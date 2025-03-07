@@ -12,10 +12,6 @@ import type { AlertServiceType } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
 
 interface MetricCriteriaProps {
-  /*
-   * boolean value to check if the component is in create mode
-   */
-  isCreateMode?: boolean;
   /**
    * name used for the component to set formik field
    */
@@ -33,7 +29,7 @@ interface MetricCriteriaProps {
 }
 
 export const MetricCriteriaField = (props: MetricCriteriaProps) => {
-  const { isCreateMode, name, serviceType, setMaxInterval } = props;
+  const { name, serviceType, setMaxInterval } = props;
   const {
     data: metricDefinitions,
     isError: isMetricDefinitionError,
@@ -64,25 +60,10 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     setMaxInterval(maxInterval);
   }, [maxInterval, setMaxInterval]);
 
-  const { append, fields, remove, replace } = useFieldArray({
+  const { append, fields, remove } = useFieldArray({
     control,
     name,
   });
-  const serviceWatcher = useWatch({ control, name: 'serviceType' });
-
-  React.useEffect(() => {
-    if (isCreateMode) {
-      replace([
-        {
-          aggregate_function: null,
-          dimension_filters: [],
-          metric: null,
-          operator: null,
-          threshold: 0,
-        },
-      ]);
-    }
-  }, [isCreateMode, replace, serviceWatcher]);
 
   return (
     <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>

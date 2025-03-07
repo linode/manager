@@ -34,7 +34,7 @@ export interface AlertsListTableProps {
    */
   isLoading: boolean;
   /**
-   * Callback to scroll till the button element element on page change
+   * Callback to scroll to the button element on page change
    */
   scrollToElement: () => void;
   /**

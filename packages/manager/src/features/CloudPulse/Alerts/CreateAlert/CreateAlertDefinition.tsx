@@ -85,6 +85,7 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
+    setValue,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -123,6 +124,19 @@ export const CreateAlertDefinition = () => {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
   }, [errors, submitCount]);
+
+  const handleServiceTypeChange = React.useCallback(() => {
+    // Reset the criteria to initial state
+    setValue('rule_criteria.rules', [
+      {
+        aggregate_function: null,
+        dimension_filters: [],
+        metric: null,
+        operator: null,
+        threshold: 0,
+      },
+    ]);
+  }, [setValue]);
 
   return (
     <React.Fragment>
@@ -166,14 +180,16 @@ export const CreateAlertDefinition = () => {
               control={control}
               name="description"
             />
-            <CloudPulseServiceSelect name="serviceType" />
+            <CloudPulseServiceSelect
+              handleServiceTypeChange={handleServiceTypeChange}
+              name="serviceType"
+            />
             <CloudPulseAlertSeveritySelect name="severity" />
             <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField
               setMaxInterval={(interval: number) =>
                 setMaxScrapeInterval(interval)
               }
-              isCreateMode
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
             />
