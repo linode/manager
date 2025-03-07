@@ -30,6 +30,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={[region]}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -59,6 +61,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={[region]}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -89,6 +93,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={[region]}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -119,6 +125,8 @@ componentTests('RegionSelect', (mount) => {
               onChange={() => {}}
               regions={[region]}
               value={undefined}
+              accountAvailabilityData={[]}
+              accountAvailabilityLoading={false}
             />
           </>
         );
@@ -153,6 +161,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -188,6 +198,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={regionToPreselect.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -224,6 +236,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -252,6 +266,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -272,6 +288,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -290,6 +308,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={spyFn}
             regions={regions}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -315,6 +335,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={spyFn}
             regions={regions}
             value={regionToSelect.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 
@@ -360,6 +382,8 @@ componentTests('RegionSelect', (mount) => {
           onChange={() => {}}
           regions={regions}
           value={undefined}
+          accountAvailabilityData={[]}
+          accountAvailabilityLoading={false}
         />,
         {
           dcGetWell: true,
@@ -395,6 +419,8 @@ componentTests('RegionSelect', (mount) => {
           onChange={() => {}}
           regions={regions}
           value={undefined}
+          accountAvailabilityData={[]}
+          accountAvailabilityLoading={false}
         />
       );
 
@@ -425,6 +451,8 @@ componentTests('RegionSelect', (mount) => {
           onChange={() => {}}
           regions={regions}
           value={undefined}
+          accountAvailabilityData={[]}
+          accountAvailabilityLoading={false}
         />
       );
 
@@ -456,6 +484,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={undefined}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
         checkComponentA11y();
@@ -469,6 +499,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
         checkComponentA11y();
@@ -482,6 +514,8 @@ componentTests('RegionSelect', (mount) => {
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
           />
         );
 

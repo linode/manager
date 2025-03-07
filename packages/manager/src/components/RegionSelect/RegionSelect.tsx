@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
@@ -34,6 +33,8 @@ export const RegionSelect = <
   props: RegionSelectProps<DisableClearable>
 ) => {
   const {
+    accountAvailabilityData,
+    accountAvailabilityLoading,
     currentCapability,
     disableClearable,
     disabled,
@@ -42,7 +43,7 @@ export const RegionSelect = <
     flags,
     forcefullyShownRegionIds,
     helperText,
-    ignoreAccountAvailability,
+    ignoreAccountAvailability, // @todo: modularization - check if we can remove this prop
     label,
     noMarginTop,
     onChange,
@@ -58,10 +59,10 @@ export const RegionSelect = <
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  // const {
+  //   data: accountAvailability,
+  //   isLoading: accountAvailabilityLoading,
+  // } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -83,7 +84,7 @@ export const RegionSelect = <
     if (
       !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
-        accountAvailabilityData: accountAvailability,
+        accountAvailabilityData,
         currentCapability,
         region,
       })

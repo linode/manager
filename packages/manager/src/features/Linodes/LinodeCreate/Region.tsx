@@ -37,6 +37,7 @@ import {
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 export const Region = React.memo(() => {
   const {
@@ -86,6 +87,11 @@ export const Region = React.memo(() => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -247,6 +253,8 @@ export const Region = React.memo(() => {
             ? 'core'
             : undefined
         }
+        accountAvailabilityData={accountAvailabilityData}
+        accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}

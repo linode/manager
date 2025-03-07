@@ -41,7 +41,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     flags,
     forcefullyShownRegionIds,
     helperText,
-    ignoreAccountAvailability,
+    ignoreAccountAvailability, // @todo: modularization - check if we can remove this prop
     isClearable,
     label,
     onChange,

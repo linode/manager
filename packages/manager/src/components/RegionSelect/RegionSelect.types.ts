@@ -30,6 +30,8 @@ export interface RegionSelectProps<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
     'label' | 'options' | 'value'
   > {
+  accountAvailabilityData: AccountAvailability[] | undefined;
+  accountAvailabilityLoading: boolean;
   /**
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
    * Only use `undefined` for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
@@ -54,7 +56,7 @@ export interface RegionSelectProps<
    * Ignores account availability information when rendering region options
    * @default false
    */
-  ignoreAccountAvailability?: boolean;
+  ignoreAccountAvailability?: boolean; // @todo: modularization - check if we can remove this prop
   label?: string;
   regionFilter?: RegionFilterValue;
   /**
@@ -81,6 +83,7 @@ export interface RegionMultiSelectProps
     onRemove: (region: string) => void;
     selectedRegions: Region[];
   }>;
+  // @todo: modularization - Add `accountAvailabilityData` & `accountAvailabilityLoading` prop
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
   /**
@@ -97,7 +100,7 @@ export interface RegionMultiSelectProps
    * Ignores account availability information when rendering region options
    * @default false
    */
-  ignoreAccountAvailability?: boolean;
+  ignoreAccountAvailability?: boolean; // @todo: modularization - check if we can remove this prop
   isClearable?: boolean;
   label?: string;
   onChange: (ids: string[]) => void;

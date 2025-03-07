@@ -7,13 +7,14 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
-import type { Region } from '@linode/api-v4';
 import type { CreateVPCPayload } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
@@ -31,6 +32,11 @@ export const VPCTopSectionContent = (props: Props) => {
   const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
   );
+
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
 
   const { control } = useFormContext<CreateVPCPayload>();
 
@@ -57,6 +63,8 @@ export const VPCTopSectionContent = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <RegionSelect
+            accountAvailabilityData={accountAvailabilityData}
+            accountAvailabilityLoading={accountAvailabilityLoading}
             aria-label="Choose a region"
             currentCapability="VPCs"
             disabled={isDrawer ? true : disabled}

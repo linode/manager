@@ -7,6 +7,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { QuotasTable } from './QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
@@ -39,6 +40,11 @@ export const Quotas = () => {
     'isFetchingS3Endpoints' in locationData
       ? locationData.isFetchingS3Endpoints
       : locationData.isFetchingRegions;
+
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
 
   // Handlers
   const onSelectServiceChange = (
@@ -109,6 +115,8 @@ export const Quotas = () => {
                     ? `Loading ${selectedService.label} regions...`
                     : `Select a region for ${selectedService.label}`
                 }
+                accountAvailabilityData={accountAvailabilityData}
+                accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability={undefined}
                 disableClearable
                 disabled={isFetchingLocations}

@@ -28,6 +28,7 @@ import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
 import type { Linode, PlacementGroup, PriceObject } from '@linode/api-v4';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];
@@ -62,6 +63,11 @@ export const ConfigureForm = React.memo((props: Props) => {
     linodeType || '',
     Boolean(linodeType)
   );
+
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
 
   const [
     selectedPlacementGroup,
@@ -176,6 +182,8 @@ export const ConfigureForm = React.memo((props: Props) => {
             textFieldProps={{
               helperText,
             }}
+            accountAvailabilityData={accountAvailabilityData}
+            accountAvailabilityLoading={accountAvailabilityLoading}
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}

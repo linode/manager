@@ -11,6 +11,7 @@ import {
 import { DatabaseEngineSelect } from 'src/features/Databases/DatabaseCreate/DatabaseEngineSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import type {
   ClusterSize,
@@ -54,6 +55,11 @@ export const DatabaseClusterData = (props: Props) => {
   });
   const flags = useFlags();
 
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
+
   const labelToolTip = (
     <StyledLabelTooltip>
       <strong>Label must:</strong>
@@ -91,6 +97,8 @@ export const DatabaseClusterData = (props: Props) => {
       </Grid>
       <Grid>
         <RegionSelect
+          accountAvailabilityData={accountAvailabilityData}
+          accountAvailabilityLoading={accountAvailabilityLoading}
           currentCapability="Managed Databases"
           disableClearable
           disabled={isRestricted}

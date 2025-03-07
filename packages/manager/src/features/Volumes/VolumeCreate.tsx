@@ -1,10 +1,11 @@
 import {
-  useGrants,
-  useProfile,
-  useLinodeQuery,
-  useRegionsQuery,
   useAccountAgreements,
+  useAllAccountAvailabilitiesQuery,
+  useGrants,
+  useLinodeQuery,
   useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
 } from '@linode/queries';
 import {
   Box,
@@ -290,6 +291,11 @@ export const VolumeCreate = () => {
       isInvalidPrice
   );
 
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
+
   const handleLinodeChange = (linode: Linode | null) => {
     if (linode !== null) {
       setFieldValue('linode_id', linode.id);
@@ -411,6 +417,8 @@ export const VolumeCreate = () => {
                   setFieldValue('region', region?.id ?? null);
                   setFieldValue('linode_id', null);
                 }}
+                accountAvailabilityData={accountAvailabilityData}
+                accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}

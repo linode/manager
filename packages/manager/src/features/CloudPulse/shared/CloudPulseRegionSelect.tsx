@@ -1,8 +1,11 @@
+import {
+  useAllAccountAvailabilitiesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from '@linode/queries';
 
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
@@ -24,10 +27,6 @@ export interface CloudPulseRegionSelectProps {
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    const { data: regions, isError, isLoading } = useRegionsQuery();
-
-    const flags = useFlags();
-
     const {
       defaultValue,
       handleRegionChange,
@@ -36,6 +35,15 @@ export const CloudPulseRegionSelect = React.memo(
       savePreferences,
       selectedDashboard,
     } = props;
+
+    const { data: regions, isError, isLoading } = useRegionsQuery();
+
+    const flags = useFlags();
+
+    const {
+      data: accountAvailabilityData,
+      isLoading: accountAvailabilityLoading,
+    } = useAllAccountAvailabilitiesQuery();
 
     const serviceType: string | undefined = selectedDashboard?.service_type;
     const capability = serviceType
@@ -88,6 +96,8 @@ export const CloudPulseRegionSelect = React.memo(
             savePreferences
           );
         }}
+        accountAvailabilityData={accountAvailabilityData}
+        accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability={capability}
         data-testid="region-select"
         disableClearable={false}

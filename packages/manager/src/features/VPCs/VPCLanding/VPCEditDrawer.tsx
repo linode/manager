@@ -1,4 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useAllAccountAvailabilitiesQuery,
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+  useUpdateVPCMutation,
+} from '@linode/queries';
 import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
@@ -7,12 +14,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-  useUpdateVPCMutation,
-} from '@linode/queries';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
@@ -44,6 +45,11 @@ export const VPCEditDrawer = (props: Props) => {
     mutateAsync: updateVPC,
     reset: resetMutation,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
+
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
 
   const {
     control,
@@ -125,6 +131,8 @@ export const VPCEditDrawer = (props: Props) => {
         />
         {regionsData && (
           <RegionSelect
+            accountAvailabilityData={accountAvailabilityData}
+            accountAvailabilityLoading={accountAvailabilityLoading}
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
             errorText={(regionsError && regionsError[0].reason) || undefined}
