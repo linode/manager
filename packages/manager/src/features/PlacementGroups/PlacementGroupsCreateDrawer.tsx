@@ -264,7 +264,7 @@ export const PlacementGroupsCreateDrawer = (
                 helperText={values.region && pgRegionLimitHelperText}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
-                tooltipText="Only Linode data center regions that support placement groups are listed."
+                tooltipText="Only regions that support placement groups are listed."
                 value={selectedRegionId ?? values.region}
               />
             )}
