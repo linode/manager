@@ -19,6 +19,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AlertDefinitionLanding } from './AlertsDefinitionLanding';
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export type EnabledAlertTab = {
   isEnabled: boolean;
@@ -89,6 +90,18 @@ export const AlertsLanding = React.memo(() => {
             <Redirect from="*" to="/alerts/definitions" />
           </Switch>
         </Paper>
+        <React.Fragment>
+          <DocumentTitleSegment segment="Alerts" />
+          <Paper sx={{ padding: 2 }}>
+            <Switch>
+              <Route
+                component={AlertDefinitionLanding}
+                path={'/alerts/definitions'}
+              />
+              <Redirect from="*" to="/alerts/definitions" />
+            </Switch>
+          </Paper>
+        </React.Fragment>
       </Tabs>
     </React.Suspense>
   );

@@ -22,7 +22,7 @@ export const AlertDefinitionLanding = () => {
       </Route>
       <Route
         component={CreateAlertDefinition}
-        path="/monitor/alerts/definitions/create"
+        path="/alerts/definitions/create"
       />
     </Switch>
   );
