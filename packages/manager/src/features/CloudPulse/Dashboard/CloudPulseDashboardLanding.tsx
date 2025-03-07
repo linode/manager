@@ -12,6 +12,7 @@ import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
@@ -86,6 +87,7 @@ export const CloudPulseDashboardLanding = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
       <Grid container spacing={2}>
+      <DocumentTitleSegment segment="Dashboards" />
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
