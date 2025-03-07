@@ -71,19 +71,3 @@ export const StyledError = styled(Error, {
   marginBottom: theme.spacing(4),
   width: 60,
 }));
-
-export const StyledH1Header = styled(H1Header, {
-  label: 'StyledH1Header',
-})(({ theme }) => ({
-  marginBottom: theme.spacing(),
-  [theme.breakpoints.down('md')]: {
-    marginLeft: theme.spacing(),
-  },
-}));
-
-export const StyledRootGrid = styled(Grid, {
-  label: 'StyledRootGrid',
-})({
-  padding: 0,
-  width: 'calc(100% + 16px)',
-});
