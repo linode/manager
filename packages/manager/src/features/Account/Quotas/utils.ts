@@ -1,13 +1,17 @@
+import { object, string } from 'yup';
+
+import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
 import {
   GLOBAL_QUOTA_LABEL,
   GLOBAL_QUOTA_VALUE,
 } from 'src/components/RegionSelect/constants';
-import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import type { QuotaIncreaseFormFields } from './QuotasIncreaseForm';
 import type {
   Filter,
+  Profile,
   Quota,
   QuotaType,
   QuotaUsage,
@@ -109,3 +113,36 @@ export const getQuotaError = (
     ? quotaUsageQueries[index].error[0].reason
     : 'An unexpected error occurred';
 };
+
+/**
+ * Function to get the default values for the quota increase form
+ */
+export const getQuotaIncreaseFormDefaultValues = (
+  quota: Quota,
+  profile: Profile | undefined
+): QuotaIncreaseFormFields => {
+  const regionAppliedLabel = quota.s3_endpoint ? 'Endpoint' : 'Region';
+  const regionAppliedValue = quota.s3_endpoint ?? quota.region_applied;
+
+  if (!profile) {
+    return {
+      description: '',
+      quantity: '0',
+      summary: 'Increase Quota',
+    };
+  }
+
+  return {
+    description: `**User**: ${profile.username}<br>\n**Email**: ${profile.email}<br>\n**Quota Name**: ${quota.quota_name}<br>\n**New Quantity Requested**: 0 ${quota.resource_metric}<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    quantity: '0',
+    summary: 'Increase Quota',
+  };
+};
+
+export const getQuotaIncreaseFormSchema = object({
+  description: string().required('Description is required.'),
+  quantity: string()
+    .required('Quantity is required')
+    .matches(/^[1-9]\d*$/, 'Quantity must be a positive number greater than 0'),
+  summary: string().required('Summary is required.'),
+});

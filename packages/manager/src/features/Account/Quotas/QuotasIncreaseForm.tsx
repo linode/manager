@@ -1,7 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Accordion, Notice, Stack, TextField, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Controller, FormProvider } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
+import { Controller, FormProvider } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { MarkdownReference } from 'src/features/Support/SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -9,6 +10,11 @@ import { TabbedReply } from 'src/features/Support/SupportTicketDetail/TabbedRepl
 import { useProfile } from 'src/queries/profile/profile';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+import {
+  getQuotaIncreaseFormDefaultValues,
+  getQuotaIncreaseFormSchema,
+} from './utils';
 
 import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
 
@@ -19,7 +25,7 @@ interface QuotasIncreaseFormProps {
   quota: Quota;
 }
 
-interface QuotaIncreaseFormFields extends TicketRequest {
+export interface QuotaIncreaseFormFields extends TicketRequest {
   quantity: string;
 }
 
@@ -31,16 +37,13 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const { data: profile } = useProfile();
 
   const defaultValues = React.useMemo(
-    () => ({
-      description: `**User**: ${profile?.username}<br>\n**Email**: ${profile?.email}<br>\n**Quota Name**: ${quota.quota_name}<br>\n**New Quantity Requested**: 0 ${quota.resource_metric}<br>\n**Region**: ${quota.region_applied}`,
-      quantity: '0',
-      summary: 'Increase Quota',
-    }),
+    () => getQuotaIncreaseFormDefaultValues(quota, profile),
     [quota, profile]
   );
   const form = useForm<QuotaIncreaseFormFields>({
     defaultValues,
-    resolver: undefined,
+    mode: 'onBlur',
+    resolver: yupResolver(getQuotaIncreaseFormSchema),
   });
 
   const { description, quantity, summary } = form.watch();
@@ -94,10 +97,13 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
           <Controller
             render={({ field, fieldState }) => (
               <TextField
+                onChange={(e) => {
+                  field.onChange(e);
+                  form.trigger('summary');
+                }}
                 errorText={fieldState.error?.message}
                 label="Title"
                 name="summary"
-                onChange={field.onChange}
                 placeholder="Enter a title for your ticket."
                 required
                 value={summary}
@@ -110,6 +116,10 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             render={({ fieldState }) => (
               <Stack direction="row" gap={2}>
                 <TextField
+                  onChange={(e) => {
+                    handleQuantityChange(e.target.value);
+                    form.trigger('quantity');
+                  }}
                   slotProps={{
                     input: {
                       endAdornment: (
@@ -133,7 +143,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                   label="Quantity"
                   min={1}
                   name="quantity"
-                  onChange={(e) => handleQuantityChange(e.target.value)}
                   required
                   sx={{ width: 300 }}
                   type="number"
@@ -149,8 +158,11 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             <Controller
               render={({ field, fieldState }) => (
                 <TabbedReply
+                  handleChange={(e) => {
+                    field.onChange(e);
+                    form.trigger('description');
+                  }}
                   error={fieldState.error?.message}
-                  handleChange={field.onChange}
                   placeholder={'Enter your request for a quota increase.'}
                   required
                   value={description}
