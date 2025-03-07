@@ -1,6 +1,8 @@
 import { CircleProgress, ErrorState, Paper } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -19,7 +21,7 @@ import {
 } from './stackScriptUtils';
 
 export const StackScriptDetail = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const { id: stackScriptId } = useParams({
@@ -49,7 +51,7 @@ export const StackScriptDetail = () => {
       return;
     }
     const url = getStackScriptUrl(stackscript.username, id, username);
-    navigate({ to: url });
+    history.push(url);
   };
 
   const handleLabelChange = (label: string) => {

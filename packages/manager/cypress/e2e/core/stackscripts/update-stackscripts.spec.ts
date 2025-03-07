@@ -212,6 +212,9 @@ describe('Update stackscripts', () => {
       is_public: false,
     });
     mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
@@ -253,6 +256,7 @@ describe('Update stackscripts', () => {
       .findByTitle('Make StackScript Public')
       .should('be.visible')
       .click();
+    cy.wait('@getStackScript');
     const updatedStackScript = { ...stackScripts[0] };
     updatedStackScript.is_public = true;
     mockUpdateStackScript(updatedStackScript.id, updatedStackScript).as(
