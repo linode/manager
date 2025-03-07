@@ -1,4 +1,8 @@
 import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  isNotNullOrUndefined,
+} from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
@@ -26,8 +30,6 @@ import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
@@ -293,7 +295,7 @@ const SearchBarComponent = (props: SearchProps) => {
             top: '50%',
             transform: 'translate(-50%, -50%)',
             visibility: searchActive ? 'visible' : 'hidden',
-            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            width: `calc(100% - ${theme.tokens.spacing.S32})`,
             zIndex: searchActive ? 3 : 0,
           },
         }}
@@ -433,7 +435,7 @@ const SearchBarComponent = (props: SearchProps) => {
           }}
           sx={(theme) => ({
             '& .MuiInput-root .MuiInput-input': {
-              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
             },
             '&.MuiAutocomplete-root': {
               '&.Mui-focused, &.Mui-focused:hover': {
@@ -443,7 +445,7 @@ const SearchBarComponent = (props: SearchProps) => {
                 borderColor: theme.tokens.header.Search.Border.Hover,
               },
               '.MuiInput-root': {
-                paddingRight: theme.tokens.spacing[40],
+                paddingRight: theme.tokens.spacing.S8,
               },
               border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
             },

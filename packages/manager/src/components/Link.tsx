@@ -1,15 +1,15 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { omitProps } from '@linode/ui';
+import {
+  childrenContainsNoText,
+  flattenChildrenIntoAriaLabel,
+  opensInNewTab,
+} from '@linode/utilities'; // `link.ts` utils from @linode/utilities
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { useStyles } from 'src/components/Link.styles';
-import {
-  childrenContainsNoText,
-  flattenChildrenIntoAriaLabel,
-  opensInNewTab,
-} from 'src/utilities/link';
 
 import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
 import type { LinkProps as _LinkProps } from 'react-router-dom';

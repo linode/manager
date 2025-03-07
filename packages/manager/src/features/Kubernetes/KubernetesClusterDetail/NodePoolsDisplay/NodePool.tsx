@@ -6,12 +6,12 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { NodeTable } from './NodeTable';
 
@@ -41,6 +41,7 @@ interface Props {
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -66,6 +67,7 @@ export const NodePool = (props: Props) => {
     openRecycleNodeDialog,
     poolId,
     statusFilter,
+    regionSupportsDiskEncryption,
     tags,
     typeLabel,
   } = props;
@@ -227,6 +229,7 @@ export const NodePool = (props: Props) => {
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
+        regionSupportsDiskEncryption={regionSupportsDiskEncryption}
         statusFilter={statusFilter}
         tags={tags}
         typeLabel={typeLabel}

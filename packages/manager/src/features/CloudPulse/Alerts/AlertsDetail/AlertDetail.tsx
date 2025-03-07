@@ -1,4 +1,4 @@
-import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
+import { Box, Chip, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 

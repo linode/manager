@@ -5,6 +5,7 @@ export { default as CheckboxCheckedIcon } from './checkboxChecked.svg';
 export { default as CheckboxIndeterminateIcon } from './checkboxIndeterminate.svg';
 export { default as ChevronDownIcon } from './chevron-down.svg';
 export { default as InfoIcon } from './info.svg';
+export { default as PendingIcon } from './pending.svg';
 export { default as PlusSignIcon } from './plusSign.svg';
 export { default as RadioIcon } from './radio.svg';
 export { default as RadioIconRadioed } from './radioRadioed.svg';

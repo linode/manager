@@ -1,9 +1,7 @@
-import { formatStorageUnits } from '@linode/utilities';
+import { formatStorageUnits, isNotNullOrUndefined } from '@linode/utilities';
 
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-
-import { isNotNullOrUndefined } from './nullOrUndefined';
 
 import type { APIError, LinodeType } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';

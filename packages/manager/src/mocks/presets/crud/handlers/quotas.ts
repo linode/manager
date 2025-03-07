@@ -1,3 +1,4 @@
+import { pickRandom } from '@linode/utilities';
 import { http } from 'msw';
 
 import { regions } from 'src/__data__/regionsData';
@@ -8,7 +9,6 @@ import {
   makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
-import { pickRandom } from 'src/utilities/random';
 
 import type {
   ObjectStorageEndpoint,

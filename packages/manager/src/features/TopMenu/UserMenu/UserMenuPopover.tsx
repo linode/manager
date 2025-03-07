@@ -158,8 +158,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
-            paddingX: theme.tokens.spacing[70],
-            paddingY: theme.tokens.spacing[60],
+            paddingX: theme.tokens.spacing.S24,
+            paddingY: theme.tokens.spacing.S16,
           }),
         },
       }}
@@ -174,10 +174,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     >
       <Stack
         data-qa-user-menu
-        gap={(theme) => theme.tokens.spacing[60]}
+        gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing[40]}>
+        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography>Current account:</Typography>
           )}
@@ -218,8 +218,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             <Heading>Account</Heading>
             <Divider />
             <Stack
-              gap={(theme) => theme.tokens.spacing[40]}
-              mt={(theme) => theme.tokens.spacing[40]}
+              gap={(theme) => theme.tokens.spacing.S8}
+              mt={(theme) => theme.tokens.spacing.S8}
             >
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (

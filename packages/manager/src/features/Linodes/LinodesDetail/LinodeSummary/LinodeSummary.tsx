@@ -1,4 +1,4 @@
-import { Autocomplete, Paper, Stack, Typography } from '@linode/ui';
+import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,

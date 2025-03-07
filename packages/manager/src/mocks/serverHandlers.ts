@@ -6,6 +6,7 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
+import { pickRandom } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -111,10 +112,10 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { pickRandom } from 'src/utilities/random';
 
 import type {
   AccountMaintenance,
@@ -2474,9 +2475,18 @@ export const handlers = [
     async ({ params }) => {
       const serviceType = params.serviceType;
       return HttpResponse.json({
-        data: alertFactory.buildList(20, {
-          service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
-        }),
+        data: [
+          ...alertFactory.buildList(20, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          ...alertFactory.buildList(5, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+          }),
+        ],
       });
     }
   ),

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircleProgress,
+  ErrorState,
   Select,
   Stack,
   Typography,
@@ -13,7 +14,6 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
@@ -142,6 +142,11 @@ export const NodePoolsDisplay = (props: Props) => {
     handleAccordionClick,
     setExpandedAccordions,
   } = useDefaultExpandedNodePools(clusterID, _pools);
+
+  const regionSupportsDiskEncryption =
+    regionsData
+      .find((regionDatum) => regionDatum.id === clusterRegionId)
+      ?.capabilities.includes('Disk Encryption') ?? false;
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
@@ -302,6 +307,7 @@ export const NodePoolsDisplay = (props: Props) => {
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
