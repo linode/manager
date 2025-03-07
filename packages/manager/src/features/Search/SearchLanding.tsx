@@ -8,6 +8,7 @@ import { ResultGroup } from './ResultGroup';
 import { StyledError, StyledGrid, StyledStack } from './SearchLanding.styles';
 import { useLegacySearch } from './withStoreSearch';
 
+import type { SearchResultsByEntity } from './search.interfaces';
 import type { ResultRowDataOption } from './types';
 
 const displayMap = {
@@ -55,7 +56,7 @@ const SearchLanding = () => {
         </StyledGrid>
       )}
       {Object.keys(searchResultsByEntity).map(
-        (entityType: keyof typeof displayMap, idx: number) => (
+        (entityType: keyof SearchResultsByEntity, idx: number) => (
           <ResultGroup
             entity={displayMap[entityType]}
             groupSize={100}
