@@ -124,7 +124,7 @@ export const useRemoveEntityFromAlert = () => {
       const { id: alertId, service_type: serviceType } = alert;
       return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
-    onError(_data, variable) {
+    onSuccess(_data, variable) {
       const { alert, entityId } = variable;
       const { id: alertId, service_type: serviceType } = alert;
 
