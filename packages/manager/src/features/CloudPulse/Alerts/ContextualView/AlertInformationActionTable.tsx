@@ -87,11 +87,10 @@ export const AlertInformationActionTable = (
     setIsDialogOpen(false);
   };
   const handleConfirm = React.useCallback(
-    (alertId: number, serviceType: string, currentStatus: boolean) => {
+    (alert: Alert, currentStatus: boolean) => {
       const payLoad: EntityAlertUpdatePayload = {
-        alertId,
+        alert,
         entityId,
-        serviceType,
       };
 
       setIsLoading(true);
@@ -192,15 +191,13 @@ export const AlertInformationActionTable = (
         )}
       </OrderBy>
       <AlertConfirmationDialog
-        alertId={selectedAlert.id}
-        alertName={selectedAlert.label}
+        alert={selectedAlert}
         entityName={entityName}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isActive={selectedAlert?.entity_ids?.includes(entityId) ?? false}
         isLoading={isLoading}
         isOpen={isDialogOpen}
-        serviceType={selectedAlert.service_type}
       />
     </>
   );
