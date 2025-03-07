@@ -1,8 +1,10 @@
 import { Box, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -77,8 +79,12 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
   return (
-    <React.Fragment>
-      <DocumentTitleSegment segment="Dashboards" />
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/metrics' }}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
+      />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>
@@ -104,6 +110,10 @@ export const CloudPulseDashboardLanding = () => {
           timeDuration={timeDuration}
         />
       </Grid>
-    </React.Fragment>
+    </React.Suspense>
   );
 };
+
+export const cloudPulseMetricsLandingLazyRoute = createLazyRoute('/metrics')({
+  component: CloudPulseDashboardLanding,
+});
