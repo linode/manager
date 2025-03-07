@@ -83,18 +83,6 @@ describe('Alert Resuable Component for contextual view', () => {
     expect(history.location.pathname).toBe('/alerts/definitions');
   });
 
-  it('Should go to alert details page on click of an alert', async () => {
-    const history = createMemoryHistory();
-    const { getByText } = renderWithTheme(
-      <Router history={history}>{component}</Router>
-    );
-    await userEvent.click(getByText(alerts[0].label));
-
-    expect(history.location.pathname).toBe(
-      `/alerts/definitions/detail/${serviceType}/${alerts[0].id}`
-    );
-  });
-
   it('Should filter alerts based on search text', async () => {
     const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
       component

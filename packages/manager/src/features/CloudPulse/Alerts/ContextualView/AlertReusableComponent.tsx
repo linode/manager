@@ -85,7 +85,6 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             buttonType="outlined"
             data-testid="manage-alerts"
             onClick={() => history.push('/alerts/definitions')}
-            sx={{ border: '1px solid' }}
           >
             Manage Alerts
           </Button>

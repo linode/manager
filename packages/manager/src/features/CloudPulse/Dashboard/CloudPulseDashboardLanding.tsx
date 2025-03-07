@@ -86,8 +86,8 @@ export const CloudPulseDashboardLanding = () => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
-      <Grid container spacing={2}>
       <DocumentTitleSegment segment="Dashboards" />
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
