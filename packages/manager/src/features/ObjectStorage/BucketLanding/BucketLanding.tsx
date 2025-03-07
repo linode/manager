@@ -19,7 +19,6 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
@@ -33,6 +32,7 @@ import type {
   ObjectStorageEndpoint,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import { readableBytes } from '@linode/utilities';
 
 interface Props {
   isCreateBucketDrawerOpen?: boolean;

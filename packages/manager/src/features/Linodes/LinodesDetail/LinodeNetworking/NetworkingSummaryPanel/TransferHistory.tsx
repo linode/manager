@@ -20,13 +20,13 @@ import {
   useProfile,
 } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
 import type {
   LinodeNetworkTimeData,
   Point,
 } from 'src/components/AreaChart/types';
+import { readableBytes } from '@linode/utilities';
 
 interface Props {
   linodeCreated: string;

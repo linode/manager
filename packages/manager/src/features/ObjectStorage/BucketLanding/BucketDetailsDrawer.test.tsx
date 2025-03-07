@@ -1,4 +1,4 @@
-import { truncateMiddle } from '@linode/utilities';
+import { readableBytes, truncateMiddle } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
@@ -11,7 +11,6 @@ import {
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 
@@ -20,11 +19,11 @@ vi.mock('@linode/utilities', async () => {
   const actual = await vi.importActual('@linode/utilities');
   return {
     ...actual,
+    readableBytes: vi.fn(),
     truncateMiddle: vi.fn(),
   };
 });
 vi.mock('src/utilities/formatDate');
-vi.mock('src/utilities/unitConversions');
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({

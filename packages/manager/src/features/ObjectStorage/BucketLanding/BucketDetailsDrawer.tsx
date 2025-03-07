@@ -1,5 +1,5 @@
 import { Divider, Typography } from '@linode/ui';
-import { pluralize, truncateMiddle } from '@linode/utilities';
+import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -13,7 +13,6 @@ import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
 import { BucketRateLimitTable } from './BucketRateLimitTable';

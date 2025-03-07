@@ -1,5 +1,5 @@
 import { Stack, Tooltip } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
+import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -10,7 +10,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
 import { ImageStatus } from './ImageStatus';
