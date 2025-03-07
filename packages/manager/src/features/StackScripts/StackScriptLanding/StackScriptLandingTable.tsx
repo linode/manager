@@ -24,7 +24,7 @@ import {
   communityStackScriptFilter,
 } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 import { useDialogData } from 'src/hooks/useDialogData';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
@@ -69,7 +69,13 @@ export const StackScriptLandingTable = (props: Props) => {
     searchableFieldsWithoutOperator: ['username', 'label', 'description'],
   });
 
-  const { handleOrderChange, order, orderBy } = useOrder(defaultOrder);
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder,
+      from: '/stackscripts',
+    },
+    preferenceKey: 'stackscripts-landing',
+  });
 
   const {
     data: selectedStackScript,
