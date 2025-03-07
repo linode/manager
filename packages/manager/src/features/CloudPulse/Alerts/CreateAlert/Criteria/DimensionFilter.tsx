@@ -60,7 +60,6 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             value: null,
           })
         }
-        buttonType="secondary"
         compactX
         data-qa-buttons="true"
         disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
