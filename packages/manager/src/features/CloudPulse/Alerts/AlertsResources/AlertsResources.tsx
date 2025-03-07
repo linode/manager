@@ -1,11 +1,5 @@
-import {
-  Checkbox,
-  CircleProgress,
-  Notice,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { Grid, Grid2 } from '@mui/material';
+import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';

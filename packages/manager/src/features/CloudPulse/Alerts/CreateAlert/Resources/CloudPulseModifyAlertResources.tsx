@@ -2,6 +2,8 @@ import { Box, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { AlertResources } from '../../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../../Utils/utils';
 
@@ -20,6 +22,18 @@ export const CloudPulseModifyAlertResources = React.memo(
     const { name } = props;
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+
+    const flags = useFlags();
+
+    const getMaxSelectionCount = React.useCallback(() => {
+      if (!serviceTypeWatcher || !flags.aclpAlertServiceTypeInfoMap) {
+        return undefined;
+      }
+
+      return flags.aclpAlertServiceTypeInfoMap?.find(
+        (value) => value.serviceType === serviceTypeWatcher
+      )?.maxResourceSelectionCount;
+    }, [flags.aclpAlertServiceTypeInfoMap, serviceTypeWatcher]);
 
     const handleResourcesSelection = (resourceIds: string[]) => {
       setValue(name, resourceIds, {
@@ -49,7 +63,7 @@ export const CloudPulseModifyAlertResources = React.memo(
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
                 isSelectionsNeeded
-                maxSelectionCount={2}
+                maxSelectionCount={getMaxSelectionCount()}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
               />

@@ -2,8 +2,6 @@ import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { LinkButton } from 'src/components/LinkButton';
-
 import type { SelectUnselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
