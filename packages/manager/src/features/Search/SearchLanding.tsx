@@ -31,22 +31,23 @@ const SearchLanding = () => {
   });
 
   return (
-    <Stack spacing={2}>
-      {combinedResults.length > 0 && !isLoading && (
+    <Stack mt={2} spacing={2}>
+      <Stack
+        alignItems="center"
+        direction="row"
+        height="32px"
+        justifyContent="space-between"
+        spacing={1}
+      >
         <Typography variant="h1">
-          Search Results {query && `for "${query}"`}
-        </Typography>
-      )}
-      {isLoading && <CircleProgress />}
+          Search Results {query && `for "${query}"`}</Typography>
+        {isLoading && <CircleProgress size="sm" />}
+      </Stack>
       {!isLoading && combinedResults.length === 0 && (
-        <Stack>
-          <Typography style={{ marginBottom: 16 }}>
-            You searched for ...
-          </Typography>
-          <Typography>{query}</Typography>
-          <Typography className="nothing" style={{ marginTop: 56 }}>
-            Sorry, no results for this one.
-          </Typography>
+        <Stack alignItems="center" justifyContent="center" spacing={2}>
+          <Typography>You searched for ...</Typography>
+          <Typography variant="h2">{query}</Typography>
+          <Typography>Sorry, no results for this one.</Typography>
         </Stack>
       )}
       {Object.keys(searchResultsByEntity).map(

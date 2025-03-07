@@ -34,26 +34,43 @@ export const useSearch = ({ query }: Props) => {
   const shouldFetchAll =
     isSearching && isLargeAccount !== undefined && !isLargeAccount;
 
-  const { data: regions } = useRegionsQuery(shouldFetchAll);
-  const { data: domains } = useAllDomainsQuery(shouldFetchAll);
-  const { data: clusters } = useAllKubernetesClustersQuery(shouldFetchAll);
-  const { data: volumes } = useAllVolumesQuery({}, {}, shouldFetchAll);
-  const { data: nodebals } = useAllNodeBalancersQuery(shouldFetchAll);
-  const { data: firewalls } = useAllFirewallsQuery(shouldFetchAll);
-  const { data: databases } = useAllDatabasesQuery(shouldFetchAll);
-  const { data: objectStorageBuckets } = useObjectStorageBuckets(
+  const { data: regions, isLoading: regionsLoading } = useRegionsQuery(
     shouldFetchAll
   );
-  const { data: privateImages, isLoading: imagesLoading } = useAllImagesQuery(
-    {},
-    { is_public: false },
+  const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
     shouldFetchAll
   );
-  const { data: publicImages } = useAllImagesQuery(
+  const {
+    data: clusters,
+    isLoading: lkeClustersLoading,
+  } = useAllKubernetesClustersQuery(shouldFetchAll);
+  const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
     {},
-    { is_public: true },
-    isSearching
+    {},
+    shouldFetchAll
   );
+  const {
+    data: nodebals,
+    isLoading: nodebalancersLoading,
+  } = useAllNodeBalancersQuery(shouldFetchAll);
+  const { data: firewalls, isLoading: firewallsLoading } = useAllFirewallsQuery(
+    shouldFetchAll
+  );
+  const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
+    shouldFetchAll
+  );
+  const {
+    data: objectStorageBuckets,
+    isLoading: bucketsLoading,
+  } = useObjectStorageBuckets(shouldFetchAll);
+  const {
+    data: privateImages,
+    isLoading: privateImagesLoading,
+  } = useAllImagesQuery({}, { is_public: false }, shouldFetchAll);
+  const {
+    data: publicImages,
+    isLoading: publicIamgesLoading,
+  } = useAllImagesQuery({}, { is_public: true }, isSearching);
   const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
     {},
     {},
@@ -90,7 +107,19 @@ export const useSearch = ({ query }: Props) => {
     ...searchableDatabases,
   ];
 
-  const isLoading = linodesLoading || imagesLoading;
+  const isLoading =
+    linodesLoading ||
+    privateImagesLoading ||
+    publicIamgesLoading ||
+    bucketsLoading ||
+    lkeClustersLoading ||
+    databasesLoading ||
+    nodebalancersLoading ||
+    domainsLoading ||
+    regionsLoading ||
+    volumesLoading ||
+    firewallsLoading ||
+    useIsLargeAccount === undefined;
 
   const results = search(searchableItems, query);
 

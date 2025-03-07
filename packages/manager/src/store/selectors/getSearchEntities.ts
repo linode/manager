@@ -87,7 +87,7 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
     icon: 'image',
     /* TODO: Choose a real location for this to link to */
     path: `/images?query="${image.label}"`,
-    tags: [],
+    tags: image.tags,
   },
   entityType: 'image',
   label: image.label,
