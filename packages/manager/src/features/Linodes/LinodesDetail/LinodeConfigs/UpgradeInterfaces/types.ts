@@ -35,20 +35,19 @@ export interface ConfigSelectDialogState extends BaseDialogState {
 export interface ProgressDialogState extends BaseDialogState {
   isDryRun: boolean;
   progress: number;
-  selectedConfig: Config;
   step: 'progress';
 }
 
 export interface SuccessDialogState extends BaseDialogState {
   isDryRun: boolean;
   linodeInterfaces: LinodeInterface[];
-  selectedConfig: Config;
+  selectedConfig?: Config;
   step: 'success';
 }
 
 export interface ErrorDialogState extends BaseDialogState {
-  error: APIError[];
+  errors: APIError[];
   isDryRun: boolean;
-  selectedConfig: Config;
+  selectedConfig?: Config;
   step: 'error';
 }

@@ -3,6 +3,8 @@ import React from 'react';
 
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 
+import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
+
 import type {
   PromptDialogState,
   UpgradeInterfacesDialogContentProps,
@@ -11,9 +13,15 @@ import type {
 export const UpgradePromptDialogContent = (
   props: UpgradeInterfacesDialogContentProps<PromptDialogState>
 ) => {
-  const { linodeId, onClose, open, setDialogState, state } = props;
+  const { linodeId, onClose, open, setDialogState } = props;
 
   const { data: configs } = useAllLinodeConfigsQuery(linodeId, open);
+
+  const { upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces({
+    linodeId,
+    selectedConfig: configs?.[0],
+    setDialogState,
+  });
 
   if (!configs) {
     return <Typography>No Configuration Profiles found to upgrade.</Typography>;
@@ -28,7 +36,7 @@ export const UpgradePromptDialogContent = (
             isDryRun: true,
             step: 'configSelect',
           })
-      : () => {};
+      : () => upgradeToLinodeInterfaces(true);
   const upgradeInterfaces =
     configs?.length > 1
       ? () =>
@@ -38,7 +46,7 @@ export const UpgradePromptDialogContent = (
             isDryRun: false,
             step: 'configSelect',
           })
-      : () => {};
+      : () => upgradeToLinodeInterfaces(false);
 
   return (
     <Stack gap={2}>
