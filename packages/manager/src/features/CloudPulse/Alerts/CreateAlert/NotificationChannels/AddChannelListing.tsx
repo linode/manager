@@ -166,7 +166,6 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             onClick={handleOpenDrawer}
             size="medium"
             sx={(theme) => ({ marginTop: theme.spacing(2) })}
-            sxEndIcon={{ display: 'none' }}
             tooltipText="You can add up to 5 notification channels."
             type="button"
           >

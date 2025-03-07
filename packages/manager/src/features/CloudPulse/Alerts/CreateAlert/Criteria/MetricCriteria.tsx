@@ -106,7 +106,6 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
         disabled={metricCriteriaWatcher.length === 5}
         size="medium"
         sx={(theme) => ({ marginTop: theme.spacing(2) })}
-        sxEndIcon={{ display: 'none' }}
         tooltipText="You can add up to 5 metrics."
       >
         Add metric
