@@ -86,6 +86,9 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
+  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
+    'standard'
+  );
 
   const formValues = React.useMemo(() => {
     return {
@@ -108,7 +111,7 @@ export const CreateCluster = () => {
   const formMethods = useForm<CreateKubeClusterPayload>({
     defaultValues: async () => {
       const myversions = await queryClient.ensureQueryData(
-        kubernetesQueries.versions
+        kubernetesQueries.tieredVersions(selectedTier)
       );
       return {
         ...formValues,
@@ -128,7 +131,6 @@ export const CreateCluster = () => {
   const selectedRegion = watch('region');
   const nodePool = watch('node_pools');
   const aplEnabled = watch('apl_enabled');
-  const selectedTier = watch('tier');
   const highAvailability = watch('control_plane.high_availability');
 
   const {
@@ -148,8 +150,13 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
+  React.useEffect(() => {
+    setValue('k8s_version', versions[0]?.label);
+  }, [versions]);
+
   const handleClusterTierSelection = (tier: KubernetesTier) => {
-    setValue('tier', tier);
+    // setValue('tier', tier);
+    setSelectedTier(tier);
     // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setValue('control_plane.high_availability', true);
