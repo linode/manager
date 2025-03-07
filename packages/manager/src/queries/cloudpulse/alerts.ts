@@ -86,50 +86,33 @@ export const useAddEntityToAlert = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
-      const { alertId, entityId, serviceType } = payload;
+      const { alert, entityId } = payload;
+      const { id: alertId, service_type: serviceType } = alert;
       return addEntityToAlert(serviceType, entityId, {
         'alert-definition-id': alertId,
       });
     },
-    onError(_error, payload, context: { previousData: Alert[] }) {
-      const { serviceType } = payload;
-      const { previousData } = context;
-      queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-        previousData
-      );
-    },
-    onMutate(payload) {
-      const { alertId, entityId, serviceType } = payload;
 
-      queryClient.cancelQueries({
+    onSuccess(_data, variable) {
+      const { alert, entityId } = variable;
+      const { id: alertId, service_type: serviceType } = alert;
+
+      alert.entity_ids.push(entityId);
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
+        alert
+      );
+      queryClient.invalidateQueries({
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
           .queryKey,
       });
 
-      const previousData = queryClient.getQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
-      );
-
-      queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-        (alerts: Alert[]) => {
-          return alerts?.map((alert) => {
-            if (alert.id !== alertId) {
-              return alert;
-            }
-
-            alert.entity_ids.push(entityId);
-
-            return alert;
-          });
-        }
-      );
-
-      return { previousData };
-    },
-    onSettled() {
-      queryClient.invalidateQueries(queryFactory.alerts);
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
     },
   });
 };
@@ -137,52 +120,33 @@ export const useRemoveEntityFromAlert = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
-      const { alertId, entityId, serviceType } = payload;
+      const { alert, entityId } = payload;
+      const { id: alertId, service_type: serviceType } = alert;
       return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
+    onError(_data, variable) {
+      const { alert, entityId } = variable;
+      const { id: alertId, service_type: serviceType } = alert;
 
-    onError(_error, payload, context: { previousData: Alert[] }) {
-      const { serviceType } = payload;
-      const { previousData } = context;
+      const index = alert.entity_ids.indexOf(entityId);
+      if (index > -1) {
+        alert.entity_ids.splice(index, 1);
+      }
       queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-        previousData
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
+        alert
       );
-    },
-    onMutate(payload) {
-      const { alertId, entityId, serviceType } = payload;
-
-      queryClient.cancelQueries({
+      queryClient.invalidateQueries({
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
           .queryKey,
       });
 
-      const previousData = queryClient.getQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
-      );
-
-      queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
-        (alerts: Alert[]) => {
-          return alerts?.map((alert) => {
-            if (alert.id !== alertId) {
-              return alert;
-            }
-
-            const index = alert.entity_ids.indexOf(entityId);
-            if (index > -1) {
-              alert.entity_ids.splice(index, 1);
-            }
-
-            return alert;
-          });
-        }
-      );
-
-      return { previousData };
-    },
-    onSettled() {
-      queryClient.invalidateQueries(queryFactory.alerts);
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
     },
   });
 };
