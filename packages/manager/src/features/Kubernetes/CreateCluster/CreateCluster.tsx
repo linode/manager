@@ -115,6 +115,9 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
+  // LKE-E does not support APL at this time.
+  const isAPLEnabled = showAPL && selectedTier === 'standard';
+
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
@@ -242,7 +245,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (showAPL) {
+    if (isAPLEnabled) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -251,7 +254,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      isAPLEnabled || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -447,7 +450,7 @@ export const CreateCluster = () => {
               />
             </StyledDocsLinkContainer>
           </StyledStackWithTabletBreakpoint>
-          {showAPL && (
+          {isAPLEnabled && (
             <>
               <Divider sx={{ marginTop: 4 }} />
               <StyledStackWithTabletBreakpoint>
@@ -460,7 +463,7 @@ export const CreateCluster = () => {
               </StyledStackWithTabletBreakpoint>
             </>
           )}
-          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+          <Divider sx={{ marginTop: isAPLEnabled ? 1 : 4 }} />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane

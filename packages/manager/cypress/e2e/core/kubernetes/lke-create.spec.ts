@@ -1086,6 +1086,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms that HA is enabled by default with LKE-E selection
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
+     * - Confirms the APL section is not shown while it remains unsupported
      * - Confirms at least one IP must be provided for ACL
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
@@ -1214,6 +1215,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .should('be.visible')
         .should('be.enabled')
         .click();
+
+      // Confirm the APL section is not shown.
+      cy.findByTestId('apl-label').should('not.exist');
+      cy.findByTestId('apl-radio-button-yes').should('not.exist');
+      cy.findByTestId('apl-radio-button-no').should('not.exist');
 
       // Confirm the expected available plans display.
       validEnterprisePlanTabs.forEach((tab) => {
