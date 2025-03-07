@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
@@ -12,7 +13,6 @@ import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
