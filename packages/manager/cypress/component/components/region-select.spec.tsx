@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mockGetAccountAvailability } from 'support/intercepts/account';
+// import { mockGetAccountAvailability } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { createSpy } from 'support/util/components';
@@ -9,9 +9,9 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 componentTests('RegionSelect', (mount) => {
-  beforeEach(() => {
-    mockGetAccountAvailability([]);
-  });
+  // beforeEach(() => {
+  //   mockGetAccountAvailability([]);
+  // });
 
   describe('Interactions', () => {
     describe('Open menu', () => {
@@ -25,13 +25,13 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability="Object Storage"
             flags={{}}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -56,13 +56,13 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability="Object Storage"
             flags={{}}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -88,13 +88,13 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability="Object Storage"
             flags={{}}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -120,13 +120,13 @@ componentTests('RegionSelect', (mount) => {
           <>
             <span id="other-element">Other Element</span>
             <RegionSelect
+              accountAvailabilityData={[]}
+              accountAvailabilityLoading={false}
               currentCapability="Object Storage"
               flags={{}}
               onChange={() => {}}
               regions={[region]}
               value={undefined}
-              accountAvailabilityData={[]}
-              accountAvailabilityLoading={false}
             />
           </>
         );
@@ -156,13 +156,13 @@ componentTests('RegionSelect', (mount) => {
       it('can select a region initially', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -193,13 +193,13 @@ componentTests('RegionSelect', (mount) => {
       it('can change region selection', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={regionToPreselect.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -231,13 +231,13 @@ componentTests('RegionSelect', (mount) => {
       it('can clear region selection', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -260,14 +260,14 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when clearable is disabled', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             disableClearable={true}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -283,13 +283,13 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when no region is selected', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -303,13 +303,13 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={spyFn}
             regions={regions}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -330,13 +330,13 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={spyFn}
             regions={regions}
             value={regionToSelect.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
@@ -373,17 +373,17 @@ componentTests('RegionSelect', (mount) => {
         unavailable: ['Object Storage'],
       });
 
-      mockGetAccountAvailability([mockAvailability]);
+      // mockGetAccountAvailability([mockAvailability]);
       // TODO Remove `dcGetWell` flag override when feature flag is removed from codebase.
       mount(
         <RegionSelect
+          accountAvailabilityData={[mockAvailability]}
+          accountAvailabilityLoading={false}
           currentCapability="Object Storage"
           flags={{}}
           onChange={() => {}}
           regions={regions}
           value={undefined}
-          accountAvailabilityData={[]}
-          accountAvailabilityLoading={false}
         />,
         {
           dcGetWell: true,
@@ -414,13 +414,13 @@ componentTests('RegionSelect', (mount) => {
     it('only lists regions with the specified capability', () => {
       mount(
         <RegionSelect
+          accountAvailabilityData={[]}
+          accountAvailabilityLoading={false}
           currentCapability="Object Storage"
           flags={{}}
           onChange={() => {}}
           regions={regions}
           value={undefined}
-          accountAvailabilityData={[]}
-          accountAvailabilityLoading={false}
         />
       );
 
@@ -446,13 +446,13 @@ componentTests('RegionSelect', (mount) => {
     it('lists all regions when no capability is specified', () => {
       mount(
         <RegionSelect
+          accountAvailabilityData={[]}
+          accountAvailabilityLoading={false}
           currentCapability={undefined}
           flags={{}}
           onChange={() => {}}
           regions={regions}
           value={undefined}
-          accountAvailabilityData={[]}
-          accountAvailabilityLoading={false}
         />
       );
 
@@ -479,13 +479,13 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed without an item selected', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={undefined}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
         checkComponentA11y();
@@ -494,13 +494,13 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed with an item selected', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
         checkComponentA11y();
@@ -509,13 +509,13 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is open', () => {
         mount(
           <RegionSelect
+            accountAvailabilityData={[]}
+            accountAvailabilityLoading={false}
             currentCapability={undefined}
             flags={{}}
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}
-            accountAvailabilityData={[]}
-            accountAvailabilityLoading={false}
           />
         );
 
