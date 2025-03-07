@@ -13,16 +13,15 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Link } from 'src/components/Link';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
-
 import type { SelectOption } from '@linode/ui';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   formControlDropdown: {
