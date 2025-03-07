@@ -17,7 +17,7 @@ interface Props {
   sshKey: SSHKey | undefined;
 }
 
-const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
+export const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -84,5 +84,3 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
     </Drawer>
   );
 };
-
-export default React.memo(EditSSHKeyDrawer);
