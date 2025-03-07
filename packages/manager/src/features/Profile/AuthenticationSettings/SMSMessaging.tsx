@@ -1,4 +1,4 @@
-import { Box, Button, Notice, Typography } from '@linode/ui';
+import { Box, Button, Notice, omittedProps, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -128,6 +128,7 @@ const StyledCopy = styled(Typography, {
 
 const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
+  shouldForwardProp: omittedProps(['hasVerifiedPhoneNumber']),
 })<{ hasVerifiedPhoneNumber: boolean }>(
   ({ hasVerifiedPhoneNumber, theme }) => ({
     borderLeft: hasVerifiedPhoneNumber

@@ -44,6 +44,7 @@ export const DatabaseEngineVersion = (props: Props) => {
       {engineVersion}
       {isDefaultGA && hasUpdates && (
         <StyledLink
+          accessibleAriaLabel="Database Engine"
           data-testid="maintenance-link"
           sx={{ verticalAlign: 'bottom' }}
           to={`/databases/${engine}/${databaseID}/settings`}
