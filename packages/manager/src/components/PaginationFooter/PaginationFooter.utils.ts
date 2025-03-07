@@ -11,9 +11,9 @@ export const getMinimumPageSizeForNumberOfItems = (
   // Ensure the page sizes are sorted numerically.
   const sortedPageSizes = [...pageSizes].sort((a, b) => a - b);
 
-  for (const sortedPageSiz of sortedPageSizes) {
-    if (numberOfItems <= sortedPageSiz) {
-      return sortedPageSiz;
+  for (const sortedPageSize of sortedPageSizes) {
+    if (numberOfItems <= sortedPageSize) {
+      return sortedPageSize;
     }
   }
   return Infinity;
