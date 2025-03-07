@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Box,
   CircleProgress,
@@ -5,7 +6,6 @@ import {
   Notice,
   StyledLinkButton,
 } from '@linode/ui';
-import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery } from 'src/queries/vpcs/vpcs';
@@ -30,7 +31,6 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -133,7 +133,10 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton onClick={() => setEditVPCDrawerOpen(true)}>
+          <StyledActionButton
+            disabled={isVPCLKEEnterpriseCluster}
+            onClick={() => setEditVPCDrawerOpen(true)}
+          >
             Edit
           </StyledActionButton>
           <StyledActionButton onClick={() => setDeleteVPCDialogOpen(true)}>
@@ -191,7 +194,7 @@ const VPCDetail = () => {
         vpc={vpc}
       />
       {isVPCLKEEnterpriseCluster && (
-        <Notice variant="warning" important spacingTop={24}>
+        <Notice important spacingTop={24} variant="warning">
           <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
         </Notice>
       )}

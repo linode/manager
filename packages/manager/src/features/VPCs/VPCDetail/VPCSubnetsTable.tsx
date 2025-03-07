@@ -225,6 +225,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
+              isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}

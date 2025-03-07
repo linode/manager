@@ -115,7 +115,7 @@ describe('VPC Detail Summary section', () => {
 
     expect(
       getByText(
-        'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.'
+        'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.'
       )
     ).toBeVisible();
   });

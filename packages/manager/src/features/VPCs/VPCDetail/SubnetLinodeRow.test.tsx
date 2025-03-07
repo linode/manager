@@ -27,6 +27,26 @@ beforeAll(() => mockMatchMedia());
 const loadingTestId = 'circle-progress';
 const mockFirewall0 = 'mock-firewall-0';
 
+const publicInterface = LinodeConfigInterfaceFactory.build({
+  active: true,
+  id: 5,
+  ipam_address: null,
+  primary: true,
+  purpose: 'public',
+});
+
+const vpcInterface = LinodeConfigInterfaceFactory.build({
+  active: true,
+  id: 10,
+  ipam_address: null,
+  purpose: 'vpc',
+  subnet_id: 1,
+});
+
+const configurationProfile = linodeConfigFactory.build({
+  interfaces: [publicInterface, vpcInterface],
+});
+
 describe('SubnetLinodeRow', () => {
   const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
 
@@ -166,26 +186,6 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({
-      active: true,
-      id: 5,
-      ipam_address: null,
-      primary: true,
-      purpose: 'public',
-    });
-
-    const vpcInterface = LinodeConfigInterfaceFactory.build({
-      active: true,
-      id: 10,
-      ipam_address: null,
-      purpose: 'vpc',
-      subnet_id: 1,
-    });
-
-    const configurationProfile = linodeConfigFactory.build({
-      interfaces: [publicInterface, vpcInterface],
-    });
-
     const subnet = subnetFactory.build({
       id: 1,
       linodes: [
@@ -235,18 +235,24 @@ describe('SubnetLinodeRow', () => {
     });
   });
 
-  it('should not display in-line action buttons for LKE-E Linodes', async () => {
+  it('should disable in-line action buttons for LKE-E Linodes', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+
     server.use(
       http.get('*/linodes/instances/:linodeId', () => {
         return HttpResponse.json(linodeFactory1);
+      })
+    );
+    server.use(
+      http.get('*/instances/*/configs', async () => {
+        return HttpResponse.json(makeResourcePage([configurationProfile]));
       })
     );
 
     const handleUnassignLinode = vi.fn();
     const handlePowerActionsLinode = vi.fn();
 
-    const { getByTestId, queryByRole } = renderWithTheme(
+    const { getByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -262,14 +268,14 @@ describe('SubnetLinodeRow', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const powerOffButton = queryByRole('button', {
+    const powerOffButton = getByRole('button', {
       name: 'Power Off',
     });
-    expect(powerOffButton).not.toBeInTheDocument();
-    const unassignLinodeButton = queryByRole('button', {
+    expect(powerOffButton).toBeDisabled();
+    const unassignLinodeButton = getByRole('button', {
       name: 'Unassign Linode',
     });
-    expect(unassignLinodeButton).not.toBeInTheDocument();
+    expect(unassignLinodeButton).toBeDisabled();
   });
 
   it('should not display a warning icon for LKE-E Linodes', async () => {
