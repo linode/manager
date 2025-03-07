@@ -151,19 +151,18 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
                 />
               ))}
           </Stack>
-            <Button
-              buttonType="outlined"
-              data-qa-buttons="true"
-              onClick={handleOpenDrawer}
-              size="medium"
-              sx={(theme) => ({ marginTop: theme.spacing(2) })}
-              type="button"
-              sxEndIcon={{ display: 'none' }}
-              tooltipText='You can add up to 5 notification channels.'
-              disabled={notificationChannelWatcher.length === 5}
-            >
-              Add notification channel
-            </Button>
+          <Button
+            buttonType="outlined"
+            data-qa-buttons="true"
+            disabled={notificationChannelWatcher.length === 5}
+            onClick={handleOpenDrawer}
+            size="medium"
+            sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            tooltipText="You can add up to 5 notification channels."
+            type="button"
+          >
+            Add notification channel
+          </Button>
 
           <AddNotificationChannelDrawer
             handleCloseDrawer={handleCloseDrawer}
