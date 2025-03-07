@@ -5,11 +5,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { Domain } from '@linode/api-v4/lib/domains';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { splitAt } from '@linode/utilities';
 
 const useStyles = makeStyles()(() => ({
   button: {

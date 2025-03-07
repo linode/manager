@@ -1,4 +1,5 @@
 import { Divider, Typography } from '@linode/ui';
+import { truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,7 +8,6 @@ import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
-import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';

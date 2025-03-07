@@ -10,11 +10,11 @@ import {
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { MonitorStatus } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { splitAt } from '@linode/utilities';
 
 export interface MonitorActionMenuProps {
   label: string;

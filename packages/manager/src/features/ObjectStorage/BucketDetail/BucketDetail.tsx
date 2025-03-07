@@ -1,6 +1,9 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { ActionsPanel, Box } from '@linode/ui';
-import { getQueryParamFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamFromQueryString,
+  truncateMiddle,
+} from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
@@ -30,7 +33,6 @@ import {
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { truncateMiddle } from 'src/utilities/truncate';
 
 import { deleteObject as _deleteObject } from '../requests';
 import {
