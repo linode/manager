@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
-import { FormLabel } from '@mui/material';
+import { FormLabel, styled } from '@mui/material';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -22,18 +22,31 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 
+import {
+  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
+  CREATE_CLUSTER_STANDARD_TIER_ACL_COPY,
+} from '../constants';
+
+import type { KubernetesTier } from '@linode/api-v4';
 import type { CreateKubeClusterPayload } from '@linode/api-v4';
 import type { RenderGuardProps } from 'src/components/RenderGuard';
+
 export interface ControlPlaneACLProps extends RenderGuardProps {
   enableControlPlaneACL: boolean;
   errorText: string | undefined;
-  initialIpv4Addresses?: string[];
-  initialIpv6Addresses?: string[];
+  selectedTier: KubernetesTier;
   setControlPlaneACL: (enabled: boolean) => void;
 }
 
 export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
-  const { enableControlPlaneACL, errorText, setControlPlaneACL } = props;
+  const {
+    enableControlPlaneACL,
+    errorText,
+    selectedTier,
+    setControlPlaneACL,
+  } = props;
+
+  const isEnterpriseCluster = selectedTier === 'enterprise';
 
   const {
     clearErrors,
@@ -80,14 +93,15 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
-          Enable an access control list (ACL) on your LKE cluster to restrict
-          access to your cluster’s control plane. When enabled, only the IP
-          addresses and ranges you specify can connect to the control plane.
+          {isEnterpriseCluster
+            ? CREATE_CLUSTER_STANDARD_TIER_ACL_COPY
+            : CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY}
         </Typography>
         <FormControlLabel
           control={
-            <Toggle
+            <StyledACLToggle
               checked={enableControlPlaneACL}
+              disabled={isEnterpriseCluster}
               name="ipacl-checkbox"
               onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
             />
@@ -228,3 +242,13 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     </>
   );
 };
+
+export const StyledACLToggle = styled(Toggle, {
+  label: 'StyledACLToggle',
+})(({ theme }) => ({
+  // Keep the checked, disabled toggle a faded blue for LKE Enterprise.
+  '& .MuiSwitch-switchBase.Mui-disabled+.MuiSwitch-track': {
+    backgroundColor: theme.tokens.color.Brand[50],
+    borderColor: theme.tokens.color.Brand[50],
+  },
+}));

@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,7 +18,6 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -122,6 +129,7 @@ export const CreateCluster = () => {
   const nodePool = watch('node_pools');
   const aplEnabled = watch('apl_enabled');
   const selectedTier = watch('tier');
+  const highAvailability = watch('control_plane.high_availability');
 
   const {
     isLoadingVersions,
@@ -142,9 +150,10 @@ export const CreateCluster = () => {
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setValue('tier', tier);
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setValue('control_plane.high_availability', true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!getValues('region')?.includes('Kubernetes Enterprise')) {
@@ -152,6 +161,10 @@ export const CreateCluster = () => {
       }
     } else {
       setValue('control_plane.high_availability', undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -201,15 +214,18 @@ export const CreateCluster = () => {
     const { push } = history;
 
     const _ipv4 = control_plane?.acl?.addresses?.ipv4 || [];
-
     const _ipv6 = control_plane?.acl?.addresses?.ipv6 || [];
 
+    // Filter out empty strings from the arrays
+    const filteredIpv4 = _ipv4.filter((ip) => ip !== '');
+    const filteredIpv6 = _ipv6.filter((ip) => ip !== '');
+
     const addressIPv4Payload = controlPlaneACL && {
-      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+      ...(filteredIpv4.length > 0 && { ipv4: filteredIpv4 }),
     };
 
     const addressIPv6Payload = controlPlaneACL && {
-      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+      ...(filteredIpv6.length > 0 && { ipv6: filteredIpv6 }),
     };
 
     let payload: CreateKubeClusterPayload = {
@@ -217,7 +233,7 @@ export const CreateCluster = () => {
         acl: {
           enabled: controlPlaneACL,
           ...(controlPlaneACL &&
-            (_ipv4?.length || _ipv6.length) && {
+            (filteredIpv4.length || filteredIpv6.length) && {
               addresses: {
                 ...addressIPv4Payload,
                 ...addressIPv6Payload,
@@ -545,6 +561,7 @@ export const CreateCluster = () => {
                         ]}
                         enableControlPlaneACL={controlPlaneACL}
                         errorText={errorMap.control_plane}
+                        selectedTier={selectedTier as KubernetesTier}
                         setControlPlaneACL={setControlPlaneACL}
                       />
                     )}
@@ -599,7 +616,7 @@ export const CreateCluster = () => {
               }
               updateFor={[
                 hasAgreed,
-                getValues('control_plane.high_availability'),
+                highAvailability,
                 getValues('region'),
                 getValues('node_pools'),
                 isSubmitting,

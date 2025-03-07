@@ -1,4 +1,5 @@
 import { Box, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -17,7 +18,6 @@ import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -82,6 +82,7 @@ export interface BodyProps {
   numCPUs: number;
   numVolumes: number;
   region: string;
+  regionSupportsDiskEncryption: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -105,6 +106,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numCPUs,
     numVolumes,
     region,
+    regionSupportsDiskEncryption,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -121,16 +123,17 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
-  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
   const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
-  // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
+  // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
-    isDiskEncryptionFeatureEnabled && Boolean(encryptionStatus);
+    (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
+    Boolean(encryptionStatus);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
@@ -234,25 +237,26 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 )}
               </Box>
             </Grid>
-            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
-              <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    tooltipText={
-                      isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                    encryptionStatus={encryptionStatus}
-                  />
-                </Box>
-              </Grid>
-            )}
+            {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
+              encryptionStatus && (
+                <Grid>
+                  <Box
+                    alignItems="center"
+                    data-testid={encryptionStatusTestId}
+                    display="flex"
+                    flexDirection="row"
+                  >
+                    <EncryptedStatus
+                      tooltipText={
+                        isLKELinode
+                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                      }
+                      encryptionStatus={encryptionStatus}
+                    />
+                  </Box>
+                </Grid>
+              )}
           </StyledSummaryGrid>
         </Grid>
 
@@ -389,7 +393,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      {(linodeLkeClusterId || attachedFirewall || isLinodeInterfaceEnabled) && (
+      {(linodeLkeClusterId ||
+        attachedFirewall ||
+        isLinodeInterfacesEnabled) && (
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
@@ -406,7 +412,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {linodeLkeClusterId && (
             <StyledListItem
               sx={{
-                ...(!attachedFirewall && !isLinodeInterfaceEnabled
+                ...(!attachedFirewall && !isLinodeInterfacesEnabled
                   ? { borderRight: 'unset' }
                   : {}),
               }}
@@ -425,7 +431,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {!isLinodeInterface && attachedFirewall && (
             <StyledListItem
               sx={{
-                ...(!isLinodeInterfaceEnabled ? { borderRight: 'unset' } : {}),
+                ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
               }}
             >
               <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
@@ -439,7 +445,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               {attachedFirewall && `(ID: ${attachedFirewall.id})`}
             </StyledListItem>
           )}
-          {isLinodeInterfaceEnabled && (
+          {isLinodeInterfacesEnabled && (
             <StyledListItem sx={{ borderRight: 'unset' }}>
               <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
               {isLinodeInterface ? 'Linode' : 'Configuration Profile'}

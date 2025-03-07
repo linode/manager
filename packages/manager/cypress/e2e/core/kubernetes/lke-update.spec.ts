@@ -82,7 +82,7 @@ describe('LKE cluster updates', () => {
 
       const haUpgradeWarnings = [
         'All nodes will be deleted and new nodes will be created to replace them.',
-        'Any local storage (such as ’hostPath’ volumes) will be erased.',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted.',
         'This may take several minutes, as nodes will be replaced on a rolling basis.',
       ];
 
@@ -154,7 +154,7 @@ describe('LKE cluster updates', () => {
       const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -180,7 +180,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -203,18 +203,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -274,7 +277,7 @@ describe('LKE cluster updates', () => {
         'A new version of Kubernetes is available (1.31.1+lke2).';
 
       const upgradeNotes = [
-        'Once the upgrade is complete you will need to recycle all nodes in your cluster',
+        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -308,7 +311,7 @@ describe('LKE cluster updates', () => {
 
       ui.dialog
         .findByTitle(
-          `Step 1: Upgrade ${mockCluster.label} to Kubernetes ${newVersion}`
+          `Upgrade Kubernetes version to ${newVersion} on ${mockCluster.label}?`
         )
         .should('be.visible')
         .within(() => {
@@ -331,18 +334,21 @@ describe('LKE cluster updates', () => {
 
       mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
 
-      const stepTwoDialogTitle = 'Step 2: Recycle All Cluster Nodes';
+      const stepTwoDialogTitle = 'Upgrade complete';
 
       ui.dialog
         .findByTitle(stepTwoDialogTitle)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Kubernetes version has been updated successfully.', {
-            exact: false,
-          }).should('be.visible');
+          cy.findByText(
+            'The cluster’s Kubernetes version has been updated successfully',
+            {
+              exact: false,
+            }
+          ).should('be.visible');
 
           cy.findByText(
-            'For the changes to take full effect you must recycle the nodes in your cluster.',
+            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
             { exact: false }
           ).should('be.visible');
 
@@ -391,8 +397,8 @@ describe('LKE cluster updates', () => {
       });
 
       const recycleWarningSubstrings = [
-        'local storage (such as ’hostPath’ volumes) will be erased',
-        'may take several minutes',
+        'Any data stored within local storage of your node(s) (such as ’hostPath’ volumes) is deleted',
+        'using local storage for important data is not common or recommended',
       ];
 
       mockGetCluster(mockCluster).as('getCluster');
@@ -417,7 +423,7 @@ describe('LKE cluster updates', () => {
         .findByTitle(`Recycle ${mockKubeLinode.id}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy this node in the node pool.', {
+          cy.findByText('Delete and recreate this node.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
@@ -447,7 +453,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle node pool?')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy all nodes in the node pool.', {
+          cy.findByText('Delete and recreate all nodes in this node pool.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
@@ -477,7 +483,7 @@ describe('LKE cluster updates', () => {
         .findByTitle('Recycle all nodes in cluster?')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Redeploy all nodes in the cluster.', {
+          cy.findByText('Delete and recreate all nodes in this cluster.', {
             exact: false,
           }).should('be.visible');
           recycleWarningSubstrings.forEach((warning: string) => {
@@ -2639,10 +2645,10 @@ describe('LKE ACL updates', () => {
     });
 
     /**
-     * - Confirms ACL can be disabled from the summary page
+     * - Confirms ACL can be disabled from the summary page (for standard tier only)
      * - Confirms both IPv4 and IPv6 can be updated and that drawer updates as a result
      */
-    it('can disable ACL and edit IPs', () => {
+    it('can disable ACL on a standard tier cluster and edit IPs', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
         enabled: true,
         addresses: { ipv4: undefined, ipv6: undefined },
@@ -2954,6 +2960,78 @@ describe('LKE ACL updates', () => {
 
       cy.wait(['@updateControlPlaneACLError']);
       cy.contains(mockErrorMessage).should('be.visible');
+    });
+
+    it('can handle validation for an enterprise cluster', () => {
+      const mockEnterpriseCluster = kubernetesClusterFactory.build({
+        tier: 'enterprise',
+      });
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        addresses: { ipv4: ['127.0.0.1'], ipv6: undefined },
+        enabled: true,
+      });
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+
+      mockGetCluster(mockEnterpriseCluster).as('getCluster');
+      mockGetControlPlaneACL(mockEnterpriseCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockEnterpriseCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getControlPlaneACL']);
+
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enabled (1 IP Address)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle(`Control Plane ACL for ${mockEnterpriseCluster.label}`)
+        .should('be.visible')
+        .within(() => {
+          // Clear the existing IP
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .click();
+          cy.focused().clear();
+
+          // Try to submit the form without any IPs
+          ui.button
+            .findByTitle('Update')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm validation error prevents this
+          cy.findByText(
+            'At least one IP address or CIDR range is required for LKE Enterprise.'
+          ).should('be.visible');
+
+          // Add at least one IP
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .click();
+          cy.focused().clear();
+          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+
+          // Resubmit the form
+          ui.button
+            .findByTitle('Update')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm error message disappears
+          cy.findByText(
+            'At least one IP address or CIDR range is required for LKE Enterprise.'
+          ).should('not.exist');
+        });
     });
   });
 });

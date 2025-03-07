@@ -18,7 +18,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@linode/design-language-system": "^3.0.0",
+    "@linode/design-language-system": "^4.0.0",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "@mui/utils": "^6.4.3",
@@ -32,7 +32,6 @@
     "start": "tsc -w --preserveWatchOutput",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc",
-    "precommit": "lint-staged",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
@@ -63,7 +62,6 @@
     "eslint-config-prettier": "~8.1.0",
     "eslint-plugin-prettier": "~3.3.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "lint-staged": "^15.2.9",
     "prettier": "~2.2.1",
     "vite-plugin-svgr": "^3.2.0"
   }
