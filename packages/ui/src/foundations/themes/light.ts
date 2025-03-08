@@ -353,6 +353,7 @@ export const lightTheme: ThemeOptions = {
     MuiAutocomplete: {
       styleOverrides: {
         clearIndicator: {
+          color: Select.Default.Icon,
           padding: 0,
           svg: {
             height: '16px',
@@ -368,6 +369,11 @@ export const lightTheme: ThemeOptions = {
         groupLabel: {
           font: Typography.Label.Bold.L,
           padding: '8px',
+        },
+        input: {
+          '&.MuiInputBase-input.MuiInput-input': {
+            padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
+          },
         },
         inputRoot: {
           height: 'inherit',
@@ -412,6 +418,7 @@ export const lightTheme: ThemeOptions = {
           },
         },
         popupIndicator: {
+          color: Select.Default.Icon,
           padding: 0,
         },
         root: {
@@ -857,7 +864,7 @@ export const lightTheme: ThemeOptions = {
         positionEnd: {
           marginLeft: Spacing.S8,
           svg: {
-            fontSize: Font.FontSize.S,
+            fontSize: Font.FontSize.L,
           },
         },
         positionStart: {
@@ -889,6 +896,7 @@ export const lightTheme: ThemeOptions = {
           '&:disabled, &.Mui-disabled': {
             cursor: 'not-allowed',
           },
+          height: Spacing.S16,
           padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -928,7 +936,7 @@ export const lightTheme: ThemeOptions = {
           border: `1px solid ${TextField.Default.Border}`,
           color: TextField.Filled.Text,
           font: Typography.Label.Regular.S,
-          height: '32px',
+          height: '34px',
           maxWidth: inputMaxWidth,
           paddingLeft: Spacing.S8,
           paddingRight: Spacing.S8,
