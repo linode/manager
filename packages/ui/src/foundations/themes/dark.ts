@@ -239,6 +239,9 @@ export const darkTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        clearIndicator: {
+          color: Select.Default.Icon,
+        },
         listbox: {
           backgroundColor: customDarkModeOptions.bg.white,
           border: `1px solid ${primaryColors.main}`,
@@ -248,6 +251,9 @@ export const darkTheme: ThemeOptions = {
         },
         noOptions: {
           color: Color.Neutrals.White,
+        },
+        popupIndicator: {
+          color: Select.Default.Icon,
         },
         tag: {
           '.MuiChip-deleteIcon': { color: primaryColors.text },

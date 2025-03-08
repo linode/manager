@@ -187,8 +187,8 @@ export const ImageSelect = (props: Props) => {
               !multiple && value && !Array.isArray(value) ? (
                 <InputAdornment position="start">
                   <OSIcon
-                    fontSize="24px"
-                    height="24px"
+                    fontSize="20px"
+                    height="20px"
                     os={value.vendor ?? ''}
                     position="relative"
                     top={1}
