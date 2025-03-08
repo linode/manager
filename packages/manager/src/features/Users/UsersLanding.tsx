@@ -1,11 +1,8 @@
-import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -39,28 +36,17 @@ export const UsersLanding = () => {
   const pagination = usePagination(1, 'account-users');
   const order = useOrder();
 
-  const location = useLocation();
-  const history = useHistory();
-
-  const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get('query') ?? '';
-
-  const { error: searchError, filter } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'email'],
-  });
-
   const showProxyUserTable =
     profile?.user_type === 'child' || profile?.user_type === 'proxy';
 
   const usersFilter: Filter = {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
-    ...filter,
-    // ['user_type']: showProxyUserTable ? 'child' : undefined,
+    ['user_type']: showProxyUserTable ? 'child' : undefined,
   };
 
-  // Since this query is disabled for restricted users, use isLoading.
-  const { data: users, error, isLoading, refetch } = useAccountUsers({
+  // Since this query is disabled for restricted users, use isInitialLoading.
+  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -70,20 +56,14 @@ export const UsersLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  // Since this query is disabled for restricted users, use isLoading.
+  // Since this query is disabled for restricted users, use isInitialLoading.
   const {
     data: proxyUser,
     error: proxyUserError,
-    isFetching,
-    isLoading: isLoadingProxyUser,
+    isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled: showProxyUserTable && !isRestrictedUser,
-    filters: usersFilter,
-    params: {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-    // filters: { user_type: 'proxy' },
+    filters: { user_type: 'proxy' },
   });
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -109,16 +89,6 @@ export const UsersLanding = () => {
   const handleDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
     setSelectedUsername(username);
-  };
-
-  const handleSearch = (value: string) => {
-    queryParams.set('page', '1');
-    if (value) {
-      queryParams.set('query', value);
-    } else {
-      queryParams.delete('query');
-    }
-    history.push({ search: queryParams.toString() });
   };
 
   return (
@@ -157,7 +127,7 @@ export const UsersLanding = () => {
         sx={(theme) => ({
           alignItems: 'center',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: showProxyUserTable ? 'space-between' : 'flex-end',
           marginBottom: theme.spacing(2),
           marginTop: theme.spacing(3),
         })}
@@ -174,22 +144,6 @@ export const UsersLanding = () => {
             User Settings
           </Typography>
         )}
-        <DebouncedSearchTextField
-          containerProps={{
-            sx: {
-              width: { md: '320px', xs: '100%' },
-            },
-          }}
-          clearable
-          debounceTime={250}
-          errorText={searchError?.message}
-          hideLabel
-          isSearching={isFetching}
-          label="Search Users"
-          onSearch={handleSearch}
-          placeholder="Search Users"
-          value={query}
-        />
         <Button
           tooltipText={
             isRestrictedUser
@@ -211,10 +165,10 @@ export const UsersLanding = () => {
         <TableBody>
           <UsersLandingTableBody
             error={error}
-            isLoading={isLoading}
+            isLoading={isInitialLoading}
             numCols={numCols}
             onDelete={handleDelete}
-            users={users?.data ?? []}
+            users={users?.data}
           />
         </TableBody>
       </Table>
