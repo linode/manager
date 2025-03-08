@@ -4,16 +4,18 @@ import {
   InputAdornment,
   TextField,
 } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
 import Close from 'src/assets/icons/close.svg';
 import Search from 'src/assets/icons/search.svg';
 
-import type { TextFieldProps } from '@linode/ui';
+import type { InputProps, TextFieldProps } from '@linode/ui';
 
 export interface DebouncedSearchProps extends TextFieldProps {
+  /**
+   * Class name to apply to the component.
+   */
   className?: string;
   /**
    * Whether to show a clear button at the end of the input.
@@ -24,9 +26,18 @@ export interface DebouncedSearchProps extends TextFieldProps {
    * @default 400
    */
   debounceTime?: number;
+  /**
+   * Default value of the input.
+   */
   defaultValue?: string;
+  /**
+   * Whether to hide the label.
+   */
   hideLabel?: boolean;
-
+  /**
+   * Custom props to apply to the input element.
+   */
+  inputSlotProps?: InputProps;
   /**
    * Determines if the textbox is currently searching for inputted query
    */
@@ -35,19 +46,25 @@ export interface DebouncedSearchProps extends TextFieldProps {
    * Function to perform when searching for query
    */
   onSearch: (query: string) => void;
+  /**
+   * Placeholder text for the input.
+   */
   placeholder?: string;
+  /**
+   * Value of the input.
+   */
   value: string;
 }
 
 export const DebouncedSearchTextField = React.memo(
   (props: DebouncedSearchProps) => {
     const {
-      InputProps,
       className,
       clearable,
       debounceTime,
       defaultValue,
       hideLabel,
+      inputSlotProps,
       isSearching,
       label,
       onSearch,
@@ -105,7 +122,7 @@ export const DebouncedSearchTextField = React.memo(
                 <Search />
               </InputAdornment>
             ),
-            ...InputProps,
+            ...inputSlotProps,
           },
         }}
         className={className}
@@ -121,23 +138,3 @@ export const DebouncedSearchTextField = React.memo(
     );
   }
 );
-
-export const StyledClearIcon = styled(Close, {
-  label: 'StyledClearIcon',
-})(({ theme }) => ({
-  color: theme.tokens.search.Filled.Icon,
-  height: '16px',
-  width: '16px',
-}));
-
-export const StyledSearchIcon = styled(Search, {
-  label: 'StyledSearchIcon',
-})(({ theme }) => ({
-  '&&': {
-    '&:hover': {
-      color: theme.tokens.search.Disabled.SearchIcon,
-    },
-
-    color: theme.tokens.search.Default.SearchIcon,
-  },
-}));
