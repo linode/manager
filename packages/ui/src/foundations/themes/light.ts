@@ -358,15 +358,19 @@ export const lightTheme: ThemeOptions = {
             height: '16px',
             width: '16px',
           },
+          visibility: 'visible',
         },
         endAdornment: {
           display: 'flex',
-          gap: Spacing.S2,
+          gap: Spacing.S4,
           marginRight: Spacing.S8,
         },
         groupLabel: {
           font: Typography.Label.Bold.L,
           padding: '8px',
+        },
+        inputRoot: {
+          height: 'inherit',
         },
         listbox: {
           backgroundColor: bg.white,
