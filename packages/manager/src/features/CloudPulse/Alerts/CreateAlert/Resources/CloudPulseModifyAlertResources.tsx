@@ -46,7 +46,7 @@ export const CloudPulseModifyAlertResources = React.memo(
 
     return (
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
             <Typography ref={titleRef} variant="h2">
               2. Resources
@@ -58,6 +58,9 @@ export const CloudPulseModifyAlertResources = React.memo(
               })}
             >
               <AlertResources
+                errorText={
+                  fieldState.error ? fieldState.error.message : undefined
+                }
                 alertResourceIds={field.value}
                 alertType="user"
                 handleResourcesSelection={handleResourcesSelection}

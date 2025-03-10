@@ -4,6 +4,7 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import NullComponent from 'src/components/NullComponent';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -35,6 +36,7 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import type { NoticeVariant } from '@linode/ui';
 
 export interface AlertResourcesProp {
   /**
@@ -55,6 +57,11 @@ export interface AlertResourcesProp {
    * The type of the alert system | user
    */
   alertType: AlertDefinitionType;
+
+  /**
+   * The error text that needs to displayed incase needed
+   */
+  errorText?: string;
 
   /**
    * Callback for publishing the selected resources
@@ -82,8 +89,6 @@ export interface AlertResourcesProp {
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType?: AlertServiceType;
-
-  errorText?: string;
 }
 
 export type SelectUnselectAll = 'Select All' | 'Unselect All';
@@ -94,13 +99,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     alertType,
+    errorText,
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
     maxSelectionCount,
     scrollElement,
     serviceType,
-    errorText,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
@@ -408,36 +413,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {errorText !== undefined && (
-          <Grid item xs={12}>
-            <StyledNotice variant="error">
-              <Typography
-                sx={(theme) => ({
-                  fontFamily: theme.font.bold,
-                })}
-                data-testid="max_selection_notice"
-                variant="body2"
-              >
-                {errorText}
-              </Typography>
-            </StyledNotice>
-          </Grid>
-        )}
-        {maxSelectionCount !== undefined && (
-          <Grid item xs={12}>
-            <StyledNotice variant="warning">
-              <Typography
-                sx={(theme) => ({
-                  fontFamily: theme.font.bold,
-                })}
-                data-testid="max_selection_notice"
-                variant="body2"
-              >
-                You can select up to {maxSelectionCount} resources
-              </Typography>
-            </StyledNotice>
-          </Grid>
-        )}
+        <AlertsNoticeMessage text={errorText} variant="error" />
+        <AlertsNoticeMessage
+          text={
+            maxSelectionCount !== undefined
+              ? `You can select up to ${maxSelectionCount} resources`
+              : undefined
+          }
+          variant="warning"
+        />
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
@@ -468,3 +452,38 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     </Stack>
   );
 });
+
+interface ResourcesNoticeProps {
+  /**
+   * The text that needs to be displayed in the notice
+   */
+  text?: string;
+  /**
+   * The variant of notice like info, error, warning
+   */
+  variant?: NoticeVariant;
+}
+
+const AlertsNoticeMessage = (props: ResourcesNoticeProps) => {
+  const { text, variant } = props;
+
+  if (!text?.length) {
+    return <NullComponent />;
+  }
+
+  return (
+    <Grid item xs={12}>
+      <StyledNotice variant={variant}>
+        <Typography
+          sx={(theme) => ({
+            fontFamily: theme.font.bold,
+          })}
+          data-testid="alert_message_notice"
+          variant="body2"
+        >
+          {text}
+        </Typography>
+      </StyledNotice>
+    </Grid>
+  );
+};
