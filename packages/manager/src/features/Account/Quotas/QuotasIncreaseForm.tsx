@@ -1,8 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Accordion, Notice, Stack, TextField, Typography } from '@linode/ui';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { Controller, FormProvider } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { MarkdownReference } from 'src/features/Support/SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -37,7 +36,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const { data: profile } = useProfile();
 
   const defaultValues = React.useMemo(
-    () => getQuotaIncreaseFormDefaultValues(quota, profile),
+    () => getQuotaIncreaseFormDefaultValues({ profile, quantity: 0, quota }),
     [quota, profile]
   );
   const form = useForm<QuotaIncreaseFormFields>({
@@ -46,7 +45,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     resolver: yupResolver(getQuotaIncreaseFormSchema),
   });
 
-  const { description, quantity, summary } = form.watch();
+  const { quantity, summary } = form.watch();
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
@@ -75,20 +74,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
       });
   });
 
-  const handleQuantityChange = (value: string) => {
-    // Update the quantity field
-    form.setValue('quantity', value);
-
-    // Update the description field
-    const currentDescription = form.getValues('description');
-    const updatedDescription = currentDescription.replace(
-      /\*\*New Quantity Requested\*\*: \d+/,
-      `**New Quantity Requested**: ${value || '0'}`
-    );
-
-    form.setValue('description', updatedDescription);
-  };
-
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit} ref={formContainerRef}>
@@ -113,11 +98,11 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             name="summary"
           />
           <Controller
-            render={({ fieldState }) => (
+            render={({ field, fieldState }) => (
               <Stack direction="row" gap={2}>
                 <TextField
                   onChange={(e) => {
-                    handleQuantityChange(e.target.value);
+                    field.onChange(e);
                     form.trigger('quantity');
                   }}
                   slotProps={{
@@ -126,8 +111,10 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                         <Typography
                           sx={(theme) => ({
                             color: theme.tokens.color.Neutrals[80],
+                            font: theme.font.bold,
                             fontSize: theme.tokens.font.FontSize.Xxxs,
                             mx: 1,
+                            textTransform: 'uppercase',
                             userSelect: 'none',
                             whiteSpace: 'nowrap',
                           })}
@@ -153,7 +140,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             control={form.control}
             name="quantity"
           />
-
           <Stack direction="column">
             <Controller
               render={({ field, fieldState }) => (
@@ -162,10 +148,16 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                     field.onChange(e);
                     form.trigger('description');
                   }}
+                  value={
+                    getQuotaIncreaseFormDefaultValues({
+                      profile,
+                      quantity: Number(quantity),
+                      quota,
+                    }).description
+                  }
                   error={fieldState.error?.message}
                   placeholder={'Enter your request for a quota increase.'}
                   required
-                  value={description}
                 />
               )}
               control={form.control}
@@ -180,7 +172,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
               <MarkdownReference />
             </Accordion>
           </Stack>
-
           <ActionsPanel
             primaryButtonProps={{
               disabled: Number(quantity) <= 0,

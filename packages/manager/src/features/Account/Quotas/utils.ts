@@ -114,13 +114,20 @@ export const getQuotaError = (
     : 'An unexpected error occurred';
 };
 
+interface GetQuotaIncreaseFormDefaultValuesProps {
+  profile: Profile | undefined;
+  quantity: number;
+  quota: Quota;
+}
+
 /**
  * Function to get the default values for the quota increase form
  */
-export const getQuotaIncreaseFormDefaultValues = (
-  quota: Quota,
-  profile: Profile | undefined
-): QuotaIncreaseFormFields => {
+export const getQuotaIncreaseFormDefaultValues = ({
+  profile,
+  quantity,
+  quota,
+}: GetQuotaIncreaseFormDefaultValuesProps): QuotaIncreaseFormFields => {
   const regionAppliedLabel = quota.s3_endpoint ? 'Endpoint' : 'Region';
   const regionAppliedValue = quota.s3_endpoint ?? quota.region_applied;
 
@@ -133,7 +140,13 @@ export const getQuotaIncreaseFormDefaultValues = (
   }
 
   return {
-    description: `**User**: ${profile.username}<br>\n**Email**: ${profile.email}<br>\n**Quota Name**: ${quota.quota_name}<br>\n**New Quantity Requested**: 0 ${quota.resource_metric}<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    description: `**User**: ${profile.username}<br>\n**Email**: ${
+      profile.email
+    }<br>\n**Quota Name**: ${
+      quota.quota_name
+    }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+      quantity > 1 ? 's' : ''
+    }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
     quantity: '0',
     summary: 'Increase Quota',
   };
