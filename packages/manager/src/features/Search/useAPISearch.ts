@@ -7,6 +7,7 @@ import { useFirewallsInfiniteQuery } from 'src/queries/firewalls';
 import { useImagesInfiniteQuery } from 'src/queries/images';
 import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
+import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 import {
@@ -24,7 +25,6 @@ import {
 import { emptyErrors, separateResultsByEntity } from './utils';
 
 import type { SearchableEntityType, SearchableItem } from './search.interfaces';
-import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 
 interface Props {
   enabled: boolean;
