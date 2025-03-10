@@ -3,6 +3,7 @@ import {
   Chip,
   FormControl,
   FormControlLabel,
+  Notice,
   Radio,
   RadioGroup,
   Typography,
@@ -13,6 +14,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 
 export interface APLProps {
+  isSectionDisabled: boolean;
   setAPL: (apl: boolean) => void;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
@@ -28,7 +30,7 @@ export const APLCopy = () => (
 );
 
 export const ApplicationPlatform = (props: APLProps) => {
-  const { setAPL, setHighAvailability } = props;
+  const { isSectionDisabled, setAPL, setHighAvailability } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAPL(e.target.value === 'yes');
@@ -53,15 +55,22 @@ export const ApplicationPlatform = (props: APLProps) => {
         </Box>
       </FormLabel>
       <APLCopy />
+      {isSectionDisabled && (
+        <Notice variant="info" spacingTop={8}>
+          <Typography>APL is not yet available for LKE Enterprise.</Typography>
+        </Notice>
+      )}
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-yes" />}
-          label={<Typography>Yes, enable Akamai App Platform.</Typography>}
+          disabled={isSectionDisabled}
+          label="Yes, enable Akamai App Platform."
           name="yes"
           value="yes"
         />
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-no" />}
+          disabled={isSectionDisabled}
           label="No"
           name="no"
           value="no"

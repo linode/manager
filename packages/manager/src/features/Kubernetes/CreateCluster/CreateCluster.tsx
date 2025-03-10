@@ -450,19 +450,20 @@ export const CreateCluster = () => {
               />
             </StyledDocsLinkContainer>
           </StyledStackWithTabletBreakpoint>
-          {isAPLEnabled && (
-            <>
-              <Divider sx={{ marginTop: 4 }} />
-              <StyledStackWithTabletBreakpoint>
-                <Stack>
-                  <ApplicationPlatform
-                    setAPL={setApl_enabled}
-                    setHighAvailability={setHighAvailability}
-                  />
-                </Stack>
-              </StyledStackWithTabletBreakpoint>
-            </>
-          )}
+          {/* {isAPLEnabled && ( */}
+          <>
+            <Divider sx={{ marginTop: 4 }} />
+            <StyledStackWithTabletBreakpoint>
+              <Stack>
+                <ApplicationPlatform
+                  setAPL={setApl_enabled}
+                  setHighAvailability={setHighAvailability}
+                  isSectionDisabled={isLkeEnterpriseLAFeatureEnabled}
+                />
+              </Stack>
+            </StyledStackWithTabletBreakpoint>
+          </>
+          {/* )} */}
           <Divider sx={{ marginTop: isAPLEnabled ? 1 : 4 }} />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
