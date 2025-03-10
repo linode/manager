@@ -103,10 +103,8 @@ describe('volumes', () => {
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
     cy.findByText('Label is required.').should('be.visible');
-    cy.findByLabelText('Label', { exact: false })
-      .should('be.visible')
-      .click()
-      .type(mockVolume.label);
+    cy.findByLabelText('Label', { exact: false }).should('be.visible').click();
+    cy.focused().type(mockVolume.label);
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
@@ -166,7 +164,8 @@ describe('volumes', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Create and Attach Volume').should('be.visible').click();
-        cy.get('[data-qa-volume-label]').click().type(newVolume.label);
+        cy.get('[data-qa-volume-label]').click();
+        cy.focused().type(newVolume.label);
         ui.button.findByTitle('Create Volume').should('be.visible').click();
       });
 
@@ -218,10 +217,8 @@ describe('volumes', () => {
       .findByTitle(`Detach Volume ${mockAttachedVolume.label}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Volume Label')
-          .should('be.visible')
-          .click()
-          .type(mockAttachedVolume.label);
+        cy.findByLabelText('Volume Label').should('be.visible').click();
+        cy.focused().type(mockAttachedVolume.label);
 
         ui.button
           .findByTitle('Detach')
