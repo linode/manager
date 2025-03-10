@@ -1158,8 +1158,6 @@ export const lightTheme: ThemeOptions = {
               color: theme.tokens.radio.Inactive.Disabled.Border,
             },
             color: theme.tokens.radio.Active.Disabled.Border,
-            // border: `${Color.Neutrals[5]}`,
-            // fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
           },
           '&.MuiRadio-root': {
