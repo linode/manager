@@ -10,10 +10,12 @@ import { FormHelperText } from '../FormHelperText';
 import { InputAdornment } from '../InputAdornment';
 import { InputLabel } from '../InputLabel';
 import { TooltipIcon } from '../TooltipIcon';
+import { getClampedValue, useFieldIds } from './TextField.utils';
 
 import type { BoxProps } from '../Box';
 import type { TooltipProps } from '../Tooltip';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
+import type { SlotComponentProps } from '@mui/utils';
 
 interface BaseProps {
   /**
@@ -154,6 +156,7 @@ export const TextField = (props: TextFieldProps) => {
     onChange,
     optional,
     required,
+    slotProps,
     tooltipClasses,
     tooltipOnMouseEnter,
     tooltipPosition,
@@ -167,7 +170,13 @@ export const TextField = (props: TextFieldProps) => {
 
   const [_value, setValue] = React.useState<Value>(value);
   const theme = useTheme();
-  const fallbackId = React.useId();
+
+  const {
+    errorScrollClassName,
+    errorTextId,
+    helperTextId,
+    validInputId,
+  } = useFieldIds(label, inputId, errorGroup, Boolean(errorText));
 
   React.useEffect(() => {
     setValue(value);
@@ -188,22 +197,12 @@ export const TextField = (props: TextFieldProps) => {
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const numberTypes = ['tel', 'number'];
-
-      // Because !!0 is falsy :(
-      const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
-
       /**
        * If we've provided a min and max value, make sure the user
        * input doesn't go outside of those bounds ONLY if the input
        * type matches a number type.
        */
-      const cleanedValue =
-        minAndMaxExist &&
-        numberTypes.some((eachType) => eachType === type) &&
-        e.target.value !== ''
-          ? clamp(min, max, +e.target.value)
-          : e.target.value;
+      const cleanedValue = getClampedValue(e.target.value, type, min, max);
 
       /**
        * If the cleanedValue is undefined, set the value to an empty
@@ -241,24 +240,6 @@ export const TextField = (props: TextFieldProps) => {
     },
     [min, max, type, onChange]
   );
-
-  let errorScrollClassName = '';
-
-  if (errorText) {
-    errorScrollClassName = errorGroup
-      ? `error-for-scroll-${errorGroup}`
-      : `error-for-scroll`;
-  }
-
-  const validInputId =
-    inputId ||
-    (label
-      ? convertToKebabCase(label)
-      : // label could still be an empty string
-        fallbackId);
-
-  const helperTextId = `${validInputId}-helper-text`;
-  const errorTextId = `${validInputId}-error-text`;
 
   const labelSuffixText = required
     ? '(required)'
@@ -298,6 +279,7 @@ export const TextField = (props: TextFieldProps) => {
           }}
           data-qa-textfield-label={label}
           htmlFor={validInputId}
+          {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
         >
           {label}
           {labelSuffixText && (
@@ -342,44 +324,45 @@ export const TextField = (props: TextFieldProps) => {
         <_TextField
           {...textFieldProps}
           {...dataAttrs}
-          InputLabelProps={{
-            ...InputLabelProps,
-            required: false,
-            shrink: true,
-          }}
-          InputProps={{
-            className,
-            disableUnderline: true,
-            endAdornment: loading && (
-              <InputAdornment position="end">
-                <CircleProgress size="sm" />
-              </InputAdornment>
-            ),
-            sx: {
-              ...(expand && {
-                maxWidth: '100%',
-              }),
+          slotProps={{
+            htmlInput: {
+              'aria-describedby': helperText ? helperTextId : undefined,
+              'aria-errormessage': errorText ? errorTextId : undefined,
+              'aria-invalid': !!error || !!errorText,
+              'data-testid': 'textfield-input',
+              id: validInputId,
+              ...inputProps, // Included for backward compatibility until migration is complete
+              ...slotProps?.htmlInput,
             },
-            ...InputProps,
-          }}
-          SelectProps={{
-            IconComponent: KeyboardArrowDown,
-            MenuProps: {
-              MenuListProps: { className: 'selectMenuList' },
-              PaperProps: { className: 'selectMenuDropdown' },
-              anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
-              transformOrigin: { horizontal: 'left', vertical: 'top' },
+            input: {
+              className,
+              disableUnderline: true,
+              endAdornment: loading && (
+                <InputAdornment position="end">
+                  <CircleProgress size="sm" />
+                </InputAdornment>
+              ),
+              sx: {
+                ...(expand && {
+                  maxWidth: '100%',
+                }),
+              },
+              ...(InputProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
+              ...slotProps?.input,
             },
-            disableUnderline: true,
-            ...SelectProps,
-          }}
-          inputProps={{
-            'aria-describedby': helperText ? helperTextId : undefined,
-            'aria-errormessage': errorText ? errorTextId : undefined,
-            'aria-invalid': !!error || !!errorText,
-            'data-testid': 'textfield-input',
-            id: validInputId,
-            ...inputProps,
+            select: {
+              IconComponent: KeyboardArrowDown,
+              MenuProps: {
+                MenuListProps: { className: 'selectMenuList' },
+                PaperProps: { className: 'selectMenuDropdown' },
+                anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
+                transformOrigin: { horizontal: 'left', vertical: 'top' },
+              },
+              disableUnderline: true,
+              ...(SelectProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
+              ...slotProps?.select,
+            },
+            ...slotProps,
           }}
           sx={{
             marginTop: 0,
