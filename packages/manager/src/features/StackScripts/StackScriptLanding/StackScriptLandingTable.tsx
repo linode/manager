@@ -72,9 +72,15 @@ export const StackScriptLandingTable = (props: Props) => {
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder,
-      from: '/stackscripts',
+      from:
+        type === 'account'
+          ? '/stackscripts/account'
+          : '/stackscripts/community',
     },
-    preferenceKey: 'stackscripts-landing',
+    preferenceKey:
+      type === 'account'
+        ? 'stackscripts-landing-account'
+        : 'stackscripts-landing-community',
   });
 
   const {
