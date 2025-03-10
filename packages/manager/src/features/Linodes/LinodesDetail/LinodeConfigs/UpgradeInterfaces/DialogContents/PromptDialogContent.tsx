@@ -10,7 +10,7 @@ import type {
   UpgradeInterfacesDialogContentProps,
 } from '../types';
 
-export const UpgradePromptDialogContent = (
+export const PromptDialogContent = (
   props: UpgradeInterfacesDialogContentProps<PromptDialogState>
 ) => {
   const { linodeId, onClose, open, setDialogState } = props;
@@ -52,13 +52,15 @@ export const UpgradePromptDialogContent = (
     <Stack gap={2}>
       <Typography>
         Upgrading allows interface connections to be directly associated with
-        the Linode and not the Linode's configuration profile.
+        the Linode and not the Linode&apos;s configuration profile.
       </Typography>
       <Typography>
         It is recommended that you perform a dry run before upgrading to verify
         and resolve potential conflicts during the upgrade.
       </Typography>
-      <Typography>Upgrading will have the following impact:</Typography>
+      <Typography>
+        <strong>Upgrading will have the following impact:</strong>
+      </Typography>
       <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
         <ListItem disablePadding sx={{ display: 'list-item' }}>
           Any firewall attached to the Linode will be removed and a default
@@ -74,7 +76,13 @@ export const UpgradePromptDialogContent = (
           tab.
         </ListItem>
       </List>
-      <Box gap={2}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          justifyContent: 'flex-end',
+        }}
+      >
         <Button buttonType="secondary" onClick={onClose}>
           Cancel
         </Button>

@@ -16,9 +16,11 @@ export const ProgressDialogContent = (
   return (
     <Stack gap={2}>
       <LinearProgress value={state.progress} variant="determinate" />
-      <Button loading onClick={() => {}}>
-        Upgrade Interfaces
-      </Button>
+      <Stack direction="row-reverse">
+        <Button buttonType="primary" loading onClick={() => {}}>
+          Upgrade
+        </Button>
+      </Stack>
     </Stack>
   );
 };

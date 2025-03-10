@@ -1,11 +1,11 @@
-import { Box, Button, Dialog, List } from '@linode/ui';
+import { Dialog } from '@linode/ui';
 import React from 'react';
 
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
 import { ErrorDialogContent } from './DialogContents/ErrorDialogContent';
 import { ProgressDialogContent } from './DialogContents/ProgressDialogContent';
+import { PromptDialogContent } from './DialogContents/PromptDialogContent';
 import { SuccessDialogContent } from './DialogContents/SuccessDialogContent';
-import { UpgradePromptDialogContent } from './DialogContents/UpgradePromptDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
 
@@ -40,8 +40,8 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
     >
       {dialogState.step === 'prompt' && (
-        <UpgradePromptDialogContent {...dialogProps} state={dialogState} />
-      )}{' '}
+        <PromptDialogContent {...dialogProps} state={dialogState} />
+      )}
       {dialogState.step === 'configSelect' && (
         <ConfigSelectDialogContent {...dialogProps} state={dialogState} />
       )}

@@ -1,4 +1,4 @@
-import { Box, Button, Notice, Select, Stack } from '@linode/ui';
+import { Button, Notice, Stack } from '@linode/ui';
 import React from 'react';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
@@ -22,19 +22,22 @@ export const SuccessDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice variant="success">
+      <Notice important variant="success">
         {state.isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
       </Notice>
-      <Box gap={2}>
-        <Button buttonType="secondary" onClick={onClose}>
-          {state.isDryRun ? 'Cancel' : 'Close'}
-        </Button>
+      <Stack direction="row-reverse" gap={2}>
         {state.isDryRun && (
-          <Button onClick={() => upgradeToLinodeInterfaces(false)}>
+          <Button
+            buttonType="primary"
+            onClick={() => upgradeToLinodeInterfaces(false)}
+          >
             Upgrade Interfaces
           </Button>
         )}
-      </Box>
+        <Button buttonType="secondary" onClick={onClose}>
+          {state.isDryRun ? 'Cancel' : 'Close'}
+        </Button>
+      </Stack>
     </Stack>
   );
 };

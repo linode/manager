@@ -1,4 +1,4 @@
-import { Box, Button, Notice, Select, Stack } from '@linode/ui';
+import { Button, Notice, Select, Stack } from '@linode/ui';
 import React from 'react';
 
 import {
@@ -35,12 +35,16 @@ export const ConfigSelectDialogContent = (
   });
 
   return (
-    <Stack gap={2}>
+    <Stack>
       {state.isDryRun
         ? CONFIG_SELECT_DRY_RUN_COPY
         : CONFIG_SELECT_ACTUAL_UPGRADE_COPY}
       {!state.isDryRun && selectedConfigId && (
-        <Notice data-testid="upgrade-interfaces-warning" variant="warning">
+        <Notice
+          data-testid="upgrade-interfaces-warning"
+          sx={{ marginTop: 2 }}
+          variant="warning"
+        >
           {UPGRADE_INTERFACES_WARNING}
         </Notice>
       )}
@@ -54,17 +58,18 @@ export const ConfigSelectDialogContent = (
         options={configOptions}
         placeholder="Select Configuration Profile"
       />
-      <Box gap={2}>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
+      <Stack direction="row-reverse" gap={2} sx={{ marginTop: 4 }}>
         <Button
+          buttonType="primary"
           disabled={!selectedConfigId}
           onClick={() => upgradeToLinodeInterfaces(state.isDryRun)}
         >
           {state.isDryRun ? 'Upgrade Dry Run' : 'Upgrade Interfaces'}
         </Button>
-      </Box>
+        <Button buttonType="secondary" onClick={onClose}>
+          Cancel
+        </Button>
+      </Stack>
     </Stack>
   );
 };

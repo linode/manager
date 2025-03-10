@@ -12,4 +12,4 @@ export const SUCCESS_DRY_RUN_COPY =
 export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';
 
 export const ERROR_DRY_RUN_COPY =
-  'The configuration dry run found the following issues. Please correct the issues and perform another dry run before upgrading the interface configuration';
+  'The configuration dry run found the following issues. Please correct the issues and perform another dry run before upgrading the interface configuration.';
