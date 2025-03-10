@@ -479,6 +479,9 @@ importers:
       cypress-mochawesome-reporter:
         specifier: ^3.8.2
         version: 3.8.2(cypress@14.0.1)(mocha@10.8.2)
+      cypress-on-fix:
+        specifier: ^1.1.0
+        version: 1.1.0
       cypress-real-events:
         specifier: ^1.14.0
         version: 1.14.0(cypress@14.0.1)
@@ -545,6 +548,9 @@ importers:
       mocha-junit-reporter:
         specifier: ^2.2.1
         version: 2.2.1(mocha@10.8.2)
+      mochawesome:
+        specifier: ^7.1.3
+        version: 7.1.3(mocha@10.8.2)
       msw:
         specifier: ^2.2.3
         version: 2.6.5(@types/node@20.17.6)(typescript@5.7.3)
@@ -3606,6 +3612,9 @@ packages:
     hasBin: true
     peerDependencies:
       cypress: '>=6.2.0'
+
+  cypress-on-fix@1.1.0:
+    resolution: {integrity: sha512-qGdbC0vZLmR3lYPpWWZvMqgDTeA2v04zu3DBdBmJHbG+BjwlFNYGnL7Y+X4LBrB+AyCCCeCuXhV80UXA90UhWg==}
 
   cypress-real-events@1.14.0:
     resolution: {integrity: sha512-XmI8y3OZLh6cjRroPalzzS++iv+pGCaD9G9kfIbtspgv7GVsDt30dkZvSXfgZb4rAN+3pOkMVB7e0j4oXydW7Q==}
@@ -7614,7 +7623,7 @@ snapshots:
   '@eslint/eslintrc@0.4.3':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
       espree: 7.3.1
       globals: 13.24.0
       ignore: 4.0.6
@@ -7636,7 +7645,7 @@ snapshots:
   '@humanwhocodes/config-array@0.5.0':
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -7813,7 +7822,7 @@ snapshots:
 
   '@kwsites/file-exists@1.1.1':
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -9030,7 +9039,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.7.3)
       '@typescript-eslint/utils': 6.21.0(eslint@7.32.0)(typescript@5.7.3)
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
       eslint: 7.32.0
       ts-api-utils: 1.4.0(typescript@5.7.3)
     optionalDependencies:
@@ -9077,7 +9086,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/visitor-keys': 6.21.0
-      debug: 4.3.7
+      debug: 4.4.0(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
@@ -9888,6 +9897,12 @@ snapshots:
       mochawesome-report-generator: 6.2.0
     transitivePeerDependencies:
       - mocha
+
+  cypress-on-fix@1.1.0:
+    dependencies:
+      debug: 4.4.0(supports-color@8.1.1)
+    transitivePeerDependencies:
+      - supports-color
 
   cypress-real-events@1.14.0(cypress@14.0.1):
     dependencies:
