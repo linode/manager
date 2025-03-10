@@ -3,6 +3,7 @@ import { refinedSearch } from './refinedSearch';
 import type {
   SearchResults,
   SearchResultsByEntity,
+  SearchableEntityType,
   SearchableItem,
 } from './search.interfaces';
 
@@ -17,6 +18,31 @@ export const emptyResults: SearchResultsByEntity = {
   nodebalancer: [],
   stackscript: [],
   volume: [],
+};
+
+export const emptyErrors: Record<SearchableEntityType, null | string> = {
+  bucket: null,
+  database: null,
+  domain: null,
+  firewall: null,
+  image: null,
+  kubernetesCluster: null,
+  linode: null,
+  nodebalancer: null,
+  stackscript: null,
+  volume: null,
+};
+
+export const getErrorsFromErrorMap = (
+  errorMap: Record<SearchableEntityType, null | string>
+) => {
+  const errors = [];
+  for (const [entityName, error] of Object.entries(errorMap)) {
+    if (error) {
+      errors.push(`Unable to fetch ${entityName}s: ${error}`);
+    }
+  }
+  return errors;
 };
 
 export const separateResultsByEntity = (

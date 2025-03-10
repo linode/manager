@@ -6,7 +6,6 @@ import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   bucketToSearchableItem,
@@ -22,6 +21,8 @@ import {
 
 import { search } from './utils';
 
+import type { SearchableEntityType } from './search.interfaces';
+
 interface Props {
   enabled: boolean;
   query: string;
@@ -32,7 +33,6 @@ interface Props {
  * based on a user's seach query.
  */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
-  const { data: regions, isLoading: regionsLoading } = useRegionsQuery(enabled);
   const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
     enabled
   );
@@ -79,9 +79,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
   const searchableLinodes = linodes?.map(linodeToSearchableItem) ?? [];
   const searchableClusters =
-    clusters?.map((cluster) =>
-      kubernetesClusterToSearchableItem(cluster, regions ?? [])
-    ) ?? [];
+    clusters?.map((cluster) => kubernetesClusterToSearchableItem(cluster)) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,
@@ -103,9 +101,21 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     databasesLoading ||
     nodebalancersLoading ||
     domainsLoading ||
-    regionsLoading ||
     volumesLoading ||
     firewallsLoading;
+
+  const entityErrors: Record<SearchableEntityType, string | null> = {
+    bucket: null,
+    database: null,
+    domain: null,
+    firewall: null,
+    image: null,
+    kubernetesCluster: null,
+    linode: null,
+    nodebalancer: null,
+    stackscript: null,
+    volume: null
+  };
 
   const { combinedResults, searchResultsByEntity } = search(
     searchableItems,
@@ -114,6 +124,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
 
   return {
     combinedResults,
+    entityErrors,
     isLoading,
     searchResultsByEntity,
   };

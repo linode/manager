@@ -10,9 +10,9 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
-import { separateResultsByEntity } from './utils';
+import { emptyErrors, separateResultsByEntity } from './utils';
 
-import type { SearchableItem } from './search.interfaces';
+import type { SearchableEntityType, SearchableItem } from './search.interfaces';
 
 interface Props {
   enabled: boolean;
@@ -22,7 +22,7 @@ interface Props {
 const entities = [
   {
     getSearchableItem: linodeToSearchableItem,
-    name: 'linode',
+    name: 'linode' as const,
     query: useInfiniteLinodesQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['id', 'label', 'tags', 'ipv4'],
@@ -30,7 +30,7 @@ const entities = [
   },
   {
     getSearchableItem: volumeToSearchableItem,
-    name: 'volume',
+    name: 'volume' as const,
     query: useInfiniteVolumesQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['label', 'tags'],
@@ -39,7 +39,7 @@ const entities = [
   {
     baseFilter: { mine: true },
     getSearchableItem: stackscriptToSearchableItem,
-    name: 'stackscript',
+    name: 'stackscript' as const,
     query: useStackScriptsInfiniteQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['label'],
@@ -88,8 +88,24 @@ export const useAPISearch = ({ enabled, query }: Props) => {
 
   const searchResultsByEntity = separateResultsByEntity(combinedResults);
 
+  const entityErrors = result.reduce<
+    Record<SearchableEntityType, null | string>
+  >(
+    (acc, r) => {
+      if (r.parseError) {
+        acc[r.name] = r.parseError.message;
+      }
+      if (r.error) {
+        acc[r.name] = r.error[0].reason;
+      }
+      return acc;
+    },
+    { ...emptyErrors }
+  );
+
   return {
     combinedResults,
+    entityErrors,
     isLoading,
     searchResultsByEntity,
   };

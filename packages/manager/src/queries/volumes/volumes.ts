@@ -107,6 +107,7 @@ export const useInfiniteVolumesQuery = (filter: Filter, enabled?: boolean) =>
       return page + 1;
     },
     initialPageParam: 1,
+    retry: false,
   });
 
 export const useAllVolumesQuery = (

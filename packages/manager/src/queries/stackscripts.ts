@@ -97,6 +97,7 @@ export const useStackScriptsInfiniteQuery = (
     },
     initialPageParam: 1,
     placeholderData: keepPreviousData,
+    retry: false,
   });
 
 export const useUpdateStackScriptMutation = (

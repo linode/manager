@@ -1,4 +1,4 @@
-import { CircleProgress, Stack, Typography } from '@linode/ui';
+import { CircleProgress, Notice, Stack, Typography } from '@linode/ui';
 import { getQueryParamFromQueryString } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
@@ -12,6 +12,7 @@ import type {
   SearchableEntityType,
 } from './search.interfaces';
 import type { ResultRowDataOption } from './types';
+import { getErrorsFromErrorMap } from './utils';
 
 const displayMap: Record<SearchableEntityType, string> = {
   bucket: 'Buckets',
@@ -30,9 +31,16 @@ const SearchLanding = () => {
   const location = useLocation();
   const query = getQueryParamFromQueryString(location.search, 'query');
 
-  const { combinedResults, isLoading, searchResultsByEntity } = useSearch({
+  const {
+    combinedResults,
+    entityErrors,
+    isLoading,
+    searchResultsByEntity,
+  } = useSearch({
     query,
   });
+
+  const errors = getErrorsFromErrorMap(entityErrors);
 
   return (
     <Stack mt={2} spacing={2}>
@@ -48,6 +56,13 @@ const SearchLanding = () => {
         </Typography>
         {isLoading && <CircleProgress size="sm" />}
       </Stack>
+      {errors.length > 0 && (
+        <Notice variant="error">
+          {errors.map((error) => (
+            <Typography key={error}>{error}</Typography>
+          ))}
+        </Notice>
+      )}
       {!isLoading && combinedResults.length === 0 && (
         <Stack alignItems="center" justifyContent="center" spacing={2}>
           <Typography>You searched for ...</Typography>

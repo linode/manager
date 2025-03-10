@@ -219,6 +219,7 @@ export const useInfiniteLinodesQuery = (
       return page + 1;
     },
     initialPageParam: 1,
+    retry: false,
   });
 
 export const useLinodeQuery = (id: number, enabled = true) => {

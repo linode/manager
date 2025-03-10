@@ -14,7 +14,6 @@ import type {
   Linode,
   NodeBalancer,
   ObjectStorageBucket,
-  Region,
   StackScript,
   Volume,
 } from '@linode/api-v4';
@@ -120,12 +119,11 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: KubernetesCluster,
-  regions: Region[]
+  kubernetesCluster: KubernetesCluster
 ): SearchableItem => ({
   data: {
     created: kubernetesCluster.created,
-    description: getDescriptionForCluster(kubernetesCluster, regions),
+    description: getDescriptionForCluster(kubernetesCluster),
     icon: 'kube',
     k8s_version: kubernetesCluster.k8s_version,
     label: kubernetesCluster.label,

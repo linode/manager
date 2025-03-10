@@ -134,7 +134,12 @@ export const SearchBar = () => {
     handleClose();
   };
 
-  const options = createFinalOptions(combinedResults, searchText, isLoading, false);
+  const options = createFinalOptions(
+    combinedResults,
+    searchText,
+    isLoading,
+    false
+  );
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const label = isSmallScreen

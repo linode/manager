@@ -9,15 +9,15 @@ const data = searchableItems as SearchableItem[];
 describe('separate results by entity', () => {
   const results = separateResultsByEntity(data);
   it('contains keys of each entity type', () => {
-    expect(results).toHaveProperty('linodes');
-    expect(results).toHaveProperty('volumes');
-    expect(results).toHaveProperty('domains');
-    expect(results).toHaveProperty('images');
-    expect(results).toHaveProperty('nodebalancers');
-    expect(results).toHaveProperty('kubernetesClusters');
-    expect(results).toHaveProperty('buckets');
-    expect(results).toHaveProperty('firewalls');
-    expect(results).toHaveProperty('databases');
+    expect(results).toHaveProperty('linode');
+    expect(results).toHaveProperty('volume');
+    expect(results).toHaveProperty('domain');
+    expect(results).toHaveProperty('image');
+    expect(results).toHaveProperty('nodebalancer');
+    expect(results).toHaveProperty('kubernetesCluster');
+    expect(results).toHaveProperty('bucket');
+    expect(results).toHaveProperty('firewall');
+    expect(results).toHaveProperty('database');
   });
 
   it('the value of each entity type is an array', () => {
@@ -43,6 +43,7 @@ describe('separate results by entity', () => {
       kubernetesCluster: [],
       linode: [],
       nodebalancer: [],
+      stackscript: [],
       volume: [],
     });
   });
