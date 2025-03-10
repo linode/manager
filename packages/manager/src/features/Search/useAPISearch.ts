@@ -1,11 +1,22 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import { useDebouncedValue } from '@linode/utilities';
 
+import { useDatabasesInfiniteQuery } from 'src/queries/databases/databases';
+import { useDomainsInfiniteQuery } from 'src/queries/domains';
+import { useFirewallsInfiniteQuery } from 'src/queries/firewalls';
+import { useImagesInfiniteQuery } from 'src/queries/images';
+import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 import {
+  databaseToSearchableItem,
+  domainToSearchableItem,
+  firewallToSearchableItem,
+  imageToSearchableItem,
+  kubernetesClusterToSearchableItem,
   linodeToSearchableItem,
+  nodeBalToSearchableItem,
   stackscriptToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
@@ -13,6 +24,7 @@ import {
 import { emptyErrors, separateResultsByEntity } from './utils';
 
 import type { SearchableEntityType, SearchableItem } from './search.interfaces';
+import { useInfiniteNodebalancersQuery } from 'src/queries/nodebalancers';
 
 interface Props {
   enabled: boolean;
@@ -45,6 +57,55 @@ const entities = [
       searchableFieldsWithoutOperator: ['label'],
     },
   },
+  {
+    getSearchableItem: kubernetesClusterToSearchableItem,
+    name: 'kubernetesCluster' as const,
+    query: useKubernetesClustersInfiniteQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['label', 'tags'],
+    },
+  },
+  {
+    getSearchableItem: domainToSearchableItem,
+    name: 'domain' as const,
+    query: useDomainsInfiniteQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['domain', 'tags'],
+    },
+  },
+  {
+    getSearchableItem: firewallToSearchableItem,
+    name: 'firewall' as const,
+    query: useFirewallsInfiniteQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['label'],
+    },
+  },
+  {
+    getSearchableItem: databaseToSearchableItem,
+    name: 'database' as const,
+    query: useDatabasesInfiniteQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['label'],
+    },
+  },
+  {
+    baseFilter: { is_public: false },
+    getSearchableItem: imageToSearchableItem,
+    name: 'image' as const,
+    query: useImagesInfiniteQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['label'],
+    },
+  },
+  {
+    getSearchableItem: nodeBalToSearchableItem,
+    name: 'nodebalancer' as const,
+    query: useInfiniteNodebalancersQuery,
+    searchOptions: {
+      searchableFieldsWithoutOperator: ['label', 'ipv4', 'tags'],
+    },
+  },
 ];
 
 /**
@@ -72,7 +133,7 @@ export const useAPISearch = ({ enabled, query }: Props) => {
       parseError: error,
       ...entity.query(
         entity.baseFilter ? { ...entity.baseFilter, ...filter } : filter,
-        enabled && error === null
+        enabled && error === null && Boolean(deboundedQuery)
       ),
     };
   });

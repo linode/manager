@@ -10,6 +10,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -50,6 +51,10 @@ export const imageQueries = createQueryKeys('images', {
     queryFn: () => getImage(imageId),
     queryKey: [imageId],
   }),
+  infinite: (filters: Filter) => ({
+    queryFn: ({ pageParam }) => getImages({ page: pageParam as number }, filters),
+    queryKey: [filters],
+  }),
   paginated: (params: Params, filters: Filter) => ({
     queryFn: () => getImages(params, filters),
     queryKey: [params, filters],
@@ -72,6 +77,21 @@ export const useImageQuery = (imageId: string, enabled = true) =>
     ...imageQueries.image(imageId),
     enabled,
   });
+
+export const useImagesInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Image>, APIError[]>({
+    ...imageQueries.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();

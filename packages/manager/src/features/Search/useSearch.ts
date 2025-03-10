@@ -11,18 +11,19 @@ interface Props {
 export const useSearch = ({ query }: Props) => {
   const isSearching = Boolean(query);
   const isLargeAccount = useIsLargeAccount(isSearching);
+  const isAccountSizeKnown = isLargeAccount !== undefined;
 
   const shouldUseClientSideSearch = FORCE_SEARCH_TYPE
     ? FORCE_SEARCH_TYPE === 'client'
     : isLargeAccount === false;
 
   const clientSideSearchData = useClientSideSearch({
-    enabled: shouldUseClientSideSearch,
+    enabled: isSearching && isAccountSizeKnown && shouldUseClientSideSearch,
     query,
   });
 
   const apiSearchData = useAPISearch({
-    enabled: !shouldUseClientSideSearch,
+    enabled: isSearching && isAccountSizeKnown && !shouldUseClientSideSearch,
     query,
   });
 

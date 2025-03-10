@@ -28,6 +28,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -152,6 +153,10 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             : getAllKubernetesClusters(),
         queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) => getKubernetesClusters({ page: pageParam }, filter),
+        queryKey: [filter],
+      }),
       paginated: (
         params: Params,
         filter: Filter,
@@ -162,7 +167,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             ? getKubernetesClustersBeta(params, filter)
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
-      }),
+      })
     },
     queryKey: null,
   },
@@ -195,6 +200,24 @@ export const useKubernetesClusterQuery = (
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
     enabled: enabled && !isAPLAvailabilityLoading,
     ...options,
+  });
+};
+
+export const useKubernetesClustersInfiniteQuery = (
+  filter: Filter,
+  enabled: boolean
+) => {
+  return useInfiniteQuery<ResourcePage<KubernetesCluster>, APIError[]>({
+    ...kubernetesQueries.lists._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
   });
 };
 
