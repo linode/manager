@@ -245,4 +245,40 @@ describe('MetricCriteriaField', () => {
 
     expect(setMaxInterval).toBeCalledWith(firstOptionConvertedTime);
   });
+  it('displays tooltip when the button is disabled', async () => {
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <MetricCriteriaField
+          name="rule_criteria.rules"
+          serviceType="linode"
+          setMaxInterval={vi.fn()}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [
+              mockData.data[0],
+              mockData.data[0],
+              mockData.data[1],
+              mockData.data[1],
+              mockData.data[0],
+            ],
+          },
+        },
+      },
+    });
+
+    const addButton = screen.getByRole('button', {
+      name: 'Add metric',
+    });
+
+    expect(addButton).toBeDisabled();
+    userEvent.hover(addButton);
+    await waitFor(() =>
+      expect(getByText('You can add up to 5 metrics.')).toBeInTheDocument()
+    );
+  });
 });
