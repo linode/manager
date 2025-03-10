@@ -27,9 +27,13 @@ vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
-vi.mock('src/queries/databases/databases', () => ({
-  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
-}));
+vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+  };
+});
 
 describe('DatabaseSummaryClusterConfiguration', () => {
   it('should display correctly for default db', async () => {
