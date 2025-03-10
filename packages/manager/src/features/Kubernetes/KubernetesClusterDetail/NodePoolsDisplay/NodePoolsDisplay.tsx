@@ -143,6 +143,11 @@ export const NodePoolsDisplay = (props: Props) => {
     setExpandedAccordions,
   } = useDefaultExpandedNodePools(clusterID, _pools);
 
+  const regionSupportsDiskEncryption =
+    regionsData
+      .find((regionDatum) => regionDatum.id === clusterRegionId)
+      ?.capabilities.includes('Disk Encryption') ?? false;
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -302,6 +307,7 @@ export const NodePoolsDisplay = (props: Props) => {
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}

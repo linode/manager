@@ -190,11 +190,11 @@ describe('Create Alert', () => {
     cy.visitWithLogin('monitor/alerts/definitions/create');
 
     // Enter Name and Description
-    cy.findByPlaceholderText('Enter Name')
+    cy.findByPlaceholderText('Enter a Name')
       .should('be.visible')
       .type(customAlertDefinition.label);
 
-    cy.findByPlaceholderText('Enter Description')
+    cy.findByPlaceholderText('Enter a Description')
       .should('be.visible')
       .type(customAlertDefinition.description ?? '');
 
@@ -227,7 +227,7 @@ describe('Create Alert', () => {
     const cpuUsageMetricDetails = {
       aggregationType: 'Average',
       dataField: 'CPU Utilization',
-      operator: '==',
+      operator: '=',
       ruleIndex: 0,
       threshold: '1000',
     };
@@ -273,7 +273,7 @@ describe('Create Alert', () => {
     const memoryUsageMetricDetails = {
       aggregationType: 'Average',
       dataField: 'Memory Usage',
-      operator: '==',
+      operator: '=',
       ruleIndex: 1,
       threshold: '1000',
     };
