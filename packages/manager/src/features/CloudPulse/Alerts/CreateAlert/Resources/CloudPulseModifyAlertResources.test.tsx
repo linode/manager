@@ -169,7 +169,7 @@ describe('CreateAlertResources component tests', () => {
     });
 
     expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
-    expect(getByText('You can select up to 2 resources')).toBeInTheDocument();
+    expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();
     expect(getByText('More than 2 resources selected')).toBeInTheDocument();
   });
 });
