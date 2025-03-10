@@ -110,12 +110,12 @@ export const CreateCluster = () => {
 
   const formMethods = useForm<CreateKubeClusterPayload>({
     defaultValues: async () => {
-      const myversions = await queryClient.ensureQueryData(
+      const latestK8sVersions = await queryClient.ensureQueryData(
         kubernetesQueries.tieredVersions(selectedTier)
       );
       return {
         ...formValues,
-        k8s_version: myversions[0].id,
+        k8s_version: latestK8sVersions[0].id,
       };
     },
   });
@@ -155,7 +155,6 @@ export const CreateCluster = () => {
   }, [versions]);
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
-    // setValue('tier', tier);
     setSelectedTier(tier);
     // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {

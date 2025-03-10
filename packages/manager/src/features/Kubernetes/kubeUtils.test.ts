@@ -20,7 +20,11 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from './kubeUtils';
-import { KubernetesTieredVersion, KubernetesVersion } from '@linode/api-v4';
+
+import type {
+  KubernetesTieredVersion,
+  KubernetesVersion,
+} from '@linode/api-v4';
 
 const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
 const mockKubernetesEnterpriseVersions = kubernetesEnterpriseTierVersionFactory.buildList(

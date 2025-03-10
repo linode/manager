@@ -112,7 +112,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
 
       {enableControlPlaneACL && (
         <Box sx={{ marginBottom: 3, maxWidth: 450 }}>
-          {/* IPv4 Addresses */}
           <Box marginTop={2}>
             <Typography mb={1} variant="inherit">
               IPv4 Addresses or CIDRs
@@ -174,8 +173,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               Add IPv4 Address
             </LinkButton>
           </Box>
-
-          {/* IPv6 Addresses */}
           <Box marginTop={2}>
             <Typography mb={1} variant="inherit">
               IPv6 Addresses or CIDRs
