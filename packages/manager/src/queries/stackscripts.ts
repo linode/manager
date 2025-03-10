@@ -35,7 +35,16 @@ export const getAllOCAsRequest = (passedParams: Params = {}) =>
     getOneClickApps({ ...params, ...passedParams })
   )().then((data) => data.data);
 
+export const getAllAccountStackScripts = () =>
+  getAll<StackScript>((params) =>
+    getStackScripts(params, { mine: true })
+  )().then((data) => data.data);
+
 export const stackscriptQueries = createQueryKeys('stackscripts', {
+  all: {
+    queryFn: () => getAllAccountStackScripts(),
+    queryKey: null,
+  },
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
       getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
@@ -62,6 +71,16 @@ export const useMarketplaceAppsQuery = (enabled: boolean) => {
 export const useStackScriptQuery = (id: number, enabled = true) =>
   useQuery<StackScript, APIError[]>({
     ...stackscriptQueries.stackscript(id),
+    enabled,
+  });
+
+/**
+ * Don't use this! It only exists so users can search for their StackScripts
+ * in the legacy main search.
+ */
+export const useAllAccountStackScriptsQuery = (enabled: boolean) =>
+  useQuery<StackScript[], APIError[]>({
+    ...stackscriptQueries.all,
     enabled,
   });
 
