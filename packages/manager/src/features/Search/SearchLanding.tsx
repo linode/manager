@@ -6,26 +6,10 @@ import { useLocation } from 'react-router-dom';
 
 import { ResultGroup } from './ResultGroup';
 import { useSearch } from './useSearch';
+import { getErrorsFromErrorMap, searchableEntityDisplayNameMap } from './utils';
 
-import type {
-  SearchResultsByEntity,
-  SearchableEntityType,
-} from './search.interfaces';
+import type { SearchResultsByEntity } from './search.interfaces';
 import type { ResultRowDataOption } from './types';
-import { getErrorsFromErrorMap } from './utils';
-
-const displayMap: Record<SearchableEntityType, string> = {
-  bucket: 'Buckets',
-  database: 'Databases',
-  domain: 'Domains',
-  firewall: 'Firewalls',
-  image: 'Images',
-  kubernetesCluster: 'Kubernetes',
-  linode: 'Linodes',
-  nodebalancer: 'NodeBalancers',
-  stackscript: 'StackScripts',
-  volume: 'Volumes',
-};
 
 const SearchLanding = () => {
   const location = useLocation();
@@ -73,7 +57,7 @@ const SearchLanding = () => {
       {Object.keys(searchResultsByEntity).map(
         (entityType: keyof SearchResultsByEntity, idx: number) => (
           <ResultGroup
-            entity={displayMap[entityType]}
+            entity={searchableEntityDisplayNameMap[entityType]}
             groupSize={100}
             key={idx}
             results={searchResultsByEntity[entityType] as ResultRowDataOption[]}

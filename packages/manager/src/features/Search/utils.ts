@@ -33,13 +33,33 @@ export const emptyErrors: Record<SearchableEntityType, null | string> = {
   volume: null,
 };
 
+export const searchableEntityDisplayNameMap: Record<
+  SearchableEntityType,
+  string
+> = {
+  bucket: 'Buckets',
+  database: 'Databases',
+  domain: 'Domains',
+  firewall: 'Firewalls',
+  image: 'Images',
+  kubernetesCluster: 'Kubernetes',
+  linode: 'Linodes',
+  nodebalancer: 'NodeBalancers',
+  stackscript: 'StackScripts',
+  volume: 'Volumes',
+};
+
 export const getErrorsFromErrorMap = (
   errorMap: Record<SearchableEntityType, null | string>
 ) => {
   const errors = [];
   for (const [entityName, error] of Object.entries(errorMap)) {
     if (error) {
-      errors.push(`Unable to fetch ${entityName}s: ${error}`);
+      errors.push(
+        `Unable to fetch ${
+          searchableEntityDisplayNameMap[entityName as SearchableEntityType]
+        }: ${error}`
+      );
     }
   }
   return errors;
