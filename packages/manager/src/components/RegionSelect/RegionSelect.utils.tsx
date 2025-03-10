@@ -1,7 +1,5 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
-// import { useFlags } from 'src/hooks/useFlags';
-// import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
@@ -169,10 +167,8 @@ export const useIsGeckoEnabled = (
   flags: FlagSet,
   regions: Region[] | undefined
 ) => {
-  // const flags = useFlags();
   const isGeckoLA = flags?.gecko2?.enabled && flags.gecko2.la;
   const isGeckoBeta = flags?.gecko2?.enabled && !flags.gecko2?.la;
-  // const { data: regions } = useRegionsQuery();
 
   const hasDistributedRegionCapability = regions?.some((region: Region) =>
     region.capabilities.includes('Distributed Plans')

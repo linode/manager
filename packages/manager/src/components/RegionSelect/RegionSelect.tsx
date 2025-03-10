@@ -59,11 +59,6 @@ export const RegionSelect = <
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
 
-  // const {
-  //   data: accountAvailability,
-  //   isLoading: accountAvailabilityLoading,
-  // } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
-
   const regionOptions = getRegionOptions({
     currentCapability,
     forcefullyShownRegionIds,

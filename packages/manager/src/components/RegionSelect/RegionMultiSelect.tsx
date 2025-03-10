@@ -56,11 +56,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  // const {
-  //   data: accountAvailability,
-  //   isLoading: accountAvailabilityLoading,
-  // } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
-
   const regionOptions = getRegionOptions({
     currentCapability,
     forcefullyShownRegionIds,
