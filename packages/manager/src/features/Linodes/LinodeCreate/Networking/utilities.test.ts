@@ -43,7 +43,6 @@ describe('Linode Create Networking Utilities', () => {
 
       expect(getLinodeInterfacePayload(networkInterface)).toEqual({
         ...networkInterface,
-        purpose: undefined,
         vlan: null,
         vpc: null,
       });
