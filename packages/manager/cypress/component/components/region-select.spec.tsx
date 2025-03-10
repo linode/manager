@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { mockGetAccountAvailability } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { createSpy } from 'support/util/components';
@@ -9,10 +8,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 componentTests('RegionSelect', (mount) => {
-  // beforeEach(() => {
-  //   mockGetAccountAvailability([]);
-  // });
-
   describe('Interactions', () => {
     describe('Open menu', () => {
       /*
@@ -373,7 +368,6 @@ componentTests('RegionSelect', (mount) => {
         unavailable: ['Object Storage'],
       });
 
-      // mockGetAccountAvailability([mockAvailability]);
       // TODO Remove `dcGetWell` flag override when feature flag is removed from codebase.
       mount(
         <RegionSelect

@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { regionFactory } from 'src/factories/regions';
+// @todo: modularization - replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { regionFactory } from 'src/factories';
+// @todo: modularization - replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';

@@ -3,7 +3,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
-// import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
