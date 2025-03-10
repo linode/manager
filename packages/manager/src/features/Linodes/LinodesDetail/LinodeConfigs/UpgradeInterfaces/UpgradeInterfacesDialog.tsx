@@ -44,7 +44,8 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
 
   return (
     <Dialog
-      // fullHeight
+      // fullHeight // how do i make the dialog not change size
+      maxWidth="sm"
       onClose={closeAndResetDialog}
       open={open}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}

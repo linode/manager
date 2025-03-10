@@ -111,6 +111,7 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
         {isLinodeInterfacesEnabled &&
           linode?.interface_generation !== 'linode' && (
             <Button
+              alwaysShowTooltip
               buttonType="outlined"
               disabled={isReadOnly}
               onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
