@@ -1,5 +1,5 @@
 import { nodeBalancerConfigNodeSchema } from '@linode/validation/lib/nodebalancers.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
@@ -32,6 +32,34 @@ export const getNodeBalancerConfigNodes = (
   );
 
 /**
+ * getNodeBalancerConfigNodesBeta
+ *
+ * Returns a paginated list of nodes for the specified NodeBalancer configuration profile.
+ * These are the backends that will be sent traffic for this port.
+ * Requires the NB-VPC feature flag to be enabled
+ *
+ * Note: Returns the vpc_config_id incase of a VPC backend
+ *
+ * duplicated function of getNodeBalancerConfigNodes
+ * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
+ * @param configId { number } The configuration profile to retrieve nodes for.
+ */
+export const getNodeBalancerConfigNodesBeta = (
+  nodeBalancerId: number,
+  configId: number
+) =>
+  Request<Page<NodeBalancerConfigNode>>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes`
+    )
+  );
+
+/**
  * getNodeBalancerConfigNode
  *
  * Returns details about a specific node for the given NodeBalancer configuration profile.
@@ -49,6 +77,36 @@ export const getNodeBalancerConfigNode = (
     setMethod('GET'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
+        nodeId
+      )}`
+    )
+  );
+
+/**
+ * getNodeBalancerConfigNodeBeta
+ *
+ * Returns details about a specific node for the given NodeBalancer configuration profile.
+ *
+ * Note: Returns the vpc_config_id incase of a VPC backend
+ *
+ * duplicated function of getNodeBalancerConfigNode
+ * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
+ * @param configId { number } The configuration profile to retrieve nodes for.
+ * @param nodeId { number } The Node to be retrieved.
+ */
+export const getNodeBalancerConfigNodeBeta = (
+  nodeBalancerId: number,
+  configId: number,
+  nodeId: number
+) =>
+  Request<Page<NodeBalancerConfigNode>>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
         nodeBalancerId
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
         nodeId
@@ -97,6 +155,33 @@ export const createNodeBalancerConfigNode = (
 /**
  * createNodeBalancerConfigNode
  *
+ * Creates a NodeBalancer Node, a backend that can accept traffic for
+ * this NodeBalancer Config. Nodes are routed requests on the configured port based on their status.
+ * Requires the NB-VPC feature flag to be enabled
+ *
+ * Note: The BETA version accepts a Node's VPC IP address and subnet-id
+ *
+ * duplicated function of createNodeBalancer
+ * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ */
+export const createNodeBalancerConfigNodeBeta = (
+  nodeBalancerId: number,
+  configId: number,
+  data: CreateNodeBalancerConfigNode
+) =>
+  Request<NodeBalancerConfigNode>(
+    setMethod('POST'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes`
+    ),
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  );
+
+/**
+ * UpdateNodeBalancerConfigNode
+ *
  * Updates a backend node for the specified NodeBalancer configuration profile.
  *
  * Note: The Linode API does not accept separate port and IP address parameters. This method will join
@@ -135,6 +220,34 @@ export const updateNodeBalancerConfigNode = (
     setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
   );
 
+/**
+ * UpdateNodeBalancerConfigNodeBeta
+ *
+ * Updates a backend node for the specified NodeBalancer configuration profile.
+ *
+ * Note: The BETA version accepts a Node's VPC IP address and subnet-id
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
+ * @param configId { number } The configuration profile to add a node to.
+ * @param data
+ */
+export const updateNodeBalancerConfigNodeBeta = (
+  nodeBalancerId: number,
+  configId: number,
+  nodeId: number,
+  data: UpdateNodeBalancerConfigNode
+) =>
+  Request<NodeBalancerConfigNode>(
+    setMethod('PUT'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
+        nodeId
+      )}`
+    ),
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  );
 /**
  * deleteNodeBalancerConfigNode
  *
