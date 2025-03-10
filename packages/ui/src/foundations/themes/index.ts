@@ -158,6 +158,7 @@ declare module '@mui/material/styles/createTheme' {
       footer: FooterTypes;
       header: GlobalHeaderTypes;
       interaction: InteractionTypes;
+      radio: RadioButtonTypes;
       radius: RadiusTypes;
       search: SearchTypes;
       sideNavigation: SideNavigationTypes;
