@@ -183,7 +183,7 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      popupIcon={<ChevronDownIcon />}
+      popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       value={value}
       {...rest}
       onChange={(e, value, reason, details) => {

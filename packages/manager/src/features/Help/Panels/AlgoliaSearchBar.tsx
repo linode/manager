@@ -113,7 +113,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           InputProps: {
             startAdornment: (
               <InputAdornment position="start">
-                <Search />
+                <Search data-qa-search-icon />
               </InputAdornment>
             ),
           },
