@@ -82,6 +82,8 @@ export interface AlertResourcesProp {
    * The service type associated with the alerts like DBaaS, Linode etc.,
    */
   serviceType?: AlertServiceType;
+
+  errorText?: string;
 }
 
 export type SelectUnselectAll = 'Select All' | 'Unselect All';
@@ -98,6 +100,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     maxSelectionCount,
     scrollElement,
     serviceType,
+    errorText,
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
@@ -403,6 +406,21 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               text="Show Selected Only"
               value="Show Selected"
             />
+          </Grid>
+        )}
+        {errorText !== undefined && (
+          <Grid item xs={12}>
+            <StyledNotice variant="error">
+              <Typography
+                sx={(theme) => ({
+                  fontFamily: theme.font.bold,
+                })}
+                data-testid="max_selection_notice"
+                variant="body2"
+              >
+                {errorText}
+              </Typography>
+            </StyledNotice>
           </Grid>
         )}
         {maxSelectionCount !== undefined && (
