@@ -27,7 +27,10 @@ import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import {
+  useIsLinodeCloneFirewallEnabled,
+  useIsLinodeInterfacesEnabled,
+} from 'src/utilities/linodes';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -73,6 +76,7 @@ export const LinodeCreate = () => {
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
+  const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
 
   const queryClient = useQueryClient();
 
@@ -239,8 +243,12 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          {!isLinodeInterfacesEnabled && <VPC />}
-          {!isLinodeInterfacesEnabled && <Firewall />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VPC />
+          )}
+          {!isLinodeInterfacesEnabled &&
+            (params.type !== 'Clone Linode' ||
+              isLinodeCloneFirewallEnabled) && <Firewall />}
           {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <VLAN />
           )}
