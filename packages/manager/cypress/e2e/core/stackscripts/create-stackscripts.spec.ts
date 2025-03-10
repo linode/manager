@@ -1,26 +1,28 @@
+import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
-import {
-  pollLinodeStatus,
-  pollImageStatus,
-  pollLinodeDiskSize,
-} from 'support/util/polling';
-import { randomLabel, randomString, randomPhrase } from 'support/util/random';
 import { interceptGetAccountAvailability } from 'support/intercepts/account';
+import { interceptGetAllImages } from 'support/intercepts/images';
+import { interceptCreateLinode } from 'support/intercepts/linodes';
 import {
   interceptCreateStackScript,
   interceptGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
-import { createLinodeRequestFactory } from 'src/factories';
-import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
-import { chooseRegion, getRegionByLabel } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
-import { interceptGetAllImages } from 'support/intercepts/images';
-import type { Image } from '@linode/api-v4';
+import {
+  pollImageStatus,
+  pollLinodeDiskSize,
+  pollLinodeStatus,
+} from 'support/util/polling';
+import { randomLabel, randomPhrase, randomString } from 'support/util/random';
+import { chooseRegion, getRegionByLabel } from 'support/util/regions';
+
 import { getFilteredImagesForImageSelect } from 'src/components/ImageSelect/utilities';
+import { createLinodeRequestFactory } from 'src/factories';
+
+import type { Image } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -129,11 +131,11 @@ const createLinodeAndImage = async () => {
   const resizedDiskSize = 2048;
   const linode = await createTestLinode(
     createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: chooseRegion().id,
       root_pass: randomString(32),
       type: 'g6-nanode-1',
-      booted: false,
     })
   );
 

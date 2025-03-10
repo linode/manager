@@ -1,22 +1,23 @@
-import { CreateLinodeRequest, Linode } from '@linode/api-v4';
-import { ui } from 'support/ui';
-import { randomString, randomLabel } from 'support/util/random';
-import { authenticate } from 'support/api/authentication';
 import { createStackScript } from '@linode/api-v4/lib';
-import {
-  interceptGetStackScript,
-  interceptGetStackScripts,
-} from 'support/intercepts/stackscripts';
 import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
-import { cleanUp } from 'support/util/cleanup';
-import { chooseRegion } from 'support/util/regions';
+import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   interceptRebuildLinode,
   mockGetLinodeDetails,
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
+import {
+  interceptGetStackScript,
+  interceptGetStackScripts,
+} from 'support/intercepts/stackscripts';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import type { CreateLinodeRequest, Linode } from '@linode/api-v4';
 
 /**
  * Creates a Linode and StackScript.
@@ -73,7 +74,7 @@ const findRebuildDialog = (linodeLabel: string) => {
  */
 const assertPasswordComplexity = (
   desiredPassword: string,
-  passwordStrength: 'Weak' | 'Fair' | 'Good'
+  passwordStrength: 'Fair' | 'Good' | 'Weak'
 ) => {
   cy.findByLabelText('Root Password').should('be.visible').clear();
   cy.focused().type(desiredPassword);
@@ -238,22 +239,22 @@ describe('rebuild linode', () => {
 
     // Create a StackScript to rebuild a Linode.
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      region: region,
       image: 'linode/alpine3.18',
+      label: randomLabel(),
+      region,
       root_pass: randomString(16),
     });
 
     const stackScriptRequest = {
-      label: randomLabel(),
-      description: randomString(),
-      ordinal: 0,
-      logo_url: '',
-      images: ['linode/alpine3.18'],
-      deployments_total: 0,
       deployments_active: 0,
+      deployments_total: 0,
+      description: randomString(),
+      images: ['linode/alpine3.18'],
       is_public: false,
+      label: randomLabel(),
+      logo_url: '',
       mine: true,
+      ordinal: 0,
       rev_note: '',
       script: '#!/bin/bash\n\necho "Hello, world!"',
       user_defined_fields: [],

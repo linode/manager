@@ -2,8 +2,8 @@
  * @file Integration tests for VPC navigation.
  */
 
-import { ui } from 'support/ui';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 
 describe('VPC navigation', () => {
   /*

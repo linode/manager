@@ -9,9 +9,9 @@ import {
   interceptInitiateEntityTransfer,
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
+  mockGetEntityTransfersError,
   mockInitiateEntityTransferError,
   mockReceiveEntityTransfer,
-  mockGetEntityTransfersError,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';

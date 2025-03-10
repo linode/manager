@@ -3,8 +3,9 @@
  */
 
 import { mockGetAccount } from 'support/intercepts/account';
-import { accountFactory } from 'src/factories';
 import { ui } from 'support/ui';
+
+import { accountFactory } from 'src/factories';
 
 const mockAccount = accountFactory.build();
 

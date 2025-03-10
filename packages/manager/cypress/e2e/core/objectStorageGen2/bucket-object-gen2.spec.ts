@@ -2,17 +2,6 @@ import 'cypress-file-upload';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  accountFactory,
-  objectStorageBucketFactoryGen2,
-  objectStorageEndpointsFactory,
-  regionFactory,
-} from 'src/factories';
-import { chooseRegion } from 'support/util/regions';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ObjectStorageEndpoint } from '@linode/api-v4';
-import { randomItem, randomLabel } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
-import {
   mockCreateBucket,
   mockGetBucket,
   mockGetBucketObjectFilename,
@@ -23,7 +12,20 @@ import {
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { randomItem, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
+
+import {
+  accountFactory,
+  objectStorageBucketFactoryGen2,
+  objectStorageEndpointsFactory,
+  regionFactory,
+} from 'src/factories';
+
+import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 bucket object tests', () => {
   beforeEach(() => {
@@ -133,17 +135,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E0',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E0',
       s3_endpoint: undefined,
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E0',
       cors_enabled: true,
+      endpoint_type: 'E0',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -193,17 +195,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E1',
       s3_endpoint: 'us-sea-1.linodeobjects.com',
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E1',
       cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -253,16 +255,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E2',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E2',
       cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -313,16 +315,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E3',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E3',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E3',
       cors_enabled: true,
+      endpoint_type: 'E3',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');

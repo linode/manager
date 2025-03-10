@@ -1,52 +1,54 @@
-import {
-  accountFactory,
-  kubernetesClusterFactory,
-  nodePoolFactory,
-  kubeLinodeFactory,
-  linodeFactory,
-  kubernetesControlPlaneACLFactory,
-  kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
-} from 'src/factories';
-import { extendType } from 'src/utilities/extendType';
-import { mockGetAccount } from 'support/intercepts/account';
+import { DateTime } from 'luxon';
+import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { latestKubernetesVersion } from 'support/constants/lke';
-import {
-  mockGetCluster,
-  mockGetKubernetesVersions,
-  mockGetClusterPools,
-  mockResetKubeconfig,
-  mockUpdateCluster,
-  mockAddNodePool,
-  mockUpdateNodePool,
-  mockDeleteNodePool,
-  mockRecycleNode,
-  mockRecycleNodePool,
-  mockRecycleAllNodes,
-  mockGetDashboardUrl,
-  mockGetApiEndpoints,
-  mockUpdateControlPlaneACL,
-  mockGetControlPlaneACL,
-  mockUpdateControlPlaneACLError,
-  mockGetControlPlaneACLError,
-  mockGetTieredKubernetesVersions,
-  mockUpdateClusterError,
-  mockUpdateNodePoolError,
-} from 'support/intercepts/lke';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeType,
   mockGetLinodeTypes,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
-import type { PoolNodeResponse, Linode, Taint, Label } from '@linode/api-v4';
+import {
+  mockAddNodePool,
+  mockDeleteNodePool,
+  mockGetApiEndpoints,
+  mockGetCluster,
+  mockGetClusterPools,
+  mockGetControlPlaneACL,
+  mockGetControlPlaneACLError,
+  mockGetDashboardUrl,
+  mockGetKubernetesVersions,
+  mockGetTieredKubernetesVersions,
+  mockRecycleAllNodes,
+  mockRecycleNode,
+  mockRecycleNodePool,
+  mockResetKubeconfig,
+  mockUpdateCluster,
+  mockUpdateClusterError,
+  mockUpdateControlPlaneACL,
+  mockUpdateControlPlaneACLError,
+  mockUpdateNodePool,
+  mockUpdateNodePoolError,
+} from 'support/intercepts/lke';
 import { ui } from 'support/ui';
+import { buildArray } from 'support/util/arrays';
+import { randomString } from 'support/util/random';
 import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { randomString } from 'support/util/random';
-import { buildArray } from 'support/util/arrays';
-import { DateTime } from 'luxon';
+
+import {
+  accountFactory,
+  kubeLinodeFactory,
+  kubernetesClusterFactory,
+  kubernetesControlPlaneACLFactory,
+  kubernetesControlPlaneACLOptionsFactory,
+  linodeFactory,
+  linodeTypeFactory,
+  nodePoolFactory,
+} from 'src/factories';
+import { extendType } from 'src/utilities/extendType';
+
+import type { Label, Linode, PoolNodeResponse, Taint } from '@linode/api-v4';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -67,10 +69,10 @@ describe('LKE cluster updates', () => {
      */
     it('can upgrade to high availability', () => {
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: latestKubernetesVersion,
         control_plane: {
           high_availability: false,
         },
+        k8s_version: latestKubernetesVersion,
       });
 
       const mockClusterWithHA = {
@@ -387,13 +389,13 @@ describe('LKE cluster updates', () => {
 
       const mockNodePool = nodePoolFactory.build({
         count: 1,
-        type: 'g6-standard-1',
         nodes: [mockKubeLinode],
+        type: 'g6-standard-1',
       });
 
       const mockLinode = linodeFactory.build({
-        label: randomLabel(),
         id: mockKubeLinode.instance_id ?? undefined,
+        label: randomLabel(),
       });
 
       const recycleWarningSubstrings = [
@@ -520,16 +522,16 @@ describe('LKE cluster updates', () => {
 
       const mockNodePool = nodePoolFactory.build({
         count: 1,
-        type: 'g6-standard-1',
         nodes: kubeLinodeFactory.buildList(1),
+        type: 'g6-standard-1',
       });
 
       const mockNodePoolAutoscale = {
         ...mockNodePool,
         autoscaler: {
           enabled: true,
-          min: autoscaleMin,
           max: autoscaleMax,
+          min: autoscaleMin,
         },
       };
 
@@ -638,8 +640,8 @@ describe('LKE cluster updates', () => {
 
       const mockNodePoolResized = nodePoolFactory.build({
         count: 3,
-        type: 'g6-standard-1',
         nodes: kubeLinodeFactory.buildList(3),
+        type: 'g6-standard-1',
       });
 
       const mockNodePoolInitial = {
@@ -1040,8 +1042,8 @@ describe('LKE cluster updates', () => {
 
     const mockNodePoolNoTags = nodePoolFactory.build({
       id: 1,
-      type: mockType.id,
       nodes: mockNodes,
+      type: mockType.id,
     });
 
     const mockNodePoolWithTags = {
@@ -1151,11 +1153,10 @@ describe('LKE cluster updates', () => {
 
     const mockNodePoolInitial = nodePoolFactory.build({
       id: 1,
-      type: mockType.id,
-      nodes: mockNodes,
       labels: {
         ['example.com/my-app']: 'teams',
       },
+      nodes: mockNodes,
       taints: [
         {
           effect: 'NoSchedule',
@@ -1163,6 +1164,7 @@ describe('LKE cluster updates', () => {
           value: 'teamA',
         },
       ],
+      type: mockType.id,
     });
 
     const mockDrawerTitle = 'Labels and Taints: Linode 2 GB Plan';
@@ -1185,10 +1187,10 @@ describe('LKE cluster updates', () => {
     it('can delete labels and taints', () => {
       const mockNodePoolUpdated = nodePoolFactory.build({
         id: 1,
-        type: mockType.id,
+        labels: {},
         nodes: mockNodes,
         taints: [],
-        labels: {},
+        type: mockType.id,
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -1309,24 +1311,24 @@ describe('LKE cluster updates', () => {
       const mockNewSimpleLabel = 'my_label.-key: my_label.-value';
       const mockNewDNSLabel = 'my_label-key.io/app: my_label.-value';
       const mockNewTaint: Taint = {
+        effect: 'NoSchedule',
         key: 'my_taint.-key',
         value: 'my_taint.-value',
-        effect: 'NoSchedule',
       };
       const mockNewDNSTaint: Taint = {
+        effect: 'NoSchedule',
         key: 'my_taint-key.io/app',
         value: 'my_taint.-value',
-        effect: 'NoSchedule',
       };
       const mockNodePoolUpdated = nodePoolFactory.build({
         id: 1,
-        type: mockType.id,
-        nodes: mockNodes,
-        taints: [mockNewTaint, mockNewDNSTaint],
         labels: {
           'my_label-key': 'my_label.-value',
           'my_label-key.io/app': 'my_label.-value',
         },
+        nodes: mockNodes,
+        taints: [mockNewTaint, mockNewDNSTaint],
+        type: mockType.id,
       });
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
@@ -1717,12 +1719,12 @@ describe('LKE cluster updates', () => {
     });
     const mockNodePools = [
       nodePoolFactory.build({
-        nodes: kubeLinodeFactory.buildList(10),
         count: 10,
+        nodes: kubeLinodeFactory.buildList(10),
       }),
       nodePoolFactory.build({
-        nodes: kubeLinodeFactory.buildList(5),
         count: 5,
+        nodes: kubeLinodeFactory.buildList(5),
       }),
       nodePoolFactory.build({ nodes: [kubeLinodeFactory.build()] }),
     ];
@@ -1798,8 +1800,8 @@ describe('LKE cluster updates', () => {
 
   it('filters the node tables based on selected status filter', () => {
     const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
       created: DateTime.local().toISO(),
+      k8s_version: latestKubernetesVersion,
       tier: 'enterprise',
     });
     const mockNodePools = [
@@ -1932,17 +1934,17 @@ describe('LKE cluster updates', () => {
       const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: latestKubernetesVersion,
-        region: dcSpecificPricingRegion.id,
         control_plane: {
           high_availability: false,
         },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
       const mockNodePoolResized = nodePoolFactory.build({
         count: 3,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(3),
+        type: mockPlanType.id,
       });
 
       const mockNodePoolInitial = {
@@ -2076,25 +2078,25 @@ describe('LKE cluster updates', () => {
       const dcSpecificPricingRegion = getRegionById('us-east');
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: latestKubernetesVersion,
-        region: dcSpecificPricingRegion.id,
         control_plane: {
           high_availability: false,
         },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
       const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
 
       const mockNewNodePool = nodePoolFactory.build({
         count: 2,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(2),
+        type: mockPlanType.id,
       });
 
       const mockNodePool = nodePoolFactory.build({
         count: 1,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(1),
+        type: mockPlanType.id,
       });
 
       mockGetCluster(mockCluster).as('getCluster');
@@ -2182,17 +2184,17 @@ describe('LKE cluster updates', () => {
       const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: latestKubernetesVersion,
-        region: dcSpecificPricingRegion.id,
         control_plane: {
           high_availability: false,
         },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
       const mockNodePoolResized = nodePoolFactory.build({
         count: 3,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(3),
+        type: mockPlanType.id,
       });
 
       const mockNodePoolInitial = {
@@ -2319,23 +2321,23 @@ describe('LKE cluster updates', () => {
       const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
       const mockCluster = kubernetesClusterFactory.build({
-        k8s_version: latestKubernetesVersion,
-        region: dcSpecificPricingRegion.id,
         control_plane: {
           high_availability: false,
         },
+        k8s_version: latestKubernetesVersion,
+        region: dcSpecificPricingRegion.id,
       });
 
       const mockNewNodePool = nodePoolFactory.build({
         count: 2,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(2),
+        type: mockPlanType.id,
       });
 
       const mockNodePool = nodePoolFactory.build({
         count: 1,
-        type: mockPlanType.id,
         nodes: kubeLinodeFactory.buildList(1),
+        type: mockPlanType.id,
       });
 
       mockGetCluster(mockCluster).as('getCluster');
@@ -2450,14 +2452,14 @@ describe('LKE ACL updates', () => {
      */
     it('can enable ACL on an LKE cluster with ACL pre-installed and edit IPs', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
-        enabled: false,
         addresses: { ipv4: ['10.0.3.0/24'], ipv6: undefined },
+        enabled: false,
       });
       const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
         {
+          addresses: { ipv4: ['10.0.0.0/24'], ipv6: undefined },
           enabled: true,
           'revision-id': mockRevisionId,
-          addresses: { ipv4: ['10.0.0.0/24'], ipv6: undefined },
         }
       );
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
@@ -2550,8 +2552,6 @@ describe('LKE ACL updates', () => {
       // update mocks
       const mockUpdatedACLOptions2 = kubernetesControlPlaneACLOptionsFactory.build(
         {
-          enabled: true,
-          'revision-id': mockRevisionId,
           addresses: {
             ipv4: ['10.0.0.0/24'],
             ipv6: [
@@ -2559,6 +2559,8 @@ describe('LKE ACL updates', () => {
               'f4a2:b849:4a24:d0d9:15f0:704b:f943:718f',
             ],
           },
+          enabled: true,
+          'revision-id': mockRevisionId,
         }
       );
       const mockUpdatedControlPlaneACL2 = kubernetesControlPlaneACLFactory.build(
@@ -2650,16 +2652,16 @@ describe('LKE ACL updates', () => {
      */
     it('can disable ACL on a standard tier cluster and edit IPs', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
-        enabled: true,
         addresses: { ipv4: undefined, ipv6: undefined },
+        enabled: true,
       });
       const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
         {
-          enabled: false,
           addresses: {
             ipv4: ['10.0.0.0/24'],
             ipv6: ['8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'],
           },
+          enabled: false,
         }
       );
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
@@ -2787,8 +2789,8 @@ describe('LKE ACL updates', () => {
      */
     it('can enable ACL on an LKE cluster with ACL not pre-installed and edit IPs', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
-        enabled: true,
         addresses: { ipv4: ['10.0.0.0/24'] },
+        enabled: true,
       });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
@@ -2881,8 +2883,8 @@ describe('LKE ACL updates', () => {
      */
     it('can handle validation and API errors', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
-        enabled: true,
         addresses: { ipv4: undefined, ipv6: undefined },
+        enabled: true,
       });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,

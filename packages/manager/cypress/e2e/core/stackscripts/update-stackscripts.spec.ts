@@ -1,17 +1,17 @@
+import { getImages } from '@linode/api-v4';
+import { stackScriptFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { randomLabel, randomPhrase } from 'support/util/random';
 import {
   mockGetStackScript,
+  mockGetStackScripts,
   mockUpdateStackScript,
   mockUpdateStackScriptError,
-  mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
-import { stackScriptFactory } from '@src/factories';
-import { getImages, StackScript } from '@linode/api-v4';
 import { depaginate } from 'support/util/paginate';
+import { randomLabel, randomPhrase } from 'support/util/random';
 
-import type { Image } from '@linode/api-v4';
+import type { Image, StackScript } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
@@ -108,8 +108,8 @@ describe('Update stackscripts', () => {
       // Spread operator clones an object...
       {
         ...stackScripts[0],
-        label: stackscriptLabel,
         description: stackscriptDesc,
+        label: stackscriptLabel,
       },
       { ...stackScripts[1] },
     ];

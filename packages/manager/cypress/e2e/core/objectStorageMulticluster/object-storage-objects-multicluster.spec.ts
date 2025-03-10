@@ -1,12 +1,13 @@
+import { createBucket } from '@linode/api-v4';
 import 'cypress-file-upload';
 import { authenticate } from 'support/api/authentication';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { interceptUploadBucketObjectS3 } from 'support/intercepts/object-storage';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
-import { ui } from 'support/ui';
+
 import { createObjectStorageBucketFactoryGen1 } from 'src/factories';
-import { interceptUploadBucketObjectS3 } from 'support/intercepts/object-storage';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { createBucket } from '@linode/api-v4';
 
 // Message shown on-screen when user navigates to an empty bucket.
 const emptyBucketMessage = 'This bucket is empty.';
@@ -47,14 +48,14 @@ const setUpBucketMulticluster = (
 ) => {
   return createBucket(
     createObjectStorageBucketFactoryGen1.build({
-      label,
-      region: regionId,
+      // to avoid 400 responses from the API.
+      cluster: undefined,
       cors_enabled,
+      label,
 
       // API accepts either `cluster` or `region`, but not both. Our factory
       // populates both fields, so we have to manually set `cluster` to `undefined`
-      // to avoid 400 responses from the API.
-      cluster: undefined,
+      region: regionId,
     })
   );
 };
@@ -73,8 +74,8 @@ const assertStatusForUrlAtAlias = (
     // An alias can resolve to anything. We're assuming the user passed a valid
     // alias which resolves to a string.
     cy.request({
-      url: url as string,
       failOnStatusCode: false,
+      url: url as string,
     }).then((response) => {
       expect(response.status).to.eq(expectedStatus);
     });
@@ -136,8 +137,8 @@ describe('Object Storage Multicluster objects', () => {
     const bucketFolderName = randomLabel();
 
     const bucketFiles = [
-      { path: 'object-storage-files/1.txt', name: '1.txt' },
-      { path: 'object-storage-files/2.jpg', name: '2.jpg' },
+      { name: '1.txt', path: 'object-storage-files/1.txt' },
+      { name: '2.jpg', path: 'object-storage-files/2.jpg' },
     ];
 
     cy.defer(

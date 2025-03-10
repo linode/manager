@@ -1,34 +1,35 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import type { Linode } from '@linode/api-v4';
 import {
-  linodeFactory,
-  linodeBackupsFactory,
   accountSettingsFactory,
   createLinodeRequestFactory,
+  linodeBackupsFactory,
+  linodeFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
+import { expectManagedDisabled } from 'support/api/managed';
+import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   mockGetAccountSettings,
   mockUpdateAccountSettings,
 } from 'support/intercepts/account';
 import {
-  mockGetLinodes,
+  interceptCancelLinodeBackups,
+  interceptCreateLinodeSnapshot,
+  interceptEnableLinodeBackups,
+  interceptGetLinode,
   mockEnableLinodeBackups,
   mockGetLinodeType,
   mockGetLinodeTypes,
-  interceptEnableLinodeBackups,
-  interceptGetLinode,
-  interceptCreateLinodeSnapshot,
-  interceptCancelLinodeBackups,
+  mockGetLinodes,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { randomLabel } from 'support/util/random';
-import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
-import { chooseRegion } from 'support/util/regions';
-import { expectManagedDisabled } from 'support/api/managed';
 import { createTestLinode } from 'support/util/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 const BackupsCancellationNote =
   'Once backups for this Linode have been canceled, you cannot re-enable them for 24 hours.';
@@ -57,10 +58,10 @@ describe('linode backups', () => {
 
     // Create a Linode that is not booted and which does not have backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      region: chooseRegion().id,
       backups_enabled: false,
       booted: false,
+      label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     cy.defer(
@@ -166,10 +167,10 @@ describe('linode backups', () => {
     cy.tag('method:e2e');
     // Create a Linode that is not booted and which has backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      region: chooseRegion().id,
       backups_enabled: true,
       booted: false,
+      label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     const snapshotName = randomLabel();
@@ -327,27 +328,27 @@ describe('"Enable Linode Backups" banner', () => {
       //
       // See `dcPricingMockLinodeTypes` exported from `support/constants/dc-specific-pricing.ts`.
       linodeFactory.build({
+        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-ord',
-        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[0].id,
       }),
       linodeFactory.build({
+        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-east',
-        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[1].id,
       }),
       linodeFactory.build({
+        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-west',
-        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[2].id,
       }),
       linodeFactory.build({
+        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-central',
-        backups: { enabled: false },
         type: 'g6-nanode-1',
       }),
     ];
