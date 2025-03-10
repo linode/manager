@@ -48,7 +48,7 @@ export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
     value: 'lte',
   },
   {
-    label: '==',
+    label: '=',
     value: 'eq',
   },
 ];
