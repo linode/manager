@@ -31,7 +31,6 @@ export const getLinodeInterfacePayload = (
 ) => {
   const cleanedInterface = {
     ...networkInterface,
-    purpose: undefined,
   };
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
