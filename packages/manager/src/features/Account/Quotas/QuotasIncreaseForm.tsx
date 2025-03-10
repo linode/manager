@@ -31,7 +31,7 @@ export interface QuotaIncreaseFormFields extends TicketRequest {
 export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const { onClose, quota } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<APIError | null>(null);
+  const [error, setError] = React.useState<null | string>(null);
   const formContainerRef = React.useRef<HTMLFormElement>(null);
   const { data: profile } = useProfile();
 
@@ -66,8 +66,8 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
       .then((response) => {
         onSuccess(response.id);
       })
-      .catch((errResponse: APIError) => {
-        setError(errResponse);
+      .catch((errResponse: APIError[]) => {
+        setError(errResponse[0].reason);
         setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
       });
@@ -76,7 +76,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit} ref={formContainerRef}>
-        {error && <Notice color="error">{error.reason}</Notice>}
+        {error && <Notice variant="error">{error}</Notice>}
         <Stack direction="column" gap={2}>
           <Controller
             render={({ field, fieldState }) => (
