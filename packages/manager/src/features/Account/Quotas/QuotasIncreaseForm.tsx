@@ -54,9 +54,8 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
 
     setSubmitting(true);
 
-    const payload: QuotaIncreaseFormFields = {
+    const payload: TicketRequest = {
       description: values.description,
-      quantity: values.quantity,
       summary: values.summary,
     };
 
