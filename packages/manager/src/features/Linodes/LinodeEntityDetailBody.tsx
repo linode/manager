@@ -453,13 +453,19 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               {isLinodeInterface ? (
                 'Linode'
               ) : (
-                <>
+                <span>
                   Configuration Profile{' '}
                   <Chip
+                    sx={(theme) => ({
+                      backgroundColor: theme.color.tagButtonBg,
+                      color: theme.tokens.color.Neutrals[80],
+                    })}
+                    component="span"
+                    label="UPGRADE"
                     onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
-                    title="Upgrade"
+                    size="small"
                   />
-                </>
+                </span>
               )}
             </StyledListItem>
           )}

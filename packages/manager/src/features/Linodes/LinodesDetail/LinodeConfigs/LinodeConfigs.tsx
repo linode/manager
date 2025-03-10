@@ -109,7 +109,7 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
           label={'Configuration Profiles'}
         />
         {isLinodeInterfacesEnabled &&
-          linode?.interface_generation === 'legacy_config' && (
+          linode?.interface_generation !== 'linode' && (
             <Button
               buttonType="outlined"
               disabled={isReadOnly}

@@ -15,27 +15,37 @@ interface UpgradeInterfacesProps {
   open: boolean;
 }
 
+const initialState: UpgradeInterfacesDialogState = {
+  dialogTitle: 'Upgrade Interfaces',
+  step: 'prompt',
+};
+
 export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
   const { linodeId, onClose, open } = props;
 
   const [
     dialogState,
     setDialogState,
-  ] = React.useState<UpgradeInterfacesDialogState>({
-    dialogTitle: 'Upgrade Interfaces',
-    step: 'prompt',
-  });
+  ] = React.useState<UpgradeInterfacesDialogState>({ ...initialState });
+
+  const closeAndResetDialog = () => {
+    onClose();
+    setDialogState({
+      ...initialState,
+    });
+  };
 
   const dialogProps = {
     linodeId,
-    onClose,
+    onClose: closeAndResetDialog,
     open,
     setDialogState,
   };
 
   return (
     <Dialog
-      onClose={onClose}
+      // fullHeight
+      onClose={closeAndResetDialog}
       open={open}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
     >
