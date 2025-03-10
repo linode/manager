@@ -1,10 +1,10 @@
 import { Box, Divider, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledHeader,

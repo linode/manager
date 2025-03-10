@@ -1,6 +1,5 @@
 import { Checkbox } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
-import { intersection } from 'ramda';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -63,11 +62,9 @@ export const Disks = (props: DisksProps) => {
                         const isConfigSelected =
                           // Is there anything in common between this disk's
                           // associatedConfigIds and the selectedConfigsIds?
-                          intersection(
-                            diskSelection?.[disk.id]?.associatedConfigIds ?? [],
-                            selectedConfigIds
-                          ).length > 0;
-
+                          (
+                            diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                          ).some((num) => selectedConfigIds.includes(num));
                         return (
                           <TableRow data-qa-disk={disk.label} key={disk.id}>
                             <TableCell>

@@ -35,7 +35,8 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     name,
   });
 
-  const dimensionFilterWatcher = useWatch({ control, name});
+  const dimensionFilterWatcher = useWatch({ control, name });
+
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
@@ -55,25 +56,25 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             />
           ))}
       </Stack>
-        <Button
-          onClick={() =>
-            append({
-              dimension_label: null,
-              operator: null,
-              value: null,
-            })
-          }
-          disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
-          buttonType="secondary"
-          compactX
-          data-qa-buttons="true"
-          size="small"
-          tooltipText="You can add up to 5 dimension filters."
-          sxEndIcon={{ display: 'none' }}
-          sx={{ justifyContent: 'start', width: '150px' }}
-        >
-          Add dimension filter
-        </Button>
+      <Button
+        onClick={() =>
+          append({
+            dimension_label: null,
+            operator: null,
+            value: null,
+          })
+        }
+        buttonType="secondary"
+        compactX
+        data-qa-buttons="true"
+        disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
+        size="small"
+        sx={{ justifyContent: 'start', width: '150px' }}
+        sxEndIcon={{ display: 'none' }}
+        tooltipText="You can add up to 5 dimension filters."
+      >
+        Add dimension filter
+      </Button>
     </Box>
   );
 };

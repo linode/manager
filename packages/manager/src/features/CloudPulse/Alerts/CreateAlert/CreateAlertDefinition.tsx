@@ -11,7 +11,6 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -81,13 +80,13 @@ export const CreateAlertDefinition = () => {
       CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
     ),
   });
-
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, submitCount },
     getValues,
     handleSubmit,
     setError,
+    setValue,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -108,7 +107,6 @@ export const CreateAlertDefinition = () => {
       alertCreateExit();
     } catch (errors) {
       for (const error of errors) {
-        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -121,11 +119,25 @@ export const CreateAlertDefinition = () => {
     }
   });
 
+  const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
-    if (!isEmpty(errors)) {
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [errors]);
+  }, [errors, submitCount]);
+
+  const handleServiceTypeChange = React.useCallback(() => {
+    // Reset the criteria to initial state
+    setValue('rule_criteria.rules', [
+      {
+        aggregate_function: null,
+        dimension_filters: [],
+        metric: null,
+        operator: null,
+        threshold: 0,
+      },
+    ]);
+  }, [setValue]);
 
   return (
     <React.Fragment>
@@ -169,7 +181,10 @@ export const CreateAlertDefinition = () => {
               control={control}
               name="description"
             />
-            <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
+            <CloudPulseServiceSelect
+              handleServiceTypeChange={handleServiceTypeChange}
+              name="serviceType"
+            />
             <CloudPulseAlertSeveritySelect name="severity" />
             <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField

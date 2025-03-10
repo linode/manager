@@ -1,6 +1,7 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
-import { accountMaintenanceFactory } from 'src/factories';
 import { parseCsv } from 'support/util/csv';
+
+import { accountMaintenanceFactory } from 'src/factories';
 
 describe('Maintenance', () => {
   /*
@@ -152,9 +153,9 @@ describe('Maintenance', () => {
           (maintenance) => ({
             entity_label: maintenance.entity.label,
             entity_type: maintenance.entity.type,
-            type: maintenance.type,
-            status: maintenance.status,
             reason: maintenance.reason,
+            status: maintenance.status,
+            type: maintenance.type,
           })
         );
 
@@ -172,9 +173,9 @@ describe('Maintenance', () => {
               (entry: any) => ({
                 entity_label: entry['Entity Label'],
                 entity_type: entry['Entity Type'],
-                type: entry['Type'],
-                status: entry['Status'],
                 reason: entry['Reason'],
+                status: entry['Status'],
+                type: entry['Type'],
               })
             );
 
@@ -202,9 +203,9 @@ describe('Maintenance', () => {
           (maintenance) => ({
             entity_label: maintenance.entity.label,
             entity_type: maintenance.entity.type,
-            type: maintenance.type,
-            status: maintenance.status,
             reason: maintenance.reason,
+            status: maintenance.status,
+            type: maintenance.type,
           })
         );
 
@@ -224,9 +225,9 @@ describe('Maintenance', () => {
               (entry: any) => ({
                 entity_label: entry['Entity Label'],
                 entity_type: entry['Entity Type'],
-                type: entry['Type'],
-                status: entry['Status'],
                 reason: entry['Reason'],
+                status: entry['Status'],
+                type: entry['Type'],
               })
             );
 

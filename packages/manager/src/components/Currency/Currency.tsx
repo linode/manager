@@ -1,6 +1,5 @@
+import { isNumber } from '@linode/utilities';
 import * as React from 'react';
-
-import { isNumber } from 'src/utilities/isNumber';
 
 interface CurrencyFormatterProps {
   /**

@@ -1,21 +1,14 @@
-import {
-  Box,
-  Chip,
-  FormControlLabel,
-  Toggle,
-  Tooltip,
-  Typography,
-} from '@linode/ui';
+import { FormControlLabel, Toggle, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import NullComponent from 'src/components/NullComponent';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import { processMetricCriteria } from '../Utils/utils';
+import { MetricThreshold } from './MetricThreshold';
 
-import type { ProcessedCriteria } from '../Utils/utils';
 import type { Alert } from '@linode/api-v4';
 
 interface AlertInformationActionRowProps {
@@ -26,7 +19,7 @@ interface AlertInformationActionRowProps {
 
   /**
    * Handler function for the click of toggle button
-   * @param alert alert object for which toggle button is click
+   * @param alert object for which toggle button is click
    */
   handleToggle: (alert: Alert) => void;
 
@@ -45,7 +38,7 @@ export const AlertInformationActionRow = (
 
   return (
     <TableRow data-qa-alert-cell={id} data-testid={id} key={`alert-row-${id}`}>
-      <TableCell>
+      <TableCell sx={{ width: 0 }}>
         <FormControlLabel
           control={
             <Toggle checked={status} onChange={() => handleToggle(alert)} />
@@ -62,59 +55,14 @@ export const AlertInformationActionRow = (
         <MetricThreshold metricThreshold={metricThreshold} />
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle1">{type}</Typography>
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.typography.Label.Regular.S,
+          })}
+        >
+          {capitalize(type)}
+        </Typography>
       </TableCell>
     </TableRow>
-  );
-};
-
-export interface MetricThresholdProps {
-  /**
-   * List of processed criterias
-   */
-  metricThreshold: ProcessedCriteria[];
-}
-
-const MetricThreshold = (props: MetricThresholdProps) => {
-  const { metricThreshold } = props;
-  if (metricThreshold.length === 0) {
-    return <NullComponent />;
-  }
-
-  const thresholdObject = metricThreshold[0];
-  const metric = `${thresholdObject.label} ${thresholdObject.operator}  ${thresholdObject.threshold} ${thresholdObject.unit}`;
-  const total = metricThreshold.length - 1;
-  if (metricThreshold.length === 1) {
-    return <Typography variant="subtitle1">{metric}</Typography>;
-  }
-  const rest = metricThreshold
-    .slice(1)
-    .map((criteria) => {
-      return `${criteria.label} ${criteria.operator} ${criteria.threshold} ${criteria.unit}`;
-    })
-    .join('\n');
-  return (
-    <Box alignItems="center" display="flex" gap={1.75}>
-      <Typography variant="subtitle1">{metric}</Typography>
-      <Tooltip
-        title={<Typography sx={{ whiteSpace: 'pre-line' }}>{rest}</Typography>}
-      >
-        <span>
-          <Chip
-            sx={(theme) => {
-              return {
-                backgroundColor: theme.bg.offWhite,
-                border: '1px solid',
-                borderColors: theme.borderColors.borderFocus,
-                borderRadius: '4px',
-                px: 0.5,
-                py: 1.5,
-              };
-            }}
-            label={`+${total}`}
-          />
-        </span>
-      </Tooltip>
-    </Box>
   );
 };
