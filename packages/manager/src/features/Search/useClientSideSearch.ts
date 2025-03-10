@@ -97,8 +97,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
   const searchableBuckets =
     objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
   const searchableClusters =
-    clusters?.map((cluster) => kubernetesClusterToSearchableItem(cluster)) ??
-    [];
+    clusters?.map(kubernetesClusterToSearchableItem) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,
