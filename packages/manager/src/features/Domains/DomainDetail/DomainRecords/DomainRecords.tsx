@@ -1,9 +1,8 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 // eslint-disable-next-line no-restricted-imports
