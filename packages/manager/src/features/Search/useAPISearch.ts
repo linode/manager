@@ -95,7 +95,7 @@ const entities = [
     name: 'image' as const,
     query: useImagesInfiniteQuery,
     searchOptions: {
-      searchableFieldsWithoutOperator: ['label'],
+      searchableFieldsWithoutOperator: ['label', 'tags'],
     },
   },
   {
