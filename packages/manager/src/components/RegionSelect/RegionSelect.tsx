@@ -43,7 +43,7 @@ export const RegionSelect = <
     flags,
     forcefullyShownRegionIds,
     helperText,
-    ignoreAccountAvailability, // @todo: modularization - check if we can remove this prop
+    ignoreAccountAvailability,
     label,
     noMarginTop,
     onChange,
