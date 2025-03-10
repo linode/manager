@@ -420,7 +420,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         <AlertsNoticeMessage
           text={
             maxSelectionCount !== undefined
-              ? `You can select up to ${maxSelectionCount} resources`
+              ? `You can select up to ${maxSelectionCount} resources.`
               : undefined
           }
           variant="warning"

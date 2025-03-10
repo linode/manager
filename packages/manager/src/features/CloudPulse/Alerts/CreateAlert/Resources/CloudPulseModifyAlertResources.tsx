@@ -26,14 +26,14 @@ export const CloudPulseModifyAlertResources = React.memo(
     const flags = useFlags();
 
     const getMaxSelectionCount = React.useCallback(() => {
-      if (!serviceTypeWatcher || !flags.aclpAlertServiceTypeInfoMap) {
+      if (!serviceTypeWatcher || !flags.aclpAlertServiceTypeConfig) {
         return undefined;
       }
 
-      return flags.aclpAlertServiceTypeInfoMap?.find(
+      return flags.aclpAlertServiceTypeConfig?.find(
         ({ serviceType }) => serviceType === serviceTypeWatcher
       )?.maxResourceSelectionCount;
-    }, [flags.aclpAlertServiceTypeInfoMap, serviceTypeWatcher]);
+    }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
     const handleResourcesSelection = (resourceIds: string[]) => {
       setValue(name, resourceIds, {

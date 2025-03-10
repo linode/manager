@@ -147,7 +147,7 @@ describe('CreateAlertResources component tests', () => {
       component: <CloudPulseModifyAlertResources name="entity_ids" />,
       options: {
         flags: {
-          aclpAlertServiceTypeInfoMap: [
+          aclpAlertServiceTypeConfig: [
             {
               maxResourceSelectionCount: 2,
               serviceType: 'linode',

@@ -88,6 +88,7 @@ export const CreateAlertDefinition = () => {
     getValues,
     handleSubmit,
     setError,
+    setValue,
   } = formMethods;
 
   const { enqueueSnackbar } = useSnackbar();
@@ -126,6 +127,13 @@ export const CreateAlertDefinition = () => {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
   }, [errors]);
+
+  React.useEffect(() => {
+    setValue('entity_ids', [], {
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  }, [serviceTypeWatcher, setValue]);
 
   return (
     <React.Fragment>
