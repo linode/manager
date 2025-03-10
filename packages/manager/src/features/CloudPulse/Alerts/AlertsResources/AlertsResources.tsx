@@ -4,7 +4,6 @@ import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import NullComponent from 'src/components/NullComponent';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -18,8 +17,9 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { AlertsResourcesNotice, StyledNotice } from './AlertsResourcesNotice';
+import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
@@ -36,7 +36,6 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
-import type { NoticeVariant } from '@linode/ui';
 
 export interface AlertResourcesProp {
   /**
@@ -455,38 +454,3 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     </Stack>
   );
 });
-
-interface ResourcesNoticeProps {
-  /**
-   * The text that needs to be displayed in the notice
-   */
-  text?: string;
-  /**
-   * The variant of notice like info, error, warning
-   */
-  variant?: NoticeVariant;
-}
-
-const AlertsNoticeMessage = (props: ResourcesNoticeProps) => {
-  const { text, variant } = props;
-
-  if (!text?.length) {
-    return <NullComponent />;
-  }
-
-  return (
-    <Grid item xs={12}>
-      <StyledNotice variant={variant}>
-        <Typography
-          sx={(theme) => ({
-            fontFamily: theme.font.bold,
-          })}
-          data-testid="alert_message_notice"
-          variant="body2"
-        >
-          {text}
-        </Typography>
-      </StyledNotice>
-    </Grid>
-  );
-};
