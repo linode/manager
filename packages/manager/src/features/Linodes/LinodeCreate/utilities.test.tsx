@@ -10,6 +10,7 @@ import {
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
+  getDefaultInterfaceGenerationFromAccountSetting,
   getInterfacesPayload,
   getIsLegacyInterfaceArray,
   getIsValidLinodeLabelCharacter,
@@ -389,5 +390,35 @@ describe('getIsValidLinodeLabelCharacter', () => {
     expect(getIsValidLinodeLabelCharacter('&')).toBe(false);
     expect(getIsValidLinodeLabelCharacter('!')).toBe(false);
     expect(getIsValidLinodeLabelCharacter(' ')).toBe(false);
+  });
+});
+
+describe('getDefaultInterfaceGenerationFromAccountSetting', () => {
+  it('returns "legacy_config" for "legacy_config_default_but_linode_allowed"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting(
+        'legacy_config_default_but_linode_allowed'
+      )
+    ).toBe('legacy_config');
+  });
+
+  it('returns "legacy_config" for "legacy_config_only"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting('legacy_config_only')
+    ).toBe('legacy_config');
+  });
+
+  it('returns "linode" for "linode_only"', () => {
+    expect(getDefaultInterfaceGenerationFromAccountSetting('linode_only')).toBe(
+      'linode'
+    );
+  });
+
+  it('returns "linode" for "linode_default_but_legacy_config_allowed"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting(
+        'linode_default_but_legacy_config_allowed'
+      )
+    ).toBe('linode');
   });
 });
