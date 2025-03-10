@@ -29,13 +29,17 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
 export const getLinodeInterfacePayload = (
   networkInterface: LinodeCreateInterface
 ) => {
+  const cleanedInterface = {
+    ...networkInterface,
+  };
+
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== networkInterface.purpose) {
-      networkInterface[key] = null;
+      cleanedInterface[key] = null;
     }
   }
 
-  return networkInterface;
+  return cleanedInterface;
 };
 
 /**
