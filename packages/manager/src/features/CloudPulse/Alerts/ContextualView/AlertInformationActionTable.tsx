@@ -88,13 +88,13 @@ export const AlertInformationActionTable = (
   };
   const handleConfirm = React.useCallback(
     (alert: Alert, currentStatus: boolean) => {
-      const payLoad: EntityAlertUpdatePayload = {
+      const payload: EntityAlertUpdatePayload = {
         alert,
         entityId,
       };
 
       setIsLoading(true);
-      (currentStatus ? removeEntity(payLoad) : addEntity(payLoad))
+      (currentStatus ? removeEntity(payload) : addEntity(payload))
         .then(() => {
           enqueueSnackbar(
             `The alert settings for ${entityName} saved successfully.`,
@@ -103,7 +103,7 @@ export const AlertInformationActionTable = (
         })
         .catch(() => {
           enqueueSnackbar(
-            `${currentStatus ? 'Disabling' : 'Enabling'} alert failed`,
+            `${currentStatus ? 'Disabling' : 'Enabling'} alert failed.`,
             {
               variant: 'error',
             }
