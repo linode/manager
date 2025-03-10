@@ -16,6 +16,7 @@ import {
   GlobalHeader,
   Interaction,
   NotificationToast,
+  RadioButton,
   Radius,
   Search,
   Select,
@@ -1130,19 +1131,35 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '& $checked': {
-            color: primaryColors.main,
+          '&:active': {
+            color: theme.tokens.radio.Active.Active.Border,
+          },
+          '&.Mui-checked': {
+            color: theme.tokens.radio.Active.Default.Border,
+            '&:active': {
+              color: theme.tokens.radio.Active.Active.Border,
+            },
           },
           '& .defaultFill': {
             fill: theme.color.white,
             transition: theme.transitions.create(['fill']),
           },
+          '& svg circle': {
+            fill: Color.Neutrals.White,
+          },
           '&.Mui-disabled': {
             '& .defaultFill': {
               fill: Color.Neutrals[5],
             },
-            color: `${Color.Neutrals[40]} !important`,
-            fill: `${Color.Neutrals[5]} !important`,
+            '&:not(.Mui-checked) svg circle': {
+              fill: '#e5e5e9',
+            },
+            '&:not(.Mui-checked)': {
+              color: theme.tokens.radio.Inactive.Disabled.Border,
+            },
+            color: theme.tokens.radio.Active.Disabled.Border,
+            // border: `${Color.Neutrals[5]}`,
+            // fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
           },
           '&.MuiRadio-root': {
@@ -1159,10 +1176,10 @@ export const lightTheme: ThemeOptions = {
             '& .defaultFill': {
               fill: theme.color.white,
             },
-            color: theme.palette.primary.main,
-            fill: theme.color.white,
+            color: theme.tokens.radio.Active.Hover.Border,
+            fill: theme.tokens.radio.Active.Hover.Background,
           },
-          color: Color.Neutrals[40],
+          color: theme.tokens.action.Neutral,
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
@@ -1814,6 +1831,7 @@ export const lightTheme: ThemeOptions = {
     footer: GlobalFooter,
     header: GlobalHeader,
     interaction: Interaction,
+    radio: RadioButton,
     radius: Radius,
     search: Search,
     sideNavigation: SideNavigation,
