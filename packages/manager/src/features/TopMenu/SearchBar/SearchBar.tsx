@@ -79,7 +79,9 @@ export const SearchBar = () => {
   const handleClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
-    setSearchText('');
+    if (history.location.pathname !== '/search') {
+      setSearchText('');
+    }
     setMenuOpen(false);
   };
 
@@ -91,7 +93,9 @@ export const SearchBar = () => {
 
   const handleFocus = () => {
     setSearchActive(true);
-    setSearchText('');
+    if (history.location.pathname !== '/search') {
+      setSearchText('');
+    }
   };
 
   const handleBlur = () => {
