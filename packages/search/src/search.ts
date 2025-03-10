@@ -4,7 +4,7 @@ import grammar from './search.peggy?raw';
 
 const parser = generate(grammar);
 
-interface Options {
+export interface Options {
   /**
    * Defines the API fields filtered against (currently using +contains)
    * when the search query contains no operators.

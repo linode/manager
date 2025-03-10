@@ -27,6 +27,10 @@ interface Props {
   query: string;
 }
 
+/**
+ * Fetches all entities on a user's account and performs client-side filtering
+ * based on a user's seach query.
+ */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
   const { data: regions, isLoading: regionsLoading } = useRegionsQuery(enabled);
   const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(

@@ -22,7 +22,7 @@ interface Props {
 const entities = [
   {
     getSearchableItem: linodeToSearchableItem,
-    name: 'linode' as const,
+    name: 'linode',
     query: useInfiniteLinodesQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['id', 'label', 'tags', 'ipv4'],
@@ -30,7 +30,7 @@ const entities = [
   },
   {
     getSearchableItem: volumeToSearchableItem,
-    name: 'volume' as const,
+    name: 'volume',
     query: useInfiniteVolumesQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['label', 'tags'],
@@ -39,7 +39,7 @@ const entities = [
   {
     baseFilter: { mine: true },
     getSearchableItem: stackscriptToSearchableItem,
-    name: 'stackscript' as const,
+    name: 'stackscript',
     query: useStackScriptsInfiniteQuery,
     searchOptions: {
       searchableFieldsWithoutOperator: ['label'],
@@ -47,6 +47,17 @@ const entities = [
   },
 ];
 
+/**
+ * Fetches entities on a user's account using server-side filtering
+ * based on a user's seach query.
+ *
+ * We have to fetch the first page of each entity because API-v4
+ * does not provide a dedicated search endpoint.
+ *
+ * The main advantage of this hook over useClientSideSearch is that it uses
+ * server-side filtering (X-Filters) so that we don't need to fetch all entities
+ * and do the filtering client-side.
+ */
 export const useAPISearch = ({ enabled, query }: Props) => {
   const deboundedQuery = useDebouncedValue(query);
 
