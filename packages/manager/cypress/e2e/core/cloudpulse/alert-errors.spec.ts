@@ -43,10 +43,10 @@ describe('Alerts Listing Page - Error Handling', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    mockUpdateAlertDefinitionsError('dbaas', 1, 'Alert-1').as(
+    mockUpdateAlertDefinitionsError('dbaas', 1, 'An error occurred while disabling the alert').as(
       'getFirstAlertDefinitions'
     );
-    mockUpdateAlertDefinitionsError('dbaas', 2, 'Alert-2').as(
+    mockUpdateAlertDefinitionsError('dbaas', 2, 'An error occurred while enabling the alert').as(
       'getSecondAlertDefinitions'
     );
     cy.visitWithLogin('/alerts/definitions');
@@ -60,9 +60,8 @@ describe('Alerts Listing Page - Error Handling', () => {
         .should('be.visible')
         .and('not.be.disabled')
         .clear();
-      cy.findByPlaceholderText('Search for Alerts').type(alertName);
 
-      cy.focused().click();
+      cy.findByPlaceholderText('Search for Alerts').type(alertName);
     };
 
     // Function to toggle an alert's status
@@ -70,7 +69,6 @@ describe('Alerts Listing Page - Error Handling', () => {
       alertName: string,
       action: 'Disable' | 'Enable',
       alias: string,
-      successMessage: string
     ) => {
       cy.findByText(alertName)
         .should('be.visible')
@@ -84,7 +82,7 @@ describe('Alerts Listing Page - Error Handling', () => {
 
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
       cy.wait(alias).then(({ response }) => {
-        ui.toast.assertMessage(alertName);
+        ui.toast.assertMessage(response?.body.errors[0].reason);
       });
     };
     // Disable "Alert-1"
@@ -92,17 +90,13 @@ describe('Alerts Listing Page - Error Handling', () => {
     toggleAlertStatus(
       'Alert-1',
       'Disable',
-      '@getFirstAlertDefinitions',
-      'Alert disabled'
-    );
+      '@getFirstAlertDefinitions')
 
     // Enable "Alert-2"
     searchAlert('Alert-2');
     toggleAlertStatus(
       'Alert-2',
       'Enable',
-      '@getSecondAlertDefinitions',
-      'Alert-2'
-    );
+      '@getSecondAlertDefinitions');
   });
 });
