@@ -16,10 +16,10 @@ describe('Moniter navigation', () => {
   });
 
   /*
-   * - Confirms that Moniter navigation item is shown when feature flag is enabled.
-   * - Confirms that clicking Moniter navigation item directs user to Moniter landing page.
+   * - Confirms that Metrics navigation item is shown when feature flag is enabled.
+   * - Confirms that clicking Metrics navigation item directs user to Metrics landing page.
    */
-  it('can navigate to moniter landing page', () => {
+  it('can navigate to metrics landing page', () => {
     mockAppendFeatureFlags({
       aclp: {
         beta: true,
@@ -35,9 +35,9 @@ describe('Moniter navigation', () => {
   });
 
   /*
-   * - Confirms that moniter navigation item is not shown when feature flag is disabled.
+   * - Confirms that metrics navigation item is not shown when feature flag is disabled.
    */
-  it('does not show moniter navigation item when feature is disabled', () => {
+  it('does not show metrics navigation item when feature is disabled', () => {
     mockAppendFeatureFlags({
       aclp: {
         beta: true,
@@ -71,7 +71,7 @@ describe('Moniter navigation', () => {
   });
 
   /*
-   * - Confirms that manual navigation to the 'Alert' page on the Moniter landing page is disabled, and users are shown a 'Not Found' message..
+   * - Confirms that manual navigation to the 'Alert' landing page is disabled, and users are shown a 'Not Found' message..
    */
   it('should display "Not Found" when navigating to alert definitions with feature flag disabled', () => {
     mockAppendFeatureFlags({
@@ -89,7 +89,7 @@ describe('Moniter navigation', () => {
   });
 
   /*
-   * - Confirms that manual navigation to the 'Alert Definitions Detail' page on the Moniter landing page is disabled, and users are shown a 'Not Found' message..
+   * - Confirms that manual navigation to the 'Alert Definitions Detail' page on the Alert landing page is disabled, and users are shown a 'Not Found' message..
    */
   it('should display "Not Found" when manually navigating to alert details with feature flag disabled', () => {
     mockAppendFeatureFlags({
