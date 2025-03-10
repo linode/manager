@@ -17,7 +17,7 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
   purpose: InterfacePurpose;
-  vpc?: VPC | null;
+  vpc: VPC | null;
 }
 
 /**
