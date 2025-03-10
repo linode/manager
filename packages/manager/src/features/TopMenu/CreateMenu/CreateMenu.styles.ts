@@ -14,14 +14,14 @@ export const StyledHeading = styled('h3', {
     width: 20,
   },
   alignItems: 'center',
-  color: theme.name === 'dark' ? theme.tokens.color.Neutrals[50] : 'inherit',
+  color: theme.tokens.content.Text.Secondary.Default,
   display: 'flex',
-  font: theme.font.bold,
-  fontSize: '0.7rem',
+  font: theme.tokens.font.FontWeight.Extrabold,
+  fontSize: theme.tokens.font.FontSize.Xxxs,
   letterSpacing: '1px',
   margin: 0,
   padding: '8px 14px',
-  textTransform: 'uppercase',
+  textTransform: theme.tokens.font.Textcase.Uppercase,
   [theme.breakpoints.up('lg')]: {
     background: 'inherit',
     padding: `${props.paddingTop ? '16px' : '8px'} 16px 6px 16px`,
@@ -35,14 +35,14 @@ export const StyledMenuItem = styled(MenuItem, {
   // We have to do this because in packages/manager/src/index.css we force underline links
   textDecoration: 'none !important',
   [theme.breakpoints.up('md')]: {
-    padding: '8px 16px',
+    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   },
 })) as typeof MenuItem;
 
 export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
-  background: theme.bg.appBar,
+  background: theme.tokens.background.Normal,
   maxHeight: 500,
   padding: `${theme.spacing(1)} 0`,
   [theme.breakpoints.down('lg')]: {
@@ -69,8 +69,8 @@ export const StyledMenuList = styled(MenuList, {
 export const StyledLinkTypography = styled(Typography, {
   label: 'StyledLinkTypography',
 })(({ theme }) => ({
-  color: theme.color.offBlack,
-  font: theme.font.bold,
+  color: theme.tokens.content.Text.Primary.Default,
+  font: theme.tokens.font.FontWeight.Bold,
   fontSize: '1rem',
   lineHeight: '1.4rem',
 }));
