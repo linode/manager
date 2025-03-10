@@ -1,5 +1,6 @@
 import { FormControlLabel, Typography } from '@linode/ui';
 import {
+  ActionsPanel,
   Box,
   Divider,
   Notice,
@@ -11,7 +12,6 @@ import {
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import {

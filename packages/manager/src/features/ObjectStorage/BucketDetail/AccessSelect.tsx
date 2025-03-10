@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   Notice,
@@ -9,7 +10,6 @@ import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useOpenClose } from 'src/hooks/useOpenClose';
