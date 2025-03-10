@@ -252,6 +252,12 @@ export const darkTheme: ThemeOptions = {
         noOptions: {
           color: Color.Neutrals.White,
         },
+        option: {
+          '&:hover': {
+            backgroundColor: `${Dropdown.Background.Hover}`,
+            color: Dropdown.Text.Default,
+          },
+        },
         popupIndicator: {
           color: Select.Default.Icon,
         },
@@ -541,6 +547,13 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: Content.Icon.Primary.Hover,
           },
+        },
+      },
+    },
+    MuiInputAdornment: {
+      styleOverrides: {
+        root: {
+          color: Search.Filled.Icon,
         },
       },
     },
