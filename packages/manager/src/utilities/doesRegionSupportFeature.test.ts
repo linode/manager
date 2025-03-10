@@ -1,4 +1,4 @@
-import { regions } from 'src/__data__/regionsData';
+import { regions } from '@linode/utilities';
 
 import { doesRegionSupportFeature } from './doesRegionSupportFeature';
 

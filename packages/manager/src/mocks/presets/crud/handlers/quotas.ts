@@ -1,7 +1,6 @@
-import { pickRandom } from '@linode/utilities';
+import { pickRandom, regions } from '@linode/utilities';
 import { http } from 'msw';
 
-import { regions } from 'src/__data__/regionsData';
 import { objectStorageEndpointsFactory } from 'src/factories/objectStorage';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 import {
