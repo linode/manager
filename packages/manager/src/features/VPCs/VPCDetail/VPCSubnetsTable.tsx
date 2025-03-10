@@ -297,6 +297,7 @@ export const VPCSubnetsTable = (props: Props) => {
             marginBottom: theme.spacing(2),
           }}
           buttonType="primary"
+          disabled={isVPCLKEEnterpriseCluster}
           onClick={() => setSubnetCreateDrawerOpen(true)}
         >
           Create Subnet

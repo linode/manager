@@ -118,4 +118,21 @@ describe('VPC Subnets table', () => {
     getByText('VPC IPv4');
     getByText('Firewalls');
   });
+
+  it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
+    const { getByRole, getByTestId } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={true}
+        vpcId={3}
+        vpcRegion=""
+      />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const createButton = getByRole('button', {
+      name: 'Create Subnet',
+    });
+    expect(createButton).toBeDisabled();
+  });
 });

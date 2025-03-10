@@ -139,7 +139,10 @@ const VPCDetail = () => {
           >
             Edit
           </StyledActionButton>
-          <StyledActionButton onClick={() => setDeleteVPCDialogOpen(true)}>
+          <StyledActionButton
+            disabled={isVPCLKEEnterpriseCluster}
+            onClick={() => setDeleteVPCDialogOpen(true)}
+          >
             Delete
           </StyledActionButton>
         </Box>
