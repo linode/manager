@@ -510,11 +510,10 @@ export const mockUpdateAlertDefinitionsError = (
   serviceType: string,
   id: number,
   errorMessage: string,
-  status: number = 500
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
     apiMatcher(`/monitor/services/${serviceType}/alert-definitions/${id}`),
-    makeErrorResponse(errorMessage, status)
+    makeErrorResponse(errorMessage, 500)
   );
 };
