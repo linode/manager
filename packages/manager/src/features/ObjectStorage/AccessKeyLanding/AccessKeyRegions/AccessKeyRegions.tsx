@@ -3,6 +3,7 @@ import * as React from 'react';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { sortByString } from 'src/utilities/sort-by';
 
 import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
@@ -37,6 +38,11 @@ export const AccessKeyRegions = (props: Props) => {
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
 
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery();
+
   return (
     <RegionMultiSelect
       forcefullyShownRegionIds={
@@ -45,6 +51,8 @@ export const AccessKeyRegions = (props: Props) => {
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
+      accountAvailabilityData={accountAvailabilityData}
+      accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}

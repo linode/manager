@@ -83,7 +83,8 @@ export interface RegionMultiSelectProps
     onRemove: (region: string) => void;
     selectedRegions: Region[];
   }>;
-  // @todo: modularization - Add `accountAvailabilityData` & `accountAvailabilityLoading` prop
+  accountAvailabilityData: AccountAvailability[] | undefined;
+  accountAvailabilityLoading: boolean;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
   /**

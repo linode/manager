@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
+// import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
@@ -34,6 +34,8 @@ const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
     SelectedRegionsList,
+    accountAvailabilityData,
+    accountAvailabilityLoading,
     currentCapability,
     disabled,
     disabledRegions: disabledRegionsFromProps,
@@ -54,10 +56,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  // const {
+  //   data: accountAvailability,
+  //   isLoading: accountAvailabilityLoading,
+  // } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -83,7 +85,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     if (
       !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
-        accountAvailabilityData: accountAvailability,
+        accountAvailabilityData,
         currentCapability,
         region,
       })

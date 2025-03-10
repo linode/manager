@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
 import { useRegionsQuery } from '@linode/queries';
 
@@ -18,7 +20,6 @@ import type {
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
 import type { DisableItemOption } from 'src/components/ListItemOption';
-import { useFlags } from 'src/hooks/useFlags';
 
 interface Props {
   image: Image | undefined;
@@ -39,6 +40,12 @@ export const ManageImageReplicasForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
+
+  const ignoreAccountAvailability: boolean = true;
+  const {
+    data: accountAvailabilityData,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const {
     formState: { errors, isDirty, isSubmitting },
@@ -115,11 +122,13 @@ export const ManageImageReplicasForm = (props: Props) => {
             shouldValidate: true,
           })
         }
+        accountAvailabilityData={accountAvailabilityData}
+        accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         flags={flags}
-        ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
+        ignoreAccountAvailability={ignoreAccountAvailability} // Ignore the account capability because we are just using "Object Storage" for region compatibility
         label="Add Regions"
         placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}
