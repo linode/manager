@@ -490,3 +490,29 @@ export const mockDeleteEntityFromAlert = (
     }
   );
 };
+
+/**
+ * Intercepts and mocks – Indicates enabling/disabling alerts with error handling.
+ *
+ * @param {string} serviceType - The type of service for which the alert definition belongs.
+ * @param {number} id - The unique identifier of the alert definition.
+ * @param {string} errorMessage - The error message to be returned in the response.
+ * @param {number} [status=500] - The HTTP status code for the error response (default: 500).
+ * @returns {Cypress.Chainable<null>} - A Cypress intercept that simulates a failed API request.
+ *
+ * This function is used in Cypress tests to simulate a failed API call when updating
+ * alert definitions. It intercepts `PUT` requests to the specified API endpoint and
+ * returns a mock error response.
+ */
+export const mockUpdateAlertDefinitionsError = (
+  serviceType: string,
+  id: number,
+  errorMessage: string,
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/monitor/services/${serviceType}/alert-definitions/${id}`),
+    makeErrorResponse(errorMessage, 500)
+  );
+};
+
