@@ -41,7 +41,9 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 export const linodeToSearchableItem = (linode: Linode): SearchableItem => ({
   data: {
     created: linode.created,
-    description: `${linode.image} ${linode.specs.vcpus} CPUs`,
+    description: `${linode.image}, ${linode.specs.vcpus} CPU, ${
+      linode.specs.disk / 1024
+    } GB Storage, ${linode.specs.memory / 1024} GB RAM`,
     icon: 'linode',
     ips: getLinodeIps(linode),
     path: `/linodes/${linode.id}`,
