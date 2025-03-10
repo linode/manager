@@ -84,6 +84,8 @@ export const useEditAlertDefinition = () => {
 
 export const useAddEntityToAlert = () => {
   const queryClient = useQueryClient();
+
+  // Todo: Will update the type of api response once it is finalized
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
       const { alert, entityId } = payload;
@@ -118,6 +120,8 @@ export const useAddEntityToAlert = () => {
 };
 export const useRemoveEntityFromAlert = () => {
   const queryClient = useQueryClient();
+
+  // Todo: Will update the type of api response once it is finalized
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
       const { alert, entityId } = payload;
