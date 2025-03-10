@@ -50,8 +50,8 @@ import type {
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
 import type { FormikHelpers } from 'formik';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps

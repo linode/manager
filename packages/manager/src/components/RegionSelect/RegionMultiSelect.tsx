@@ -3,6 +3,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
+
+// @todo: modularization - The `getRegionCountryGroup` utility should probably go to @linode/shared package since it imports
+// GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts OR
+// we can move it to @linode/utilties if we declare GLOBAL_QUOTA_LABEL and GLOBAL_QUOTA_VALUE in utility file itself.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
@@ -15,7 +19,7 @@ import {
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableItemOption } from '@linode/ui';
 
 interface RegionChipLabelProps {
   region: Region;

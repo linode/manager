@@ -1,18 +1,16 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
-import { Box, Stack } from '@linode/ui';
+import { Box, ListItemOption, Stack } from '@linode/ui';
 import React from 'react';
 
-import { ListItemOption } from 'src/components/ListItemOption';
-
 import type { PlacementGroup } from '@linode/api-v4';
-import type { ListItemProps } from 'src/components/ListItemOption';
+import type { ListItemOptionProps } from '@linode/ui';
 
 export const PlacementGroupSelectOption = ({
   disabledOptions,
   item,
   props,
   selected,
-}: ListItemProps<PlacementGroup>) => (
+}: ListItemOptionProps<PlacementGroup>) => (
   <ListItemOption
     disabledOptions={disabledOptions}
     item={item}

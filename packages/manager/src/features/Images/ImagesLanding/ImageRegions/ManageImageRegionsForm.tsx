@@ -18,8 +18,8 @@ import type {
   Region,
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
 import type { Resolver } from 'react-hook-form';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface Props {
   image: Image | undefined;

@@ -1,14 +1,13 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, ListItemOption, Stack } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
-import { ListItemOption } from 'src/components/ListItemOption';
 
 import type { Region } from '@linode/api-v4';
-import type { ListItemProps } from 'src/components/ListItemOption';
+import type { ListItemOptionProps } from '@linode/ui';
 
-interface RegionOptionProps extends ListItemProps<Region> {
+interface RegionOptionProps extends ListItemOptionProps<Region> {
   isGeckoLAEnabled: boolean;
 }
 
