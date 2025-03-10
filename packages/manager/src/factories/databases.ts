@@ -208,8 +208,6 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     advanced: {
       connect_timeout: 10,
       default_time_zone: '+03:00',
-      group_concat_max_len: 4,
-      information_schema_stats_expiry: 900,
       innodb_print_all_deadlocks: true,
       service_log: false,
       sql_mode:
