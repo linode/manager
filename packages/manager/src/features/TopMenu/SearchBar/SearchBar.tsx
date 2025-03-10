@@ -49,7 +49,7 @@ export const SearchBar = () => {
   const history = useHistory();
   const theme = useTheme();
 
-  // No idea
+  // Sync state with query params
   React.useEffect(() => {
     const { pathname, search } = history.location;
     const query = getQueryParamsFromQueryString(search);
@@ -142,7 +142,7 @@ export const SearchBar = () => {
     combinedResults,
     searchText,
     isLoading,
-    false
+    false // @todo handle errors. Because we make many API calls, we need a good way to handle partial errors.
   );
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
