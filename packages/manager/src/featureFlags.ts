@@ -101,7 +101,7 @@ interface AclpAlerting {
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
-  aclpAlertServiceTypeInfoMap: AclpAlertServiceTypeInfoMap[];
+  aclpAlertServiceTypeInfoMap: AclpAlertServiceTypeConfigMap[];
   aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -274,8 +274,8 @@ export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];
 }
 
-export interface AclpAlertServiceTypeInfoMap {
+export interface AclpAlertServiceTypeConfigMap {
   maxResourceSelectionCount: number;
   serviceType: AlertServiceType;
-  //This can be extended to have supportedRegions, supportedFilters and other tags
+  // This can be extended to have supportedRegions, supportedFilters and other tags
 }

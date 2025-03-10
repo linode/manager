@@ -78,6 +78,9 @@ export interface AlertResourcesProp {
    */
   isSelectionsNeeded?: boolean;
 
+  /**
+   * The maximum number of elements that can be selected, if left undefined we can select any number of elements
+   */
   maxSelectionCount?: number;
 
   /**
