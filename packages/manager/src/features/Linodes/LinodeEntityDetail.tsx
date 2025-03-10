@@ -90,11 +90,6 @@ export const LinodeEntityDetail = (props: Props) => {
     linode.region
   );
 
-  const regionSupportsDiskEncryption =
-    regions
-      ?.find((r) => r.id === linode.region)
-      ?.capabilities.includes('Disk Encryption') ?? false;
-
   let progress;
   let transitionText;
 
@@ -137,7 +132,6 @@ export const LinodeEntityDetail = (props: Props) => {
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
-            regionSupportsDiskEncryption={regionSupportsDiskEncryption}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }
