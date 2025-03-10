@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { reduceAsync } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -19,7 +20,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 

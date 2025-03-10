@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -9,7 +17,6 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -111,9 +118,10 @@ export const CreateCluster = () => {
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -121,6 +129,10 @@ export const CreateCluster = () => {
       }
     } else {
       setHighAvailability(undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -479,6 +491,7 @@ export const CreateCluster = () => {
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>
