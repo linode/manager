@@ -33,3 +33,6 @@ export const CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY =
 
 export const LKE_ENTERPRISE_VPC_WARNING =
   'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.';
+
+export const LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING =
+  'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.';

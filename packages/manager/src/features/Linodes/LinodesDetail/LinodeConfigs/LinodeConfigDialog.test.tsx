@@ -5,7 +5,7 @@ import {
   linodeConfigFactory,
   linodeFactory,
 } from 'src/factories';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
@@ -173,7 +173,7 @@ describe('LinodeConfigDialog', () => {
       expect(valueReturned?.props.text).toBe(undefined);
     });
 
-    it('should return a <Notice /> with LKE_ENTERPRISE_VPC_WARNING text if the Linode is associated with a LKE-E cluster', () => {
+    it('should return a <Notice /> with LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING text if the Linode is associated with a LKE-E cluster', () => {
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterface,
         isLKEEnterpriseCluster: true,
@@ -186,7 +186,9 @@ describe('LinodeConfigDialog', () => {
         values: editableFields,
       });
 
-      expect(valueReturned?.props.text).toEqual(LKE_ENTERPRISE_VPC_WARNING);
+      expect(valueReturned?.props.text).toEqual(
+        LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING
+      );
     });
   });
 
