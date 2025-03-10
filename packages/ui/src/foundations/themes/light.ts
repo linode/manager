@@ -377,6 +377,7 @@ export const lightTheme: ThemeOptions = {
         },
         inputRoot: {
           height: 'inherit',
+          paddingBottom: 0,
         },
         listbox: {
           backgroundColor: bg.white,
@@ -395,8 +396,8 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
           },
           '&:hover': {
-            backgroundColor: `${primaryColors.main} !important`,
-            color: primaryColors.white,
+            backgroundColor: `${Dropdown.Background.Hover}`,
+            color: Dropdown.Text.Default,
             transition: 'background-color 0.2s',
           },
           fontSize: '0.9rem',
@@ -872,6 +873,9 @@ export const lightTheme: ThemeOptions = {
           svg: {
             fontSize: Font.FontSize.L,
           },
+        },
+        root: {
+          color: Search.Filled.Icon,
         },
       },
     },
