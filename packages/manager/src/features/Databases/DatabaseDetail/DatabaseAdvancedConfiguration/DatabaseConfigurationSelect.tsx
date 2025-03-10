@@ -1,84 +1,70 @@
-import { Autocomplete, Button, TextField } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Autocomplete, TextField } from '@linode/ui';
 import React from 'react';
 
-interface ConfigurationOption {
+import type { ConfigValue, ConfigurationItem } from '@linode/api-v4';
+
+export interface ConfigurationOption extends ConfigurationItem {
   category: string;
-  description: string;
   label: string;
+  value?: ConfigValue;
 }
 
 interface Props {
   configurations: ConfigurationOption[];
   errorText: string | undefined;
-  onChange: (value: string) => void;
-  value: string;
+  label: string;
+  onChange: (value: ConfigurationOption) => void;
 }
 
 export const DatabaseConfigurationSelect = (props: Props) => {
-  const { configurations, errorText, onChange, value } = props;
+  const { configurations, errorText, label, onChange } = props;
 
-  const selectedConfiguration = React.useMemo(() => {
-    return configurations.find((val) => val.label === value);
-  }, [value, configurations]);
+  const selectedConfig = configurations.find((val) => val.label === label);
 
   return (
-    <Grid
-      alignItems={'end'}
-      container
-      justifyContent="space-between"
-      size={{ lg: 12 }}
-    >
-      <Grid size={{ xs: 9 }}>
-        <Autocomplete
-          groupBy={(option) => {
-            if (option.category === 'Other') {
-              return 'Other';
-            }
-            return option.category;
-          }}
-          isOptionEqualToValue={(option, selectedValue) =>
-            option.label === selectedValue.label
-          }
-          onChange={(_, selected) => {
-            onChange(selected.label);
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              error={!!errorText}
-              helperText={errorText}
-              label="Add a Configuration Option"
-              placeholder="Select a configuration option"
-            />
-          )}
-          renderOption={(props, option) => (
-            <li {...props}>
-              <div>
-                <strong>{option.label}</strong>
-                {/* TODO: Add description if needed */}
-                {/* {option.description && <div>{option.description}</div>} */}
-              </div>
-            </li>
-          )}
-          autoHighlight
-          disableClearable
-          getOptionLabel={(option) => option.label}
-          label={''}
-          options={configurations}
-          sx={{ width: '336px' }}
-          value={selectedConfiguration}
+    <Autocomplete
+      groupBy={(option) => {
+        if (option.category === 'Other') {
+          return 'Other';
+        }
+        return option.category;
+      }}
+      isOptionEqualToValue={(option, selectedValue) =>
+        option.label === selectedValue.label
+      }
+      onChange={(_, selected) => {
+        onChange(selected!);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          error={!!errorText}
+          helperText={errorText}
+          label="Add a Configuration Option"
+          placeholder="Select a configuration option"
         />
-      </Grid>
-      <Grid size={{ xs: 2 }}>
-        <Button
-          buttonType="primary"
-          disabled={!selectedConfiguration}
-          sx={{ minWidth: 'auto', width: '70px' }}
-        >
-          Add
-        </Button>
-      </Grid>
-    </Grid>
+      )}
+      renderOption={(props, option) => (
+        <li {...props} key={props.id}>
+          {option.label}
+        </li>
+      )}
+      slotProps={{
+        listbox: {
+          style: {
+            padding: 0,
+          },
+        },
+      }}
+      sx={{
+        width: '316px',
+      }}
+      autoHighlight
+      clearIcon={null}
+      getOptionLabel={(option) => option.label}
+      label={''}
+      options={configurations}
+      value={selectedConfig ?? null}
+    />
   );
 };

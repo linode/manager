@@ -23,6 +23,7 @@ import {
   SSLFields,
   UpdateDatabasePayload,
   DatabaseFork,
+  DatabaseEngineConfig,
 } from './types';
 
 /**
@@ -345,4 +346,16 @@ export const resumeDatabase = (engine: Engine, databaseID: number) =>
       )}/instances/${encodeURIComponent(databaseID)}/resume`
     ),
     setMethod('POST')
+  );
+
+/**
+ * getConfig
+ *
+ * Return detailed list of all the configuration options
+ *
+ */
+export const getDatabaseEngineConfig = (engine: Engine) =>
+  Request<DatabaseEngineConfig>(
+    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/config`),
+    setMethod('GET')
   );

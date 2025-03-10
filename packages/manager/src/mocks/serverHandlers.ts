@@ -30,6 +30,7 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -368,6 +369,9 @@ const databases = [
 
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
+  }),
+  http.get('*/databases/:engine/config', () => {
+    return HttpResponse.json(databaseEngineConfigFactory.build());
   }),
 ];
 

@@ -5,9 +5,13 @@ import { useAccount } from '@linode/queries';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
+import type { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 import type {
+  ConfigurationItem,
   DatabaseEngine,
+  DatabaseEngineConfig,
   DatabaseInstance,
+  DatabaseInstanceAdvancedConfig,
   Engine,
   PendingUpdates,
   DatabaseFork,
@@ -264,3 +268,80 @@ export const formatConfigValue = (configValue: string) =>
     : configValue === 'undefined'
     ? ' - '
     : configValue;
+
+/**
+ * Recursively searches for a configuration item by its key within a nested configuration object.
+ *
+ * @param configObject
+ * @param targetKey
+ * @returns The found configuration option or `undefined` if not found.
+ */
+export const findConfigItem = (
+  configs:
+    | Record<string, Record<string, ConfigurationItem> | ConfigurationItem>
+    | undefined,
+  targetKey: string
+): ConfigurationItem | undefined => {
+  for (const key in configs) {
+    const value = configs[key];
+
+    if (key === targetKey) {
+      return value as ConfigurationItem;
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      const found = findConfigItem(
+        value as Record<string, ConfigurationItem>,
+        targetKey
+      );
+      if (found) return found;
+    }
+  }
+
+  return undefined;
+};
+
+/**
+ * Converts existing database configurations into an array of configuration options.
+ *
+ * @param configs
+ * @param allConfigs
+ * @returns An array of structured configuration options with metadata from `allConfigs`.
+ */
+export const convertExistingConfigsToArray = (
+  configs: DatabaseInstanceAdvancedConfig,
+  allConfigs: DatabaseEngineConfig | undefined
+): ConfigurationOption[] => {
+  const options: ConfigurationOption[] = [];
+
+  for (const key in configs) {
+    const value = configs[key];
+
+    if (typeof value === 'object' && value !== null) {
+      for (const subKey in value) {
+        const subValue = value[subKey];
+
+        const foundConfig = findConfigItem(allConfigs?.engine_config, subKey);
+        if (foundConfig) {
+          options.push({
+            ...foundConfig,
+            category: '',
+            label: subKey,
+            value: subValue,
+          });
+        }
+      }
+    } else {
+      const foundConfig = findConfigItem(allConfigs?.engine_config, key);
+      if (foundConfig) {
+        options.push({
+          ...foundConfig,
+          category: '',
+          label: key,
+          value: value,
+        });
+      }
+    }
+  }
+  return options;
+};

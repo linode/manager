@@ -69,7 +69,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
                 </React.Fragment>
               ))
             ) : (
-              <React.Fragment key={`${key}`}>
+              <React.Fragment key={key}>
                 <Grid size={{ lg: 4, md: 4, xs: 5 }}>
                   <StyledLabelTypography>{`${engine}.${key}`}</StyledLabelTypography>
                 </Grid>
