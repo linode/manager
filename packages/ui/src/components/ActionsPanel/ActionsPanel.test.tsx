@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithTheme } from '../../utilities/testHelpers';
 import { ActionsPanel } from './ActionsPanel';
