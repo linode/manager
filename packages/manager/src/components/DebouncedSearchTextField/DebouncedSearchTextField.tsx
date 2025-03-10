@@ -119,7 +119,7 @@ export const DebouncedSearchTextField = React.memo(
             ),
             startAdornment: (
               <InputAdornment position="start">
-                <Search />
+                <Search data-testid="SearchIcon" />
               </InputAdornment>
             ),
             ...inputSlotProps,

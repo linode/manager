@@ -1,7 +1,6 @@
 import { Autocomplete, CustomPopper } from '@linode/ui';
 import React from 'react';
 
-import ChevronDownIcon from 'src/assets/icons/chevron-down.svg';
 import Close from 'src/assets/icons/close.svg';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
@@ -163,7 +162,6 @@ export const LinodeSelect = (
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
-      popupIcon={<ChevronDownIcon />}
       sx={sx}
     />
   );
