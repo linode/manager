@@ -1,13 +1,13 @@
+import { queryClientFactory } from '@linode/queries';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-  vpcFactory,
-} from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
+import { vpcFactory } from 'src/factories';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { InterfaceListItem } from './InterfaceListItem';
@@ -23,7 +23,7 @@ const interfaceListItemTestId = 'interface-list-item';
 
 describe('InterfaceListItem', () => {
   it('should return the correct text for a public interface', () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({
+    const publicInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
@@ -38,7 +38,7 @@ describe('InterfaceListItem', () => {
   });
 
   it('should return the correct text for a VLAN interface', () => {
-    const vlanInterface = LinodeConfigInterfaceFactory.build();
+    const vlanInterface = linodeConfigInterfaceFactory.build();
 
     const { getByTestId } = renderWithTheme(
       <InterfaceListItem idx={1} interfaceEntry={vlanInterface} />
@@ -55,7 +55,7 @@ describe('InterfaceListItem', () => {
       label: 'first-vpc',
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: 1,
     });
 

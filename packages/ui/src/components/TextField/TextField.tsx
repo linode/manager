@@ -114,7 +114,7 @@ interface InputToolTipProps {
 }
 
 interface TextFieldPropsOverrides
-  extends Omit<StandardTextFieldProps, 'label'> {
+  extends Omit<StandardTextFieldProps, 'label' | 'select'> {
   // We override this prop to make it required
   label: string;
 }

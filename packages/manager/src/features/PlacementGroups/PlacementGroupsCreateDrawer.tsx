@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Divider,
   List,
   ListItem,
@@ -18,7 +19,6 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
@@ -27,8 +27,8 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   useAllPlacementGroupsQuery,
   useCreatePlacementGroup,
-} from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+  useRegionsQuery,
+} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';

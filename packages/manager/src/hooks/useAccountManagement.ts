@@ -1,6 +1,9 @@
-import { useAccount } from 'src/queries/account/account';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import {
+  useAccount,
+  useAccountSettings,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 
 import { useRestrictedGlobalGrantCheck } from './useRestrictedGlobalGrantCheck';
 
