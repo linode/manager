@@ -9,9 +9,11 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { getValidationSchema } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -72,13 +74,22 @@ export const CreateAlertDefinition = () => {
   const history = useHistory();
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
+  const flags = useFlags();
+  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>;
+
+  // Default resolver
+  const [validationSchema, setValidationSchema] = React.useState(
+    getValidationSchema(
+      null,
+      [],
+      createAlertSchema
+    ) as ObjectSchema<CreateAlertDefinitionForm>
+  );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(
-      CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
-    ),
+    resolver: yupResolver(validationSchema),
   });
   const {
     control,
@@ -137,7 +148,18 @@ export const CreateAlertDefinition = () => {
         threshold: 0,
       },
     ]);
+    setValue('entity_ids', []);
   }, [setValue]);
+
+  React.useEffect(() => {
+    setValidationSchema(
+      getValidationSchema(
+        serviceTypeWatcher,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        createAlertSchema
+      ) as ObjectSchema<CreateAlertDefinitionForm>
+    );
+  }, [createAlertSchema, flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
   return (
     <React.Fragment>

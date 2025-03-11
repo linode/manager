@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -17,7 +18,10 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { convertAlertDefinitionValues } from '../Utils/utils';
+import {
+  convertAlertDefinitionValues,
+  getValidationSchema,
+} from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
@@ -42,6 +46,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const flags = useFlags();
+  const editAlertScheme = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -53,7 +59,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      getValidationSchema(
+        alertDetails?.service_type,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        editAlertScheme
+      ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
