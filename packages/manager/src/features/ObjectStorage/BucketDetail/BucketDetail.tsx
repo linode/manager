@@ -1,5 +1,5 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { Box } from '@linode/ui';
+import { ActionsPanel, Box } from '@linode/ui';
 import { getQueryParamFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
@@ -9,7 +9,6 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';

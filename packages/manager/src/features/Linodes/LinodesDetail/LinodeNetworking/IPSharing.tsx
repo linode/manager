@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Button,
   CircleProgress,
   Dialog,
@@ -13,7 +14,6 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';

@@ -8,7 +8,7 @@ import {
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4';
-import { Accordion, Box, Button, Typography } from '@linode/ui';
+import { Accordion, ActionsPanel, Box, Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import {
   append,
@@ -24,7 +24,6 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromiseLoader from 'src/components/PromiseLoader/PromiseLoader';

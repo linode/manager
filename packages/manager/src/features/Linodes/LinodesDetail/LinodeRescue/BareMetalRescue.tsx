@@ -1,8 +1,8 @@
 import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
+import { ActionsPanel } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
