@@ -35,6 +35,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { UpgradeInterfacesDialog } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
@@ -83,7 +84,6 @@ export interface BodyProps {
   numVolumes: number;
   region: string;
   regionSupportsDiskEncryption: boolean;
-  setIsUpgradeInterfacesDialogOpen: (setOpen: boolean) => void;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -108,7 +108,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numVolumes,
     region,
     regionSupportsDiskEncryption,
-    setIsUpgradeInterfacesDialogOpen,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -141,6 +140,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
+
+  const [
+    isUpgradeInterfacesDialogOpen,
+    setIsUpgradeInterfacesDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -471,6 +475,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           )}
         </Grid>
       )}
+      <UpgradeInterfacesDialog
+        linodeId={linodeId}
+        onClose={() => setIsUpgradeInterfacesDialogOpen(false)}
+        open={isUpgradeInterfacesDialogOpen}
+      />
     </>
   );
 });

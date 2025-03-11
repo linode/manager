@@ -19,8 +19,6 @@ import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
-import type { LinodeDetailProps } from './LinodesDetail';
-
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(() =>
   import('./LinodeNetworking/LinodeNetworking').then((module) => ({
@@ -39,9 +37,7 @@ const LinodeSettings = React.lazy(
   () => import('./LinodeSettings/LinodeSettings')
 );
 
-const LinodesDetailNavigation = (props: LinodeDetailProps) => {
-  const { setIsUpgradeInterfacesDialogOpen } = props;
-
+const LinodesDetailNavigation = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
@@ -155,11 +151,7 @@ const LinodesDetailNavigation = (props: LinodeDetailProps) => {
                     <LinodeStorage />
                   </SafeTabPanel>
                   <SafeTabPanel index={idx++}>
-                    <LinodeConfigurations
-                      setIsUpgradeInterfacesDialogOpen={
-                        setIsUpgradeInterfacesDialogOpen
-                      }
-                    />
+                    <LinodeConfigurations />
                   </SafeTabPanel>
 
                   <SafeTabPanel index={idx++}>

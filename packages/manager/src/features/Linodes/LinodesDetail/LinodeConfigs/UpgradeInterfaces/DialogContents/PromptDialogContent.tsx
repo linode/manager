@@ -1,4 +1,12 @@
-import { Box, Button, List, ListItem, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  List,
+  ListItem,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
@@ -15,7 +23,7 @@ export const PromptDialogContent = (
 ) => {
   const { linodeId, onClose, open, setDialogState } = props;
 
-  const { data: configs } = useAllLinodeConfigsQuery(linodeId, open);
+  const { data: configs, isLoading } = useAllLinodeConfigsQuery(linodeId, open);
 
   const { upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces({
     linodeId,
@@ -23,12 +31,12 @@ export const PromptDialogContent = (
     setDialogState,
   });
 
-  if (!configs) {
-    return <Typography>No Configuration Profiles found to upgrade.</Typography>;
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
   const upgradeDryRun =
-    configs?.length > 1
+    configs && configs.length > 1
       ? () =>
           setDialogState({
             configs,
@@ -38,7 +46,7 @@ export const PromptDialogContent = (
           })
       : () => upgradeToLinodeInterfaces(true);
   const upgradeInterfaces =
-    configs?.length > 1
+    configs && configs?.length > 1
       ? () =>
           setDialogState({
             configs,

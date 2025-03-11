@@ -8,7 +8,6 @@ import { PromptDialogContent } from './DialogContents/PromptDialogContent';
 import { SuccessDialogContent } from './DialogContents/SuccessDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
-
 interface UpgradeInterfacesProps {
   linodeId: number;
   onClose: () => void;
@@ -44,7 +43,8 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
 
   return (
     <Dialog
-      // fullHeight // how do i make the dialog not change size
+      fullHeight // how do i make the dialog not change size
+      fullWidth
       maxWidth="sm"
       onClose={closeAndResetDialog}
       open={open}

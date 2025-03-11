@@ -32,7 +32,6 @@ import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
-import type { LinodeDetailProps } from '../LinodesDetail';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { BaseQueryParams } from '@linode/utilities';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -47,7 +46,7 @@ interface QueryParams extends BaseQueryParams {
   upgrade: BooleanString;
 }
 
-export const LinodeDetailHeader = (props: LinodeDetailProps) => {
+export const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -57,8 +56,6 @@ export const LinodeDetailHeader = (props: LinodeDetailProps) => {
   const queryParams = getQueryParamsFromQueryString<QueryParams>(
     location.search
   );
-
-  const { setIsUpgradeInterfacesDialogOpen } = props;
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',
@@ -227,7 +224,6 @@ export const LinodeDetailHeader = (props: LinodeDetailProps) => {
         handlers={handlers}
         id={matchedLinodeId}
         linode={linode}
-        setIsUpgradeInterfacesDialogOpen={setIsUpgradeInterfacesDialogOpen}
       />
       <PowerActionsDialog
         action={powerAction}

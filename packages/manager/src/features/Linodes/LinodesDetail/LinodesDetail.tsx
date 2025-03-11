@@ -14,13 +14,7 @@ import {
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
-import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
-
 import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
-
-export interface LinodeDetailProps {
-  setIsUpgradeInterfacesDialogOpen: (setOpen: boolean) => void;
-}
 
 const LinodesDetailHeader = React.lazy(() =>
   import(
@@ -50,11 +44,6 @@ export const LinodeDetail = () => {
   const id = Number(linodeId);
 
   const { data: linode, error, isLoading } = useLinodeQuery(id);
-
-  const [
-    isUpgradeInterfacesDialogOpen,
-    setIsUpgradeInterfacesDialogOpen,
-  ] = React.useState<boolean>(false);
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -90,21 +79,8 @@ export const LinodeDetail = () => {
         <Route
           render={() => (
             <React.Fragment>
-              <LinodesDetailHeader
-                setIsUpgradeInterfacesDialogOpen={
-                  setIsUpgradeInterfacesDialogOpen
-                }
-              />
-              <LinodesDetailNavigation
-                setIsUpgradeInterfacesDialogOpen={
-                  setIsUpgradeInterfacesDialogOpen
-                }
-              />
-              <UpgradeInterfacesDialog
-                linodeId={id}
-                onClose={() => setIsUpgradeInterfacesDialogOpen(false)}
-                open={isUpgradeInterfacesDialogOpen}
-              />
+              <LinodesDetailHeader />
+              <LinodesDetailNavigation />
             </React.Fragment>
           )}
         />

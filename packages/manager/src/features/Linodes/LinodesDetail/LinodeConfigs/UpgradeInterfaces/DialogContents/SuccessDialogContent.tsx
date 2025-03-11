@@ -1,4 +1,4 @@
-import { Button, Notice, Stack } from '@linode/ui';
+import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
@@ -8,6 +8,7 @@ import type {
   SuccessDialogState,
   UpgradeInterfacesDialogContentProps,
 } from '../types';
+import type { LinodeInterface, VPCInterfaceData } from '@linode/api-v4';
 
 export const SuccessDialogContent = (
   props: UpgradeInterfacesDialogContentProps<SuccessDialogState>
@@ -20,13 +21,41 @@ export const SuccessDialogContent = (
     setDialogState,
   });
 
+  const { isDryRun, linodeInterfaces } = state;
+
   return (
     <Stack gap={2}>
       <Notice important variant="success">
-        {state.isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
+        <Typography>
+          {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
+        </Typography>
       </Notice>
+      {!isDryRun && linodeInterfaces.length > 0 && (
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.tokens.background.Neutral,
+            marginTop: theme.spacing(1),
+            padding: theme.spacing(2),
+          })}
+        >
+          <Typography
+            sx={(theme) => ({
+              marginTop: theme.spacing(1),
+            })}
+            variant="h3"
+          >
+            Upgrade Summary
+          </Typography>
+          {linodeInterfaces.map((linodeInterface) => (
+            <LinodeInterfaceInfo
+              key={linodeInterface.id}
+              {...linodeInterface}
+            />
+          ))}
+        </Box>
+      )}
       <Stack direction="row-reverse" gap={2}>
-        {state.isDryRun && (
+        {isDryRun && (
           <Button
             buttonType="primary"
             onClick={() => upgradeToLinodeInterfaces(false)}
@@ -35,9 +64,93 @@ export const SuccessDialogContent = (
           </Button>
         )}
         <Button buttonType="secondary" onClick={onClose}>
-          {state.isDryRun ? 'Cancel' : 'Close'}
+          {isDryRun ? 'Cancel' : 'Close'}
         </Button>
       </Stack>
     </Stack>
+  );
+};
+
+const LinodeInterfaceInfo = (props: LinodeInterface) => {
+  const {
+    created,
+    id,
+    mac_address,
+    public: publicInterface,
+    updated,
+    version,
+    vlan,
+    vpc,
+  } = props;
+
+  return (
+    <>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
+        <strong>Interface Meta Info: Interface #{id}</strong>
+      </Typography>
+      <Typography>ID: {id}</Typography>
+      <Typography>MAC Address: {mac_address}</Typography>
+      <Typography>Created: {created}</Typography>
+      <Typography>Updated: {updated}</Typography>
+      <Typography>Version: {version}</Typography>
+      {publicInterface && (
+        <Typography
+          sx={(theme) => ({
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(2),
+          })}
+        >
+          Public Interface successfully upgraded
+        </Typography>
+      )}
+      {vpc && <VPCInterfaceInfo {...vpc} />}
+      {vlan && <VlanInterfaceInfo vlan={vlan} />}
+    </>
+  );
+};
+
+const VPCInterfaceInfo = (props: VPCInterfaceData) => {
+  const { subnet_id, vpc_id } = props;
+
+  return (
+    <>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
+        <strong>VPC Interface Details</strong>
+      </Typography>
+      <Typography>Default Route: IPv4</Typography>
+      <Typography>VPC ID: {vpc_id}</Typography>
+      <Typography>Subnet ID: {subnet_id}</Typography>
+    </>
+  );
+};
+
+const VlanInterfaceInfo = (props: Pick<LinodeInterface, 'vlan'>) => {
+  const { vlan } = props;
+
+  const { ipam_address, vlan_label } = vlan!;
+
+  return (
+    <>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
+        <strong>VLAN Interface Details</strong>
+      </Typography>
+      <Typography>Label: {vlan_label}</Typography>
+      <Typography>IPAM Address: {ipam_address}</Typography>
+    </>
   );
 };

@@ -24,12 +24,9 @@ import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
+import { UpgradeInterfacesDialog } from './UpgradeInterfaces/UpgradeInterfacesDialog';
 
-import type { LinodeDetailProps } from '../LinodesDetail';
-
-const LinodeConfigs = (props: LinodeDetailProps) => {
-  const { setIsUpgradeInterfacesDialogOpen } = props;
-
+const LinodeConfigs = () => {
   const theme = useTheme();
 
   const { linodeId } = useParams<{ linodeId: string }>();
@@ -64,6 +61,11 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
   const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
     false
   );
+
+  const [
+    isUpgradeInterfacesDialogOpen,
+    setIsUpgradeInterfacesDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -230,6 +232,11 @@ const LinodeConfigs = (props: LinodeDetailProps) => {
         linodeId={id}
         onClose={() => setIsDeleteConfigDialogOpen(false)}
         open={isDeleteConfigDialogOpen}
+      />
+      <UpgradeInterfacesDialog
+        linodeId={id}
+        onClose={() => setIsUpgradeInterfacesDialogOpen(false)}
+        open={isUpgradeInterfacesDialogOpen}
       />
     </>
   );
