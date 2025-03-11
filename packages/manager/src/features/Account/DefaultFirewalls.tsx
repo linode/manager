@@ -5,12 +5,13 @@ import {
 } from '@linode/queries';
 import {
   Accordion,
-  BetaChip,
+  Autocomplete,
   Box,
   Button,
   CircleProgress,
+  Divider,
   ErrorState,
-  Select,
+  Notice,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -33,19 +34,28 @@ export const DefaultFirewalls = () => {
     error: firewallsError,
     isLoading: isLoadingfirewalls,
   } = useAllFirewallsQuery();
-
-  // const values = {
-  //   default_firewall_ids: firewallSettings?.default_firewall_ids ?? {}
-  // }
+  const firewallOptions = firewalls ?? [];
+  const values = {
+    default_firewall_ids: firewallSettings?.default_firewall_ids ?? {},
+  };
 
   const {
     control,
-    formState: { isDirty, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     setError,
   } = useForm<UpdateFirewallSettings>({
-    defaultValues: { ...firewallSettings },
+    defaultValues: values,
+    values,
   });
+
+  const onSubmit = async (values: UpdateFirewallSettings) => {
+    try {
+      await updateFirewallSettings(values);
+    } catch (error) {
+      setError(error.field ?? 'root', { message: error[0].reason });
+    }
+  };
 
   if (isLoadingFirewallSettings || isLoadingfirewalls) {
     return (
@@ -65,28 +75,112 @@ export const DefaultFirewalls = () => {
 
   return (
     <Accordion defaultExpanded heading="Default Firewalls">
-      <Typography>
-        Choose the preferred firewall to be assigned for each type of
-        interface/connection
-      </Typography>
-      <form>
-        <Typography>
-          <strong>Linodes - Configuration Profile Interfaces</strong>
-        </Typography>
-        <Box
-          sx={(theme) => ({
-            marginTop: theme.spacing(2),
-          })}
-        >
-          <Button
-            buttonType="outlined"
-            disabled={!isDirty}
-            loading={isSubmitting}
-            type="submit"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {errors.root?.message && (
+          <Notice variant="error">{errors.root.message}</Notice>
+        )}
+        <Stack>
+          <Typography>
+            Choose the preferred firewall to be assigned for each type of
+            interface/connection
+          </Typography>
+          <Typography
+            sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            variant="h3"
           >
-            Save
-          </Button>
-        </Box>
+            Linodes - Configuration Profile Interfaces
+          </Typography>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(_, item) => {
+                  field.onChange(item?.id);
+                }}
+                value={
+                  firewallOptions.find((option) => option.id === field.value) ??
+                  null
+                }
+                errorText={fieldState.error?.message}
+                label="All"
+                options={firewallOptions}
+              />
+            )}
+            control={control}
+            name="default_firewall_ids.linode"
+          />
+          <Divider spacingBottom={16} spacingTop={16} />
+          <Typography variant="h3">Linodes - Linode Interfaces</Typography>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(_, item) => {
+                  field.onChange(item?.id);
+                }}
+                value={
+                  firewallOptions.find((option) => option.id === field.value) ??
+                  null
+                }
+                errorText={fieldState.error?.message}
+                label="Public Interface"
+                options={firewallOptions}
+              />
+            )}
+            control={control}
+            name="default_firewall_ids.public_interface"
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(_, item) => {
+                  field.onChange(item?.id);
+                }}
+                value={
+                  firewallOptions.find((option) => option.id === field.value) ??
+                  null
+                }
+                errorText={fieldState.error?.message}
+                label="VPC Interface"
+                options={firewallOptions}
+              />
+            )}
+            control={control}
+            name="default_firewall_ids.vpc_interface"
+          />
+          <Divider spacingBottom={16} spacingTop={16} />
+          <Typography variant="h3">NodeBalancers</Typography>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                onChange={(_, item) => {
+                  field.onChange(item?.id);
+                }}
+                value={
+                  firewallOptions.find((option) => option.id === field.value) ??
+                  null
+                }
+                errorText={fieldState.error?.message}
+                label="NodeBalancers"
+                options={firewallOptions}
+              />
+            )}
+            control={control}
+            name="default_firewall_ids.nodebalancer"
+          />
+          <Box
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
+          >
+            <Button
+              buttonType="outlined"
+              disabled={!isDirty}
+              loading={isSubmitting}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Box>
+        </Stack>
       </form>
     </Accordion>
   );

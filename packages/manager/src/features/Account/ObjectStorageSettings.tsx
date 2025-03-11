@@ -1,3 +1,4 @@
+import { useAccountSettings, useProfile } from '@linode/queries';
 import {
   Accordion,
   Box,
@@ -12,7 +13,6 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useAccountSettings, useProfile } from '@linode/queries';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
 
 export const ObjectStorageSettings = () => {

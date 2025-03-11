@@ -1,19 +1,20 @@
+import {
+  useAccountSettings,
+  useAllLinodesQuery,
+  useMutateAccountSettings,
+} from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import {
-  useAccountSettings,
-  useMutateAccountSettings,
-  useAllLinodesQuery,
-} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BackupDrawer } from '../Backups';
 import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
+import { DefaultFirewalls } from './DefaultFirewalls';
 import { EnableManaged } from './EnableManaged';
 import NetworkHelper from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
@@ -84,6 +85,7 @@ const GlobalSettings = () => {
     <div>
       <DocumentTitleSegment segment="Settings" />
       {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
+      {isLinodeInterfacesEnabled && <DefaultFirewalls />}
       <AutoBackups
         backups_enabled={backups_enabled}
         hasLinodesWithoutBackups={hasLinodesWithoutBackups}
