@@ -1,4 +1,5 @@
 import { Box, Button, Stack, Typography } from '@linode/ui';
+import Grid2 from '@mui/material/Grid2/Grid2';
 import * as React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -65,7 +66,13 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     name,
   });
   return (
-    <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+    <Grid2
+      container
+      display="flex"
+      flexDirection="column"
+      rowSpacing={2} // this helps in spacing automatically
+      sx={(theme) => ({ marginTop: theme.spacing(3) })}
+    >
       <Box
         alignItems="center"
         display="flex"
@@ -74,7 +81,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
       >
         <Typography variant="h2">3. Criteria</Typography>
       </Box>
-      <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+      <Stack spacing={2}>
         {fields !== null &&
           fields.length !== 0 &&
           fields.map((field, index) => {
@@ -101,14 +108,16 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             threshold: 0,
           })
         }
+        sx={{
+          width: '130px', // added a nice width for the button
+        }}
         buttonType="outlined"
         disabled={metricCriteriaWatcher.length === 5}
         size="medium"
-        sx={(theme) => ({ marginTop: theme.spacing(2) })}
         tooltipText="You can add up to 5 metrics."
       >
         Add metric
       </Button>
-    </Box>
+    </Grid2>
   );
 };
