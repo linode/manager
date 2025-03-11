@@ -30,7 +30,6 @@ import {
   StyledIPv4Label,
   StyledLabelBox,
   StyledListItem,
-  StyledSummaryGrid,
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
@@ -173,7 +172,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           >
             Summary
           </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
+          <Grid container spacing={1}>
             <Grid
               size={{
                 lg: 6,
@@ -256,7 +255,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Box>
                 </Grid>
               )}
-          </StyledSummaryGrid>
+          </Grid>
         </Grid>
 
         <Grid
