@@ -17,7 +17,6 @@ export const StyledHeading = styled('h3', {
   color: theme.tokens.content.Text.Secondary.Default,
   display: 'flex',
   fontSize: theme.tokens.font.FontSize.Xxxs,
-  // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
   fontWeight: theme.tokens.font.FontWeight.Extrabold,
   letterSpacing: '1px',
   lineHeight: theme.tokens.font.LineHeight.Xxxs,
@@ -76,7 +75,6 @@ export const StyledLinkTypography = styled(Typography, {
 })(({ theme }) => ({
   color: theme.tokens.content.Text.Primary.Default,
   fontSize: theme.tokens.font.FontSize.S,
-  // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
   fontWeight: theme.tokens.font.FontWeight.Bold,
   lineHeight: theme.tokens.font.LineHeight.Xs,
 }));
