@@ -2,6 +2,7 @@ import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { IPAddress } from '@linode/api-v4/lib/networking';
@@ -20,7 +21,12 @@ export const ViewIPDrawer = (props: Props) => {
   const actualRegion = regions?.find((r) => r.id === ip?.region);
 
   return (
-    <Drawer onClose={props.onClose} open={props.open} title={`Details for IP`}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={props.onClose}
+      open={props.open}
+      title={`Details for IP`}
+    >
       {ip && (
         <React.Fragment>
           <StyledSectionDiv data-qa-ip-address-heading>

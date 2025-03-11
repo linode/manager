@@ -11,6 +11,7 @@ import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
 import {
@@ -85,7 +86,12 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title={'Create Subnet'}
+    >
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}

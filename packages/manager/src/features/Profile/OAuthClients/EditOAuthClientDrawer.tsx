@@ -10,6 +10,7 @@ import {
 import { useFormik } from 'formik';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -53,7 +54,12 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create OAuth App">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Create OAuth App"
+    >
       {hasErrorFor('none') && (
         <Notice text={hasErrorFor('none')} variant="error" />
       )}

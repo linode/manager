@@ -4,6 +4,7 @@ import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
 
@@ -71,7 +72,12 @@ export const SubnetEditDrawer = (props: Props) => {
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit Subnet">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit Subnet"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}

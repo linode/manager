@@ -1,6 +1,7 @@
 import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -119,6 +120,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         open={isRemoveDeviceDialogOpen}
       />
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={() => setIsAddFirewalDrawerOpen(false)}
         open={isAddFirewallDrawerOpen}
         title="Add Firewall"

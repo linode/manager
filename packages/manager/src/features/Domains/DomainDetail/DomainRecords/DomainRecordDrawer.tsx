@@ -6,6 +6,7 @@ import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
@@ -256,6 +257,7 @@ export const DomainRecordDrawer = (props: DomainRecordDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`${modeMap[mode]} ${typeMap[type]} Record`}

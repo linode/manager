@@ -111,6 +111,7 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

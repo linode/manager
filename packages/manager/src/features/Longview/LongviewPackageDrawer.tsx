@@ -2,6 +2,7 @@ import { Box, Drawer } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -40,6 +41,7 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={isOpen}
       title={`${clientLabel}: Package Updates`}

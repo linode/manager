@@ -12,6 +12,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
@@ -96,6 +97,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Restore Backup from ${backup?.created}`}

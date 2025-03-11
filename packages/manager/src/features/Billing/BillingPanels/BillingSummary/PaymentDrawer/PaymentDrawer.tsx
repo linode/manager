@@ -19,6 +19,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { LinearProgress } from 'src/components/LinearProgress';
+import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -239,7 +240,12 @@ export const PaymentDrawer = (props: Props) => {
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title="Make a Payment">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Make a Payment"
+    >
       <Stack spacing={2}>
         {isReadOnly && (
           <Notice

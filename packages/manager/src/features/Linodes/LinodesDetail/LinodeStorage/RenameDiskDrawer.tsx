@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { object, string } from 'yup';
 
+import { NotFound } from 'src/components/NotFound';
 import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -55,7 +56,12 @@ export const RenameDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Rename Disk">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Rename Disk"
+    >
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice

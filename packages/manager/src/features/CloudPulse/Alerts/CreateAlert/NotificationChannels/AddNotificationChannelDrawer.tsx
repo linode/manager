@@ -10,6 +10,8 @@ import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
+
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
@@ -99,7 +101,12 @@ export const AddNotificationChannelDrawer = (
   };
 
   return (
-    <Drawer onClose={resetDrawer} open={open} title="Add Notification Channel">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={resetDrawer}
+      open={open}
+      title="Add Notification Channel"
+    >
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Box

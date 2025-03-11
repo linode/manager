@@ -12,6 +12,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
@@ -276,6 +277,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         title={`Unassign Linodes from subnet: ${subnet?.label} (${
           subnet?.ipv4 ?? subnet?.ipv6
         })`}
+        NotFoundComponent={NotFound}
         onClose={handleOnClose}
         open={open}
       >

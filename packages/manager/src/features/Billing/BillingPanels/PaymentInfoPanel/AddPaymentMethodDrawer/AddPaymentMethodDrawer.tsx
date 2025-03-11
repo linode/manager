@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
+import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useProfile } from 'src/queries/profile/profile';
@@ -92,7 +93,12 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const disabled = isProcessing || hasMaxPaymentMethods || isReadOnly;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Payment Method">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add Payment Method"
+    >
       {isProcessing ? (
         <LinearProgress
           sx={{

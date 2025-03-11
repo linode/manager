@@ -2,6 +2,7 @@ import { Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
+import { NotFound } from 'src/components/NotFound';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -17,6 +18,7 @@ export const VolumeDetailsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

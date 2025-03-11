@@ -11,6 +11,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 
@@ -57,6 +58,7 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

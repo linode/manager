@@ -2,6 +2,7 @@ import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
@@ -25,7 +26,12 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
   const { onClose, onSubmit, open } = props;
 
   return (
-    <Drawer onClose={onClose} open={open} title={'Add Credential'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={'Add Credential'}
+    >
       <Formik
         initialValues={{
           label: '',

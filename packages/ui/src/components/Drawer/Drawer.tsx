@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { NotFound } from '../../../../manager/src/components/NotFound';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
@@ -16,7 +15,7 @@ import type { APIError } from '@linode/api-v4';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 import type { Theme } from '@mui/material/styles';
 
-export interface DrawerProps extends _DrawerProps {
+interface BaseProps extends _DrawerProps {
   error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
@@ -35,6 +34,19 @@ export interface DrawerProps extends _DrawerProps {
   wide?: boolean;
 }
 
+interface PropsWithoutNotFound extends BaseProps {
+  NotFoundComponent?: never;
+  labelLink?: never;
+}
+
+interface PropsWithNotFound extends BaseProps {
+  NotFoundComponent: React.ComponentType<
+    React.PropsWithChildren<{ className?: string }>
+  >;
+}
+
+export type DrawerProps = PropsWithNotFound | PropsWithoutNotFound;
+
 /**
  * ## Overview
  * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
@@ -50,6 +62,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
     const { classes, cx } = useStyles();
     const {
+      NotFoundComponent,
       children,
       error,
       isFetching,
@@ -135,8 +148,8 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Grid>
         </Grid>
         {error ? (
-          error === 'Not Found' ? (
-            <NotFound />
+          error === 'Not Found' && NotFoundComponent ? (
+            <NotFoundComponent />
           ) : (
             <ErrorState
               errorText={Array.isArray(error) ? error[0].reason : error}

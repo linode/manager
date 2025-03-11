@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
@@ -146,7 +147,12 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={isOpen}
+      title="Create Bucket"
+    >
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice

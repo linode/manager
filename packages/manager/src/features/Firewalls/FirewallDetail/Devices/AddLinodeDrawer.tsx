@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
@@ -174,6 +175,7 @@ export const AddLinodeDrawer = (props: Props) => {
         setLocalError(undefined);
         onClose();
       }}
+      NotFoundComponent={NotFound}
       open={open}
       title={`Add Linode to Firewall: ${firewall?.label}`}
     >

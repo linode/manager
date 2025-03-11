@@ -13,6 +13,7 @@ import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -147,7 +148,13 @@ all new Linodes will automatically be backed up.`
   });
 
   return (
-    <Drawer onClose={onClose} open={open} title="Enable All Backups" wide>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Enable All Backups"
+      wide
+    >
       <Stack spacing={2}>
         <Typography variant="body1">
           Three backup slots are executed and rotated automatically: a daily

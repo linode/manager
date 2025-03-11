@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -52,7 +53,12 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Import a Zone">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Import a Zone"
+    >
       {noPermission && (
         <Notice variant="error">
           You do not have permission to create new Domains.

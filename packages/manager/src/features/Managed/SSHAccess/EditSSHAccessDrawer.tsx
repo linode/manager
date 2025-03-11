@@ -12,6 +12,7 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
+import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -78,7 +79,12 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   };
 
   return (
-    <Drawer onClose={closeDrawer} open={isOpen} title={title}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={closeDrawer}
+      open={isOpen}
+      title={title}
+    >
       {!linodeSetting ? null : (
         <>
           {/* We're intentionally not validating with Formik, because we want to allow "Port" to

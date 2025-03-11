@@ -22,6 +22,7 @@ import { useLocation } from 'react-router-dom';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
@@ -198,6 +199,7 @@ export const PlacementGroupsCreateDrawer = (
         />
       )}
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={handleDrawerClose}
         open={open}
         title="Create Placement Group"

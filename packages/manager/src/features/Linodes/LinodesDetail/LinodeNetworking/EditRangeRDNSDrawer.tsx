@@ -10,6 +10,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
 import { useAllIPsQuery } from 'src/queries/networking/networking';
@@ -81,7 +82,12 @@ export const EditRangeRDNSDrawer = (props: Props) => {
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Edit Reverse DNS">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title="Edit Reverse DNS"
+    >
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice data-qa-error style={{ marginTop: 16 }} variant="error">

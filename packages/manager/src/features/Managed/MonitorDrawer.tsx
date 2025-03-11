@@ -12,6 +12,8 @@ import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
+
 import type {
   ManagedCredential,
   ManagedServiceMonitor,
@@ -123,7 +125,12 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={titleMap[mode]}
+    >
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}

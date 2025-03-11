@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
@@ -107,6 +108,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={closeDrawer}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}

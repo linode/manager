@@ -4,6 +4,7 @@ import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -74,7 +75,12 @@ export const VPCEditDrawer = (props: Props) => {
   const { data: regionsData, error: regionsError } = useRegionsQuery();
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit VPC">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit VPC"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}

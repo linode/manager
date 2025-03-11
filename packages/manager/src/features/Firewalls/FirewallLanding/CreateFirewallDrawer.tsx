@@ -18,6 +18,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -142,6 +143,7 @@ export const CreateFirewallDrawer = React.memo(
     return (
       <FormProvider {...form}>
         <Drawer
+          NotFoundComponent={NotFound}
           onClose={onClose}
           onTransitionExited={() => reset()}
           open={open}
