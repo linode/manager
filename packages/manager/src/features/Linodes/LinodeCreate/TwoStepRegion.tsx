@@ -75,7 +75,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { params } = useLinodeCreateQueryParams();
 
   return (
-    <Paper data-testid="region">
+    <Paper data-testid="region" data-qa-linode-region>
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink

@@ -30,7 +30,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const theme = useTheme();
   const [color, setColor] = useState<string>(
-    defaultColor ?? theme.palette.primary.dark
+    defaultColor ?? theme.tokens.color.Neutrals[30]
   );
 
   return (

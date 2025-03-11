@@ -180,7 +180,7 @@ Environment variables related to the general operation of the Cloud Manager Cypr
 
 | Environment Variable | Description                                                                                           | Example      | Default                         |
 |----------------------|-------------------------------------------------------------------------------------------------------|--------------|---------------------------------|
-| `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core`, `region`, or `synthetic`. | `region`     | Unset; defaults to `core` suite |
+| `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core` or `synthetic`.            | `synthetic`  | Unset; defaults to `core` suite |
 | `CY_TEST_TAGS`       | Query identifying tests that should run by specifying allowed and disallowed tags.                    | `method:e2e` | Unset; all tests run by default |
 
 ###### Overriding Behavior
@@ -189,7 +189,6 @@ These environment variables can be used to override some behaviors of Cloud Mana
 
 | Environment Variable    | Description                                     | Example   | Default                                    |
 |-------------------------|-------------------------------------------------|-----------|--------------------------------------------|
-| `CY_TEST_REGION`        | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random      |
 | `CY_TEST_FEATURE_FLAGS` | JSON string containing feature flag data        | `{}`      | Unset; feature flag data is not overridden |
 
 ###### Run Splitting

@@ -3,17 +3,16 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  FirewallRuleActionMenu,
-  FirewallRuleActionMenuProps,
-} from './FirewallRuleActionMenu';
+import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
+
+import type { FirewallRuleActionMenuProps } from './FirewallRuleActionMenu';
 
 const props: FirewallRuleActionMenuProps = {
   disabled: false,
+  handleCloneFirewallRule: vi.fn(),
+  handleDeleteFirewallRule: vi.fn(),
+  handleOpenRuleDrawerForEditing: vi.fn(),
   idx: 1,
-  triggerCloneFirewallRule: vi.fn(),
-  triggerDeleteFirewallRule: vi.fn(),
-  triggerOpenRuleDrawerForEditing: vi.fn(),
 };
 
 describe('Firewall rule action menu', () => {
