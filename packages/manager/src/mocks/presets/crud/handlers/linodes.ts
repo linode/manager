@@ -28,6 +28,8 @@ import type {
   Linode,
   LinodeBackupsResponse,
   LinodeIPsResponse,
+  LinodeInterface,
+  LinodeInterfaces,
   RegionalNetworkUtilization,
   Stats,
 } from '@linode/api-v4';
@@ -70,6 +72,51 @@ export const getLinodes = () => [
       }
 
       return makeResponse(linode);
+    }
+  ),
+
+  http.get(
+    '*/v4beta/linode/instances/:id/interfaces',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaces>> => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+      const linodeInterfaces = await mswDB.getAll('linodeInterfaces');
+
+      if (
+        !linode ||
+        !linodeInterfaces ||
+        linode.interface_generation !== 'linode'
+      ) {
+        return makeNotFoundResponse();
+      }
+
+      const interfaces = linodeInterfaces
+        .filter((interfaceTuple) => interfaceTuple[0] === id)
+        .map((interfaceTuple) => interfaceTuple[1]);
+
+      return makeResponse({
+        interfaces,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4beta/linode/instances/:id/interfaces/:interfaceId',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | LinodeInterface>> => {
+      const id = Number(params.id);
+      const interfaceId = Number(params.interfaceId);
+      const linode = await mswDB.get('linodes', id);
+      const linodeInterface = await mswDB.get('linodeInterfaces', interfaceId);
+
+      if (!linode || !linodeInterface) {
+        return makeNotFoundResponse();
+      }
+
+      return makeResponse(linodeInterface[1]);
     }
   ),
 
