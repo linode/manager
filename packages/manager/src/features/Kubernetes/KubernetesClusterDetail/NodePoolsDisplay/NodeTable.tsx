@@ -255,7 +255,7 @@ export const NodeTable = React.memo((props: Props) => {
                  **/
                 sx={{ position: 'relative' }}
               />
-              <StyledTableFooter sx={{ paddingLeft: 0, paddingTop: '8px' }}>
+              <StyledTableFooter>
                 <StyledPoolInfoBox>
                   {(isDiskEncryptionFeatureEnabled ||
                     regionSupportsDiskEncryption) &&
