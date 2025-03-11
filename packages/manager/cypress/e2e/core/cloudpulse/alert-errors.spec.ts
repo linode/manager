@@ -49,7 +49,7 @@ describe('Alerts Listing Page - Error Handling', () => {
     mockUpdateAlertDefinitionsError('dbaas', 2, 'Alert-2').as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin('monitor/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
