@@ -1,5 +1,6 @@
-import { IconButton } from '@linode/ui';
 import { Box, CircleProgress, Paper, Tooltip } from '@linode/ui';
+import { IconButton } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -7,25 +8,24 @@ import { useLocation } from 'react-router-dom';
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { StyledControlHeader } from './DisplayLinodes.styles';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
+import type { BaseQueryParams } from '@linode/utilities';
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { PaginationProps } from 'src/components/Paginate';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 import type { RegionFilter } from 'src/utilities/storage';
 
 interface QueryParams extends BaseQueryParams {

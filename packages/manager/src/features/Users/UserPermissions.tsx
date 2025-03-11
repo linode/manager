@@ -5,6 +5,7 @@ import {
   updateUser,
 } from '@linode/api-v4/lib/account';
 import {
+  ActionsPanel,
   Box,
   CircleProgress,
   FormControlLabel,
@@ -19,7 +20,6 @@ import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -410,13 +410,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         )}
         <StyledPaper>
           <Grid
-            container
-            spacing={2}
             sx={{
               alignItems: 'center',
               margin: 0,
               width: 'auto',
             }}
+            container
+            spacing={2}
           >
             <StyledHeaderGrid>
               <Typography
@@ -491,12 +491,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     return (
       <Grid
-        className="py0"
-        key={perm}
         size={{
           sm: 6,
           xs: 12,
         }}
+        className="py0"
+        key={perm}
       >
         <FormControlLabel
           control={
@@ -599,11 +599,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         data-qa-entity-section
       >
         <Grid
-          container
           sx={{
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
+          container
         >
           <Grid>
             <Typography

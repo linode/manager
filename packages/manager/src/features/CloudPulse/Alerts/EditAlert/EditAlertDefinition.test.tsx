@@ -23,6 +23,7 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  Element.prototype.scrollIntoView = vi.fn();
   queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
@@ -88,8 +89,8 @@ describe('EditAlertDefinition component', () => {
       );
       const descriptionValue = 'Updated Description';
       const nameValue = 'Updated Label';
-      const nameInput = getByPlaceholderText('Enter Name');
-      const descriptionInput = getByPlaceholderText('Enter Description');
+      const nameInput = getByPlaceholderText('Enter a Name');
+      const descriptionInput = getByPlaceholderText('Enter a Description');
       await userEvent.clear(nameInput);
       await userEvent.clear(descriptionInput);
       await userEvent.type(nameInput, nameValue);

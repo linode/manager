@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { ActionsPanel, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
@@ -30,7 +29,7 @@ interface Props {
 export const AddNodebalancerDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);

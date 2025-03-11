@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
 
-import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import type { Filter } from '@linode/api-v4';

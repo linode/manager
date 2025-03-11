@@ -1,7 +1,6 @@
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -102,7 +101,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       : null,
   ].filter(Boolean) as Action[];
 
-  return !isEmpty(actions) ? (
+  return actions.length > 0 ? (
     <>
       {!matchesMdDown &&
         actions.map((action) => {

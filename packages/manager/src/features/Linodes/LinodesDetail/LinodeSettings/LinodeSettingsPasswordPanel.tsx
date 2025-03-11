@@ -1,9 +1,8 @@
-import { Accordion, Notice, Select } from '@linode/ui';
+import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllLinodeDisksQuery,

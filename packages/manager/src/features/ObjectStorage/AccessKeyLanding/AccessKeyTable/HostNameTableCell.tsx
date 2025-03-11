@@ -1,11 +1,11 @@
 import { StyledLinkButton } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { pluralize } from 'src/utilities/pluralize';
 
 import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
 

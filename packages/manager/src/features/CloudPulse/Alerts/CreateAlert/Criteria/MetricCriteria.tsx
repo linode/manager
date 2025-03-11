@@ -64,6 +64,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     control,
     name,
   });
+
   return (
     <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
       <Box
@@ -102,8 +103,11 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
           })
         }
         buttonType="outlined"
+        disabled={metricCriteriaWatcher.length === 5}
         size="medium"
         sx={(theme) => ({ marginTop: theme.spacing(2) })}
+        sxEndIcon={{ display: 'none' }}
+        tooltipText="You can add up to 5 metrics."
       >
         Add metric
       </Button>

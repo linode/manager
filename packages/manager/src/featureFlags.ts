@@ -121,6 +121,7 @@ export interface Flags {
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
   limitsEvolution: BaseFeatureFlag;
+  linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: BaseFeatureFlag;
   lkeEnterprise: LkeEnterpriseFlag;

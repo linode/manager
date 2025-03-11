@@ -1,5 +1,6 @@
-import { Popover } from '@mui/material';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { Popover, useTheme, useMediaQuery } from '@mui/material';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTime } from 'luxon';
 import React, { useRef, useState } from 'react';
 
@@ -8,7 +9,7 @@ import { Button } from '../../Button/Button';
 import { Divider } from '../../Divider/Divider';
 import { Stack } from '../../Stack/Stack';
 import { Calendar } from '../Calendar/Calendar';
-import { DateTimeField } from '../DateTimeField';
+import { DateField } from '../DateField';
 import { Presets } from './Presets';
 
 import type { SxProps } from '@mui/material/styles';
@@ -118,9 +119,9 @@ export const DateRangePicker = ({
 
   const handleApply = () => {
     onApply?.({
-      endDate: endDate ? endDate.toISO() : null,
+      endDate: endDate ? endDate.toISODate() : null,
       selectedPreset,
-      startDate: startDate ? startDate.toISO() : null,
+      startDate: startDate ? startDate.toISODate() : null,
     });
     handleClose();
   };
@@ -179,106 +180,106 @@ export const DateRangePicker = ({
   };
 
   return (
-    <Box>
-      <Stack direction="row" spacing={2} sx={sx}>
-        <DateTimeField
-          onChange={(date) => {
-            setStartDate(date);
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <Box>
+        <Stack direction="row" spacing={2} sx={sx}>
+          <DateField
+            onChange={(date) => {
+              setStartDate(date);
 
-            // Clear end date **only** if the new start date is after the current end date
-            if (endDate && date && date > endDate) {
-              setEndDate(null);
+              // Clear end date **only** if the new start date is after the current end date
+              if (endDate && date && date > endDate) {
+                setEndDate(null);
+              }
+              setFocusedField('end'); // Automatically focus on end date
+            }}
+            errorText={startDateError}
+            format={format}
+            inputRef={startDateInputRef}
+            label={startDateProps?.label ?? 'Start Date'}
+            onClick={() => handleOpen('start')}
+            value={startDate}
+          />
+          <DateField
+            onChange={(date) => {
+              setEndDate(date);
+            }}
+            errorText={endDateError}
+            format={format}
+            inputRef={endDateInputRef}
+            label={endDateProps?.label ?? 'End Date'}
+            onClick={() => handleOpen('end')}
+            value={endDate}
+          />
+        </Stack>
+        <Popover
+          onClose={(e: React.SyntheticEvent<HTMLElement>) => {
+            const target = e.target as HTMLElement;
+
+            // Check if click is inside the input field (anchorEl)
+            const isClickInsideInput = anchorEl?.contains(target);
+
+            // Check if click is inside the Popover itself
+            const isClickInsidePopover = target.closest('.MuiPopover-paper');
+
+            if (isClickInsideInput || isClickInsidePopover) {
+              return; // Prevent closing if clicked inside input or popover
             }
-            setFocusedField('end'); // Automatically focus on end date
+
+            handleClose(); // Close popover only when clicking outside
           }}
-          errorText={startDateError}
-          format={format}
-          handleClose={handleClose}
-          inputRef={startDateInputRef}
-          label={startDateProps?.label ?? 'Start Date'}
-          onClick={() => handleOpen('start')}
-          value={startDate}
-        />
-        <DateTimeField
-          onChange={(date) => {
-            setEndDate(date);
-          }}
-          errorText={endDateError}
-          format={format}
-          handleClose={handleClose}
-          inputRef={endDateInputRef}
-          label={endDateProps?.label ?? 'End Date'}
-          onClick={() => handleOpen('end')}
-          value={endDate}
-        />
-      </Stack>
-      <Popover
-        onClose={(e: React.SyntheticEvent<HTMLElement>) => {
-          const target = e.target as HTMLElement;
-
-          // Check if click is inside the input field (anchorEl)
-          const isClickInsideInput = anchorEl?.contains(target);
-
-          // Check if click is inside the Popover itself
-          const isClickInsidePopover = target.closest('.MuiPopover-paper');
-
-          if (isClickInsideInput || isClickInsidePopover) {
-            return; // Prevent closing if clicked inside input or popover
-          }
-
-          handleClose(); // Close popover only when clicking outside
-        }}
-        anchorEl={anchorEl}
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        disableAutoFocus
-        open={open}
-        role="dialog"
-        sx={{ boxShadow: 3, zIndex: 1300 }}
-        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-      >
-        <Box
-          bgcolor="background.paper"
-          boxShadow={4}
-          display="flex"
-          gap={2}
-          paddingRight={2}
-          sx={{ overflowX: isSmallScreen ? 'auto' : '' }}
+          anchorEl={anchorEl}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          disableAutoFocus
+          open={open}
+          role="dialog"
+          sx={{ boxShadow: 3, zIndex: 1300 }}
+          transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
-          {presetsProps?.enablePresets && (
-            <Presets
-              onPresetSelect={handlePresetSelect}
-              selectedPreset={selectedPreset}
+          <Box
+            bgcolor="background.paper"
+            boxShadow={4}
+            display="flex"
+            gap={2}
+            paddingRight={2}
+            sx={{ overflowX: isSmallScreen ? 'auto' : '' }}
+          >
+            {presetsProps?.enablePresets && (
+              <Presets
+                onPresetSelect={handlePresetSelect}
+                selectedPreset={selectedPreset}
+              />
+            )}
+            <Calendar
+              direction="left"
+              endDate={endDate}
+              focusedField={focusedField}
+              month={currentMonth}
+              onDateClick={handleDateSelection}
+              setMonth={setCurrentMonth}
+              startDate={startDate}
             />
-          )}
-          <Calendar
-            direction="left"
-            endDate={endDate}
-            focusedField={focusedField}
-            month={currentMonth}
-            onDateClick={handleDateSelection}
-            setMonth={setCurrentMonth}
-            startDate={startDate}
-          />
-          <Calendar
-            direction="right"
-            endDate={endDate}
-            focusedField={focusedField}
-            month={currentMonth.plus({ months: 1 })}
-            onDateClick={handleDateSelection}
-            setMonth={(date) => setCurrentMonth(date.minus({ months: 1 }))}
-            startDate={startDate}
-          />
-        </Box>
-        <Divider spacingBottom={0} spacingTop={0} />
-        <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
-          <Button buttonType="outlined" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button buttonType="primary" onClick={handleApply}>
-            Apply
-          </Button>
-        </Box>
-      </Popover>
-    </Box>
+            <Calendar
+              direction="right"
+              endDate={endDate}
+              focusedField={focusedField}
+              month={currentMonth.plus({ months: 1 })}
+              onDateClick={handleDateSelection}
+              setMonth={(date) => setCurrentMonth(date.minus({ months: 1 }))}
+              startDate={startDate}
+            />
+          </Box>
+          <Divider spacingBottom={0} spacingTop={0} />
+          <Box display="flex" gap={2} justifyContent="flex-end" padding={2}>
+            <Button buttonType="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button buttonType="primary" onClick={handleApply}>
+              Apply
+            </Button>
+          </Box>
+        </Popover>
+      </Box>
+    </LocalizationProvider>
   );
 };

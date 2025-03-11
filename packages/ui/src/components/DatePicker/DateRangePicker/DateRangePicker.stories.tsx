@@ -27,7 +27,7 @@ The Date Range Picker allows users to select a start and end date using a custom
       },
     },
   },
-  title: 'Components/DateRangePicker',
+  title: 'Components/DatePicker/DateRangePickerV2',
 };
 
 export default meta;

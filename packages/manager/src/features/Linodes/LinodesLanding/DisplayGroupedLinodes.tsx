@@ -2,17 +2,14 @@ import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { IconButton } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
-import { compose } from 'ramda';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
-import {
-  MIN_PAGE_SIZE,
-  PaginationFooter,
-  getMinimumPageSizeForNumberOfItems,
-} from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -80,7 +77,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
 
   const dataLength = data.length;
 
-  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
+  const orderedGroupedLinodes = sortGroups(groupByTags(data));
   const tableWrapperProps = {
     dataLength,
     handleOrderChange,

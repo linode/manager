@@ -1,10 +1,9 @@
-import { Box, Notice, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Notice, TextField, Typography } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,

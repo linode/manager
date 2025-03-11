@@ -1,4 +1,5 @@
-import { pluralize } from 'src/utilities/pluralize';
+import { pluralize } from '@linode/utilities';
+
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {

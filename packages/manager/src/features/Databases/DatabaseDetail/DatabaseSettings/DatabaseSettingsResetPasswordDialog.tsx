@@ -1,7 +1,6 @@
-import { Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useDatabaseCredentialsMutation } from 'src/queries/databases/databases';
 

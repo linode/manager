@@ -72,9 +72,12 @@ describe('volume create flow', () => {
     });
 
     // Fill out and submit volume create form.
-    cy.contains('Label').click().type(volume.label);
-    cy.findByLabelText('Tags').click().type(entityTag);
-    cy.contains('Size').click().type(`{selectall}{backspace}${volume.size}`);
+    cy.contains('Label').click();
+    cy.focused().type(volume.label);
+    cy.findByLabelText('Tags').click();
+    cy.focused().type(entityTag);
+    cy.contains('Size').click();
+    cy.focused().type(`{selectall}{backspace}${volume.size}`);
     ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
     cy.findByText('Create Volume').click();
@@ -127,16 +130,14 @@ describe('volume create flow', () => {
         });
 
         // Fill out and submit volume create form.
-        cy.contains('Label').click().type(volume.label);
-        cy.contains('Size')
-          .click()
-          .type(`{selectall}{backspace}${volume.size}`);
+        cy.contains('Label').click();
+        cy.focused().type(volume.label);
+        cy.contains('Size').click();
+        cy.focused().type(`{selectall}{backspace}${volume.size}`);
         ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
-        cy.findByLabelText('Linode')
-          .should('be.visible')
-          .click()
-          .type(linode.label);
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -209,10 +210,8 @@ describe('volume create flow', () => {
         cy.wait(['@getFeatureFlags', '@getAccount']);
 
         // Select a linode without the BSE capability
-        cy.findByLabelText('Linode')
-          .should('be.visible')
-          .click()
-          .type(linode.label);
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -267,10 +266,8 @@ describe('volume create flow', () => {
     cy.wait(['@getAccount', '@getRegions', '@getLinodes']);
 
     // Select a linode without the BSE capability
-    cy.findByLabelText('Linode')
-      .should('be.visible')
-      .click()
-      .type(mockLinode.label);
+    cy.findByLabelText('Linode').should('be.visible').click();
+    cy.focused().type(mockLinode.label);
 
     ui.autocompletePopper
       .findByTitle(mockLinode.label)
@@ -353,8 +350,8 @@ describe('volume create flow', () => {
         // Ensure notice is displayed in "Attach Existing Volume" view when an encrypted volume is selected, & that the "Attach Volume" button is disabled
         cy.findByPlaceholderText('Select a Volume')
           .should('be.visible')
-          .click()
-          .type(`${volume.label}{downarrow}{enter}`);
+          .click();
+        cy.focused().type(`${volume.label}{downarrow}{enter}`);
         ui.autocompletePopper
           .findByTitle(volume.label)
           .should('be.visible')
@@ -401,7 +398,8 @@ describe('volume create flow', () => {
             'be.visible'
           );
           cy.contains('Create and Attach Volume').click();
-          cy.contains('Label').click().type(volume.label);
+          cy.contains('Label').click();
+          cy.focused().type(volume.label);
           cy.contains('Size').type(`{selectall}{backspace}${volume.size}`);
           cy.findByText('Create Volume').click();
         });
