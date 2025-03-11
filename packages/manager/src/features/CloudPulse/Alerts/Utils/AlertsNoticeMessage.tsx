@@ -1,11 +1,10 @@
+import { type NoticeVariant, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
+import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
 import { StyledNotice } from '../AlertsResources/AlertsResourcesNotice';
-
-import { Typography, type NoticeVariant } from '@linode/ui';
-import React from 'react';
 
 interface ResourcesNoticeProps {
   /**
