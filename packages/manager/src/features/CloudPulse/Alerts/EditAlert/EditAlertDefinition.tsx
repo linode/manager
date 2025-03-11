@@ -7,6 +7,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -28,7 +29,6 @@ import type {
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
-import { useFlags } from 'src/hooks/useFlags';
 
 export interface EditAlertProps {
   /**
@@ -60,7 +60,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       getValidationSchema(
         alertDetails.service_type,
         flags.aclpAlertServiceTypeConfig ?? [],
-        editAlertSchema
+        editAlertSchema,
+        true
       ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
