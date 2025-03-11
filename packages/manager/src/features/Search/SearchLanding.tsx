@@ -9,7 +9,6 @@ import { useSearch } from './useSearch';
 import { getErrorsFromErrorMap, searchableEntityDisplayNameMap } from './utils';
 
 import type { SearchResultsByEntity } from './search.interfaces';
-import type { ResultRowDataOption } from './types';
 
 const SearchLanding = () => {
   const location = useLocation();
@@ -60,7 +59,7 @@ const SearchLanding = () => {
             entity={searchableEntityDisplayNameMap[entityType]}
             groupSize={100}
             key={idx}
-            results={searchResultsByEntity[entityType] as ResultRowDataOption[]}
+            results={searchResultsByEntity[entityType]}
           />
         )
       )}

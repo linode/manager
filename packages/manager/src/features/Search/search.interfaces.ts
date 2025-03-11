@@ -3,11 +3,19 @@ export interface SearchResults {
   searchResultsByEntity: SearchResultsByEntity;
 }
 
-export interface SearchableItem<T = number | string> {
-  data?: any;
+interface SearchItemData extends Record<string, string | string[] | undefined> {
+  created?: string;
+  description: string;
+  path: string;
+  region?: string;
+  tags?: string[];
+}
+
+export interface SearchableItem {
+  data: SearchItemData;
   entityType: SearchableEntityType;
   label: string;
-  value: T;
+  value: number | string;
 }
 
 export type SearchableEntityType =

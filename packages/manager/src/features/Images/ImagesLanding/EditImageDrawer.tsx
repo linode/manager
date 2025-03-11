@@ -64,8 +64,8 @@ export const EditImageDrawer = (props: Props) => {
         for (const error of errors) {
           if (
             error.field === 'label' ||
-            error.field == 'description' ||
-            error.field == 'tags'
+            error.field === 'description' ||
+            error.field === 'tags'
           ) {
             setError(error.field, { message: error.reason });
           } else {

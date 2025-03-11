@@ -124,11 +124,10 @@ export const SearchBar = () => {
     }
 
     if (isSpecialOption(item)) {
-      const text = item.data.searchText;
       if (item.value === 'redirect') {
         history.push({
           pathname: `/search`,
-          search: `?query=${encodeURIComponent(text)}`,
+          search: `?query=${encodeURIComponent(searchText)}`,
         });
       }
       return;
@@ -298,10 +297,7 @@ export const SearchBar = () => {
             return (
               <SearchSuggestion
                 {...rest}
-                data={{
-                  data: option.data,
-                  label: option.label,
-                }}
+                data={option}
                 key={`${key}-${value}`}
                 searchText={searchText}
                 selectOption={() => onSelect(option)}

@@ -14,12 +14,12 @@ import { splitAt } from 'src/utilities/splitAt';
 import { StyledButton, StyledTypography } from './ResultGroup.styles';
 import { ResultRow } from './ResultRow';
 
-import type { ResultRowDataOption } from './types';
+import type { SearchableItem } from './search.interfaces';
 
 interface ResultGroupProps {
   entity: string;
   groupSize: number;
-  results: ResultRowDataOption[];
+  results: SearchableItem[];
 }
 
 export const ResultGroup = (props: ResultGroupProps) => {

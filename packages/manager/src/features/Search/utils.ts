@@ -1,3 +1,8 @@
+import Compute from 'src/assets/icons/entityIcons/compute.svg';
+import Database from 'src/assets/icons/entityIcons/database.svg';
+import Networking from 'src/assets/icons/entityIcons/networking.svg';
+import Storage from 'src/assets/icons/entityIcons/storage.svg';
+
 import { refinedSearch } from './refinedSearch';
 
 import type {
@@ -31,6 +36,22 @@ export const emptyErrors: Record<SearchableEntityType, null | string> = {
   nodebalancer: null,
   stackscript: null,
   volume: null,
+};
+
+export const searchableEntityIconMap: Record<
+  SearchableEntityType,
+  React.ComponentType
+> = {
+  bucket: Storage,
+  database: Database,
+  domain: Networking,
+  firewall: Networking,
+  image: Storage,
+  kubernetesCluster: Compute,
+  linode: Compute,
+  nodebalancer: Networking,
+  stackscript: Compute,
+  volume: Storage,
 };
 
 export const searchableEntityDisplayNameMap: Record<

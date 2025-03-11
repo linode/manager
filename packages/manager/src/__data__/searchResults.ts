@@ -42,7 +42,7 @@ export const searchbarResult1 = {
     searchText: 'result',
     tags: [],
   },
-  entityType: 'linode' as any,
+  entityType: 'linode' as const,
   label: 'result1',
   value: '111111',
 };
@@ -57,6 +57,7 @@ export const searchbarResult2 = {
     searchText: 'result',
     tags: ['tag1', 'tag2'],
   },
+  entityType: 'nodebalancer' as const,
   label: 'result2',
   value: '222222',
 };
