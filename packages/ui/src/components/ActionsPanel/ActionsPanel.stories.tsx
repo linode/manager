@@ -1,7 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { ActionPanelProps, ActionsPanel } from './ActionsPanel';
+import { ActionsPanel } from './ActionsPanel';
+
+import type { ActionPanelProps } from './ActionsPanel';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ActionsPanel> = {
   component: ActionsPanel,

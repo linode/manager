@@ -1,7 +1,7 @@
+import { ActionsPanel } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useAccountUserDeleteMutation } from '@linode/queries';
 
@@ -19,9 +19,9 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
 
   const {
     error,
+    isPending,
     mutateAsync: deleteUser,
     reset,
-    isPending,
   } = useAccountUserDeleteMutation(username);
 
   const onClose = () => {

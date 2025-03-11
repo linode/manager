@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Button,
   Divider,
   List,
@@ -11,7 +12,6 @@ import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from '@linode/queries';

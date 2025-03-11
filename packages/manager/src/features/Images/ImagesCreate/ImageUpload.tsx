@@ -2,10 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
-  useRegionsQuery,
   useProfile,
+  useRegionsQuery,
 } from '@linode/queries';
 import {
+  ActionsPanel,
   Box,
   Button,
   Checkbox,
@@ -22,7 +23,6 @@ import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 // eslint-disable-next-line no-restricted-imports

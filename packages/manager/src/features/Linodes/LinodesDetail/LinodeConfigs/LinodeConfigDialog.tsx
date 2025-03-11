@@ -9,6 +9,7 @@ import {
   vpcQueries,
 } from '@linode/queries';
 import {
+  ActionsPanel,
   Autocomplete,
   Box,
   Button,
@@ -34,7 +35,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';

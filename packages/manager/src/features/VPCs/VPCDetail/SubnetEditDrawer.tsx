@@ -4,12 +4,11 @@ import {
   useProfile,
   useUpdateSubnetMutation,
 } from '@linode/queries';
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';

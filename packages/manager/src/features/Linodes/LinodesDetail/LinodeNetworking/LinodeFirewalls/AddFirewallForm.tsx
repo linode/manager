@@ -3,13 +3,12 @@ import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
 } from '@linode/queries';
-import { Autocomplete, Stack, Typography } from '@linode/ui';
+import { ActionsPanel, Autocomplete, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { number, object } from 'yup';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
 

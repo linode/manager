@@ -7,6 +7,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import {
+  ActionsPanel,
   Autocomplete,
   Checkbox,
   Notice,
@@ -21,7 +22,6 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { reportException } from 'src/exceptionReporting';
 import {

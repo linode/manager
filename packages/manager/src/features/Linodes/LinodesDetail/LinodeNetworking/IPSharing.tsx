@@ -6,6 +6,7 @@ import {
   useLinodeShareIPMutation,
 } from '@linode/queries';
 import {
+  ActionsPanel,
   Button,
   CircleProgress,
   Dialog,
@@ -20,7 +21,6 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';

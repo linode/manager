@@ -1,7 +1,7 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
 export interface PaginationProps {
   handlePageChange: (page: number) => void;
