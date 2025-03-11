@@ -235,7 +235,7 @@ describe('SubnetLinodeRow', () => {
     });
   });
 
-  it('should disable in-line action buttons for LKE-E Linodes', async () => {
+  it('should hide in-line action buttons for LKE-E Linodes', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
 
     server.use(
@@ -252,7 +252,7 @@ describe('SubnetLinodeRow', () => {
     const handleUnassignLinode = vi.fn();
     const handlePowerActionsLinode = vi.fn();
 
-    const { getByRole, getByTestId } = renderWithTheme(
+    const { getByTestId, queryByRole } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -268,14 +268,14 @@ describe('SubnetLinodeRow', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const powerOffButton = getByRole('button', {
+    const powerOffButton = queryByRole('button', {
       name: 'Power Off',
     });
-    expect(powerOffButton).toBeDisabled();
-    const unassignLinodeButton = getByRole('button', {
+    expect(powerOffButton).not.toBeInTheDocument();
+    const unassignLinodeButton = queryByRole('button', {
       name: 'Unassign Linode',
     });
-    expect(unassignLinodeButton).toBeDisabled();
+    expect(unassignLinodeButton).not.toBeInTheDocument();
   });
 
   it('should not display a warning icon for LKE-E Linodes', async () => {

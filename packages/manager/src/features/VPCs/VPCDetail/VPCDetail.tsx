@@ -197,7 +197,12 @@ const VPCDetail = () => {
         vpc={vpc}
       />
       {isVPCLKEEnterpriseCluster && (
-        <Notice important spacingTop={24} variant="warning">
+        <Notice
+          bgcolor={theme.palette.background.paper}
+          spacingTop={24}
+          style={{ padding: '8px 16px' }}
+          variant="warning"
+        >
           <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
         </Notice>
       )}
