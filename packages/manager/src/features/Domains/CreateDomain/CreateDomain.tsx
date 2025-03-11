@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   FormHelperText,
@@ -9,13 +10,12 @@ import {
   TextField,
 } from '@linode/ui';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
