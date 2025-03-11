@@ -111,6 +111,7 @@ export const RegionSelect = <
         enableNativeSelectOnMobile={{
           getOptionValue: (option) => option.id,
           optionMatcher: (option, value) => option.id === value,
+          transformSelection: (option) => option,
         }}
         getOptionLabel={(region) =>
           isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`

@@ -43,6 +43,10 @@ export interface EnhancedAutocompleteProps<
   enableNativeSelectOnMobile?: {
     optionMatcher: (option: T, value: string) => boolean;
     getOptionValue: (option: T) => string;
+    transformSelection: (
+      option: T,
+      event: React.ChangeEvent<HTMLSelectElement>
+    ) => AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>;
   };
   /** A required label for the Autocomplete to ensure accessibility. */
   label: string;
@@ -118,7 +122,7 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
-  if (isMobileDevice && enableNativeSelectOnMobile && !multiple) {
+  if (!isMobileDevice && enableNativeSelectOnMobile && !multiple) {
     return (
       <Stack direction="column">
         <NativeSelect
@@ -126,16 +130,13 @@ export const Autocomplete = <
             const selectedOption = options.find((option) =>
               enableNativeSelectOnMobile.optionMatcher(option, e.target.value)
             );
-            onChange?.(
-              e,
-              selectedOption as AutocompleteValue<
-                T,
-                Multiple,
-                DisableClearable,
-                FreeSolo
-              >,
-              'selectOption'
-            );
+            if (selectedOption && onChange) {
+              const transformedValue = enableNativeSelectOnMobile.transformSelection(
+                selectedOption,
+                e
+              );
+              onChange(e, transformedValue, 'selectOption');
+            }
           }}
           sx={{
             width: '100%',
