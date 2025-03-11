@@ -17,7 +17,12 @@ import type { TextFieldProps } from '../TextField';
 import type {
   AutocompleteProps,
   AutocompleteRenderInputParams,
+  AutocompleteValue,
 } from '@mui/material/Autocomplete';
+import { NativeSelect } from '@mui/material';
+import { FormHelperText } from '../FormHelperText';
+import { useIsMobileDevice } from '../../utilities/useIsMobileDevice';
+import { Stack } from '../Stack';
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
@@ -34,6 +39,11 @@ export interface EnhancedAutocompleteProps<
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
   helperText?: TextFieldProps['helperText'];
+  /** Enable native select on mobile */
+  enableNativeSelectOnMobile?: {
+    optionMatcher: (option: T, value: string) => boolean;
+    getOptionValue: (option: T) => string;
+  };
   /** A required label for the Autocomplete to ensure accessibility. */
   label: string;
   /** Removes the top margin from the input label, if desired. */
@@ -76,6 +86,7 @@ export const Autocomplete = <
     defaultValue,
     disablePortal = true,
     disableSelectAll = false,
+    enableNativeSelectOnMobile = false,
     errorText = '',
     helperText,
     label,
@@ -96,6 +107,7 @@ export const Autocomplete = <
     value,
     ...rest
   } = props;
+  const { isMobileDevice } = useIsMobileDevice();
 
   const isSelectAllActive =
     multiple && Array.isArray(value) && value.length === options.length;
@@ -105,6 +117,56 @@ export const Autocomplete = <
   const selectAllOption = { label: `${selectAllText} ${selectAllLabel}` };
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
+
+  if (isMobileDevice && enableNativeSelectOnMobile && !multiple) {
+    return (
+      <Stack direction="column">
+        <NativeSelect
+          onChange={(e) => {
+            const selectedOption = options.find((option) =>
+              enableNativeSelectOnMobile.optionMatcher(option, e.target.value)
+            );
+            onChange?.(
+              e,
+              selectedOption as AutocompleteValue<
+                T,
+                Multiple,
+                DisableClearable,
+                FreeSolo
+              >,
+              'selectOption'
+            );
+          }}
+          sx={{
+            width: '100%',
+            mt: 1,
+          }}
+          error={!!errorText}
+          placeholder={placeholder}
+          required={textFieldProps?.InputProps?.required}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((option) => {
+            return (
+              <option
+                key={option.label}
+                value={enableNativeSelectOnMobile.getOptionValue(option)}
+              >
+                {option.label}
+              </option>
+            );
+          })}
+        </NativeSelect>
+        {errorText && (
+          <FormHelperText
+            sx={(theme) => ({ color: theme.tokens.action.Negative.Active })}
+          >
+            {errorText}
+          </FormHelperText>
+        )}
+      </Stack>
+    );
+  }
 
   return (
     <MuiAutocomplete

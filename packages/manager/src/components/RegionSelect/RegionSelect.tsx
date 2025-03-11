@@ -108,6 +108,10 @@ export const RegionSelect = <
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
+        enableNativeSelectOnMobile={{
+          getOptionValue: (option) => option.id,
+          optionMatcher: (option, value) => option.id === value,
+        }}
         getOptionLabel={(region) =>
           isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
         }
