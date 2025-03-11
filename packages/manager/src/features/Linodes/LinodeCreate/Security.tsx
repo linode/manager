@@ -93,7 +93,7 @@ export const Security = () => {
         control={control}
         name="authorized_users"
       />
-      {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) && (
+      {isDiskEncryptionFeatureEnabled && (
         <>
           <Divider spacingBottom={20} spacingTop={24} />
           <Controller

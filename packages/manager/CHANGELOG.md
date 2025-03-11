@@ -68,7 +68,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fix CloudPulse test failures triggered by new notice ([#11728](https://github.com/linode/manager/pull/11728))
 - Remove Cypress test assertion involving Login app text ([#11737](https://github.com/linode/manager/pull/11737))
 - Delete region test suite ([#11780](https://github.com/linode/manager/pull/11780))
-- Revise LDE-related logic in unit tests for EnableBackupsDialog and NodeTable and in E2E test for Linode Create ([#11783](https://github.com/linode/manager/pull/11783))
 
 ### Upcoming Features:
 
@@ -91,7 +90,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fix LKE-E provisioning placeholder when filtering by status ([#11745](https://github.com/linode/manager/pull/11745))
 - Enable ACL by default for LKE-E clusters ([#11746](https://github.com/linode/manager/pull/11746))
 - Improve UX of CloudPulse Alerts create flow and resources section ([#11748](https://github.com/linode/manager/pull/11748))
-- Revise logic governing display of LDE sections and data ([#11783](https://github.com/linode/manager/pull/11783))
 - Fix CloudPulse document titles with appropriate keywords (#11662)
 - Update LKE checkout bar & NodeBalancer details summary ([#11653](https://github.com/linode/manager/pull/11653))
 
