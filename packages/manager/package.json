@@ -94,7 +94,7 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
+    "start": "vite",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "vite preview --port 3000 --host",
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",

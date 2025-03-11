@@ -15,7 +15,6 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "start": "tsc -w --preserveWatchOutput",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc",
     "precommit": "lint-staged"

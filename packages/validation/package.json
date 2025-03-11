@@ -26,7 +26,7 @@
     "lib"
   ],
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
+    "start": "tsup --watch",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false"

@@ -46,7 +46,7 @@
     "yup": "1.4.0"
   },
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
+    "start": "tsup --watch",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
     "test": "vitest run",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",

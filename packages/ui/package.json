@@ -29,7 +29,6 @@
     "tss-react": "^4.8.2"
   },
   "scripts": {
-    "start": "tsc -w --preserveWatchOutput",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc",
     "test": "vitest run",
