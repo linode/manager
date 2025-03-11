@@ -1,10 +1,11 @@
+import { useAllNodeBalancersQuery } from '@linode/queries';
+import { useAllFirewallsQuery } from '@linode/queries';
+import { useAllLinodesQuery } from '@linode/queries';
+
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useAllAccountStackScriptsQuery } from 'src/queries/stackscripts';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
