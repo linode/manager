@@ -86,6 +86,14 @@ export interface SelectProps<T extends { label: string }>
    */
   label: string;
   /**
+   * The props for the ListItem component.
+   */
+  listItemProps?: (
+    value: T
+  ) => {
+    dataAttributes?: Record<string, string | boolean | T>;
+  };
+  /**
    * The callback function that is invoked when the value changes.
    */
   onChange?: (_event: React.SyntheticEvent, _value: T) => void;
@@ -125,6 +133,7 @@ export const Select = <T extends SelectOption = SelectOption>(
     hideLabel = false,
     label,
     loading = false,
+    listItemProps,
     noOptionsText = 'No options available',
     onChange,
     options,
@@ -212,6 +221,9 @@ export const Select = <T extends SelectOption = SelectOption>(
         return (
           <ListItem
             {...rest}
+            {...(option.create || option.noOptions
+              ? undefined
+              : listItemProps?.(option as T)?.dataAttributes)}
             sx={
               option.noOptions
                 ? {

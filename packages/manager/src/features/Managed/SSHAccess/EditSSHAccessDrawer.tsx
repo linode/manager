@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   FormControlLabel,
   Notice,
   TextField,
@@ -9,7 +10,6 @@ import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';

@@ -1,13 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { isEmpty } from '@linode/api-v4';
+import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -19,10 +20,10 @@ import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
+  Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
-import type { Alert } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 export interface EditAlertProps {
@@ -94,6 +95,16 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
   ];
 
+  const previousSubmitCount = React.useRef<number>(0);
+  React.useEffect(() => {
+    if (
+      !isEmpty(formState.errors) &&
+      formState.submitCount > previousSubmitCount.current
+    ) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+  }, [formState.errors, formState.submitCount]);
+
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
@@ -111,7 +122,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 name="label"
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
-                placeholder="Enter Name"
+                placeholder="Enter a Name"
                 value={field.value ?? ''}
               />
             )}
@@ -127,7 +138,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 optional
-                placeholder="Enter Description"
+                placeholder="Enter a Description"
                 value={field.value ?? ''}
               />
             )}
