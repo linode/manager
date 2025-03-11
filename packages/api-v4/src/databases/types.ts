@@ -66,12 +66,10 @@ export interface ConfigurationItem {
 export type ConfigValue = number | string | boolean;
 
 export type ConfigCategoryValues = Record<string, ConfigValue>;
-export interface DatabaseEngineConfig {
-  engine_config: Record<
-    string,
-    Record<string, ConfigurationItem> | ConfigurationItem
-  >;
-}
+export type DatabaseEngineConfig = Record<
+  string,
+  Record<string, ConfigurationItem> | ConfigurationItem
+>;
 export interface DatabaseInstanceAdvancedConfig {
   [category: string]: ConfigCategoryValues | ConfigValue;
 }

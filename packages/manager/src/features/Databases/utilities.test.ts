@@ -8,6 +8,7 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
+  convertEngineConfigToOptions,
   convertExistingConfigsToArray,
   findConfigItem,
   formatConfigValue,
@@ -25,6 +26,7 @@ import {
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
+import type { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 import type {
   AccountCapability,
   Database,
@@ -34,7 +36,6 @@ import type {
   PendingUpdates,
 } from '@linode/api-v4';
 import type { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
-import { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
@@ -403,10 +404,10 @@ describe('toFormatedDate', () => {
     const today = DateTime.utc();
     const mockTodayWithHours = DateTime.fromObject({
       day: today.day,
-      month: today.month,
-      year: today.year,
       hour: today.hour,
       minute: 0,
+      month: today.month,
+      year: today.year,
     }).toFormat('yyyy-MM-dd HH:mm');
     const result = toFormatedDate(selectedDate, undefined);
     expect(result).toContain(mockTodayWithHours);
@@ -607,31 +608,25 @@ describe('findConfigItem', () => {
 
   const expectedNestedConfig = {
     description:
-      'Enable the pg_stat_monitor extension. Enabling this extension will cause the cluster to be restarted. When this extension is enabled, pg_stat_statements results for utility commands are unreliable',
-    restart_cluster: true,
-    type: 'boolean',
+      'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
+    example: 10,
+    maximum: 3600,
+    minimum: 2,
+    restart_cluster: false,
+    type: 'integer',
   };
   it('should return the correct ConfigurationItem for a given targetKey', () => {
-    const result = findConfigItem(
-      mockConfigs.engine_config,
-      'binlog_retention_period'
-    );
+    const result = findConfigItem(mockConfigs, 'binlog_retention_period');
     expect(result).toEqual(expectedConfig);
   });
 
   it('should return the correct ConfigurationItem for a nested key', () => {
-    const result = findConfigItem(
-      mockConfigs.engine_config,
-      'pg_stat_monitor_enable'
-    );
+    const result = findConfigItem(mockConfigs, 'connect_timeout');
     expect(result).toEqual(expectedNestedConfig);
   });
 
   it('should return undefined if the targetKey does not exist', () => {
-    const result = findConfigItem(
-      mockConfigs.engine_config,
-      'non_existing_key'
-    );
+    const result = findConfigItem(mockConfigs, 'non_existing_key');
     expect(result).toBeUndefined();
   });
 });
@@ -690,5 +685,57 @@ describe('convertExistingConfigsToArray', () => {
   it('should convert configs to array of ConfigurationOptions with label and current value', () => {
     const result = convertExistingConfigsToArray(existingConfigs, mockConfigs);
     expect(result).toEqual(expectedOptions);
+  });
+});
+
+describe('convertEngineConfigToOptions', () => {
+  it('should correctly convert a flat configuration', () => {
+    const configs = {
+      binlog_retention_period: { type: 'integer' },
+      service_log: { type: ['boolean', 'null'] },
+    };
+    const expectedConfigOptions = [
+      {
+        category: 'other',
+        enum: [],
+        label: 'binlog_retention_period',
+        type: 'integer',
+      },
+      {
+        category: 'other',
+        enum: [],
+        label: 'service_log',
+        type: ['boolean', 'null'],
+      },
+    ];
+    expect(convertEngineConfigToOptions(configs)).toEqual(
+      expectedConfigOptions
+    );
+  });
+
+  it('should correctly convert a nested configuration', () => {
+    const configs = {
+      mysql: {
+        connect_timeout: { type: 'integer' },
+        default_time_zone: { type: 'string' },
+      },
+    };
+    const expectedConfigOptions = [
+      {
+        category: 'mysql',
+        enum: [],
+        label: 'connect_timeout',
+        type: 'integer',
+      },
+      {
+        category: 'mysql',
+        enum: [],
+        label: 'default_time_zone',
+        type: 'string',
+      },
+    ];
+    expect(convertEngineConfigToOptions(configs)).toEqual(
+      expectedConfigOptions
+    );
   });
 });

@@ -7,6 +7,7 @@ import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 
 import type { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 import type {
+  ConfigCategoryValues,
   ConfigurationItem,
   DatabaseEngine,
   DatabaseFork,
@@ -270,6 +271,54 @@ export const formatConfigValue = (configValue: string) =>
     : configValue;
 
 /**
+ * Converts a nested database engine configuration into a flat array of configuration options.
+ *
+ * @param allConfigs
+ * @returns An array of structured configuration options.
+ */
+export const convertEngineConfigToOptions = (
+  allConfigs: DatabaseEngineConfig | undefined
+) => {
+  const options: ConfigurationOption[] = [];
+
+  const processConfig = (
+    config: Record<
+      string,
+      ConfigurationItem | Record<string, ConfigurationItem>
+    >,
+    parentCategory: string = ''
+  ) => {
+    for (const key in config) {
+      const value = config[key] as ConfigurationItem;
+      if (typeof value === 'object') {
+        // If it has "type" property, add option to the list
+        if ('type' in value) {
+          // If parentCategory is empty, use 'Other' as the category
+          const category = parentCategory || 'other';
+          options.push({
+            ...value,
+            category: category,
+            enum: value.enum ?? [],
+            label: key,
+            type: value.type,
+          });
+        }
+        // Else, it's a nested category, so recurse
+        else {
+          processConfig(value as Record<string, ConfigurationItem>, key);
+        }
+      }
+    }
+  };
+
+  if (allConfigs !== undefined) {
+    processConfig(allConfigs);
+  }
+
+  return options;
+};
+
+/**
  * Recursively searches for a configuration item by its key within a nested configuration object.
  *
  * @param configObject
@@ -281,12 +330,12 @@ export const findConfigItem = (
     | Record<string, Record<string, ConfigurationItem> | ConfigurationItem>
     | undefined,
   targetKey: string
-): ConfigurationItem | undefined => {
+): ConfigurationOption | undefined => {
   for (const key in configs) {
     const value = configs[key];
 
     if (key === targetKey) {
-      return value as ConfigurationItem;
+      return value as ConfigurationOption;
     }
 
     if (typeof value === 'object' && value !== null) {
@@ -321,7 +370,7 @@ export const convertExistingConfigsToArray = (
       for (const subKey in value) {
         const subValue = value[subKey];
 
-        const foundConfig = findConfigItem(allConfigs?.engine_config, subKey);
+        const foundConfig = findConfigItem(allConfigs, subKey);
         if (foundConfig) {
           options.push({
             ...foundConfig,
@@ -332,7 +381,7 @@ export const convertExistingConfigsToArray = (
         }
       }
     } else {
-      const foundConfig = findConfigItem(allConfigs?.engine_config, key);
+      const foundConfig = findConfigItem(allConfigs, key);
       if (foundConfig) {
         options.push({
           ...foundConfig,
@@ -344,4 +393,52 @@ export const convertExistingConfigsToArray = (
     }
   }
   return options;
+};
+/**
+ * Formats the configuration payload by organizing form data into categorized fields.
+ *
+ * @param formData
+ * @param configurations
+ * @returns A structured object where configurations are grouped by category.
+ */
+export const formatConfigPayload = (
+  formData: ConfigurationOption[],
+  configurations: ConfigurationOption[]
+) => {
+  const formattedConfigData: DatabaseInstanceAdvancedConfig = {};
+
+  configurations.forEach(({ category, label }) => {
+    // Find the matching config from the formData
+    const formConfig = formData.find((config) => config.label === label);
+
+    if (formConfig && formConfig.value !== undefined) {
+      if (category === 'other') {
+        formattedConfigData[label] = formConfig.value;
+      } else {
+        if (!formattedConfigData[category]) {
+          formattedConfigData[category] = {} as ConfigCategoryValues;
+        }
+        (formattedConfigData[category] as ConfigCategoryValues)[label] =
+          formConfig.value;
+      }
+    }
+  });
+
+  return formattedConfigData;
+};
+
+export const isConfigBoolean = (config: ConfigurationOption) => {
+  return (
+    config?.type === 'boolean' ||
+    (Array.isArray(config?.type) && config?.type.includes('boolean'))
+  );
+};
+
+export const isConfigStringWithEnum = (config: ConfigurationOption) => {
+  return (
+    (config?.type === 'string' && config.enum) ||
+    (Array.isArray(config?.type) &&
+      config?.type.includes('string') &&
+      config.enum)
+  );
 };
