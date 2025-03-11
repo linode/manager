@@ -12,7 +12,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { getValidationSchema } from '../Utils/utils';
+import { enhanceValidationSchemaWithEntityIdValidation } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -77,7 +77,7 @@ export const CreateAlertDefinition = () => {
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState(
-    getValidationSchema({
+    enhanceValidationSchemaWithEntityIdValidation({
       aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
       baseSchema: createAlertSchema,
       serviceTypeObj: null,
@@ -151,7 +151,7 @@ export const CreateAlertDefinition = () => {
 
   React.useEffect(() => {
     setValidationSchema(
-      getValidationSchema({
+      enhanceValidationSchemaWithEntityIdValidation({
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
         baseSchema: createAlertSchema,
         serviceTypeObj: serviceTypeWatcher,

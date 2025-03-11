@@ -280,7 +280,11 @@ export const processMetricCriteria = (
   );
 };
 
-export const getValidationSchema = (
+/**
+ * @param props The props required to enhance the validation schema
+ * @returns The validation schema updated with max selection count for entity_ids based on service type
+ */
+export const enhanceValidationSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
   const {

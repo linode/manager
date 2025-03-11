@@ -19,7 +19,7 @@ import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChanne
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import {
   convertAlertDefinitionValues,
-  getValidationSchema,
+  enhanceValidationSchemaWithEntityIdValidation,
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
@@ -57,7 +57,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      getValidationSchema({
+      enhanceValidationSchemaWithEntityIdValidation({
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
         baseSchema: editAlertSchema,
         serviceTypeObj: alertDetails.service_type,

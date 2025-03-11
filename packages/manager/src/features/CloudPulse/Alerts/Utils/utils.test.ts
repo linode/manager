@@ -8,7 +8,7 @@ import {
   convertSecondsToMinutes,
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
-  getValidationSchema,
+  enhanceValidationSchemaWithEntityIdValidation,
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
@@ -101,12 +101,12 @@ describe('getValidationSchema', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getValidationSchema({ ...props, serviceTypeObj: 'unknown' });
+    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props, serviceTypeObj: 'unknown' });
     expect(schema).toBe(baseSchema);
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getValidationSchema({ ...props });
+    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props });
 
     await expect(
       schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
@@ -114,7 +114,7 @@ describe('getValidationSchema', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getValidationSchema({ ...props, serviceTypeObj: 'linode' });
+    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props, serviceTypeObj: 'linode' });
 
     await expect(
       schema.validate({
@@ -124,7 +124,7 @@ describe('getValidationSchema', () => {
   });
 
   it('should return update error message if update flag is true', async () => {
-    const schema = getValidationSchema({
+    const schema = enhanceValidationSchemaWithEntityIdValidation({
       ...props,
       serviceTypeObj: 'linode',
       update: true,
