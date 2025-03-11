@@ -6,9 +6,9 @@ import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  enhanceValidationSchemaWithEntityIdValidation,
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
-  enhanceValidationSchemaWithEntityIdValidation,
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
@@ -101,7 +101,10 @@ describe('getValidationSchema', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props, serviceTypeObj: 'unknown' });
+    const schema = enhanceValidationSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'unknown',
+    });
     expect(schema).toBe(baseSchema);
   });
 
@@ -114,7 +117,10 @@ describe('getValidationSchema', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props, serviceTypeObj: 'linode' });
+    const schema = enhanceValidationSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'linode',
+    });
 
     await expect(
       schema.validate({
