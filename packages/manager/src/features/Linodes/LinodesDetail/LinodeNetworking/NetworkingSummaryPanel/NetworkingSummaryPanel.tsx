@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
 
 import { DNSResolvers } from './DNSResolvers';
 import { NetworkTransfer } from './NetworkTransfer';

@@ -5,16 +5,15 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useAccountAgreements } from 'src/queries/account/agreements';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountAgreements, useProfile } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_ADDITIONAL_PRICING,
 } from 'src/utilities/pricing/constants';
-import { LKE_ADDITIONAL_PRICING } from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
   getTotalClusterPrice,

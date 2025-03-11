@@ -1,10 +1,11 @@
-import { Typography } from '@linode/ui';
+import { useRegionsQuery, useVPCQuery } from '@linode/queries';
 import {
   Box,
   CircleProgress,
   ErrorState,
   Notice,
   StyledLinkButton,
+  Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -16,8 +17,6 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
 import {

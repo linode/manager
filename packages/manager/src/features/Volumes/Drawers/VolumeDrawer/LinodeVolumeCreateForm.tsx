@@ -1,10 +1,9 @@
-import { Box, Notice, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Notice, TextField, Typography } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
@@ -17,7 +16,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,

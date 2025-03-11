@@ -4,10 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useDeleteLinodeMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;

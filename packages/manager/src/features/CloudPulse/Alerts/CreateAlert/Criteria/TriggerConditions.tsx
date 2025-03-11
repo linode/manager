@@ -79,7 +79,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 textFieldProps={{
                   labelTooltipText:
-                    'Choose how often you intend to evaluate the alert condition.',
+                    'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
                 }}
                 value={
                   getEvaluationPeriodOptions().find(
@@ -114,7 +114,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 textFieldProps={{
                   labelTooltipText:
-                    'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
+                    'Choose how often you intend to evaluate the alert condition.',
                 }}
                 value={
                   getPollingIntervalOptions().find(
@@ -127,7 +127,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 label="Polling Interval"
                 onBlur={field.onBlur}
                 options={getPollingIntervalOptions()}
-                placeholder="Select a Polling"
+                placeholder="Select a Polling Interval"
               />
             )}
             control={control}
@@ -136,49 +136,64 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
         </Grid>
         <Grid
           sx={{
-            alignItems: 'center',
-            display: 'flex',
-            gap: 1,
             mt: { lg: 3.5, xs: 0 },
           }}
+          alignItems="start"
+          display="flex"
+          flexDirection={{ sm: 'row', xs: 'column' }}
+          gap={1}
           item
+          justifyContent={{ sm: 'left', xs: 'center' }}
           md="auto"
           sm={12}
           xs={12}
         >
-          <Typography mt={3} variant="body1">
+          <Typography
+            marginTop={{ sm: '32px', xs: '0px' }}
+            maxWidth={{ lg: '270px', md: '220px' }}
+            mt={3}
+            variant="body1"
+          >
             Trigger alert when all criteria are met for
           </Typography>
 
           <Controller
             render={({ field, fieldState }) => (
-              <Box sx={{ maxHeight: '54px' }}>
-                <TextField
-                  onWheel={(event) =>
-                    event.target instanceof HTMLElement && event.target.blur()
-                  }
-                  sx={{
-                    height: '30px',
-                    width: '30px',
-                  }}
-                  data-qa-trigger-occurrences
-                  data-testid="trigger-occurences"
-                  errorText={fieldState.error?.message}
-                  label=""
-                  min={0}
-                  name={`${name}.trigger_occurrences`}
-                  onBlur={field.onBlur}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  type="number"
-                  value={field.value ?? 0}
-                />
-              </Box>
+              <TextField
+                containerProps={{
+                  maxWidth: '120px',
+                }}
+                onWheel={(event) =>
+                  event.target instanceof HTMLElement && event.target.blur()
+                }
+                sx={{
+                  height: '34px',
+                  marginTop: { sm: '16px', xs: '0px' },
+                  width: '100px',
+                }}
+                data-qa-trigger-occurrences
+                data-testid="trigger-occurences"
+                errorText={fieldState.error?.message}
+                label=""
+                min={0}
+                name={`${name}.trigger_occurrences`}
+                noMarginTop
+                onBlur={field.onBlur}
+                onChange={(e) => field.onChange(e.target.value)}
+                type="number"
+                value={field.value ?? 0}
+              />
             )}
             control={control}
             name={`${name}.trigger_occurrences`}
           />
 
-          <Typography mt={3} textAlign="start" variant="body1">
+          <Typography
+            marginTop={{ sm: '32px', xs: '0px' }}
+            mt={3}
+            textAlign="start"
+            variant="body1"
+          >
             consecutive occurrence(s).
           </Typography>
         </Grid>

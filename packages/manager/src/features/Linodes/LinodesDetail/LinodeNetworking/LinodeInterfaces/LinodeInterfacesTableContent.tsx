@@ -1,17 +1,20 @@
+import { useLinodeInterfacesQuery } from '@linode/queries';
 import React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useLinodeInterfacesQuery } from 'src/queries/linodes/interfaces';
 
 import { LinodeInterfaceTableRow } from './LinodeInterfaceTableRow';
 
+import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
+
 interface Props {
+  handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
-export const LinodeInterfacesTableContent = ({ linodeId }: Props) => {
+export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
   const { data, error, isPending } = useLinodeInterfacesQuery(linodeId);
 
   if (isPending) {
@@ -33,6 +36,7 @@ export const LinodeInterfacesTableContent = ({ linodeId }: Props) => {
 
   return data.interfaces.map((networkInterface) => (
     <LinodeInterfaceTableRow
+      handlers={handlers}
       key={networkInterface.id}
       linodeId={linodeId}
       {...networkInterface}
