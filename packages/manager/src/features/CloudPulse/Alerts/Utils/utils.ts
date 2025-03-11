@@ -15,8 +15,8 @@ import type {
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
-import { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 
 interface AlertChipBorderProps {
   /**
@@ -59,6 +59,28 @@ export interface ProcessedCriteria {
    * Unit for the threshold value
    */
   unit: string;
+}
+
+export interface AlertValidationSchemaProps {
+  /**
+   * The config that holds the maxResourceSelection count per service type like linode, dbaas etc.,
+   */
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  /**
+   * The base schema which needs to be enhanced with the entity_ids validation
+   */
+  baseSchema: ObjectSchema<
+    CreateAlertDefinitionForm | EditAlertDefinitionPayload
+  >;
+
+  /**
+   * The service type that is linked with alert and for which the validation schema needs to be built
+   */
+  serviceTypeObj: null | string;
+  /**
+   * Property to check whether it is create / edit flow of the alerts
+   */
+  update?: boolean;
 }
 
 /**
@@ -259,13 +281,14 @@ export const processMetricCriteria = (
 };
 
 export const getValidationSchema = (
-  serviceTypeObj: null | string,
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[],
-  baseSchema: ObjectSchema<
-    CreateAlertDefinitionForm | EditAlertDefinitionPayload
-  >,
-  update?: boolean
+  props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
+  const {
+    aclpAlertServiceTypeConfig,
+    baseSchema,
+    serviceTypeObj,
+    update,
+  } = props;
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
     ({ serviceType }) => serviceTypeObj === serviceType
   )?.maxResourceSelectionCount;

@@ -10,6 +10,9 @@ interface AlertResourceNoticeProps {
    */
   handleSelectionChange: (action: SelectUnselectAll) => void;
 
+  /**
+   * The maximum number of resources that can be selected.
+   */
   maxSelectionCount?: number;
 
   /**
@@ -48,7 +51,7 @@ export const AlertsResourcesNotice = React.memo(
           <Button
             disabled={
               maxSelectionCount !== undefined &&
-              totalResources > maxSelectionCount
+              totalResources > maxSelectionCount // Select All not needed when total resources is greater than max selection count.
             }
             onClick={() => {
               handleSelectionChange('Select All');

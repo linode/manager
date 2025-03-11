@@ -57,12 +57,12 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      getValidationSchema(
-        alertDetails.service_type,
-        flags.aclpAlertServiceTypeConfig ?? [],
-        editAlertSchema,
-        true
-      ) as ObjectSchema<EditAlertDefinitionPayload>
+      getValidationSchema({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: editAlertSchema,
+        serviceTypeObj: alertDetails.service_type,
+        update: true,
+      }) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 

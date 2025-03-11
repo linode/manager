@@ -12,6 +12,7 @@ import {
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
+import type { AlertValidationSchemaProps } from './utils';
 import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
@@ -88,27 +89,24 @@ it('should correctly convert an alert definition values to the required format',
 
 describe('getValidationSchema', () => {
   const baseSchema = object({}) as ObjectSchema<CreateAlertDefinitionForm>;
-
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
     { maxResourceSelectionCount: 5, serviceType: 'linode' },
   ];
+  const props: AlertValidationSchemaProps = {
+    aclpAlertServiceTypeConfig,
+    baseSchema,
+    serviceTypeObj: 'dbaas',
+    update: false,
+  };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getValidationSchema(
-      'unknown',
-      aclpAlertServiceTypeConfig,
-      baseSchema
-    );
+    const schema = getValidationSchema({ ...props, serviceTypeObj: 'unknown' });
     expect(schema).toBe(baseSchema);
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getValidationSchema(
-      'dbaas',
-      aclpAlertServiceTypeConfig,
-      baseSchema
-    );
+    const schema = getValidationSchema({ ...props });
 
     await expect(
       schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
@@ -116,11 +114,7 @@ describe('getValidationSchema', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getValidationSchema(
-      'linode',
-      aclpAlertServiceTypeConfig,
-      baseSchema
-    );
+    const schema = getValidationSchema({ ...props, serviceTypeObj: 'linode' });
 
     await expect(
       schema.validate({
@@ -130,12 +124,11 @@ describe('getValidationSchema', () => {
   });
 
   it('should return update error message if update flag is true', async () => {
-    const schema = getValidationSchema(
-      'linode',
-      aclpAlertServiceTypeConfig,
-      baseSchema,
-      true
-    );
+    const schema = getValidationSchema({
+      ...props,
+      serviceTypeObj: 'linode',
+      update: true,
+    });
 
     await expect(
       schema.validate({
