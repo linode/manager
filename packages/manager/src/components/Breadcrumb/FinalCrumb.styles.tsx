@@ -15,15 +15,19 @@ export const StyledEditableText = styled(EditableText, {
     width: 250,
   },
   marginLeft: `-${theme.spacing()}`,
+  '& .breadcrumb-text': {
+    color: theme.tokens.breadcrumb.Normal.Text.Default,
+    fontSize: '1rem !important',
+  },
 }));
 
 export const StyledH1Header = styled(H1Header, { label: 'StyledH1Header' })(
   ({ theme }) => ({
-    color: theme.textColors.tableStatic,
-    fontSize: '1.125rem',
+    color: theme.tokens.breadcrumb.Normal.Text.Default,
+    fontSize: '1rem',
     textTransform: 'capitalize',
     [theme.breakpoints.up('lg')]: {
-      fontSize: '1.125rem',
+      fontSize: '1rem',
     },
   })
 );

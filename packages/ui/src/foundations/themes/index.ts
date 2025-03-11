@@ -33,6 +33,7 @@ import type {
   GlobalFooterTypes as GlobalFooterTypesLight,
   GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
+  BreadcrumbTypes,
   RadiusTypes,
   SearchTypes as SearchTypesLight,
   SideNavigationTypes as SideNavigationTypesLight,
@@ -143,6 +144,7 @@ declare module '@mui/material/styles/createTheme' {
       //  ---- Global tokens: theme agnostic ----
       border: BorderTypes;
       borderRadius: BorderRadiusTypes;
+      breadcrumb: BreadcrumbTypes;
       calendar: CalendarTypes;
       chart: ChartTypes;
       color: ColorTypes;
@@ -187,6 +189,7 @@ declare module '@mui/material/styles/createTheme' {
       border?: BorderTypes;
       //  ---- Global tokens: theme agnostic ----
       borderRadius?: BorderRadiusTypes;
+      breadcrumb?: BreadcrumbTypes;
       calendar?: CalendarTypes;
       chart?: ChartTypes;
       color?: ColorTypes;

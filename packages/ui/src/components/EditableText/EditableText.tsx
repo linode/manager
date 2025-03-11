@@ -135,6 +135,10 @@ interface BaseProps extends Omit<TextFieldProps, 'label'> {
    * Optional suffix to append to the text when it is not in editing mode
    */
   textSuffix?: string;
+  /**
+   * Whether this EditableText is used as a breadcrumb
+   */
+  isBreadcrumb?: boolean;
 }
 
 interface PropsWithoutLink extends BaseProps {
@@ -173,6 +177,7 @@ export const EditableText = (props: EditableTextProps) => {
     disabledBreadcrumbEditButton,
     errorText,
     handleAnalyticsEvent,
+    isBreadcrumb,
     labelLink,
     onCancel,
     onEdit,
@@ -237,7 +242,7 @@ export const EditableText = (props: EditableTextProps) => {
   };
   const labelText = (
     <H1Header
-      className={classes.root}
+      className={`${classes.root} ${isBreadcrumb ? 'breadcrumb-text' : ''}`}
       data-qa-editable-text
       title={`${text}${textSuffix ?? ''}`}
     />
@@ -272,7 +277,9 @@ export const EditableText = (props: EditableTextProps) => {
         <TextField
           {...rest}
           inputProps={{
-            className: classes.input,
+            className: `${classes.input} ${
+              isBreadcrumb ? 'breadcrumb-text' : ''
+            }`,
           }}
           InputProps={{ className: classes.inputRoot }}
           // eslint-disable-next-line
