@@ -48,8 +48,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 

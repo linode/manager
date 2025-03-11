@@ -42,11 +42,6 @@ export const LINODE_STATUS_PAGE_URL =
   import.meta.env.REACT_APP_STATUS_PAGE_URL ||
   'https://status.linode.com/api/v2';
 
-// Maximum page size allowed by the API. Used in the `getAll()` helper function
-// to request as many items at once as possible.
-export const API_MAX_PAGE_SIZE =
-  Number(import.meta.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
-
 // Having more of a single entity than this number classifies you as having
 // a "large account".
 export const LARGE_ACCOUNT_THRESHOLD = 1500;

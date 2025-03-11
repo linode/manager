@@ -1,13 +1,10 @@
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { Accordion, ActionsPanel, Notice, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
 import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

@@ -9,7 +9,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
+import { queryPresets } from '@linode/queries';
 import { queryFactory } from './queries';
 
 import type {

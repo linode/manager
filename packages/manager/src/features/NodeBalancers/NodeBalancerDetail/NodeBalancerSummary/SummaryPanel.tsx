@@ -1,3 +1,10 @@
+import {
+  useAllNodeBalancerConfigsQuery,
+  useNodeBalancerQuery,
+  useNodeBalancersFirewallsQuery,
+  useNodebalancerUpdateMutation,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -7,13 +14,6 @@ import { TagCell } from 'src/components/TagCell/TagCell';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import {
-  useAllNodeBalancerConfigsQuery,
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {

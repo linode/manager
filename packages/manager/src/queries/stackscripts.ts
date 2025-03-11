@@ -15,9 +15,9 @@ import {
 } from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { queryPresets } from './base';
+import { queryPresets } from '@linode/queries';
 
 import type {
   APIError,
@@ -28,7 +28,7 @@ import type {
   StackScriptPayload,
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>

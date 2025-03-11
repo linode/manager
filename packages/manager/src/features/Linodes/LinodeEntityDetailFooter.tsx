@@ -5,8 +5,7 @@ import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 

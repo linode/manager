@@ -14,6 +14,13 @@ import {
   updateObjectACL,
   uploadSSLCert,
 } from '@linode/api-v4';
+import {
+  useRegionsQuery,
+  accountQueries,
+  queryPresets,
+  useAccount,
+  updateAccountSettingsData,
+} from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -28,11 +35,6 @@ import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { useAccount } from '../account/account';
-import { accountQueries } from '../account/queries';
-import { updateAccountSettingsData } from '../account/settings';
-import { queryPresets } from '../base';
-import { useRegionsQuery } from '../regions/regions';
 import {
   getAllBucketsFromClusters,
   getAllBucketsFromEndpoints,

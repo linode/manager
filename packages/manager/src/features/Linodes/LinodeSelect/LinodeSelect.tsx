@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import React from 'react';
 
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from '@linode/queries';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';

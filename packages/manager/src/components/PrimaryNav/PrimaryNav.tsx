@@ -18,11 +18,11 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountSettings } from 'src/queries/account/settings';
 import {
+  useAccountSettings,
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+} from '@linode/queries';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';

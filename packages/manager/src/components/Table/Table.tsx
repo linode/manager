@@ -1,7 +1,7 @@
 import { default as _Table } from '@mui/material/Table';
 import * as React from 'react';
 
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import { StyledTableWrapper } from './Table.styles';
 

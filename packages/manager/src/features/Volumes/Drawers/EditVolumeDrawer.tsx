@@ -6,7 +6,7 @@ import React from 'react';
 import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,

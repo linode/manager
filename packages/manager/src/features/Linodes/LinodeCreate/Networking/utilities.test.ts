@@ -1,4 +1,4 @@
-import { linodeInterfaceFactoryPublic } from 'src/factories/linodeInterface';
+import { linodeInterfaceFactoryPublic } from '@linode/utilities';
 
 import { getLinodeInterfacePayload } from './utilities';
 

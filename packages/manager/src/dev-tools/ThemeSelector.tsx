@@ -5,7 +5,7 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 export const MOCK_THEME_STORAGE_KEY = 'devTools/theme';
 
-import type { ThemeChoice } from 'src/utilities/theme';
+import type { ThemeChoice } from '@linode/utilities';
 
 export const ThemeSelector = () => {
   const [mockTheme, setMockTheme] = React.useState<ThemeChoice>('system');

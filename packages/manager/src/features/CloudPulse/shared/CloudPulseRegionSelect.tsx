@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
