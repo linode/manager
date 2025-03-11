@@ -13,6 +13,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
+import { getValidationSchema } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -20,7 +21,7 @@ import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect'
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues, getValidationSchema } from './utilities';
+import { filterFormValues } from './utilities';
 
 import type {
   CreateAlertDefinitionForm,

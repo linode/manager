@@ -1,16 +1,22 @@
+import { array, object, string } from 'yup';
+
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
+import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
+  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
   /**
@@ -250,4 +256,34 @@ export const processMetricCriteria = (
       };
     }
   );
+};
+
+export const getValidationSchema = (
+  serviceTypeObj: null | string,
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[],
+  baseSchema: ObjectSchema<
+    CreateAlertDefinitionForm | EditAlertDefinitionPayload
+  >,
+  update?: boolean
+): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
+  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
+    ({ serviceType }) => serviceTypeObj === serviceType
+  )?.maxResourceSelectionCount;
+
+  return maxSelectionCount === undefined
+    ? baseSchema
+    : baseSchema.concat(
+        object({
+          entity_ids: array()
+            .of(string())
+            .max(
+              maxSelectionCount,
+              update
+                ? `Number of entities after update must not exceed ${maxSelectionCount}`
+                : `Length must be 0 - ${maxSelectionCount}`
+            ),
+        }) as ObjectSchema<
+          CreateAlertDefinitionForm | EditAlertDefinitionPayload
+        >
+      );
 };

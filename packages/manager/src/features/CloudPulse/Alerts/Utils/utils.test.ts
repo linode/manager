@@ -1,3 +1,5 @@
+import { object } from 'yup';
+
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import {
@@ -6,9 +8,13 @@ import {
   convertSecondsToMinutes,
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
+  getValidationSchema,
 } from './utils';
 
+import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -78,4 +84,63 @@ it('should correctly convert an alert definition values to the required format',
   };
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
+});
+
+describe('getValidationSchema', () => {
+  const baseSchema = object({}) as ObjectSchema<CreateAlertDefinitionForm>;
+
+  const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
+    { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
+    { maxResourceSelectionCount: 5, serviceType: 'linode' },
+  ];
+
+  it('should return baseSchema if maxSelectionCount is undefined', () => {
+    const schema = getValidationSchema(
+      'unknown',
+      aclpAlertServiceTypeConfig,
+      baseSchema
+    );
+    expect(schema).toBe(baseSchema);
+  });
+
+  it("should return schema with maxSelectionCount for 'dbaas'", async () => {
+    const schema = getValidationSchema(
+      'dbaas',
+      aclpAlertServiceTypeConfig,
+      baseSchema
+    );
+
+    await expect(
+      schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
+    ).rejects.toThrow('Length must be 0 - 3');
+  });
+
+  it("should return schema with correct maxSelectionCount for 'linode'", async () => {
+    const schema = getValidationSchema(
+      'linode',
+      aclpAlertServiceTypeConfig,
+      baseSchema
+    );
+
+    await expect(
+      schema.validate({
+        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
+      })
+    ).rejects.toThrow('Length must be 0 - 5');
+  });
+
+  it('should return update error message if update flag is true', async () => {
+    const schema = getValidationSchema(
+      'linode',
+      aclpAlertServiceTypeConfig,
+      baseSchema,
+      true
+    );
+
+    await expect(
+      schema.validate({
+        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
+      })
+    ).rejects.toThrow('Number of entities after update must not exceed 5');
+  });
 });

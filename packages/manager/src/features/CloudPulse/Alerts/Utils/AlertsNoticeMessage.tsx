@@ -1,4 +1,4 @@
-import { type NoticeVariant, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -6,7 +6,9 @@ import NullComponent from 'src/components/NullComponent';
 
 import { StyledNotice } from '../AlertsResources/AlertsResourcesNotice';
 
-interface ResourcesNoticeProps {
+import type { NoticeVariant } from '@linode/ui';
+
+interface AlertsNoticeProps {
   /**
    * The text that needs to be displayed in the notice
    */
@@ -17,7 +19,7 @@ interface ResourcesNoticeProps {
   variant?: NoticeVariant;
 }
 
-export const AlertsNoticeMessage = (props: ResourcesNoticeProps) => {
+export const AlertsNoticeMessage = (props: AlertsNoticeProps) => {
   const { text, variant } = props;
 
   if (!text?.length) {
