@@ -8,14 +8,24 @@ import { LinodeInterfaceActionMenu } from './LinodeInterfaceActionMenu';
 import { LinodeInterfaceFirewall } from './LinodeInterfaceFirewall';
 import { getLinodeInterfaceType } from './utilities';
 
+import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 import type { LinodeInterface } from '@linode/api-v4';
 
 interface Props extends LinodeInterface {
+  handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
 export const LinodeInterfaceTableRow = (props: Props) => {
-  const { created, id, linodeId, mac_address, updated, version } = props;
+  const {
+    created,
+    handlers,
+    id,
+    linodeId,
+    mac_address,
+    updated,
+    version,
+  } = props;
 
   const type = getLinodeInterfaceType(props);
 
@@ -35,7 +45,7 @@ export const LinodeInterfaceTableRow = (props: Props) => {
         <DateTimeDisplay value={created} />
       </TableCell>
       <TableCell actionCell>
-        <LinodeInterfaceActionMenu id={id} type={type} />
+        <LinodeInterfaceActionMenu handlers={handlers} id={id} type={type} />
       </TableCell>
     </TableRow>
   );
