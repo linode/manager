@@ -17,6 +17,7 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -57,6 +58,11 @@ export interface AlertResourcesProp {
   alertType: AlertDefinitionType;
 
   /**
+   * The error text that needs to displayed incase needed
+   */
+  errorText?: string;
+
+  /**
    * Callback for publishing the selected resources
    */
   handleResourcesSelection?: (resources: string[]) => void;
@@ -70,6 +76,11 @@ export interface AlertResourcesProp {
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The maximum number of elements that can be selected, if left undefined we can select any number of elements
+   */
+  maxSelectionCount?: number;
 
   /**
    * The element until which we need to scroll on pagination and order change
@@ -90,9 +101,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     alertType,
+    errorText,
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    maxSelectionCount,
     scrollElement,
     serviceType,
   } = props;
@@ -309,14 +322,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
-          icon={EntityIcon}
-          subtitle="Once you assign the resources, they will show up here."
-          title="No resources associated with this alert definition."
           sx={{
             h2: {
               fontSize: '16px',
             },
           }}
+          icon={EntityIcon}
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
         />
       </Stack>
     );
@@ -341,14 +354,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={2}>
         <Grid
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item
           rowSpacing={3}
           xs={12}
-          sx={{
-            alignItems: 'center',
-          }}
         >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
@@ -401,6 +414,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
+        <AlertsNoticeMessage text={errorText} variant="error" />
+        <AlertsNoticeMessage
+          text={
+            maxSelectionCount !== undefined
+              ? `You can select up to ${maxSelectionCount} resources.`
+              : undefined
+          }
+          variant="warning"
+        />
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
@@ -408,6 +430,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
+                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />

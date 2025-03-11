@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { TPAProvider } from '@linode/api-v4/lib/profile';
+import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -101,6 +101,7 @@ interface AclpAlerting {
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -274,4 +275,10 @@ export interface SuppliedMaintenanceData {
 }
 export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];
+}
+
+export interface AclpAlertServiceTypeConfig {
+  maxResourceSelectionCount: number;
+  serviceType: AlertServiceType;
+  // This can be extended to have supportedRegions, supportedFilters and other tags
 }

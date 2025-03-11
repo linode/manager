@@ -16,7 +16,10 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { convertAlertDefinitionValues } from '../Utils/utils';
+import {
+  convertAlertDefinitionValues,
+  getValidationSchema,
+} from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
@@ -25,6 +28,7 @@ import type {
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import { useFlags } from 'src/hooks/useFlags';
 
 export interface EditAlertProps {
   /**
@@ -47,11 +51,17 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
+  const flags = useFlags();
+  const editAlertSchema = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
   const formMethods = useForm<EditAlertDefinitionPayload>({
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      getValidationSchema(
+        alertDetails.service_type,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        editAlertSchema
+      ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
