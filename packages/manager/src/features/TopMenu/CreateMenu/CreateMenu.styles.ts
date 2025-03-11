@@ -34,6 +34,7 @@ export const StyledHeading = styled('h3', {
 export const StyledMenuItem = styled(MenuItem, {
   label: 'StyledMenuItem',
 })(({ theme }) => ({
+  backgroundColor: theme.tokens.background.Normal,
   padding: '8px 14px',
   // We have to do this because in packages/manager/src/index.css we force underline links
   textDecoration: 'none !important',
@@ -46,7 +47,7 @@ export const StyledMenuItem = styled(MenuItem, {
 export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
-  background: theme.tokens.background.Normal,
+  backgroundColor: theme.tokens.background.Normal,
   maxHeight: 500,
   padding: `${theme.spacing(1)} 0`,
   [theme.breakpoints.down('lg')]: {
