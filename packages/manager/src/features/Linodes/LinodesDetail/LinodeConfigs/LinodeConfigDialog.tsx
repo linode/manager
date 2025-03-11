@@ -1,4 +1,14 @@
 import {
+  useAllLinodeDisksQuery,
+  useAllLinodeKernelsQuery,
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+  useLinodeQuery,
+  useRegionsQuery,
+  vlanQueries,
+  vpcQueries,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Box,
@@ -34,19 +44,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import {
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useAllLinodeKernelsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {

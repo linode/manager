@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 interface Props {
   region: string;

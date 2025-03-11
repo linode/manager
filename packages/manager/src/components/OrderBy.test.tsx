@@ -9,7 +9,7 @@ import {
   sortData,
 } from './OrderBy';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const a = {
   age: 43,

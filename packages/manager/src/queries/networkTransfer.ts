@@ -1,9 +1,9 @@
 import { getNetworkTransferPrices } from '@linode/api-v4';
 import { useQuery } from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { queryPresets } from './base';
+import { queryPresets } from '@linode/queries';
 
 import type { APIError, PriceType } from '@linode/api-v4';
 

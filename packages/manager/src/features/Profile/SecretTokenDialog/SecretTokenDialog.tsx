@@ -8,7 +8,7 @@ import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/Co
 import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 

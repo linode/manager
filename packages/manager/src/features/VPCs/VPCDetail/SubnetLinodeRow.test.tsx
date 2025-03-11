@@ -1,10 +1,15 @@
-import { fireEvent } from '@testing-library/react';
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+import {
+  waitFor,
+  waitForElementToBeRemoved,
+  fireEvent,
+} from '@testing-library/react';
 import * as React from 'react';
 
 import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
   firewallFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
@@ -102,7 +107,7 @@ describe('SubnetLinodeRow', () => {
   });
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
     });
@@ -163,7 +168,7 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({
+    const publicInterface = linodeConfigInterfaceFactory.build({
       active: true,
       id: 5,
       ipam_address: null,
@@ -171,7 +176,7 @@ describe('SubnetLinodeRow', () => {
       purpose: 'public',
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactory.build({
+    const vpcInterface = linodeConfigInterfaceFactory.build({
       active: true,
       id: 10,
       ipam_address: null,
