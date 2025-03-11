@@ -40,7 +40,6 @@ import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-const currentDate = new Date();
 
 const cleanText = (string: string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
@@ -128,16 +127,14 @@ const mockProfile = profileFactory.build({
  *   - `month`: The month of the year as a number.
  */
 const getDateRangeInGMT = (
-  daysOffset: number,
   hour: number,
-  minute: number = 0
+  minute: number = 0,
+  isStart: boolean = false
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = now
-    .startOf('month')
-    .plus({ days: daysOffset })
-    .set({ hour, minute });
-
+  const targetDate = isStart
+    ? now.startOf('month').set({ hour, minute })
+    : now.set({ hour, minute });
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
   return {
     actualDate,
@@ -243,7 +240,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     }).as('fetchPreferences');
     mockGetDatabases([databaseMock]);
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
@@ -254,13 +251,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       day: startDay,
       hour: startHour,
       minute: startMinute,
-    } = getDateRangeInGMT(0, 12, 15);
+    } = getDateRangeInGMT(12, 15, true);
     const {
       actualDate: endActualDate,
       day: endDay,
       hour: endHour,
       minute: endMinute,
-    } = getDateRangeInGMT(currentDate.getDate(), 12, 15);
+    } = getDateRangeInGMT(12, 30);
 
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -394,7 +391,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           convertToGmt(endActualDate.replace(' ', 'T'))
         );
       });
-
     // Click on the "Presets" button
     ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 

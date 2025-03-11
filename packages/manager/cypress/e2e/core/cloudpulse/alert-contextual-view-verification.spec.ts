@@ -176,7 +176,7 @@ it('should verify sorting, alert management, and search functionality for contex
         .should(
           'have.attr',
           'href',
-          `/monitor/alerts/definitions/detail/${DBaaS}/${id}`
+          `/alerts/definitions/detail/${DBaaS}/${id}`
         )
         .and('have.text', `Alert-${id}`);
     });

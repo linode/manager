@@ -132,7 +132,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('Select a resource without applying any tags', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
     mockGetLinodes([linodes[0]]);
     ui.autocomplete
@@ -168,7 +168,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       },
     }).as('fetchPutPreferences');
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPutPreferences']);
 
@@ -202,7 +202,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('should correctly filter resources by tags, region, select tag "tag-2" and available resource should be linodeWithTagsTag2AndTag3', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
@@ -256,7 +256,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('should correctly filter resources by tags, region, select tag "tag-3" and available resources should be linodeWithTagsTag2AndTag3, linodeWithTagsTag3AndTag4', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
@@ -285,7 +285,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('add extra tag and verify resource', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
@@ -327,7 +327,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('delete tag-2 and add tag-4 tag and verify resource', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 
@@ -370,7 +370,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   });
 
   it('selecting multiple resources, applying multiple tags, and verify that the resource selections are updated correctly based on the applied filters.', () => {
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
 

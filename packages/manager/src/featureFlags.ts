@@ -110,6 +110,7 @@ export interface Flags {
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
@@ -121,12 +122,14 @@ export interface Flags {
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
   limitsEvolution: BaseFeatureFlag;
+  linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: BaseFeatureFlag;
   lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
+  nodebalancerVpc: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];

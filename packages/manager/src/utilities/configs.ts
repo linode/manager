@@ -9,13 +9,14 @@ export const manuallySetVPCConfigInterfacesToActive = (
   return configs.map((config) => {
     return {
       ...config,
-      interfaces: config.interfaces?.map((linodeInterface) => {
-        if (linodeInterface.purpose === 'vpc') {
-          return { ...linodeInterface, active: true };
-        } else {
-          return linodeInterface;
-        }
-      }),
+      interfaces:
+        config.interfaces?.map((linodeInterface) => {
+          if (linodeInterface.purpose === 'vpc') {
+            return { ...linodeInterface, active: true };
+          } else {
+            return linodeInterface;
+          }
+        }) ?? null,
     };
   });
 };

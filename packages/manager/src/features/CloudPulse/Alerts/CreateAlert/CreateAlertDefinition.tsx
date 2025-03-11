@@ -13,7 +13,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -89,11 +88,9 @@ export const CreateAlertDefinition = () => {
       validationSchema,
     ),
   });
-
-
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, submitCount },
     getValues,
     handleSubmit,
     setError,
@@ -118,7 +115,6 @@ export const CreateAlertDefinition = () => {
       alertCreateExit();
     } catch (errors) {
       for (const error of errors) {
-        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -131,11 +127,25 @@ export const CreateAlertDefinition = () => {
     }
   });
 
+  const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
-    if (!isEmpty(errors)) {
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [errors]);
+  }, [errors, submitCount]);
+
+  const handleServiceTypeChange = React.useCallback(() => {
+    // Reset the criteria to initial state
+    setValue('rule_criteria.rules', [
+      {
+        aggregate_function: null,
+        dimension_filters: [],
+        metric: null,
+        operator: null,
+        threshold: 0,
+      },
+    ]);
+  }, [setValue]);
 
   React.useEffect(() => {
     setValue('entity_ids', [], {
@@ -187,7 +197,10 @@ export const CreateAlertDefinition = () => {
               control={control}
               name="description"
             />
-            <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
+            <CloudPulseServiceSelect
+              handleServiceTypeChange={handleServiceTypeChange}
+              name="serviceType"
+            />
             <CloudPulseAlertSeveritySelect name="severity" />
             <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField

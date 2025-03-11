@@ -35,7 +35,7 @@ export interface AlertsListTableProps {
    */
   isLoading: boolean;
   /**
-   * Callback to scroll till the button element on page change
+   * Callback to scroll to the button element on page change
    */
   scrollToElement: () => void;
   /**
@@ -76,9 +76,13 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
             variant: 'success',
           });
         })
-        .catch(() => {
+        .catch((updateError: APIError[]) => {
           // Handle error
-          enqueueSnackbar(`${errorStatus} alert failed`, {
+          const errorResponse = getAPIErrorOrDefault(
+            updateError,
+            `${errorStatus} alert failed`
+          );
+          enqueueSnackbar(errorResponse[0].reason, {
             variant: 'error',
           });
         });

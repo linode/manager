@@ -87,7 +87,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
@@ -146,7 +146,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
@@ -202,7 +202,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
@@ -252,7 +252,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
@@ -307,7 +307,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
     mockGetRegions([mockRegion]).as('fetchRegion');
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.
@@ -358,7 +358,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ],
     };
     mockAppendFeatureFlags(flags).as('getFeatureFlags');
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('metrics');
     cy.wait('@getFeatureFlags');
 
     // Selecting a dashboard from the autocomplete input.

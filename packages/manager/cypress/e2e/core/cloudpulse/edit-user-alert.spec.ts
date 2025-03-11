@@ -5,6 +5,12 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import {
+  EVALUATION_PERIOD_DESCRIPTION,
+  METRIC_DESCRIPTION_DATA_FIELD,
+  POLLING_INTERVAL_DESCRIPTION,
+  SEVERITY_LEVEL_DESCRIPTION,
+} from 'support/constants/cloudpulse';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -114,15 +120,6 @@ const notificationChannels = notificationChannelFactory.build({
   type: 'custom',
 });
 
-const METRIC_DESCRIPTION_DATA_FIELD =
-  'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.';
-const SEVERITY_LEVEL_DESCRIPTION =
-  'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.';
-const EVALUATION_PERIOD_DESCRIPTION =
-  'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.';
-const POLLING_INTERVAL_DESCRIPTION =
-  'Choose how often you intend to evaluate the alert condition.';
-
 describe('Integration Tests for Edit Alert', () => {
   /*
    * - Confirms that the Edit Alert page loads with the correct alert details.
@@ -190,7 +187,7 @@ describe('Integration Tests for Edit Alert', () => {
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Verify form fields
@@ -214,7 +211,7 @@ describe('Integration Tests for Edit Alert', () => {
     // Verify alert resource selection count message
     cy.get('[data-qa-notice="true"]')
       .find('p')
-      .should('have.text', '1 of 5 resources are selected.');
+      .should('contain.text', '1 of 5 resources are selected.');
 
     // Assert rule values 1
     assertRuleValues(0, {
@@ -278,7 +275,7 @@ describe('Integration Tests for Edit Alert', () => {
   });
 
   it('successfully updated alert details and verified that the API request matches the expected test data.', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Make changes to alert form
@@ -290,9 +287,9 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocomplete.findByLabel('Severity').clear();
     ui.autocomplete.findByLabel('Severity').type('Info');
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
-    cy.get('[data-qa-notice="true"]').within(() => {
-      ui.button.findByTitle('Select All').should('be.visible').click();
-    });
+
+    cy.get('[data-qa-notice="true"]').contains('Select All').click();
+
     cy.get(
       '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
     ).within(() => {
@@ -360,7 +357,7 @@ describe('Integration Tests for Edit Alert', () => {
       expect(request.body.rule_criteria.rules[1].threshold).to.equal(1000);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'monitor/alerts/definitions');
+      cy.url().should('endWith', 'alerts/definitions');
       ui.toast.assertMessage('Alert successfully updated.');
 
       // Confirm that Alert is listed on landing page with expected configuration.

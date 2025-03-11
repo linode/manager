@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -9,7 +17,6 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -40,18 +47,19 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
-import { ClusterTypePanel } from './ClusterTypePanel';
+import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
-  StyledFieldWithDocsStack,
+  StyledStackWithTabletBreakpoint,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -107,12 +115,13 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
-  const handleClusterTypeSelection = (tier: KubernetesTier) => {
+  const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -120,6 +129,10 @@ export const CreateCluster = () => {
       }
     } else {
       setHighAvailability(undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -363,15 +376,15 @@ export const CreateCluster = () => {
           {isLkeEnterpriseLAFlagEnabled && (
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
-              <ClusterTypePanel
-                handleClusterTypeSelection={handleClusterTypeSelection}
+              <ClusterTierPanel
+                handleClusterTierSelection={handleClusterTierSelection}
                 isUserRestricted={isCreateClusterRestricted}
                 selectedTier={selectedTier}
               />
             </>
           )}
           <Divider sx={{ marginTop: 4 }} />
-          <StyledFieldWithDocsStack>
+          <StyledStackWithTabletBreakpoint>
             <Stack>
               <RegionSelect
                 currentCapability={
@@ -387,7 +400,7 @@ export const CreateCluster = () => {
                 tooltipText={
                   isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
-                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
                 disableClearable
@@ -406,32 +419,45 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledFieldWithDocsStack>
+          </StyledStackWithTabletBreakpoint>
           <Divider sx={{ marginTop: 4 }} />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setVersion(selected?.value);
-            }}
-            disableClearable={!!version}
-            disabled={isCreateClusterRestricted}
-            errorText={errorMap.k8s_version}
-            label="Kubernetes Version"
-            loading={isLoadingVersions}
-            options={versions}
-            placeholder={' '}
-            value={versions.find((v) => v.value === version) ?? null}
-          />
+          <StyledStackWithTabletBreakpoint>
+            <Stack>
+              <Autocomplete
+                onChange={(_, selected) => {
+                  setVersion(selected?.value);
+                }}
+                disableClearable={!!version}
+                disabled={isCreateClusterRestricted}
+                errorText={errorMap.k8s_version}
+                label="Kubernetes Version"
+                loading={isLoadingVersions}
+                options={versions}
+                placeholder={' '}
+                sx={{ minWidth: 416 }}
+                value={versions.find((v) => v.value === version) ?? null}
+              />
+            </Stack>
+            <StyledDocsLinkContainer
+              sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
+              <DocsLink
+                href={CLUSTER_VERSIONS_DOCS_LINK}
+                label="Kubernetes Versions"
+              />
+            </StyledDocsLinkContainer>
+          </StyledStackWithTabletBreakpoint>
           {showAPL && (
             <>
               <Divider sx={{ marginTop: 4 }} />
-              <StyledFieldWithDocsStack>
+              <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
                 </Stack>
-              </StyledFieldWithDocsStack>
+              </StyledStackWithTabletBreakpoint>
             </>
           )}
           <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
@@ -465,6 +491,7 @@ export const CreateCluster = () => {
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>

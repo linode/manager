@@ -12,29 +12,6 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
-export interface ProcessedCriteria {
-  /**
-   * Aggregation type for the metric criteria
-   */
-  aggregationType: string;
-  /**
-   * Label for the metric criteria
-   */
-  label: string;
-  /**
-   * Comparison operator for the metric criteria
-   */
-  operator: string;
-  /**
-   * Threshold value for the metric criteria
-   */
-  threshold: number;
-  /**
-   * Unit for the threshold value
-   */
-  unit: string;
-}
-
 interface AlertChipBorderProps {
   /**
    * The radius needed for the border
@@ -53,6 +30,29 @@ interface AlertChipBorderProps {
    * Indicates Whether to merge the chips into single or keep it individually
    */
   mergeChips: boolean | undefined;
+}
+
+export interface ProcessedCriteria {
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Aggregation type for the metric criteria
+   */
+  metricAggregationType: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  metricOperator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
 }
 
 /**
@@ -232,39 +232,22 @@ export const convertAlertDefinitionValues = (
 };
 
 /**
-
  *
-
  * @param criterias list of metric criterias to be processed
-
  * @returns list of metric criterias in processed form
-
  */
-
 export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
-  return criterias
-
-    .map((criteria) => {
-      const { aggregate_function, label, operator, threshold, unit } = criteria;
-
+  return criterias.map(
+    ({ aggregate_function, label, operator, threshold, unit }) => {
       return {
-        aggregationType: aggregationTypeMap[aggregate_function],
-
         label,
-
-        operator: metricOperatorTypeMap[operator],
-
+        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricOperator: metricOperatorTypeMap[operator],
         threshold,
-
         unit,
       };
-    })
-
-    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
-      previousValue.push(currentValue);
-
-      return previousValue;
-    }, []);
+    }
+  );
 };

@@ -64,6 +64,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     control,
     name,
   });
+
   return (
     <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
       <Box
@@ -91,25 +92,25 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             );
           })}
       </Stack>
-        <Button
-          onClick={() =>
-            append({
-              aggregate_function: null,
-              dimension_filters: [],
-              metric: null,
-              operator: null,
-              threshold: 0,
-            })
-          }
-          tooltipText='You can add up to 5 metrics.'
-          sxEndIcon={{ display: 'none' }}
-          disabled={metricCriteriaWatcher.length === 5}
-          buttonType="outlined"
-          size="medium"
-          sx={(theme) => ({ marginTop: theme.spacing(2) })}
-        >
-          Add metric
-        </Button>
+      <Button
+        onClick={() =>
+          append({
+            aggregate_function: null,
+            dimension_filters: [],
+            metric: null,
+            operator: null,
+            threshold: 0,
+          })
+        }
+        buttonType="outlined"
+        disabled={metricCriteriaWatcher.length === 5}
+        size="medium"
+        sx={(theme) => ({ marginTop: theme.spacing(2) })}
+        sxEndIcon={{ display: 'none' }}
+        tooltipText="You can add up to 5 metrics."
+      >
+        Add metric
+      </Button>
     </Box>
   );
 };

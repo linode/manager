@@ -1,13 +1,13 @@
 import {
   Box,
   CircleProgress,
+  ErrorState,
   Paper,
   StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 

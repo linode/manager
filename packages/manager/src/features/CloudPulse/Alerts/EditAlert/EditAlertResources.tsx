@@ -136,7 +136,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
           </Button>
         </Box>
         <EditAlertResourcesConfirmDialog
-          isPending={isPending}
+          isApiResponsePending={isPending}
           onClose={() => setShowConfirmation((prev) => !prev)}
           onConfirm={saveResources}
           openConfirmationDialog={showConfirmation}

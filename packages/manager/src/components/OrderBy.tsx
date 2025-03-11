@@ -1,16 +1,18 @@
+import {
+  getQueryParamsFromQueryString,
+  pathOr,
+  usePrevious,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { equals, sort } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { usePrevious } from 'src/hooks/usePrevious';
 import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { pathOr } from 'src/utilities/pathOr';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import {
   sortByArrayLength,
   sortByNumber,
