@@ -61,7 +61,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       getValidationSchema(
         alertDetails?.service_type,
         flags.aclpAlertServiceTypeConfig ?? [],
-        editAlertScheme
+        editAlertScheme,
+        true
       ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
