@@ -7,7 +7,7 @@ import Add from 'src/assets/icons/add.svg';
 export const StyledHeading = styled('h3', {
   label: 'StyledHeading',
   shouldForwardProp: omittedProps(['paddingTop']),
-})<{ paddingTop?: boolean }>(({ theme, ...props }) => ({
+})<{ marginTop?: boolean }>(({ theme, ...props }) => ({
   '& svg': {
     height: 20,
     marginRight: theme.spacing(1),
@@ -16,15 +16,18 @@ export const StyledHeading = styled('h3', {
   alignItems: 'center',
   color: theme.tokens.content.Text.Secondary.Default,
   display: 'flex',
-  font: theme.tokens.font.FontWeight.Extrabold,
   fontSize: theme.tokens.font.FontSize.Xxxs,
+  // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+  fontWeight: theme.tokens.font.FontWeight.Extrabold,
   letterSpacing: '1px',
+  lineHeight: theme.tokens.font.LineHeight.Xxxs,
   margin: 0,
   padding: '8px 14px',
   textTransform: theme.tokens.font.Textcase.Uppercase,
   [theme.breakpoints.up('lg')]: {
     background: 'inherit',
-    padding: `${props.paddingTop ? '16px' : '8px'} 16px 6px 16px`,
+    marginTop: `${props.marginTop ? '12px' : ''}`,
+    padding: `8px 16px 6px 16px`,
   },
 }));
 
@@ -35,6 +38,7 @@ export const StyledMenuItem = styled(MenuItem, {
   // We have to do this because in packages/manager/src/index.css we force underline links
   textDecoration: 'none !important',
   [theme.breakpoints.up('md')]: {
+    minWidth: '326px',
     padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   },
 })) as typeof MenuItem;
@@ -70,9 +74,10 @@ export const StyledLinkTypography = styled(Typography, {
   label: 'StyledLinkTypography',
 })(({ theme }) => ({
   color: theme.tokens.content.Text.Primary.Default,
-  font: theme.tokens.font.FontWeight.Bold,
-  fontSize: '1rem',
-  lineHeight: '1.4rem',
+  fontSize: theme.tokens.font.FontSize.S,
+  // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+  fontWeight: theme.tokens.font.FontWeight.Bold,
+  lineHeight: theme.tokens.font.LineHeight.Xs,
 }));
 
 export const StyledAddIcon = styled(Add, {
