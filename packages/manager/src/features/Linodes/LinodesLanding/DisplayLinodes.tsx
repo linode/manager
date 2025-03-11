@@ -9,7 +9,7 @@ import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
