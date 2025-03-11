@@ -38,7 +38,7 @@
   "dependencies": {
     "ipaddr.js": "^2.0.0",
     "libphonenumber-js": "^1.10.6",
-    "yup": "^1.4.0"
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

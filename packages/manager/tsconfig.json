@@ -13,13 +13,14 @@
     },
     "resolveJsonModule": true,
     "rootDir": ".",
+    "outDir": "./lib",
 
     /* JavaScript Support */
     "allowJs": false,
 
     /* Emit */
     "sourceMap": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
@@ -39,10 +40,18 @@
     "skipLibCheck": true,
 
     /* Optimizations */
-    "incremental": true
+    "composite": true
   },
   "include": [
     "src",
     "package.json"
+  ],
+  "references": [
+    { "path": "../api-v4" },
+    { "path": "../validation" },
+    { "path": "../utilities" },
+    { "path": "../queries" },
+    { "path": "../ui" },
+    { "path": "../search" },
   ]
 }

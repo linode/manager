@@ -4,11 +4,14 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "./lib",
     "strict": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "incremental": true,
+    "composite": true,
   },
   "include": ["src"]
 }

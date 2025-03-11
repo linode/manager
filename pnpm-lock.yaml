@@ -46,8 +46,8 @@ importers:
         specifier: ^2.0.0
         version: 2.2.0
       yup:
-        specifier: ^1.4.0
-        version: 1.5.0
+        specifier: 1.4.0
+        version: 1.4.0
     devDependencies:
       axios-mock-adapter:
         specifier: ^1.22.0
@@ -299,8 +299,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.2(typescript-fsa@3.0.0)
       yup:
-        specifier: ^1.4.0
-        version: 1.5.0
+        specifier: 1.4.0
+        version: 1.4.0
       zxcvbn:
         specifier: ^4.4.2
         version: 4.4.2
@@ -840,8 +840,8 @@ importers:
         specifier: ^1.10.6
         version: 1.11.14
       yup:
-        specifier: ^1.4.0
-        version: 1.5.0
+        specifier: 1.4.0
+        version: 1.4.0
     devDependencies:
       concurrently:
         specifier: ^9.0.1
@@ -6976,8 +6976,8 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
-  yup@1.5.0:
-    resolution: {integrity: sha512-NJfBIHnp1QbqZwxcgl6irnDMIsb/7d1prNhFx02f1kp8h+orpi4xs3w90szNpOh68a/iHPdMsYvhZWoDmUvXBQ==}
+  yup@1.4.0:
+    resolution: {integrity: sha512-wPbgkJRCqIf+OHyiTBQoJiP5PFuAXaWiJK6AmYkzQAh5/c2K9hzSApBZG5wV9KoKSePF7sAxmNSvh/13YHkFDg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -13760,7 +13760,7 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
-  yup@1.5.0:
+  yup@1.4.0:
     dependencies:
       property-expr: 2.0.6
       tiny-case: 1.0.3

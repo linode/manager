@@ -90,7 +90,7 @@
     "tss-react": "^4.8.2",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
-    "yup": "^1.4.0",
+    "yup": "1.4.0",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {

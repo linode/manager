@@ -10,11 +10,15 @@
     "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
+    "rootDir": "src",
     "noUnusedLocals": true,
     "declarationMap": true,
-    "incremental": true
+    "composite": true
   },
   "include": [
     "src"
+  ],
+  "references": [
+    { "path": "../validation" }
   ]
 }

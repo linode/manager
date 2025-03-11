@@ -43,7 +43,7 @@
     "@linode/validation": "workspace:*",
     "axios": "~1.7.4",
     "ipaddr.js": "^2.0.0",
-    "yup": "^1.4.0"
+    "yup": "1.4.0"
   },
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",

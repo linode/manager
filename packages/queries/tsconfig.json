@@ -5,7 +5,9 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "./lib",
     "allowUnreachableCode": false,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -13,7 +15,10 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "composite": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    { "path": "../api-v4" },
+  ]
 }

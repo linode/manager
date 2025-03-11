@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/manager" },
+    { "path": "./packages/api-v4" },
+    { "path": "./packages/validation" },
+    { "path": "./packages/utilities" },
+    { "path": "./packages/queries" },
+    { "path": "./packages/search" },
+    { "path": "./packages/ui" },
+  ]
+}
