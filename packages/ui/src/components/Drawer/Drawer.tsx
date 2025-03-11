@@ -11,9 +11,14 @@ import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
 import { Typography } from '../Typography';
 
-import type { APIError } from '@linode/api-v4';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 import type { Theme } from '@mui/material/styles';
+
+// simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
+interface APIError {
+  field?: string;
+  reason: string;
+}
 
 interface BaseProps extends _DrawerProps {
   error?: APIError[] | null | string;
