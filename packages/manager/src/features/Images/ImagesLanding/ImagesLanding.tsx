@@ -1,5 +1,6 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
+  ActionsPanel,
   CircleProgress,
   ErrorState,
   IconButton,
@@ -19,7 +20,6 @@ import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';

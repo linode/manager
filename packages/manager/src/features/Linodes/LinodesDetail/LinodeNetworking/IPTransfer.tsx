@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   CircleProgress,
   Dialog,
@@ -11,7 +12,6 @@ import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   useAllLinodesQuery,
   useLinodeQuery,

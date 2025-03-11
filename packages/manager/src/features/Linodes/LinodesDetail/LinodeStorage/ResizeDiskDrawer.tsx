@@ -1,11 +1,16 @@
-import { FormHelperText, InputAdornment, Notice, TextField } from '@linode/ui';
+import {
+  ActionsPanel,
+  FormHelperText,
+  InputAdornment,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
