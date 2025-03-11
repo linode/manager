@@ -191,26 +191,6 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
-    const publicInterface = linodeConfigInterfaceFactory.build({
-      active: true,
-      id: 5,
-      ipam_address: null,
-      primary: true,
-      purpose: 'public',
-    });
-
-    const vpcInterface = linodeConfigInterfaceFactory.build({
-      active: true,
-      id: 10,
-      ipam_address: null,
-      purpose: 'vpc',
-      subnet_id: 1,
-    });
-
-    const configurationProfile = linodeConfigFactory.build({
-      interfaces: [publicInterface, vpcInterface],
-    });
-
     const subnet = subnetFactory.build({
       id: 1,
       linodes: [
