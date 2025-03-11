@@ -64,13 +64,11 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             value: null,
           })
         }
-        buttonType="secondary"
         compactX
         data-qa-buttons="true"
         disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
         size="small"
-        sx={{ justifyContent: 'start', width: '150px' }}
-        sxEndIcon={{ display: 'none' }}
+        sx={{ justifyContent: 'start', width: '160px' }}
         tooltipText="You can add up to 5 dimension filters."
       >
         Add dimension filter
