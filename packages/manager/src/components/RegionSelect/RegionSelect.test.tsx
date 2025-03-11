@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+// @todo: modularization - `regionFactory` can be imported from `@linode/utilities`
+// once `@linode/queries` PR with the Factories config is merged.
 import { regionFactory } from 'src/factories';
 // @todo: modularization - replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
