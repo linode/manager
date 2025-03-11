@@ -293,6 +293,11 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
     serviceTypeObj,
     update,
   } = props;
+
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig) {
+    return baseSchema;
+  }
+
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
     ({ serviceType }) => serviceTypeObj === serviceType
   )?.maxResourceSelectionCount;
