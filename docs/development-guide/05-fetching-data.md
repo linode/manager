@@ -90,7 +90,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@linode/api-v4";
 import type { APIError, Profile } from "@linode/api-v4";
 
-const profileQueries = createQueryKeys("profile", {
+const profileQueries = createQueryKeys('profile', {
   profile: {
     queryFn: getProfile,
     queryKey: null,
@@ -108,7 +108,7 @@ The first time `useProfile()` is called, the data is fetched from the API. On su
 ```ts
 import { queryPresets } from "src/queries/base";
 
-const profileQueries = createQueryKeys("profile", {
+const profileQueries = createQueryKeys('profile', {
   profile: {
     queryFn: getProfile,
     queryKey: null,
@@ -155,7 +155,7 @@ A minimal example of acceptable direct **api-v4** use:
 ```ts
 resetKubeConfig({ id }).then(() => {
   setResetKubeConfigDialogOpen(false);
-  enqueueSnackbar("Successfully reset Kubeconfig");
+  enqueueSnackbar('Successfully reset Kubeconfig');
 });
 ```
 
