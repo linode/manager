@@ -1,3 +1,4 @@
+import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
 import {
   Accordion,
   BetaChip,
@@ -11,7 +12,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
 
 import type {
   AccountSettings,

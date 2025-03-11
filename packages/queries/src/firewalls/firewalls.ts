@@ -10,6 +10,8 @@ import {
   getTemplates,
   updateFirewall,
   updateFirewallRules,
+  getFirewallSettings,
+  updateFirewallSettings,
 } from '@linode/api-v4/lib/firewalls';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -38,6 +40,8 @@ import type {
   Params,
   ResourcePage,
   UpdateFirewallRules,
+  FirewallSettings,
+  UpdateFirewallSettings
 } from '@linode/api-v4';
 
 const getAllFirewallDevices = (
@@ -83,6 +87,10 @@ export const firewallQueries = createQueryKeys('firewalls', {
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  settings: {
+    queryFn: getFirewallSettings,
     queryKey: null,
   },
   template: (slug: FirewallTemplateSlug) => ({
@@ -252,6 +260,10 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   });
 };
 
+export const useFirewallSettingsQuery = () => {
+  return useQuery<FirewallSettings, APIError[]>(firewallQueries.settings);
+};
+
 export const useFirewallTemplatesQuery = () => {
   return useQuery<FirewallTemplate[], APIError[]>({
     ...firewallQueries.templates,
@@ -265,6 +277,19 @@ export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>({
     ...firewallQueries.firewalls._ctx.all,
     enabled,
+  });
+};
+
+export const useMutateFirewallSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation<FirewallSettings, APIError[], UpdateFirewallSettings>({
+    mutationFn: (data) => updateFirewallSettings(data),
+    onSuccess(firewallSettings) {
+      queryClient.setQueryData<FirewallSettings>(
+        firewallQueries.settings.queryKey,
+        firewallSettings
+      );
+    },
   });
 };
 
