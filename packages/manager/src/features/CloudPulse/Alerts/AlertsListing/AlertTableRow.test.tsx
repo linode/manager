@@ -143,4 +143,26 @@ describe('Alert Row', () => {
     await userEvent.click(ActionMenu);
     expect(getByText('Disable')).toBeInTheDocument();
   });
+
+  it('should have disable action item present inside action menu in disabled state if the user created alert is in not in enabled or disabled state', async () => {
+    const alert = alertFactory.build({ status: 'provisioning', type: 'user' });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(ActionMenu);
+    expect(getByText('Provisioning')).toBeInTheDocument();
+    expect(getByText('Disable').closest('li')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
 });

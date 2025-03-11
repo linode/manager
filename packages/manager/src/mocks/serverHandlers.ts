@@ -2524,6 +2524,13 @@ export const handlers = [
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
       ...customAlertsWithServiceType,
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'provisioning',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),

@@ -30,6 +30,9 @@ export const statusToActionMap: Record<
 > = {
   disabled: 'Enable',
   enabled: 'Disable',
+  failed: 'Disable',
+  in_progress: 'Disable',
+  provisioning: 'Disable',
 };
 
 export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [
