@@ -5,9 +5,11 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
+import { type ObjectSchema, array, object, string } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -25,7 +27,7 @@ import type {
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
-import type { ObjectSchema } from 'yup';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 
 export interface EditAlertProps {
   /**
@@ -42,6 +44,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -53,7 +56,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      getValidationSchema(alertDetails?.service_type, flags.aclpAlertServiceTypeConfig ?? [])
     ),
   });
 
@@ -181,4 +184,32 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       </FormProvider>
     </Paper>
   );
+};
+
+// Dynamic schema
+const getValidationSchema = (
+  serviceTypeObj: null | string,
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[]
+): ObjectSchema<EditAlertDefinitionPayload> => {
+  const dbaasMaxSelection = 3;
+
+  const maxSelectionCount =
+    serviceTypeObj === 'dbaas'
+      ? dbaasMaxSelection
+      : aclpAlertServiceTypeConfig.find(
+          ({ serviceType }) => serviceTypeObj === serviceType
+        )?.maxResourceSelectionCount;
+
+  return maxSelectionCount === undefined
+    ? (EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>)
+    : EditAlertDefinitionFormSchema.concat(
+        object({
+          entity_ids: array()
+            .of(string())
+            .max(
+              maxSelectionCount,
+              `More than ${maxSelectionCount} resources selected.`
+            ),
+        }) as ObjectSchema<EditAlertDefinitionPayload>
+      );
 };

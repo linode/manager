@@ -1,4 +1,5 @@
 import { omitProps } from '@linode/ui';
+import { array, object, string } from 'yup';
 
 import type {
   CreateAlertDefinitionForm,
@@ -9,9 +10,12 @@ import type {
 import type {
   CreateAlertDefinitionPayload,
   DimensionFilter,
+  EditAlertDefinitionPayload,
   MetricCriteria,
   TriggerCondition,
 } from '@linode/api-v4';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 // filtering out the form properties which are not part of the payload
 export const filterFormValues = (
@@ -96,4 +100,31 @@ export const convertToSeconds = (secondsList: string[]) => {
         return number * 0;
     }
   });
+};
+
+export const getValidationSchema = (
+  serviceTypeObj: null | string,
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[],
+  baseSchema: ObjectSchema<
+    CreateAlertDefinitionForm | EditAlertDefinitionPayload
+  >
+): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
+  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
+    ({ serviceType }) => serviceTypeObj === serviceType
+  )?.maxResourceSelectionCount;
+
+  return maxSelectionCount === undefined
+    ? baseSchema
+    : baseSchema.concat(
+        object({
+          entity_ids: array()
+            .of(string())
+            .max(
+              maxSelectionCount,
+              `More than ${maxSelectionCount} resources selected.`
+            ),
+        }) as ObjectSchema<
+          CreateAlertDefinitionForm | EditAlertDefinitionPayload
+        >
+      );
 };

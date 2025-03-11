@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { type ObjectSchema, array, object, string } from 'yup';
+import { type ObjectSchema } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -21,14 +21,13 @@ import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect'
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues } from './utilities';
+import { filterFormValues, getValidationSchema } from './utilities';
 
 import type {
   CreateAlertDefinitionForm,
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -75,10 +74,11 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
+  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState(
-    getValidationSchema(null, [])
+    getValidationSchema(null, [], createAlertSchema ) as ObjectSchema<CreateAlertDefinitionForm>
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -152,7 +152,7 @@ export const CreateAlertDefinition = () => {
       shouldTouch: true,
       shouldValidate: true,
     });
-    setValidationSchema(getValidationSchema(serviceTypeWatcher, flags.aclpAlertServiceTypeConfig ?? []));
+    setValidationSchema(getValidationSchema(serviceTypeWatcher, flags.aclpAlertServiceTypeConfig ?? [], createAlertSchema) as ObjectSchema<CreateAlertDefinitionForm>);
   }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher, setValue]);
 
   return (
@@ -231,28 +231,6 @@ export const CreateAlertDefinition = () => {
         </FormProvider>
       </Paper>
     </React.Fragment>
-  );
-};
-
-// Dynamic schema
-const getValidationSchema = (
-  serviceTypeObj: null | string,
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[]
-): ObjectSchema<CreateAlertDefinitionForm> => {
-  const dbaasMaxSelection = 3;
-
-  const maxSelectionCount =
-    serviceTypeObj === "dbaas"
-      ? dbaasMaxSelection
-      : aclpAlertServiceTypeConfig.find(({ serviceType }) => serviceTypeObj === serviceType)
-        ?.maxResourceSelectionCount;
-
-  return maxSelectionCount === undefined ? CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm> :  CreateAlertDefinitionFormSchema.concat(
-    object({
-      entity_ids: array()
-        .of(string())
-        .max(maxSelectionCount, `More than ${maxSelectionCount} resources selected.`),
-    }) as ObjectSchema<CreateAlertDefinitionForm>
   );
 };
 
