@@ -13,7 +13,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import { queryClientFactory } from '@src/queries/base';
+import { queryClientFactory } from '@linode/queries';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
   RouterProvider,

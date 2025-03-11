@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  ActionsPanel,
   Box,
   FormControlLabel,
   Notice,
@@ -16,7 +17,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
 import {

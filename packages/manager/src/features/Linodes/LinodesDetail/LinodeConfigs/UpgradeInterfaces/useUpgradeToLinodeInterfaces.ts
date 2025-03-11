@@ -1,4 +1,4 @@
-import { useUpgradeToLinodeInterfacesMutation } from 'src/queries/linodes/interfaces';
+import { useUpgradeToLinodeInterfacesMutation } from '@linode/queries';
 
 import type { UpgradeInterfacesDialogState } from './types';
 import type { Config } from '@linode/api-v4';

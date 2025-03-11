@@ -1,8 +1,8 @@
+import { usePreferences } from '@linode/queries';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { RebuildLinodeFormValues } from './utils';
 

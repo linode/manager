@@ -1,3 +1,4 @@
+import { useAllLinodeConfigsQuery } from '@linode/queries';
 import {
   Box,
   Button,
@@ -8,8 +9,6 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 

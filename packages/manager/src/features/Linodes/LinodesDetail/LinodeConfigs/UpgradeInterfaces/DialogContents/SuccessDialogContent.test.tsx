@@ -1,7 +1,7 @@
+import { linodeInterfaceFactoryVPC } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { linodeInterfaceFactoryVPC } from 'src/factories/linodeInterface';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';

@@ -1,7 +1,7 @@
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
 import { linodeIPFactory } from 'src/factories/linodes';
 import {
   ipResponseToDisplayRows,
@@ -17,7 +17,7 @@ import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
 const ipDisplayVPC = vpcConfigInterfaceToDisplayRows(
-  LinodeConfigInterfaceFactoryWithVPC.build()
+  linodeConfigInterfaceFactoryWithVPC.build()
 )[0];
 
 const handlers: IPAddressRowHandlers = {
@@ -129,7 +129,7 @@ describe('ipResponseToDisplayRows', () => {
   it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
     const ipDisplays = ipResponseToDisplayRows(
       ips,
-      LinodeConfigInterfaceFactoryWithVPC.build()
+      linodeConfigInterfaceFactoryWithVPC.build()
     );
 
     expect(

@@ -1,8 +1,7 @@
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
