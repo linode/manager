@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   Drawer,
   FormControl,
@@ -10,8 +11,6 @@ import {
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';

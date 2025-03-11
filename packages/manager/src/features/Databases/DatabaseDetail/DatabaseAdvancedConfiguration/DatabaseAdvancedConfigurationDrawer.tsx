@@ -1,7 +1,5 @@
-import { Divider, Drawer, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Divider, Drawer, Notice, Typography } from '@linode/ui';
 import React, { useState } from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';

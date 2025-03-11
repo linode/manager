@@ -1,8 +1,7 @@
-import { Drawer, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { IPRange } from '@linode/api-v4/lib/networking';

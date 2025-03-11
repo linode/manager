@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import {
   useMutatePreferences,
   usePreferences,

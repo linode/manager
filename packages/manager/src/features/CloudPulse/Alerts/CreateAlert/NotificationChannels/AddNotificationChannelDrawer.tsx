@@ -1,10 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Autocomplete, Box, Drawer, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Drawer,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
@@ -89,12 +93,13 @@ export const AddNotificationChannelDrawer = (
     (template) => template.label === channelLabelWatcher
   );
 
+  const resetDrawer = () => {
+    handleCloseDrawer();
+    reset();
+  };
+
   return (
-    <Drawer
-      onClose={handleCloseDrawer}
-      open={open}
-      title="Add Notification Channel"
-    >
+    <Drawer onClose={resetDrawer} open={open} title="Add Notification Channel">
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Box
@@ -163,6 +168,11 @@ export const AddNotificationChannelDrawer = (
                         reason === 'selectOption' ? selected.label : null
                       );
                     }}
+                    slotProps={{
+                      popper: {
+                        placement: 'bottom',
+                      },
+                    }}
                     value={
                       selectedChannelTypeTemplate?.find(
                         (option) => option.label === field.value
@@ -211,7 +221,7 @@ export const AddNotificationChannelDrawer = (
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: handleCloseDrawer,
+              onClick: resetDrawer,
             }}
           />
         </form>

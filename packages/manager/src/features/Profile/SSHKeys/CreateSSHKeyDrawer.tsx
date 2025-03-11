@@ -1,9 +1,14 @@
-import { Drawer, Notice, TextField, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
 import { Link } from 'src/components/Link';
 import { useCreateSSHKeyMutation } from 'src/queries/profile/profile';

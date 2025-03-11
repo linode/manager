@@ -1,8 +1,6 @@
-import { Drawer, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useUpdatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

@@ -1,5 +1,6 @@
 import { createUser } from '@linode/api-v4/lib/account';
 import {
+  ActionsPanel,
   Drawer,
   FormControlLabel,
   Notice,
@@ -8,8 +9,6 @@ import {
 } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

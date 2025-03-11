@@ -2,11 +2,9 @@ import {
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 

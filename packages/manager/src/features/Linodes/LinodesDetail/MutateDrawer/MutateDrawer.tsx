@@ -1,7 +1,5 @@
-import { Drawer, ListItem, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 
 interface MutateInfo {

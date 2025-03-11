@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   Drawer,
   InputAdornment,
@@ -10,8 +11,6 @@ import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schem
 import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import type {
   ManagedCredential,

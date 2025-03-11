@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Drawer,
   FormControlLabel,
   Notice,
@@ -7,20 +8,19 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { CustomFirewallFields } from './CustomFirewallFields';
 import { createFirewallResolver } from './formUtilities';

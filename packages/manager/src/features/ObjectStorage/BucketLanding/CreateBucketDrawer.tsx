@@ -1,11 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Drawer, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {

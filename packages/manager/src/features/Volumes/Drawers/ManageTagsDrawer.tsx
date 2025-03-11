@@ -1,8 +1,6 @@
-import { Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useGrants } from 'src/queries/profile/profile';
 import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';

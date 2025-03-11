@@ -1,7 +1,6 @@
+import { getQueryParamFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { BucketRateLimitTable } from '../BucketLanding/BucketRateLimitTable';
 import { BucketBreadcrumb } from './BucketBreadcrumb';

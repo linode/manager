@@ -1,9 +1,7 @@
-import { Drawer, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';

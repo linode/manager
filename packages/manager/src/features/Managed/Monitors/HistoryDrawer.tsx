@@ -1,7 +1,6 @@
+import { ActionsPanel } from '@linode/ui';
 import { Drawer } from '@linode/ui';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { IssueCalendar } from './IssueCalendar';
 

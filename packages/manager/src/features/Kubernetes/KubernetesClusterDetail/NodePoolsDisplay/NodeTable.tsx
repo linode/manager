@@ -51,6 +51,7 @@ export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -67,6 +68,7 @@ export const NodeTable = React.memo((props: Props) => {
     nodes,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -256,7 +258,8 @@ export const NodeTable = React.memo((props: Props) => {
               />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
-                  {isDiskEncryptionFeatureEnabled &&
+                  {(isDiskEncryptionFeatureEnabled ||
+                    regionSupportsDiskEncryption) &&
                   encryptionStatus !== undefined ? (
                     <Box
                       alignItems="center"

@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Box,
   Drawer,
   FormControlLabel,
@@ -9,8 +10,6 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useCreateUserMutation } from 'src/queries/account/users';
 
 import type { User } from '@linode/api-v4/lib/account';

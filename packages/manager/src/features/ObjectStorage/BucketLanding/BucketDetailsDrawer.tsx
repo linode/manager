@@ -1,4 +1,5 @@
 import { Divider, Drawer, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionQuery, useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 

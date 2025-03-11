@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Checkbox,
   Drawer,
   FormControl,
@@ -8,8 +9,6 @@ import {
 } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

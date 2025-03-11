@@ -3,6 +3,7 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import {
+  ActionsPanel,
   Box,
   Divider,
   Drawer,
@@ -14,7 +15,6 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {

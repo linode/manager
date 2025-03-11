@@ -23,10 +23,6 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core/placementGroups',
-    'e2e/core/stackscripts',
-    'e2e/core/volumes',
-    'e2e/core/vpc',
     'public',
     '!.eslintrc.js',
   ],
@@ -95,6 +91,7 @@ module.exports = {
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
+        'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
@@ -140,6 +137,12 @@ module.exports = {
                 message:
                   'Please use useOrderV2 hook for components being migrated to TanStack Router.',
                 name: 'src/components/OrderBy',
+              },
+              {
+                importNames: ['Prompt'],
+                message:
+                  'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
+                name: 'src/components/Prompt/Prompt',
               },
             ],
           },

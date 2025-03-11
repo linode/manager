@@ -1,10 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Drawer, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
 
