@@ -2,12 +2,12 @@ import type { LinodeInterface } from '@linode/api-v4';
 
 export const getLinodeInterfaceType = (networkInterface: LinodeInterface) => {
   if (networkInterface.vpc) {
-    return 'vpc';
+    return 'VPC';
   }
   if (networkInterface.vlan) {
-    return 'vlan';
+    return 'VLAN';
   }
-  return 'public';
+  return 'Public';
 };
 
 export type LinodeInterfaceType = ReturnType<typeof getLinodeInterfaceType>;

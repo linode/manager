@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Divider,
   List,
   ListItem,
@@ -18,7 +19,6 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';

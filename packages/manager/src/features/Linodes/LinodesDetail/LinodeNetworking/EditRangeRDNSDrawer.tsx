@@ -1,10 +1,9 @@
-import { Notice, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Notice, TextField, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';

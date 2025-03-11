@@ -1,9 +1,8 @@
-import { Box, Checkbox, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Box, Checkbox, Notice, TextField } from '@linode/ui';
 import { UpdateVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
