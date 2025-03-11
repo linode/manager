@@ -23,8 +23,8 @@ export const StyledHeading = styled('h3', {
   margin: 0,
   padding: '8px 14px',
   textTransform: theme.tokens.font.Textcase.Uppercase,
+  backgroundColor: theme.tokens.background.Normal,
   [theme.breakpoints.up('lg')]: {
-    background: 'inherit',
     marginTop: `${props.marginTop ? '12px' : ''}`,
     padding: `8px 16px 6px 16px`,
   },
