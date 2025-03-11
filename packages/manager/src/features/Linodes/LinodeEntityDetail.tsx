@@ -67,7 +67,10 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(linode.id);
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
+    linode.id,
+    linode.interface_generation !== 'linode'
+  );
 
   const attachedFirewalls = attachedFirewallData?.data ?? [];
 
