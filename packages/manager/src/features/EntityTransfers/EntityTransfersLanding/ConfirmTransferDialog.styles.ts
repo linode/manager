@@ -1,7 +1,5 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 export const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
