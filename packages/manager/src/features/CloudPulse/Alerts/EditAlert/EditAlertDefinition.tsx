@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { type ObjectSchema, array, object, string } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -19,6 +18,7 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
+import { getValidationSchema } from '../CreateAlert/utilities';
 import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
@@ -27,7 +27,7 @@ import type {
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 export interface EditAlertProps {
   /**
@@ -45,6 +45,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
+  const editAlertScheme = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -56,7 +57,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      getValidationSchema(alertDetails?.service_type, flags.aclpAlertServiceTypeConfig ?? [])
+      getValidationSchema(
+        alertDetails?.service_type,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        editAlertScheme
+      ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
@@ -184,32 +189,4 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       </FormProvider>
     </Paper>
   );
-};
-
-// Dynamic schema
-const getValidationSchema = (
-  serviceTypeObj: null | string,
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[]
-): ObjectSchema<EditAlertDefinitionPayload> => {
-  const dbaasMaxSelection = 3;
-
-  const maxSelectionCount =
-    serviceTypeObj === 'dbaas'
-      ? dbaasMaxSelection
-      : aclpAlertServiceTypeConfig.find(
-          ({ serviceType }) => serviceTypeObj === serviceType
-        )?.maxResourceSelectionCount;
-
-  return maxSelectionCount === undefined
-    ? (EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>)
-    : EditAlertDefinitionFormSchema.concat(
-        object({
-          entity_ids: array()
-            .of(string())
-            .max(
-              maxSelectionCount,
-              `More than ${maxSelectionCount} resources selected.`
-            ),
-        }) as ObjectSchema<EditAlertDefinitionPayload>
-      );
 };

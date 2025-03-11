@@ -109,9 +109,12 @@ export const getValidationSchema = (
     CreateAlertDefinitionForm | EditAlertDefinitionPayload
   >
 ): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
-  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    ({ serviceType }) => serviceTypeObj === serviceType
-  )?.maxResourceSelectionCount;
+  const maxSelectionCount =
+    serviceTypeObj === 'dbaas'
+      ? 3
+      : aclpAlertServiceTypeConfig.find(
+          ({ serviceType }) => serviceTypeObj === serviceType
+        )?.maxResourceSelectionCount;
 
   return maxSelectionCount === undefined
     ? baseSchema

@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { type ObjectSchema } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -28,6 +27,7 @@ import type {
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
+import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -74,19 +74,21 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
+  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>;
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState(
-    getValidationSchema(null, [], createAlertSchema ) as ObjectSchema<CreateAlertDefinitionForm>
+    getValidationSchema(
+      null,
+      [],
+      createAlertSchema
+    ) as ObjectSchema<CreateAlertDefinitionForm>
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(
-      validationSchema,
-    ),
+    resolver: yupResolver(validationSchema),
   });
   const {
     control,
@@ -145,15 +147,18 @@ export const CreateAlertDefinition = () => {
         threshold: 0,
       },
     ]);
+    setValue('entity_ids', []);
   }, [setValue]);
 
   React.useEffect(() => {
-    setValue('entity_ids', [], {
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-    setValidationSchema(getValidationSchema(serviceTypeWatcher, flags.aclpAlertServiceTypeConfig ?? [], createAlertSchema) as ObjectSchema<CreateAlertDefinitionForm>);
-  }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher, setValue]);
+    setValidationSchema(
+      getValidationSchema(
+        serviceTypeWatcher,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        createAlertSchema
+      ) as ObjectSchema<CreateAlertDefinitionForm>
+    );
+  }, [createAlertSchema, flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
   return (
     <React.Fragment>
@@ -233,5 +238,3 @@ export const CreateAlertDefinition = () => {
     </React.Fragment>
   );
 };
-
-
