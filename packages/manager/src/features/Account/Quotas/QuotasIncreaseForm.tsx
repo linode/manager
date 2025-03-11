@@ -1,19 +1,21 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Accordion, Notice, Stack, TextField, Typography } from '@linode/ui';
+import {
+  Accordion,
+  ActionsPanel,
+  Notice,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { MarkdownReference } from 'src/features/Support/SupportTicketDetail/TabbedReply/MarkdownReference';
-import { TabbedReply } from 'src/features/Support/SupportTicketDetail/TabbedReply/TabbedReply';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { useProfile } from 'src/queries/profile/profile';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import {
-  getQuotaIncreaseFormDefaultValues,
-  getQuotaIncreaseFormSchema,
-} from './utils';
+import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 
 import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
 
@@ -25,6 +27,7 @@ interface QuotasIncreaseFormProps {
 }
 
 export interface QuotaIncreaseFormFields extends TicketRequest {
+  notes?: string;
   quantity: string;
 }
 
@@ -34,9 +37,10 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const [error, setError] = React.useState<null | string>(null);
   const formContainerRef = React.useRef<HTMLFormElement>(null);
   const { data: profile } = useProfile();
+  const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
   const defaultValues = React.useMemo(
-    () => getQuotaIncreaseFormDefaultValues({ profile, quantity: 0, quota }),
+    () => getQuotaIncreaseMessage({ profile, quantity: 0, quota }),
     [quota, profile]
   );
   const form = useForm<QuotaIncreaseFormFields>({
@@ -45,9 +49,13 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     resolver: yupResolver(getQuotaIncreaseFormSchema),
   });
 
-  const { quantity, summary } = form.watch();
+  const { notes, quantity, summary } = form.watch();
 
-  const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
+  const quotaIncreaseDescription = getQuotaIncreaseMessage({
+    profile,
+    quantity: Number(quantity),
+    quota,
+  }).description;
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
@@ -55,7 +63,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     setSubmitting(true);
 
     const payload: TicketRequest = {
-      description: values.description,
+      description: `${quotaIncreaseDescription}\n\n${values.notes}`,
       summary: values.summary,
     };
 
@@ -83,14 +91,13 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
               <TextField
                 onChange={(e) => {
                   field.onChange(e);
-                  form.trigger('summary');
                 }}
                 errorText={fieldState.error?.message}
                 label="Title"
                 name="summary"
                 placeholder="Enter a title for your ticket."
                 required
-                value={summary}
+                value={field.value}
               />
             )}
             control={form.control}
@@ -109,7 +116,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                       endAdornment: (
                         <Typography
                           sx={(theme) => ({
-                            color: theme.tokens.color.Neutrals[80],
+                            color: theme.tokens.content.Text,
                             font: theme.font.bold,
                             fontSize: theme.tokens.font.FontSize.Xxxs,
                             mx: 1,
@@ -132,48 +139,63 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                   required
                   sx={{ width: 300 }}
                   type="number"
-                  value={quantity}
+                  value={field.value}
                 />
               </Stack>
             )}
             control={form.control}
             name="quantity"
           />
-          <Stack direction="column">
-            <Controller
-              render={({ field, fieldState }) => (
-                <TabbedReply
-                  handleChange={(e) => {
-                    field.onChange(e);
-                    form.trigger('description');
-                  }}
-                  value={
-                    getQuotaIncreaseFormDefaultValues({
-                      profile,
-                      quantity: Number(quantity),
-                      quota,
-                    }).description
-                  }
-                  error={fieldState.error?.message}
-                  placeholder={'Enter your request for a quota increase.'}
-                  required
-                />
-              )}
-              control={form.control}
-              name="description"
-            />
-            <Accordion
-              detailProps={{ sx: { p: 0.25 } }}
-              heading="Formatting Tips"
-              summaryProps={{ sx: { paddingX: 0.25 } }}
-              sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                slotProps={{
+                  input: {
+                    sx: {
+                      maxWidth: '100%',
+                    },
+                  },
+                }}
+                errorText={fieldState.error?.message}
+                label="Notes"
+                multiline
+                name="notes"
+                value={field.value}
+              />
+            )}
+            control={form.control}
+            name="notes"
+          />
+          <Accordion
+            data-testid="quota-increase-form-preview"
+            detailProps={{ sx: { p: 0.25 } }}
+            heading="Ticket Preview"
+            summaryProps={{ sx: { paddingX: 0.25 } }}
+          >
+            <Stack
+              sx={(theme) => ({
+                backgroundColor: theme.tokens.background.Neutral,
+                p: 2,
+              })}
+              data-testid="quota-increase-form-preview-content"
             >
-              <MarkdownReference />
-            </Accordion>
-          </Stack>
+              <Typography
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                  fontSize: theme.tokens.font.FontSize.M,
+                })}
+              >
+                {summary}
+              </Typography>
+              <Markdown textOrMarkdown={quotaIncreaseDescription} />{' '}
+              <Markdown textOrMarkdown={notes ?? ''} />
+            </Stack>
+          </Accordion>
           <ActionsPanel
             primaryButtonProps={{
-              disabled: Number(quantity) <= 0,
               label: 'Submit',
               loading: submitting,
               onClick: handleSubmit,

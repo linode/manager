@@ -11,8 +11,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useFlags } from 'src/hooks/useFlags';
-import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { usePagination } from 'src/hooks/usePagination';
 import { useQuotasQuery } from 'src/queries/quotas/quotas';
 import { quotaQueries } from 'src/queries/quotas/quotas';
@@ -23,7 +21,6 @@ import { getQuotasFilters } from './utils';
 
 import type { Filter, Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 const quotaRowMinHeight = 58;
@@ -38,8 +35,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
   const history = useHistory();
   const pagination = usePagination(1, 'quotas-table');
   const hasSelectedLocation = Boolean(selectedLocation);
-  const flags = useFlags();
-  const { isAkamaiAccount } = useIsAkamaiAccount();
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
   const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
 
@@ -85,20 +80,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
   if (quotasError) {
     return <ErrorState errorText={quotasError[0].reason} />;
   }
-
-  const isRequestForQuotaButtonDisabled =
-    flags.limitsEvolution?.requestForIncreaseDisabledForAll ||
-    (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
-      isAkamaiAccount);
-
-  const requestIncreaseAction: Action = {
-    disabled: isRequestForQuotaButtonDisabled,
-    onClick: (quota: Quota) => {
-      setSelectedQuota(quota);
-      setSupportModalOpen(true);
-    },
-    title: 'Request an Increase',
-  };
 
   const onIncreaseQuotaTicketCreated = (
     ticketId: number,
@@ -157,7 +138,6 @@ export const QuotasTable = (props: QuotasTableProps) => {
                   key={quota.quota_id}
                   quota={quota}
                   quotaUsageQueries={quotaUsageQueries}
-                  requestIncreaseAction={requestIncreaseAction}
                   setSelectedQuota={setSelectedQuota}
                   setSupportModalOpen={setSupportModalOpen}
                 />

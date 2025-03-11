@@ -123,7 +123,7 @@ interface GetQuotaIncreaseFormDefaultValuesProps {
 /**
  * Function to get the default values for the quota increase form
  */
-export const getQuotaIncreaseFormDefaultValues = ({
+export const getQuotaIncreaseMessage = ({
   profile,
   quantity,
   quota,
@@ -134,6 +134,7 @@ export const getQuotaIncreaseFormDefaultValues = ({
   if (!profile) {
     return {
       description: '',
+      notes: '',
       quantity: '0',
       summary: 'Increase Quota',
     };
@@ -147,6 +148,7 @@ export const getQuotaIncreaseFormDefaultValues = ({
     }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
       quantity > 1 ? 's' : ''
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    notes: '',
     quantity: '0',
     summary: 'Increase Quota',
   };
@@ -154,6 +156,9 @@ export const getQuotaIncreaseFormDefaultValues = ({
 
 export const getQuotaIncreaseFormSchema = object({
   description: string().required('Description is required.'),
+  notes: string()
+    .optional()
+    .max(255, 'Notes must be less than 255 characters.'),
   quantity: string()
     .required('Quantity is required')
     .matches(/^[1-9]\d*$/, 'Quantity must be a positive number greater than 0'),

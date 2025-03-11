@@ -7,6 +7,8 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { BarPercent } from 'src/components/BarPercent/BarPercent';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
+import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
 import { getQuotaError } from './utils';
 
@@ -23,7 +25,6 @@ interface QuotasTableRowProps {
   index: number;
   quota: QuotaWithUsage;
   quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
-  requestIncreaseAction: Action;
   setSelectedQuota: (quota: Quota) => void;
   setSupportModalOpen: (open: boolean) => void;
 }
@@ -36,11 +37,28 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     index,
     quota,
     quotaUsageQueries,
-    requestIncreaseAction,
     setSelectedQuota,
     setSupportModalOpen,
   } = props;
   const theme = useTheme();
+  const flags = useFlags();
+  const { isAkamaiAccount } = useIsAkamaiAccount();
+  // These conditions are meant to achieve a couple things:
+  // 1. Ability to disable the request for increase button for Internal accounts (this will be used for early adopters, and removed eventually).
+  // 2. Ability to disable the request for increase button for All accounts (this is a prevention measure when beta is in GA).
+  const isRequestForQuotaButtonDisabled =
+    flags.limitsEvolution?.requestForIncreaseDisabledForAll ||
+    (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
+      isAkamaiAccount);
+
+  const requestIncreaseAction: Action = {
+    disabled: isRequestForQuotaButtonDisabled,
+    onClick: () => {
+      setSelectedQuota(quota);
+      setSupportModalOpen(true);
+    },
+    title: 'Request an Increase',
+  };
 
   return (
     <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
@@ -120,15 +138,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
       {hasQuotaUsage ? (
         <TableCell sx={{ paddingRight: 0, textAlign: 'right' }}>
           <ActionMenu
-            actionsList={[
-              {
-                ...requestIncreaseAction,
-                onClick: () => {
-                  setSelectedQuota(quota);
-                  setSupportModalOpen(true);
-                },
-              },
-            ]}
+            actionsList={[requestIncreaseAction]}
             ariaLabel={`Action menu for quota ${quota.quota_name}`}
           />
         </TableCell>

@@ -7,7 +7,7 @@ import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 
 import {
   getQuotaError,
-  getQuotaIncreaseFormDefaultValues,
+  getQuotaIncreaseMessage,
   useGetLocationsForQuotaService,
 } from './utils';
 
@@ -103,7 +103,7 @@ describe('useGetLocationsForQuotaService', () => {
     };
     const quantity = 1;
 
-    const defaultValues = getQuotaIncreaseFormDefaultValues({
+    const defaultValues = getQuotaIncreaseMessage({
       profile,
       quantity,
       quota,
