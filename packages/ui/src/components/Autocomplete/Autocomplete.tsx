@@ -122,7 +122,7 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
-  if (!isMobileDevice && enableNativeSelectOnMobile && !multiple) {
+  if (isMobileDevice && enableNativeSelectOnMobile && !multiple) {
     return (
       <Stack direction="column">
         <NativeSelect
