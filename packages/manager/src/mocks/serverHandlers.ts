@@ -2467,14 +2467,7 @@ export const handlers = [
         type: pickRandom(types),
         updated_by: pickRandom(users),
       });
-      return HttpResponse.json(
-        {
-          errors: [
-            { field: 'entity_ids', reason: 'More than 2 resources selected' },
-          ],
-        },
-        { status: 400 }
-      );
+      return HttpResponse.json(response);
     }
   ),
   http.get(
