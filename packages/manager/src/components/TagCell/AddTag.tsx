@@ -2,7 +2,7 @@ import { Autocomplete } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 
 interface AddTagProps {

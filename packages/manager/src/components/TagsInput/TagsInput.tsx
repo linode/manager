@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

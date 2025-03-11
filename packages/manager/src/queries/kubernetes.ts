@@ -25,6 +25,8 @@ import {
   updateKubernetesClusterControlPlaneACL,
   updateNodePool,
 } from '@linode/api-v4';
+import { profileQueries, queryPresets } from '@linode/queries';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -38,10 +40,6 @@ import {
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
-import { getAll } from 'src/utilities/getAll';
-
-import { queryPresets } from './base';
-import { profileQueries } from './profile/profile';
 
 import type {
   CreateKubeClusterPayload,

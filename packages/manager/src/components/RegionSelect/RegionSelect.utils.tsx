@@ -1,7 +1,7 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
@@ -162,15 +162,6 @@ export const getIsDistributedRegion = (
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
   return region?.site_type === 'distributed';
-};
-
-export const getNewRegionLabel = (region: Region) => {
-  const [city] = region.label.split(', ');
-  // Include state for the US
-  if (region.country === 'us') {
-    return `${region.country.toUpperCase()}, ${region.label}`;
-  }
-  return `${region.country.toUpperCase()}, ${city}`;
 };
 
 export const useIsGeckoEnabled = () => {

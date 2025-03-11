@@ -21,7 +21,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
-} from 'src/queries/account/maintenance';
+} from '@linode/queries';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import { PENDING_MAINTENANCE_FILTER } from './utilities';

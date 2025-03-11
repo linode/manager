@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import { UserDeleteConfirmationDialog } from '../UserDeleteConfirmationDialog';
 

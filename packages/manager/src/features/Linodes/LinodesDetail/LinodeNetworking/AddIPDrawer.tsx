@@ -1,5 +1,10 @@
-import { FormControlLabel, Typography } from '@linode/ui';
 import {
+  useCreateIPv6RangeMutation,
+  useAllocateIPMutation,
+  useLinodeIPsQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Box,
   Divider,
   Notice,
@@ -7,18 +12,14 @@ import {
   RadioGroup,
   Stack,
   Tooltip,
+  FormControlLabel,
+  Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import {
-  useAllocateIPMutation,
-  useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
-import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
 
 import { ExplainerCopy } from './ExplainerCopy';
 

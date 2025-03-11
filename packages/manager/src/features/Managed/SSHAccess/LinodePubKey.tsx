@@ -11,7 +11,7 @@ import {
   StyledVisibilityShowIcon,
 } from 'src/features/Billing/BillingPanels/ContactInfoPanel/ContactInformation.styles';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
