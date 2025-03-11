@@ -9,7 +9,7 @@ export type DimensionFilterOperatorType =
   | 'startswith'
   | 'endswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertStatusType = 'enabled' | 'disabled';
+export type AlertStatusType = 'enabled' | 'disabled' | 'in_progress' | 'provisioning' | 'failed';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'number'
