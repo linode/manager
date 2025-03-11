@@ -13,14 +13,13 @@
     },
     "resolveJsonModule": true,
     "rootDir": ".",
-    "outDir": "./lib",
 
     /* JavaScript Support */
     "allowJs": false,
 
     /* Emit */
     "sourceMap": true,
-    "emitDeclarationOnly": true,
+    "noEmit": true,
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
@@ -40,7 +39,7 @@
     "skipLibCheck": true,
 
     /* Optimizations */
-    "composite": true
+    "incremental": true
   },
   "include": [
     "src",
