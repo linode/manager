@@ -1,7 +1,6 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 import type { Alert } from '@linode/api-v4';
