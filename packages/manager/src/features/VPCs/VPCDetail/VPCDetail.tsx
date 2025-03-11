@@ -20,7 +20,10 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
-import { getUniqueLinodesFromSubnets } from '../utils';
+import {
+  getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
+} from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import {
@@ -58,10 +61,7 @@ const VPCDetail = () => {
       ? vpc.description
       : truncate(vpc.description, 150);
 
-  // This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
-  const isVPCLKEEnterpriseCluster =
-    /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(description) ||
-    /^lke\d+/i.test(vpc.label);
+  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
 
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
