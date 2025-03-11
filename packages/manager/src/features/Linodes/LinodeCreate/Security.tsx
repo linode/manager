@@ -93,7 +93,7 @@ export const Security = () => {
         control={control}
         name="authorized_users"
       />
-      {isDiskEncryptionFeatureEnabled && (
+      {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) && (
         <>
           <Divider spacingBottom={20} spacingTop={24} />
           <Controller
@@ -115,7 +115,7 @@ export const Security = () => {
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
-                disabled={!regionSupportsDiskEncryption}
+                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
                 error={fieldState.error?.message}
               />
             )}

@@ -86,11 +86,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   return (
     <Grid
-      container
-      data-testid={`${name}-id`}
       sx={{
         gap: 2,
       }}
+      container
+      data-testid={`${name}-id`}
     >
       <Grid item md={3} xs={12}>
         <Controller

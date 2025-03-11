@@ -36,6 +36,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
   });
 
   const dimensionFilterWatcher = useWatch({ control, name });
+
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">

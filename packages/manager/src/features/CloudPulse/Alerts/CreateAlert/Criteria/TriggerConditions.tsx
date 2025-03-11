@@ -58,11 +58,11 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
       <Grid
-        container
-        spacing={2}
         sx={{
           alignItems: 'flex-start',
         }}
+        container
+        spacing={2}
       >
         <Grid item md={3} sm={6} xs={12}>
           <Controller
@@ -135,24 +135,22 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
         </Grid>
         <Grid
+          sx={{
+            mt: { lg: 3.5, xs: 0 },
+          }}
           alignItems="start"
           display="flex"
           flexDirection={{ sm: 'row', xs: 'column' }}
           gap={1}
           item
-          justifyContent={{ xs: 'center' }}
+          justifyContent={{ sm: 'left', xs: 'center' }}
           md="auto"
           sm={12}
           xs={12}
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            gap: 1,
-            mt: { lg: 3.5, xs: 0 },
-          }}
         >
           <Typography
             marginTop={{ sm: '32px', xs: '0px' }}
+            maxWidth={{ lg: '270px', md: '220px' }}
             mt={3}
             variant="body1"
           >
@@ -162,13 +160,16 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           <Controller
             render={({ field, fieldState }) => (
               <TextField
+                containerProps={{
+                  maxWidth: '120px',
+                }}
                 onWheel={(event) =>
                   event.target instanceof HTMLElement && event.target.blur()
                 }
                 sx={{
                   height: '34px',
                   marginTop: { sm: '16px', xs: '0px' },
-                  width: '30px',
+                  width: '100px',
                 }}
                 data-qa-trigger-occurrences
                 data-testid="trigger-occurences"

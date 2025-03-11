@@ -65,6 +65,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
     control,
     name,
   });
+
   return (
     <Grid2
       container

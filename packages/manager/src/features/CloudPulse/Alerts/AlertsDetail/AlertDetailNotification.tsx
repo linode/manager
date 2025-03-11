@@ -1,9 +1,8 @@
-import { CircleProgress, Stack, Typography } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack, Typography } from '@linode/ui';
 import { Divider, Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';

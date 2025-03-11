@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
 
-import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import type { Filter } from '@linode/api-v4';
@@ -137,6 +137,7 @@ export const VLANSelect = (props: Props) => {
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isFetching}
+      noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
       onBlur={onBlur}
       open={open}

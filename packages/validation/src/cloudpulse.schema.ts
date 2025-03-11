@@ -27,6 +27,7 @@ const triggerConditionValidation = object({
     .positive('Enter a positive value.')
     .typeError('The value should be a number.'),
 });
+
 const specialStartEndRegex = /^[^a-zA-Z0-9]/;
 export const createAlertDefinitionSchema = object({
   label: string()
@@ -35,7 +36,14 @@ export const createAlertDefinitionSchema = object({
       /^[^*#&+:<>"?@%{}\\\/]+$/,
       'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
     )
-    .max(100, 'Name must be 100 characters or less.'),
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value ?? '');
+      }
+    ),
   description: string()
     .max(100, 'Description must be 100 characters or less.')
     .test(
