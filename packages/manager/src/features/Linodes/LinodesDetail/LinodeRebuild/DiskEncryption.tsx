@@ -31,7 +31,7 @@ export const DiskEncryption = (props: Props) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
-  if (!isDiskEncryptionFeatureEnabled && !regionSupportsDiskEncryption) {
+  if (!isDiskEncryptionFeatureEnabled) {
     return null;
   }
 
