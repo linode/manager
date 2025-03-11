@@ -144,7 +144,7 @@ describe('Alert Row', () => {
     expect(getByText('Disable')).toBeInTheDocument();
   });
 
-  it('should have disable action item present inside action menu in disabled state if the user created alert is in not in enabled or disabled state', async () => {
+  it('should have disable action item present inside action menu in disabled state if the user created alert does not have enabled or disabled status', async () => {
     const alert = alertFactory.build({ status: 'provisioning', type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
