@@ -1,10 +1,9 @@
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useUpdateSSHKeyMutation } from 'src/queries/profile/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -17,7 +16,7 @@ interface Props {
   sshKey: SSHKey | undefined;
 }
 
-const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
+export const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -84,5 +83,3 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
     </Drawer>
   );
 };
-
-export default React.memo(EditSSHKeyDrawer);

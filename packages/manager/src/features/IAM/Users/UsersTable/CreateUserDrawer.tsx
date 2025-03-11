@@ -1,9 +1,15 @@
-import { Box, FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
+import {
+  ActionsPanel,
+  Box,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+} from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useCreateUserMutation } from 'src/queries/account/users';
 
