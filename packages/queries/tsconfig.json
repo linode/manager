@@ -19,6 +19,6 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../api-v4" },
+    { "path": "../api-v4" }
   ]
 }

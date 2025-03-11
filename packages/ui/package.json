@@ -21,6 +21,7 @@
     "@linode/design-language-system": "^4.0.0",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
+    "@mui/system": "^6.4.5",
     "@mui/utils": "^6.4.3",
     "@mui/x-date-pickers": "^7.27.0",
     "luxon": "3.4.4",
