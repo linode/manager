@@ -97,6 +97,9 @@ export const useCreateStackScriptMutation = () => {
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
+      });
     },
   });
 };
@@ -136,6 +139,9 @@ export const useUpdateStackScriptMutation = (
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
+      });
       queryClient.setQueryData<StackScript>(
         stackscriptQueries.stackscript(id).queryKey,
         stackscript
@@ -160,6 +166,9 @@ export const useDeleteStackScriptMutation = (
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
+      });
       queryClient.removeQueries({
         queryKey: stackscriptQueries.stackscript(id).queryKey,
       });
@@ -177,6 +186,9 @@ export const stackScriptEventHandler = ({
   // Keep the infinite store up to date
   invalidateQueries({
     queryKey: stackscriptQueries.infinite._def,
+  });
+  invalidateQueries({
+    queryKey: stackscriptQueries.all.queryKey,
   });
 
   // If the event has a StackScript entity attached, invalidate it
