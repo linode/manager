@@ -20,7 +20,7 @@ import {
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 import {
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,

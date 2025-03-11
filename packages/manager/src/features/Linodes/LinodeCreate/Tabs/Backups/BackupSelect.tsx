@@ -6,7 +6,7 @@ import { useController, useWatch } from 'react-hook-form';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
+import { useLinodeBackupsQuery } from '@linode/queries';
 
 import type { LinodeCreateFormValues } from '../../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';

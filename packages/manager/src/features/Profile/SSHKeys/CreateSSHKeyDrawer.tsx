@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Code } from 'src/components/Code/Code';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { useCreateSSHKeyMutation } from 'src/queries/profile/profile';
+import { useCreateSSHKeyMutation } from '@linode/queries';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

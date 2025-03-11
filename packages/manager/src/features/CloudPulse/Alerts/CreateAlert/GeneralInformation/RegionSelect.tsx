@@ -1,8 +1,8 @@
+import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { FieldPathByValue } from 'react-hook-form';

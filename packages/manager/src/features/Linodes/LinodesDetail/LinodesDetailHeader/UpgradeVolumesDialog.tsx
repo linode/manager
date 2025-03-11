@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/Dialogs/UpgradeVolumeDialog';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useNotificationsQuery } from '@linode/queries';
 import {
   useLinodeVolumesQuery,
   useVolumesMigrateMutation,

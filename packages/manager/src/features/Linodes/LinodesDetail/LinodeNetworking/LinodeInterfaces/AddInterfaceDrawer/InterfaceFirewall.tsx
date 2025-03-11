@@ -1,8 +1,7 @@
+import { useAllFirewallsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 import { useController } from 'react-hook-form';
-
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
 import type { CreateInterfaceFormValues } from './utilities';
 
