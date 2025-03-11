@@ -1,3 +1,4 @@
+import { useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -17,7 +18,6 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from '@linode/queries';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
@@ -32,6 +32,7 @@ import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
+  isVPCLKEEnterpriseCluster: boolean;
   vpcId: number;
   vpcRegion: string;
 }
@@ -39,7 +40,7 @@ interface Props {
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { vpcId, vpcRegion } = props;
+  const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
   const theme = useTheme();
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
@@ -224,6 +225,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
+              isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}
@@ -248,6 +250,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 <SubnetLinodeRow
                   handlePowerActionsLinode={handlePowerActionsLinode}
                   handleUnassignLinode={handleSubnetUnassignLinode}
+                  isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
                   key={linodeInfo.id}
                   linodeId={linodeInfo.id}
                   subnet={subnet}
@@ -265,7 +268,9 @@ export const VPCSubnetsTable = (props: Props) => {
         InnerTable,
         OuterTableCells,
         id: subnet.id,
-        label: subnet.label,
+        label: `${subnet.label}${
+          isVPCLKEEnterpriseCluster ? ' (Managed)' : ''
+        }`,
       };
     });
   };
@@ -294,6 +299,7 @@ export const VPCSubnetsTable = (props: Props) => {
             marginBottom: theme.spacing(2),
           }}
           buttonType="primary"
+          disabled={isVPCLKEEnterpriseCluster}
           onClick={() => setSubnetCreateDrawerOpen(true)}
         >
           Create Subnet

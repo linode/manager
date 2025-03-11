@@ -36,6 +36,7 @@ interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
+  isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -46,6 +47,7 @@ export const SubnetLinodeRow = (props: Props) => {
     handlePowerActionsLinode,
     handleUnassignLinode,
     hover = false,
+    isVPCLKEEnterpriseCluster,
     linodeId,
     subnet,
     subnetId,
@@ -107,28 +109,29 @@ export const SubnetLinodeRow = (props: Props) => {
     <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
   );
 
-  const labelCell = hasUnrecommendedConfiguration ? (
-    <Box
-      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
-      sx={{ alignItems: 'center', display: 'flex' }}
-    >
-      <TooltipIcon
-        text={
-          <Typography>
-            This Linode is using a configuration profile with a Networking
-            setting that is not recommended. To avoid potential connectivity
-            issues, edit the Linode’s configuration.
-          </Typography>
-        }
-        icon={<StyledWarningIcon />}
-        status="other"
-        sxTooltipIcon={{ paddingLeft: 0 }}
-      />
-      {linkifiedLinodeLabel}
-    </Box>
-  ) : (
-    linkifiedLinodeLabel
-  );
+  const labelCell =
+    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
+      <Box
+        data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+        sx={{ alignItems: 'center', display: 'flex' }}
+      >
+        <TooltipIcon
+          text={
+            <Typography>
+              This Linode is using a configuration profile with a Networking
+              setting that is not recommended. To avoid potential connectivity
+              issues, edit the Linode’s configuration.
+            </Typography>
+          }
+          icon={<StyledWarningIcon />}
+          status="other"
+          sxTooltipIcon={{ paddingLeft: 0 }}
+        />
+        {linkifiedLinodeLabel}
+      </Box>
+    ) : (
+      linkifiedLinodeLabel
+    );
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
@@ -197,29 +200,36 @@ export const SubnetLinodeRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        {isRebootNeeded && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(linode, 'Reboot');
-            }}
-            actionText="Reboot"
-          />
+        {!isVPCLKEEnterpriseCluster && (
+          <>
+            {isRebootNeeded && (
+              <InlineMenuAction
+                onClick={() => {
+                  handlePowerActionsLinode(linode, 'Reboot');
+                }}
+                actionText="Reboot"
+                disabled={isVPCLKEEnterpriseCluster}
+              />
+            )}
+            {showPowerButton && (
+              <InlineMenuAction
+                onClick={() => {
+                  handlePowerActionsLinode(
+                    linode,
+                    isOffline ? 'Power On' : 'Power Off'
+                  );
+                }}
+                actionText={isOffline ? 'Power On' : 'Power Off'}
+                disabled={isVPCLKEEnterpriseCluster}
+              />
+            )}
+            <InlineMenuAction
+              actionText="Unassign Linode"
+              disabled={isVPCLKEEnterpriseCluster}
+              onClick={() => handleUnassignLinode(linode, subnet)}
+            />
+          </>
         )}
-        {showPowerButton && (
-          <InlineMenuAction
-            onClick={() => {
-              handlePowerActionsLinode(
-                linode,
-                isOffline ? 'Power On' : 'Power Off'
-              );
-            }}
-            actionText={isOffline ? 'Power On' : 'Power Off'}
-          />
-        )}
-        <InlineMenuAction
-          actionText="Unassign Linode"
-          onClick={() => handleUnassignLinode(linode, subnet)}
-        />
       </TableCell>
     </TableRow>
   );
