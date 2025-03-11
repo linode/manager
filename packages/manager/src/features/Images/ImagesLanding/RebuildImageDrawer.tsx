@@ -1,18 +1,17 @@
-import { Divider, Notice, Stack } from '@linode/ui';
+import { ActionsPanel, Divider, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
-import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 interface Props {
   image: Image | undefined;

@@ -1,5 +1,6 @@
 import {
   Accordion,
+  ActionsPanel,
   Box,
   Button,
   Notice,
@@ -15,7 +16,6 @@ import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';

@@ -123,7 +123,7 @@ describe('AlertDefinition Create', () => {
     await user.click(container.getByText('Submit'));
     expect(
       await container.findByText(
-        'Name cannot contain special characters: * # & + : \< \> ? @ % { } \\ /.'
+        'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
       )
     ).toBeVisible();
     expect(

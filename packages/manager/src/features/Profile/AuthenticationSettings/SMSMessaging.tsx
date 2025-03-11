@@ -1,9 +1,8 @@
-import { Box, Button, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useSMSOptOutMutation } from 'src/queries/profile/profile';
