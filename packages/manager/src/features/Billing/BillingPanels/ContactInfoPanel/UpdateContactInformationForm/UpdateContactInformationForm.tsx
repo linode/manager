@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   Checkbox,
   Notice,
@@ -11,7 +12,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { reportException } from 'src/exceptionReporting';
 import {
@@ -450,12 +450,12 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
         {nonUSCountry && (
           <Grid
-            size={12}
             sx={{
               alignItems: 'flex-start',
               display: 'flex',
               marginTop: (theme) => theme.tokens.spacing.S16,
             }}
+            size={12}
           >
             <Checkbox
               onChange={() =>

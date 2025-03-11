@@ -1,9 +1,14 @@
 import { createUser } from '@linode/api-v4/lib/account';
-import { FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
+import {
+  ActionsPanel,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+} from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
