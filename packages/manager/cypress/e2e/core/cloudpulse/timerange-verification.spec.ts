@@ -240,7 +240,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     }).as('fetchPreferences');
     mockGetDatabases([databaseMock]);
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('/metrics');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
