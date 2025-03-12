@@ -557,12 +557,12 @@ export const shutDownLinode = (mockState: MockState) => [
   ),
 ];
 
-const convertToLinodeInterfaces = (config: Config) => {
+const convertToLinodeInterfaces = (config: Config | undefined) => {
   const linodeInterfacePublic = linodeInterfaceFactoryPublic.build({
     created: DateTime.now().toISO(),
     updated: DateTime.now().toISO(),
   });
-  if (config.interfaces?.length === 0) {
+  if (!config || config.interfaces?.length === 0) {
     return [linodeInterfacePublic];
   }
   return (
@@ -614,10 +614,14 @@ export const upgradeToLinodeInterfaces = (mockState: MockState) => [
       const linodeInterfaces = convertToLinodeInterfaces(config);
 
       const addLinodeInterfacePromises = [];
+      const updateConfigPromises = [];
 
       // if not a dry run, update everything
       if (dry_run === false) {
-        const updatedConfig = { ...config, interfaces: null };
+        // for all configs, remove the interfaces
+        const updatedConfigs = configs.map((config) => {
+          return { ...config, interfaces: null };
+        });
         const updatedLinode = {
           ...linode,
           interface_generation: 'linode' as InterfaceGenerationType,
@@ -633,16 +637,20 @@ export const upgradeToLinodeInterfaces = (mockState: MockState) => [
           );
         }
 
-        await Promise.all(addLinodeInterfacePromises);
-        await mswDB.update('linodes', linodeId, updatedLinode, mockState);
-        if (config) {
-          await mswDB.update(
-            'linodeConfigs',
-            config.id,
-            [linodeId, updatedConfig],
-            mockState
+        for (const updatedConfig of updatedConfigs) {
+          updateConfigPromises.push(
+            mswDB.update(
+              'linodeConfigs',
+              config.id,
+              [linodeId, updatedConfig],
+              mockState
+            )
           );
         }
+
+        await Promise.all(addLinodeInterfacePromises);
+        await Promise.all(updateConfigPromises);
+        await mswDB.update('linodes', linodeId, updatedLinode, mockState);
       }
 
       return makeResponse({

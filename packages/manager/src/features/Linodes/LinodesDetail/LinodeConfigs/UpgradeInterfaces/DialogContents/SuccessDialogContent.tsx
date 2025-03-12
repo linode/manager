@@ -108,14 +108,20 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
           Public Interface successfully upgraded
         </Typography>
       )}
-      {vpc && <VPCInterfaceInfo {...vpc} />}
+      {vpc && <VPCInterfaceInfo {...vpc} default_route={props.default_route} />}
       {vlan && <VlanInterfaceInfo vlan={vlan} />}
     </>
   );
 };
 
-const VPCInterfaceInfo = (props: VPCInterfaceData) => {
-  const { subnet_id, vpc_id } = props;
+type VPCInterfaceInfo = VPCInterfaceData &
+  Pick<LinodeInterface, 'default_route'>;
+
+const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
+  const { default_route, ipv4, subnet_id, vpc_id } = props;
+  const { addresses, ranges } = ipv4;
+
+  const primaryAddress = addresses.find((address) => address.primary === true);
 
   return (
     <>
@@ -127,9 +133,23 @@ const VPCInterfaceInfo = (props: VPCInterfaceData) => {
       >
         <strong>VPC Interface Details</strong>
       </Typography>
-      <Typography>Default Route: IPv4</Typography>
+      {default_route && (
+        <Typography>
+          Default Route:{' '}
+          {default_route.ipv4 ? 'IPv4' : default_route.ipv6 ? 'IPv6' : 'None'}
+        </Typography>
+      )}
       <Typography>VPC ID: {vpc_id}</Typography>
       <Typography>Subnet ID: {subnet_id}</Typography>
+      <Typography>
+        Addresses: {addresses.map((address) => address.address).join(', ')}
+      </Typography>
+      {primaryAddress && (
+        <Typography>Primary Address: {primaryAddress.address}</Typography>
+      )}
+      {ranges.length > 0 && (
+        <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
+      )}
     </>
   );
 };

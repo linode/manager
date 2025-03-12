@@ -8,6 +8,7 @@ import { PromptDialogContent } from './DialogContents/PromptDialogContent';
 import { SuccessDialogContent } from './DialogContents/SuccessDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
+
 interface UpgradeInterfacesProps {
   linodeId: number;
   onClose: () => void;
