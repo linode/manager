@@ -1,6 +1,6 @@
 import { getQuotas } from '@linode/api-v4';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
 import type { Filter, Params, Quota, QuotaType } from '@linode/api-v4';
 

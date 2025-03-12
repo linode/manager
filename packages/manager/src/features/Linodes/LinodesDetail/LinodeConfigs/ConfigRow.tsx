@@ -1,21 +1,25 @@
 import {
-  Config,
-  Devices,
-  DiskDevice,
-  VolumeDevice,
-} from '@linode/api-v4/lib/linodes';
+  useAllLinodeDisksQuery,
+  useLinodeKernelQuery,
+  useLinodeQuery,
+} from '@linode/queries';
+import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeKernelQuery } from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';
+
+import type {
+  Config,
+  Devices,
+  DiskDevice,
+  VolumeDevice,
+} from '@linode/api-v4/lib/linodes';
 
 interface Props {
   config: Config;
@@ -27,19 +31,21 @@ interface Props {
 }
 
 export const isDiskDevice = (
-  device: VolumeDevice | DiskDevice
+  device: DiskDevice | VolumeDevice
 ): device is DiskDevice => {
   return 'disk_id' in device;
 };
 
 const isVolumeDevice = (
-  device: VolumeDevice | DiskDevice
+  device: DiskDevice | VolumeDevice
 ): device is VolumeDevice => {
   return 'volume_id' in device;
 };
 
 export const ConfigRow = React.memo((props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
+
+  const { data: linode } = useLinodeQuery(linodeId);
 
   const { data: kernel } = useLinodeKernelQuery(config.kernel);
 
@@ -110,9 +116,11 @@ export const ConfigRow = React.memo((props: Props) => {
         {config.label} – {kernel?.label ?? config.kernel}
       </TableCell>
       <TableCell>{deviceLabels}</TableCell>
-      <TableCell>
-        {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
-      </TableCell>
+      {linode?.interface_generation !== 'linode' && (
+        <TableCell>
+          {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
+        </TableCell>
+      )}
       <StyledTableCell>
         <ConfigActionMenu
           config={config}

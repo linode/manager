@@ -1,4 +1,8 @@
 import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  isNotNullOrUndefined,
+} from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
@@ -13,21 +17,21 @@ import withStoreSearch from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
@@ -293,7 +297,7 @@ const SearchBarComponent = (props: SearchProps) => {
             top: '50%',
             transform: 'translate(-50%, -50%)',
             visibility: searchActive ? 'visible' : 'hidden',
-            width: `calc(100% - ${theme.tokens.spacing[80]})`,
+            width: `calc(100% - ${theme.tokens.spacing.S32})`,
             zIndex: searchActive ? 3 : 0,
           },
         }}
@@ -433,7 +437,7 @@ const SearchBarComponent = (props: SearchProps) => {
           }}
           sx={(theme) => ({
             '& .MuiInput-root .MuiInput-input': {
-              padding: `${theme.tokens.spacing[30]} ${theme.tokens.spacing[40]}`,
+              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
             },
             '&.MuiAutocomplete-root': {
               '&.Mui-focused, &.Mui-focused:hover': {
@@ -443,7 +447,7 @@ const SearchBarComponent = (props: SearchProps) => {
                 borderColor: theme.tokens.header.Search.Border.Hover,
               },
               '.MuiInput-root': {
-                paddingRight: theme.tokens.spacing[40],
+                paddingRight: theme.tokens.spacing.S8,
               },
               border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
             },

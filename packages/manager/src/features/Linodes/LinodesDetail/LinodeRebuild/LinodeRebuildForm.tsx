@@ -1,4 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
+import { usePreferences, useRebuildLinodeMutation } from '@linode/queries';
 import { Divider, Notice, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -8,8 +9,6 @@ import { useLocation } from 'react-router-dom';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -83,6 +82,11 @@ export const LinodeRebuildForm = (props: Props) => {
       values.metadata = undefined;
     } else if (values.metadata?.user_data) {
       values.metadata.user_data = utoa(values.metadata.user_data);
+    }
+
+    // Distributed instances are encrypted by default and disk_encryption should not be included in the payload.
+    if (linode.site_type === 'distributed') {
+      values.disk_encryption = undefined;
     }
 
     try {

@@ -6,7 +6,7 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
@@ -17,6 +17,7 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -57,6 +58,11 @@ export interface AlertResourcesProp {
   alertType: AlertDefinitionType;
 
   /**
+   * The error text that needs to displayed incase needed
+   */
+  errorText?: string;
+
+  /**
    * Callback for publishing the selected resources
    */
   handleResourcesSelection?: (resources: string[]) => void;
@@ -70,6 +76,11 @@ export interface AlertResourcesProp {
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The maximum number of elements that can be selected, if left undefined we can select any number of elements
+   */
+  maxSelectionCount?: number;
 
   /**
    * The element until which we need to scroll on pagination and order change
@@ -90,9 +101,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     alertType,
+    errorText,
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    maxSelectionCount,
     scrollElement,
     serviceType,
   } = props;
@@ -402,6 +415,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
+        <AlertsNoticeMessage text={errorText} variant="error" />
+        <AlertsNoticeMessage
+          text={
+            maxSelectionCount !== undefined
+              ? `You can select up to ${maxSelectionCount} resources.`
+              : undefined
+          }
+          variant="warning"
+        />
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
@@ -409,11 +431,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
+                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />
             </Grid>
           )}
+
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

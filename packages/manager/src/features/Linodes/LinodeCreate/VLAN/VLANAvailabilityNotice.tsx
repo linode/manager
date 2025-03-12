@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import type { Region } from '@linode/api-v4';

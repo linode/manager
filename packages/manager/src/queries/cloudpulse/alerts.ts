@@ -11,7 +11,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
+import { queryPresets } from '@linode/queries';
 import { queryFactory } from './queries';
 
 import type {
@@ -44,12 +44,14 @@ export const useAllAlertDefinitionsQuery = (
     ...queryPresets.longLived,
     enabled,
     placeholderData: keepPreviousData,
+    refetchInterval: 120000,
   });
 };
 
 export const useAlertDefinitionByServiceTypeQuery = (serviceType: string) => {
   return useQuery<Alert[], APIError[]>({
     ...queryFactory.alerts._ctx.alertsByServiceType(serviceType),
+    refetchInterval: 120000,
   });
 };
 

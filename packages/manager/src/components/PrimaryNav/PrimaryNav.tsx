@@ -18,11 +18,11 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountSettings } from 'src/queries/account/settings';
 import {
+  useAccountSettings,
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+} from '@linode/queries';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';
@@ -381,6 +381,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Box
+      height={{
+        md: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
+        xs: '100%',
+      }}
       sx={{
         '&:hover': {
           '.primary-nav-toggle': {
@@ -393,7 +397,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       display="flex"
       flexDirection="column"
       gap={0}
-      height={`calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`}
       id="main-navigation"
       justifyContent="flex-start"
       ref={primaryNavRef}
@@ -471,9 +474,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         })}
       </Box>
       <PrimaryNavToggle
+        areNavItemsOverflowing={navItemsOverflowing}
         desktopMenuToggle={desktopMenuToggle}
         isCollapsed={isCollapsed}
-        areNavItemsOverflowing={navItemsOverflowing}
       />
     </Box>
   );

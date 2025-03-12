@@ -1,9 +1,8 @@
-import { Checkbox, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Checkbox, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useSuspendDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -57,9 +56,8 @@ export const DatabaseSettingsSuspendClusterDialog = (
     setHasConfirmed(false);
   };
 
-  const suspendClusterCopy = `A suspended cluster stops working immediately and you won't be billed for it.
-    You can resume the clusters work within 180 days from its suspension.
-    After that time, the cluster will be deleted permanently.`;
+  const SUSPENDED_CLUSTER_COPY =
+    "A suspended cluster stops immediately and you won't be billed for it. You can resume the cluster within 180 days from its suspension. After that time, the cluster will be deleted permanently.";
 
   const actions = (
     <ActionsPanel
@@ -90,7 +88,7 @@ export const DatabaseSettingsSuspendClusterDialog = (
     >
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
-          <b>{suspendClusterCopy}</b>
+          <b>{SUSPENDED_CLUSTER_COPY}</b>
         </Typography>
       </Notice>
       <Checkbox

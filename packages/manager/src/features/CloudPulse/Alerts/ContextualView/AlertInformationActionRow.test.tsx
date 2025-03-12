@@ -1,3 +1,4 @@
+import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { alertFactory } from 'src/factories';
@@ -19,7 +20,7 @@ describe('Alert list table row', () => {
     );
 
     expect(getByText(alert.label)).toBeInTheDocument();
-    expect(getByText(alert.type)).toBeInTheDocument();
+    expect(getByText(capitalize(alert.type))).toBeInTheDocument();
   });
 
   it('Should display metric threshold', () => {
@@ -34,7 +35,7 @@ describe('Alert list table row', () => {
     );
     expect(
       getByText(
-        `${processCriteria.label} ${processCriteria.operator} ${processCriteria.threshold} ${processCriteria.unit}`
+        `${processCriteria.label} ${processCriteria.metricOperator} ${processCriteria.threshold} ${processCriteria.unit}`
       )
     ).toBeInTheDocument();
   });

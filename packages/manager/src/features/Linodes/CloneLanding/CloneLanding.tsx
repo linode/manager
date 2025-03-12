@@ -1,9 +1,9 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
-import { intersection } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -19,14 +19,13 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
@@ -272,11 +271,11 @@ export const CloneLanding = () => {
       <LinodesDetailHeader />
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
-          container
           sx={{
             justifyContent: 'space-between',
             marginTop: theme.spacing(1),
           }}
+          container
         >
           <Grid
             size={{
@@ -355,10 +354,10 @@ export const CloneLanding = () => {
                   // This disk has been individually selected ...
                   // ... AND it's associated configs are NOT selected
                   state.diskSelection[disk.id].isSelected &&
-                  intersection(
-                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? [],
-                    selectedConfigIds
-                  ).length === 0
+                  (
+                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                  ).filter((num) => selectedConfigIds.includes(num)).length ===
+                    0
                 );
               })}
               // If a selected disk is associated with a selected config, we

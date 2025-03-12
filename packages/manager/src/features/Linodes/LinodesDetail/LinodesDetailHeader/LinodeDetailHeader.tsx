@@ -1,25 +1,21 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
@@ -34,9 +30,9 @@ import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { BaseQueryParams } from '@linode/utilities';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { BooleanString } from 'src/features/Linodes/types';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface QueryParams extends BaseQueryParams {
   delete: BooleanString;

@@ -1,10 +1,9 @@
+import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ADOBE_ANALYTICS_URL, NUM_ADOBE_SCRIPTS } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-
-import { loadScript } from './useScript';
 
 /**
  * Initializes our Adobe Analytics script on mount and subscribes to page view events.

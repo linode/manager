@@ -1,4 +1,6 @@
+import { useCreateFirewall } from '@linode/queries';
 import {
+  ActionsPanel,
   FormControlLabel,
   Notice,
   Radio,
@@ -6,21 +8,20 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useCreateFirewall } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { CustomFirewallFields } from './CustomFirewallFields';
 import { createFirewallResolver } from './formUtilities';
@@ -61,7 +62,7 @@ export const CreateFirewallDrawer = React.memo(
     const { _hasGrant, _isRestrictedUser } = useAccountManagement();
     const { mutateAsync: createFirewall } = useCreateFirewall();
     const queryClient = useQueryClient();
-    const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+    const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -161,7 +162,7 @@ export const CreateFirewallDrawer = React.memo(
                 />
               </Notice>
             )}
-            {isLinodeInterfaceEnabled && (
+            {isLinodeInterfacesEnabled && (
               <>
                 <Typography style={{ marginTop: 24 }}>
                   <strong>Create</strong>
@@ -195,7 +196,7 @@ export const CreateFirewallDrawer = React.memo(
                 />
               </>
             )}
-            {createFirewallFrom === 'template' && isLinodeInterfaceEnabled ? (
+            {createFirewallFrom === 'template' && isLinodeInterfacesEnabled ? (
               <TemplateFirewallFields
                 userCannotAddFirewall={userCannotAddFirewall}
               />

@@ -54,7 +54,7 @@ const primaryColors = {
   headline: Color.Neutrals[100],
   light: Color.Brand[60],
   main: Color.Brand[80],
-  text: Color.Neutrals[70],
+  text: Content.Text.Primary.Default,
   white: Color.Neutrals.White,
 };
 
@@ -80,7 +80,7 @@ export const color = {
   grey8: Color.Neutrals[30],
   grey9: Color.Neutrals[5],
   grey10: Color.Neutrals[10],
-  headline: primaryColors.headline,
+  headline: Content.Text.Primary.Default,
   label: Color.Neutrals[70],
   offBlack: Color.Neutrals[90],
   orange: Color.Amber[70],
@@ -449,7 +449,7 @@ export const lightTheme: ThemeOptions = {
               color: primaryColors.white,
             },
             borderRadius: '50%',
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             fontSize: '16px',
             margin: '0 4px',
           },
@@ -544,7 +544,7 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiButton-startIcon': {
             marginLeft: 0,
-            marginRight: Spacing[20],
+            marginRight: Spacing.S4,
           },
           border: 'none',
           borderRadius: 1,
@@ -646,7 +646,7 @@ export const lightTheme: ThemeOptions = {
           color: color.white,
         },
         deleteIcon: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           margin: 0,
           padding: 2,
         },
@@ -676,7 +676,7 @@ export const lightTheme: ThemeOptions = {
           },
           alignItems: 'center',
           borderRadius: 4,
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           display: 'inline-flex',
           fontSize: '.8rem',
           height: 20,
@@ -751,7 +751,7 @@ export const lightTheme: ThemeOptions = {
             lineHeight: 1.2,
           },
           borderBottom: `1px solid ${Color.Neutrals[20]}`,
-          color: primaryColors.headline,
+          color: Content.Text.Primary.Default,
           marginBottom: 20,
           padding: '16px 24px',
         },
@@ -796,7 +796,7 @@ export const lightTheme: ThemeOptions = {
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
         root: {
           marginLeft: -11,
@@ -935,7 +935,7 @@ export const lightTheme: ThemeOptions = {
             maxWidth: '100%',
             width: '100%',
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
           minHeight: 34,
@@ -1023,11 +1023,11 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
           },
           '&.selectHeader': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
             opacity: 1,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -1080,7 +1080,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.loading': {
-            backgroundColor: primaryColors.text,
+            backgroundColor: Content.Text.Primary.Default,
           },
           '&:active': {
             backgroundColor: Dropdown.Background.Default,
@@ -1164,9 +1164,11 @@ export const lightTheme: ThemeOptions = {
             maxWidth: '100%',
             width: '100%',
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
+          height: '34px',
           lineHeight: 1,
           maxWidth: inputMaxWidth,
+          minHeight: '34px',
           transition: 'border-color 225ms ease-in-out',
         },
       },
@@ -1190,7 +1192,7 @@ export const lightTheme: ThemeOptions = {
           [breakpoints.up('lg')]: {
             minWidth: 250,
           },
-          marginTop: Spacing[20],
+          marginTop: Spacing.S4,
           minWidth: 200,
         },
       },
@@ -1388,7 +1390,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$selected, &$selected:hover': {
-            color: primaryColors.headline,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
           },
           '&:hover': {
@@ -1507,13 +1509,13 @@ export const lightTheme: ThemeOptions = {
           },
           // Spacing for collapsible inner content
           '.MuiCollapse-root': {
-            padding: Spacing[60],
+            padding: Spacing.S16,
           },
           borderBottom: `1px solid ${Table.Row.Border}`,
           fontSize: Font.FontSize.Xs,
           height: '40px',
           lineHeight: Font.LineHeight.Xs,
-          padding: `0 ${Spacing[50]}`,
+          padding: `0 ${Spacing.S12}`,
         },
         stickyHeader: {
           // No idea where sticky cells are getting their background from
@@ -1566,7 +1568,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
-            margin: `0 ${Spacing[20]}`,
+            margin: `0 ${Spacing.S4}`,
             path: {
               fill: Table.HeaderNested.Text,
             },
@@ -1625,10 +1627,10 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           [breakpoints.down('md')]: {
-            padding: `0 ${Spacing[40]}`,
+            padding: `0 ${Spacing.S8}`,
           },
           [breakpoints.up('md')]: {
-            padding: `0 ${Spacing[60]}`, // To override default MUI breakpoint padding
+            padding: `0 ${Spacing.S16}`, // To override default MUI breakpoint padding
           },
           height: topMenuHeight,
           width: '100%',
@@ -1843,7 +1845,7 @@ export const lightTheme: ThemeOptions = {
       main: Color.Green[40],
     },
     text: {
-      primary: primaryColors.text,
+      primary: Content.Text.Primary.Default,
     },
     warning: {
       dark: Color.Amber[70],
@@ -1906,12 +1908,12 @@ export const lightTheme: ThemeOptions = {
   typography: {
     body1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Body.Regular,
     },
     caption: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Overline,
       letterSpacing: Typography.Heading.OverlineLetterSpacing,
       textTransform: Typography.Heading.OverlineTextCase,
@@ -1923,23 +1925,23 @@ export const lightTheme: ThemeOptions = {
       [breakpoints.up('lg')]: {
         font: Typography.Heading.Xl,
       },
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.L,
     },
     h2: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.M,
     },
     h3: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.S,
     },
     htmlFontSize: undefined,
     subtitle1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Xs,
     },
   },

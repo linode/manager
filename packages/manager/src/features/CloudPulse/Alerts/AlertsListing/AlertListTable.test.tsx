@@ -21,7 +21,6 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   mutateAsync: vi.fn().mockResolvedValue({}),
   reset: vi.fn(),
 });
-
 const mockScroll = vi.fn();
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {

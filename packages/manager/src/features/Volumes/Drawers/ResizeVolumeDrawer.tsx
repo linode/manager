@@ -1,13 +1,12 @@
-import { Notice } from '@linode/ui';
+import { ActionsPanel, Notice } from '@linode/ui';
 import { ResizeVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 import {
   useResizeVolumeMutation,
   useVolumeTypesQuery,

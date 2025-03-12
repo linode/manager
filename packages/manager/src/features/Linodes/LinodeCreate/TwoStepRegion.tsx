@@ -9,7 +9,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
@@ -75,7 +75,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { params } = useLinodeCreateQueryParams();
 
   return (
-    <Paper data-testid="region">
+    <Paper data-testid="region" data-qa-linode-region>
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink

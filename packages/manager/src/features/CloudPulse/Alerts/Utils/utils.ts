@@ -1,39 +1,22 @@
+import { array, object, string } from 'yup';
+
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
+import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
+  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-
-export interface ProcessedCriteria {
-  /**
-   * Aggregation type for the metric criteria
-   */
-  aggregationType: string;
-  /**
-   * Label for the metric criteria
-   */
-  label: string;
-  /**
-   * Comparison operator for the metric criteria
-   */
-  operator: string;
-  /**
-   * Threshold value for the metric criteria
-   */
-  threshold: number;
-  /**
-   * Unit for the threshold value
-   */
-  unit: string;
-}
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
   /**
@@ -53,6 +36,29 @@ interface AlertChipBorderProps {
    * Indicates Whether to merge the chips into single or keep it individually
    */
   mergeChips: boolean | undefined;
+}
+
+export interface ProcessedCriteria {
+  /**
+   * Label for the metric criteria
+   */
+  label: string;
+  /**
+   * Aggregation type for the metric criteria
+   */
+  metricAggregationType: string;
+  /**
+   * Comparison operator for the metric criteria
+   */
+  metricOperator: string;
+  /**
+   * Threshold value for the metric criteria
+   */
+  threshold: number;
+  /**
+   * Unit for the threshold value
+   */
+  unit: string;
 }
 
 /**
@@ -232,39 +238,52 @@ export const convertAlertDefinitionValues = (
 };
 
 /**
-
  *
-
  * @param criterias list of metric criterias to be processed
-
  * @returns list of metric criterias in processed form
-
  */
-
 export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
-  return criterias
-
-    .map((criteria) => {
-      const { aggregate_function, label, operator, threshold, unit } = criteria;
-
+  return criterias.map(
+    ({ aggregate_function, label, operator, threshold, unit }) => {
       return {
-        aggregationType: aggregationTypeMap[aggregate_function],
-
         label,
-
-        operator: metricOperatorTypeMap[operator],
-
+        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricOperator: metricOperatorTypeMap[operator],
         threshold,
-
         unit,
       };
-    })
+    }
+  );
+};
 
-    .reduce<ProcessedCriteria[]>((previousValue, currentValue) => {
-      previousValue.push(currentValue);
+export const getValidationSchema = (
+  serviceTypeObj: null | string,
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[],
+  baseSchema: ObjectSchema<
+    CreateAlertDefinitionForm | EditAlertDefinitionPayload
+  >,
+  update?: boolean
+): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
+  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
+    ({ serviceType }) => serviceTypeObj === serviceType
+  )?.maxResourceSelectionCount;
 
-      return previousValue;
-    }, []);
+  return maxSelectionCount === undefined
+    ? baseSchema
+    : baseSchema.concat(
+        object({
+          entity_ids: array()
+            .of(string())
+            .max(
+              maxSelectionCount,
+              update
+                ? `Number of entities after update must not exceed ${maxSelectionCount}`
+                : `Length must be 0 - ${maxSelectionCount}`
+            ),
+        }) as ObjectSchema<
+          CreateAlertDefinitionForm | EditAlertDefinitionPayload
+        >
+      );
 };

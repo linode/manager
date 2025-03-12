@@ -1,8 +1,6 @@
-import { Notice, Typography } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
-
-import { LinkButton } from 'src/components/LinkButton';
 
 import type { SelectUnselectAll } from './AlertsResources';
 
@@ -11,6 +9,8 @@ interface AlertResourceNoticeProps {
    * Callback to handle selection changes (select all or unselect all).
    */
   handleSelectionChange: (action: SelectUnselectAll) => void;
+
+  maxSelectionCount?: number;
 
   /**
    * The number of currently selected resources.
@@ -25,7 +25,12 @@ interface AlertResourceNoticeProps {
 
 export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
-    const { handleSelectionChange, selectedResources, totalResources } = props;
+    const {
+      handleSelectionChange,
+      maxSelectionCount,
+      selectedResources,
+      totalResources,
+    } = props;
     const isSelectAll = selectedResources !== totalResources;
 
     return (
@@ -40,38 +45,54 @@ export const AlertsResourcesNotice = React.memo(
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
         {isSelectAll && (
-          <LinkButton
+          <Button
+            disabled={
+              maxSelectionCount !== undefined &&
+              totalResources > maxSelectionCount
+            }
             onClick={() => {
               handleSelectionChange('Select All');
             }}
+            sx={{
+              margin: 0,
+              padding: 0,
+            }}
             aria-label="Select All Resources"
             data-testid="select_all_notice"
+            variant="text"
           >
             Select All
-          </LinkButton>
+          </Button>
         )}
         {!isSelectAll && (
-          <LinkButton
+          <Button
             onClick={() => {
               handleSelectionChange('Unselect All');
             }}
+            sx={{
+              margin: 0,
+              padding: 0,
+            }}
             aria-label="Unselect All Resources"
             data-testid="unselect_all_notice"
+            variant="text"
           >
-            Unselect All
-          </LinkButton>
+            Deselect All
+          </Button>
         )}
       </StyledNotice>
     );
   }
 );
 
-const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
-  alignItems: 'center',
-  background: theme.tokens.background.Normal,
-  borderRadius: 1,
-  display: 'flex',
-  flexWrap: 'nowrap',
-  marginBottom: 0,
-  padding: theme.spacing(2),
-}));
+export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
+  ({ theme }) => ({
+    alignItems: 'center',
+    background: theme.tokens.background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacing(2),
+  })
+);

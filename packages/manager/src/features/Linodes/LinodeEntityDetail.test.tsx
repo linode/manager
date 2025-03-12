@@ -1,16 +1,18 @@
+import { queryClientFactory } from '@linode/queries';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
   accountFactory,
+  firewallFactory,
   kubernetesClusterFactory,
   linodeFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -37,6 +39,7 @@ describe('Linode Entity Detail', () => {
   const vpcSectionTestId = 'vpc-section-title';
   const assignedVPCLabelTestId = 'assigned-vpc-label';
   const assignedLKEClusterLabelTestId = 'assigned-lke-cluster-label';
+  const assignedFirewallTestId = 'assigned-firewall';
 
   const mocks = vi.hoisted(() => {
     return {
@@ -160,6 +163,109 @@ describe('Linode Entity Detail', () => {
       expect(getByTestId(assignedLKEClusterLabelTestId).innerHTML).toEqual(
         'test-cluster'
       );
+    });
+  });
+
+  it('should display a link to the assigned firewall if it exists for a Linode with configuration profile interfaces', async () => {
+    const mockFirewall = firewallFactory.build({ label: 'test-firewall' });
+    const mockLinode = linodeFactory.build();
+    server.use(
+      http.get('*/linode/instances/:linodeId/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([mockFirewall]));
+      })
+    );
+
+    const { getByTestId } = renderWithTheme(
+      <LinodeEntityDetail
+        handlers={handlers}
+        id={mockLinode.id}
+        linode={mockLinode}
+      />
+    );
+
+    await waitFor(() => {
+      expect(getByTestId(assignedFirewallTestId)).toBeVisible();
+      expect(getByTestId(assignedFirewallTestId).innerHTML).toEqual(
+        'test-firewall'
+      );
+    });
+  });
+
+  it('should not display a link to an assigned firewall if no firewall exists', async () => {
+    const mockLinode = linodeFactory.build();
+    server.use(
+      http.get('*/linode/instances/:linodeId/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
+    const { queryByTestId } = renderWithTheme(
+      <LinodeEntityDetail
+        handlers={handlers}
+        id={mockLinode.id}
+        linode={mockLinode}
+      />
+    );
+
+    await waitFor(() => {
+      expect(queryByTestId(assignedFirewallTestId)).not.toBeInTheDocument();
+    });
+  });
+
+  it('should display the interface type for a Linode with configuration profile interfaces', async () => {
+    const mockLinode = linodeFactory.build();
+    server.use(
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(mockLinode);
+      })
+    );
+
+    const { getByText } = renderWithTheme(
+      <LinodeEntityDetail
+        handlers={handlers}
+        id={mockLinode.id}
+        linode={mockLinode}
+      />,
+      {
+        flags: {
+          linodeInterfaces: { enabled: true },
+        },
+      }
+    );
+
+    await waitFor(() => {
+      expect(getByText('Configuration Profile')).toBeVisible();
+    });
+  });
+
+  it('should display the interface type for a Linode with Linode interfaces and does not display firewall link', async () => {
+    const mockLinode = linodeFactory.build({ interface_generation: 'linode' });
+    const mockFirewall = firewallFactory.build({ label: 'test-firewall' });
+    server.use(
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(mockLinode);
+      }),
+      http.get('*/linode/instances/:linodeId/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([mockFirewall]));
+      })
+    );
+
+    const { getByText, queryByTestId } = renderWithTheme(
+      <LinodeEntityDetail
+        handlers={handlers}
+        id={mockLinode.id}
+        linode={mockLinode}
+      />,
+      {
+        flags: {
+          linodeInterfaces: { enabled: true },
+        },
+      }
+    );
+
+    await waitFor(() => {
+      expect(getByText('Linode')).toBeVisible();
+      expect(queryByTestId(assignedFirewallTestId)).not.toBeInTheDocument();
     });
   });
 

@@ -6,7 +6,7 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -125,7 +125,7 @@ export const Summary = () => {
       item: {
         title: 'Encrypted',
       },
-      show: diskEncryption === 'enabled',
+      show: diskEncryption === 'enabled' || region?.site_type === 'distributed',
     },
   ];
 

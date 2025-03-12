@@ -1,9 +1,8 @@
-import { CircleProgress, Stack } from '@linode/ui';
+import { useLinodeQuery } from '@linode/queries';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
@@ -12,7 +11,7 @@ import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 
 export const LinodeNetworking = () => {
-  const { isLinodeInterfaceEnabled } = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
@@ -27,7 +26,7 @@ export const LinodeNetworking = () => {
   }
 
   const showInterfacesTable =
-    isLinodeInterfaceEnabled && linode.interface_generation === 'linode';
+    isLinodeInterfacesEnabled && linode.interface_generation === 'linode';
 
   const showFirewallsTable =
     !linode.interface_generation ||

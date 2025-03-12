@@ -1,8 +1,9 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { Typography } from '@linode/ui';
 import {
+  Typography,
   Button,
   Divider,
+  ErrorState,
   InputAdornment,
   Notice,
   Stack,
@@ -17,14 +18,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
-import { accountQueries } from 'src/queries/account/queries';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccount, accountQueries, useProfile } from '@linode/queries';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

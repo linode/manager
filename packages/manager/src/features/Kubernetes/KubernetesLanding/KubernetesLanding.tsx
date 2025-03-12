@@ -1,4 +1,4 @@
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -10,7 +10,6 @@ import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -24,7 +23,7 @@ import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay'
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
@@ -171,7 +170,7 @@ export const KubernetesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
-      {isDiskEncryptionFeatureEnabled && (
+      {isDiskEncryptionFeatureEnabled && ( // @TODO LDE: once LDE is GA in all DCs, remove this condition
         <DismissibleBanner
           preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
           spacingBottom={8}

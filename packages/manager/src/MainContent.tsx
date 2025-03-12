@@ -27,7 +27,9 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+  useAccountSettings,
+  useProfile,
+} from '@linode/queries';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
@@ -38,8 +40,6 @@ import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useAccountSettings } from './queries/account/settings';
-import { useProfile } from './queries/profile/profile';
 import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
@@ -161,7 +161,6 @@ const EventsLanding = React.lazy(() =>
 const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
 );
-const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
@@ -391,7 +390,6 @@ export const MainContent = () => {
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
-                            <Route component={Firewalls} path="/firewalls" />
                             {isDatabasesEnabled && (
                               <Route component={Databases} path="/databases" />
                             )}

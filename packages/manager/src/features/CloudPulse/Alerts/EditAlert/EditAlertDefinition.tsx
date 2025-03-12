@@ -1,16 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -18,7 +17,10 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { convertAlertDefinitionValues } from '../Utils/utils';
+import {
+  convertAlertDefinitionValues,
+  getValidationSchema,
+} from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
@@ -43,6 +45,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const flags = useFlags();
+  const editAlertScheme = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -54,7 +58,12 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      getValidationSchema(
+        alertDetails?.service_type,
+        flags.aclpAlertServiceTypeConfig ?? [],
+        editAlertScheme,
+        true
+      ) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
@@ -72,7 +81,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       history.push(definitionLanding);
     } catch (errors) {
       for (const error of errors) {
-        scrollErrorIntoViewV2(formRef);
         if (error.field) {
           setError(error.field, { message: error.reason });
         } else {
@@ -104,11 +112,15 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
   ];
 
+  const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
-    if (!isEmpty(formState.errors)) {
+    if (
+      !isEmpty(formState.errors) &&
+      formState.submitCount > previousSubmitCount.current
+    ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  }, [formState.errors]);
+  }, [formState.errors, formState.submitCount]);
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>

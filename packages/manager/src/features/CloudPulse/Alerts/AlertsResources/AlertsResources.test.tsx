@@ -15,8 +15,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -255,7 +255,7 @@ describe('AlertResources component tests', () => {
     expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
 
     // click unselect all in notice and test
-    await userEvent.click(getByText('Unselect All'));
+    await userEvent.click(getByText('Deselect All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

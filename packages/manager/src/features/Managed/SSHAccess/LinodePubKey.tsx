@@ -1,10 +1,9 @@
-import { Button, Stack, Typography } from '@linode/ui';
+import { Button, ErrorState, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import {
@@ -12,7 +11,7 @@ import {
   StyledVisibilityShowIcon,
 } from 'src/features/Billing/BillingPanels/ContactInfoPanel/ContactInformation.styles';
 import { useManagedSSHKey } from 'src/queries/managed/managed';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {

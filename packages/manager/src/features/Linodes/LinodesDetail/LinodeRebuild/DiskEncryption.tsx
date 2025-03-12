@@ -1,3 +1,4 @@
+import { useRegionQuery } from '@linode/queries';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -7,7 +8,6 @@ import {
   getRebuildDiskEncryptionDescription,
   useIsDiskEncryptionFeatureEnabled,
 } from 'src/components/Encryption/utils';
-import { useRegionQuery } from 'src/queries/regions/regions';
 
 import type { RebuildLinodeFormValues } from './utils';
 
@@ -31,7 +31,7 @@ export const DiskEncryption = (props: Props) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
-  if (!isDiskEncryptionFeatureEnabled) {
+  if (!isDiskEncryptionFeatureEnabled && !regionSupportsDiskEncryption) {
     return null;
   }
 

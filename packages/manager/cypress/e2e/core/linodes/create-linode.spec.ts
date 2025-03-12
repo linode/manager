@@ -33,8 +33,6 @@ import {
   vpcFactory,
   subnetFactory,
   regionFactory,
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
 } from 'src/factories';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -43,6 +41,10 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 import {
   mockGetProfile,
   mockGetProfileGrants,
@@ -56,6 +58,11 @@ describe('Create Linode', () => {
   before(() => {
     cleanUp('linodes');
     cleanUp('ssh-keys');
+  });
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
   });
 
   /*
@@ -114,13 +121,12 @@ describe('Create Linode', () => {
           linodeCreatePage.setRootPassword(randomString(32));
 
           // Confirm information in summary is shown as expected.
-          cy.get('[data-qa-linode-create-summary]')
-            .scrollIntoView()
-            .within(() => {
-              cy.findByText('Debian 12').should('be.visible');
-              cy.findByText(linodeRegion.label).should('be.visible');
-              cy.findByText(planConfig.planLabel).should('be.visible');
-            });
+          cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+          cy.get('[data-qa-linode-create-summary]').within(() => {
+            cy.findByText('Debian 12').should('be.visible');
+            cy.findByText(linodeRegion.label).should('be.visible');
+            cy.findByText(planConfig.planLabel).should('be.visible');
+          });
 
           // Create Linode and confirm it's provisioned as expected.
           ui.button
@@ -237,13 +243,12 @@ describe('Create Linode', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm information in summary is shown as expected.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Debian 12').should('be.visible');
-        cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
-        cy.findByText(mockAcceleratedType[0].label).should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Debian 12').should('be.visible');
+      cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
+      cy.findByText(mockAcceleratedType[0].label).should('be.visible');
+    });
 
     // Create Linode and confirm it's provisioned as expected.
     ui.button
@@ -307,12 +312,12 @@ describe('Create Linode', () => {
       label: region.label,
       capabilities: ['Linodes', 'VPCs', 'Vlans'],
     });
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
-    const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
-    const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
+    const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
       vpc_id: mockVPC.id,
       purpose: 'vpc',
       active: true,
@@ -387,10 +392,8 @@ describe('Create Linode', () => {
           'be.visible'
         );
         // select VPC
-        cy.findByLabelText('Assign VPC')
-          .should('be.visible')
-          .focus()
-          .type(`${mockVPC.label}{downArrow}{enter}`);
+        cy.findByLabelText('Assign VPC').should('be.visible').focus();
+        cy.focused().type(`${mockVPC.label}{downArrow}{enter}`);
         // select subnet
         cy.findByPlaceholderText('Select Subnet')
           .should('be.visible')
@@ -407,10 +410,12 @@ describe('Create Linode', () => {
       .findByTitle('Add SSH Key')
       .should('be.visible')
       .within(() => {
-        cy.get('[id="label"]').clear().type(sshPublicKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(sshPublicKeyLabel);
 
         // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -421,7 +426,8 @@ describe('Create Linode', () => {
         ).should('be.visible');
 
         // Create a new ssh key
-        cy.get('[id="ssh-public-key"]').clear().type(sshPublicKey);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -435,7 +441,9 @@ describe('Create Linode', () => {
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
     cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
-    cy.get('#linode-label').clear().type(linodeLabel).click();
+    cy.get('#linode-label').clear();
+    cy.focused().type(linodeLabel);
+    cy.focused().click();
     cy.get('#root-password').type(rootpass);
 
     ui.button.findByTitle('Create Linode').click();

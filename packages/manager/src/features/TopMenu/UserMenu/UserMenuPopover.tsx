@@ -11,7 +11,7 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -158,8 +158,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
-            paddingX: theme.tokens.spacing[70],
-            paddingY: theme.tokens.spacing[60],
+            paddingX: theme.tokens.spacing.S24,
+            paddingY: theme.tokens.spacing.S16,
           }),
         },
       }}
@@ -174,10 +174,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     >
       <Stack
         data-qa-user-menu
-        gap={(theme) => theme.tokens.spacing[60]}
+        gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing[40]}>
+        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography>Current account:</Typography>
           )}
@@ -218,8 +218,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             <Heading>Account</Heading>
             <Divider />
             <Stack
-              gap={(theme) => theme.tokens.spacing[40]}
-              mt={(theme) => theme.tokens.spacing[40]}
+              gap={(theme) => theme.tokens.spacing.S8}
+              mt={(theme) => theme.tokens.spacing.S8}
             >
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (

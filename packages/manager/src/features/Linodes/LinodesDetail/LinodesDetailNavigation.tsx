@@ -1,4 +1,4 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import {
@@ -10,14 +10,13 @@ import {
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));

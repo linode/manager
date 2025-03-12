@@ -1,13 +1,12 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { CircleProgress, ErrorState, Paper } from '@linode/ui';
 import React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript } from 'src/components/StackScript/StackScript';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,

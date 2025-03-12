@@ -1,4 +1,6 @@
-import { CircleProgress } from '@linode/ui';
+import { useLinodeQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
@@ -10,10 +12,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 

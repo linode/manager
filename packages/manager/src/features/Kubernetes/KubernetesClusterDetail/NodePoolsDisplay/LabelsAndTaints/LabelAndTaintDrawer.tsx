@@ -1,9 +1,8 @@
-import { Button, Divider, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Button, Divider, Notice, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
@@ -146,10 +145,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Typography>
             Labels are key-value pairs that are used as identifiers. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <LabelTable />
           <Button
@@ -178,10 +179,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
             Taints are used to control which pods can be placed on nodes in this
             node pool. They consist of a key, value, and effect. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <TaintTable />
           <Button

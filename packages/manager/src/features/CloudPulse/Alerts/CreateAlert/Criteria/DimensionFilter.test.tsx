@@ -159,7 +159,12 @@ describe('DimensionFilterField', () => {
       useFormOptions: {
         defaultValues: {
           rule_criteria: {
-            rules: [{...mockData[0], dimension_filters: Array(5).fill(dimensionFilterValue)}],
+            rules: [
+              {
+                ...mockData[0],
+                dimension_filters: Array(5).fill(dimensionFilterValue),
+              },
+            ],
           },
           serviceType: 'linode',
         },

@@ -85,49 +85,57 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
     handleCloseDrawer();
   };
 
-  const NotificationChannelCard = (props: NotificationChannelsProps) => {
-    const { id, notification } = props;
-    return (
-      <Box
-        sx={(theme) => ({
-          ...getAlertBoxStyles(theme),
-          borderRadius: 1,
-          overflow: 'auto',
-          padding: theme.spacing(2),
-        })}
-        data-qa-notification={`notification-channel-${id}`}
-        data-testid={`notification-channel-${id}`}
-        key={id}
-      >
-        <Stack direction="row" justifyContent="space-between">
-          <Typography data-qa-channel marginBottom={2} variant="h3">
-            {capitalize(notification?.label ?? 'Unnamed Channel')}
-          </Typography>
-          <ClearIconButton handleClick={() => handleRemove(id)} />
-        </Stack>
-        <Stack alignItems="baseline" direction="row">
-          <Typography data-qa-type variant="h3" width={100}>
-            Type:
-          </Typography>
-          <Typography data-qa-channel-type variant="subtitle2">
-            {
-              channelTypeOptions.find(
-                (option) => option.value === notification?.channel_type
-              )?.label
-            }
-          </Typography>
-        </Stack>
-        <Stack alignItems="baseline" direction="row">
-          <Typography data-qa-to variant="h3" width={100}>
-            To:
-          </Typography>
-          <Typography data-qa-channel-details variant="subtitle2">
-            {notification && <RenderChannelDetails template={notification} />}
-          </Typography>
-        </Stack>
-      </Box>
-    );
-  };
+  const NotificationChannelCard = React.memo(
+    (props: NotificationChannelsProps) => {
+      const { id, notification } = props;
+      return (
+        <Box
+          sx={(theme) => ({
+            ...getAlertBoxStyles(theme),
+            borderRadius: 1,
+            overflow: 'auto',
+            padding: theme.spacing(2),
+          })}
+          data-qa-notification={`notification-channel-${id}`}
+          data-testid={`notification-channel-${id}`}
+          key={id}
+        >
+          <Stack direction="row" justifyContent="space-between">
+            <Typography data-qa-channel marginBottom={2} variant="h3">
+              {capitalize(notification?.label ?? 'Unnamed Channel')}
+            </Typography>
+            <ClearIconButton handleClick={() => handleRemove(id)} />
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography data-qa-type variant="h3" width={100}>
+              Type:
+            </Typography>
+            <Typography data-qa-channel-type variant="subtitle2">
+              {
+                channelTypeOptions.find(
+                  (option) => option.value === notification?.channel_type
+                )?.label
+              }
+            </Typography>
+          </Stack>
+          <Stack alignItems="baseline" direction="row">
+            <Typography data-qa-to variant="h3" width={100}>
+              To:
+            </Typography>
+            <Typography data-qa-channel-details variant="subtitle2">
+              {notification && <RenderChannelDetails template={notification} />}
+            </Typography>
+          </Stack>
+        </Box>
+      );
+    },
+    (prevProps, nextProps) => {
+      return (
+        prevProps.id === nextProps.id &&
+        prevProps.notification.id === nextProps.notification.id
+      );
+    }
+  );
 
   return (
     <Controller
@@ -151,19 +159,17 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
                 />
               ))}
           </Stack>
-            <Button
-              buttonType="outlined"
-              data-qa-buttons="true"
-              onClick={handleOpenDrawer}
-              size="medium"
-              sx={(theme) => ({ marginTop: theme.spacing(2) })}
-              type="button"
-              sxEndIcon={{ display: 'none' }}
-              tooltipText='You can add up to 5 notification channels.'
-              disabled={notificationChannelWatcher.length === 5}
-            >
-              Add notification channel
-            </Button>
+          <Button
+            buttonType="outlined"
+            data-qa-buttons="true"
+            disabled={notificationChannelWatcher.length === 5}
+            onClick={handleOpenDrawer}
+            size="medium"
+            sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            tooltipText="You can add up to 5 notification channels."
+          >
+            Add notification channel
+          </Button>
 
           <AddNotificationChannelDrawer
             handleCloseDrawer={handleCloseDrawer}

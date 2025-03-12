@@ -1,10 +1,9 @@
-import { CircleProgress, Notice, Typography } from '@linode/ui';
+import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
@@ -15,7 +14,7 @@ import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,

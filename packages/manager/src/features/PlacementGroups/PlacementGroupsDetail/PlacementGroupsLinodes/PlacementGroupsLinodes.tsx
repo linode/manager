@@ -1,19 +1,15 @@
-import { Button, Stack } from '@linode/ui';
+import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
+import { Button, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
@@ -145,19 +141,19 @@ export const PlacementGroupsLinodes = (props: Props) => {
   return (
     <Stack spacing={2}>
       <Grid
-        container
         sx={{
           justifyContent: 'space-between',
         }}
+        container
       >
         <Grid
-          sx={{
-            flexGrow: 1,
-            mb: 1,
-          }}
           size={{
             sm: 6,
             xs: 12,
+          }}
+          sx={{
+            flexGrow: 1,
+            mb: 1,
           }}
         >
           <DebouncedSearchTextField
