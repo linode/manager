@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { isEmpty } from '@linode/api-v4';
+import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
@@ -57,18 +58,18 @@ const initialValues: CreateAlertDefinitionForm = {
 const overrides = [
   {
     label: 'Definitions',
-    linkTo: '/monitor/alerts/definitions',
+    linkTo: '/alerts/definitions',
     position: 1,
   },
   {
     label: 'Details',
-    linkTo: `/monitor/alerts/definitions/create`,
+    linkTo: `/alerts/definitions/create`,
     position: 2,
   },
 ];
 export const CreateAlertDefinition = () => {
   const history = useHistory();
-  const alertCreateExit = () => history.push('/monitor/alerts/definitions');
+  const alertCreateExit = () => history.push('/alerts/definitions');
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
@@ -77,8 +78,15 @@ export const CreateAlertDefinition = () => {
       CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>
     ),
   });
+  const {
+    control,
+    formState: { errors, isSubmitting, submitCount },
+    getValues,
+    handleSubmit,
+    setError,
+    setValue,
+  } = formMethods;
 
-  const { control, formState, getValues, handleSubmit, setError } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
     getValues('serviceType')!
@@ -109,6 +117,26 @@ export const CreateAlertDefinition = () => {
     }
   });
 
+  const previousSubmitCount = React.useRef<number>(0);
+  React.useEffect(() => {
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
+    }
+  }, [errors, submitCount]);
+
+  const handleServiceTypeChange = React.useCallback(() => {
+    // Reset the criteria to initial state
+    setValue('rule_criteria.rules', [
+      {
+        aggregate_function: null,
+        dimension_filters: [],
+        metric: null,
+        operator: null,
+        threshold: 0,
+      },
+    ]);
+  }, [setValue]);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Create an Alert" />
@@ -128,7 +156,7 @@ export const CreateAlertDefinition = () => {
                   name="label"
                   onBlur={field.onBlur}
                   onChange={(e) => field.onChange(e.target.value)}
-                  placeholder="Enter Name"
+                  placeholder="Enter a Name"
                   value={field.value ?? ''}
                 />
               )}
@@ -144,14 +172,17 @@ export const CreateAlertDefinition = () => {
                   onBlur={field.onBlur}
                   onChange={(e) => field.onChange(e.target.value)}
                   optional
-                  placeholder="Enter Description"
+                  placeholder="Enter a Description"
                   value={field.value ?? ''}
                 />
               )}
               control={control}
               name="description"
             />
-            <CloudPulseServiceSelect name="serviceType" />
+            <CloudPulseServiceSelect
+              handleServiceTypeChange={handleServiceTypeChange}
+              name="serviceType"
+            />
             <CloudPulseAlertSeveritySelect name="severity" />
             <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField
@@ -169,7 +200,7 @@ export const CreateAlertDefinition = () => {
             <ActionsPanel
               primaryButtonProps={{
                 label: 'Submit',
-                loading: formState.isSubmitting,
+                loading: isSubmitting,
                 type: 'submit',
               }}
               secondaryButtonProps={{

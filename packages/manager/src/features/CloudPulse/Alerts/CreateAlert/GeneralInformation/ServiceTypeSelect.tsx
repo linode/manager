@@ -11,6 +11,11 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
+   * @returns vsoid
+   * function to handle the service type change
+   */
+  handleServiceTypeChange?: () => void;
+  /**
    * Boolean value to check if service select is disabled in the edit flow
    */
   isDisabled?: boolean;
@@ -23,7 +28,7 @@ interface CloudPulseServiceSelectProps {
 export const CloudPulseServiceSelect = (
   props: CloudPulseServiceSelectProps
 ) => {
-  const { isDisabled, name } = props;
+  const { handleServiceTypeChange, isDisabled, name } = props;
   const {
     data: serviceOptions,
     error: serviceTypesError,
@@ -61,6 +66,9 @@ export const CloudPulseServiceSelect = (
             }
             if (reason === 'clear') {
               field.onChange(null);
+            }
+            if (handleServiceTypeChange !== undefined) {
+              handleServiceTypeChange();
             }
           }}
           value={

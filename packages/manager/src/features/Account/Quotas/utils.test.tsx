@@ -2,7 +2,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 
-import { getQuotaError, useGetLocationsForQuotaService } from './utils';
+import { profileFactory } from 'src/factories/profile';
+import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+
+import {
+  getQuotaError,
+  getQuotaIncreaseMessage,
+  useGetLocationsForQuotaService,
+} from './utils';
 
 import type { QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -84,5 +91,32 @@ describe('useGetLocationsForQuotaService', () => {
     const error = getQuotaError(quotaUsageQueries, index);
 
     expect(error).toEqual('Error 1');
+  });
+
+  it('getQuotaIncreaseFormDefaultValues should return the correct default values', () => {
+    const profile = profileFactory.build();
+    const baseQuota = quotaFactory.build();
+    const quotaUsage = quotaUsageFactory.build();
+    const quota = {
+      ...baseQuota,
+      ...quotaUsage,
+    };
+    const quantity = 1;
+
+    const defaultValues = getQuotaIncreaseMessage({
+      profile,
+      quantity,
+      quota,
+    });
+
+    expect(defaultValues.description).toEqual(
+      `**User**: ${profile.username}<br>\n**Email**: ${
+        profile.email
+      }<br>\n**Quota Name**: ${
+        quota.quota_name
+      }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+        quantity > 1 ? 's' : ''
+      }<br>\n**Region**: ${quota.region_applied}`
+    );
   });
 });

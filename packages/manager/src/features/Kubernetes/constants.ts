@@ -32,4 +32,7 @@ export const CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY =
   'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.';
 
 export const LKE_ENTERPRISE_VPC_WARNING =
+  'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.';
+
+export const LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING =
   'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.';

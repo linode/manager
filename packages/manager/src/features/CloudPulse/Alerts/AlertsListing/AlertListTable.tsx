@@ -34,13 +34,17 @@ export interface AlertsListTableProps {
    */
   isLoading: boolean;
   /**
+   * Callback to scroll to the button element on page change
+   */
+  scrollToElement: () => void;
+  /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
 }
 
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
-  const { alerts, error, isLoading, services } = props;
+  const { alerts, error, isLoading, scrollToElement, services } = props;
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
     : undefined;
@@ -85,7 +89,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     <OrderBy
       data={alerts}
       order="asc"
-      orderBy="service"
+      orderBy="service_type"
       preferenceKey="alerts-landing"
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -109,11 +113,16 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                     <TableRow>
                       {AlertListingTableLabelMap.map((value) => (
                         <TableSortCell
+                          handleClick={(orderBy, order) => {
+                            if (order) {
+                              handleOrderChange(orderBy, order);
+                              handlePageChange(1);
+                            }
+                          }}
                           active={orderBy === value.label}
                           data-qa-header={value.label}
                           data-qa-sorting={value.label}
                           direction={order}
-                          handleClick={handleOrderChange}
                           key={value.label}
                           label={value.label}
                           noWrap
@@ -147,12 +156,24 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 </Table>
               </Grid>
               <PaginationFooter
+                handlePageChange={(page) => {
+                  handlePageChange(page);
+                  requestAnimationFrame(() => {
+                    scrollToElement();
+                  });
+                }}
+                handleSizeChange={(pageSize) => {
+                  handlePageSizeChange(pageSize);
+                  handlePageChange(1);
+                  requestAnimationFrame(() => {
+                    scrollToElement();
+                  });
+                }}
                 count={count}
                 eventCategory="Alert Definitions Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
+                sx={{ border: 0 }}
               />
             </>
           )}

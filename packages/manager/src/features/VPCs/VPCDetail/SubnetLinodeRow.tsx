@@ -10,9 +10,11 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useAllLinodeConfigsQuery,
+  useLinodeFirewallsQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
@@ -206,6 +208,7 @@ export const SubnetLinodeRow = (props: Props) => {
                   handlePowerActionsLinode(linode, 'Reboot');
                 }}
                 actionText="Reboot"
+                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             {showPowerButton && (
@@ -217,10 +220,12 @@ export const SubnetLinodeRow = (props: Props) => {
                   );
                 }}
                 actionText={isOffline ? 'Power On' : 'Power Off'}
+                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             <InlineMenuAction
               actionText="Unassign Linode"
+              disabled={isVPCLKEEnterpriseCluster}
               onClick={() => handleUnassignLinode(linode, subnet)}
             />
           </>

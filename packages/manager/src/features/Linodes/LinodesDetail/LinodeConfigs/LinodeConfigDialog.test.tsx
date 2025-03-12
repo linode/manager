@@ -1,11 +1,7 @@
+import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import React from 'react';
 
-import {
-  LinodeConfigInterfaceFactory,
-  linodeConfigFactory,
-  linodeFactory,
-} from 'src/factories';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { linodeConfigFactory, linodeFactory } from 'src/factories';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
@@ -18,14 +14,15 @@ import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
 import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
+import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useLinodeQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
@@ -55,12 +52,12 @@ describe('LinodeConfigDialog', () => {
     });
   });
 
-  const publicInterface = LinodeConfigInterfaceFactory.build({
+  const publicInterface = linodeConfigInterfaceFactory.build({
     primary: true,
     purpose: 'public',
   });
 
-  const vpcInterface = LinodeConfigInterfaceFactory.build({
+  const vpcInterface = linodeConfigInterfaceFactory.build({
     ipv4: {
       nat_1_1: '10.0.0.0',
     },
@@ -68,7 +65,7 @@ describe('LinodeConfigDialog', () => {
     purpose: 'vpc',
   });
 
-  const vpcInterfaceWithoutNAT = LinodeConfigInterfaceFactory.build({
+  const vpcInterfaceWithoutNAT = linodeConfigInterfaceFactory.build({
     primary: false,
     purpose: 'vpc',
   });
@@ -173,7 +170,7 @@ describe('LinodeConfigDialog', () => {
       expect(valueReturned?.props.text).toBe(undefined);
     });
 
-    it('should return a <Notice /> with LKE_ENTERPRISE_VPC_WARNING text if the Linode is associated with a LKE-E cluster', () => {
+    it('should return a <Notice /> with LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING text if the Linode is associated with a LKE-E cluster', () => {
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterface,
         isLKEEnterpriseCluster: true,
@@ -186,7 +183,9 @@ describe('LinodeConfigDialog', () => {
         values: editableFields,
       });
 
-      expect(valueReturned?.props.text).toEqual(LKE_ENTERPRISE_VPC_WARNING);
+      expect(valueReturned?.props.text).toEqual(
+        LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING
+      );
     });
   });
 

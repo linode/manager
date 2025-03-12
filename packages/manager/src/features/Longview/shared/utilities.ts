@@ -1,6 +1,4 @@
-import { pluralize } from '@linode/utilities';
-
-import { readableBytes } from 'src/utilities/unitConversions';
+import { pluralize, readableBytes } from '@linode/utilities';
 
 import type {
   CPU,

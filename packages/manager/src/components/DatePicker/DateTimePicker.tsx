@@ -1,4 +1,4 @@
-import { InputAdornment, TextField } from '@linode/ui';
+import { ActionsPanel, InputAdornment, TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -10,7 +10,6 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useEffect, useState } from 'react';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
 

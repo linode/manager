@@ -4,7 +4,7 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 import {

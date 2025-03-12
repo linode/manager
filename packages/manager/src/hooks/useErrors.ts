@@ -1,7 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { scrollErrorIntoView } from '@linode/utilities';
 import * as React from 'react';
 
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const useErrors = (): [
   APIError[],

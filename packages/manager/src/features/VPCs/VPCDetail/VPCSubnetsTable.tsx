@@ -1,3 +1,4 @@
+import { useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -17,7 +18,6 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSubnetsQuery } from 'src/queries/vpcs/vpcs';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
@@ -225,6 +225,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleEditSubnet}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
+              isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
               subnet={subnet}
               vpcId={vpcId}
@@ -267,7 +268,9 @@ export const VPCSubnetsTable = (props: Props) => {
         InnerTable,
         OuterTableCells,
         id: subnet.id,
-        label: subnet.label,
+        label: `${subnet.label}${
+          isVPCLKEEnterpriseCluster ? ' (Managed)' : ''
+        }`,
       };
     });
   };
@@ -296,6 +299,7 @@ export const VPCSubnetsTable = (props: Props) => {
             marginBottom: theme.spacing(2),
           }}
           buttonType="primary"
+          disabled={isVPCLKEEnterpriseCluster}
           onClick={() => setSubnetCreateDrawerOpen(true)}
         >
           Create Subnet

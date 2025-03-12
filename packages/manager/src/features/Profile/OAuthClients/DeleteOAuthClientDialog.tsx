@@ -1,9 +1,8 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteOAuthClientMutation } from 'src/queries/account/oauth';
+import { useDeleteOAuthClientMutation } from '@linode/queries';
 
 interface Props {
   id: string;

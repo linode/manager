@@ -23,10 +23,6 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core/placementGroups',
-    'e2e/core/stackscripts',
-    'e2e/core/volumes',
-    'e2e/core/vpc',
     'public',
     '!.eslintrc.js',
   ],
@@ -88,6 +84,58 @@ module.exports = {
         'testing-library/await-async-query': 'off',
       },
     },
+    {
+      env: {
+        'cypress/globals': true,
+        node: true,
+      },
+      // cypress/e2e/core files have had --fix applied, so enforce error level to maintain code quality
+      files: ['cypress/e2e/core/**'],
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'error',
+        'perfectionist/sort-array-includes': 'error',
+        'perfectionist/sort-classes': 'error',
+        'perfectionist/sort-enums': 'error',
+        'perfectionist/sort-exports': 'error',
+        'perfectionist/sort-imports': [
+          'error',
+          {
+            'custom-groups': {
+              type: {
+                react: ['react', 'react-*'],
+                src: ['src*'],
+              },
+              value: {
+                src: ['src/**/*'],
+              },
+            },
+            groups: [
+              ['builtin', 'libraries', 'external'],
+              ['src', 'internal'],
+              ['parent', 'sibling', 'index'],
+              'object',
+              'unknown',
+              [
+                'type',
+                'internal-type',
+                'parent-type',
+                'sibling-type',
+                'index-type',
+              ],
+            ],
+            'newlines-between': 'always',
+          },
+        ],
+        'perfectionist/sort-interfaces': 'error',
+        'perfectionist/sort-jsx-props': 'error',
+        'perfectionist/sort-map-elements': 'error',
+        'perfectionist/sort-named-exports': 'error',
+        'perfectionist/sort-named-imports': 'error',
+        'perfectionist/sort-object-types': 'error',
+        'perfectionist/sort-objects': 'error',
+        'perfectionist/sort-union-types': 'error',
+      },
+    },
     // restrict usage of react-router-dom during migration to tanstack/react-router
     // TODO: TanStack Router - remove this override when migration is complete
     {
@@ -99,6 +147,7 @@ module.exports = {
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
+        'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {

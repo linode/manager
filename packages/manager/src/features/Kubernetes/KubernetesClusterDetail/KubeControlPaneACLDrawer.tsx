@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  ActionsPanel,
   Box,
   FormControlLabel,
   Notice,
@@ -7,6 +8,7 @@ import {
   Typography,
   omittedProps,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {
   kubernetesControlPlaneACLPayloadSchema,
   kubernetesEnterpriseControlPlaneACLPayloadSchema,
@@ -16,14 +18,12 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
 } from 'src/queries/kubernetes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
