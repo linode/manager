@@ -31,6 +31,8 @@
     ]
   },
   "dependencies": {
+    "@linode/api-v4": "workspace:*",
+    "@types/ramda": "0.25.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -47,6 +49,8 @@
     "eslint-config-prettier": "~8.1.0",
     "eslint-plugin-prettier": "~3.3.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "prettier": "~2.2.1"
+    "factory.ts": "^0.5.1",
+    "prettier": "~2.2.1",
+    "ramda": "~0.25.0"
   }
 }
