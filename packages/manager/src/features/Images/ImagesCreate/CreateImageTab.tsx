@@ -25,10 +25,12 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+  useGrants,
+  useRegionsQuery,
+} from '@linode/queries';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 

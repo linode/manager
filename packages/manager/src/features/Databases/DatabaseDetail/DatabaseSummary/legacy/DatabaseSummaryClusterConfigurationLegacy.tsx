@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Box, TooltipIcon, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -7,7 +8,6 @@ import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/Dat
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { Region } from '@linode/api-v4';

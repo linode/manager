@@ -1,5 +1,5 @@
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 /**

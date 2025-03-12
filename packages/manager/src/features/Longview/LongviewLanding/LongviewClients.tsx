@@ -8,8 +8,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import withLongviewClients from 'src/containers/longview.container';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';

@@ -16,11 +16,11 @@ import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
+  useAllLinodesQuery,
   useAllPlacementGroupsQuery,
   useAssignLinodesToPlacementGroup,
-} from 'src/queries/placementGroups';
+} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';

@@ -1,7 +1,6 @@
+import { useLinodeQuery } from '@linode/queries';
 import { Dialog } from '@linode/ui';
 import React from 'react';
-
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 

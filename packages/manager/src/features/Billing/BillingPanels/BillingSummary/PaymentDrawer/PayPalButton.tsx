@@ -12,9 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
-import { accountQueries } from 'src/queries/account/queries';
+import { useAccount, useClientToken, accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { SetSuccess } from './types';

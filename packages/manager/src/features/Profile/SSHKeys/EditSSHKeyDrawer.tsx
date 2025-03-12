@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { useUpdateSSHKeyMutation } from 'src/queries/profile/profile';
+import { useUpdateSSHKeyMutation } from '@linode/queries';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { SSHKey } from '@linode/api-v4';

@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { RescueDescription } from './RescueDescription';
