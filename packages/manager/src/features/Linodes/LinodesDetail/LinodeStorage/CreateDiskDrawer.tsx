@@ -1,4 +1,9 @@
 import {
+  useAllLinodeDisksQuery,
+  useLinodeDiskCreateMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -19,11 +24,6 @@ import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
 import { NotFound } from 'src/components/NotFound';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskCreateMutation,
-} from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';

@@ -7,11 +7,9 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskChangePasswordMutation,
-} from 'src/queries/linodes/disks';
-import {
   useLinodeChangePasswordMutation,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 

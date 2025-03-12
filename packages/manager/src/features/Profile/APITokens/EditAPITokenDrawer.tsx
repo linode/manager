@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useUpdatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
+import { useUpdatePersonalAccessTokenMutation } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Token, TokenRequest } from '@linode/api-v4';

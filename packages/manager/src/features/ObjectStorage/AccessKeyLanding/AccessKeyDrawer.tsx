@@ -12,7 +12,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useAccountSettings } from '@linode/queries';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';

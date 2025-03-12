@@ -1,10 +1,15 @@
-import { fireEvent } from '@testing-library/react';
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+import {
+  fireEvent,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import * as React from 'react';
 
 import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
   firewallFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
@@ -26,6 +31,26 @@ beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
 const mockFirewall0 = 'mock-firewall-0';
+
+const publicInterface = linodeConfigInterfaceFactory.build({
+  active: true,
+  id: 5,
+  ipam_address: null,
+  primary: true,
+  purpose: 'public',
+});
+
+const vpcInterface = linodeConfigInterfaceFactory.build({
+  active: true,
+  id: 10,
+  ipam_address: null,
+  purpose: 'vpc',
+  subnet_id: 1,
+});
+
+const configurationProfile = linodeConfigFactory.build({
+  interfaces: [publicInterface, vpcInterface],
+});
 
 describe('SubnetLinodeRow', () => {
   const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
@@ -67,6 +92,7 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
           subnetId={1}
         />
@@ -100,9 +126,10 @@ describe('SubnetLinodeRow', () => {
     fireEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
+
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
     });
@@ -133,6 +160,7 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
           subnetId={0}
         />
@@ -163,26 +191,6 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display a warning icon for Linodes using unrecommended configuration profiles', async () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({
-      active: true,
-      id: 5,
-      ipam_address: null,
-      primary: true,
-      purpose: 'public',
-    });
-
-    const vpcInterface = LinodeConfigInterfaceFactory.build({
-      active: true,
-      id: 10,
-      ipam_address: null,
-      purpose: 'vpc',
-      subnet_id: 1,
-    });
-
-    const configurationProfile = linodeConfigFactory.build({
-      interfaces: [publicInterface, vpcInterface],
-    });
-
     const subnet = subnetFactory.build({
       id: 1,
       linodes: [
@@ -213,6 +221,7 @@ describe('SubnetLinodeRow', () => {
         <SubnetLinodeRow
           handlePowerActionsLinode={vi.fn()}
           handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory2.id}
           subnet={subnet}
           subnetId={subnet.id}
@@ -228,6 +237,80 @@ describe('SubnetLinodeRow', () => {
 
     await waitFor(() => {
       expect(warningIcon).toBeInTheDocument();
+    });
+  });
+
+  it('should hide in-line action buttons for LKE-E Linodes', async () => {
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+
+    server.use(
+      http.get('*/linodes/instances/:linodeId', () => {
+        return HttpResponse.json(linodeFactory1);
+      })
+    );
+    server.use(
+      http.get('*/instances/*/configs', async () => {
+        return HttpResponse.json(makeResourcePage([configurationProfile]));
+      })
+    );
+
+    const handleUnassignLinode = vi.fn();
+    const handlePowerActionsLinode = vi.fn();
+
+    const { getByTestId, queryByRole } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={true}
+          linodeId={linodeFactory1.id}
+          subnetId={0}
+        />
+      )
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const powerOffButton = queryByRole('button', {
+      name: 'Power Off',
+    });
+    expect(powerOffButton).not.toBeInTheDocument();
+    const unassignLinodeButton = queryByRole('button', {
+      name: 'Unassign Linode',
+    });
+    expect(unassignLinodeButton).not.toBeInTheDocument();
+  });
+
+  it('should not display a warning icon for LKE-E Linodes', async () => {
+    const subnet = subnetFactory.build({
+      id: 1,
+      label: 'lke1234567',
+      linodes: [subnetAssignedLinodeDataFactory.build()],
+    });
+
+    const { getByTestId, queryByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={vi.fn()}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={true}
+          linodeId={linodeFactory2.id}
+          subnet={subnet}
+          subnetId={subnet.id}
+        />
+      )
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const warningIcon = queryByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG);
+
+    await waitFor(() => {
+      expect(warningIcon).not.toBeInTheDocument();
     });
   });
 });

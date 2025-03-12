@@ -1,3 +1,4 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
   FormControlLabel,
   Paper,
@@ -8,13 +9,9 @@ import {
 import React from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
 import { isOSMac } from 'src/utilities/userAgent';
 
-import type { ThemeChoice } from 'src/utilities/theme';
+import type { ThemeChoice } from '@linode/utilities';
 
 export const Theme = () => {
   const { data: theme } = usePreferences((preferences) => preferences?.theme);

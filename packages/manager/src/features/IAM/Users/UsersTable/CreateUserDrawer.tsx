@@ -1,3 +1,4 @@
+import { useCreateUserMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -12,7 +13,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { NotFound } from 'src/components/NotFound';
-import { useCreateUserMutation } from 'src/queries/account/users';
 
 import type { User } from '@linode/api-v4/lib/account';
 

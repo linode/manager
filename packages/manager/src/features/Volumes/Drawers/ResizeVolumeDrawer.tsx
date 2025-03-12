@@ -6,7 +6,7 @@ import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 import {
   useResizeVolumeMutation,
   useVolumeTypesQuery,

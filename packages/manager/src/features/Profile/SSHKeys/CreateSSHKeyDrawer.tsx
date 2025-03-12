@@ -12,7 +12,7 @@ import * as React from 'react';
 import { Code } from 'src/components/Code/Code';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
-import { useCreateSSHKeyMutation } from 'src/queries/profile/profile';
+import { useCreateSSHKeyMutation } from '@linode/queries';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

@@ -11,9 +11,11 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPMutation } from 'src/queries/linodes/networking';
-import { useAllIPsQuery } from 'src/queries/networking/networking';
+import {
+  useLinodeQuery,
+  useLinodeIPMutation,
+  useAllIPsQuery,
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';

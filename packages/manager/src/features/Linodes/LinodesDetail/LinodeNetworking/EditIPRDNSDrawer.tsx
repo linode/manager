@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useLinodeIPMutation } from 'src/queries/linodes/networking';
+import { useLinodeIPMutation } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { IPAddress } from '@linode/api-v4/lib/networking';

@@ -18,7 +18,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { useNodeBalancersQuery } from '@linode/queries';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';

@@ -2,6 +2,7 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { useMutatePlacementGroup } from '@linode/queries';
 import {
   ActionsPanel,
   Divider,
@@ -18,7 +19,6 @@ import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { NotFound } from 'src/components/NotFound';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 

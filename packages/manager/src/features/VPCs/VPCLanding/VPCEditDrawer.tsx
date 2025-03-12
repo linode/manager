@@ -6,9 +6,12 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';
+import {
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+  useUpdateVPCMutation,
+} from '@linode/queries';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 

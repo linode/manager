@@ -2,12 +2,9 @@ import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
-import type { DismissedNotification } from 'src/types/ManagerPreferences';
+import type { DismissedNotification } from '@linode/utilities';
 
 /**
  * Handlers for dismissing notifications and checking if a notification has been dismissed.

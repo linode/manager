@@ -1,4 +1,11 @@
 import {
+  useAllDetailedIPv6RangesQuery,
+  useAllLinodesQuery,
+  useLinodeIPsQuery,
+  useLinodeQuery,
+  useLinodeShareIPMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Button,
   CircleProgress,
@@ -9,23 +16,13 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { areArraysEqual } from '@linode/utilities';
+import { API_MAX_PAGE_SIZE, areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import {
-  useLinodeIPsQuery,
-  useLinodeShareIPMutation,
-} from 'src/queries/linodes/networking';
-import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';

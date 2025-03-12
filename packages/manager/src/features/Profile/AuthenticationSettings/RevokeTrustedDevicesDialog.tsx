@@ -2,7 +2,7 @@ import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useRevokeTrustedDeviceMutation } from 'src/queries/profile/profile';
+import { useRevokeTrustedDeviceMutation } from '@linode/queries';
 
 interface Props {
   deviceId: number;

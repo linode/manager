@@ -1,6 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { Typography } from '@linode/ui';
 import {
+  Typography,
   Button,
   Divider,
   Drawer,
@@ -23,9 +23,7 @@ import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
-import { accountQueries } from 'src/queries/account/queries';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccount, accountQueries, useProfile } from '@linode/queries';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

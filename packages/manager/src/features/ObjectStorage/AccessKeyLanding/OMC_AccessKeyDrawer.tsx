@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useAccountSettings } from '@linode/queries';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { sortByString } from 'src/utilities/sort-by';
 
