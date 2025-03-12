@@ -161,6 +161,6 @@ export const getQuotaIncreaseFormSchema = object({
     .max(255, 'Notes must be less than 255 characters.'),
   quantity: string()
     .required('Quantity is required')
-    .matches(/^[1-9]\d*$/, 'Quantity must be a positive number greater than 0'),
+    .matches(/^[1-9]\d*$/, 'Quantity must be a number greater than 0.'),
   summary: string().required('Summary is required.'),
 });
