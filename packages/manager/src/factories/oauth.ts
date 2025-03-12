@@ -1,5 +1,5 @@
 import { Token } from '@linode/api-v4/lib/profile/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 export const appTokenFactory = Factory.Sync.makeFactory<Token>({
   created: '2020-01-01T12:00:00',

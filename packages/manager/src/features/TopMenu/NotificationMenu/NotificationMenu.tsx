@@ -1,3 +1,4 @@
+import { useNotificationsQuery } from '@linode/queries';
 import { Box, Chip, Divider, Typography, rotate360 } from '@linode/ui';
 import { usePrevious } from '@linode/utilities';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -17,7 +18,6 @@ import {
 import { NotificationCenterNotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationCenterNotificationsContainer';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
   useEventsInfiniteQuery,

@@ -4,13 +4,15 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+} from '@linode/queries';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,

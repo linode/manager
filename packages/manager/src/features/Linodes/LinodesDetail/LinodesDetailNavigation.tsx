@@ -16,7 +16,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));

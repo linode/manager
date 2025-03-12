@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { getNextThemeValue } from 'src/utilities/theme';
 import { isOSMac } from 'src/utilities/userAgent';
 

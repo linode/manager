@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   CircleProgress,
   Dialog,
@@ -11,16 +12,13 @@ import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import {
   useAssignAdressesMutation,
   useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
-import { useAllIPv6RangesQuery } from 'src/queries/networking/networking';
+  useAllIPv6RangesQuery,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, IPRange } from '@linode/api-v4';

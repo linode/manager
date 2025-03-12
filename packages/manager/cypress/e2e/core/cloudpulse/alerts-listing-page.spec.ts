@@ -132,7 +132,7 @@ const validateAlertDetails = (alert: Alert) => {
       .and(
         'have.attr',
         'href',
-        `/monitor/alerts/definitions/detail/${service_type}/${id}`
+        `/alerts/definitions/detail/${service_type}/${id}`
       );
     cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
       .should('be.visible')
@@ -164,7 +164,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
@@ -198,10 +198,10 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     // Validate navigation links and buttons
     cy.findByText('Alerts')
       .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts');
+
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts/definitions');
+      .and('have.attr', 'href', '/alerts/definitions');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers

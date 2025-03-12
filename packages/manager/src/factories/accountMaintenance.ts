@@ -1,6 +1,5 @@
 import { pickRandom, randomDate } from '@linode/utilities';
-
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 

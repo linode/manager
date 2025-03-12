@@ -10,7 +10,7 @@ import { VariantType } from 'notistack';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
