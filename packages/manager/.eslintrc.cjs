@@ -95,6 +95,7 @@ module.exports = {
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
+        'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {
