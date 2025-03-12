@@ -5,13 +5,13 @@ import {
 } from '@linode/queries';
 import {
   Accordion,
-  Autocomplete,
   Box,
   Button,
   CircleProgress,
   Divider,
   ErrorState,
   Notice,
+  Select,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -34,9 +34,21 @@ export const DefaultFirewalls = () => {
     error: firewallsError,
     isLoading: isLoadingfirewalls,
   } = useAllFirewallsQuery();
-  const firewallOptions = firewalls ?? [];
+  const firewallOptions =
+    firewalls?.map((firewall) => {
+      return { label: firewall.label, value: firewall.id };
+    }) ?? [];
+
   const values = {
-    default_firewall_ids: firewallSettings?.default_firewall_ids ?? {},
+    default_firewall_ids: {
+      linode: firewallSettings?.default_firewall_ids.linode ?? undefined,
+      nodebalancer:
+        firewallSettings?.default_firewall_ids.nodebalancer ?? undefined,
+      public_interface:
+        firewallSettings?.default_firewall_ids.public_interface ?? undefined,
+      vpc_interface:
+        firewallSettings?.default_firewall_ids.vpc_interface ?? undefined,
+    },
   };
 
   const {
@@ -45,7 +57,7 @@ export const DefaultFirewalls = () => {
     handleSubmit,
     setError,
   } = useForm<UpdateFirewallSettings>({
-    defaultValues: values,
+    defaultValues: { ...values },
     values,
   });
 
@@ -92,17 +104,19 @@ export const DefaultFirewalls = () => {
           </Typography>
           <Controller
             render={({ field, fieldState }) => (
-              <Autocomplete
+              <Select
                 onChange={(_, item) => {
-                  field.onChange(item?.id);
+                  field.onChange(item?.value);
                 }}
                 value={
-                  firewallOptions.find((option) => option.id === field.value) ??
-                  null
+                  firewallOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 errorText={fieldState.error?.message}
                 label="All"
                 options={firewallOptions}
+                placeholder="Select a firewall"
               />
             )}
             control={control}
@@ -112,17 +126,19 @@ export const DefaultFirewalls = () => {
           <Typography variant="h3">Linodes - Linode Interfaces</Typography>
           <Controller
             render={({ field, fieldState }) => (
-              <Autocomplete
+              <Select
                 onChange={(_, item) => {
-                  field.onChange(item?.id);
+                  field.onChange(item?.value);
                 }}
                 value={
-                  firewallOptions.find((option) => option.id === field.value) ??
-                  null
+                  firewallOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 errorText={fieldState.error?.message}
                 label="Public Interface"
                 options={firewallOptions}
+                placeholder="Select a firewall"
               />
             )}
             control={control}
@@ -130,17 +146,19 @@ export const DefaultFirewalls = () => {
           />
           <Controller
             render={({ field, fieldState }) => (
-              <Autocomplete
+              <Select
                 onChange={(_, item) => {
-                  field.onChange(item?.id);
+                  field.onChange(item?.value);
                 }}
                 value={
-                  firewallOptions.find((option) => option.id === field.value) ??
-                  null
+                  firewallOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 errorText={fieldState.error?.message}
                 label="VPC Interface"
                 options={firewallOptions}
+                placeholder="Select a firewall"
               />
             )}
             control={control}
@@ -150,17 +168,19 @@ export const DefaultFirewalls = () => {
           <Typography variant="h3">NodeBalancers</Typography>
           <Controller
             render={({ field, fieldState }) => (
-              <Autocomplete
+              <Select
                 onChange={(_, item) => {
-                  field.onChange(item?.id);
+                  field.onChange(item?.value);
                 }}
                 value={
-                  firewallOptions.find((option) => option.id === field.value) ??
-                  null
+                  firewallOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
                 }
                 errorText={fieldState.error?.message}
                 label="NodeBalancers"
                 options={firewallOptions}
+                placeholder="Select a firewall"
               />
             )}
             control={control}
