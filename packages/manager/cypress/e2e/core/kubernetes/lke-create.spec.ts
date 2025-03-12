@@ -13,6 +13,7 @@ import {
   nodePoolFactory,
   kubeLinodeFactory,
   lkeHighAvailabilityTypeFactory,
+  accountBetaFactory,
 } from 'src/factories';
 import {
   mockCreateCluster,
@@ -458,6 +459,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
+    cy.findByTestId('apl-beta-chip').should('have.text', 'BETA');
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
     cy.findByTestId('ha-radio-button-yes').should('be.disabled');
     cy.get(
@@ -1086,7 +1088,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms that HA is enabled by default with LKE-E selection
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
-     * - Confirms the APL section is not shown while it remains unsupported
+     * - Confirms the APL section is disabled while it remains unsupported
      * - Confirms at least one IP must be provided for ACL
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
@@ -1095,13 +1097,19 @@ describe('LKE Cluster Creation with LKE-E', () => {
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
       const mockedEnterpriseCluster = kubernetesClusterFactory.build({
+        k8s_version: latestEnterpriseTierKubernetesVersion.id,
         label: clusterLabel,
         region: 'us-iad',
         tier: 'enterprise',
-        k8s_version: latestEnterpriseTierKubernetesVersion.id,
       });
       const mockedEnterpriseClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
 
+      mockGetAccountBeta(
+        accountBetaFactory.build({
+          id: 'apl',
+          label: 'Akamai App Platform Beta',
+        })
+      ).as('getAccountBeta');
       mockGetAccount(
         accountFactory.build({
           capabilities: [
@@ -1216,10 +1224,16 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .should('be.enabled')
         .click();
 
-      // Confirm the APL section is not shown.
-      cy.findByTestId('apl-label').should('not.exist');
-      cy.findByTestId('apl-radio-button-yes').should('not.exist');
-      cy.findByTestId('apl-radio-button-no').should('not.exist');
+      // Confirm the APL section is disabled and unsupported.
+      cy.findByTestId('apl-label').should('be.visible');
+      cy.findByTestId('apl-beta-chip').should(
+        'have.text',
+        'BETA - COMING SOON'
+      );
+      cy.findByTestId('apl-radio-button-yes').should('be.disabled');
+      cy.findByTestId('apl-radio-button-no').within(() => {
+        cy.findByRole('radio').should('be.disabled').should('be.checked');
+      });
 
       // Confirm the expected available plans display.
       validEnterprisePlanTabs.forEach((tab) => {
