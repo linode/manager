@@ -94,11 +94,17 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  const regionSupportsDiskEncryption = doesRegionSupportFeature(
-    selectedRegionId ?? '',
-    regions,
-    'Disk Encryption'
-  );
+  const regionSupportsDiskEncryption =
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'Disk Encryption'
+    ) ||
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'LA Disk Encryption'
+    );
 
   return (
     <Grid container direction="column">

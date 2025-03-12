@@ -25,7 +25,9 @@ export const DiskEncryption = (props: Props) => {
 
   const isLinodeInDistributedRegion = region?.site_type === 'distributed';
   const regionSupportsDiskEncryption =
-    region?.capabilities.includes('Disk Encryption') ?? false;
+    (region?.capabilities.includes('Disk Encryption') ||
+      region?.capabilities.includes('LA Disk Encryption')) ??
+    false;
 
   const {
     isDiskEncryptionFeatureEnabled,

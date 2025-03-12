@@ -36,9 +36,10 @@ export const Security = () => {
 
   const selectedRegion = regions?.find((r) => r.id === regionId);
 
-  const regionSupportsDiskEncryption = selectedRegion?.capabilities.includes(
-    'Disk Encryption'
-  );
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
+  const regionSupportsDiskEncryption =
+    selectedRegion?.capabilities.includes('Disk Encryption') ||
+    selectedRegion?.capabilities.includes('LA Disk Encryption');
 
   const isDistributedRegion = getIsDistributedRegion(
     regions ?? [],
