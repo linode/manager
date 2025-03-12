@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useProfile } from '@linode/queries';
 import {
   Accordion,
   ActionsPanel,
@@ -7,13 +8,12 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
-import { useProfile } from 'src/queries/profile/profile';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 
