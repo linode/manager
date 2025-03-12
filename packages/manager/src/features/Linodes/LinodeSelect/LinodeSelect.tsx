@@ -2,7 +2,7 @@ import { Autocomplete, CustomPopper } from '@linode/ui';
 import React from 'react';
 
 import Close from 'src/assets/icons/close.svg';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from '@linode/queries';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';

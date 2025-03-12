@@ -49,3 +49,20 @@ export const useIsLinodeInterfacesEnabled = () => {
     isLinodeInterfacesEnabled: flags.linodeInterfaces?.enabled ?? false,
   };
 };
+
+/**
+ * Returns whether or not the feature for attaching Firewalls in the *Linode Clone*
+ * flow should be enabled.
+ *
+ * Currently, this just uses the `linodeCloneFirewall` feature flag as a source of truth,
+ * but will eventually also look at Linode API for this capability.
+ */
+export const useIsLinodeCloneFirewallEnabled = () => {
+  const flags = useFlags();
+
+  // @TODO Clone Linode Firewalls: check for firewall attachment capability in Linode API when it exists
+
+  return {
+    isLinodeCloneFirewallEnabled: Boolean(flags.linodeCloneFirewall),
+  };
+};

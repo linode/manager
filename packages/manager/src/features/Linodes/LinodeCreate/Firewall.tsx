@@ -11,7 +11,7 @@ import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/Cre
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import { useAllFirewallsQuery } from '@linode/queries';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { useLinodeCreateQueryParams } from './utilities';
