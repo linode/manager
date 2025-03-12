@@ -81,7 +81,7 @@ describe('Alert Resuable Component for contextual view', () => {
     await userEvent.click(getByTestId('manage-alerts'));
 
     expect(mockHistory.push).toHaveBeenCalledWith(
-      '/monitor/alerts/definitions'
+      '/alerts/definitions'
     );
   });
 
