@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { appTokenFactory } from 'src/factories';
-import { profileFactory } from 'src/factories';
+import { appTokenFactory, profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { basePerms } from './utils';
@@ -14,8 +13,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   Notice,
@@ -11,7 +12,6 @@ import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
   addressOptions,

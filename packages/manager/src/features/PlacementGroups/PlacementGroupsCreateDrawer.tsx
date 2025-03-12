@@ -1,4 +1,10 @@
 import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Divider,
   List,
   ListItem,
@@ -9,6 +15,7 @@ import {
 } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
+  scrollErrorIntoView,
   useFormValidateOnChange,
 } from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
@@ -18,20 +25,13 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  useAllPlacementGroupsQuery,
-  useCreatePlacementGroup,
-} from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
@@ -154,7 +154,7 @@ export const PlacementGroupsCreateDrawer = (
   const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
-    () => regions?.find((region) => region.id == values.region),
+    () => regions?.find((region) => region.id === values.region),
     [regions, values.region]
   );
 

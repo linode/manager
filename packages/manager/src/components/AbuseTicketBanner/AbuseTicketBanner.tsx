@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useNotificationsQuery } from '@linode/queries';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';

@@ -1,23 +1,24 @@
+import { latestKubernetesVersion } from 'support/constants/lke';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetApiEndpoints,
+  mockGetCluster,
+  mockGetClusterPools,
+  mockGetControlPlaneACL,
+  mockGetDashboardUrl,
+  mockGetKubeconfig,
+  mockGetKubernetesVersions,
+  mockUpdateCluster,
+} from 'support/intercepts/lke';
+import { ui } from 'support/ui';
+import { readDownload } from 'support/util/downloads';
+import { randomLabel } from 'support/util/random';
+
 import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   nodePoolFactory,
 } from 'src/factories';
-import { latestKubernetesVersion } from 'support/constants/lke';
-import {
-  mockGetCluster,
-  mockGetKubeconfig,
-  mockGetKubernetesVersions,
-  mockGetClusterPools,
-  mockGetDashboardUrl,
-  mockGetApiEndpoints,
-  mockGetControlPlaneACL,
-  mockUpdateCluster,
-} from 'support/intercepts/lke';
-import { randomLabel } from 'support/util/random';
-import { readDownload } from 'support/util/downloads';
-import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockKubeconfigContents = '---'; // Valid YAML.
 const mockKubeconfigResponse = {
@@ -88,8 +89,8 @@ describe('LKE summary page', () => {
       },
     });
     const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
       control_plane: mockACL,
+      k8s_version: latestKubernetesVersion,
     });
     const tag = randomLabel();
     const mockClusterUpdated = {
@@ -150,8 +151,8 @@ describe('LKE summary page', () => {
 
     const tagNew = randomLabel();
     const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
       control_plane: mockACL,
+      k8s_version: latestKubernetesVersion,
       tags: tagsExisting,
     });
 
@@ -220,8 +221,8 @@ describe('LKE summary page', () => {
     });
     const tagExisting = randomLabel();
     const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
       control_plane: mockACL,
+      k8s_version: latestKubernetesVersion,
       tags: [tagExisting],
     });
 
@@ -273,8 +274,8 @@ describe('LKE summary page', () => {
     });
     const tagsExisting = buildTags(2);
     const mockCluster = kubernetesClusterFactory.build({
-      k8s_version: latestKubernetesVersion,
       control_plane: mockACL,
+      k8s_version: latestKubernetesVersion,
       tags: tagsExisting,
     });
 

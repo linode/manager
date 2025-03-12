@@ -5,7 +5,7 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import {
   generateGraphData,
@@ -23,10 +23,14 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { DateTimeWithPreset, Widgets } from '@linode/api-v4';
-import type { MetricDefinition, TimeGranularity } from '@linode/api-v4';
-import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type {
+  DateTimeWithPreset,
+  Widgets,
+  MetricDefinition,
+  TimeGranularity,
+} from '@linode/api-v4';
+import type {
+  DataSet,
   AreaProps,
   ChartVariant,
 } from 'src/components/AreaChart/AreaChart';

@@ -17,12 +17,12 @@ import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 const overrides = [
   {
     label: 'Definitions',
-    linkTo: '/monitor/alerts/definitions',
+    linkTo: '/alerts/definitions',
     position: 1,
   },
   {
     label: 'Edit',
-    linkTo: `/monitor/alerts/definitions/edit`,
+    linkTo: `/alerts/definitions/edit`,
     position: 2,
   },
 ];

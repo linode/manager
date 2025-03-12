@@ -2,32 +2,33 @@
  * @file Integration tests for VPC assign/unassign Linodes flows.
  */
 
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 import {
-  mockGetSubnets,
-  mockCreateSubnet,
-  mockGetVPC,
-  mockGetVPCs,
-} from 'support/intercepts/vpc';
-import {
+  linodeConfigFactory,
+  linodeFactory,
   subnetFactory,
   vpcFactory,
-  linodeFactory,
-  linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
 } from '@src/factories';
-import { ui } from 'support/ui';
-import { randomNumber, randomLabel } from 'support/util/random';
-import { mockGetLinodes } from 'support/intercepts/linodes';
-import {
-  mockCreateLinodeConfigInterfaces,
-  mockGetLinodeConfigs,
-  mockDeleteLinodeConfigInterface,
-} from 'support/intercepts/configs';
 import {
   vpcAssignLinodeRebootNotice,
   vpcUnassignLinodeRebootNotice,
 } from 'support/constants/vpc';
-import { VPC, Linode, Config } from '@linode/api-v4';
+import {
+  mockCreateLinodeConfigInterfaces,
+  mockDeleteLinodeConfigInterface,
+  mockGetLinodeConfigs,
+} from 'support/intercepts/configs';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockCreateSubnet,
+  mockGetSubnets,
+  mockGetVPC,
+  mockGetVPCs,
+} from 'support/intercepts/vpc';
+import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
+
+import type { Config, Linode, VPC } from '@linode/api-v4';
 
 describe('VPC assign/unassign flows', () => {
   let mockVPCs: VPC[];
@@ -207,9 +208,9 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnet],
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
     const mockLinodeConfig = linodeConfigFactory.build({
       interfaces: [vpcInterface],

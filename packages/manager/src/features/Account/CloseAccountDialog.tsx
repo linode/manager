@@ -9,7 +9,7 @@ import {
   CANCELLATION_DATA_LOSS_WARNING,
   CANCELLATION_DIALOG_TITLE,
 } from 'src/features/Account/constants';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 

@@ -3,8 +3,7 @@ import { Notice, StyledLinkButton, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { profileQueries } from 'src/queries/profile/profile';
-import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
+import { profileQueries, useSecurityQuestions } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

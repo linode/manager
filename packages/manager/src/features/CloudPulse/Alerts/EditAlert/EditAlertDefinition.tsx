@@ -1,15 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -81,7 +80,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       }
     }
   });
-  const definitionLanding = '/monitor/alerts/definitions';
+  const definitionLanding = '/alerts/definitions';
 
   const overrides = [
     {

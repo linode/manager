@@ -11,10 +11,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;

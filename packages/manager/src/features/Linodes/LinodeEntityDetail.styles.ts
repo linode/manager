@@ -45,14 +45,6 @@ export const StyledColumnLabelGrid = styled(Grid, {
   font: theme.font.bold,
 }));
 
-export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
-  ({ theme }) => ({
-    '& p': {
-      color: theme.textColors.tableStatic,
-    },
-  })
-);
-
 export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
   ({ theme }) => ({
     padding: 0,
