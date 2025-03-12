@@ -91,7 +91,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       }
     }
   });
-  const definitionLanding = '/monitor/alerts/definitions';
+  const definitionLanding = '/alerts/definitions';
 
   const overrides = [
     {

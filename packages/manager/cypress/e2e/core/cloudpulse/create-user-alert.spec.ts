@@ -171,7 +171,7 @@ describe('Create Alert', () => {
 
   it('should navigate to the Create Alert page from the Alert Listings page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -183,11 +183,11 @@ describe('Create Alert', () => {
       .click();
 
     // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', 'monitor/alerts/definitions/create');
+    cy.url().should('endWith', '/alerts/definitions/create');
   });
 
   it('should successfully create a new alert', () => {
-    cy.visitWithLogin('monitor/alerts/definitions/create');
+    cy.visitWithLogin('/alerts/definitions/create');
 
     // Enter Name and Description
     cy.findByPlaceholderText('Enter a Name')
@@ -404,7 +404,7 @@ describe('Create Alert', () => {
       expect(request.body.channel_ids).to.include(1);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'monitor/alerts/definitions');
+      cy.url().should('endWith', '/alerts/definitions');
       ui.toast.assertMessage('Alert successfully created');
 
       // Confirm that Alert is listed on landing page with expected configuration.
