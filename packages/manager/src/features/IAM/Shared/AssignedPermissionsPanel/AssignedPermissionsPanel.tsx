@@ -37,16 +37,16 @@ export const AssignedPermissionsPanel = ({ role }: Props) => {
         backgroundColor:
           theme.name === 'light'
             ? theme.tokens.color.Neutrals[5]
-            : theme.tokens.color.Neutrals[90],
+            : theme.tokens.color.Neutrals[100],
         marginTop: theme.spacing(1.25),
-        padding: `${theme.tokens.spacing[50]} ${theme.tokens.spacing[40]}`,
+        padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
       }}
     >
       <Typography
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          marginBottom: theme.tokens.spacing[50],
+          marginBottom: theme.tokens.spacing.S12,
           overflowWrap: 'anywhere',
           wordBreak: 'normal',
         }}

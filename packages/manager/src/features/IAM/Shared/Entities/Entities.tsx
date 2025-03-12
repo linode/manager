@@ -47,7 +47,7 @@ export const Entities = ({ access, type }: Props) => {
         <FormLabel>
           <Typography
             marginBottom={0.5}
-            sx={{ marginTop: theme.tokens.spacing[50] }}
+            sx={{ marginTop: theme.tokens.spacing.S12 }}
             variant="inherit"
           >
             Entities
@@ -74,7 +74,7 @@ export const Entities = ({ access, type }: Props) => {
       onChange={(_, value) => setSelectedEntities(value)}
       options={memoizedEntities}
       placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
-      sx={{ marginTop: theme.tokens.spacing[50] }}
+      sx={{ marginTop: theme.tokens.spacing.S12 }}
       value={selectedEntities}
     />
   );

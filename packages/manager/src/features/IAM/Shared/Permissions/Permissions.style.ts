@@ -43,5 +43,5 @@ export const StyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
   font: theme.tokens.typography.Label.Semibold.Xs,
-  paddingLeft: theme.tokens.spacing[30],
+  paddingLeft: theme.tokens.spacing.S6,
 }));

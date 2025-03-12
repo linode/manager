@@ -88,7 +88,7 @@ export const AssignedEntities = ({
             display: 'flex',
             height: '20px',
             maxWidth: 'max-content',
-            padding: `${theme.tokens.spacing[20]} ${theme.tokens.spacing[40]}`,
+            padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S8}`,
           }}
         >
           <Tooltip placement="top" title="Click to View All Entities">

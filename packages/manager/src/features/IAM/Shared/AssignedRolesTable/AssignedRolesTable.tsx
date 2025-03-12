@@ -21,7 +21,6 @@ import {
   useAccountUserPermissions,
 } from 'src/queries/iam/iam';
 import { useAccountResources } from 'src/queries/resources/resources';
-import { truncate } from 'src/utilities/truncate';
 
 import { Permissions } from '../Permissions/Permissions';
 import {
@@ -37,7 +36,7 @@ import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
 import type { AccountAccessType, RoleType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
-import { capitalize } from '@linode/utilities';
+import { capitalize, truncate } from '@linode/utilities';
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
@@ -173,7 +172,7 @@ export const AssignedRolesTable = () => {
       const InnerTable = (
         <Grid
           sx={{
-            padding: `${theme.tokens.spacing[0]} ${theme.tokens.spacing[60]}`,
+            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
           }}
         >
           <Typography
