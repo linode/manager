@@ -1,4 +1,9 @@
 import {
+  useAllIPsQuery,
+  useLinodeIPMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Drawer,
   Notice,
@@ -11,11 +16,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import {
-  useLinodeQuery,
-  useLinodeIPMutation,
-  useAllIPsQuery,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';

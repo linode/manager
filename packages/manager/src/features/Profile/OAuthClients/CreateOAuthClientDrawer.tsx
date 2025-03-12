@@ -1,3 +1,4 @@
+import { useCreateOAuthClientMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Checkbox,
@@ -11,7 +12,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useCreateOAuthClientMutation } from '@linode/queries';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { OAuthClientRequest } from '@linode/api-v4';

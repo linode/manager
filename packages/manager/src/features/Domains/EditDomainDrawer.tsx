@@ -1,3 +1,4 @@
+import { useGrants, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -14,7 +15,6 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';

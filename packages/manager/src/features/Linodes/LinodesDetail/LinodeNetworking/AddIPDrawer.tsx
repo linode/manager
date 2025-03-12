@@ -1,6 +1,6 @@
 import {
-  useCreateIPv6RangeMutation,
   useAllocateIPMutation,
+  useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from '@linode/queries';
 import {
@@ -8,12 +8,12 @@ import {
   Box,
   Divider,
   Drawer,
+  FormControlLabel,
   Notice,
   Radio,
   RadioGroup,
   Stack,
   Tooltip,
-  FormControlLabel,
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';

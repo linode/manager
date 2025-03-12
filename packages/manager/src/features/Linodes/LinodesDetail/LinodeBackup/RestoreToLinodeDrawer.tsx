@@ -1,4 +1,9 @@
 import {
+  useAllLinodesQuery,
+  useLinodeBackupRestoreMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Checkbox,
@@ -14,11 +19,6 @@ import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useLinodeBackupRestoreMutation,
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { LinodeBackup } from '@linode/api-v4/lib/linodes';

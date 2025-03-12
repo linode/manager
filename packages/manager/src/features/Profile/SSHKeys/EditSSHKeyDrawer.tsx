@@ -1,3 +1,4 @@
+import { useUpdateSSHKeyMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { useEffect } from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useUpdateSSHKeyMutation } from '@linode/queries';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { SSHKey } from '@linode/api-v4';

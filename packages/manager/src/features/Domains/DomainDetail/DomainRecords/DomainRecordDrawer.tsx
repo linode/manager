@@ -3,12 +3,12 @@ import {
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { isValidCNAME, isValidDomainRecord } from '../../domainUtils';
 import {

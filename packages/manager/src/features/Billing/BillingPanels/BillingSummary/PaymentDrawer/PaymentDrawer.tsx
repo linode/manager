@@ -1,6 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account';
+import { accountQueries, useAccount, useProfile } from '@linode/queries';
 import {
-  Typography,
   Button,
   Divider,
   Drawer,
@@ -10,6 +10,7 @@ import {
   Stack,
   TextField,
   TooltipIcon,
+  Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -23,7 +24,6 @@ import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount, accountQueries, useProfile } from '@linode/queries';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

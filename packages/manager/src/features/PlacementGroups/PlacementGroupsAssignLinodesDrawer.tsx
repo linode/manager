@@ -3,6 +3,11 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import {
+  useAllLinodesQuery,
+  useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Box,
   Divider,
@@ -17,11 +22,6 @@ import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { NotFound } from 'src/components/NotFound';
-import {
-  useAllLinodesQuery,
-  useAllPlacementGroupsQuery,
-  useAssignLinodesToPlacementGroup,
-} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';

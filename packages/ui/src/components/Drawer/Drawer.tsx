@@ -39,7 +39,6 @@ interface BaseProps extends _DrawerProps {
 
 interface PropsWithoutNotFound extends BaseProps {
   NotFoundComponent?: never;
-  labelLink?: never;
 }
 
 interface PropsWithNotFound extends BaseProps {

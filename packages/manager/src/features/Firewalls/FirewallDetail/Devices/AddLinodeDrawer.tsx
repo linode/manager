@@ -1,3 +1,9 @@
+import {
+  useAddFirewallDeviceMutation,
+  useAllFirewallsQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
@@ -8,12 +14,6 @@ import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import {
-  useAddFirewallDeviceMutation,
-  useAllFirewallsQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';

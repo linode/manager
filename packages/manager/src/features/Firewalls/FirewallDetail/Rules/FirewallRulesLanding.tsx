@@ -1,3 +1,9 @@
+import {
+  linodeQueries,
+  nodebalancerQueries,
+  useAllFirewallDevicesQuery,
+  useUpdateFirewallRulesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,12 +14,6 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 // eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
-import {
-  useAllFirewallDevicesQuery,
-  useUpdateFirewallRulesMutation,
-  linodeQueries,
-  nodebalancerQueries,
-} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';

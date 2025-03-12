@@ -1,3 +1,4 @@
+import { useGrants, useProfile } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -5,7 +6,6 @@ import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useImportZoneMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { ImportZonePayload } from '@linode/api-v4/lib/domains';

@@ -1,4 +1,8 @@
 import {
+  useCreatePersonalAccessTokenMutation,
+  useProfile,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -21,10 +25,6 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  useProfile,
-  useCreatePersonalAccessTokenMutation,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {

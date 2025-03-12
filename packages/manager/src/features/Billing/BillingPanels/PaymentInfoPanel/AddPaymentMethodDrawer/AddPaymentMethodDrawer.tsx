@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import {
   Box,
   Divider,
@@ -10,11 +11,10 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
-import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { NotFound } from 'src/components/NotFound';
+import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from '@linode/queries';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';

@@ -1,6 +1,30 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
+import {
+  accountFactory,
+  accountSettingsFactory,
+  objectStorageClusterFactory,
+  objectStorageKeyFactory,
+  profileFactory,
+  regionFactory,
+} from '@src/factories';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockCancelObjectStorage,
+  mockCreateAccessKey,
+  mockGetBuckets,
+  mockGetClusters,
+} from 'support/intercepts/object-storage';
+import { mockGetAccessKeys } from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
 
 import type {
   AccountSettings,
@@ -8,30 +32,6 @@ import type {
   ObjectStorageClusterID,
   Region,
 } from '@linode/api-v4';
-import {
-  accountSettingsFactory,
-  objectStorageClusterFactory,
-  profileFactory,
-  regionFactory,
-  objectStorageKeyFactory,
-  accountFactory,
-} from '@src/factories';
-import {
-  mockGetAccount,
-  mockGetAccountSettings,
-} from 'support/intercepts/account';
-import {
-  mockCancelObjectStorage,
-  mockCreateAccessKey,
-  mockGetBuckets,
-  mockGetClusters,
-} from 'support/intercepts/object-storage';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.

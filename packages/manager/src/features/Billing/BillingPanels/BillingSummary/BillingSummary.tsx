@@ -1,3 +1,4 @@
+import { useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useNotificationsQuery, useGrants } from '@linode/queries';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';

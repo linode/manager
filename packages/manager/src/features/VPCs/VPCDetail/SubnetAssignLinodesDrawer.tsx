@@ -1,5 +1,11 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
+  getAllLinodeConfigs,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import {
   Autocomplete,
   Box,
   Button,
@@ -27,12 +33,6 @@ import {
 } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import {
-  useAllLinodesQuery,
-  getAllLinodeConfigs,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 

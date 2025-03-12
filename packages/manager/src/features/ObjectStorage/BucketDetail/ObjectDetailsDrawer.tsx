@@ -1,14 +1,13 @@
+import { useProfile } from '@linode/queries';
 import { Divider, Drawer, Typography } from '@linode/ui';
+import { readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
-import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';
 

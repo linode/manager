@@ -1,9 +1,9 @@
+import { useRegionsQuery } from '@linode/queries';
 import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { useRegionsQuery } from '@linode/queries';
 
 import type { IPAddress } from '@linode/api-v4/lib/networking';
 

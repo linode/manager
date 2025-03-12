@@ -1,4 +1,5 @@
 import { Box, StyledLinkButton, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -7,7 +8,6 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import ObjectActionMenu from './ObjectActionMenu';
 

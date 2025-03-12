@@ -1,10 +1,10 @@
+import { useLinodeDiskUpdateMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { object, string } from 'yup';
 
 import { NotFound } from 'src/components/NotFound';
-import { useLinodeDiskUpdateMutation } from '@linode/queries';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { Disk } from '@linode/api-v4/lib/linodes';

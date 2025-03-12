@@ -1,4 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+  useUpdateVPCMutation,
+} from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
@@ -6,12 +12,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import {
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-  useUpdateVPCMutation,
-} from '@linode/queries';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 

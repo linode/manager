@@ -6,10 +6,10 @@ import {
   RadioGroup,
   Typography,
 } from '@linode/ui';
+import { isOSMac } from '@linode/utilities';
 import React from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import { isOSMac } from 'src/utilities/userAgent';
 
 import type { ThemeChoice } from '@linode/utilities';
 

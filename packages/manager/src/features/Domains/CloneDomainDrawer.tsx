@@ -1,3 +1,4 @@
+import { useGrants, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -13,7 +14,6 @@ import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useCloneDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from '@linode/queries';
 
 import type { Domain } from '@linode/api-v4';
 

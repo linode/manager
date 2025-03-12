@@ -1,4 +1,5 @@
 import { Box, Paper, Typography } from '@linode/ui';
+import { convertBytesToTarget, readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,10 +9,6 @@ import {
   formatMemory,
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
-import {
-  convertBytesToTarget,
-  readableBytes,
-} from 'src/utilities/unitConversions';
 
 import type { Process } from './types';
 import type {

@@ -1,4 +1,9 @@
 import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Divider,
   Drawer,
@@ -11,6 +16,7 @@ import {
 } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
+  scrollErrorIntoView,
   useFormValidateOnChange,
 } from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
@@ -25,14 +31,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  useAllPlacementGroupsQuery,
-  useCreatePlacementGroup,
-  useRegionsQuery,
-} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
@@ -155,7 +155,7 @@ export const PlacementGroupsCreateDrawer = (
   const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
-    () => regions?.find((region) => region.id == values.region),
+    () => regions?.find((region) => region.id === values.region),
     [regions, values.region]
   );
 

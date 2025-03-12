@@ -11,7 +11,10 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
-import { useFormValidateOnChange } from '@linode/utilities';
+import {
+  scrollErrorIntoView,
+  useFormValidateOnChange,
+} from '@linode/utilities';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -20,7 +23,6 @@ import * as React from 'react';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { NotFound } from 'src/components/NotFound';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';

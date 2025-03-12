@@ -3,6 +3,7 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
+import { useAccountSettings } from '@linode/queries';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -13,7 +14,6 @@ import { useErrors } from 'src/hooks/useErrors';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountSettings } from '@linode/queries';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
