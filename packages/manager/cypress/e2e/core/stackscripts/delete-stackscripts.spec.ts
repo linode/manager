@@ -1,8 +1,8 @@
 import { authenticate } from 'support/api/authentication';
 import {
   mockDeleteStackScript,
-  mockGetStackScripts,
   mockGetStackScript,
+  mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 
