@@ -34,7 +34,7 @@ import type {
   GlobalFooterTypes as GlobalFooterTypesLight,
   GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
-  RadioButtonTypes,
+  RadioButtonTypes as RadioButtonTypesLight,
   RadiusTypes,
   SearchTypes as SearchTypesLight,
   SideNavigationTypes as SideNavigationTypesLight,
@@ -54,6 +54,7 @@ import type {
   ElevationTypes as ElevationTypesDark,
   GlobalFooterTypes as GlobalFooterTypesDark,
   InteractionTypes as InteractionTypesDark,
+  RadioButtonTypes as RadioButtonTypesDark,
   SearchTypes as SearchTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
   TableTypes as TableTypesDark,
@@ -72,6 +73,7 @@ type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type CalendarTypes = MergeTypes<CalendarTypesLight, CalendarTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
+type RadioButtonTypes = MergeTypes<RadioButtonTypesLight, RadioButtonTypesDark>;
 type SideNavigationTypes = MergeTypes<
   SideNavigationTypesLight,
   SideNavigationTypesDark
