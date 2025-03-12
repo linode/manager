@@ -6,6 +6,7 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -14,7 +15,6 @@ import { TagCell } from 'src/components/TagCell/TagCell';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();

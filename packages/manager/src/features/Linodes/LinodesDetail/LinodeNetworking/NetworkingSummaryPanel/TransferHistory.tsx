@@ -1,4 +1,5 @@
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -20,7 +21,6 @@ import {
   useProfile,
 } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
 import type {
