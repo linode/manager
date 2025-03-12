@@ -58,6 +58,7 @@ export const ApplicationPlatform = (props: APLProps) => {
             color="primary"
             data-testid="apl-beta-chip"
             label={CHIP_COPY}
+            size="small"
             sx={{ ml: 1 }}
           />
         </Box>
