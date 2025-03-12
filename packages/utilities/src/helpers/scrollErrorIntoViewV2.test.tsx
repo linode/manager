@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { scrollErrorIntoViewV2 } from './scrollErrorIntoViewV2';
 
 import type { Mock } from 'vitest';

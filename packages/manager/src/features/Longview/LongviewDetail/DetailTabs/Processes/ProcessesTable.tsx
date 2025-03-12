@@ -1,3 +1,4 @@
+import { readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
@@ -13,7 +14,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { StyledDiv } from './ProcessesTable.styles';
 
