@@ -21,8 +21,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
-import { profileQueries } from '../profile/profile';
+import { queryPresets, profileQueries } from '@linode/queries';
 import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,

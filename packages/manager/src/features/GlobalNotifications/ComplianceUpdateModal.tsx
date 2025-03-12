@@ -5,8 +5,7 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { SupportLink } from 'src/components/SupportLink';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useMutateAccountAgreements } from 'src/queries/account/agreements';
-import { accountQueries } from 'src/queries/account/queries';
+import { useMutateAccountAgreements, accountQueries } from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';

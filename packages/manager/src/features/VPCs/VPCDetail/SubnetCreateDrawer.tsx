@@ -11,8 +11,12 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Drawer } from 'src/components/Drawer';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
+import {
+  useGrants,
+  useProfile,
+  useCreateSubnetMutation,
+  useVPCQuery,
+} from '@linode/queries';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   RESERVED_IP_NUMBER,

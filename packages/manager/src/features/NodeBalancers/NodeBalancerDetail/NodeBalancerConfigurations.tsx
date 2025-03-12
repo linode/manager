@@ -8,7 +8,9 @@ import {
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4';
+import { nodebalancerQueries } from '@linode/queries';
 import { Accordion, ActionsPanel, Box, Button, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import {
   append,
@@ -28,9 +30,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromiseLoader from 'src/components/PromiseLoader/PromiseLoader';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';

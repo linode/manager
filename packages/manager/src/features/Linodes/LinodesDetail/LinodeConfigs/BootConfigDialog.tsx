@@ -4,7 +4,7 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
+import { useRebootLinodeMutation } from '@linode/queries';
 
 import type { Config } from '@linode/api-v4';
 

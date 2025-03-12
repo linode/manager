@@ -8,9 +8,11 @@ import { Link } from 'src/components/Link';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useNotificationsQuery,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';

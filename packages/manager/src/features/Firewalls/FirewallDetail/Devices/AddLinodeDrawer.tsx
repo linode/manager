@@ -11,8 +11,9 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-} from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';

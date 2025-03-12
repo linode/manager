@@ -23,7 +23,8 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/regions/regions', () => ({
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 

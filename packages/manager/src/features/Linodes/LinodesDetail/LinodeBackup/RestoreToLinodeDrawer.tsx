@@ -13,11 +13,11 @@ import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
+  useLinodeBackupRestoreMutation,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { LinodeBackup } from '@linode/api-v4/lib/linodes';

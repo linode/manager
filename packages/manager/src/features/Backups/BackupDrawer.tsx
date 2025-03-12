@@ -17,8 +17,8 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/account/settings';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+  useAllLinodesQuery,
+} from '@linode/queries';
 import { useAllTypes } from 'src/queries/types';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';

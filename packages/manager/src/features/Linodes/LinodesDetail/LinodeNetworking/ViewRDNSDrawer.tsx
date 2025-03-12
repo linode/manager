@@ -1,10 +1,9 @@
+import { useAllIPsQuery, useLinodeQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useAllIPsQuery } from 'src/queries/networking/networking';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
 

@@ -2,7 +2,7 @@ import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDisableTwoFactorMutation } from 'src/queries/profile/profile';
+import { useDisableTwoFactorMutation } from '@linode/queries';
 
 interface Props {
   onClose: () => void;

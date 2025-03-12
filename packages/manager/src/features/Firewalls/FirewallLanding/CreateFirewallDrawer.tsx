@@ -1,3 +1,4 @@
+import { useCreateFirewall } from '@linode/queries';
 import {
   ActionsPanel,
   FormControlLabel,
@@ -19,7 +20,6 @@ import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useCreateFirewall } from 'src/queries/firewalls';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 

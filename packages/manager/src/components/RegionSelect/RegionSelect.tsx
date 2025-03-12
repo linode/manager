@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';

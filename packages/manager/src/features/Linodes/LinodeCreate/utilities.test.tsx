@@ -1,18 +1,17 @@
 import {
-  LinodeConfigInterfaceFactory,
-  createLinodeRequestFactory,
-} from 'src/factories';
-import {
+  getIsLegacyInterfaceArray,
+  linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
-} from 'src/factories/linodeInterface';
+} from '@linode/utilities';
+
+import { createLinodeRequestFactory } from 'src/factories';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
   getDefaultInterfaceGenerationFromAccountSetting,
   getInterfacesPayload,
-  getIsLegacyInterfaceArray,
   getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
   getLinodeLabelFromLabelParts,
@@ -326,7 +325,7 @@ describe('getInterfacesPayload', () => {
 
 describe('getIsLegacyInterfaceArray', () => {
   it('determines the given interfaces are legacy', () => {
-    const legacyInterfaces = LinodeConfigInterfaceFactory.buildList(3);
+    const legacyInterfaces = linodeConfigInterfaceFactory.buildList(3);
     expect(getIsLegacyInterfaceArray(legacyInterfaces)).toBe(true);
     expect(getIsLegacyInterfaceArray(undefined)).toBe(true);
     expect(getIsLegacyInterfaceArray([])).toBe(true);

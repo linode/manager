@@ -16,8 +16,12 @@ import { RemovableSelectionsListTable } from 'src/components/RemovableSelections
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import { linodeQueries, useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import {
+  linodeQueries,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {

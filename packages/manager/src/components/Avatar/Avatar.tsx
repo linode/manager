@@ -4,8 +4,7 @@ import { default as _Avatar } from '@mui/material/Avatar';
 import * as React from 'react';
 
 import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useProfile } from 'src/queries/profile/profile';
+import { usePreferences, useProfile } from '@linode/queries';
 
 import type { SxProps, Theme } from '@mui/material';
 

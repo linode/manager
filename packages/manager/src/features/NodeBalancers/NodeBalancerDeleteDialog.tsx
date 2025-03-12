@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
+import { useNodebalancerDeleteMutation } from '@linode/queries';
 
 interface Props {
   id: number;
