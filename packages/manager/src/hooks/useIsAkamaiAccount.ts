@@ -1,4 +1,4 @@
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { ProfileWithAkamaiAccountHeader as ProfileWithAkamaiAccountHeader } from 'src/request';

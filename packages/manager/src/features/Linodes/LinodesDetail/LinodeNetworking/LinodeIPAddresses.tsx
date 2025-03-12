@@ -21,9 +21,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useLinodeQuery,
+  useLinodeIPsQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';

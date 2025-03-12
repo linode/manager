@@ -5,8 +5,7 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useSMSOptOutMutation } from 'src/queries/profile/profile';
-import { useProfile } from 'src/queries/profile/profile';
+import { useSMSOptOutMutation, useProfile } from '@linode/queries';
 
 import { getFormattedNumber } from './PhoneVerification/helpers';
 

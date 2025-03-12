@@ -1,3 +1,4 @@
+import { useAllFirewallsQuery, useGrants } from '@linode/queries';
 import {
   Box,
   FormControlLabel,
@@ -14,8 +15,6 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 

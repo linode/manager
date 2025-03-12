@@ -1,10 +1,7 @@
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 export const TypeToConfirm = () => {
   // Type-to-confirm is enabled by default when no preference is set.

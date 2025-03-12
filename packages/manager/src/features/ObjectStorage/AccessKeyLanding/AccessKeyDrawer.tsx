@@ -11,7 +11,7 @@ import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useAccountSettings } from '@linode/queries';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';

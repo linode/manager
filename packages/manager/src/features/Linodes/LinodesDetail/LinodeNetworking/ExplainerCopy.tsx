@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
 
 import type { IPType } from './AddIPDrawer';
 

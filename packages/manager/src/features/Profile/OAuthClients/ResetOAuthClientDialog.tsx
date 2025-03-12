@@ -2,7 +2,7 @@ import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useResetOAuthClientMutation } from 'src/queries/account/oauth';
+import { useResetOAuthClientMutation } from '@linode/queries';
 
 interface Props {
   id: string;

@@ -1,6 +1,5 @@
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { useAccountBetaQuery } from 'src/queries/account/betas';
+import { useAccount, useAccountBetaQuery } from '@linode/queries';
 import {
   useKubernetesTieredVersionsQuery,
   useKubernetesVersionQuery,

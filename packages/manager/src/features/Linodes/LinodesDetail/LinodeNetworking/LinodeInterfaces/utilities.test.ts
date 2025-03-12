@@ -2,7 +2,7 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
-} from 'src/factories/linodeInterface';
+} from '@linode/utilities';
 
 import { getLinodeInterfaceType } from './utilities';
 

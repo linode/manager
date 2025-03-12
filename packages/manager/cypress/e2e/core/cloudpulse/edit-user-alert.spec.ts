@@ -218,7 +218,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(0, {
       aggregationType: 'Average',
       dataField: 'CPU Utilization',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 
@@ -226,7 +226,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(1, {
       aggregationType: 'Average',
       dataField: 'Memory Usage',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 

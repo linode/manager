@@ -1,8 +1,8 @@
+import { configFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
 import {
-  configFactory,
   firewallDeviceFactory,
   linodeBackupFactory,
   linodeDiskFactory,

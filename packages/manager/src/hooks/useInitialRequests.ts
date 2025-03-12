@@ -2,8 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { accountQueries } from 'src/queries/account/queries';
-import { profileQueries } from 'src/queries/profile/profile';
+import { accountQueries, profileQueries } from '@linode/queries';
 import { redirectToLogin } from 'src/session';
 import { isLoggedIn } from 'src/utilities/authentication';
 

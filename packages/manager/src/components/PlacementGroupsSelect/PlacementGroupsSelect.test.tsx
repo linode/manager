@@ -21,8 +21,8 @@ const queryMocks = vi.hoisted(() => ({
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,

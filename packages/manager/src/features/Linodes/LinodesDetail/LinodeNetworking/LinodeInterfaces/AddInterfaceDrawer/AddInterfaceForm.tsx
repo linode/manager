@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCreateLinodeInterfaceMutation } from '@linode/queries';
 import { Notice, Stack, omitProps } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
-import { useCreateLinodeInterfaceMutation } from 'src/queries/linodes/interfaces';
 
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';

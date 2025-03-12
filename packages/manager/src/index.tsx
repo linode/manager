@@ -1,3 +1,4 @@
+import { queryClientFactory } from '@linode/queries';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
@@ -17,7 +18,6 @@ import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-import { queryClientFactory } from './queries/base';
 import { getRoot } from './utilities/rootManager';
 
 const queryClient = queryClientFactory('longLived');

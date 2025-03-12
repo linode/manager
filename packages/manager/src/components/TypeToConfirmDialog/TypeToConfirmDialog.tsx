@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ActionButtonsProps } from '@linode/ui';
