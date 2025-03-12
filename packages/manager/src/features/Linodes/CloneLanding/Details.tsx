@@ -14,7 +14,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import {
   StyledButton,

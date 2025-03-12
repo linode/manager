@@ -11,9 +11,9 @@ import { Prompt } from 'src/components/Prompt/Prompt';
 import {
   useAllFirewallDevicesQuery,
   useUpdateFirewallRulesMutation,
-} from 'src/queries/firewalls';
-import { linodeQueries } from 'src/queries/linodes/linodes';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
+  linodeQueries,
+  nodebalancerQueries,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';

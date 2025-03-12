@@ -27,7 +27,9 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+  useAccountSettings,
+  useProfile,
+} from '@linode/queries';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
@@ -38,8 +40,6 @@ import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useAccountSettings } from './queries/account/settings';
-import { useProfile } from './queries/profile/profile';
 import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';

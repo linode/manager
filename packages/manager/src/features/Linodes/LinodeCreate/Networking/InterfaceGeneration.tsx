@@ -1,3 +1,4 @@
+import { useAccountSettings } from '@linode/queries';
 import {
   FormControl,
   FormControlLabel,
@@ -9,7 +10,6 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
-import { useAccountSettings } from 'src/queries/account/settings';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';

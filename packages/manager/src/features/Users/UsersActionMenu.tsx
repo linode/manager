@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 interface Props {
   isProxyUser: boolean;

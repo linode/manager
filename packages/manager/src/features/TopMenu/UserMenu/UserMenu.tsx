@@ -15,8 +15,7 @@ import ChevronUp from 'src/assets/icons/chevron-up.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
-import { useAccount } from 'src/queries/account/account';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccount, useProfile } from '@linode/queries';
 import { getStorage, setStorage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 

@@ -3,7 +3,7 @@
  *
  * Usage:
  *
- * package-versions <manager-version> <api-version> <validation-version> [-f | --force]
+ * package-versions <manager-version> <api-version> <validation-version> <ui-version> <utilities-version> <queries-version> [-f | --force]
  *
  * Positional Parameters:
  * - `<manager-version>`    (Optional) Desired Cloud Manager package version.
@@ -11,6 +11,7 @@
  * - `<validation-version>` (Optional) Desired Validation package version.
  * - `<ui-version>`         (Optional) Desired UI package version.
  * - `<utilities-version>`  (Optional) Desired Utilities package version.
+ * - `<queries-version>`  (Optional) Desired Queries package version.
  *
  * Optional Flags:
  * - `-f | --force`         Forces the script to update package versions without
@@ -102,7 +103,8 @@ const [
   desiredApiVersion,
   desiredValidationVersion,
   desiredUiVersion,
-  desiredUtilitiesVersion
+  desiredUtilitiesVersion,
+  desiredQueriesVersion,
 ] = desiredVersions;
 
 // Describes packages that should be modified by this script.
@@ -112,6 +114,7 @@ const jobs = [
   { name: 'validation', path: getPackagePath('validation'), desiredVersion: desiredValidationVersion },
   { name: 'ui', path: getPackagePath('ui'), desiredVersion: desiredUiVersion },
   { name: 'utilities', path: getPackagePath('utilities'), desiredVersion: desiredUtilitiesVersion },
+  { name: 'utilities', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.

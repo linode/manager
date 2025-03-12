@@ -16,7 +16,7 @@ import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
