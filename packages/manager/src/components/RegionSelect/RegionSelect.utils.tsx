@@ -1,8 +1,7 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
-// @todo: modularization - The `getRegionCountryGroup` utility should probably go to `@linode/shared` package
-// since it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts
-// OR we can move it to `@linode/utilities` if we export GLOBAL_QUOTA_LABEL and GLOBAL_QUOTA_VALUE from utility file itself.
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
