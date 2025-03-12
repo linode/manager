@@ -1,12 +1,14 @@
-import { Autocomplete, Drawer, Typography } from '@linode/ui';
-import React from 'react';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
+import React, { useState } from 'react';
 
 import { Link } from 'src/components/Link';
+import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
+import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 import { useAccountPermissions } from 'src/queries/iam/iam';
 
-import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getAllRoles, getRoleByName } from '../../Shared/utilities';
+import { getAllRoles } from '../../Shared/utilities';
 
 import type { RolesType } from '../../Shared/utilities';
 
@@ -16,31 +18,48 @@ interface Props {
 }
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
-  const [
-    selectedOptions,
-    setSelectedOptions,
-  ] = React.useState<RolesType | null>(null);
-
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions } = useAccountPermissions();
 
   const allRoles = React.useMemo(() => {
     if (!accountPermissions) {
       return [];
     }
-
     return getAllRoles(accountPermissions);
   }, [accountPermissions]);
 
-  // Get the selected role based on the `selectedOptions`
-  const selectedRole = React.useMemo(() => {
-    if (!selectedOptions || !accountPermissions) {
-      return null;
-    }
-    return getRoleByName(accountPermissions, selectedOptions.value);
-  }, [selectedOptions, accountPermissions]);
+  const [selectedRoles, setSelectedRoles] = useState<(RolesType | null)[]>([
+    null,
+  ]);
+
+  const handleChangeRole = (index: number, value: RolesType | null) => {
+    const updatedRoles = [...selectedRoles];
+    updatedRoles[index] = value;
+    setSelectedRoles(updatedRoles);
+  };
+
+  const addRole = () => setSelectedRoles([...selectedRoles, null]);
+
+  const handleRemoveRole = (index: number) => {
+    const updatedRoles = selectedRoles.filter((_, i) => i !== index);
+    setSelectedRoles(updatedRoles);
+  };
+
+  const removeAllRoles = () => setSelectedRoles([null]);
+
+  const handleSubmit = () => {
+    // TODO - make this really do something apart from console logging - UIE-8590
+    // eslint-disable-next-line no-console
+    console.log(
+      'Selected Roles:',
+      selectedRoles.filter((role) => role)
+    );
+    handleClose();
+  };
+
+  const handleClose = () => {
+    removeAllRoles();
+    onClose();
+  };
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
@@ -57,24 +76,38 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
         <Link to=""> Learn more about roles and permissions.</Link>
       </Typography>
 
-      <Autocomplete
-        renderOption={(props, option) => (
-          <li {...props} key={option.label}>
-            {option.label}
-          </li>
-        )}
-        label="Assign New Roles"
-        loading={accountPermissionsLoading}
-        onChange={(_, value) => setSelectedOptions(value)}
-        options={allRoles}
-        placeholder="Select a Role"
-        textFieldProps={{ hideLabel: true, noMarginTop: true }}
-        value={selectedOptions}
-      />
+      {!!accountPermissions &&
+        selectedRoles.map((role, index) => (
+          <AssignSingleRole
+            index={index}
+            key={role ? role.label : `${index}`}
+            onChange={handleChangeRole}
+            onRemove={handleRemoveRole}
+            options={allRoles}
+            permissions={accountPermissions}
+            selectedOption={selectedRoles[index]}
+          />
+        ))}
 
-      {selectedRole && (
-        <AssignedPermissionsPanel key={selectedRole.name} role={selectedRole} />
+      {/* If all roles are filled, allow them to add another */}
+      {selectedRoles.every((role) => role !== null) && (
+        <StyledLinkButtonBox
+          sx={(theme) => ({ marginTop: theme.spacing(1.5) })}
+        >
+          <LinkButton onClick={addRole}>Add another role</LinkButton>
+        </StyledLinkButtonBox>
       )}
+
+      <ActionsPanel
+        primaryButtonProps={{
+          label: 'Assign',
+          onClick: handleSubmit,
+        }}
+        secondaryButtonProps={{
+          label: 'Cancel',
+          onClick: handleClose,
+        }}
+      />
     </Drawer>
   );
 };
