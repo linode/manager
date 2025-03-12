@@ -33,7 +33,7 @@ import type {
   GlobalFooterTypes as GlobalFooterTypesLight,
   GlobalHeaderTypes,
   InteractionTypes as InteractionTypesLight,
-  BreadcrumbTypes,
+  BreadcrumbTypes as BreadcrumbTypesLight,
   RadiusTypes,
   SearchTypes as SearchTypesLight,
   SideNavigationTypes as SideNavigationTypesLight,
@@ -46,6 +46,7 @@ import type {
   ActionTypes as ActionTypesDark,
   BackgroundTypes as BackgroundTypesDark,
   BorderTypes as BorderTypesDark,
+  BreadcrumbTypes as BreadcrumbTypesDark,
   CalendarTypes as CalendarTypesDark,
   ContentTypes as ContentTypesDark,
   DropdownTypes as DropdownTypesDark,
@@ -65,6 +66,7 @@ type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
 type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
 type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
 type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
+type BreadcrumbTypes = MergeTypes<BreadcrumbTypesLight, BreadcrumbTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type CalendarTypes = MergeTypes<CalendarTypesLight, CalendarTypesDark>;
