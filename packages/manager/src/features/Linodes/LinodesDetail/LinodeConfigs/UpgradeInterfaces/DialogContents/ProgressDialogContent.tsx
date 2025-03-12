@@ -18,11 +18,11 @@ export const ProgressDialogContent = (
       <Box sx={{ paddingBottom: 12, paddingTop: 12 }}>
         <LinearProgress value={state.progress} variant="determinate" />
       </Box>
-      <Stack direction="row-reverse">
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button buttonType="primary" loading onClick={() => {}}>
           Upgrade
         </Button>
-      </Stack>
+      </Box>
     </Stack>
   );
 };
