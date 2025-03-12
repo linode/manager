@@ -18,6 +18,6 @@ const cloudPulseMetricsLandingRoute = createRoute({
   )
 );
 
-export const CloudPulseMetricsRouteTree = cloudPulseMetricsRoute.addChildren([
+export const cloudPulseMetricsRouteTree = cloudPulseMetricsRoute.addChildren([
   cloudPulseMetricsLandingRoute,
 ]);

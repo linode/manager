@@ -200,12 +200,12 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
   it('should validate UI elements and alert details', () => {
     // Validate navigation links and buttons
-    cy.findByText('Alerts').should('be.visible');
+    cy.findByText('Alerts')
+      .should('be.visible')
 
     cy.findByText('Definitions')
       .should('be.visible')
       .and('have.attr', 'href', '/alerts/definitions');
-
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers

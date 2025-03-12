@@ -394,14 +394,18 @@ export const MainContent = () => {
                               <Route component={Databases} path="/databases" />
                             )}
                             <Route component={VPC} path="/vpcs" />
-                            <Route
-                              component={CloudPulseMetrics}
-                              path="/metrics"
-                            />
-                            <Route
-                              component={CloudPulseAlerts}
-                              path="/alerts"
-                            />
+                            {isACLPEnabled && (
+                              <Route
+                                component={CloudPulseMetrics}
+                                path="/metrics"
+                              />
+                            )}
+                            {isACLPEnabled && (
+                              <Route
+                                component={CloudPulseAlerts}
+                                path="/alerts"
+                              />
+                            )}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                             <Redirect from="/dashboard" to={defaultRoot} />

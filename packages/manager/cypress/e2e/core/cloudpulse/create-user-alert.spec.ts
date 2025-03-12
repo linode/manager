@@ -183,7 +183,7 @@ describe('Create Alert', () => {
       .click();
 
     // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', 'alerts/definitions/create');
+    cy.url().should('endWith', '/alerts/definitions/create');
   });
 
   it('should successfully create a new alert', () => {
@@ -404,7 +404,7 @@ describe('Create Alert', () => {
       expect(request.body.channel_ids).to.include(1);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'alerts/definitions');
+      cy.url().should('endWith', '/alerts/definitions');
       ui.toast.assertMessage('Alert successfully created');
 
       // Confirm that Alert is listed on landing page with expected configuration.

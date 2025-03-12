@@ -187,7 +187,7 @@ describe('Integration Tests for Edit Alert', () => {
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
-    cy.visitWithLogin(`alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Verify form fields
@@ -275,7 +275,7 @@ describe('Integration Tests for Edit Alert', () => {
   });
 
   it('successfully updated alert details and verified that the API request matches the expected test data.', () => {
-    cy.visitWithLogin(`alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Make changes to alert form
