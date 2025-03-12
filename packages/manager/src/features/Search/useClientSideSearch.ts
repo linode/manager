@@ -125,7 +125,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     stackscriptsLoading;
 
   const entityErrors: Record<SearchableEntityType, null | string> = {
-    bucket: bucketsError?.[0].reason ?? null,
+    bucket: bucketsError?.message ?? null,
     database: databasesError?.[0].reason ?? null,
     domain: domainsError?.[0].reason ?? null,
     firewall: firewallsError?.[0].reason ?? null,
