@@ -96,13 +96,9 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
   );
 
 /**
- * createNodeBalancer
+ * createNodeBalancerBeta
  *
- * Create a NodeBalancer within a VPC with the BETA version
- * Requires the NB-VPC feature flag to be enabled
- *
- * duplicated function of createNodeBalancer
- * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ * Add a NodeBalancer to your account using the beta API
  */
 export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
   Request<NodeBalancer>(

@@ -34,14 +34,8 @@ export const getNodeBalancerConfigNodes = (
 /**
  * getNodeBalancerConfigNodesBeta
  *
- * Returns a paginated list of nodes for the specified NodeBalancer configuration profile.
- * These are the backends that will be sent traffic for this port.
- * Requires the NB-VPC feature flag to be enabled
- *
- * Note: Returns the vpc_config_id incase of a VPC backend
- *
- * duplicated function of getNodeBalancerConfigNodes
- * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ * Returns a paginated list of nodes for the specified NodeBalancer configuration profile from the beta API.
+ * Note: Returns the vpc_config_id in case of a VPC backend
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to retrieve nodes for.
@@ -83,16 +77,12 @@ export const getNodeBalancerConfigNode = (
       )}`
     )
   );
-
 /**
  * getNodeBalancerConfigNodeBeta
  *
- * Returns details about a specific node for the given NodeBalancer configuration profile.
+ * Returns details about a specific node for the given NodeBalancer configuration profile from the beta API.
  *
- * Note: Returns the vpc_config_id incase of a VPC backend
- *
- * duplicated function of getNodeBalancerConfigNode
- * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ * Note: Returns the vpc_config_id in case of a VPC backend
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to retrieve nodes for.
@@ -153,16 +143,16 @@ export const createNodeBalancerConfigNode = (
   );
 
 /**
- * createNodeBalancerConfigNode
+ * createNodeBalancerConfigNodeBeta
  *
  * Creates a NodeBalancer Node, a backend that can accept traffic for
  * this NodeBalancer Config. Nodes are routed requests on the configured port based on their status.
- * Requires the NB-VPC feature flag to be enabled
  *
  * Note: The BETA version accepts a Node's VPC IP address and subnet-id
  *
- * duplicated function of createNodeBalancer
- * necessary to call BETA_API_ROOT in a separate function based on the feature flag
+ * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
+ * @param configId { number } The configuration profile to add a node to.
+ * @param data
  */
 export const createNodeBalancerConfigNodeBeta = (
   nodeBalancerId: number,

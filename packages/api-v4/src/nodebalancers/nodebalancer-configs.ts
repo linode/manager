@@ -76,16 +76,12 @@ export const createNodeBalancerConfig = (
   );
 
 /**
- * createNodeBalancerConfig
+ * createNodeBalancerConfigBeta
  *
  * Creates a NodeBalancer Config, which allows the NodeBalancer to accept traffic on a new port.
  * You will need to add NodeBalancer Nodes to the new Config before it can actually serve requests.
- * Requires the NB-VPC feature flag to be enabled
  *
  * Note: The BETA version accepts a Node's VPC IP address and subnet-id
- *
- * duplicated function of createNodeBalancer
- * necessary to call BETA_API_ROOT in a separate function based on the feature flag
  *
  * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
  */
