@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllFirewallsQuery,
   useFirewallSettingsQuery,
@@ -15,6 +16,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { UpdateFirewallSettingsSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -40,15 +42,7 @@ export const DefaultFirewalls = () => {
     }) ?? [];
 
   const values = {
-    default_firewall_ids: {
-      linode: firewallSettings?.default_firewall_ids.linode ?? undefined,
-      nodebalancer:
-        firewallSettings?.default_firewall_ids.nodebalancer ?? undefined,
-      public_interface:
-        firewallSettings?.default_firewall_ids.public_interface ?? undefined,
-      vpc_interface:
-        firewallSettings?.default_firewall_ids.vpc_interface ?? undefined,
-    },
+    default_firewall_ids: { ...firewallSettings?.default_firewall_ids },
   };
 
   const {
@@ -58,6 +52,8 @@ export const DefaultFirewalls = () => {
     setError,
   } = useForm<UpdateFirewallSettings>({
     defaultValues: { ...values },
+    mode: 'onBlur',
+    resolver: yupResolver(UpdateFirewallSettingsSchema),
     values,
   });
 
