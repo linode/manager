@@ -2,7 +2,6 @@ import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
@@ -12,7 +11,6 @@ import { IconButton } from '../IconButton';
 import { Typography } from '../Typography';
 
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
-import type { Theme } from '@mui/material/styles';
 
 // simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
 interface APIError {
@@ -65,7 +63,6 @@ export type DrawerProps = PropsWithNotFound | PropsWithoutNotFound;
  */
 export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
-    const { classes, cx } = useStyles();
     const {
       NotFoundComponent,
       children,
@@ -92,17 +89,40 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
 
     return (
       <_Drawer
-        classes={{
-          paper: cx(classes.common, {
-            [classes.default]: !wide,
-            [classes.wide]: wide,
-          }),
-        }}
         onClose={(_, reason) => {
           if (onClose && reason !== 'backdropClick') {
             onClose({}, 'escapeKeyDown');
           }
         }}
+        sx={(theme) => ({
+          '& .MuiDrawer-paper': {
+            padding: (theme) => theme.spacing(4),
+            [theme.breakpoints.down('sm')]: {
+              padding: theme.spacing(2),
+            },
+            ...(wide
+              ? {
+                  maxWidth: 700,
+                  width: '100%',
+                }
+              : {
+                  [theme.breakpoints.down('sm')]: {
+                    maxWidth: 445,
+                    width: '100%',
+                  },
+                  width: 480,
+                }),
+          },
+          '& .actionPanel': {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginTop: (theme) => theme.spacing(1),
+          },
+          '& .selectionCard': {
+            flexBasis: '100%',
+            maxWidth: '100%',
+          },
+        })}
         anchor="right"
         open={open}
         ref={ref}
@@ -113,19 +133,24 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         role="dialog"
       >
         <Grid
-          sx={{
+          sx={(theme) => ({
+            '&&': {
+              marginBottom: theme.spacing(2),
+            },
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             position: 'relative',
-          }}
-          className={classes.drawerHeader}
+          })}
           container
           wrap="nowrap"
         >
           <Grid>
             {isFetching ? null : (
               <Typography
-                className={classes.title}
+                sx={(theme) => ({
+                  marginRight: theme.spacing(2),
+                  wordBreak: 'break-word',
+                })}
                 data-qa-drawer-title={title}
                 data-testid="drawer-title"
                 id={titleID}
@@ -171,53 +196,3 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     );
   }
 );
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    '& :hover, & :focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.tokens.color.Neutrals.White,
-    },
-    '& > span': {
-      padding: 2,
-    },
-    minHeight: 'auto',
-    minWidth: 'auto',
-    padding: 0,
-  },
-  common: {
-    '& .actionPanel': {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: theme.spacing(),
-    },
-    '& .selectionCard': {
-      flexBasis: '100%',
-      maxWidth: '100%',
-    },
-    padding: theme.spacing(4),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(2),
-    },
-  },
-  default: {
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 445,
-      width: '100%',
-    },
-    width: 480,
-  },
-  drawerHeader: {
-    '&&': {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginRight: theme.spacing(4),
-    wordBreak: 'break-word',
-  },
-  wide: {
-    maxWidth: 700,
-    width: '100%',
-  },
-}));
