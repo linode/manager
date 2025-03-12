@@ -1,4 +1,4 @@
-## [2025-03-11] - v0.1.0
+## [2025-03-13] - v0.1.0
 
 ### Added:
 
@@ -8,7 +8,3 @@
 ### Changed:
 
 - Move @vitest/ui to monorepo root dependency ([#11755](https://github.com/linode/manager/pull/11755))
-
-### Tech Stories:
-
-- Update `@vitest/ui` from `2.1.1` to `3.0.3` ([#11749](https://github.com/linode/manager/pull/11749))
