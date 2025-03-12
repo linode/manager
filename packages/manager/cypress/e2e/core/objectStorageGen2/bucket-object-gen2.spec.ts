@@ -1,17 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import 'cypress-file-upload';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  accountFactory,
-  objectStorageBucketFactoryGen2,
-  objectStorageEndpointsFactory,
-  regionFactory,
-} from 'src/factories';
-import { chooseRegion } from 'support/util/regions';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ObjectStorageEndpoint } from '@linode/api-v4';
-import { randomItem, randomLabel } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
 import {
   mockCreateBucket,
   mockGetBucket,
@@ -23,7 +13,19 @@ import {
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { randomItem, randomLabel } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
+
+import {
+  accountFactory,
+  objectStorageBucketFactoryGen2,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
+
+import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 bucket object tests', () => {
   beforeEach(() => {

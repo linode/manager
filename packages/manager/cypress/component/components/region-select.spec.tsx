@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 import { ui } from 'support/ui';
 import { checkComponentA11y } from 'support/util/accessibility';
@@ -5,7 +6,7 @@ import { createSpy } from 'support/util/components';
 import { componentTests, visualTests } from 'support/util/components';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
+import { accountAvailabilityFactory } from 'src/factories';
 
 componentTests('RegionSelect', (mount) => {
   describe('Interactions', () => {

@@ -6,7 +6,11 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
-import { pickRandom, regions } from '@linode/utilities';
+import {
+  pickRandom,
+  regionAvailabilityFactory,
+  regions,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -89,7 +93,6 @@ import {
   proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
-  regionAvailabilityFactory,
   securityQuestionsFactory,
   serviceTypesFactory,
   stackScriptFactory,

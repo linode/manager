@@ -1,6 +1,7 @@
-// @todo: modularization - `accountAvailabilityFactory` & `regionFactory` can be imported from `@linode/utilities`
-// once `@linode/queries` PR with the Factories config is merged.
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
+import { regionFactory } from '@linode/utilities';
+
+// @todo: modularization - Move `accountAvailabilityFactory` to `@linode/utilities`'s factories
+import { accountAvailabilityFactory } from 'src/factories';
 
 import {
   getRegionOptions,

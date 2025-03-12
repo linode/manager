@@ -1,68 +1,68 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-import { pluralize } from '@linode/utilities';
+import { pluralize, regionFactory } from '@linode/utilities';
 import {
-  accountFactory,
-  dedicatedTypeFactory,
-  kubernetesClusterFactory,
-  kubernetesControlPlaneACLFactory,
-  kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
-  regionFactory,
-  nodePoolFactory,
-  kubeLinodeFactory,
-  lkeHighAvailabilityTypeFactory,
-} from 'src/factories';
-import {
-  mockCreateCluster,
-  mockGetCluster,
-  mockCreateClusterError,
-  mockGetControlPlaneACL,
-  mockGetClusterPools,
-  mockGetDashboardUrl,
-  mockGetApiEndpoints,
-  mockGetClusters,
-  mockGetLKEClusterTypes,
-  mockGetTieredKubernetesVersions,
-  mockGetKubernetesVersions,
-} from 'support/intercepts/lke';
-import { mockGetAccountBeta } from 'support/intercepts/betas';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockGetRegions,
-  mockGetRegionAvailability,
-} from 'support/intercepts/regions';
-import { getRegionById } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { randomLabel, randomNumber, randomItem } from 'support/util/random';
-import {
-  dcPricingLkeCheckoutSummaryPlaceholder,
-  dcPricingLkeHAPlaceholder,
-  dcPricingLkeClusterPlans,
-  dcPricingMockLinodeTypes,
-  dcPricingPlanPlaceholder,
   dcPricingDocsLabel,
   dcPricingDocsUrl,
+  dcPricingLkeCheckoutSummaryPlaceholder,
+  dcPricingLkeClusterPlans,
+  dcPricingLkeHAPlaceholder,
+  dcPricingMockLinodeTypes,
+  dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
-import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { chooseRegion } from 'support/util/regions';
-import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kubeUtils';
-import {
-  CLUSTER_TIER_DOCS_LINK,
-  CLUSTER_VERSIONS_DOCS_LINK,
-} from 'src/features/Kubernetes/constants';
-import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
-
-import type { ExtendedType } from 'src/utilities/extendType';
-import type { LkePlanDescription } from 'support/api/lke';
-import { PriceType } from '@linode/api-v4/lib/types';
 import {
   latestEnterpriseTierKubernetesVersion,
   latestKubernetesVersion,
 } from 'support/constants/lke';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetAccountBeta } from 'support/intercepts/betas';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockCreateCluster,
+  mockCreateClusterError,
+  mockGetApiEndpoints,
+  mockGetCluster,
+  mockGetClusterPools,
+  mockGetClusters,
+  mockGetControlPlaneACL,
+  mockGetDashboardUrl,
+  mockGetKubernetesVersions,
+  mockGetLKEClusterTypes,
+  mockGetTieredKubernetesVersions,
+} from 'support/intercepts/lke';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { randomItem, randomLabel, randomNumber } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
+
 import { lkeEnterpriseTypeFactory } from 'src/factories';
+import {
+  accountFactory,
+  dedicatedTypeFactory,
+  kubeLinodeFactory,
+  kubernetesClusterFactory,
+  kubernetesControlPlaneACLFactory,
+  kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
+  lkeHighAvailabilityTypeFactory,
+  nodePoolFactory,
+} from 'src/factories';
+import {
+  CLUSTER_TIER_DOCS_LINK,
+  CLUSTER_VERSIONS_DOCS_LINK,
+} from 'src/features/Kubernetes/constants';
+import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kubeUtils';
+import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
+
+import type { PriceType } from '@linode/api-v4/lib/types';
+import type { ExtendedType } from 'src/utilities/extendType';
+import type { LkePlanDescription } from 'support/api/lke';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;

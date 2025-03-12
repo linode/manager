@@ -1,17 +1,19 @@
-import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
+import { regionFactory } from '@linode/utilities';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
   randomLabel,
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockCreateLinode } from 'support/intercepts/linodes';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { chooseRegion } from 'support/util/regions';
+
+import { VLANFactory, linodeFactory } from 'src/factories';
 
 describe('Create Linode with VLANs', () => {
   beforeEach(() => {

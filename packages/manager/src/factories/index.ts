@@ -39,7 +39,6 @@ export * from './placementGroups';
 export * from './preferences';
 export * from './profile';
 export * from './promotionalOffer';
-export * from './regions';
 export * from './stackscripts';
 export * from './statusPage';
 export * from './subnets';

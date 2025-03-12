@@ -1,42 +1,43 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockCreateLinode,
+  mockGetLinodeDetails,
+} from 'support/intercepts/linodes';
+import {
+  mockCreatePlacementGroup,
+  mockGetPlacementGroups,
+} from 'support/intercepts/placement-groups';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui/';
+import { linodeCreatePage } from 'support/ui/pages';
+import { randomNumber, randomString } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
+
 import {
   accountFactory,
   linodeFactory,
   placementGroupFactory,
 } from 'src/factories';
-import { regionFactory } from 'src/factories';
-import { ui } from 'support/ui/';
-import {
-  mockCreateLinode,
-  mockGetLinodeDetails,
-} from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
-import {
-  mockCreatePlacementGroup,
-  mockGetPlacementGroups,
-} from 'support/intercepts/placement-groups';
-import { randomNumber, randomString } from 'support/util/random';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
-import { linodeCreatePage } from 'support/ui/pages';
-import { extendRegion } from 'support/util/regions';
 
 const mockAccount = accountFactory.build();
 
 const mockNewarkRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes', 'Placement Group'],
+    country: 'us',
     id: 'us-east',
     label: 'Newark, NJ',
-    country: 'us',
   })
 );
 
 const mockDallasRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes'],
+    country: 'us',
     id: 'us-central',
     label: 'Dallas, TX',
-    country: 'us',
   })
 );
 
@@ -109,11 +110,11 @@ describe('Linode create flow with Placement Group', () => {
       .click();
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: 'pg-1-us-east',
-      region: mockRegions[0].id,
-      placement_group_type: 'anti_affinity:local',
-      placement_group_policy: 'strict',
       is_compliant: true,
+      label: 'pg-1-us-east',
+      placement_group_policy: 'strict',
+      placement_group_type: 'anti_affinity:local',
+      region: mockRegions[0].id,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
@@ -173,10 +174,10 @@ describe('Linode create flow with Placement Group', () => {
     const linodeLabel = 'linode-with-placement-group';
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
-      region: mockRegions[0].id,
       placement_group: {
         id: mockPlacementGroup.id,
       },
+      region: mockRegions[0].id,
     });
 
     // Confirm the Placement group assignment is accounted for in the summary.
@@ -212,21 +213,21 @@ describe('Linode create flow with Placement Group', () => {
    */
   it('can assign existing Placement Group during Linode Create flow', () => {
     const mockPlacementGroup = placementGroupFactory.build({
-      label: 'pg-1-us-east',
-      region: mockRegions[0].id,
-      placement_group_type: 'anti_affinity:local',
-      placement_group_policy: 'strict',
       is_compliant: true,
+      label: 'pg-1-us-east',
+      placement_group_policy: 'strict',
+      placement_group_type: 'anti_affinity:local',
+      region: mockRegions[0].id,
     });
 
     const linodeLabel = 'linode-with-placement-group';
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
       label: linodeLabel,
-      region: mockRegions[0].id,
       placement_group: {
         id: mockPlacementGroup.id,
       },
+      region: mockRegions[0].id,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');

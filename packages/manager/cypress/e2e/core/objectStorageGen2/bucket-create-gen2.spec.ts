@@ -1,26 +1,28 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetObjectStorageEndpoints,
-  mockGetBuckets,
-  mockDeleteBucket,
   mockCreateBucket,
-  mockGetBucketAccess,
   mockCreateBucketError,
+  mockDeleteBucket,
+  mockGetBucketAccess,
+  mockGetBuckets,
+  mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
-  regionFactory,
 } from 'src/factories';
 import { profileFactory } from 'src/factories/profile';
-import { chooseRegion } from 'support/util/regions';
+
 import type { ACLType, ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
@@ -176,9 +178,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E0',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E0',
       s3_endpoint: undefined,
     });
 
@@ -293,9 +295,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E1',
       cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -317,9 +319,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E1',
       s3_endpoint: 'us-sea-1.linodeobjects.com',
     });
 
@@ -419,9 +421,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E2',
       cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -443,9 +445,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E2',
       s3_endpoint: undefined,
     });
 
@@ -543,9 +545,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E3',
       cors_enabled: false,
+      endpoint_type: 'E3',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -567,9 +569,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E3',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E3',
       s3_endpoint: undefined,
     });
 

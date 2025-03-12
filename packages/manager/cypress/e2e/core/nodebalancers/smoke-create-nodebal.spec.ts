@@ -1,15 +1,14 @@
+import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
-import { createTestLinode } from 'support/util/linodes';
-
-import { randomLabel } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 import type { NodeBalancer } from '@linode/api-v4';
 
@@ -17,14 +16,12 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-import {
-  linodeFactory,
-  nodeBalancerFactory,
-  regionFactory,
-} from 'src/factories';
+import { regionFactory } from '@linode/utilities';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+
+import { linodeFactory, nodeBalancerFactory } from 'src/factories';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,
@@ -91,16 +88,16 @@ describe('create NodeBalancer', () => {
   it('creates a NodeBalancer in a region with base pricing', () => {
     const region = chooseRegion();
     const linodePayload = {
-      region: region.id,
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
+      region: region.id,
     };
 
     cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
+        ipv4: linode.ipv4[1],
         label: randomLabel(),
         region: region.id,
-        ipv4: linode.ipv4[1],
       });
       // catch request
       interceptCreateNodeBalancer().as('createNodeBalancer');
@@ -174,15 +171,15 @@ describe('create NodeBalancer', () => {
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     const initialRegion = getRegionById('us-west');
     const linodePayload = {
-      region: initialRegion.id,
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
+      region: initialRegion.id,
     };
     cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
       const nodeBal = nodeBalancerFactory.build({
+        ipv4: linode.ipv4[1],
         label: randomLabel(),
         region: initialRegion.id,
-        ipv4: linode.ipv4[1],
       });
 
       // catch request

@@ -1,6 +1,6 @@
+import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { regionFactory } from 'src/factories/regions';
 import { formatPlanTypes } from 'src/utilities/planNotices';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

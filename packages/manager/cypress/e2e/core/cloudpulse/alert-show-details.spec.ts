@@ -4,7 +4,7 @@
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
-import { capitalize } from '@linode/utilities';
+import { capitalize, regionFactory } from '@linode/utilities';
 import {
   aggregationTypeMap,
   dimensionOperatorTypeMap,
@@ -28,7 +28,6 @@ import {
   alertRulesFactory,
   databaseFactory,
   notificationChannelFactory,
-  regionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -133,9 +132,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
-    cy.visitWithLogin(
-      `/alerts/definitions/detail/${service_type}/${id}`
-    );
+    cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
     cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
 
     // Validating contents of Overview Section

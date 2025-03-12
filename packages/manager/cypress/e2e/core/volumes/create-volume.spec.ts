@@ -1,38 +1,41 @@
-import type { Linode, Region } from '@linode/api-v4';
-import { createTestLinode } from 'support/util/linodes';
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from 'src/factories/linodes';
+import { regionFactory } from '@linode/utilities';
 import {
   accountUserFactory,
   grantsFactory,
   profileFactory,
 } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
+import { entityTag } from 'support/constants/cypress';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { mockGetUser } from 'support/intercepts/account';
-import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptCreateVolume,
   mockGetVolume,
   mockGetVolumes,
 } from 'support/intercepts/volumes';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetRegions } from 'support/intercepts/regions';
+
+import { accountFactory, volumeFactory } from 'src/factories';
 import {
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
-import { entityTag } from 'support/constants/cypress';
+  createLinodeRequestFactory,
+  linodeFactory,
+} from 'src/factories/linodes';
+
+import type { Linode, Region } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.

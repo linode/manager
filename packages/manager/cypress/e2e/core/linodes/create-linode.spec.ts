@@ -2,54 +2,56 @@
  * @file Linode Create end-to-end tests.
  */
 
-import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
-import { randomLabel, randomString, randomNumber } from 'support/util/random';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import { cleanUp } from 'support/util/cleanup';
-import { linodeCreatePage } from 'support/ui/pages';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+  regionFactory,
+} from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetUser } from 'support/intercepts/account';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateLinode,
-  mockCreateLinodeError,
   mockCreateLinode,
+  mockCreateLinodeError,
   mockGetLinodeDisks,
   mockGetLinodeType,
   mockGetLinodeTypes,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import { Region, VLAN, Config, Disk } from '@linode/api-v4';
-import { getRegionById } from 'support/util/regions';
-import {
-  accountFactory,
-  accountUserFactory,
-  profileFactory,
-  grantsFactory,
-  linodeFactory,
-  linodeConfigFactory,
-  linodeTypeFactory,
-  VLANFactory,
-  vpcFactory,
-  subnetFactory,
-  regionFactory,
-} from 'src/factories';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
-import {
-  linodeConfigInterfaceFactory,
-  linodeConfigInterfaceFactoryWithVPC,
-} from '@linode/utilities';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { mockGetUser } from 'support/intercepts/account';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
+import { cleanUp } from 'support/util/cleanup';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { getRegionById } from 'support/util/regions';
+
+import {
+  VLANFactory,
+  accountFactory,
+  accountUserFactory,
+  grantsFactory,
+  linodeConfigFactory,
+  linodeFactory,
+  linodeTypeFactory,
+  profileFactory,
+  subnetFactory,
+  vpcFactory,
+} from 'src/factories';
+
+import type { Config, Disk, Region, VLAN } from '@linode/api-v4';
 
 let username: string;
 
@@ -73,24 +75,24 @@ describe('Create Linode', () => {
     describe('By plan type', () => {
       [
         {
-          planType: 'Shared CPU',
-          planLabel: 'Nanode 1 GB',
           planId: 'g6-nanode-1',
+          planLabel: 'Nanode 1 GB',
+          planType: 'Shared CPU',
         },
         {
-          planType: 'Dedicated CPU',
-          planLabel: 'Dedicated 4 GB',
           planId: 'g6-dedicated-2',
+          planLabel: 'Dedicated 4 GB',
+          planType: 'Dedicated CPU',
         },
         {
-          planType: 'High Memory',
-          planLabel: 'Linode 24 GB',
           planId: 'g7-highmem-1',
+          planLabel: 'Linode 24 GB',
+          planType: 'High Memory',
         },
         {
-          planType: 'Premium CPU',
-          planLabel: 'Premium 4 GB',
           planId: 'g7-premium-2',
+          planLabel: 'Premium 4 GB',
+          planType: 'Premium CPU',
         },
         // TODO Include GPU plan types.
         // TODO Include Accelerated plan types (when they're no longer as restricted)
@@ -197,9 +199,9 @@ describe('Create Linode', () => {
     });
     const mockAcceleratedType = [
       linodeTypeFactory.build({
+        class: 'accelerated',
         id: 'accelerated-1',
         label: 'accelerated-1',
-        class: 'accelerated',
       }),
     ];
     const mockRegions = [
@@ -308,9 +310,9 @@ describe('Create Linode', () => {
       subnets: [mockSubnet],
     });
     const mockVPCRegion = regionFactory.build({
+      capabilities: ['Linodes', 'VPCs', 'Vlans'],
       id: region.id,
       label: region.label,
-      capabilities: ['Linodes', 'VPCs', 'Vlans'],
     });
     const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
@@ -318,9 +320,9 @@ describe('Create Linode', () => {
     });
     const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
     const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
-      purpose: 'vpc',
       active: true,
+      purpose: 'vpc',
+      vpc_id: mockVPC.id,
     });
     const mockConfig: Config = linodeConfigFactory.build({
       id: randomNumber(),
@@ -333,22 +335,22 @@ describe('Create Linode', () => {
     });
     const mockDisks: Disk[] = [
       {
-        id: 44311273,
-        status: 'ready',
-        label: diskLabel,
         created: '2020-08-21T17:26:14',
-        updated: '2020-08-21T17:26:30',
         filesystem: 'ext4',
+        id: 44311273,
+        label: diskLabel,
         size: 81408,
+        status: 'ready',
+        updated: '2020-08-21T17:26:30',
       },
       {
-        id: 44311274,
-        status: 'ready',
-        label: '512 MB Swap Image',
         created: '2020-08-21T17:26:14',
-        updated: '2020-08-21T17:26:31',
         filesystem: 'swap',
+        id: 44311274,
+        label: '512 MB Swap Image',
         size: 512,
+        status: 'ready',
+        updated: '2020-08-21T17:26:31',
       },
     ];
 
@@ -537,14 +539,14 @@ describe('Create Linode', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({
