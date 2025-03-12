@@ -1,3 +1,4 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
@@ -7,14 +8,13 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
-import type { CreateVPCPayload } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4';
+import type { CreateVPCPayload } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 

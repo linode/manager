@@ -1,4 +1,5 @@
 import { quotaTypes } from '@linode/api-v4';
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { QuotasTable } from './QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';

@@ -1,3 +1,7 @@
+import {
+  useAllAccountAvailabilitiesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -6,9 +10,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 
 import { ImageRegionRow } from './ImageRegionRow';
 

@@ -1,4 +1,7 @@
-import { useRegionsQuery } from '@linode/queries';
+import {
+  useAllAccountAvailabilitiesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -37,7 +40,6 @@ import {
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 export const Region = React.memo(() => {
   const {

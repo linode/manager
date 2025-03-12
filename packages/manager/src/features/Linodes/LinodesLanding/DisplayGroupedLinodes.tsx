@@ -1,5 +1,6 @@
-import { IconButton } from '@linode/ui';
+import { useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
+import { IconButton } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -18,7 +19,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   StyledControlHeader,

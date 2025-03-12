@@ -1,9 +1,9 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 
 import type { Region } from '@linode/api-v4/lib/regions';

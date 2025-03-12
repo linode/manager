@@ -1,9 +1,9 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { sortByString } from 'src/utilities/sort-by';
 
 import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';

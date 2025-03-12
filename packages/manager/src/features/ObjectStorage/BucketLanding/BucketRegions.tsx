@@ -1,9 +1,9 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import { useIsObjectStorageGen2Enabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { WHITELISTED_REGIONS } from '../utilities';

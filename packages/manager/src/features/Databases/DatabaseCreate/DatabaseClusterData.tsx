@@ -1,3 +1,4 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Divider, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
@@ -11,7 +12,6 @@ import {
 import { DatabaseEngineSelect } from 'src/features/Databases/DatabaseCreate/DatabaseEngineSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import type {
   ClusterSize,

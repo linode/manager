@@ -1,3 +1,7 @@
+import {
+  useAllAccountAvailabilitiesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -7,7 +11,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
@@ -28,7 +31,6 @@ import { MigrationPricing } from './MigrationPricing';
 
 import type { MigrationPricingProps } from './MigrationPricing';
 import type { Linode, PlacementGroup, PriceObject } from '@linode/api-v4';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 interface Props {
   backupEnabled: Linode['backups']['enabled'];

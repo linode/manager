@@ -1,8 +1,8 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 
 import type { Region } from '@linode/api-v4';
 
