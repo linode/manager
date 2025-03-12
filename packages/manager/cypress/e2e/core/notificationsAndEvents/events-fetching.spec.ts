@@ -2,11 +2,13 @@
  * @file Integration tests for Cloud Manager's events fetching and polling behavior.
  */
 
-import { mockGetEvents, mockGetEventsPolling } from 'support/intercepts/events';
 import { DateTime } from 'luxon';
-import { eventFactory } from 'src/factories';
-import { randomNumber } from 'support/util/random';
+import { mockGetEvents, mockGetEventsPolling } from 'support/intercepts/events';
 import { mockGetVolumes } from 'support/intercepts/volumes';
+import { randomNumber } from 'support/util/random';
+
+import { eventFactory } from 'src/factories';
+
 import type { Interception } from 'support/cypress-exports';
 
 describe('Event fetching and polling', () => {
@@ -52,15 +54,15 @@ describe('Event fetching and polling', () => {
    */
   it('Polls events endpoint after initial fetch', () => {
     const mockEvent = eventFactory.build({
-      id: randomNumber(10000, 99999),
       created: DateTime.now()
         .minus({ minutes: 5 })
         .toUTC()
         .startOf('second') // Helps with matching the timestamp at the start of the second
         .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
-      rate: null,
+      id: randomNumber(10000, 99999),
       percent_complete: null,
+      rate: null,
     });
 
     mockGetEvents([mockEvent]).as('getEvents');
@@ -109,13 +111,13 @@ describe('Event fetching and polling', () => {
       .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     const mockEvent = eventFactory.build({
-      id: randomNumber(10000, 99999),
       created: DateTime.now()
         .minus({ minutes: 5 })
         .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
-      rate: null,
+      id: randomNumber(10000, 99999),
       percent_complete: null,
+      rate: null,
     });
 
     mockGetEvents([mockEvent]).as('getEventsInitialFetches');
@@ -164,22 +166,22 @@ describe('Event fetching and polling', () => {
       .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     const mockEventBasic = eventFactory.build({
-      id: randomNumber(10000, 99999),
       created: DateTime.now()
         .minus({ minutes: 5 })
         .startOf('second') // Helps with matching the timestamp at the start of the second
         .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
-      rate: null,
+      id: randomNumber(10000, 99999),
       percent_complete: null,
+      rate: null,
     });
 
     const mockEventInProgress = eventFactory.build({
-      id: randomNumber(10000, 99999),
       created: DateTime.now().minus({ minutes: 6 }).toISO(),
       duration: 0,
-      rate: null,
+      id: randomNumber(10000, 99999),
       percent_complete: 50,
+      rate: null,
     });
 
     const mockEvents = [mockEventBasic, mockEventInProgress];

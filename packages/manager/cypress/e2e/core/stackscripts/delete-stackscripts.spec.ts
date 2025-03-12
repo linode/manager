@@ -1,11 +1,12 @@
 import { authenticate } from 'support/api/authentication';
-import { stackScriptFactory } from 'src/factories';
 import {
   mockDeleteStackScript,
   mockGetStackScripts,
   mockGetStackScript,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+
+import { stackScriptFactory } from 'src/factories';
 
 authenticate();
 describe('Delete stackscripts', () => {
