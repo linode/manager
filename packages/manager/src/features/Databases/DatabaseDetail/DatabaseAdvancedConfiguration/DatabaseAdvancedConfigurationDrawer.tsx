@@ -1,13 +1,13 @@
-import { Button, ActionsPanel, Divider, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Button, Divider, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import {
-  useDatabaseAdvancedConfigurationQuery,
+  useDatabaseEngineConfig,
   useDatabaseMutation,
 } from 'src/queries/databases/databases';
 
@@ -44,26 +44,19 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
-  const { data: allConfigs } = useDatabaseAdvancedConfigurationQuery(
-    engine,
-    true
-  );
+  const { data: databaseConfig } = useDatabaseEngineConfig(engine, true);
 
   const existingConfigsArray = convertExistingConfigsToArray(
     enginConfigurationOptions,
-    allConfigs
+    databaseConfig
   );
 
   const hasRestartCluster = existingConfigsArray.find(
     (item) => item.restart_cluster
   );
 
-  const initialValues = useMemo(
-    () =>
-      Object.fromEntries(
-        existingConfigsArray.map((opt) => [opt.label, opt.value ?? ''])
-      ),
-    [existingConfigsArray]
+  const initialValues = Object.fromEntries(
+    existingConfigsArray.map((opt) => [opt.label, opt.value ?? ''])
   );
 
   const {
@@ -76,10 +69,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   });
 
   useEffect(() => {
-    if (allConfigs) {
+    if (databaseConfig) {
       reset(initialValues);
     }
-  }, [allConfigs]);
+  }, [databaseConfig]);
 
   const onSubmit = async (formData: ConfigCategoryValues) => {
     if (!dirtyFields) {

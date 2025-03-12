@@ -53,10 +53,10 @@ export interface DatabaseBackup {
 export interface ConfigurationItem {
   description?: string;
   example?: string | number | boolean;
-  minimum?: number;
-  maximum?: number;
-  maxLength?: number;
-  minLength?: number;
+  minimum?: number; // min value for the number input
+  maximum?: number; // max value for the number input
+  maxLength?: number; // max length for the text input
+  minLength?: number; // min length for the text input
   pattern?: string;
   type?: string | number | boolean | [string, null] | string[];
   enum?: string[];

@@ -250,7 +250,7 @@ export const useDatabaseTypesQuery = (
     enabled,
   });
 
-export const useDatabaseAdvancedConfigurationQuery = (
+export const useDatabaseEngineConfig = (
   engine: Engine,
   enabled: boolean = true
 ) =>
