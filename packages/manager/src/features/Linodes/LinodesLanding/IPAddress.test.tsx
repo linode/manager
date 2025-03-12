@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { IPAddress, sortIPAddress } from './IPAddress';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const publicIP = '8.8.8.8';
 const publicIP2 = '45.45.45.45';
@@ -109,8 +109,8 @@ describe('IPAddress masked', () => {
     usePreferences: vi.fn().mockReturnValue({}),
   }));
 
-  vi.mock('src/queries/profile/preferences', async () => {
-    const actual = await vi.importActual('src/queries/profile/preferences');
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
     return {
       ...actual,
       usePreferences: queryMocks.usePreferences,

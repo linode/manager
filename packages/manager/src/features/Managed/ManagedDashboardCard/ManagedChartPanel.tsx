@@ -9,7 +9,7 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 

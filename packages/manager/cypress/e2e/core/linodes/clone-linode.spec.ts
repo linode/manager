@@ -1,47 +1,48 @@
+import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import {
+  VLANFactory,
   createLinodeRequestFactory,
   linodeConfigFactory,
-  LinodeConfigInterfaceFactory,
   linodeFactory,
-  VLANFactory,
   volumeFactory,
 } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
 import {
-  interceptCloneLinode,
-  mockGetLinodeDetails,
-  mockGetLinodes,
-  mockGetLinodeType,
-  mockGetLinodeTypes,
-  mockCreateLinode,
-  mockCloneLinode,
-  mockGetLinodeVolumes,
-} from 'support/intercepts/linodes';
-import { linodeCreatePage } from 'support/ui/pages';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { ui } from 'support/ui';
-import {
-  dcPricingMockLinodeTypes,
-  dcPricingRegionDifferenceNotice,
   dcPricingDocsLabel,
   dcPricingDocsUrl,
+  dcPricingMockLinodeTypes,
+  dcPricingRegionDifferenceNotice,
 } from 'support/constants/dc-specific-pricing';
-import { chooseRegion, getRegionById } from 'support/util/regions';
-import {
-  randomLabel,
-  randomNumber,
-  randomString,
-  randomIp,
-} from 'support/util/random';
-import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
 import {
   LINODE_CLONE_TIMEOUT,
   LINODE_CREATE_TIMEOUT,
 } from 'support/constants/linodes';
-import type { Linode } from '@linode/api-v4';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  interceptCloneLinode,
+  mockCloneLinode,
+  mockCreateLinode,
+  mockGetLinodeDetails,
+  mockGetLinodeType,
+  mockGetLinodeTypes,
+  mockGetLinodeVolumes,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import { mockGetVLANs } from 'support/intercepts/vlans';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import {
+  randomIp,
+  randomLabel,
+  randomNumber,
+  randomString,
+} from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 /**
  * Returns the Cloud Manager URL to clone a given Linode.
@@ -75,9 +76,9 @@ describe('clone linode', () => {
     cy.tag('method:e2e', 'purpose:dcTesting');
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
     const linodePayload = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: linodeRegion.id,
-      booted: false,
       type: 'g6-nanode-1',
     });
 
@@ -156,7 +157,7 @@ describe('clone linode', () => {
       type: null,
     });
     const mockVolume = volumeFactory.build();
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
@@ -168,17 +169,17 @@ describe('clone linode', () => {
       ],
     });
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     const linodeNullTypePayload = createLinodeRequestFactory.build({
+      booted: false,
       label: mockLinode.label,
       region: mockLinodeRegion.id,
-      booted: false,
     });
     const newLinodeLabel = `${linodeNullTypePayload.label}-clone`;
     const clonedLinode = {

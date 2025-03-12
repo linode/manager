@@ -1,4 +1,15 @@
 import {
+  useAllLinodeDisksQuery,
+  useAllLinodeKernelsQuery,
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+  useLinodeQuery,
+  useRegionsQuery,
+  vlanQueries,
+  vpcQueries,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Autocomplete,
   Box,
   Button,
@@ -24,7 +35,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -34,19 +44,7 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import {
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-} from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useAllLinodeKernelsQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { vlanQueries } from 'src/queries/vlans';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {

@@ -4,6 +4,7 @@ import { accountMaintenanceFactory, linodeFactory } from 'src/factories';
 
 import {
   addMaintenanceToLinodes,
+  useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
 } from './linodes';
 import { wrapWithTheme } from './testHelpers';
@@ -40,5 +41,27 @@ describe('useIsLinodeInterfacesEnabled', () => {
     });
 
     expect(result.current?.isLinodeInterfacesEnabled).toBe(false);
+  });
+});
+
+describe('useIsLinodeCloneFirewallEnabled', () => {
+  it('returns isLinodeCloneFirewallEnabled: true if the feature is enabled', () => {
+    const options = { flags: { linodeCloneFirewall: true } };
+
+    const { result } = renderHook(() => useIsLinodeCloneFirewallEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isLinodeCloneFirewallEnabled).toBe(true);
+  });
+
+  it('returns isLinodeCloneFirewallEnabled: false if the feature is NOT enabled', () => {
+    const options = { flags: { linodeCloneFirewall: false } };
+
+    const { result } = renderHook(() => useIsLinodeCloneFirewallEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isLinodeCloneFirewallEnabled).toBe(false);
   });
 });

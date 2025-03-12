@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
 
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
-import type { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import type { useAllLinodesQuery } from '@linode/queries';
 
 const props: CloudPulseTagsSelectProps = {
   disabled: false,
@@ -22,8 +22,8 @@ const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,

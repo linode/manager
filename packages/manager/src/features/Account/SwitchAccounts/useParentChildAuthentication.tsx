@@ -2,14 +2,14 @@ import {
   deletePersonalAccessToken,
   getPersonalAccessTokens,
 } from '@linode/api-v4';
+import { useCreateChildAccountPersonalAccessTokenMutation } from '@linode/queries';
 import { useCallback } from 'react';
 
-import { getPersonalAccessTokenForRevocation } from 'src/features/Account/SwitchAccounts/utils';
 import {
+  getPersonalAccessTokenForRevocation,
   isParentTokenValid,
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
-import { useCreateChildAccountPersonalAccessTokenMutation } from 'src/queries/account/account';
 import { getAuthToken } from 'src/utilities/authentication';
 import { getStorage } from 'src/utilities/storage';
 

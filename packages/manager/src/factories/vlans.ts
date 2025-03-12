@@ -1,5 +1,5 @@
 import { VLAN } from '@linode/api-v4/lib/vlans/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 export const VLANFactory = Factory.Sync.makeFactory<VLAN>({
   cidr_block: '10.0.0.0/24',

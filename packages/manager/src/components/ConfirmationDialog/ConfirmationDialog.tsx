@@ -29,12 +29,7 @@ export const ConfirmationDialog = React.forwardRef<
   return (
     <Dialog {...dialogProps} PaperProps={{ role: undefined }} ref={ref}>
       <StyledDialogContentSection>{children}</StyledDialogContentSection>
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        spacing={2}
-        sx={{ mt: 2 }}
-      >
+      <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
           : actions}

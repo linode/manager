@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { ActionsPanel, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
@@ -12,8 +11,9 @@ import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-} from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';

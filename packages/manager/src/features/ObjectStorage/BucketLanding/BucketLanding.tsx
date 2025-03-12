@@ -14,8 +14,7 @@ import {
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { isBucketError } from 'src/queries/object-storage/requests';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useProfile, useRegionsQuery } from '@linode/queries';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,

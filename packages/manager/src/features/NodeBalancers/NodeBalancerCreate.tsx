@@ -1,5 +1,14 @@
 import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+  useNodeBalancerTypesQuery,
+  useNodebalancerCreateMutation,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   Accordion,
+  ActionsPanel,
   Box,
   Button,
   Notice,
@@ -15,7 +24,6 @@ import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -30,27 +38,19 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import {
-  useNodeBalancerTypesQuery,
-  useNodebalancerCreateMutation,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  PRICE_ERROR_TOOLTIP_TEXT,
+} from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';

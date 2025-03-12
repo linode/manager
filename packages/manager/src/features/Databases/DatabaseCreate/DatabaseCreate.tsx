@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import {
   BetaChip,
   CircleProgress,
@@ -37,7 +38,6 @@ import {
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';

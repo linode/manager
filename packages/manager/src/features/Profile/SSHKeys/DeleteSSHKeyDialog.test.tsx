@@ -5,7 +5,7 @@ import * as React from 'react';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import DeleteSSHKeyDialog from './DeleteSSHKeyDialog';
+import { DeleteSSHKeyDialog } from './DeleteSSHKeyDialog';
 
 const props = {
   id: 0,

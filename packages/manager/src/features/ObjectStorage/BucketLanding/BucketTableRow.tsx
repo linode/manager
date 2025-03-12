@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';

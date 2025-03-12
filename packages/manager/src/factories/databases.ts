@@ -1,6 +1,5 @@
 import { pickRandom, randomDate } from '@linode/utilities';
-
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
   ClusterSize,
@@ -13,7 +12,7 @@ import type {
   Engine,
   MySQLReplicationType,
   PostgresReplicationType,
-} from '@linode/api-v4/lib/databases/types';
+} from '@linode/api-v4';
 
 export const possibleStatuses: DatabaseStatus[] = [
   'active',

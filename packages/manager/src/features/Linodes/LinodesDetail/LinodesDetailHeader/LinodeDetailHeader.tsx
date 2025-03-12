@@ -9,10 +9,7 @@ import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,

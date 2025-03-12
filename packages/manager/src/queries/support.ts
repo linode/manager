@@ -1,14 +1,10 @@
 import {
-  ReplyRequest,
-  SupportReply,
-  SupportTicket,
   closeSupportTicket,
   createReply,
+  createSupportTicket,
   getTicket,
   getTicketReplies,
   getTickets,
-  createSupportTicket,
-  TicketRequest,
 } from '@linode/api-v4/lib/support';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -19,14 +15,19 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-
+import type {
+  ReplyRequest,
+  SupportReply,
+  SupportTicket,
+  TicketRequest,
+} from '@linode/api-v4/lib/support';
 import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
+import type { EventHandlerData } from '@linode/queries';
 
 const supportQueries = createQueryKeys('support', {
   ticket: (id: number) => ({
@@ -73,13 +74,13 @@ export const useCreateSupportTicketMutation = () => {
 export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
   useInfiniteQuery<ResourcePage<SupportReply>, APIError[]>({
     ...supportQueries.ticket(id)._ctx.replies,
-    initialPageParam: 1,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const useSupportTicketReplyMutation = () => {

@@ -1,14 +1,9 @@
-import { Dialog, Stack, Typography } from '@linode/ui';
-import React from 'react';
-import { useState } from 'react';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { ActionsPanel, Dialog, Stack, Typography } from '@linode/ui';
+import React, { useState } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { ColorPicker } from 'src/components/ColorPicker/ColorPicker';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
 
 export interface AvatarColorPickerDialogProps {
   handleClose: () => void;

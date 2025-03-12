@@ -31,8 +31,6 @@ import {
   linodeFactory,
   linodeConfigFactory,
   VLANFactory,
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
   subnetFactory,
 } from '@src/factories';
 import { randomNumber, randomLabel, randomIp } from 'support/util/random';
@@ -53,6 +51,10 @@ import type {
   Region,
   Kernel,
 } from '@linode/api-v4';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 
 /**
  * Returns a Promise that resolves to a new test Linode and its first config object.
@@ -468,12 +470,12 @@ describe('Linode Config management', () => {
       label: randomLabel(),
       kernel: mockKernel.id,
       interfaces: [
-        LinodeConfigInterfaceFactory.build({
+        linodeConfigInterfaceFactory.build({
           ipam_address: null,
           purpose: 'public',
           label: null,
         }),
-        LinodeConfigInterfaceFactory.build({
+        linodeConfigInterfaceFactory.build({
           label: randomLabel(),
           purpose: 'vlan',
         }),
@@ -498,7 +500,7 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          LinodeConfigInterfaceFactoryWithVPC.build({
+          linodeConfigInterfaceFactoryWithVPC.build({
             vpc_id: mockVPC.id,
             active: false,
             label: null,
@@ -611,7 +613,7 @@ describe('Linode Config management', () => {
         ...mockConfig,
         interfaces: [
           ...mockConfigInterfaces,
-          LinodeConfigInterfaceFactoryWithVPC.build({
+          linodeConfigInterfaceFactoryWithVPC.build({
             label: undefined,
             vpc_id: mockVPC.id,
             active: false,
@@ -712,12 +714,12 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          LinodeConfigInterfaceFactory.build({
+          linodeConfigInterfaceFactory.build({
             ipam_address: null,
             purpose: 'public',
             label: null,
           }),
-          LinodeConfigInterfaceFactoryWithVPC.build({
+          linodeConfigInterfaceFactoryWithVPC.build({
             vpc_id: mockVPC.id,
             active: false,
             label: null,

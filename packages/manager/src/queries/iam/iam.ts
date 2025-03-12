@@ -1,8 +1,6 @@
+import { queryPresets, useProfile } from '@linode/queries';
 import { useQuery } from '@tanstack/react-query';
 
-import { useProfile } from 'src/queries/profile/profile';
-
-import { queryPresets } from '../base';
 import { iamQueries } from './queries';
 
 import type {
