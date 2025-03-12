@@ -43,7 +43,6 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
-import type { LinodeCreateType } from '../Linodes/LinodeCreate/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
@@ -51,6 +50,7 @@ import type {
   Region,
 } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { FormikHelpers } from 'formik';
 
 export const PlacementGroupsCreateDrawer = (

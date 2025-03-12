@@ -10,8 +10,8 @@ import type {
   RegionFilterValue,
 } from './RegionSelect.types';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { FlagSet } from 'src/featureFlags';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 

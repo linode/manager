@@ -5,7 +5,7 @@ import { Link } from 'src/components/Link';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 
-import type { LinodeCreateType } from '../types';
+import type { LinodeCreateType } from '@linode/utilities';
 
 export const UserDataHeading = () => {
   const { params } = useLinodeCreateQueryParams();
