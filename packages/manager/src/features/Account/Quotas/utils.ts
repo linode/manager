@@ -1,13 +1,17 @@
+import { useRegionsQuery } from '@linode/queries';
+import { object, string } from 'yup';
+
 import {
   GLOBAL_QUOTA_LABEL,
   GLOBAL_QUOTA_VALUE,
   regionSelectGlobalOption,
 } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from '@linode/queries';
 
+import type { QuotaIncreaseFormFields } from './QuotasIncreaseForm';
 import type {
   Filter,
+  Profile,
   Quota,
   QuotaType,
   QuotaUsage,
@@ -109,3 +113,54 @@ export const getQuotaError = (
     ? quotaUsageQueries[index].error[0].reason
     : 'An unexpected error occurred';
 };
+
+interface GetQuotaIncreaseFormDefaultValuesProps {
+  profile: Profile | undefined;
+  quantity: number;
+  quota: Quota;
+}
+
+/**
+ * Function to get the default values for the quota increase form
+ */
+export const getQuotaIncreaseMessage = ({
+  profile,
+  quantity,
+  quota,
+}: GetQuotaIncreaseFormDefaultValuesProps): QuotaIncreaseFormFields => {
+  const regionAppliedLabel = quota.s3_endpoint ? 'Endpoint' : 'Region';
+  const regionAppliedValue = quota.s3_endpoint ?? quota.region_applied;
+
+  if (!profile) {
+    return {
+      description: '',
+      notes: '',
+      quantity: '0',
+      summary: 'Increase Quota',
+    };
+  }
+
+  return {
+    description: `**User**: ${profile.username}<br>\n**Email**: ${
+      profile.email
+    }<br>\n**Quota Name**: ${
+      quota.quota_name
+    }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+      quantity > 1 ? 's' : ''
+    }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    notes: '',
+    quantity: '0',
+    summary: 'Increase Quota',
+  };
+};
+
+export const getQuotaIncreaseFormSchema = object({
+  description: string().required('Description is required.'),
+  notes: string()
+    .optional()
+    .max(255, 'Notes must be less than 255 characters.'),
+  quantity: string()
+    .required('Quantity is required')
+    .matches(/^[1-9]\d*$/, 'Quantity must be a number greater than 0.'),
+  summary: string().required('Summary is required.'),
+});
