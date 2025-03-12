@@ -8,7 +8,6 @@ import {
 } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Divider from '@mui/material/Divider';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -74,177 +73,168 @@ export const NodePool = (props: Props) => {
   } = props;
 
   return (
-    <StyledDiv>
-      <Accordion
-        heading={
-          <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'space-between',
-              p: 0,
-            }}
-          >
-            <Box display="flex">
-              <Typography variant="h2">{typeLabel}</Typography>
-              <Divider
-                sx={(theme) => ({
-                  height: 16,
-                  margin: `4px ${theme.spacing(1)}`,
-                })}
-                orientation="vertical"
-              />
-              <Typography variant="h2">
-                {pluralize('Node', 'Nodes', count)}
-              </Typography>
-            </Box>
-            <Hidden lgUp>
-              {autoscaler.enabled && (
-                <Box position="absolute" right={(theme) => theme.spacing(10)}>
-                  <Typography mx={1}>
-                    (Min {autoscaler.min} / Max {autoscaler.max})
-                  </Typography>
-                </Box>
-              )}
-              <Box
-                alignItems="center"
-                position="absolute"
-                right={(theme) => theme.spacing(5)}
-              >
-                <ActionMenu
-                  actionsList={[
-                    {
-                      onClick: () => handleClickLabelsAndTaints(poolId),
-                      title: 'Labels and Taints',
-                    },
-                    {
-                      onClick: () => openAutoscalePoolDialog(poolId),
-                      title: 'Autoscale Pool',
-                    },
-                    {
-                      onClick: () => handleClickResize(poolId),
-                      title: 'Resize Pool',
-                    },
-                    {
-                      onClick: () => openRecycleAllNodesDialog(poolId),
-                      title: 'Recycle Pool Nodes',
-                    },
-                    {
-                      disabled: isOnlyNodePool,
-                      onClick: () => openDeletePoolDialog(poolId),
-                      title: 'Delete Pool',
-                      tooltip: isOnlyNodePool
-                        ? 'Clusters must contain at least one node pool.'
-                        : undefined,
-                    },
-                  ]}
-                  ariaLabel={`Action menu for Node Pool ${poolId}`}
-                  stopClickPropagation
-                />
-              </Box>
-            </Hidden>
-            <Hidden lgDown>
-              <Stack
-                alignItems="center"
-                data-testid="node-pool-actions"
-                direction="row"
-                position="absolute"
-                right={(theme) => theme.spacing(5)}
-              >
-                <StyledActionButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClickLabelsAndTaints(poolId);
-                  }}
-                  compactY
-                >
-                  Labels and Taints
-                </StyledActionButton>
-                <StyledActionButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openAutoscalePoolDialog(poolId);
-                  }}
-                  compactY
-                >
-                  Autoscale Pool
-                </StyledActionButton>
-                {autoscaler.enabled && (
-                  <Typography mx={1}>
-                    (Min {autoscaler.min} / Max {autoscaler.max})
-                  </Typography>
-                )}
-                <StyledActionButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClickResize(poolId);
-                  }}
-                  compactY
-                >
-                  Resize Pool
-                </StyledActionButton>
-                <StyledActionButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openRecycleAllNodesDialog(poolId);
-                  }}
-                  compactY
-                >
-                  Recycle Pool Nodes
-                </StyledActionButton>
-                <Tooltip
-                  disableFocusListener={!isOnlyNodePool}
-                  disableHoverListener={!isOnlyNodePool}
-                  disableTouchListener={!isOnlyNodePool}
-                  onClick={(e) => e.stopPropagation()}
-                  title="Clusters must contain at least one node pool."
-                >
-                  <div>
-                    <StyledActionButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openDeletePoolDialog(poolId);
-                      }}
-                      compactY
-                      disabled={isOnlyNodePool}
-                    >
-                      Delete Pool
-                    </StyledActionButton>
-                  </div>
-                </Tooltip>
-              </Stack>
-            </Hidden>
+    <Accordion
+      heading={
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+          }}
+        >
+          <Box display="flex">
+            <Typography variant="h2">{typeLabel}</Typography>
+            <Divider
+              sx={(theme) => ({
+                height: 16,
+                margin: `4px ${theme.spacing(1)}`,
+              })}
+              orientation="vertical"
+            />
+            <Typography variant="h2">
+              {pluralize('Node', 'Nodes', count)}
+            </Typography>
           </Box>
-        }
-        data-qa-node-pool-id={poolId}
-        data-qa-node-pool-section
-        expanded={accordionExpanded}
-        onChange={handleAccordionClick}
-        // Improve performance by unmounting large content from the DOM when collapsed
-        slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}
-      >
-        <NodeTable
-          clusterCreated={clusterCreated}
-          clusterId={clusterId}
-          clusterTier={clusterTier}
-          encryptionStatus={encryptionStatus}
-          nodes={nodes}
-          openRecycleNodeDialog={openRecycleNodeDialog}
-          poolId={poolId}
-          regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-          statusFilter={statusFilter}
-          tags={tags}
-          typeLabel={typeLabel}
-        />
-      </Accordion>
-    </StyledDiv>
+          <Hidden lgUp>
+            {autoscaler.enabled && (
+              <Box position="absolute" right={(theme) => theme.spacing(10)}>
+                <Typography mx={1}>
+                  (Min {autoscaler.min} / Max {autoscaler.max})
+                </Typography>
+              </Box>
+            )}
+            <Box
+              alignItems="center"
+              position="absolute"
+              right={(theme) => theme.spacing(5)}
+            >
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () => handleClickLabelsAndTaints(poolId),
+                    title: 'Labels and Taints',
+                  },
+                  {
+                    onClick: () => openAutoscalePoolDialog(poolId),
+                    title: 'Autoscale Pool',
+                  },
+                  {
+                    onClick: () => handleClickResize(poolId),
+                    title: 'Resize Pool',
+                  },
+                  {
+                    onClick: () => openRecycleAllNodesDialog(poolId),
+                    title: 'Recycle Pool Nodes',
+                  },
+                  {
+                    disabled: isOnlyNodePool,
+                    onClick: () => openDeletePoolDialog(poolId),
+                    title: 'Delete Pool',
+                    tooltip: isOnlyNodePool
+                      ? 'Clusters must contain at least one node pool.'
+                      : undefined,
+                  },
+                ]}
+                ariaLabel={`Action menu for Node Pool ${poolId}`}
+                stopClickPropagation
+              />
+            </Box>
+          </Hidden>
+          <Hidden lgDown>
+            <Stack
+              alignItems="center"
+              data-testid="node-pool-actions"
+              direction="row"
+              position="absolute"
+              right={(theme) => theme.spacing(5)}
+            >
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickLabelsAndTaints(poolId);
+                }}
+                compactY
+              >
+                Labels and Taints
+              </StyledActionButton>
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openAutoscalePoolDialog(poolId);
+                }}
+                compactY
+              >
+                Autoscale Pool
+              </StyledActionButton>
+              {autoscaler.enabled && (
+                <Typography mx={1}>
+                  (Min {autoscaler.min} / Max {autoscaler.max})
+                </Typography>
+              )}
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickResize(poolId);
+                }}
+                compactY
+              >
+                Resize Pool
+              </StyledActionButton>
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openRecycleAllNodesDialog(poolId);
+                }}
+                compactY
+              >
+                Recycle Pool Nodes
+              </StyledActionButton>
+              <Tooltip
+                disableFocusListener={!isOnlyNodePool}
+                disableHoverListener={!isOnlyNodePool}
+                disableTouchListener={!isOnlyNodePool}
+                onClick={(e) => e.stopPropagation()}
+                title="Clusters must contain at least one node pool."
+              >
+                <div>
+                  <StyledActionButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeletePoolDialog(poolId);
+                    }}
+                    compactY
+                    disabled={isOnlyNodePool}
+                  >
+                    Delete Pool
+                  </StyledActionButton>
+                </div>
+              </Tooltip>
+            </Stack>
+          </Hidden>
+        </Box>
+      }
+      data-qa-node-pool-id={poolId}
+      data-qa-node-pool-section
+      detailProps={{ sx: { paddingBottom: 1 } }}
+      expanded={accordionExpanded}
+      onChange={handleAccordionClick}
+      // Improve performance by unmounting large content from the DOM when collapsed
+      slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}
+    >
+      <NodeTable
+        clusterCreated={clusterCreated}
+        clusterId={clusterId}
+        clusterTier={clusterTier}
+        encryptionStatus={encryptionStatus}
+        nodes={nodes}
+        openRecycleNodeDialog={openRecycleNodeDialog}
+        poolId={poolId}
+        regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+        statusFilter={statusFilter}
+        tags={tags}
+        typeLabel={typeLabel}
+      />
+    </Accordion>
   );
 };
-
-export const StyledDiv = styled('div', {
-  label: 'StyledDiv',
-})(({ theme }) => ({
-  '& .MuiAccordionDetails-root': {
-    paddingBottom: theme.spacing(1),
-  },
-}));
