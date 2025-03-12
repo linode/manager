@@ -430,7 +430,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
-                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />

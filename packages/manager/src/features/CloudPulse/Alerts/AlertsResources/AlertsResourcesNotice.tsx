@@ -11,11 +11,6 @@ interface AlertResourceNoticeProps {
   handleSelectionChange: (action: SelectUnselectAll) => void;
 
   /**
-   * The maximum number of resources that can be selected.
-   */
-  maxSelectionCount?: number;
-
-  /**
    * The number of currently selected resources.
    */
   selectedResources: number;
@@ -28,12 +23,7 @@ interface AlertResourceNoticeProps {
 
 export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
-    const {
-      handleSelectionChange,
-      maxSelectionCount,
-      selectedResources,
-      totalResources,
-    } = props;
+    const { handleSelectionChange, selectedResources, totalResources } = props;
     const isSelectAll = selectedResources !== totalResources;
 
     return (
@@ -49,16 +39,11 @@ export const AlertsResourcesNotice = React.memo(
         </Typography>
         {isSelectAll && (
           <Button
-            disabled={
-              maxSelectionCount !== undefined &&
-              totalResources > maxSelectionCount // Select All not needed when total resources is greater than max selection count.
-            }
             onClick={() => {
               handleSelectionChange('Select All');
             }}
             sx={{
-              margin: 0,
-              padding: 0,
+              p: 0,
             }}
             aria-label="Select All Resources"
             data-testid="select_all_notice"
@@ -72,8 +57,7 @@ export const AlertsResourcesNotice = React.memo(
               handleSelectionChange('Unselect All');
             }}
             sx={{
-              margin: 0,
-              padding: 0,
+              p: 0,
             }}
             aria-label="Unselect All Resources"
             data-testid="unselect_all_notice"

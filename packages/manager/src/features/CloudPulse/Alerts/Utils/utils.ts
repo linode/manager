@@ -77,10 +77,6 @@ export interface AlertValidationSchemaProps {
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
   serviceTypeObj: null | string;
-  /**
-   * Property to check whether it is create / edit flow of the alerts
-   */
-  update?: boolean;
 }
 
 /**
@@ -287,12 +283,7 @@ export const processMetricCriteria = (
 export const enhanceValidationSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
-  const {
-    aclpAlertServiceTypeConfig,
-    baseSchema,
-    serviceTypeObj,
-    update,
-  } = props;
+  const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
 
   if (!serviceTypeObj || !aclpAlertServiceTypeConfig) {
     return baseSchema;
@@ -310,9 +301,7 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
             .of(string())
             .max(
               maxSelectionCount,
-              update
-                ? `Number of entities after update must not exceed ${maxSelectionCount}`
-                : `Length must be 0 - ${maxSelectionCount}`
+              `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
             ),
         }) as ObjectSchema<
           CreateAlertDefinitionForm | EditAlertDefinitionPayload

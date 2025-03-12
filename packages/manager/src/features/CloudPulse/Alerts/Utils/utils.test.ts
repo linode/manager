@@ -97,7 +97,6 @@ describe('getValidationSchema', () => {
     aclpAlertServiceTypeConfig,
     baseSchema,
     serviceTypeObj: 'dbaas',
-    update: false,
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
@@ -113,7 +112,9 @@ describe('getValidationSchema', () => {
 
     await expect(
       schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
-    ).rejects.toThrow('Length must be 0 - 3');
+    ).rejects.toThrow(
+      "The overall number of resources assigned to an alert can't exceed 3."
+    );
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
@@ -126,20 +127,8 @@ describe('getValidationSchema', () => {
       schema.validate({
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
       })
-    ).rejects.toThrow('Length must be 0 - 5');
-  });
-
-  it('should return update error message if update flag is true', async () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({
-      ...props,
-      serviceTypeObj: 'linode',
-      update: true,
-    });
-
-    await expect(
-      schema.validate({
-        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
-      })
-    ).rejects.toThrow('Number of entities after update must not exceed 5');
+    ).rejects.toThrow(
+      "The overall number of resources assigned to an alert can't exceed 5."
+    );
   });
 });

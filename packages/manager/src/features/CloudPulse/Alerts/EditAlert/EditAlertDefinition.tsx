@@ -61,7 +61,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
         baseSchema: editAlertSchema,
         serviceTypeObj: alertDetails.service_type,
-        update: true,
       }) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
