@@ -98,6 +98,12 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
+interface LimitsEvolution {
+  enabled: boolean;
+  requestForIncreaseDisabledForAll: boolean;
+  requestForIncreaseDisabledForInternalAccountsOnly: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -120,7 +126,7 @@ export interface Flags {
   gpuv2: gpuV2;
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
-  limitsEvolution: BaseFeatureFlag;
+  limitsEvolution: LimitsEvolution;
   linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
   linodeInterfaces: BaseFeatureFlag;
