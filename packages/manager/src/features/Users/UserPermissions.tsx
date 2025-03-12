@@ -4,6 +4,7 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
+import { accountQueries } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -15,6 +16,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
@@ -30,10 +32,8 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
-import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   StyledCircleProgress,

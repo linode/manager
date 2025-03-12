@@ -1,7 +1,6 @@
 import { Paper, StyledLinkButton, Typography } from '@linode/ui';
+import { truncate } from '@linode/utilities';
 import * as React from 'react';
-
-import { truncate } from 'src/utilities/truncate';
 
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';

@@ -6,6 +6,7 @@ import {
   Typography,
   omittedProps,
 } from '@linode/ui';
+import { truncateEnd } from '@linode/utilities';
 import { styled, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -17,7 +18,6 @@ import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useAccount, useProfile } from '@linode/queries';
 import { getStorage, setStorage } from 'src/utilities/storage';
-import { truncateEnd } from 'src/utilities/truncate';
 
 import { UserMenuPopover } from './UserMenuPopover';
 import { getCompanyNameOrEmail } from './utils';

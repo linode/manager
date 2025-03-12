@@ -7,6 +7,7 @@ import {
   StyledLinkButton,
   Typography,
 } from '@linode/ui';
+import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -17,7 +18,6 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { truncate } from 'src/utilities/truncate';
 
 import {
   getIsVPCLKEEnterpriseCluster,
