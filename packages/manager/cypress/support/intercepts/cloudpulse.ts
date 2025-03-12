@@ -509,7 +509,7 @@ export const mockDeleteEntityFromAlert = (
 export const mockUpdateAlertDefinitionsError = (
   serviceType: string,
   id: number,
-  errorMessage: string,
+  errorMessage: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
