@@ -1,6 +1,7 @@
 import { Box, Button, Chip } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { convertMegabytesTo } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
@@ -16,7 +17,6 @@ import {
 } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';

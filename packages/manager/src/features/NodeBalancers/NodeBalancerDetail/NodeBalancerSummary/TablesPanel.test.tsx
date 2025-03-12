@@ -12,8 +12,8 @@ const queryMocks = vi.hoisted(() => ({
   useNodeBalancerStatsQuery: vi.fn().mockReturnValue({ data: undefined }),
 }));
 
-vi.mock('src/queries/nodebalancers', async () => {
-  const actual = await vi.importActual('src/queries/nodebalancers');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,

@@ -1,4 +1,4 @@
-import { roundTo } from 'src/utilities/roundTo';
+import { roundTo } from '@linode/utilities';
 
 const supportedUnits = {
   B: 'Bytes',

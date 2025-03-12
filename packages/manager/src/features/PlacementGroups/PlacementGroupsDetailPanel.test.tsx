@@ -15,21 +15,11 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
-  return {
-    ...actual,
-    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
-  };
-});
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
 
 describe('PlacementGroupsDetailPanel', () => {
   beforeEach(() => {

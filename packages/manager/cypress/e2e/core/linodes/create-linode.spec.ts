@@ -2,6 +2,10 @@
  * @file Linode Create end-to-end tests.
  */
 
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
@@ -30,12 +34,10 @@ import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
 import { chooseRegion } from 'support/util/regions';
+import { getRegionById } from 'support/util/regions';
 
 import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
   VLANFactory,
   accountFactory,
   accountUserFactory,
@@ -312,12 +314,12 @@ describe('Create Linode', () => {
       id: region.id,
       label: region.label,
     });
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
-    const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
-    const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
+    const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       purpose: 'vpc',
       vpc_id: mockVPC.id,

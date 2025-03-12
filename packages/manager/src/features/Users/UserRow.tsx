@@ -10,8 +10,7 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useAccountUserGrants } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountUserGrants, useProfile } from '@linode/queries';
 
 import { UsersActionMenu } from './UsersActionMenu';
 

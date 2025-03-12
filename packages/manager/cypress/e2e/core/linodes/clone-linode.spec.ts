@@ -1,5 +1,5 @@
+import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import {
-  LinodeConfigInterfaceFactory,
   VLANFactory,
   createLinodeRequestFactory,
   linodeConfigFactory,
@@ -157,7 +157,7 @@ describe('clone linode', () => {
       type: null,
     });
     const mockVolume = volumeFactory.build();
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });

@@ -8,6 +8,7 @@ import {
   Typography,
   omittedProps,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {
   kubernetesControlPlaneACLPayloadSchema,
   kubernetesEnterpriseControlPlaneACLPayloadSchema,
@@ -23,7 +24,6 @@ import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
 } from 'src/queries/kubernetes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,

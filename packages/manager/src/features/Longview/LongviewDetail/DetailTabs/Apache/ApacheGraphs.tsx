@@ -1,3 +1,4 @@
+import { roundTo } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import {
   generateNetworkUnits,
   statMax,
 } from 'src/features/Longview/shared/utilities';
-import { roundTo } from 'src/utilities/roundTo';
 
 import { convertData } from '../../../shared/formatters';
 import { StyledRootPaper, StyledSmallGraphGrid } from '../CommonStyles.styles';

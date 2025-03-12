@@ -1,3 +1,4 @@
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -24,7 +25,6 @@ import {
 import { chooseRegion } from 'support/util/regions';
 
 import {
-  LinodeConfigInterfaceFactoryWithVPC,
   linodeConfigFactory,
   linodeFactory,
   regionFactory,
@@ -68,7 +68,7 @@ describe('Create Linode with VPCs', () => {
       region: linodeRegion.id,
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
       subnet_id: mockSubnet.id,
@@ -195,7 +195,7 @@ describe('Create Linode with VPCs', () => {
       region: linodeRegion.id,
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       primary: true,
       subnet_id: mockSubnet.id,

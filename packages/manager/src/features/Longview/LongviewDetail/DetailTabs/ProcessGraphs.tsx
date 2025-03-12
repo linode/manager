@@ -1,12 +1,9 @@
+import { convertBytesToTarget, readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import {
-  convertBytesToTarget,
-  readableBytes,
-} from 'src/utilities/unitConversions';
 
 import { convertData, formatMemory } from '../../shared/formatters';
 import {

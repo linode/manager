@@ -1,11 +1,21 @@
+import {
+  accountUserFactory,
+  grantsFactory,
+  profileFactory,
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
+import { mockGetUser } from 'support/intercepts/account';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptCreateVolume,
@@ -432,5 +442,60 @@ describe('volume create flow', () => {
           });
       }
     );
+  });
+
+  it('does not allow creation of a volume for restricted users from volume create page', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_volumes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    cy.visitWithLogin('/volumes/create', {
+      localStorageOverrides: pageSizeOverride,
+    });
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create this Volume. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that the "Label" field should be disabled.
+    cy.get('[id="label"]').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Tags" field should be disabled.
+    cy.findByLabelText('Tags').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Region" field should be disabled.
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
+
+    // Confirm that the "Linode" field should be disabled.
+    cy.findByLabelText('Linode').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Config" field should be disabled.
+    cy.findByLabelText('Config').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Size" field should be disabled.
+    cy.get('[id="size"]').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Create Volume" button is disabled.
+    cy.findByText('Create Volume').should('be.visible').should('be.disabled');
   });
 });

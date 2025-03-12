@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { MaskableText } from './MaskableText';
 
 import type { MaskableTextProps } from './MaskableText';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 describe('MaskableText', () => {
   const maskedText = '•••••••••••';
@@ -24,8 +24,8 @@ describe('MaskableText', () => {
     usePreferences: vi.fn().mockReturnValue({}),
   }));
 
-  vi.mock('src/queries/profile/preferences', async () => {
-    const actual = await vi.importActual('src/queries/profile/preferences');
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
     return {
       ...actual,
       usePreferences: queryMocks.usePreferences,

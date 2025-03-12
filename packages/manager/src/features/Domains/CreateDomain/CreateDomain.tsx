@@ -1,3 +1,4 @@
+import { useGrants, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -9,6 +10,7 @@ import {
   RadioGroup,
   TextField,
 } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
@@ -23,7 +25,6 @@ import { reportException } from 'src/exceptionReporting';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -32,7 +33,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 

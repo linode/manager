@@ -2,8 +2,8 @@
  * @file Integration tests for VPC assign/unassign Linodes flows.
  */
 
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 import {
-  LinodeConfigInterfaceFactoryWithVPC,
   linodeConfigFactory,
   linodeFactory,
   subnetFactory,
@@ -208,7 +208,7 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnet],
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       subnet_id: mockSubnet.id,
       vpc_id: mockVPC.id,
     });
