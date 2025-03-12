@@ -31,7 +31,8 @@ export const CloudPulseModifyAlertResources = React.memo(
       }
 
       return flags.aclpAlertServiceTypeConfig?.find(
-        ({ serviceType }) => serviceType === serviceTypeWatcher
+        (config) =>
+          config.serviceType && config.serviceType === serviceTypeWatcher
       )?.maxResourceSelectionCount;
     }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
