@@ -1,3 +1,4 @@
+import { useGrants, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Paper } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
@@ -8,7 +9,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript } from 'src/components/StackScript/StackScript';
-import { useGrants, useProfile } from '@linode/queries';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,
@@ -25,7 +25,7 @@ export const StackScriptDetail = () => {
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const { id: stackScriptId } = useParams({
-    strict: false,
+    from: '/stackscripts/$id',
   });
 
   const id = Number(stackScriptId);

@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useGrants, useProfile } from '@linode/queries';
 import {
   Button,
   CircleProgress,
@@ -18,7 +19,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { useGrants, useProfile } from '@linode/queries';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,
@@ -33,7 +33,7 @@ import type { StackScriptPayload } from '@linode/api-v4';
 export const StackScriptEdit = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams({
-    strict: false,
+    from: '/stackscripts/$id/edit',
   });
   const navigate = useNavigate();
 
