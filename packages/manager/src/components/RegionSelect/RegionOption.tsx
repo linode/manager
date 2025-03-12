@@ -2,6 +2,7 @@ import { Box, ListItemOption, Stack } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
+// @todo: Remove this import and pass Flag Component as a Prop to `RegionSelect`.
 import { Flag } from 'src/components/Flag';
 
 import type { Region } from '@linode/api-v4';

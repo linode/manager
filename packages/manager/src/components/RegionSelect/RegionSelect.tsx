@@ -3,6 +3,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
+// @todo: modularization - Remove this import and pass Flag Component as a Prop to `RegionSelect`.
 import { Flag } from 'src/components/Flag';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package

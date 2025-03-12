@@ -2,6 +2,7 @@ import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
+// @todo: modularization - Remove this import and pass Flag Component as a Prop to `RegionSelect`.
 import { Flag } from 'src/components/Flag';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package

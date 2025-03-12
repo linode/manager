@@ -6,6 +6,7 @@ import type {
 } from '@linode/api-v4';
 import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
+// @todo: modularization - Update type FlagSet to import from `@linode/shared` package once available.
 import type { FlagSet } from 'src/featureFlags';
 
 export type RegionFilterValue =

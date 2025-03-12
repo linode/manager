@@ -1,7 +1,7 @@
 import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-// @todo: modularization - replace 'testHelpers' with 'testHelpers' from the shared package once available.
+// @todo: modularization - Replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
