@@ -1,4 +1,4 @@
-import { Button, Notice, Select, Stack } from '@linode/ui';
+import { Box, Button, Notice, Select, Stack } from '@linode/ui';
 import React from 'react';
 
 import {
@@ -58,7 +58,13 @@ export const ConfigSelectDialogContent = (
         options={configOptions}
         placeholder="Select Configuration Profile"
       />
-      <Stack direction="row-reverse" gap={2} sx={{ marginTop: 4 }}>
+      <Box
+        gap={2}
+        sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}
+      >
+        <Button buttonType="secondary" onClick={onClose}>
+          Cancel
+        </Button>
         <Button
           buttonType="primary"
           disabled={!selectedConfigId}
@@ -66,10 +72,7 @@ export const ConfigSelectDialogContent = (
         >
           {state.isDryRun ? 'Upgrade Dry Run' : 'Upgrade Interfaces'}
         </Button>
-        <Button buttonType="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-      </Stack>
+      </Box>
     </Stack>
   );
 };

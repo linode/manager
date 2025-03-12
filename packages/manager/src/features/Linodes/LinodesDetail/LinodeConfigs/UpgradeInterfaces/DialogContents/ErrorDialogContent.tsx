@@ -1,4 +1,12 @@
-import { Button, List, ListItem, Notice, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { ERROR_DRY_RUN_COPY } from '../constants';
@@ -18,14 +26,10 @@ export const ErrorDialogContent = (
     <Stack gap={2}>
       <Notice important variant="error">
         <Typography>
-          {isDryRun
-            ? ERROR_DRY_RUN_COPY
-            : errors.length > 0
-            ? errors[0].reason
-            : 'An unexpected error occurred.'}
+          {isDryRun ? ERROR_DRY_RUN_COPY : 'Unable to upgrade interfaces.'}
         </Typography>
       </Notice>
-      {isDryRun && errors.length > 0 && (
+      {errors.length > 0 && (
         <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
           {errors.map((error) => (
             <ListItem
@@ -38,11 +42,11 @@ export const ErrorDialogContent = (
           ))}
         </List>
       )}
-      <Stack direction="row-reverse" sx={{ paddingTop: 12 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
         <Button buttonType="secondary" onClick={onClose}>
           Close
         </Button>
-      </Stack>
+      </Box>
     </Stack>
   );
 };

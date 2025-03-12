@@ -54,7 +54,10 @@ export const SuccessDialogContent = (
           ))}
         </Box>
       )}
-      <Stack direction="row-reverse" gap={2}>
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+        <Button buttonType="secondary" onClick={onClose}>
+          {isDryRun ? 'Cancel' : 'Close'}
+        </Button>
         {isDryRun && (
           <Button
             buttonType="primary"
@@ -63,10 +66,7 @@ export const SuccessDialogContent = (
             Upgrade Interfaces
           </Button>
         )}
-        <Button buttonType="secondary" onClick={onClose}>
-          {isDryRun ? 'Cancel' : 'Close'}
-        </Button>
-      </Stack>
+      </Box>
     </Stack>
   );
 };
