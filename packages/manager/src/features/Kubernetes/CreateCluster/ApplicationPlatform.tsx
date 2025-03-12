@@ -3,7 +3,6 @@ import {
   Chip,
   FormControl,
   FormControlLabel,
-  Notice,
   Radio,
   RadioGroup,
   Typography,
@@ -29,8 +28,12 @@ export const APLCopy = () => (
   </Typography>
 );
 
+const APL_UNSUPPORTED_CHIP_COPY = ' - COMING SOON';
+
 export const ApplicationPlatform = (props: APLProps) => {
   const { isSectionDisabled, setAPL, setHighAvailability } = props;
+
+  const CHIP_COPY = `BETA${isSectionDisabled ? APL_UNSUPPORTED_CHIP_COPY : ''}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAPL(e.target.value === 'yes');
@@ -51,15 +54,10 @@ export const ApplicationPlatform = (props: APLProps) => {
       >
         <Box alignItems="center" display="flex" flexDirection="row">
           <Typography data-testid="apl-label">Akamai App Platform</Typography>
-          <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
+          <Chip color="primary" label={CHIP_COPY} sx={{ ml: 1 }} />
         </Box>
       </FormLabel>
       <APLCopy />
-      {isSectionDisabled && (
-        <Notice variant="info" spacingTop={8}>
-          <Typography>APL is not yet available for LKE Enterprise.</Typography>
-        </Notice>
-      )}
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-yes" />}
@@ -69,6 +67,7 @@ export const ApplicationPlatform = (props: APLProps) => {
           value="yes"
         />
         <FormControlLabel
+          checked={isSectionDisabled ?? undefined}
           control={<Radio data-testid="apl-radio-button-no" />}
           disabled={isSectionDisabled}
           label="No"

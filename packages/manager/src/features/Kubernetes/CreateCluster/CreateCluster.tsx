@@ -116,7 +116,7 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   // LKE-E does not support APL at this time.
-  const isAPLEnabled = showAPL && selectedTier === 'standard';
+  const isAPLSupported = showAPL && selectedTier === 'standard';
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -245,7 +245,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (isAPLEnabled) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -254,7 +254,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      isAPLEnabled || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -450,21 +450,21 @@ export const CreateCluster = () => {
               />
             </StyledDocsLinkContainer>
           </StyledStackWithTabletBreakpoint>
-          {/* {isAPLEnabled && ( */}
-          <>
-            <Divider sx={{ marginTop: 4 }} />
-            <StyledStackWithTabletBreakpoint>
-              <Stack>
-                <ApplicationPlatform
-                  setAPL={setApl_enabled}
-                  setHighAvailability={setHighAvailability}
-                  isSectionDisabled={isLkeEnterpriseLAFeatureEnabled}
-                />
-              </Stack>
-            </StyledStackWithTabletBreakpoint>
-          </>
-          {/* )} */}
-          <Divider sx={{ marginTop: isAPLEnabled ? 1 : 4 }} />
+          {showAPL && (
+            <>
+              <Divider sx={{ marginTop: 4 }} />
+              <StyledStackWithTabletBreakpoint>
+                <Stack>
+                  <ApplicationPlatform
+                    isSectionDisabled={!isAPLSupported}
+                    setAPL={setApl_enabled}
+                    setHighAvailability={setHighAvailability}
+                  />
+                </Stack>
+              </StyledStackWithTabletBreakpoint>
+            </>
+          )}
+          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
