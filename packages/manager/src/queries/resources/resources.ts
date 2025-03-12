@@ -1,8 +1,9 @@
-import { IamAccountResource, APIError } from '@linode/api-v4';
+import { queryPresets, useProfile } from '@linode/queries';
 import { useQuery } from '@tanstack/react-query';
-import { useProfile } from 'src/queries/profile/profile';
-import { queryPresets } from '../base';
+
 import { resourcesQueries } from './queries';
+
+import type { APIError, IamAccountResource } from '@linode/api-v4';
 
 export const useAccountResources = () => {
   const { data: profile } = useProfile();

@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { truncate } from '@linode/utilities';
 import Algolia from 'algoliasearch';
 import * as React from 'react';
 
@@ -8,7 +9,6 @@ import {
   COMMUNITY_BASE_URL,
   DOCS_BASE_URL,
 } from 'src/constants';
-import { truncate } from 'src/utilities/truncate';
 
 import type { SearchClient } from 'algoliasearch';
 

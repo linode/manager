@@ -187,7 +187,7 @@ describe('Integration Tests for Edit Alert', () => {
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Verify form fields
@@ -218,7 +218,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(0, {
       aggregationType: 'Average',
       dataField: 'CPU Utilization',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 
@@ -226,7 +226,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(1, {
       aggregationType: 'Average',
       dataField: 'Memory Usage',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 
@@ -276,7 +276,7 @@ describe('Integration Tests for Edit Alert', () => {
   });
 
   it('successfully updated alert details and verified that the API request matches the expected test data.', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Make changes to alert form
@@ -361,7 +361,7 @@ describe('Integration Tests for Edit Alert', () => {
       expect(request.body.rule_criteria.rules[1].threshold).to.equal(1000);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'monitor/alerts/definitions');
+      cy.url().should('endWith', 'alerts/definitions');
       ui.toast.assertMessage('Alert successfully updated.');
 
       // Confirm that Alert is listed on landing page with expected configuration.

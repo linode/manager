@@ -1,5 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
+import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -13,8 +14,6 @@ import {
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { Region } from '@linode/api-v4';
 import type {

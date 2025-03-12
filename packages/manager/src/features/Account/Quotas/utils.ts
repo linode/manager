@@ -4,9 +4,10 @@ import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants'
 import {
   GLOBAL_QUOTA_LABEL,
   GLOBAL_QUOTA_VALUE,
+  regionSelectGlobalOption,
 } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import type { QuotaIncreaseFormFields } from './QuotasIncreaseForm';
 import type {
