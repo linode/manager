@@ -41,7 +41,7 @@ export const getAlertTypeToActionsList = (
 });
 
 export const isStatusActionDisabled = (alertStatus: AlertStatusType) => {
-  return alertStatus !== 'enabled' && alertStatus !== 'disabled';
+  return alertStatus === 'in progress' || alertStatus === 'failed';
 };
 
 export const getTitleForEnableDisable = (alertStatus: AlertStatusType) => {

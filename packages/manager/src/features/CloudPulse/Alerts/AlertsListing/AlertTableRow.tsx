@@ -54,7 +54,10 @@ export const AlertTableRow = (props: Props) => {
       <TableCell>
         <Box alignItems="center" display="flex">
           <StatusIcon data-testid="status-icon" status={getStatus(status)} />
-          {capitalize(status)}
+          {status
+            .split(' ')
+            .map((word) => capitalize(word))
+            .join(' ')}
         </Box>
       </TableCell>
       <TableCell>

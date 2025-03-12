@@ -2527,7 +2527,7 @@ export const handlers = [
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
-        status: 'provisioning',
+        status: 'in progress',
         type: 'user',
         updated_by: 'user1',
       }),
