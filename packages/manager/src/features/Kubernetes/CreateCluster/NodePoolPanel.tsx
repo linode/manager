@@ -94,6 +94,7 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
   const regionSupportsDiskEncryption =
     doesRegionSupportFeature(
       selectedRegionId ?? '',

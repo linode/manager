@@ -24,6 +24,8 @@ export const DiskEncryption = (props: Props) => {
   const { data: region } = useRegionQuery(linodeRegion);
 
   const isLinodeInDistributedRegion = region?.site_type === 'distributed';
+
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
   const regionSupportsDiskEncryption =
     (region?.capabilities.includes('Disk Encryption') ||
       region?.capabilities.includes('LA Disk Encryption')) ??
