@@ -3,6 +3,7 @@ import { stackScriptFactory } from 'src/factories';
 import {
   mockDeleteStackScript,
   mockGetStackScripts,
+  mockGetStackScript,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 
@@ -19,6 +20,9 @@ describe('Delete stackscripts', () => {
       is_public: false,
     });
     mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
@@ -32,6 +36,7 @@ describe('Delete stackscripts', () => {
           .click();
       });
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+    cy.wait('@getStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
       .should('be.visible')
@@ -57,6 +62,9 @@ describe('Delete stackscripts', () => {
       });
     mockDeleteStackScript(stackScripts[0].id).as('deleteStackScript');
     mockGetStackScripts([stackScripts[1]]).as('getUpdatedStackScripts');
+    mockGetStackScript(stackScripts[1].id, stackScripts[1]).as(
+      'getUpdatedStackScript'
+    );
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[0].label}?`)
@@ -69,7 +77,6 @@ describe('Delete stackscripts', () => {
       });
     cy.wait('@deleteStackScript');
     cy.wait('@getUpdatedStackScripts');
-
     cy.findByText(stackScripts[0].label).should('not.exist');
 
     // The "Automate Deployment with StackScripts!" welcome page appears when no StackScript exists.
@@ -84,6 +91,7 @@ describe('Delete stackscripts', () => {
     mockDeleteStackScript(stackScripts[1].id).as('deleteStackScript');
     mockGetStackScripts([]).as('getUpdatedStackScripts');
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+    cy.wait('@getUpdatedStackScript');
     ui.dialog
       .findByTitle(`Delete StackScript ${stackScripts[1].label}?`)
       .should('be.visible')
