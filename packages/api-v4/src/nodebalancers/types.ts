@@ -134,6 +134,15 @@ export interface NodeBalancerStats {
   };
 }
 
+export interface NodebalancerVpcConfig {
+  id: number;
+  nodebalancer_id: number;
+  vpc_id: number;
+  subnet_id: number;
+  ipv4_range: string | null;
+  ipv6_range: string | null;
+}
+
 export interface CreateNodeBalancerConfig {
   port?: number;
   /**
@@ -184,6 +193,8 @@ export interface CreateNodeBalancerConfig {
 }
 
 export type UpdateNodeBalancerConfig = CreateNodeBalancerConfig;
+
+export type RebuildNodeBalancerConfig = CreateNodeBalancerConfig;
 
 export interface CreateNodeBalancerConfigNode {
   address: string;
