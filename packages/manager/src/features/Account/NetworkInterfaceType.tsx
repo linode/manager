@@ -8,6 +8,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -44,6 +45,7 @@ const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting
 ];
 
 export const NetworkInterfaceType = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
@@ -67,6 +69,9 @@ export const NetworkInterfaceType = () => {
   const onSubmit = async (values: InterfaceSettingValues) => {
     try {
       await updateAccountSettings(values);
+      enqueueSnackbar('Network Interface type settings updated.', {
+        variant: 'success',
+      });
     } catch (error) {
       setError('interfaces_for_new_linodes', { message: error[0].reason });
     }

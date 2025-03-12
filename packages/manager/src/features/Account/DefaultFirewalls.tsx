@@ -17,12 +17,15 @@ import {
   Typography,
 } from '@linode/ui';
 import { UpdateFirewallSettingsSchema } from '@linode/validation';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
 export const DefaultFirewalls = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     data: firewallSettings,
     error: firewallSettingsError,
@@ -60,6 +63,9 @@ export const DefaultFirewalls = () => {
   const onSubmit = async (values: UpdateFirewallSettings) => {
     try {
       await updateFirewallSettings(values);
+      enqueueSnackbar('Default firewall settings updated.', {
+        variant: 'success',
+      });
     } catch (error) {
       setError(error.field ?? 'root', { message: error[0].reason });
     }
