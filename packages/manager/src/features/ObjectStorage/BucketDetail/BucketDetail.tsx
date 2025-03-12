@@ -1,4 +1,5 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { useAccount } from '@linode/queries';
 import { ActionsPanel, Box } from '@linode/ui';
 import {
   getQueryParamFromQueryString,
@@ -23,7 +24,6 @@ import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from '@linode/queries';
 import {
   getObjectBucketObjectsQueryKey,
   objectStorageQueries,

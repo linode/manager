@@ -1,6 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import {
+  useCreateVPCMutation,
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   getQueryParamsFromQueryString,
   scrollErrorIntoView,
 } from '@linode/utilities';
@@ -9,12 +15,6 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import {
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-  useCreateVPCMutation,
-} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 

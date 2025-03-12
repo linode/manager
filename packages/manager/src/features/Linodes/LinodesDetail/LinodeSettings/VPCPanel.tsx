@@ -1,3 +1,4 @@
+import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -19,7 +20,6 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
-import { useRegionsQuery, useAllVPCsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

@@ -1,4 +1,9 @@
 import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Divider,
   List,
@@ -25,11 +30,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import {
-  useAllPlacementGroupsQuery,
-  useCreatePlacementGroup,
-  useRegionsQuery,
-} from '@linode/queries';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 

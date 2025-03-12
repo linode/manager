@@ -4,6 +4,7 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
+import { accountQueries } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -31,7 +32,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
-import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
