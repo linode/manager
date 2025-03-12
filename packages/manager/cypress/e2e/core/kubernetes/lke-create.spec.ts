@@ -3,67 +3,67 @@
  */
 import { pluralize } from '@linode/utilities';
 import {
-  accountFactory,
-  dedicatedTypeFactory,
-  kubernetesClusterFactory,
-  kubernetesControlPlaneACLFactory,
-  kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
-  regionFactory,
-  nodePoolFactory,
-  kubeLinodeFactory,
-  lkeHighAvailabilityTypeFactory,
-  accountBetaFactory,
-} from 'src/factories';
-import {
-  mockCreateCluster,
-  mockGetCluster,
-  mockCreateClusterError,
-  mockGetControlPlaneACL,
-  mockGetClusterPools,
-  mockGetDashboardUrl,
-  mockGetApiEndpoints,
-  mockGetClusters,
-  mockGetLKEClusterTypes,
-  mockGetTieredKubernetesVersions,
-  mockGetKubernetesVersions,
-} from 'support/intercepts/lke';
-import { mockGetAccountBeta } from 'support/intercepts/betas';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockGetRegions,
-  mockGetRegionAvailability,
-} from 'support/intercepts/regions';
-import { getRegionById } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { randomLabel, randomNumber, randomItem } from 'support/util/random';
-import {
-  dcPricingLkeCheckoutSummaryPlaceholder,
-  dcPricingLkeHAPlaceholder,
-  dcPricingLkeClusterPlans,
-  dcPricingMockLinodeTypes,
-  dcPricingPlanPlaceholder,
   dcPricingDocsLabel,
   dcPricingDocsUrl,
+  dcPricingLkeCheckoutSummaryPlaceholder,
+  dcPricingLkeClusterPlans,
+  dcPricingLkeHAPlaceholder,
+  dcPricingMockLinodeTypes,
+  dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
-import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { chooseRegion } from 'support/util/regions';
-import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kubeUtils';
-import {
-  CLUSTER_TIER_DOCS_LINK,
-  CLUSTER_VERSIONS_DOCS_LINK,
-} from 'src/features/Kubernetes/constants';
-import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
-
-import type { ExtendedType } from 'src/utilities/extendType';
-import type { LkePlanDescription } from 'support/api/lke';
-import { PriceType } from '@linode/api-v4/lib/types';
 import {
   latestEnterpriseTierKubernetesVersion,
   latestKubernetesVersion,
 } from 'support/constants/lke';
-import { lkeEnterpriseTypeFactory } from 'src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetAccountBeta } from 'support/intercepts/betas';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockCreateCluster,
+  mockCreateClusterError,
+  mockGetApiEndpoints,
+  mockGetCluster,
+  mockGetClusterPools,
+  mockGetClusters,
+  mockGetControlPlaneACL,
+  mockGetDashboardUrl,
+  mockGetKubernetesVersions,
+  mockGetLKEClusterTypes,
+  mockGetTieredKubernetesVersions,
+} from 'support/intercepts/lke';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { randomItem, randomLabel, randomNumber } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
+
+import { accountBetaFactory, lkeEnterpriseTypeFactory } from 'src/factories';
+import {
+  accountFactory,
+  dedicatedTypeFactory,
+  kubeLinodeFactory,
+  kubernetesClusterFactory,
+  kubernetesControlPlaneACLFactory,
+  kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
+  lkeHighAvailabilityTypeFactory,
+  nodePoolFactory,
+  regionFactory,
+} from 'src/factories';
+import {
+  CLUSTER_TIER_DOCS_LINK,
+  CLUSTER_VERSIONS_DOCS_LINK,
+} from 'src/features/Kubernetes/constants';
+import { getTotalClusterMemoryCPUAndStorage } from 'src/features/Kubernetes/kubeUtils';
+import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
+
+import type { PriceType } from '@linode/api-v4/lib/types';
+import type { ExtendedType } from 'src/utilities/extendType';
+import type { LkePlanDescription } from 'support/api/lke';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
@@ -419,13 +419,13 @@ describe('LKE Cluster Creation with APL enabled', () => {
       },
     }).as('getFeatureFlags');
     mockGetAccountBeta({
-      id: 'apl',
-      label: 'Akamai App Platform Beta',
-      enrolled: '2024-11-04T21:39:41',
       description:
         'Akamai App Platform is a platform that combines developer and operations-centric tools, automation and self-service to streamline the application lifecycle when using Kubernetes. This process will pre-register you for an upcoming beta.',
-      started: '2024-10-31T18:00:00',
       ended: null,
+      enrolled: '2024-11-04T21:39:41',
+      id: 'apl',
+      label: 'Akamai App Platform Beta',
+      started: '2024-10-31T18:00:00',
     }).as('getAccountBeta');
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
@@ -670,14 +670,14 @@ describe('LKE Cluster Creation with ACL', () => {
   });
   const mockLinodeTypes = [
     linodeTypeFactory.build({
+      class: 'dedicated',
       id: 'dedicated-1',
       label: 'dedicated-1',
-      class: 'dedicated',
     }),
     linodeTypeFactory.build({
+      class: 'dedicated',
       id: 'dedicated-2',
       label: 'dedicated-2',
-      class: 'dedicated',
     }),
   ];
   const clusterVersion = '1.31';
@@ -713,10 +713,10 @@ describe('LKE Cluster Creation with ACL', () => {
         },
       });
       const mockCluster = kubernetesClusterFactory.build({
+        control_plane: mockACL,
+        k8s_version: clusterVersion,
         label: clusterLabel,
         region: mockRegion.id,
-        k8s_version: clusterVersion,
-        control_plane: mockACL,
       });
       mockCreateCluster(mockCluster).as('createCluster');
       mockGetCluster(mockCluster).as('getCluster');
@@ -817,10 +817,10 @@ describe('LKE Cluster Creation with ACL', () => {
       });
 
       const mockCluster = kubernetesClusterFactory.build({
+        control_plane: mockACL,
+        k8s_version: clusterVersion,
         label: clusterLabel,
         region: mockRegion.id,
-        k8s_version: clusterVersion,
-        control_plane: mockACL,
       });
       mockCreateCluster(mockCluster).as('createCluster');
       mockGetCluster(mockCluster).as('getCluster');

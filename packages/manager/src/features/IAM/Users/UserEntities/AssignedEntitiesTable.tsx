@@ -2,7 +2,7 @@ import { Autocomplete, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -19,9 +19,9 @@ import { useOrder } from 'src/hooks/useOrder';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 import { useAccountResources } from 'src/queries/resources/resources';
 
-import { getFilteredRoles, mapEntityTypes } from '../utilities';
+import { getFilteredRoles, mapEntityTypes } from '../../Shared/utilities';
 
-import type { EntitiesRole, EntitiesType } from '../utilities';
+import type { EntitiesRole, EntitiesType } from '../../Shared/utilities';
 import type {
   IamAccountResource,
   IamUserPermissions,
@@ -31,12 +31,19 @@ import type {
 } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
+interface LocationState {
+  selectedRole?: string;
+}
+
 export const AssignedEntitiesTable = () => {
   const { username } = useParams<{ username: string }>();
+  const location = useLocation();
+
+  const locationState = location.state as LocationState;
 
   const { handleOrderChange, order, orderBy } = useOrder();
 
-  const [query, setQuery] = React.useState('');
+  const [query, setQuery] = React.useState(locationState?.selectedRole ?? '');
 
   const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
 
@@ -112,10 +119,10 @@ export const AssignedEntitiesTable = () => {
               <TableCell>
                 <Typography>{el.resource_name}</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                 <Typography>{capitalize(el.resource_type)}</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                 <Typography>{el.role_name}</Typography>
               </TableCell>
               <TableCell actionCell>
@@ -142,12 +149,19 @@ export const AssignedEntitiesTable = () => {
         direction="row"
       >
         <DebouncedSearchTextField
+          containerProps={{
+            sx: {
+              marginBottom: { md: 0, xs: 2 },
+              marginRight: { md: 2, xs: 0 },
+              width: { md: '410px', xs: '100%' },
+            },
+          }}
           clearable
           hideLabel
           label="Filter"
           onSearch={setQuery}
           placeholder="Search"
-          sx={{ marginRight: 2, width: 410 }}
+          sx={{ height: 34 }}
           value={query}
         />
         <Autocomplete
@@ -170,7 +184,6 @@ export const AssignedEntitiesTable = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="entity"
-              sx={{ width: '32%' }}
             >
               Entity
             </TableSortCell>
@@ -179,7 +192,7 @@ export const AssignedEntitiesTable = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="entityType"
-              sx={{ width: '32%' }}
+              sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
               Entity type
             </TableSortCell>
@@ -188,7 +201,7 @@ export const AssignedEntitiesTable = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="role"
-              sx={{ width: '25%' }}
+              sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
               Assigned Role
             </TableSortCell>
