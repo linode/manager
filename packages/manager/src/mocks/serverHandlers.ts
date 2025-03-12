@@ -2523,6 +2523,13 @@ export const handlers = [
         type: 'user',
         updated_by: 'user1',
       }),
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'failed',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
