@@ -4,14 +4,14 @@ import {
   kubernetesClusterFactory,
   profileFactory,
 } from '@src/factories';
+import { mockGetUser } from 'support/intercepts/account';
+import { mockCreateCluster } from 'support/intercepts/lke';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { mockGetUser } from 'support/intercepts/account';
-import { randomLabel, randomNumber } from 'support/util/random';
-import { mockCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 /**
@@ -64,8 +64,8 @@ const minimumNodeNotice =
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const mockCluster = kubernetesClusterFactory.build({
-      label: randomLabel(),
       id: randomNumber(10000, 99999),
+      label: randomLabel(),
     });
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
@@ -111,14 +111,14 @@ describe('LKE Create Cluster', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({
@@ -128,8 +128,8 @@ describe('LKE Create Cluster', () => {
     });
 
     const mockCluster = kubernetesClusterFactory.build({
-      label: randomLabel(),
       id: randomNumber(10000, 99999),
+      label: randomLabel(),
     });
 
     mockGetProfile(mockProfile);

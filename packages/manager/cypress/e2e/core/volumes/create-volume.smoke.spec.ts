@@ -1,24 +1,24 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
-  volumeFactory,
   linodeFactory,
+  volumeFactory,
   volumeTypeFactory,
 } from '@src/factories';
 import {
-  mockGetLinodes,
   mockGetLinodeDetails,
   mockGetLinodeVolumes,
+  mockGetLinodes,
 } from 'support/intercepts/linodes';
 import {
   mockCreateVolume,
-  mockGetVolume,
-  mockGetVolumes,
   mockDetachVolume,
-  mockGetVolumeTypesError,
+  mockGetVolume,
   mockGetVolumeTypes,
+  mockGetVolumeTypesError,
+  mockGetVolumes,
 } from 'support/intercepts/volumes';
-import { randomLabel, randomNumber } from 'support/util/random';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
 
 import {
   PRICES_RELOAD_ERROR_NOTICE_TEXT,
@@ -62,14 +62,14 @@ const validateBasicVolume = (
 // This is a workaround for accounts that have volumes unrelated to tests.
 // @TODO Remove preference override when volumes are removed from test accounts.
 const preferenceOverrides = {
-  linodes_view_style: 'list',
-  linodes_group_by_tag: false,
-  volumes_group_by_tag: false,
   desktop_sidebar_open: false,
+  linodes_group_by_tag: false,
+  linodes_view_style: 'list',
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'desc', orderBy: 'label' },
   },
+  volumes_group_by_tag: false,
 };
 
 // Local storage override to force volume table to list up to 100 items.
@@ -90,8 +90,8 @@ describe('volumes', () => {
     mockGetVolumeTypes(mockVolumeTypes).as('getVolumeTypes');
 
     cy.visitWithLogin('/volumes', {
-      preferenceOverrides,
       localStorageOverrides,
+      preferenceOverrides,
     });
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
@@ -127,12 +127,12 @@ describe('volumes', () => {
 
   it('creates volume from linode details', () => {
     const mockLinode = linodeFactory.build({
-      label: randomLabel(),
       id: randomNumber(),
+      label: randomLabel(),
     });
     const newVolume = volumeFactory.build({
-      linode_id: mockLinode.id,
       label: randomLabel(),
+      linode_id: mockLinode.id,
     });
 
     mockCreateVolume(newVolume).as('createVolume');
@@ -141,8 +141,8 @@ describe('volumes', () => {
     mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
 
     cy.visitWithLogin('/linodes', {
-      preferenceOverrides,
       localStorageOverrides,
+      preferenceOverrides,
     });
 
     // Visit a Linode's details page.
@@ -196,8 +196,8 @@ describe('volumes', () => {
     mockGetVolumes([mockAttachedVolume]).as('getAttachedVolumes');
     mockGetVolume(mockAttachedVolume).as('getVolume');
     cy.visitWithLogin('/volumes', {
-      preferenceOverrides,
       localStorageOverrides,
+      preferenceOverrides,
     });
     cy.wait('@getAttachedVolumes');
 
@@ -240,8 +240,8 @@ describe('volumes', () => {
     mockGetVolumeTypesError().as('getVolumeTypesError');
 
     cy.visitWithLogin('/volumes', {
-      preferenceOverrides,
       localStorageOverrides,
+      preferenceOverrides,
     });
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
@@ -264,8 +264,8 @@ describe('volumes', () => {
 
   it('does not allow creation of a volume with invalid pricing from linode details', () => {
     const mockLinode = linodeFactory.build({
-      label: randomLabel(),
       id: randomNumber(),
+      label: randomLabel(),
     });
     const newVolume = volumeFactory.build({
       label: randomLabel(),
@@ -279,8 +279,8 @@ describe('volumes', () => {
     mockGetVolumeTypesError().as('getVolumeTypesError');
 
     cy.visitWithLogin('/linodes', {
-      preferenceOverrides,
       localStorageOverrides,
+      preferenceOverrides,
     });
 
     // Visit a Linode's details page.

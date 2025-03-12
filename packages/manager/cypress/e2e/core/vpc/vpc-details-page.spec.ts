@@ -1,31 +1,33 @@
 import {
-  mockGetVPC,
-  mockGetVPCs,
-  mockDeleteVPC,
-  mockUpdateVPC,
-  mockCreateSubnet,
-  mockDeleteSubnet,
-  mockEditSubnet,
-  mockGetSubnets,
-} from 'support/intercepts/vpc';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import {
-  linodeFactory,
-  linodeConfigFactory,
-  subnetFactory,
-  vpcFactory,
-} from '@src/factories';
-import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-import type { VPC } from '@linode/api-v4';
-import { getRegionById } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
-import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
 } from '@linode/utilities';
+import {
+  linodeConfigFactory,
+  linodeFactory,
+  subnetFactory,
+  vpcFactory,
+} from '@src/factories';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { mockGetLinodeDetails } from 'support/intercepts/linodes';
+import {
+  mockCreateSubnet,
+  mockDeleteSubnet,
+  mockDeleteVPC,
+  mockEditSubnet,
+  mockGetSubnets,
+  mockGetVPC,
+  mockGetVPCs,
+  mockUpdateVPC,
+} from 'support/intercepts/vpc';
+import { ui } from 'support/ui';
+import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
+
+import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
+
+import type { VPC } from '@linode/api-v4';
 
 describe('VPC details page', () => {
   /**
@@ -42,8 +44,8 @@ describe('VPC details page', () => {
 
     const mockVPCUpdated = {
       ...mockVPC,
-      label: randomLabel(),
       description: randomPhrase(),
+      label: randomLabel(),
     };
 
     const vpcRegion = getRegionById(mockVPC.region);
@@ -283,14 +285,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -301,10 +303,10 @@ describe('VPC details page', () => {
     });
 
     const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: true,
       active: true,
+      primary: true,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -339,14 +341,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -357,11 +359,11 @@ describe('VPC details page', () => {
     });
 
     const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
-      id: mockInterfaceId,
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: false,
       active: true,
+      id: mockInterfaceId,
+      primary: false,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -396,14 +398,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -414,17 +416,17 @@ describe('VPC details page', () => {
     });
 
     const mockPrimaryInterface = linodeConfigInterfaceFactory.build({
-      primary: true,
       active: false,
+      primary: true,
       purpose: 'public',
     });
 
     const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
-      id: mockInterfaceId,
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: false,
       active: true,
+      id: mockInterfaceId,
+      primary: false,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({

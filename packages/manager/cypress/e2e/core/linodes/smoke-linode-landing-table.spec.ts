@@ -1,31 +1,32 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Linode } from '@linode/api-v4';
+import { profileFactory, userPreferencesFactory } from '@src/factories';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
-import { linodeFactory } from '@src/factories/linodes';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { ui } from 'support/ui';
-import { routes } from 'support/ui/constants';
-import { apiMatcher } from 'support/util/intercepts';
-import { chooseRegion, getRegionById } from 'support/util/regions';
-import { authenticate } from 'support/api/authentication';
-import {
-  mockGetLinodes,
-  mockGetLinodeFirewalls,
-} from 'support/intercepts/linodes';
-import { userPreferencesFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import { linodeFactory } from '@src/factories/linodes';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
+import { authenticate } from 'support/api/authentication';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetUserPreferences,
-  mockUpdateUserPreferences,
+  mockGetLinodeFirewalls,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import {
   mockGetProfile,
   mockGetProfileGrants,
+  mockGetUserPreferences,
+  mockUpdateUserPreferences,
 } from 'support/intercepts/profile';
-import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
+import { routes } from 'support/ui/constants';
 import * as commonLocators from 'support/ui/locators/common-locators';
 import * as linodeLocators from 'support/ui/locators/linode-locators';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion, getRegionById } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -52,14 +53,14 @@ const linodeLabel = (index: number) => {
 };
 
 const preferenceOverrides = {
-  linodes_view_style: 'list',
-  linodes_group_by_tag: false,
-  volumes_group_by_tag: false,
   desktop_sidebar_open: false,
+  linodes_group_by_tag: false,
+  linodes_view_style: 'list',
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'asc', orderBy: 'label' },
   },
+  volumes_group_by_tag: false,
 };
 
 authenticate();
@@ -489,7 +490,7 @@ describe('linode landing checks for empty state', () => {
       .should('be.visible')
       .should('have.text', 'Cloud-based virtual machines');
 
-    //Assert that recommended section is visible - Getting Started Guides, Deploy an App and Video Playlist
+    // Assert that recommended section is visible - Getting Started Guides, Deploy an App and Video Playlist
     cy.get('@resourcesSection')
       .contains('h2', 'Getting Started Guides')
       .should('be.visible');
@@ -522,14 +523,14 @@ describe('linode landing checks for empty state', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({
@@ -586,8 +587,8 @@ describe('linode landing checks for non-empty state with restricted user', () =>
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockGrants = grantsFactory.build({

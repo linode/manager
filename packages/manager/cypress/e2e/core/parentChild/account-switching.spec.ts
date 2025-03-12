@@ -5,11 +5,12 @@ import {
   profileFactory,
 } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
+import { grantsFactory } from '@src/factories/grants';
 import { DateTime } from 'luxon';
 import {
   interceptGetInvoices,
-  interceptGetPayments,
   interceptGetPaymentMethods,
+  interceptGetPayments,
   mockCreateChildAccountToken,
   mockCreateChildAccountTokenError,
   mockGetAccount,
@@ -31,7 +32,6 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { assertLocalStorageValue } from 'support/util/local-storage';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { grantsFactory } from '@src/factories/grants';
 
 /**
  * Confirms expected username and company name are shown in user menu button and yields the button.
@@ -73,13 +73,13 @@ const mockParentAccount = accountFactory.build({
 });
 
 const mockParentProfile = profileFactory.build({
-  username: randomLabel(),
   user_type: 'parent',
+  username: randomLabel(),
 });
 
 const mockParentUser = accountUserFactory.build({
-  username: mockParentProfile.username,
   user_type: 'parent',
+  username: mockParentProfile.username,
 });
 
 const mockChildAccount = accountFactory.build({
@@ -92,25 +92,25 @@ const mockAlternateChildAccount = accountFactory.build({
 });
 
 const mockChildAccountProxyUser = accountUserFactory.build({
-  username: mockParentProfile.username,
   user_type: 'proxy',
+  username: mockParentProfile.username,
 });
 
 // Used for testing flows involving multiple children (e.g. switching child -> child).
 const mockAlternateChildAccountProxyUser = accountUserFactory.build({
-  username: mockParentProfile.username,
   user_type: 'proxy',
+  username: mockParentProfile.username,
 });
 
 const mockChildAccountProfile = profileFactory.build({
-  username: mockChildAccountProxyUser.username,
   user_type: 'proxy',
+  username: mockChildAccountProxyUser.username,
 });
 
 // Used for testing flows involving multiple children (e.g. switching child -> child).
 const mockAlternateChildAccountProfile = profileFactory.build({
-  username: mockAlternateChildAccountProxyUser.username,
   user_type: 'proxy',
+  username: mockAlternateChildAccountProxyUser.username,
 });
 
 const childAccountAccessGrantEnabled = grantsFactory.build({
@@ -122,26 +122,26 @@ const childAccountAccessGrantDisabled = grantsFactory.build({
 });
 
 const mockChildAccountToken = appTokenFactory.build({
-  id: randomNumber(),
   created: DateTime.now().toISO(),
   expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
+  id: randomNumber(),
   label: `${mockChildAccount.company}_proxy`,
   scopes: '*',
+  thumbnail_url: undefined,
   token: randomString(32),
   website: undefined,
-  thumbnail_url: undefined,
 });
 
 // Used for testing flows involving multiple children (e.g. switching child -> child).
 const mockAlternateChildAccountToken = appTokenFactory.build({
-  id: randomNumber(),
   created: DateTime.now().toISO(),
   expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
+  id: randomNumber(),
   label: `${mockAlternateChildAccount.company}_proxy`,
   scopes: '*',
+  thumbnail_url: undefined,
   token: randomString(32),
   website: undefined,
-  thumbnail_url: undefined,
 });
 
 const mockErrorMessage = 'An unknown error has occurred.';
@@ -400,10 +400,10 @@ describe('Parent/Child account switching', () => {
       // data set to mock values.
       cy.visitWithLogin('/account/billing', {
         localStorageOverrides: {
-          proxy_user: true,
-          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
           'authentication/parent_token/expire': mockParentExpiration,
           'authentication/parent_token/scopes': '*',
+          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
+          proxy_user: true,
         },
       });
 
@@ -487,10 +487,10 @@ describe('Parent/Child account switching', () => {
       // data set to mock values.
       cy.visitWithLogin('/account/billing', {
         localStorageOverrides: {
-          proxy_user: true,
-          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
           'authentication/parent_token/expire': mockParentExpiration,
           'authentication/parent_token/scopes': '*',
+          'authentication/parent_token/token': `Bearer ${mockParentToken}`,
+          proxy_user: true,
         },
       });
 
