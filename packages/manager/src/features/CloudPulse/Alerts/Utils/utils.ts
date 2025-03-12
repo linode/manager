@@ -285,7 +285,7 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
 ): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
   const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
 
-  if (!serviceTypeObj || !aclpAlertServiceTypeConfig) {
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig.length) {
     return baseSchema;
   }
 
