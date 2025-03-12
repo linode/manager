@@ -1,8 +1,7 @@
+import { truncateEnd } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { truncateEnd } from 'src/utilities/truncate';
 
 import { StyledChip, StyledDeleteButton } from './Tag.styles';
 

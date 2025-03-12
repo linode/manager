@@ -6,6 +6,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -31,7 +32,6 @@ import {
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
 } from 'src/utilities/linodes';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';

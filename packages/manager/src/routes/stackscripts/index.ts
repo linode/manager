@@ -7,64 +7,80 @@ import { StackScriptDetail } from 'src/features/StackScripts/StackScriptsDetail'
 import { rootRoute } from '../root';
 import { StackScriptsRoute } from './StackscriptsRoute';
 
+import type { TableSearchParams } from '../types';
+
+interface StackScriptsSearchParams extends TableSearchParams {
+  query?: string;
+}
+
 const stackScriptsRoute = createRoute({
   component: StackScriptsRoute,
   getParentRoute: () => rootRoute,
   path: 'stackscripts',
+  validateSearch: (search: StackScriptsSearchParams) => search,
 });
 
 const stackScriptsLandingRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: '/',
 }).lazy(() =>
-  import(
-    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
-  ).then((m) => m.stackScriptsLandingLazyRoute)
+  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsAccountRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'account',
 }).lazy(() =>
-  import(
-    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
-  ).then((m) => m.stackScriptsLandingLazyRoute)
+  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+);
+
+const stackScriptsAccountMakePublicRoute = createRoute({
+  getParentRoute: () => stackScriptsAccountRoute,
+  parseParams: (params) => ({
+    id: Number(params.id),
+  }),
+  path: '$id/make-public',
+});
+
+const stackScriptsDeleteRoute = createRoute({
+  getParentRoute: () => stackScriptsAccountRoute,
+  parseParams: (params) => ({
+    id: Number(params.id),
+  }),
+  path: '$id/delete',
+}).lazy(() =>
+  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCommunityRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'community',
 }).lazy(() =>
-  import(
-    'src/features/StackScripts/StackScriptLanding/StackScriptsLanding'
-  ).then((m) => m.stackScriptsLandingLazyRoute)
+  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCreateRoute = createRoute({
-  // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: StackScriptCreate,
   getParentRoute: () => stackScriptsRoute,
   path: 'create',
 });
 
 const stackScriptsDetailRoute = createRoute({
-  // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: StackScriptDetail,
   getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
-    stackScriptID: Number(params.stackScriptID),
+    id: Number(params.id),
   }),
-  path: '$stackScriptID',
+  path: '$id',
 });
 
 const stackScriptsEditRoute = createRoute({
-  // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: StackScriptEdit,
   getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
-    stackScriptID: Number(params.stackScriptID),
+    id: Number(params.id),
   }),
-  path: '$stackScriptID/edit',
+  path: '$id/edit',
 });
 
 export const stackScriptsRouteTree = stackScriptsRoute.addChildren([
@@ -74,4 +90,6 @@ export const stackScriptsRouteTree = stackScriptsRoute.addChildren([
   stackScriptsCreateRoute,
   stackScriptsDetailRoute,
   stackScriptsEditRoute,
+  stackScriptsAccountMakePublicRoute,
+  stackScriptsDeleteRoute,
 ]);

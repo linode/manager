@@ -96,7 +96,7 @@ describe('EditAlertResources component tests', () => {
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
     history.push = push;
-    history.push('/monitor/alerts/definitions/edit/linode/1');
+    history.push('/alerts/definitions/edit/linode/1');
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
@@ -120,7 +120,7 @@ describe('EditAlertResources component tests', () => {
 
     expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
 
-    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
+    expect(push).toHaveBeenLastCalledWith('/alerts/definitions'); // after confirmation history updates to list page
 
     await waitFor(() => {
       expect(
@@ -133,7 +133,7 @@ describe('EditAlertResources component tests', () => {
 
     expect(push).toHaveBeenLastCalledWith(
       // after cancel click history updates to list page
-      '/monitor/alerts/definitions'
+      '/alerts/definitions'
     );
   });
 
@@ -148,7 +148,7 @@ describe('EditAlertResources component tests', () => {
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
     history.push = push;
-    history.push('/monitor/alerts/definitions/edit/linode/1');
+    history.push('/alerts/definitions/edit/linode/1');
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
