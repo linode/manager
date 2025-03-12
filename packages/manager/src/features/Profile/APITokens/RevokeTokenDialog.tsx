@@ -1,12 +1,12 @@
+import {
+  useRevokeAppAccessTokenMutation,
+  useRevokePersonalAccessTokenMutation,
+} from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useRevokeAppAccessTokenMutation,
-  useRevokePersonalAccessTokenMutation,
-} from 'src/queries/profile/tokens';
 
 import type { APITokenType } from './APITokenTable';
 import type { Token } from '@linode/api-v4';

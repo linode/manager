@@ -26,7 +26,8 @@ const mockRegions = {
   // Mock data as needed
   error: null,
 };
-vi.mock('src/queries/regions/regions', () => ({
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: vi.fn(() => mockRegions),
 }));
 

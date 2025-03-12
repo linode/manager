@@ -26,14 +26,14 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+  useProfile,
+} from '@linode/queries';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useProfile } from './queries/profile/profile';
 import { useStyles } from './Root.styles';
 
 export const Root = () => {

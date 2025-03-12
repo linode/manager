@@ -1,7 +1,7 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 import type {
   CreatePlacementGroupPayload,
