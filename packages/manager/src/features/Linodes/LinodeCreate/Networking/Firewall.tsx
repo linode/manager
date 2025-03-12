@@ -1,3 +1,4 @@
+import { useAllFirewallsQuery } from '@linode/queries';
 import { Autocomplete, Box, Stack } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
@@ -5,7 +6,6 @@ import { useController } from 'react-hook-form';
 import { LinkButton } from 'src/components/LinkButton';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 
 import type { LinodeCreateFormValues } from '../utilities';
 

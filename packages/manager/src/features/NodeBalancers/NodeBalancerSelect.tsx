@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { useAllNodeBalancersQuery } from '@linode/queries';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import type { APIError, NodeBalancer } from '@linode/api-v4';

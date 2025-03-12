@@ -1,3 +1,4 @@
+import { useSSHKeysQuery } from '@linode/queries';
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -16,7 +17,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { DeleteSSHKeyDialog } from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import { SSHKeyActionMenu } from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSSHKeysQuery } from 'src/queries/profile/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 

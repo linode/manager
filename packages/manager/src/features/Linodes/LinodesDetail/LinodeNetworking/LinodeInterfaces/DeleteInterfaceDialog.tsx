@@ -1,12 +1,12 @@
+import {
+  useDeleteLinodeInterfaceMutation,
+  useLinodeInterfaceQuery,
+} from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useDeleteLinodeInterfaceMutation,
-  useLinodeInterfaceQuery,
-} from 'src/queries/linodes/interfaces';
 
 import { getLinodeInterfaceType } from './utilities';
 

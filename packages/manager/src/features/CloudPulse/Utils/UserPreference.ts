@@ -1,9 +1,6 @@
 import { useRef } from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 import { DASHBOARD_ID, WIDGETS } from './constants';
 

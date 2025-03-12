@@ -1,3 +1,4 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
   getQueryParamsFromQueryString,
   pathOr,
@@ -10,10 +11,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
-import {
   sortByArrayLength,
   sortByNumber,
   sortByString,
@@ -21,8 +18,7 @@ import {
 } from 'src/utilities/sort-by';
 import { splitAt } from 'src/utilities/splitAt';
 
-import type { Order } from 'src/hooks/useOrder';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences, Order } from '@linode/utilities';
 
 export interface OrderByProps<T> extends State {
   data: T[];

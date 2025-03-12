@@ -1,5 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAccountAgreements,
+  useAccountSettings,
+  useMutateAccountAgreements,
+  useProfile,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Notice,
@@ -15,22 +21,16 @@ import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import { useAccountSettings } from 'src/queries/account/settings';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageTypesQuery,
 } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { BucketRegions } from './BucketRegions';

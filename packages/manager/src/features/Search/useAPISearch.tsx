@@ -4,15 +4,14 @@ import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getLinodes } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
+import { useRegionsQuery } from '@linode/queries';
+import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { isNotNullOrUndefined } from '@linode/utilities';
 import { flatten } from 'ramda';
-import { useCallback } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,

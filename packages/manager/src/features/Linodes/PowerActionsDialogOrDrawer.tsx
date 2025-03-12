@@ -5,12 +5,12 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
+  useAllLinodeConfigsQuery,
   useBootLinodeMutation,
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
 

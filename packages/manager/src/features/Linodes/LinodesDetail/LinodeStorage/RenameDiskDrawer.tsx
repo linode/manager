@@ -4,7 +4,7 @@ import * as React from 'react';
 import { object, string } from 'yup';
 
 import { Drawer } from 'src/components/Drawer';
-import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
+import { useLinodeDiskUpdateMutation } from '@linode/queries';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { Disk } from '@linode/api-v4/lib/linodes';

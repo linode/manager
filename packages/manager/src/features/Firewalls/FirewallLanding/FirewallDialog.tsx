@@ -5,9 +5,12 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
-import { linodeQueries } from 'src/queries/linodes/linodes';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
+import {
+  useDeleteFirewall,
+  useMutateFirewall,
+  linodeQueries,
+  nodebalancerQueries,
+} from '@linode/queries';
 
 import type { Firewall } from '@linode/api-v4';
 

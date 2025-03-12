@@ -1,6 +1,5 @@
+import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
-
-import Factory from 'src/factories/factoryProxy';
 
 import type { EntityTransfer, TransferEntities } from '@linode/api-v4';
 
