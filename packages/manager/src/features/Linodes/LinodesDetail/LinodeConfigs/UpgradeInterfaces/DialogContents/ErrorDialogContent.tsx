@@ -38,7 +38,7 @@ export const ErrorDialogContent = (
           ))}
         </List>
       )}
-      <Stack direction="row-reverse">
+      <Stack direction="row-reverse" sx={{ paddingTop: 12 }}>
         <Button buttonType="secondary" onClick={onClose}>
           Close
         </Button>
