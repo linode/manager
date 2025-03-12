@@ -16,7 +16,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,

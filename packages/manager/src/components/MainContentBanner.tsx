@@ -5,10 +5,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 export const MainContentBanner = React.memo(() => {
   // Uncomment this to test this banner:

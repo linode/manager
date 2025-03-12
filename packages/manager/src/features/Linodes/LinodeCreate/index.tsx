@@ -1,5 +1,12 @@
 import { isEmpty } from '@linode/api-v4';
+import {
+  useCloneLinodeMutation,
+  useCreateLinodeMutation,
+  useMutateAccountAgreements,
+  useProfile,
+} from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -17,12 +24,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useMutateAccountAgreements } from 'src/queries/account/agreements';
-import {
-  useCloneLinodeMutation,
-  useCreateLinodeMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
@@ -31,7 +32,6 @@ import {
   useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
 } from 'src/utilities/linodes';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';

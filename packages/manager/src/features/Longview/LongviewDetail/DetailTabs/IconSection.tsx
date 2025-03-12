@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -9,7 +10,6 @@ import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 import { formatUptime } from 'src/utilities/formatUptime';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import {
   getPackageNoticeText,

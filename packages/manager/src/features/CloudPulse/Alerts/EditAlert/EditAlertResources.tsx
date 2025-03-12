@@ -19,7 +19,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
 
   const history = useHistory();
 
-  const definitionLanding = '/monitor/alerts/definitions';
+  const definitionLanding = '/alerts/definitions';
 
   const { alertDetails, serviceType } = props;
   const alertId = alertDetails.id;
@@ -113,7 +113,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
         <Box alignSelf="flex-end" display="flex" gap={1} m={3} mb={0}>
           <Button
             onClick={() => {
-              history.push('/monitor/alerts/definitions');
+              history.push('/alerts/definitions');
             }}
             data-testid="cancel-save-resources"
             variant="text"

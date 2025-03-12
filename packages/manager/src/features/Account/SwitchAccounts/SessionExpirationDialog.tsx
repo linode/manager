@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
