@@ -1,3 +1,4 @@
+import { useNodeBalancersFirewallsQuery } from '@linode/queries';
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
@@ -13,7 +14,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
-import { useNodeBalancersFirewallsQuery } from '@linode/queries';
 
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
