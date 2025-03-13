@@ -33,6 +33,21 @@ const APL_UNSUPPORTED_CHIP_COPY = ' - COMING SOON';
 export const ApplicationPlatform = (props: APLProps) => {
   const { isSectionDisabled, setAPL, setHighAvailability } = props;
 
+  const [isAPLChecked, setIsAPLChecked] = React.useState<boolean | undefined>(
+    isSectionDisabled ? false : undefined
+  );
+  const [isAPLNotChecked, setIsAPLNotChecked] = React.useState<
+    boolean | undefined
+  >(isSectionDisabled ? true : undefined);
+
+  /**
+   * Reset the radio buttons to the correct default state once the user toggles cluster tiers.
+   */
+  React.useEffect(() => {
+    setIsAPLChecked(isSectionDisabled ? false : undefined);
+    setIsAPLNotChecked(isSectionDisabled ? true : undefined);
+  }, [isSectionDisabled]);
+
   const CHIP_COPY = `BETA${isSectionDisabled ? APL_UNSUPPORTED_CHIP_COPY : ''}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,14 +86,15 @@ export const ApplicationPlatform = (props: APLProps) => {
           label="Yes, enable Akamai App Platform."
           name="yes"
           value="yes"
+          checked={isAPLChecked}
         />
         <FormControlLabel
-          checked={isSectionDisabled ?? undefined}
           control={<Radio data-testid="apl-radio-button-no" />}
           disabled={isSectionDisabled}
           label="No"
           name="no"
           value="no"
+          checked={isAPLNotChecked}
         />
       </RadioGroup>
     </FormControl>
