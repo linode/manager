@@ -1,3 +1,4 @@
+import { useRegionQuery } from '@linode/queries';
 import { Stack, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -20,12 +21,29 @@ export const VLAN = ({ index }: Props) => {
 
   const regionId = useWatch({ control, name: 'region' });
 
+  const { data: selectedRegion } = useRegionQuery(regionId);
+
+  const regionSupportsVLANs =
+    selectedRegion?.capabilities.includes('Vlans') ?? false;
+
   return (
-    <Stack columnGap={2} direction="row" flexWrap="wrap">
+    <Stack
+      alignItems="flex-start"
+      columnGap={2}
+      direction="row"
+      flexWrap="wrap"
+    >
       <Controller
         render={({ field, fieldState }) => (
           <VLANSelect
-            disabled={isLinodeCreateRestricted}
+            helperText={
+              !regionId
+                ? 'Select a region to see available VLANs.'
+                : selectedRegion && !regionSupportsVLANs
+                ? 'VLAN is not available in the selected region.'
+                : undefined
+            }
+            disabled={isLinodeCreateRestricted || !regionSupportsVLANs}
             errorText={fieldState.error?.message}
             filter={{ region: regionId }}
             onBlur={field.onBlur}

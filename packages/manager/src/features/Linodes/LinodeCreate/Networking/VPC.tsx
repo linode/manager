@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const VPC = ({ index }: Props) => {
-  const { control, setValue, formState } = useFormContext<LinodeCreateFormValues>();
+  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const [regionId, selectedVPCId] = useWatch({
@@ -34,8 +34,6 @@ export const VPC = ({ index }: Props) => {
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
 
-  console.log(formState.errors)
-
   return (
     <Box>
       <Stack spacing={1.5}>
@@ -45,7 +43,7 @@ export const VPC = ({ index }: Props) => {
               helperText={
                 !regionId
                   ? 'Select a region to see available VPCs.'
-                  : regionId && !regionSupportsVPCs
+                  : selectedRegion && !regionSupportsVPCs
                   ? 'VPC is not available in the selected region.'
                   : undefined
               }
@@ -57,7 +55,8 @@ export const VPC = ({ index }: Props) => {
                   // preselect that subnet for the user.
                   setValue(
                     `linodeInterfaces.${index}.vpc.subnet_id`,
-                    vpc.subnets[0].id
+                    vpc.subnets[0].id,
+                    { shouldValidate: true }
                   );
                 } else {
                   // Otherwise, just clear the selected subnet
