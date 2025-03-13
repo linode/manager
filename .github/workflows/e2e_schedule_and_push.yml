@@ -21,6 +21,7 @@ on:
 
 jobs:
   run-cypress-e2e:
+    name: Cypress Tests (User ${{ matrix.user.index }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
