@@ -18,5 +18,4 @@ export const enableHtmlReport: CypressPlugin = async function (on, config) {
   on('after:run', async () => {
     await afterRunHook();
   });
-  return config;
 };
