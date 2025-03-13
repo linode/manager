@@ -2,30 +2,32 @@
  * @file Integration tests for VPC create flow.
  */
 
-import type { Subnet, VPC } from '@linode/api-v4';
 import {
-  vpcFactory,
-  subnetFactory,
   linodeFactory,
   regionFactory,
+  subnetFactory,
+  vpcFactory,
 } from '@src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
-  mockCreateVPCError,
   mockCreateVPC,
+  mockCreateVPCError,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import {
-  randomLabel,
-  randomPhrase,
-  randomIp,
-  randomNumber,
-  randomString,
-} from 'support/util/random';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+import {
+  randomIp,
+  randomLabel,
+  randomNumber,
+  randomPhrase,
+  randomString,
+} from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
+
+import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+
+import type { Subnet, VPC } from '@linode/api-v4';
 
 /**
  * Gets the "Add another Subnet" section with the given index.
@@ -53,9 +55,9 @@ describe('VPC create flow', () => {
 
     const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
       return subnetFactory.build({
-        label: randomLabel(),
         id: randomNumber(10000, 99999),
         ipv4: `${randomIp()}/${randomNumber(0, 32)}`,
+        label: randomLabel(),
         linodes: linodeFactory.buildList(index + 1),
       });
     });
@@ -64,10 +66,10 @@ describe('VPC create flow', () => {
     const mockInvalidIpRange = `${randomIp()}/${randomNumber(33, 100)}`;
 
     const mockVpc: VPC = vpcFactory.build({
+      description: randomPhrase(),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       region: mockVPCRegion.id,
-      description: randomPhrase(),
       subnets: mockSubnets,
     });
 
@@ -265,10 +267,10 @@ describe('VPC create flow', () => {
     );
 
     const mockVpc: VPC = vpcFactory.build({
+      description: randomPhrase(),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       region: mockVPCRegion.id,
-      description: randomPhrase(),
       subnets: [],
     });
 

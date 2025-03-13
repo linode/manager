@@ -133,9 +133,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
-    cy.visitWithLogin(
-      `/alerts/definitions/detail/${service_type}/${id}`
-    );
+    cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
     cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
 
     // Validating contents of Overview Section
