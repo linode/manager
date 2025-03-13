@@ -302,7 +302,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
    */
-  interfaces: InterfacePayload[];
+  interfaces?: InterfacePayload[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */

@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isNullOrUndefined } from '@linode/utilities';
-import { CreateLinodeSchema } from '@linode/validation';
 
 import { accountQueries, regionQueries } from '@linode/queries';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
@@ -9,8 +8,9 @@ import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
   CreateLinodeFromStackScriptSchema,
+  CreateLinodeSchema,
 } from './schemas';
-import { getLinodeCreatePayload } from './utilities';
+import { getInterfacesPayload } from './utilities';
 
 import type { LinodeCreateType } from './types';
 import type {
@@ -27,16 +27,15 @@ export const getLinodeCreateResolver = (
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (values, context, options) => {
-    const transformedValues = getLinodeCreatePayload(
-      structuredClone(values),
-      context?.isLinodeInterfacesEnabled ?? false
+    values.interfaces = getInterfacesPayload(
+      values.interfaces,
+      values.private_ip
     );
-
-    const { errors } = await yupResolver<LinodeCreateFormValues>(
+    const { errors } = await yupResolver(
       schema as ObjectSchema<LinodeCreateFormValues>,
       {},
       { mode: 'async', raw: true }
-    )(transformedValues as LinodeCreateFormValues, context, options);
+    )(values, context, options);
 
     if (tab === 'Clone Linode' && !values.linode) {
       (errors as FieldErrors<LinodeCreateFormValues>)['linode'] = {

@@ -1,5 +1,16 @@
-import { CreateLinodeSchema } from '@linode/validation';
-import { number, object } from 'yup';
+import {
+  CreateLinodeSchema as BaseCreateLinodeSchema,
+  ConfigProfileInterfaceSchema,
+  CreateLinodeInterfaceSchema,
+} from '@linode/validation';
+import { array, number, object } from 'yup';
+
+export const CreateLinodeSchema = BaseCreateLinodeSchema.concat(
+  object({
+    interfaces: array(ConfigProfileInterfaceSchema),
+    linodeInterfaces: array(CreateLinodeInterfaceSchema),
+  })
+);
 
 /**
  * Extends the Linode Create schema to make backup_id required for the backups tab
