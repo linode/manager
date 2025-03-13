@@ -18,7 +18,6 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
-import { BucketRateLimitTable } from './BucketRateLimitTable';
 
 import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
@@ -49,12 +48,6 @@ export const BucketDetailsDrawer = React.memo(
     const isObjMultiClusterEnabled = isFeatureEnabledV2(
       'Object Storage Access Key Regions',
       Boolean(flags.objMultiCluster),
-      account?.capabilities ?? []
-    );
-
-    const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-      'Object Storage Endpoint Types',
-      Boolean(flags.objectStorageGen2?.enabled),
       account?.capabilities ?? []
     );
 
@@ -138,20 +131,6 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {(typeof size === 'number' || typeof objects === 'number') && (
           <Divider spacingBottom={16} spacingTop={16} />
-        )}
-        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
-         to getBucketAccess and updateBucketAccess.  */}
-        {isObjectStorageGen2Enabled && (
-          <>
-            <BucketRateLimitTable
-              typographyProps={{
-                marginTop: 1,
-                variant: 'inherit',
-              }}
-              endpointType={endpoint_type}
-            />
-            <Divider spacingBottom={16} spacingTop={16} />
-          </>
         )}
         {cluster && label && (
           <AccessSelect

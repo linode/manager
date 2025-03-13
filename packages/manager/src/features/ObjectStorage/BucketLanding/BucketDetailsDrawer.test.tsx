@@ -260,24 +260,6 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the Bucket Rate Limit Table for E2 and E3 buckets', async () => {
-    const { findByTestId } = renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          onClose={mockOnClose}
-          open={true}
-          selectedBucket={e3Bucket}
-        />
-      ),
-      options: {
-        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
-      },
-    });
-
-    const rateLimitTable = await findByTestId('bucket-rate-limit-table');
-    expect(rateLimitTable).toBeVisible();
-  });
-
   it('renders the Bucket Rate Limit Text for E0 and E1 buckets', async () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: (
