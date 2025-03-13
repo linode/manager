@@ -23,7 +23,6 @@ import {
   view,
 } from 'ramda';
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -54,7 +53,6 @@ import type {
   NodeBalancerConfigNode,
 } from '@linode/api-v4';
 import type { Lens } from 'ramda';
-import type { RouteComponentProps } from 'react-router-dom';
 import type { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 
@@ -81,7 +79,7 @@ const StyledConfigsButton = styled(Button, {
   },
 }));
 
-interface Props {
+export interface NodeBalancerConfigurationsBaseProps {
   grants: Grants | undefined;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
@@ -91,7 +89,6 @@ interface MatchProps {
   configId?: string;
   nodeBalancerId?: string;
 }
-type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
   configs: PromiseLoaderResponse<NodeBalancerConfigFieldsWithStatus[]>;
@@ -122,8 +119,8 @@ interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
 }
 
 interface NodeBalancerConfigurationsProps
-  extends Props,
-    RouteProps,
+  extends NodeBalancerConfigurationsBaseProps,
+    MatchProps,
     PreloadedProps,
     WithQueryClientProps {}
 
@@ -268,11 +265,7 @@ class NodeBalancerConfigurations extends React.Component<
       .join(',');
 
   createNode = (configIdx: number, nodeIdx: number) => {
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
@@ -330,11 +323,7 @@ class NodeBalancerConfigurations extends React.Component<
       },
     });
 
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
 
     if (!nodeBalancerId) {
       return;
@@ -377,11 +366,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   deleteNode = (configIdx: number, nodeIdx: number) => {
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
 
     if (!nodeBalancerId) {
       return;
@@ -491,7 +476,7 @@ class NodeBalancerConfigurations extends React.Component<
 
   isNodeBalancerReadOnly = () => {
     const { grants } = this.props;
-    const { nodeBalancerId } = this.props.match.params;
+    const { nodeBalancerId } = this.props;
     return Boolean(
       grants?.nodebalancer?.some(
         (grant) =>
@@ -579,7 +564,7 @@ class NodeBalancerConfigurations extends React.Component<
     const lensTo = lensFrom(['configs', idx]);
 
     // Check whether config is expended based on the URL
-    const expandedConfigId = this.props.match.params.configId;
+    const expandedConfigId = this.props.configId;
     const isExpanded = expandedConfigId
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
@@ -734,11 +719,7 @@ class NodeBalancerConfigurations extends React.Component<
      * subsequent saves.
      */
 
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
 
     if (!nodeBalancerId) {
       return;
@@ -839,11 +820,7 @@ class NodeBalancerConfigurations extends React.Component<
     configPayload: NodeBalancerConfigFieldsWithStatus
   ) => {
     /* Update a config and its nodes simultaneously */
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
 
     if (!nodeBalancerId) {
       return;
@@ -1021,11 +998,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   updateNode = (configIdx: number, nodeIdx: number) => {
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = this.props;
+    const { nodeBalancerId } = this.props;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
@@ -1152,19 +1125,14 @@ class NodeBalancerConfigurations extends React.Component<
 
 const preloaded = PromiseLoader<NodeBalancerConfigurationsProps>({
   configs: (props) => {
-    const {
-      match: {
-        params: { nodeBalancerId },
-      },
-    } = props;
+    const { nodeBalancerId } = props;
     return getConfigsWithNodes(+nodeBalancerId!);
   },
 });
 
-const enhanced = composeC<NodeBalancerConfigurationsProps, Props>(
-  withRouter,
-  preloaded,
-  withQueryClient
-);
+const enhanced = composeC<
+  NodeBalancerConfigurationsProps,
+  NodeBalancerConfigurationsBaseProps
+>(preloaded, withQueryClient);
 
 export default enhanced(NodeBalancerConfigurations);

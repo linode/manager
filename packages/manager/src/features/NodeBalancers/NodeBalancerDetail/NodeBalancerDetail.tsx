@@ -4,7 +4,7 @@ import {
   useNodebalancerUpdateMutation,
 } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
+import { useParams, useRouter } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -21,7 +21,10 @@ import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
+import type { NodeBalancerConfigurationsBaseProps } from './NodeBalancerConfigurations';
+
 export const NodeBalancerDetail = () => {
+  const router = useRouter();
   const { id } = useParams({
     strict: false,
   });
@@ -124,11 +127,21 @@ export const NodeBalancerDetail = () => {
             <NodeBalancerSummary />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <NodeBalancerConfigurations
-              grants={grants}
-              nodeBalancerLabel={nodebalancer.label}
-              nodeBalancerRegion={nodebalancer.region}
-            />
+            {router.state.matches.some(
+              (match) => match.routeId === '/nodebalancers/$id/configurations'
+            ) ? (
+              <NodeBalancerConfigurationsWrapper
+                grants={grants}
+                nodeBalancerLabel={nodebalancer.label}
+                nodeBalancerRegion={nodebalancer.region}
+              />
+            ) : (
+              <NodeBalancerConfigurationWrapper
+                grants={grants}
+                nodeBalancerLabel={nodebalancer.label}
+                nodeBalancerRegion={nodebalancer.region}
+              />
+            )}
           </SafeTabPanel>
           <SafeTabPanel index={2}>
             <NodeBalancerSettings />
@@ -137,6 +150,44 @@ export const NodeBalancerDetail = () => {
       </Tabs>
     </React.Fragment>
   );
+};
+
+// Using a wrapper because of it being class component unable to use hooks
+const NodeBalancerConfigurationsWrapper = (
+  props: NodeBalancerConfigurationsBaseProps
+) => {
+  const { id: nodeBalancerId } = useParams({
+    from: '/nodebalancers/$id/configurations',
+  });
+
+  if (!nodeBalancerId) {
+    return null;
+  }
+
+  const matchProps = {
+    nodeBalancerId,
+  };
+
+  return <NodeBalancerConfigurations {...props} {...matchProps} />;
+};
+
+const NodeBalancerConfigurationWrapper = (
+  props: NodeBalancerConfigurationsBaseProps
+) => {
+  const { configId, id: nodeBalancerId } = useParams({
+    strict: false,
+  });
+
+  if (!nodeBalancerId || !configId) {
+    return null;
+  }
+
+  const matchProps = {
+    configId,
+    nodeBalancerId,
+  };
+
+  return <NodeBalancerConfigurations {...props} {...matchProps} />;
 };
 
 export default NodeBalancerDetail;

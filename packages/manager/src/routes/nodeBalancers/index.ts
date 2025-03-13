@@ -1,8 +1,4 @@
-import {
-  createRoute,
-  lazyRouteComponent,
-  redirect,
-} from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { NodeBalancersRoute } from './NodeBalancersRoute';
@@ -51,17 +47,19 @@ const nodeBalancerDetailSummaryRoute = createRoute({
   import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
-// TODO TanStack Router - figure proper way of lazy loading class components
 const nodeBalancerDetailConfigurationsRoute = createRoute({
-  component: lazyRouteComponent(
-    () =>
-      import(
-        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerConfigurations'
-      )
-  ),
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/configurations',
-});
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
+const nodeBalancerDetailConfigurationRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/configurations/$configId',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
 
 const nodeBalancerDetailSettingsRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
@@ -75,7 +73,9 @@ export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
   nodeBalancersCreateRoute,
   nodeBalancerDetailRoute.addChildren([
     nodeBalancerDetailSummaryRoute,
-    nodeBalancerDetailConfigurationsRoute,
+    nodeBalancerDetailConfigurationsRoute.addChildren([
+      nodeBalancerDetailConfigurationRoute,
+    ]),
     nodeBalancerDetailSettingsRoute,
   ]),
 ]);
