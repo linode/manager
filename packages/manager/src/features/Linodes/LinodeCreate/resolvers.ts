@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { accountQueries, regionQueries } from '@linode/queries';
 import { isNullOrUndefined } from '@linode/utilities';
 
-import { accountQueries, regionQueries } from '@linode/queries';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
+import { getLegacyInterfaceFromLinodeInterface, getLinodeInterfacePayload } from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
@@ -26,11 +27,34 @@ export const getLinodeCreateResolver = (
   queryClient: QueryClient
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
-  return async (values, context, options) => {
-    values.interfaces = getInterfacesPayload(
-      values.interfaces,
-      values.private_ip
-    );
+  return async (rawValues, context, options) => {
+    const values = structuredClone(rawValues);
+
+    // Because `interfaces` are so complex, we need to perform some transformations before
+    // we even try to valiate them with our vaidation schema.
+    if (context?.isLinodeInterfacesEnabled) {
+      const shouldUseNewInterfaces = values.interface_generation === 'linode';
+
+      if (shouldUseNewInterfaces) {
+        values.linodeInterfaces = values.linodeInterfaces.map(
+          getLinodeInterfacePayload
+        );
+        values.interfaces = undefined;
+      } else {
+        values.interfaces = values.linodeInterfaces.map(
+          getLegacyInterfaceFromLinodeInterface
+        );
+        values.linodeInterfaces = undefined;
+      }
+    } else {
+      values.interfaces = getInterfacesPayload(
+        values.interfaces,
+        values.private_ip
+      );
+    }
+
+    console.log("Values", values)
+
     const { errors } = await yupResolver(
       schema as ObjectSchema<LinodeCreateFormValues>,
       {},
@@ -81,10 +105,10 @@ export const getLinodeCreateResolver = (
     }
 
     if (errors) {
-      return { errors, values };
+      return { errors, values: rawValues };
     }
 
-    return { errors: {}, values };
+    return { errors: {}, values: rawValues };
   };
 };
 
