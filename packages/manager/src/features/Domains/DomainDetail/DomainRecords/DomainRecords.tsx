@@ -1,5 +1,6 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { ActionsPanel, Typography } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';

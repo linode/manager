@@ -33,6 +33,7 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
+  | 'Alerts'
   | 'Betas'
   | 'Cloud Load Balancers'
   | 'Dashboard'
@@ -47,6 +48,7 @@ export type NavEntity =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
+  | 'Metrics'
   | 'Monitor'
   | 'NodeBalancers'
   | 'Object Storage'
@@ -217,14 +219,26 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         icon: <Monitor />,
         links: [
           {
-            display: 'Longview',
-            href: '/longview',
+            display: 'Metrics',
+            hide: !isACLPEnabled,
+            href: '/metrics',
+            isBeta: flags.aclp?.beta,
           },
           {
-            display: 'Monitor',
-            hide: !isACLPEnabled,
-            href: '/monitor',
+            display: 'Alerts',
+            hide:
+              !isACLPEnabled &&
+              !(
+                flags.aclpAlerting?.alertDefinitions ||
+                flags.aclpAlerting?.recentActivity ||
+                flags.aclpAlerting?.notificationChannels
+              ),
+            href: '/alerts',
             isBeta: flags.aclp?.beta,
+          },
+          {
+            display: 'Longview',
+            href: '/longview',
           },
         ],
         name: 'Monitor',

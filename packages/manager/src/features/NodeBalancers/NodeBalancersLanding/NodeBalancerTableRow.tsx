@@ -1,4 +1,5 @@
 import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
+import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -8,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 
