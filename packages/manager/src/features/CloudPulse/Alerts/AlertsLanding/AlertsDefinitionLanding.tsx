@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { AlertDetail } from '../AlertsDetail/AlertDetail';
 import { AlertListing } from '../AlertsListing/AlertListing';
@@ -19,6 +19,7 @@ export const AlertDefinitionLanding = () => {
       <Route exact path={`${url}/edit/:serviceType/:alertId`}>
         <EditAlertLanding />
       </Route>
+      <Redirect from="*" to={url} />
     </Switch>
   );
 };
