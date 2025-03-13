@@ -53,8 +53,12 @@ export const getLegacyInterfaceFromLinodeInterface = (
   const purpose = linodeInterface.purpose;
 
   return {
-    ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
-    ipam_address: linodeInterface.vlan?.ipam_address ?? null,
+    ip_ranges:
+      purpose === 'vpc'
+        ? linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range)
+        : null,
+    ipam_address:
+      purpose === 'vlan' ? linodeInterface.vlan?.ipam_address : null,
     ipv4:
       purpose === 'vpc'
         ? {
@@ -62,9 +66,9 @@ export const getLegacyInterfaceFromLinodeInterface = (
             vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
           }
         : undefined,
-    label: linodeInterface.vlan?.vlan_label ?? null,
+    label: purpose === 'vlan' ? linodeInterface.vlan?.vlan_label : null,
     purpose,
-    subnet_id: linodeInterface.vpc?.subnet_id,
-    vpc_id: linodeInterface.vpc?.vpc_id,
+    subnet_id: purpose === 'vpc' ? linodeInterface.vpc?.subnet_id : null,
+    vpc_id: purpose === 'vpc' ? linodeInterface.vpc?.vpc_id : null,
   };
 };
