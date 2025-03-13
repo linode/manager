@@ -1,7 +1,7 @@
+import { useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
@@ -18,7 +18,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNodeBalancersQuery } from '@linode/queries';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
@@ -26,6 +25,7 @@ import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
+  const navigate = useNavigate();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
     false
   );
@@ -34,7 +34,6 @@ export const NodeBalancersLanding = () => {
     setSelectedNodeBalancerId,
   ] = React.useState<number>(-1);
 
-  const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
@@ -100,7 +99,7 @@ export const NodeBalancersLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         entity="NodeBalancer"
-        onButtonClick={() => history.push('/nodebalancers/create')}
+        onButtonClick={() => navigate({ to: '/nodebalancers/create' })}
         title="NodeBalancers"
       />
       <Table>
@@ -163,9 +162,5 @@ export const NodeBalancersLanding = () => {
     </>
   );
 };
-
-export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
-  component: NodeBalancersLanding,
-});
 
 export default NodeBalancersLanding;

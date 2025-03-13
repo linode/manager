@@ -1,4 +1,8 @@
 import {
+  useNodeBalancerQuery,
+  useNodebalancerUpdateMutation,
+} from '@linode/queries';
+import {
   Accordion,
   Button,
   FormHelperText,
@@ -6,25 +10,21 @@ import {
   TextField,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import {
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from '@linode/queries';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
+  const { id } = useParams({
+    strict: false,
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -36,13 +36,13 @@ export const NodeBalancerSettings = () => {
     error: labelError,
     isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(id);
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const {
     error: throttleError,
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(id);
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
     false
@@ -97,7 +97,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls nodeBalancerId={id} />
+        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
@@ -153,9 +153,3 @@ export const NodeBalancerSettings = () => {
     </div>
   );
 };
-
-export const nodeBalancerSettingsLazyRoute = createLazyRoute(
-  '/nodebalancers/$nodeBalancerId/settings'
-)({
-  component: NodeBalancerSettings,
-});
