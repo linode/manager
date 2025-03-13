@@ -82,6 +82,7 @@ export interface BodyProps {
   numCPUs: number;
   numVolumes: number;
   region: string;
+  regionSupportsDiskEncryption: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -105,6 +106,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numCPUs,
     numVolumes,
     region,
+    regionSupportsDiskEncryption,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -249,6 +251,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                         : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
                     encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                   />
                 </Box>
               </Grid>
