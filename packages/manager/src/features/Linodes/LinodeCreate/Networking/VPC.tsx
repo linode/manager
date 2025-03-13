@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const VPC = ({ index }: Props) => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const { control, setValue, formState } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const [regionId, selectedVPCId] = useWatch({
@@ -33,6 +33,8 @@ export const VPC = ({ index }: Props) => {
   });
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+
+  console.log(formState.errors)
 
   return (
     <Box>
@@ -89,6 +91,27 @@ export const VPC = ({ index }: Props) => {
             </LinkButton>
           </Box>
         )}
+        <Controller
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              value={
+                selectedVPC?.subnets.find(
+                  (subnet) => subnet.id === field.value
+                ) ?? null
+              }
+              errorText={fieldState.error?.message}
+              getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
+              label="Subnet"
+              noMarginTop
+              onBlur={field.onBlur}
+              onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
+              options={selectedVPC?.subnets ?? []}
+              placeholder="Select Subnet"
+            />
+          )}
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.subnet_id`}
+        />
       </Stack>
       <VPCCreateDrawer
         onSuccess={(vpc) => {
