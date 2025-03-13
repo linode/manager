@@ -324,6 +324,12 @@ module.exports = {
           'Please use Typography component from @linode/ui instead of @mui/material',
         name: '@mui/material',
       },
+      {
+        importNames: ['Link'],
+        message:
+          'Please use the Link component from src/components/Link instead of react-router-dom',
+        name: 'react-router-dom',
+      },
     ],
     'no-restricted-syntax': [
       'error',

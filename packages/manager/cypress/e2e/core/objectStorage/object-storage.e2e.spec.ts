@@ -96,7 +96,7 @@ describe('object storage end-to-end tests', () => {
 
     // Wait for loader to disappear, indicating that all buckets have been loaded.
     // Mitigates test failures stemming from M3-7833.
-    cy.findByLabelText('Buckets').within(() => {
+    cy.findByTestId('Buckets').within(() => {
       cy.findByLabelText('Content is loading').should('not.exist');
     });
 
