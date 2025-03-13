@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { regionFactory } from '@linode/utilities';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
@@ -8,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { RegionMultiSelect } from './RegionMultiSelect';
 
 import type { Region } from '@linode/api-v4';
+import { FlagComponentProps } from './RegionSelect.types';
 
 const regionNewark = regionFactory.build({
   id: 'us-east',
@@ -37,12 +39,21 @@ const SelectedRegionsList = ({
   </ul>
 );
 
+// Pretend this is a Flag Component.
+// This is just to avoid importing the actual Flag component from 'manager/src/components/Flag' in RegionSelect.
+const mockFlagComponent = (
+  props: React.PropsWithChildren<FlagComponentProps>
+) => {
+  return <Box {...props} />;
+};
+
 const mockHandleSelection = vi.fn();
 
 describe('RegionMultiSelect', () => {
   it('renders correctly with initial props', () => {
     renderWithTheme(
       <RegionMultiSelect
+        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -60,6 +71,7 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
+        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -82,6 +94,7 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
+        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -109,6 +122,7 @@ describe('RegionMultiSelect', () => {
             selectedRegions={selectedRegions}
           />
         )}
+        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"

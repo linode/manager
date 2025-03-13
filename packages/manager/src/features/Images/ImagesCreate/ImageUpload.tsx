@@ -26,6 +26,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 // eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
@@ -271,6 +272,7 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
+                  FlagComponent={Flag}
                   accountAvailabilityData={accountAvailabilityData}
                   accountAvailabilityLoading={accountAvailabilityLoading}
                   currentCapability="Object Storage" // Images use Object Storage as their storage backend

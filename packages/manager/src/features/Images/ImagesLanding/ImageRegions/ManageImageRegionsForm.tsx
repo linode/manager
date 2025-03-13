@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
@@ -124,6 +125,7 @@ export const ManageImageReplicasForm = (props: Props) => {
             shouldValidate: true,
           })
         }
+        FlagComponent={Flag}
         accountAvailabilityData={accountAvailabilityData}
         accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Object Storage" // Images use Object Storage as the storage backend

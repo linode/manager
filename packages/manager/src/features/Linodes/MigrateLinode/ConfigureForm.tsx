@@ -184,6 +184,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             textFieldProps={{
               helperText,
             }}
+            FlagComponent={Flag}
             accountAvailabilityData={accountAvailabilityData}
             accountAvailabilityLoading={accountAvailabilityLoading}
             currentCapability="Linodes"

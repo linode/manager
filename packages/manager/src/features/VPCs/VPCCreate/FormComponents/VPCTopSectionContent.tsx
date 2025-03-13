@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
+import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
@@ -13,8 +14,8 @@ import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEven
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
-import type { Region } from '@linode/api-v4';
 import type { CreateVPCPayload } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
@@ -63,6 +64,7 @@ export const VPCTopSectionContent = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <RegionSelect
+            FlagComponent={Flag}
             accountAvailabilityData={accountAvailabilityData}
             accountAvailabilityLoading={accountAvailabilityLoading}
             aria-label="Choose a region"

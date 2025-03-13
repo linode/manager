@@ -1,6 +1,7 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import * as React from 'react';
 
+import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
@@ -42,6 +43,7 @@ export const BucketRegions = (props: Props) => {
       forcefullyShownRegionIds={
         isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
       }
+      FlagComponent={Flag}
       accountAvailabilityData={accountAvailabilityData}
       accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"

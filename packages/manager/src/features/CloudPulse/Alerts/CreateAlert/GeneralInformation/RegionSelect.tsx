@@ -5,6 +5,7 @@ import {
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -39,6 +40,7 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
           onChange={(_, value) => {
             field.onChange(value?.id);
           }}
+          FlagComponent={Flag}
           accountAvailabilityData={accountAvailabilityData}
           accountAvailabilityLoading={accountAvailabilityLoading}
           currentCapability={undefined}

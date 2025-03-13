@@ -31,6 +31,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
+import { Flag } from 'src/components/Flag';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -547,6 +548,7 @@ const NodeBalancerCreate = () => {
                 helperText: <RegionHelperText mb={2} />,
                 helperTextPosition: 'top',
               }}
+              FlagComponent={Flag}
               accountAvailabilityData={accountAvailabilityData}
               accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="NodeBalancers"

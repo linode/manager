@@ -2,9 +2,6 @@ import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-// @todo: modularization - Remove this import and pass Flag Component as a Prop to `RegionSelect`.
-import { Flag } from 'src/components/Flag';
-
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -17,18 +14,23 @@ import {
   useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
-import type { RegionMultiSelectProps } from './RegionSelect.types';
+import type {
+  FlagComponentProps,
+  RegionMultiSelectProps,
+} from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
 
 interface RegionChipLabelProps {
+  FlagComponent: React.ComponentType<FlagComponentProps>;
   region: Region;
 }
 
-const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const RegionChipLabel = ({ FlagComponent, region }: RegionChipLabelProps) => {
   return (
     <Stack alignItems="center" direction="row" gap={1}>
-      <Flag country={region.country} sx={{ fontSize: '1rem' }} />
+      <FlagComponent country={region.country} sx={{ fontSize: '1rem' }} />
       {region.label} ({region.id})
     </Stack>
   );
@@ -36,6 +38,7 @@ const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
+    FlagComponent,
     SelectedRegionsList,
     accountAvailabilityData,
     accountAvailabilityLoading,
@@ -137,10 +140,15 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return tagValue.map((option, index) => (
               <Chip
                 {...getTagProps({ index })}
+                label={
+                  <RegionChipLabel
+                    FlagComponent={FlagComponent}
+                    region={option}
+                  />
+                }
                 data-testid={option.id}
                 deleteIcon={<CloseIcon />}
                 key={index}
-                label={<RegionChipLabel region={option} />}
                 onDelete={() => handleRemoveOption(option.id)}
               />
             ));

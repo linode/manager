@@ -3,11 +3,20 @@ import type {
   Capabilities,
   Region,
   RegionSite,
+  Country,
 } from '@linode/api-v4';
-import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
+import type {
+  BoxProps,
+  DisableItemOption,
+  EnhancedAutocompleteProps,
+} from '@linode/ui';
 import type React from 'react';
 // @todo: modularization - Update type FlagSet to import from `@linode/shared` package once available.
 import type { FlagSet } from 'src/featureFlags';
+
+export interface FlagComponentProps extends BoxProps {
+  country: Country;
+}
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -30,7 +39,14 @@ export interface RegionSelectProps<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
     'label' | 'options' | 'value'
   > {
+  FlagComponent: React.ComponentType<FlagComponentProps>;
+  /**
+   * accountAvailabilityData from useAllAccountAvailabilitiesQuery
+   */
   accountAvailabilityData: AccountAvailability[] | undefined;
+  /**
+   * accountAvailabilityLoading from useAllAccountAvailabilitiesQuery
+   */
   accountAvailabilityLoading: boolean;
   /**
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
@@ -79,11 +95,18 @@ export interface RegionMultiSelectProps
     EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
+  FlagComponent: React.ComponentType<FlagComponentProps>;
   SelectedRegionsList?: React.ComponentType<{
     onRemove: (region: string) => void;
     selectedRegions: Region[];
   }>;
+  /**
+   * accountAvailabilityData from useAllAccountAvailabilitiesQuery
+   */
   accountAvailabilityData: AccountAvailability[] | undefined;
+  /**
+   * accountAvailabilityLoading from useAllAccountAvailabilitiesQuery
+   */
   accountAvailabilityLoading: boolean;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -115,6 +116,7 @@ export const Quotas = () => {
                     ? `Loading ${selectedService.label} regions...`
                     : `Select a region for ${selectedService.label}`
                 }
+                FlagComponent={Flag}
                 accountAvailabilityData={accountAvailabilityData}
                 accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability={undefined}

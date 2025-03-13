@@ -3,9 +3,6 @@ import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-// @todo: modularization - Remove this import and pass Flag Component as a Prop to `RegionSelect`.
-import { Flag } from 'src/components/Flag';
-
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
@@ -37,6 +34,7 @@ export const RegionSelect = <
   props: RegionSelectProps<DisableClearable>
 ) => {
   const {
+    FlagComponent,
     accountAvailabilityData,
     accountAvailabilityLoading,
     currentCapability,
@@ -148,7 +146,7 @@ export const RegionSelect = <
                   }}
                 />
               ) : (
-                <Flag country={selectedRegion?.country} mr={1} />
+                <FlagComponent country={selectedRegion?.country} mr={1} />
               )),
           },
           tooltipText,

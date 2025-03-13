@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
@@ -6,13 +7,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
 
-import type { RegionSelectProps } from './RegionSelect.types';
+import type {
+  FlagComponentProps,
+  RegionSelectProps,
+} from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
+
+// Pretend this is a Flag Component.
+// This is just to avoid importing from manager/src/components/Flag with RegionSelect.
+const mockFlagComponent = (
+  props: React.PropsWithChildren<FlagComponentProps>
+) => {
+  return <Box {...props} />;
+};
 
 describe('RegionSelect', () => {
   const regions: Region[] = regionFactory.buildList(3);
 
   const props: RegionSelectProps = {
+    FlagComponent: mockFlagComponent,
     accountAvailabilityData: [],
     accountAvailabilityLoading: false,
     currentCapability: 'Linodes',
