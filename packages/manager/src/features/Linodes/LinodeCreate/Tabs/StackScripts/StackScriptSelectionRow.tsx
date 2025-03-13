@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Radio, Stack, Typography } from '@linode/ui';
 import { truncate } from '@linode/utilities';
+import { styled } from '@mui/material';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -60,18 +61,19 @@ export const StackScriptSelectionRow = (props: Props) => {
           </Stack>
         </label>
       </TableCell>
-      <TableCell
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          minWidth: 120,
-          paddingRight: 0,
-          height: 44,
-        }}
-        actionCell
-      >
-        <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
+      <TableCell noWrap sx={{ paddingRight: 0 }}>
+        <StyledRootContainer>
+          <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
+        </StyledRootContainer>
       </TableCell>
     </TableRow>
   );
 };
+
+const StyledRootContainer = styled('div', {
+  label: 'StyledRootContainer',
+})(() => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: 0,
+}));
