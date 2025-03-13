@@ -19,7 +19,7 @@ export const AlertDefinitionLanding = () => {
       <Route exact path={`${url}/edit/:serviceType/:alertId`}>
         <EditAlertLanding />
       </Route>
-      <Redirect from="*" to={`${url}`} />
+      <Redirect from="*" to={url} />
     </Switch>
   );
 };
