@@ -13,6 +13,7 @@ import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
+import {Redirect} from 'react-router-dom'
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
@@ -112,6 +113,7 @@ export const CloudPulseDashboardLanding = () => {
           timeDuration={timeDuration}
         />
       </Grid>
+      <Redirect from="*" to ="/metrics"/>
     </React.Suspense>
   );
 };
