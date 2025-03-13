@@ -1,7 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
-import ChevronDownIcon from 'src/assets/icons/chevron-down.svg';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
+
+import ChevronDownIcon from 'src/assets/icons/chevron-down.svg';
 
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
@@ -136,7 +137,7 @@ export const Autocomplete = <
                     <>
                       {loading && (
                         <InputAdornment position="end">
-                          <CircleProgress size="xs" />
+                          <CircleProgress noPadding size="xs" />
                         </InputAdornment>
                       )}
                       {textFieldProps?.InputProps?.endAdornment}
