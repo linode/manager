@@ -37,34 +37,23 @@ export const AlertsResourcesNotice = React.memo(
         >
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
-        {isSelectAll && (
-          <Button
-            onClick={() => {
-              handleSelectionChange('Select All');
-            }}
-            sx={{
-              p: 0,
-            }}
-            aria-label="Select All Resources"
-            data-testid="select_all_notice"
-          >
-            Select All
-          </Button>
-        )}
-        {!isSelectAll && (
-          <Button
-            onClick={() => {
-              handleSelectionChange('Unselect All');
-            }}
-            sx={{
-              p: 0,
-            }}
-            aria-label="Unselect All Resources"
-            data-testid="unselect_all_notice"
-          >
-            Deselect All
-          </Button>
-        )}
+
+        <Button
+          aria-label={
+            isSelectAll ? 'Select All Resources' : 'Unselect All Resources'
+          }
+          data-testid={
+            isSelectAll ? 'select_all_notice' : 'unselect_all_notice'
+          }
+          onClick={() => {
+            handleSelectionChange(isSelectAll ? 'Select All' : 'Unselect All');
+          }}
+          sx={{
+            p: 0,
+          }}
+        >
+          {isSelectAll ? 'Select All' : 'Deselect All'}
+        </Button>
       </StyledNotice>
     );
   }
