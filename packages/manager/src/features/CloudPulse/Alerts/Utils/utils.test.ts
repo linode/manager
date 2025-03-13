@@ -2,6 +2,7 @@ import { object } from 'yup';
 
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
+import { ERROR_PARENT_FIELD_MAP } from '../constants';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
@@ -9,10 +10,15 @@ import {
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
   getValidationSchema,
+  handleErrorMap,
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
-import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
+import type {
+  APIError,
+  Alert,
+  EditAlertPayloadWithService,
+} from '@linode/api-v4';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
@@ -142,5 +148,58 @@ describe('getValidationSchema', () => {
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
       })
     ).rejects.toThrow('Number of entities after update must not exceed 5');
+  });
+
+  it('should combine the API errors from the same field and return in errorMap properly', () => {
+    const errors: APIError[] = [
+      {
+        field: 'label',
+        reason: 'Label already exists',
+      },
+      {
+        field: 'label',
+        reason: 'Label should have less than 100 character',
+      },
+      {
+        field: 'label',
+        reason: 'Label should not start with special characters',
+      },
+    ];
+    const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
+    const resultErrorMap = {
+      label:
+        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
+    };
+    expect(errorMap).toStrictEqual(resultErrorMap);
+  });
+
+  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
+    const errors: APIError[] = [
+      { field: 'severity', reason: 'Wrong field.' },
+      {
+        field: 'rule_criteria.rules[0].aggregate_function',
+        reason: 'Must be one of avg, sum, min, max, count and no full stop',
+      },
+      {
+        field: 'rule_criteria',
+        reason: 'Must have at least one rule',
+      },
+      {
+        field: 'rule_criteria.rules[0].dimension_filters[0].values',
+        reason: 'Invalid value.',
+      },
+      {
+        field: 'rule_criteria.rules[1].dimension_filters[3].values',
+        reason: 'Invalid value.',
+      },
+    ];
+
+    const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
+    const resultErrorMap = {
+      'rule_criteria.rules':
+        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
+      severity: 'Wrong field.',
+    };
+    expect(errorMap).toStrictEqual(resultErrorMap);
   });
 });

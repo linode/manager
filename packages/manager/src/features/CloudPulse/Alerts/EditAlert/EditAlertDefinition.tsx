@@ -11,6 +11,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import { ERROR_PARENT_FIELD_MAP } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -20,10 +21,12 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   getValidationSchema,
+  handleErrorMap,
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
+  APIError,
   Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
@@ -80,15 +83,19 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       });
       history.push(definitionLanding);
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
+
+      for (const [errorField, errorMessage] of Object.entries(errorMap)) {
+        setError(errorField as keyof EditAlertDefinitionPayload, {
+          message: errorMessage,
+        });
+      }
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });

@@ -177,3 +177,13 @@ export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
 };
+
+export const ERROR_FIELD_SEPARATOR_MAP: Record<string, string> = {
+  channel_ids: '|',
+  'rule_criteria.rules': '|',
+};
+
+export const ERROR_PARENT_FIELD_MAP: Record<string, string> = {
+  channel_ids: 'channel_ids',
+  rule_criteria: 'rule_criteria.rules',
+};

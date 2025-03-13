@@ -2451,13 +2451,14 @@ export const handlers = [
   http.post(
     '*/monitor/services/:service_type/alert-definitions',
     async ({ request }) => {
+
       const types: AlertDefinitionType[] = ['system', 'user'];
       const status: AlertStatusType[] = ['enabled', 'disabled'];
       const severity: AlertSeverityType[] = [0, 1, 2, 3];
       const users = ['user1', 'user2', 'user3'];
       const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-
       const reqBody = await request.json();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const response = alertFactory.build({
         ...(reqBody as CreateAlertDefinitionPayload),
         created_by: pickRandom(users),
@@ -2467,7 +2468,40 @@ export const handlers = [
         type: pickRandom(types),
         updated_by: pickRandom(users),
       });
-      return HttpResponse.json(response);
+      return HttpResponse.json(
+        {
+          errors: [
+            { field: 'channel_ids', reason: 'Reason 1.' },
+            {
+              field: 'label',
+              reason:
+                'Very long error primary message example with no full stop',
+            },
+            {
+              field: 'label',
+              reason: 'Very long error secondary message example.',
+            },
+            {
+              field: 'label',
+              reason:
+                'Very long error tertiary message example with no full stop',
+            },
+
+            { field: 'severity', reason: 'Wrong field.' },
+            { reason: 'Failed.' },
+            {
+              field: 'rule_criteria.rules[0].aggregate_function',
+              reason:
+                'Must be one of avg, sum, min, max, count and no full stop',
+            },
+            {
+              field: 'rule_criteria',
+              reason: 'Must have at least one rule.',
+            },
+          ],
+        },
+        { status: 500 }
+      );
     }
   ),
   http.get(

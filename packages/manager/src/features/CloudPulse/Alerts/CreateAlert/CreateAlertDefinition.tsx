@@ -12,7 +12,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { getValidationSchema } from '../Utils/utils';
+import { ERROR_PARENT_FIELD_MAP } from '../constants';
+import { getValidationSchema, handleErrorMap } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -27,6 +28,7 @@ import type {
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
+import type { APIError } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
@@ -116,15 +118,19 @@ export const CreateAlertDefinition = () => {
       });
       alertCreateExit();
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
+
+      for (const [errorField, errorMessage] of Object.entries(errorMap)) {
+        setError(errorField as keyof CreateAlertDefinitionForm, {
+          message: errorMessage,
+        });
+      }
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });

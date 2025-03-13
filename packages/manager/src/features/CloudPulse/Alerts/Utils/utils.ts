@@ -1,10 +1,12 @@
 import { array, object, string } from 'yup';
 
+import { ERROR_FIELD_SEPARATOR_MAP } from '../constants';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
+  APIError,
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
@@ -205,26 +207,26 @@ export const convertAlertsToTypeSet = (
  */
 export const convertAlertDefinitionValues = (
   {
-    alert_channels,
+    alert_channels: alertChannels,
     description,
-    entity_ids,
+    entity_ids: entityIds,
     id,
     label,
-    rule_criteria,
+    rule_criteria: ruleCriteria,
     severity,
     tags,
-    trigger_conditions,
+    trigger_conditions: triggerConditions,
   }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
     alertId: id,
-    channel_ids: alert_channels.map((channel) => channel.id),
+    channel_ids: alertChannels.map((channel) => channel.id),
     description: description || undefined,
-    entity_ids,
+    entity_ids: entityIds,
     label,
     rule_criteria: {
-      rules: rule_criteria.rules.map((rule) => ({
+      rules: ruleCriteria.rules.map((rule) => ({
         ...rule,
         dimension_filters:
           rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
@@ -233,7 +235,7 @@ export const convertAlertDefinitionValues = (
     serviceType,
     severity,
     tags,
-    trigger_conditions,
+    trigger_conditions: triggerConditions,
   };
 };
 
@@ -246,10 +248,16 @@ export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
   return criterias.map(
-    ({ aggregate_function, label, operator, threshold, unit }) => {
+    ({
+      aggregate_function: aggregateFunction,
+      label,
+      operator,
+      threshold,
+      unit,
+    }) => {
       return {
         label,
-        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricAggregationType: aggregationTypeMap[aggregateFunction],
         metricOperator: metricOperatorTypeMap[operator],
         threshold,
         unit,
@@ -286,4 +294,40 @@ export const getValidationSchema = (
           CreateAlertDefinitionForm | EditAlertDefinitionPayload
         >
       );
+};
+
+/**
+ * @param errors list of errors returned from the API.
+ * @param errorFieldParentMap a map of error parent field matcher value to the desired error field
+ * @returns map of errors with field as key and collated error messages as the value.
+ */
+export const handleErrorMap = (
+  errors: APIError[],
+  errorFieldParentMap: Record<string, string>
+): Record<string, string> => {
+  const errorMap: Record<string, string> = {};
+
+  for (const error of errors) {
+    if (error.field) {
+      const errorField =
+        Object.entries(errorFieldParentMap).find(([key]) =>
+          error.field?.includes(key)
+        )?.[1] || error.field;
+
+      if (!error.reason.endsWith('.')) {
+        error.reason += '.';
+      }
+      const separator = ERROR_FIELD_SEPARATOR_MAP[errorField] || ' ';
+
+      if (errorMap[errorField]) {
+        if (!errorMap[errorField].includes(error.reason)) {
+          errorMap[errorField] += `${separator}${error.reason}`;
+        }
+      } else {
+        errorMap[errorField] = error.reason;
+      }
+    }
+  }
+
+  return errorMap;
 };
