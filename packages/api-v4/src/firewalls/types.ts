@@ -48,7 +48,7 @@ export interface FirewallRuleType {
 export interface FirewallDeviceEntity {
   id: number;
   type: FirewallDeviceEntityType;
-  label: string;
+  label: string | null;
   url: string;
 }
 

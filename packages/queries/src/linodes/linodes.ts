@@ -330,6 +330,20 @@ export const useCreateLinodeMutation = () => {
             queryKey: vpcQueries.vpc(vpcId).queryKey,
           });
         }
+      } else {
+        // invalidate firewall queries if a new Linode interface is assigned to a firewall
+        if (variables.interfaces?.some((iface) => iface.firewall_id)) {
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+        }
+        for (const iface of variables.interfaces ?? []) {
+          if (iface.firewall_id) {
+            queryClient.invalidateQueries({
+              queryKey: firewallQueries.firewall(iface.firewall_id).queryKey,
+            });
+          }
+        }
       }
 
       // If the Linode is assigned to a placement group on creation,

@@ -27,6 +27,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
     isLoading,
     label,
     noWrap,
+    sx,
     ...rest
   } = props;
 
@@ -40,6 +41,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
     <TableCell
       sx={{
         whiteSpace: noWrap ? 'nowrap' : '',
+        ...sx,
       }}
       onClick={onHandleClick}
       role="columnheader"

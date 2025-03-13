@@ -63,7 +63,9 @@ export const FirewallDetail = () => {
 
   const { linodeCount, nodebalancerCount } = allDevices?.reduce(
     (acc, device) => {
-      if (device.entity.type === 'linode') {
+      // @TODO Linode Interfaces - check if we want this number to be the total number of Linodes, or total number of devices associated with Linodes
+      // for now I'm going with the latter (easier)
+      if (device.entity.type !== 'nodebalancer') {
         acc.linodeCount += 1;
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
