@@ -11,7 +11,7 @@ import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 import type { EditableProps, LabelProps } from './types';
 
 export interface CrumbOverridesProps {
-  label?: string;
+  label?: string | React.ReactNode;
   linkTo?: LinkProps['to'];
   noCap?: boolean;
   position: number;
