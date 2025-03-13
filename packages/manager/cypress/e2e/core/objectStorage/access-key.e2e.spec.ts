@@ -122,8 +122,8 @@ describe('object storage access key end-to-end tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
     const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
-      label: bucketLabel,
       cluster: bucketCluster,
+      label: bucketLabel,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
       region: undefined,
     });
