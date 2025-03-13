@@ -26,6 +26,7 @@ export const TabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
 
         return (
           <Tab
+            data-testid={tab.title}
             key={`tab-${_index}`}
             // @todo: remove this if we use NavTab widely.
             {...extraTemporaryProps}
