@@ -1,6 +1,5 @@
 export * from './account';
 export * from './accountAgreements';
-export * from './accountAvailability';
 export * from './accountLogin';
 export * from './accountMaintenance';
 export * from './accountOAuth';

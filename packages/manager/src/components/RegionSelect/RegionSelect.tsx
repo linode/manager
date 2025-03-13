@@ -115,6 +115,7 @@ export const RegionSelect = <
 
           return (
             <RegionOption
+              FlagComponent={FlagComponent}
               disabledOptions={disabledRegions[region.id]}
               isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}

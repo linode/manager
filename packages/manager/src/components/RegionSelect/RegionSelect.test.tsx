@@ -14,7 +14,7 @@ import type {
 import type { Region } from '@linode/api-v4';
 
 // Pretend this is a Flag Component.
-// This is just to avoid importing from manager/src/components/Flag with RegionSelect.
+// This is just to avoid importing the actual Flag component from 'manager/src/components/Flag' in RegionSelect.
 const mockFlagComponent = (
   props: React.PropsWithChildren<FlagComponentProps>
 ) => {

@@ -8,8 +8,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
 
+import type { FlagComponentProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import { FlagComponentProps } from './RegionSelect.types';
 
 const regionNewark = regionFactory.build({
   id: 'us-east',

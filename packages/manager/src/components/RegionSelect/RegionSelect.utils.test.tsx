@@ -1,7 +1,4 @@
-import { regionFactory } from '@linode/utilities';
-
-// @todo: modularization - Move `accountAvailabilityFactory` to `@linode/utilities`'s factories
-import { accountAvailabilityFactory } from 'src/factories';
+import { accountAvailabilityFactory, regionFactory } from '@linode/utilities';
 
 import {
   getRegionOptions,

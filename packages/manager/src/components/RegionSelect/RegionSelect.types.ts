@@ -1,9 +1,9 @@
 import type {
   AccountAvailability,
   Capabilities,
+  Country,
   Region,
   RegionSite,
-  Country,
 } from '@linode/api-v4';
 import type {
   BoxProps,

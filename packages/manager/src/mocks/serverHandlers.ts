@@ -7,6 +7,7 @@
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
 import {
+  accountAvailabilityFactory,
   pickRandom,
   regionAvailabilityFactory,
   regions,
@@ -18,7 +19,6 @@ import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   // abuseTicketNotificationFactory,
-  accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,

@@ -127,6 +127,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             // Render regular options
             return (
               <RegionOption
+                FlagComponent={FlagComponent}
                 disabledOptions={disabledRegions[option.id]}
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 item={option}
