@@ -2,13 +2,13 @@ import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import type { SelectUnselectAll } from './AlertsResources';
+import type { SelectDeselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
   /**
-   * Callback to handle selection changes (select all or unselect all).
+   * Callback to handle selection changes (select all or deselect all).
    */
-  handleSelectionChange: (action: SelectUnselectAll) => void;
+  handleSelectionChange: (action: SelectDeselectAll) => void;
 
   /**
    * The number of currently selected resources.
@@ -40,13 +40,13 @@ export const AlertsResourcesNotice = React.memo(
 
         <Button
           aria-label={
-            isSelectAll ? 'Select All Resources' : 'Unselect All Resources'
+            isSelectAll ? 'Select All Resources' : 'Deselect All Resources'
           }
           data-testid={
-            isSelectAll ? 'select_all_notice' : 'unselect_all_notice'
+            isSelectAll ? 'select_all_notice' : 'deselect_all_notice'
           }
           onClick={() => {
-            handleSelectionChange(isSelectAll ? 'Select All' : 'Unselect All');
+            handleSelectionChange(isSelectAll ? 'Select All' : 'Deselect All');
           }}
           sx={{
             p: 0,
