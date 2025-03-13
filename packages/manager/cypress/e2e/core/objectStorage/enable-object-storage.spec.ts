@@ -26,31 +26,6 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
-import {
-  accountFactory,
-  accountSettingsFactory,
-  objectStorageClusterFactory,
-  objectStorageKeyFactory,
-  profileFactory,
-  regionFactory,
-} from '@src/factories';
-import {
-  mockGetAccount,
-  mockGetAccountSettings,
-} from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockCancelObjectStorage,
-  mockCreateAccessKey,
-  mockGetBuckets,
-  mockGetClusters,
-} from 'support/intercepts/object-storage';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-
 import type {
   AccountSettings,
   ObjectStorageCluster,
