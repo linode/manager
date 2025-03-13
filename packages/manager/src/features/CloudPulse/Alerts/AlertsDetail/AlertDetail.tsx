@@ -38,12 +38,12 @@ export const AlertDetail = () => {
     const overrides = [
       {
         label: 'Definitions',
-        linkTo: '/monitor/alerts/definitions',
+        linkTo: '/alerts/definitions',
         position: 1,
       },
       {
         label: 'Details',
-        linkTo: `/monitor/alerts/definitions/details/${serviceType}/${alertId}`,
+        linkTo: `/alerts/definitions/details/${serviceType}/${alertId}`,
         position: 2,
       },
     ];

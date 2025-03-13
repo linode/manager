@@ -1,14 +1,15 @@
+import { subnetFactory, vpcFactory } from '@src/factories';
 import {
-  mockGetVPCs,
+  MOCK_DELETE_VPC_ERROR,
   mockDeleteVPC,
   mockDeleteVPCError,
+  mockGetVPCs,
   mockUpdateVPC,
-  MOCK_DELETE_VPC_ERROR,
 } from 'support/intercepts/vpc';
-import { subnetFactory, vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+
 import { VPC_LABEL } from 'src/features/VPCs/constants';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
@@ -79,21 +80,21 @@ describe('VPC landing page', () => {
   it('can update and delete VPCs from VPC landing page', () => {
     const mockVPCs = [
       vpcFactory.build({
+        description: randomPhrase(),
         label: randomLabel(),
         region: chooseRegion().id,
-        description: randomPhrase(),
       }),
       vpcFactory.build({
+        description: randomPhrase(),
         label: randomLabel(),
         region: chooseRegion().id,
-        description: randomPhrase(),
       }),
     ];
 
     const mockUpdatedVPC = {
       ...mockVPCs[1],
-      label: randomLabel(),
       description: randomPhrase(),
+      label: randomLabel(),
     };
 
     mockGetVPCs([mockVPCs[1]]).as('getVPCs');

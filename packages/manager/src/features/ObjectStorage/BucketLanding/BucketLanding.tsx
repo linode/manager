@@ -1,4 +1,5 @@
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -19,7 +20,6 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';

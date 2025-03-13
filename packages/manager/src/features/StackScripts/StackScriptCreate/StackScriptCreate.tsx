@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -19,7 +19,7 @@ import type { StackScriptPayload } from '@linode/api-v4';
 export const StackScriptCreate = () => {
   const { mutateAsync: createStackScript } = useCreateStackScriptMutation();
   const { enqueueSnackbar } = useSnackbar();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const form = useForm<StackScriptPayload>({
     defaultValues: {
@@ -49,7 +49,10 @@ export const StackScriptCreate = () => {
         variant: 'success',
       });
 
-      history.push(`/stackscripts/${stackscript.id}`);
+      navigate({
+        params: { id: stackscript.id },
+        to: '/stackscripts/$id',
+      });
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });

@@ -9,6 +9,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -30,7 +31,6 @@ import {
 } from '@linode/queries';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';

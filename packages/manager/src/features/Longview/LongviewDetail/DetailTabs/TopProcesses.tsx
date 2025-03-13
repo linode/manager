@@ -1,4 +1,5 @@
 import { Box, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
 import { StyledLink } from './TopProcesses.styles';

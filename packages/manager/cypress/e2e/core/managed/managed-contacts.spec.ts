@@ -2,16 +2,17 @@
  * @file Integration tests for Managed contacts.
  */
 
-import { contactFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
-  mockGetContacts,
   mockCreateContact,
-  mockUpdateContact,
   mockDeleteContact,
+  mockGetContacts,
+  mockUpdateContact,
 } from 'support/intercepts/managed';
 import { ui } from 'support/ui';
-import { randomString, randomPhoneNumber } from 'support/util/random';
+import { randomPhoneNumber, randomString } from 'support/util/random';
+
+import { contactFactory } from 'src/factories/managed';
 
 // Message that's shown when there are no Managed contacts.
 const noContactsMessage = "You don't have any Contacts on your account.";
@@ -25,9 +26,9 @@ describe('Managed Contacts tab', () => {
     const contactIds = [1, 2, 3, 4, 5];
     const contacts = contactIds.map((id) => {
       return contactFactory.build({
-        name: `Managed Contact ${id}`,
         email: `contact-email-${id}@example.com`,
-        id: id,
+        id,
+        name: `Managed Contact ${id}`,
       });
     });
 
@@ -59,9 +60,9 @@ describe('Managed Contacts tab', () => {
     const contactPrimaryPhone = randomPhoneNumber();
     const contactEmail = `${contactName}@example.com`;
     const contact = contactFactory.build({
+      email: contactEmail,
       id: contactId,
       name: contactName,
-      email: contactEmail,
       phone: {
         primary: contactPrimaryPhone,
         secondary: null,
@@ -129,9 +130,9 @@ describe('Managed Contacts tab', () => {
     const contactNewPrimaryPhone = randomPhoneNumber();
 
     const contact = contactFactory.build({
+      email: contactOldEmail,
       id: contactId,
       name: contactOldName,
-      email: contactOldEmail,
       phone: {
         primary: contactOldPrimaryPhone,
       },
@@ -139,8 +140,8 @@ describe('Managed Contacts tab', () => {
 
     const updatedContact = {
       ...contact,
-      name: contactNewName,
       email: contactNewEmail,
+      name: contactNewName,
       phone: {
         ...contact.phone,
         primary: contactNewPrimaryPhone,

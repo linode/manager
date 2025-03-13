@@ -229,7 +229,11 @@ describe('PrimaryNav', () => {
     });
 
     const monitorNavItem = await findByText('Monitor');
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
 
     expect(monitorNavItem).toBeVisible();
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
   });
 });
