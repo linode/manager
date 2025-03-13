@@ -2,19 +2,20 @@
  * @file End-to-end tests for Object Storage Access Key operations.
  */
 
-import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
-import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
+import { authenticate } from 'support/api/authentication';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  interceptGetAccessKeys,
   interceptCreateAccessKey,
+  interceptGetAccessKeys,
 } from 'support/intercepts/object-storage';
-import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { mockGetAccount } from 'support/intercepts/account';
+import { randomLabel } from 'support/util/random';
+
 import { accountFactory } from 'src/factories';
+import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
@@ -121,8 +122,8 @@ describe('object storage access key end-to-end tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
     const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
-      label: bucketLabel,
       cluster: bucketCluster,
+      label: bucketLabel,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
       region: undefined,
     });

@@ -1,4 +1,5 @@
 import { Autocomplete, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
@@ -26,6 +27,7 @@ interface EntitiesOption {
 
 export const Entities = ({ access, type }: Props) => {
   const { data: resources } = useAccountResources();
+  const theme = useTheme();
 
   const [selectedEntities, setSelectedEntities] = React.useState<
     EntitiesOption[]
@@ -43,7 +45,11 @@ export const Entities = ({ access, type }: Props) => {
     return (
       <>
         <FormLabel>
-          <Typography marginBottom={0.5} marginTop={0} variant="inherit">
+          <Typography
+            marginBottom={0.5}
+            sx={{ marginTop: theme.tokens.spacing.S12 }}
+            variant="inherit"
+          >
             Entities
           </Typography>
         </FormLabel>
@@ -68,6 +74,7 @@ export const Entities = ({ access, type }: Props) => {
       onChange={(_, value) => setSelectedEntities(value)}
       options={memoizedEntities}
       placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
+      sx={{ marginTop: theme.tokens.spacing.S12 }}
       value={selectedEntities}
     />
   );

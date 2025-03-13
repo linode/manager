@@ -17,6 +17,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -51,7 +52,6 @@ import {
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';

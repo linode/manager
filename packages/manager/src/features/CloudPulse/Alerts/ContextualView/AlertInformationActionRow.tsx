@@ -47,7 +47,7 @@ export const AlertInformationActionRow = (
         />
       </TableCell>
       <TableCell>
-        <Link to={`/monitor/alerts/definitions/detail/${service_type}/${id}`}>
+        <Link to={`/alerts/definitions/detail/${service_type}/${id}`}>
           {label}
         </Link>
       </TableCell>

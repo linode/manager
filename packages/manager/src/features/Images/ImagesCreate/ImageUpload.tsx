@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
@@ -38,7 +39,6 @@ import { useUploadImageMutation } from 'src/queries/images';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';

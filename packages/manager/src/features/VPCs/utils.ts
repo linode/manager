@@ -1,6 +1,6 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
-import type { Config, Subnet } from '@linode/api-v4';
+import type { Config, Subnet, VPC } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -73,3 +73,8 @@ export const hasUnrecommendedConfiguration = (
 
   return false;
 };
+
+// This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
+export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
+  /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(vpc.description) &&
+  /^lke\d+/i.test(vpc.label);

@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { reduceAsync } from '@linode/utilities';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -20,7 +20,6 @@ import { debounce } from 'throttle-debounce';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
