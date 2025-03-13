@@ -1,4 +1,4 @@
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { convertMegabytesTo } from '@linode/utilities';
 
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 

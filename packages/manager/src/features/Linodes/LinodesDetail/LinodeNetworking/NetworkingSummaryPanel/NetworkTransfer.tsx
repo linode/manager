@@ -1,4 +1,5 @@
 import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import {
   getDynamicDCNetworkTransferData,
   isLinodeInDynamicPricingDC,
 } from 'src/utilities/pricing/linodes';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { TransferContent } from './TransferContent';
 

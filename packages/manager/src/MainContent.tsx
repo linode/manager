@@ -132,9 +132,6 @@ const Profile = React.lazy(() =>
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
-const StackScripts = React.lazy(
-  () => import('src/features/StackScripts/StackScripts')
-);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -165,10 +162,20 @@ const AccountActivationLanding = React.lazy(
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const CloudPulse = React.lazy(() =>
-  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
-    default: module.CloudPulseLanding,
-  }))
+const CloudPulseMetrics = React.lazy(() =>
+  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
+    (module) => ({
+      default: module.CloudPulseDashboardLanding,
+    })
+  )
+);
+
+const CloudPulseAlerts = React.lazy(() =>
+  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
+    (module) => ({
+      default: module.AlertsLanding,
+    })
+  )
 );
 
 const IAM = React.lazy(() =>
@@ -367,10 +374,6 @@ export const MainContent = () => {
                             />
                             <Route component={Managed} path="/managed" />
                             <Route
-                              component={StackScripts}
-                              path="/stackscripts"
-                            />
-                            <Route
                               component={ObjectStorage}
                               path="/object-storage"
                             />
@@ -388,7 +391,16 @@ export const MainContent = () => {
                             )}
                             <Route component={VPC} path="/vpcs" />
                             {isACLPEnabled && (
-                              <Route component={CloudPulse} path="/monitor" />
+                              <Route
+                                component={CloudPulseMetrics}
+                                path="/metrics"
+                              />
+                            )}
+                            {isACLPEnabled && (
+                              <Route
+                                component={CloudPulseAlerts}
+                                path="/alerts"
+                              />
                             )}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
