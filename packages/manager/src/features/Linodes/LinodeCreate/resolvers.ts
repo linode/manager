@@ -53,6 +53,14 @@ export const getLinodeCreateResolver = (
         getInterfacesPayload(values.interfaces, values.private_ip) ?? [];
     }
 
+    if (!values.placement_group?.id) {
+      values.placement_group = undefined;
+    }
+
+    if (!values.metadata?.user_data) {
+      values.metadata = undefined;
+    }
+
     const { errors } = await yupResolver(
       schema,
       {},

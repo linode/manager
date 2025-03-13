@@ -700,8 +700,8 @@ export const CreateLinodeSchema = object({
             test: (value) => !value || value.length === 0,
           }),
     }),
-  metadata: MetadataSchema.notRequired(),
+  metadata: MetadataSchema.notRequired().default(undefined),
   firewall_id: number().nullable().notRequired(),
-  placement_group: PlacementGroupPayloadSchema.notRequired(),
+  placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
 });
