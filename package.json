@@ -71,7 +71,7 @@
       "cypress"
     ],
     "overrides": {
-      "canvg": "npm:@none"
+      "canvg": "^4.0.3"
     }
   }
 }

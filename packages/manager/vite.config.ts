@@ -9,6 +9,11 @@ const DIRNAME = new URL('.', import.meta.url).pathname;
 export default defineConfig({
   build: {
     outDir: 'build',
+    rollupOptions: {
+      // Optional dependencies that are not needed for the build.
+      // See https://www.npmjs.com/package/jspdf
+      external: ['canvg', 'html2canvas', 'dompurify'],
+    },
   },
   envPrefix: 'REACT_APP_',
   plugins: [react(), svgr({ exportAsDefault: true })],
