@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithThemeAndRouter } from 'src/utilities/testHelpers';
 

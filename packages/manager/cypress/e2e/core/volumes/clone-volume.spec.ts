@@ -1,11 +1,13 @@
-import { Volume } from '@linode/api-v4';
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
+import { createActiveVolume } from 'support/api/volumes';
 import { interceptCloneVolume } from 'support/intercepts/volumes';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { createActiveVolume } from 'support/api/volumes';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { Volume } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -62,7 +64,8 @@ describe('volume clone flow', () => {
           .closest('[data-qa-drawer="true"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Label').click().type(cloneVolumeLabel);
+            cy.findByText('Label').click();
+            cy.focused().type(cloneVolumeLabel);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Clone Volume').should('be.visible').click();
             });

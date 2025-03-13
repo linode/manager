@@ -1,7 +1,6 @@
 import { Button, CircleProgress, ErrorState } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
@@ -20,7 +19,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useFirewallsQuery } from 'src/queries/firewalls';
+import { useFirewallsQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
@@ -34,8 +33,8 @@ import type { Mode } from './FirewallDialog';
 const preferenceKey = 'firewalls';
 
 const FirewallLanding = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -97,11 +96,11 @@ const FirewallLanding = () => {
   };
 
   const onOpenCreateDrawer = () => {
-    history.replace('/firewalls/create');
+    navigate({ to: '/firewalls/create' });
   };
 
   const onCloseCreateDrawer = () => {
-    history.replace('/firewalls');
+    navigate({ to: '/firewalls' });
   };
 
   const handlers: FirewallHandlers = {
@@ -229,9 +228,5 @@ const FirewallLanding = () => {
     </React.Fragment>
   );
 };
-
-export const firewallLandingLazyRoute = createLazyRoute('/firewalls')({
-  component: FirewallLanding,
-});
 
 export default React.memo(FirewallLanding);

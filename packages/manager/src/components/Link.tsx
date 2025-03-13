@@ -1,15 +1,16 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { omitProps } from '@linode/ui';
-import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { useStyles } from 'src/components/Link.styles';
 import {
   childrenContainsNoText,
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
-} from 'src/utilities/link';
+} from '@linode/utilities'; // `link.ts` utils from @linode/utilities
+import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { Link as RouterLink } from 'react-router-dom';
+
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import { useStyles } from 'src/components/Link.styles';
 
 import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
 import type { LinkProps as _LinkProps } from 'react-router-dom';

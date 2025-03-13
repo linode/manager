@@ -33,7 +33,7 @@ const primaryColors = {
   headline: Color.Neutrals[5],
   light: Color.Brand[60],
   main: Color.Brand[80],
-  text: Color.Neutrals.White,
+  text: Content.Text.Primary.Default,
   white: Color.Neutrals.Black,
 };
 
@@ -84,7 +84,7 @@ export const customDarkModeOptions = {
     grey6: Color.Neutrals[50],
     grey7: Color.Neutrals[80],
     grey9: primaryColors.divider,
-    headline: primaryColors.headline,
+    headline: Content.Text.Primary.Default,
     label: Color.Neutrals[40],
     offBlack: Color.Neutrals.White,
     red: Color.Red[70],
@@ -273,7 +273,7 @@ export const darkTheme: ThemeOptions = {
           color: Color.Neutrals.White,
         },
         tag: {
-          '.MuiChip-deleteIcon': { color: primaryColors.text },
+          '.MuiChip-deleteIcon': { color: Content.Text.Primary.Default },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
       },
@@ -456,13 +456,13 @@ export const darkTheme: ThemeOptions = {
         },
         outlined: {
           '& .MuiChip-label': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
         root: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -477,7 +477,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           borderBottom: `1px solid ${Color.Neutrals[100]}`,
-          color: primaryColors.headline,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -513,7 +513,7 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-disabled': {
             color: `${Color.Neutrals[50]} !important`,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
         root: {},
       },
@@ -620,9 +620,9 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.selectHeader': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -630,7 +630,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.loading': {
-            backgroundColor: primaryColors.text,
+            backgroundColor: Content.Text.Primary.Default,
           },
           '&:active': {
             backgroundColor: Dropdown.Background.Default,
@@ -722,7 +722,9 @@ export const darkTheme: ThemeOptions = {
           borderRadius: 0,
           boxSizing: 'border-box',
           color: TextField.Filled.Text,
+          height: '34px',
           lineHeight: 1,
+          minHeight: '34px',
           transition: 'border-color 225ms ease-in-out',
         },
       },
@@ -792,7 +794,7 @@ export const darkTheme: ThemeOptions = {
         root: {
           backgroundColor: Color.Neutrals[100],
           boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -964,13 +966,13 @@ export const darkTheme: ThemeOptions = {
             color: Action.Primary.Default,
           },
           '& a.black': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a.black:hover': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a.black:visited': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a:hover': {
             color: Action.Primary.Hover,
@@ -1053,7 +1055,7 @@ export const darkTheme: ThemeOptions = {
     mode: 'dark',
     primary: primaryColors,
     text: {
-      primary: primaryColors.text,
+      primary: Content.Text.Primary.Default,
     },
   },
   textColors: customDarkModeOptions.textColors,
@@ -1077,22 +1079,22 @@ export const darkTheme: ThemeOptions = {
   },
   typography: {
     body1: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
     caption: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
     h1: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     h2: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     h3: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     subtitle1: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
   },
 };

@@ -1,8 +1,7 @@
-import { deepStringTransform } from '@linode/utilities';
+import { deepStringTransform, redactAccessToken } from '@linode/utilities';
 import { init } from '@sentry/react';
 
 import { APP_ROOT, SENTRY_URL } from 'src/constants';
-import { redactAccessToken } from 'src/utilities/redactAccessToken';
 
 import packageJson from '../package.json';
 

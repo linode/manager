@@ -1,4 +1,5 @@
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -13,10 +14,9 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
@@ -85,8 +85,8 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     <Grid
       sx={{
         alignItems: 'center',
-        justifyContent: 'space-between',
         flex: 1,
+        justifyContent: 'space-between',
         padding: 0,
       }}
       container

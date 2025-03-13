@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { AccountBeta, Beta } from '@linode/api-v4';
 

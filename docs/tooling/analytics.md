@@ -13,8 +13,7 @@ Pendo is configured in [`usePendo.js`](https://github.com/linode/manager/blob/de
 Important notes:
 
 - Pendo is only loaded if the user has enabled Performance Cookies via OneTrust *and* if a valid `PENDO_API_KEY` is configured as an environment variable. In our development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
-- We [self-host](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent) the Pendo agent, rather than load it from the CDN.
-- We have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
+- We load the Pendo agent from the CDN, rather than [self-hosting](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent), and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
 - We are hashing account and visitor IDs in a way that is consistent with Akamai's standards.
 - At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
 - Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in the local environment.

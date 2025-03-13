@@ -1,3 +1,4 @@
+import { useLinodeFirewallsQuery, useRegionsQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -10,8 +11,6 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
@@ -67,7 +66,10 @@ export const LinodeEntityDetail = (props: Props) => {
     vpcLinodeIsAssignedTo,
   } = useVPCConfigInterface(linode.id);
 
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(linode.id);
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
+    linode.id,
+    linode.interface_generation !== 'linode'
+  );
 
   const attachedFirewalls = attachedFirewallData?.data ?? [];
 
@@ -89,6 +91,11 @@ export const LinodeEntityDetail = (props: Props) => {
     regions ?? [],
     linode.region
   );
+
+  const regionSupportsDiskEncryption =
+    regions
+      ?.find((r) => r.id === linode.region)
+      ?.capabilities.includes('Disk Encryption') ?? false;
 
   let progress;
   let transitionText;
@@ -132,6 +139,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
+            regionSupportsDiskEncryption={regionSupportsDiskEncryption}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

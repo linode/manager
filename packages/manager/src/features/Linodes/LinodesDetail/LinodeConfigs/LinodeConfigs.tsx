@@ -1,3 +1,8 @@
+import {
+  useAllLinodeConfigsQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -14,8 +19,6 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { BootConfigDialog } from './BootConfigDialog';
@@ -29,6 +32,10 @@ const LinodeConfigs = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
+
+  const { data: linode } = useLinodeQuery(id);
+
+  const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
 
@@ -131,19 +138,21 @@ const LinodeConfigs = () => {
                         <TableCell
                           sx={{
                             font: theme.font.bold,
-                            width: '25%',
+                            width: isLegacyConfigInterface ? '25%' : '55%',
                           }}
                         >
                           Disks
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            font: theme.font.bold,
-                            width: '30%',
-                          }}
-                        >
-                          Network Interfaces
-                        </TableCell>
+                        {isLegacyConfigInterface && (
+                          <TableCell
+                            sx={{
+                              font: theme.font.bold,
+                              width: '30%',
+                            }}
+                          >
+                            Network Interfaces
+                          </TableCell>
+                        )}
                         <TableCell sx={{ width: '10%' }} />
                       </TableRow>
                     </TableHead>

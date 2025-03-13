@@ -5,7 +5,7 @@ import * as React from 'react';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
-import { useAccountBetasQuery } from 'src/queries/account/betas';
+import { useAccountBetasQuery } from '@linode/queries';
 import { useBetasQuery } from 'src/queries/betas';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 

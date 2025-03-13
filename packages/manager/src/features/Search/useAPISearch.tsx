@@ -1,18 +1,17 @@
 import { getDomains } from '@linode/api-v4/lib/domains';
-import { Image, getImages } from '@linode/api-v4/lib/images';
+import { getImages } from '@linode/api-v4/lib/images';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getLinodes } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
-import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
+import { useRegionsQuery } from '@linode/queries';
+import { API_MAX_PAGE_SIZE } from '@linode/utilities';
+import { isNotNullOrUndefined } from '@linode/utilities';
 import { flatten } from 'ramda';
-import { useCallback } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,
@@ -22,13 +21,16 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
-import { ExtendedType, extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { getImageLabelForLinode } from '../Images/utils';
 import { refinedSearch } from './refinedSearch';
-import { SearchResults, SearchableItem } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
+
+import type { SearchResults, SearchableItem } from './search.interfaces';
+import type { Image } from '@linode/api-v4/lib/images';
+import type { Region } from '@linode/api-v4/lib/regions';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;

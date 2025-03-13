@@ -1,10 +1,9 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLinodeConfigDeleteMutation } from 'src/queries/linodes/configs';
+import { useLinodeConfigDeleteMutation } from '@linode/queries';
 
 import type { Config } from '@linode/api-v4';
 

@@ -545,30 +545,30 @@ const CreateVPCInterfaceIpv4AddressSchema = object({
 
 const CreateVlanInterfaceSchema = object({
   vlan_label: string()
-    .required()
     .min(1, LABEL_LENGTH_MESSAGE)
     .max(64, LABEL_LENGTH_MESSAGE)
-    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES)
+    .required('VLAN label is required.'),
   ipam_address: string().nullable(),
-})
-  .notRequired()
-  .nullable();
+});
+
+export const CreateVPCInterfaceSchema = object({
+  subnet_id: number(),
+  ipv4: object({
+    addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
+    ranges: array().of(VPCInterfaceIPv4RangeSchema),
+  }).notRequired(),
+});
 
 export const CreateLinodeInterfaceSchema = object({
   firewall_id: number().nullable(),
   default_route: object({
     ipv4: boolean(),
     ipv6: boolean(),
-  }).notRequired(),
-  vpc: object({
-    subnet_id: number().required(),
-    ipv4: object({
-      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
-      ranges: array().of(VPCInterfaceIPv4RangeSchema),
-    }).notRequired(),
   })
     .notRequired()
-    .nullable(),
+    .default(null),
+  vpc: CreateVPCInterfaceSchema.notRequired().default(null),
   public: object({
     ipv4: object({
       addresses: array().of(BaseInterfaceIPv4AddressSchema),
@@ -578,8 +578,8 @@ export const CreateLinodeInterfaceSchema = object({
     }).notRequired(),
   })
     .notRequired()
-    .nullable(),
-  vlan: CreateVlanInterfaceSchema,
+    .default(null),
+  vlan: CreateVlanInterfaceSchema.notRequired().default(null),
 });
 
 const ModifyVPCInterfaceIpv4AddressSchema = object({
