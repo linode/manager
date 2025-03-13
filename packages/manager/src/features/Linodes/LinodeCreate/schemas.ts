@@ -1,14 +1,31 @@
 import {
   CreateLinodeSchema as BaseCreateLinodeSchema,
   ConfigProfileInterfaceSchema,
-  CreateLinodeInterfaceSchema,
 } from '@linode/validation';
-import { array, number, object } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 
-export const CreateLinodeSchema = BaseCreateLinodeSchema.concat(
+import { CreateLinodeInterfaceFormSchema } from '../LinodesDetail/LinodeNetworking/LinodeInterfaces/AddInterfaceDrawer/utilities';
+
+import type { LinodeCreateFormValues } from './utilities';
+import type { ObjectSchema } from 'yup';
+
+/**
+ * Extends pure `CreateLinodeSchema` because the Lindoe Create form
+ * has extra fields that we want to validate.
+ * In theory, this schema should align with the `LinodeCreateFormValues` type.
+ */
+export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> = BaseCreateLinodeSchema.concat(
   object({
-    interfaces: array(ConfigProfileInterfaceSchema),
-    linodeInterfaces: array(CreateLinodeInterfaceSchema),
+    firewallOverride: boolean(),
+    hasSignedEUAgreement: boolean(),
+    interfaces: array(ConfigProfileInterfaceSchema).required(),
+    linode: object({
+      id: number().defined(),
+      label: string().defined(),
+      region: string().defined(),
+      type: string().defined().nullable(),
+    }).notRequired(),
+    linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
   })
 );
 

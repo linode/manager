@@ -4,7 +4,10 @@ import { isNullOrUndefined } from '@linode/utilities';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
-import { getLegacyInterfaceFromLinodeInterface, getLinodeInterfacePayload } from './Networking/utilities';
+import {
+  getLegacyInterfaceFromLinodeInterface,
+  getLinodeInterfacePayload,
+} from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
@@ -20,7 +23,6 @@ import type {
 } from './utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors, Resolver } from 'react-hook-form';
-import type { ObjectSchema } from 'yup';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
@@ -39,24 +41,20 @@ export const getLinodeCreateResolver = (
         values.linodeInterfaces = values.linodeInterfaces.map(
           getLinodeInterfacePayload
         );
-        values.interfaces = undefined;
+        values.interfaces = [];
       } else {
         values.interfaces = values.linodeInterfaces.map(
           getLegacyInterfaceFromLinodeInterface
         );
-        values.linodeInterfaces = undefined;
+        values.linodeInterfaces = [];
       }
     } else {
-      values.interfaces = getInterfacesPayload(
-        values.interfaces,
-        values.private_ip
-      );
+      values.interfaces =
+        getInterfacesPayload(values.interfaces, values.private_ip) ?? [];
     }
 
-    console.log("Values", values)
-
     const { errors } = await yupResolver(
-      schema as ObjectSchema<LinodeCreateFormValues>,
+      schema,
       {},
       { mode: 'async', raw: true }
     )(values, context, options);

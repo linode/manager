@@ -133,10 +133,13 @@ const ipv6ConfigInterface = object().when('purpose', {
 // This is the validation schema for legacy interfaces attached to configuration profiles
 // For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
 export const ConfigProfileInterfaceSchema = object().shape({
-  purpose: mixed().oneOf(
-    ['public', 'vlan', 'vpc'],
-    'Purpose must be public, vlan, or vpc.'
-  ),
+  purpose: string()
+    .oneOf(
+      ['public', 'vlan', 'vpc'] as const,
+      'Purpose must be public, vlan, or vpc.'
+    )
+    .defined()
+    .required(),
   label: string().when('purpose', {
     is: 'vlan',
     then: (schema) =>
@@ -193,7 +196,7 @@ export const ConfigProfileInterfaceSchema = object().shape({
         return !isVLANandIsSetToPrimary;
       }
     )
-    .notRequired(),
+    .optional(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
     then: (schema) =>
@@ -226,7 +229,7 @@ export const ConfigProfileInterfaceSchema = object().shape({
   ipv4: ipv4ConfigInterface,
   ipv6: ipv6ConfigInterface,
   ip_ranges: array()
-    .of(string())
+    .of(string().defined())
     .notRequired()
     .nullable()
     .when('purpose', {
@@ -307,17 +310,16 @@ export const UpdateLinodePasswordSchema = object({
 });
 
 const MetadataSchema = object({
-  user_data: string().notRequired().nullable(),
+  user_data: string().nullable().defined(),
 });
 
 const PlacementGroupPayloadSchema = object({
-  id: number().notRequired().nullable(),
+  id: number().required(),
 });
 
 const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
-  .notRequired()
-  .nullable();
+  .notRequired();
 
 const alerts = object({
   cpu: number()
@@ -649,7 +651,7 @@ export const CreateLinodeSchema = object({
     then: (schema) => schema.ensure().required('Image is required.'),
     otherwise: (schema) => schema.nullable().notRequired(),
   }),
-  authorized_keys: array().of(string()).notRequired(),
+  authorized_keys: array().of(string().defined()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
@@ -658,9 +660,9 @@ export const CreateLinodeSchema = object({
     .notRequired()
     .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
-  tags: array().of(string()).notRequired(),
+  tags: array().of(string().defined()).notRequired(),
   private_ip: boolean().notRequired(),
-  authorized_users: array().of(string()).notRequired(),
+  authorized_users: array().of(string().defined()).notRequired(),
   root_pass: string().when('image', {
     is: (value: any) => Boolean(value),
     then: (schema) =>
@@ -679,10 +681,12 @@ export const CreateLinodeSchema = object({
       return ConfigProfileInterfacesSchema;
     }
   ),
-  interface_generation: string().oneOf(['legacy_config', 'linode']),
+  interface_generation: string()
+    .oneOf(['legacy_config', 'linode'])
+    .notRequired(),
   network_helper: boolean(),
   ipv4: array()
-    .of(string())
+    .of(string().defined())
     .when('interface_generation', {
       is: 'linode',
       then: (schema) =>
@@ -696,8 +700,8 @@ export const CreateLinodeSchema = object({
             test: (value) => !value || value.length === 0,
           }),
     }),
-  metadata: MetadataSchema,
+  metadata: MetadataSchema.notRequired(),
   firewall_id: number().nullable().notRequired(),
-  placement_group: PlacementGroupPayloadSchema,
+  placement_group: PlacementGroupPayloadSchema.notRequired(),
   disk_encryption: DiskEncryptionSchema,
 });
