@@ -1,4 +1,3 @@
-import { Box } from '@linode/ui';
 import { regionFactory } from '@linode/utilities';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
@@ -7,8 +6,8 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
+import { mockFlagComponent } from './RegionSelect.utils';
 
-import type { FlagComponentProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 
 const regionNewark = regionFactory.build({
@@ -38,14 +37,6 @@ const SelectedRegionsList = ({
     ))}
   </ul>
 );
-
-// Pretend this is a Flag Component.
-// This is just to avoid importing the actual Flag component from 'manager/src/components/Flag' in RegionSelect.
-const mockFlagComponent = (
-  props: React.PropsWithChildren<FlagComponentProps>
-) => {
-  return <Box {...props} />;
-};
 
 const mockHandleSelection = vi.fn();
 
