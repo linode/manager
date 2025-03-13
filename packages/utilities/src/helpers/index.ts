@@ -18,6 +18,7 @@ export * from './getDisplayName';
 export * from './isNumber';
 export * from './link';
 export * from './manuallySetVPCConfigInterfacesToActive';
+export * from './mapIdsToDevices';
 export * from './minute-conversion';
 export * from './mockLocalStorage';
 export * from './nullOrUndefined';
