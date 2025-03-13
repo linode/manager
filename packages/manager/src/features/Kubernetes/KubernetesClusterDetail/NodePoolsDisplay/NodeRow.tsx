@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import NodeActionMenu from './NodeActionMenu';
 

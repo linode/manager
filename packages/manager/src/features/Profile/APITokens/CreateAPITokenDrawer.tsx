@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControl,
   FormHelperText,
@@ -10,7 +11,6 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -20,8 +20,10 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile/profile';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
+import {
+  useProfile,
+  useCreatePersonalAccessTokenMutation,
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {

@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';

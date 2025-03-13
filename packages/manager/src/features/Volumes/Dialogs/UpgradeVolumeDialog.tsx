@@ -1,8 +1,7 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useVolumesMigrateMutation } from 'src/queries/volumes/volumes';

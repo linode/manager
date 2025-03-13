@@ -1,3 +1,4 @@
+import { useAllFirewallDevicesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -9,7 +10,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { formattedTypes } from './constants';

@@ -1,9 +1,9 @@
-import { createTestLinode } from 'support/util/linodes';
+import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { interceptLinodeResize } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
-import { interceptLinodeResize } from 'support/intercepts/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { createTestLinode } from 'support/util/linodes';
 
 authenticate();
 describe('resize linode', () => {

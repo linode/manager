@@ -14,7 +14,7 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 

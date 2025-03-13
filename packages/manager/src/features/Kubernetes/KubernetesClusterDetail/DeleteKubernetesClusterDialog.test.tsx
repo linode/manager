@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 
 import type { Props } from './DeleteKubernetesClusterDialog';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const props: Props = {
   clusterId: 1,
@@ -22,8 +22,8 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,

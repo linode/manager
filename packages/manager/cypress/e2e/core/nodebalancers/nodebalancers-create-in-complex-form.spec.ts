@@ -1,13 +1,15 @@
+import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
+import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
-import type { Linode } from '@linode/api-v4';
+
 import { nodeBalancerFactory } from 'src/factories';
-import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
+
+import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('create NodeBalancer to test the submission of multiple nodes and multiple configs', () => {
@@ -22,14 +24,14 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
   it('creates a NodeBalancer with multiple Backend Nodes', () => {
     const region = chooseRegion();
     const linodePayload = {
-      region: region.id,
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
+      region: region.id,
     };
 
     const linodePayload_2 = {
-      region: region.id,
       private_ip: true,
+      region: region.id,
     };
 
     const createTestLinodes = async () => {
@@ -42,15 +44,15 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
     cy.defer(createTestLinodes, 'Creating 2 test Linodes').then(
       ([linode, linode2]: [Linode, Linode]) => {
         const nodeBal = nodeBalancerFactory.build({
+          ipv4: linode.ipv4[1],
           label: randomLabel(),
           region: region.id,
-          ipv4: linode.ipv4[1],
         });
 
         const nodeBal_2 = nodeBalancerFactory.build({
+          ipv4: linode2.ipv4[1],
           label: randomLabel(),
           region: region.id,
-          ipv4: linode2.ipv4[1],
         });
 
         interceptCreateNodeBalancer().as('createNodeBalancer');
@@ -114,14 +116,14 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
   it('creates a NodeBalancer with an additional config', () => {
     const region = chooseRegion();
     const linodePayload = {
-      region: region.id,
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
+      region: region.id,
     };
 
     const linodePayload_2 = {
-      region: region.id,
       private_ip: true,
+      region: region.id,
     };
 
     const createTestLinodes = async () => {
@@ -134,15 +136,15 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
     cy.defer(createTestLinodes, 'Creating 2 test Linodes').then(
       ([linode, linode2]: [Linode, Linode]) => {
         const nodeBal = nodeBalancerFactory.build({
+          ipv4: linode.ipv4[1],
           label: randomLabel(),
           region: region.id,
-          ipv4: linode.ipv4[1],
         });
 
         const nodeBal_2 = nodeBalancerFactory.build({
+          ipv4: linode2.ipv4[1],
           label: randomLabel(),
           region: region.id,
-          ipv4: linode2.ipv4[1],
         });
 
         interceptCreateNodeBalancer().as('createNodeBalancer');
@@ -204,9 +206,9 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
   it('displays errors during adding new config', () => {
     const region = chooseRegion();
     const linodePayload = {
-      region: region.id,
       // NodeBalancers require Linodes with private IPs.
       private_ip: true,
+      region: region.id,
     };
 
     cy.defer(
@@ -214,9 +216,9 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       'Creating test Linode'
     ).then((linode: Linode) => {
       const nodeBal = nodeBalancerFactory.build({
+        ipv4: linode.ipv4[1],
         label: randomLabel(),
         region: region.id,
-        ipv4: linode.ipv4[1],
       });
 
       cy.visitWithLogin('/nodebalancers/create');
