@@ -63,16 +63,24 @@ export const FirewallDetail = () => {
 
   const { linodeCount, nodebalancerCount } = allDevices?.reduce(
     (acc, device) => {
-      // @TODO Linode Interfaces - check if we want this number to be the total number of Linodes, or total number of devices associated with Linodes
-      // for now I'm going with the latter (easier)
-      if (device.entity.type !== 'nodebalancer') {
+      if (device.entity.type === 'linode') {
         acc.linodeCount += 1;
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
+      } else if (device.entity.type === 'interface') {
+        const linodeId = device.entity.url.split('/')[4];
+        if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {
+          acc.linodeCount += 1;
+        }
+        acc.seenLinodeIdsForInterfaces.add(linodeId);
       }
       return acc;
     },
-    { linodeCount: 0, nodebalancerCount: 0 }
+    {
+      linodeCount: 0,
+      nodebalancerCount: 0,
+      seenLinodeIdsForInterfaces: new Set<string>(),
+    }
   ) || { linodeCount: 0, nodebalancerCount: 0 };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([

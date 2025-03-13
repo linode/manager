@@ -7,9 +7,10 @@ import { ActionsPanel, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { formattedTypes } from './constants';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+
+import { formattedTypes } from './constants';
 
 import type { FirewallDevice } from '@linode/api-v4';
 

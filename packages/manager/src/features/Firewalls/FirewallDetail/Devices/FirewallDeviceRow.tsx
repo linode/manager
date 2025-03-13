@@ -20,6 +20,8 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   const { id, label, type, url } = device.entity;
 
   const isInterfaceDevice = type === 'interface';
+  // for Linode Interfaces, the url comes in as '/v4/linode/instances/:linodeId/interfaces/:interfaceId
+  // we need the Linode ID to create a link
   const entityId = isInterfaceDevice ? Number(url.split('/')[4]) : id;
 
   // Since we're not given the Linode's label for a Linode Interface device, we must fetch it
@@ -36,6 +38,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
         {isLoading ? (
           <CircleProgress size="xs" />
         ) : (
+          // @TODO Linode Interfaces - perhaps link to the interface's details later
           <Link
             to={`/${
               isInterfaceDevice ? 'linode' : type
@@ -48,7 +51,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
       </TableCell>
       {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (
         <TableCell>
-          {isInterfaceDevice && id !== 24
+          {isInterfaceDevice
             ? `Linode Interface (ID: ${id})`
             : 'Configuration Profile Interface'}
         </TableCell>
