@@ -1,14 +1,15 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetBucket } from 'support/intercepts/object-storage';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+
 import {
   accountFactory,
   objectStorageBucketFactory,
   regionFactory,
 } from 'src/factories';
-import { randomLabel } from 'support/util/random';
-import { mockGetBucket } from 'support/intercepts/object-storage';
-import { mockGetRegions } from 'support/intercepts/regions';
 
 describe('Object Storage Multicluster Bucket Details Tabs', () => {
   beforeEach(() => {
