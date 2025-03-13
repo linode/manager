@@ -2,6 +2,7 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
   getQueryParamsFromQueryString,
   pathOr,
+  splitAt,
   usePrevious,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
@@ -16,7 +17,6 @@ import {
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { ManagerPreferences, Order } from '@linode/utilities';
 

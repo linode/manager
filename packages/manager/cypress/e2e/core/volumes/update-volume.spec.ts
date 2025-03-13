@@ -1,12 +1,13 @@
-import { Volume } from '@linode/api-v4';
-
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
+import { createActiveVolume } from 'support/api/volumes';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
-import { ui } from 'support/ui';
-import { createActiveVolume } from 'support/api/volumes';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { Volume } from '@linode/api-v4';
 
 authenticate();
 describe('volume update flow', () => {
