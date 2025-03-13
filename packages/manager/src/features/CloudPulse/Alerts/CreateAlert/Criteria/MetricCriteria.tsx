@@ -66,7 +66,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
   });
 
   return (
-    <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+    <Stack mt={3} spacing={2}>
       <Typography variant="h2">3. Criteria</Typography>
       <Stack spacing={2}>
         {fields !== null &&
