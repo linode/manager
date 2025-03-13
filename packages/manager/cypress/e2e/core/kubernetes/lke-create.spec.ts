@@ -868,7 +868,9 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .should('be.enabled')
         .click();
-      cy.get('[id="domain-transfer-ip-1"]').should('be.visible').click();
+      cy.get('[id="ipv4-addresses-or-cidrs-ip-address-1"]')
+        .should('be.visible')
+        .click();
       cy.focused().type('10.0.1.0/24');
       cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')

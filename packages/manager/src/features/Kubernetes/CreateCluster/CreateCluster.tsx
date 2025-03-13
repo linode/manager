@@ -15,9 +15,10 @@ import {
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
-import { pick, remove, update } from 'ramda';
 import * as React from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -30,13 +31,13 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
-  getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
+  kubernetesQueries,
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
@@ -45,7 +46,6 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
@@ -67,31 +67,18 @@ import { NodePoolPanel } from './NodePoolPanel';
 
 import type {
   CreateKubeClusterPayload,
-  CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [selectedRegion, setSelectedRegion] = React.useState<
-    Region | undefined
-  >();
-  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
-  const [label, setLabel] = React.useState<string | undefined>();
-  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const [highAvailability, setHighAvailability] = React.useState<boolean>();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
-
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
@@ -99,15 +86,63 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
-    stringToExtendedIP(''),
-  ]);
-  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
-    stringToExtendedIP(''),
-  ]);
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
+
+  const formValues = React.useMemo(() => {
+    return {
+      apl_enabled: false,
+      control_plane: {
+        acl: {
+          addresses: {
+            ipv4: [''],
+            ipv6: [''],
+          },
+        },
+      },
+      node_pools: [],
+      tier: 'standard' as KubernetesTier,
+    };
+  }, []);
+
+  const queryClient = useQueryClient();
+
+  const formMethods = useForm<CreateKubeClusterPayload>({
+    defaultValues: async () => {
+      const latestK8sVersions = await queryClient.ensureQueryData(
+        kubernetesQueries.tieredVersions(selectedTier)
+      );
+      return {
+        ...formValues,
+        k8s_version: latestK8sVersions[0].id,
+      };
+    },
+  });
+
+  const {
+    control,
+    formState: { isSubmitting },
+    getValues,
+    handleSubmit,
+    setValue,
+    watch,
+  } = formMethods;
+  const selectedRegion = watch('region');
+  const nodePool = watch('node_pools');
+  const aplEnabled = watch('apl_enabled');
+  const highAvailability = watch('control_plane.high_availability');
+
+  const {
+    isLoadingVersions,
+    versions: versionData,
+    versionsError,
+  } = useLkeStandardOrEnterpriseVersions(selectedTier);
+
+  const versions = (versionData ?? []).map((thisVersion) => ({
+    label: thisVersion.id,
+    value: thisVersion.id,
+  }));
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -115,20 +150,23 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
+  React.useEffect(() => {
+    setValue('k8s_version', versions[0]?.label);
+  }, [versions]);
+
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
-
     // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
-      setHighAvailability(true);
+      setValue('control_plane.high_availability', true);
       setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
-      if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
-        setSelectedRegion(undefined);
+      if (!getValues('region')?.includes('Kubernetes Enterprise')) {
+        setValue('region', '');
       }
     } else {
-      setHighAvailability(undefined);
+      setValue('control_plane.high_availability', undefined);
       setControlPlaneACL(false);
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
@@ -156,7 +194,6 @@ export const CreateCluster = () => {
 
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
-
   const {
     mutateAsync: createKubernetesCluster,
   } = useCreateKubernetesClusterMutation();
@@ -170,79 +207,54 @@ export const CreateCluster = () => {
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  const {
-    isLoadingVersions,
-    versions: versionData,
-    versionsError,
-  } = useLkeStandardOrEnterpriseVersions(selectedTier);
-
-  const versions = (versionData ?? []).map((thisVersion) => ({
-    label: thisVersion.id,
-    value: thisVersion.id,
-  }));
-
-  React.useEffect(() => {
-    if (versions.length > 0) {
-      setVersion(getLatestVersion(versions).value);
-    }
-  }, [versionData]);
-
-  const createCluster = () => {
-    if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
-      scrollErrorIntoViewV2(formContainerRef);
-      return;
-    }
+  const createCluster = (formData: CreateKubeClusterPayload): Promise<void> => {
+    const {
+      apl_enabled,
+      control_plane,
+      k8s_version,
+      label,
+      node_pools,
+      region,
+    } = formData;
 
     const { push } = history;
-    setErrors(undefined);
-    setSubmitting(true);
 
-    const node_pools = nodePools.map(
-      pick(['type', 'count'])
-    ) as CreateNodePoolData[];
+    const _ipv4 = control_plane?.acl?.addresses?.ipv4 || [];
+    const _ipv6 = control_plane?.acl?.addresses?.ipv6 || [];
 
-    const _ipv4 = ipV4Addr
-      .map((ip) => {
-        return ip.address;
-      })
-      .filter((ip) => ip !== '');
+    // Filter out empty strings from the arrays
+    const filteredIpv4 = _ipv4.filter((ip) => ip !== '');
+    const filteredIpv6 = _ipv6.filter((ip) => ip !== '');
 
-    const _ipv6 = ipV6Addr
-      .map((ip) => {
-        return ip.address;
-      })
-      .filter((ip) => ip !== '');
-
-    const addressIPv4Payload = {
-      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+    const addressIPv4Payload = controlPlaneACL && {
+      ...(filteredIpv4.length > 0 && { ipv4: filteredIpv4 }),
     };
 
-    const addressIPv6Payload = {
-      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+    const addressIPv6Payload = controlPlaneACL && {
+      ...(filteredIpv6.length > 0 && { ipv6: filteredIpv6 }),
     };
 
     let payload: CreateKubeClusterPayload = {
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
-          'revision-id': '',
-          ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
-            (_ipv4.length > 0 || _ipv6.length > 0) && {
+          ...(controlPlaneACL &&
+            (filteredIpv4.length || filteredIpv6.length) && {
               addresses: {
                 ...addressIPv4Payload,
                 ...addressIPv6Payload,
               },
             }),
         },
-        high_availability: highAvailability ?? false,
+        high_availability: control_plane?.high_availability ?? false,
       },
-      k8s_version: version,
+      k8s_version,
       label,
       node_pools,
-      region: selectedRegion?.id,
+      region,
     };
 
-    if (showAPL) {
+    if (apl_enabled) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -250,12 +262,13 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
+    // Choose the correct function to create the cluster
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      apl_enabled || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
-    createClusterFn(payload)
+    return createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
@@ -267,36 +280,32 @@ export const CreateCluster = () => {
       })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-        setSubmitting(false);
         scrollErrorIntoViewV2(formContainerRef);
       });
   };
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
-  const addPool = (pool: KubeNodePoolResponse) => {
-    setNodePools([...nodePools, pool]);
+  const addPool = (pool: Partial<KubeNodePoolResponse>) => {
+    const currentPools = getValues('node_pools') || [];
+    const updatedPools = [...currentPools, pool];
+    setValue('node_pools', updatedPools as KubeNodePoolResponse[]);
   };
 
   const updatePool = (poolIdx: number, updatedPool: KubeNodePoolResponse) => {
-    const updatedPoolWithPrice = {
-      ...updatedPool,
-    };
-    setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
+    const currentPools = getValues('node_pools') || [];
+    currentPools[poolIdx] = updatedPool;
+    setValue('node_pools', [...currentPools]);
   };
 
   const removePool = (poolIdx: number) => {
-    const updatedPools = remove(poolIdx, 1, nodePools);
-    setNodePools(updatedPools);
-  };
-
-  const updateLabel = (newLabel: string) => {
-    // If the new label is an empty string, use undefined. This allows it to pass Yup validation.
-    setLabel(newLabel ? newLabel : undefined);
+    const currentPools = getValues('node_pools');
+    const updatedPools = currentPools.filter((_, index) => index !== poolIdx);
+    setValue('node_pools', updatedPools);
   };
 
   const highAvailabilityPrice = getDCSpecificPriceByType({
-    regionId: selectedRegion?.id,
+    regionId: selectedRegion,
     type: lkeHAType,
   });
 
@@ -320,7 +329,7 @@ export const CreateCluster = () => {
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     regionsData,
-    selectedRegionID: selectedRegion?.id,
+    selectedRegionID: selectedRegion,
   });
 
   if (
@@ -332,231 +341,315 @@ export const CreateCluster = () => {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await createCluster(data);
+    } catch (err) {
+      setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+      scrollErrorIntoViewV2(formContainerRef);
+    }
+  });
+
   return (
-    <Grid className={classes.root} container ref={formContainerRef}>
-      <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-      <LandingHeader
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
-        title="Create Cluster"
-      />
-      <Grid className={`mlMain py0`}>
-        {generalError && (
-          <Notice variant="error">
-            <ErrorMessage
-              entity={{ type: 'lkecluster_id' }}
-              formPayloadValues={{ node_pools: nodePools }}
-              message={generalError}
-            />
-          </Notice>
-        )}
-        {isCreateClusterRestricted && (
-          <Notice
-            text={getRestrictedResourceText({
-              action: 'create',
-              isSingular: false,
-              resourceType: 'LKE Clusters',
-            })}
-            important
-            sx={{ marginBottom: 2 }}
-            variant="error"
+    <FormProvider {...formMethods}>
+      <form onSubmit={onSubmit}>
+        <Grid className={classes.root} container ref={formContainerRef}>
+          <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+          <LandingHeader
+            docsLabel="Docs"
+            docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
+            title="Create Cluster"
           />
-        )}
-        <Paper data-qa-label-header>
-          <TextField
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              updateLabel(e.target.value)
-            }
-            data-qa-label-input
-            disabled={isCreateClusterRestricted}
-            errorText={errorMap.label}
-            label="Cluster Label"
-            value={label || ''}
-          />
-          {isLkeEnterpriseLAFlagEnabled && (
-            <>
-              <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
-              <ClusterTierPanel
-                handleClusterTierSelection={handleClusterTierSelection}
-                isUserRestricted={isCreateClusterRestricted}
-                selectedTier={selectedTier}
+          <Grid className={`mlMain py0`}>
+            {generalError && (
+              <Notice variant="error">
+                <ErrorMessage
+                  entity={{ type: 'lkecluster_id' }}
+                  formPayloadValues={{ node_pools: getValues('node_pools') }}
+                  message={generalError}
+                />
+              </Notice>
+            )}
+            {isCreateClusterRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'LKE Clusters',
+                })}
+                important
+                sx={{ marginBottom: 2 }}
+                variant="error"
               />
-            </>
-          )}
-          <Divider sx={{ marginTop: 4 }} />
-          <StyledStackWithTabletBreakpoint>
-            <Stack>
-              <RegionSelect
-                currentCapability={
-                  isLkeEnterpriseLAFeatureEnabled &&
-                  selectedTier === 'enterprise'
-                    ? 'Kubernetes Enterprise'
-                    : 'Kubernetes'
-                }
-                textFieldProps={{
-                  helperText: <RegionHelperText mb={2} />,
-                  helperTextPosition: 'top',
-                }}
-                tooltipText={
-                  isLkeEnterpriseLAFeatureEnabled &&
-                  selectedTier === 'enterprise'
-                    ? 'Only regions that support LKE Enterprise clusters are listed.'
-                    : undefined
-                }
-                disableClearable
-                disabled={isCreateClusterRestricted}
-                errorText={errorMap.region}
-                onChange={(e, region) => setSelectedRegion(region)}
-                regions={regionsData}
-                value={selectedRegion?.id}
+            )}
+            <Paper data-qa-label-header>
+              <Controller
+                render={({ field }) => (
+                  <TextField
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      field.onChange(e.target.value);
+                    }}
+                    data-qa-label-input
+                    disabled={isCreateClusterRestricted}
+                    errorText={errorMap.label}
+                    label="Cluster Label"
+                    value={field.value || ''}
+                  />
+                )}
+                control={control}
+                name="label"
               />
-            </Stack>
-            <StyledDocsLinkContainer
-              sx={(theme) => ({ marginTop: theme.spacing(2) })}
-            >
-              <DocsLink
-                href="https://www.linode.com/pricing"
-                label={DOCS_LINK_LABEL_DC_PRICING}
-              />
-            </StyledDocsLinkContainer>
-          </StyledStackWithTabletBreakpoint>
-          <Divider sx={{ marginTop: 4 }} />
-          <StyledStackWithTabletBreakpoint>
-            <Stack>
-              <Autocomplete
-                onChange={(_, selected) => {
-                  setVersion(selected?.value);
-                }}
-                disableClearable={!!version}
-                disabled={isCreateClusterRestricted}
-                errorText={errorMap.k8s_version}
-                label="Kubernetes Version"
-                loading={isLoadingVersions}
-                options={versions}
-                placeholder={' '}
-                sx={{ minWidth: 416 }}
-                value={versions.find((v) => v.value === version) ?? null}
-              />
-            </Stack>
-            <StyledDocsLinkContainer
-              sx={(theme) => ({ marginTop: theme.spacing(2) })}
-            >
-              <DocsLink
-                href={CLUSTER_VERSIONS_DOCS_LINK}
-                label="Kubernetes Versions"
-              />
-            </StyledDocsLinkContainer>
-          </StyledStackWithTabletBreakpoint>
-          {showAPL && (
-            <>
+
+              {isLkeEnterpriseLAFlagEnabled && (
+                <>
+                  <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
+                  <Controller
+                    render={({}) => (
+                      <ClusterTierPanel
+                        handleClusterTierSelection={handleClusterTierSelection}
+                        isUserRestricted={isCreateClusterRestricted}
+                        selectedTier={selectedTier}
+                      />
+                    )}
+                    control={control}
+                    name="tier"
+                  />
+                </>
+              )}
               <Divider sx={{ marginTop: 4 }} />
               <StyledStackWithTabletBreakpoint>
                 <Stack>
-                  <ApplicationPlatform
-                    setAPL={setApl_enabled}
-                    setHighAvailability={setHighAvailability}
+                  <Controller
+                    render={({ field }) => (
+                      <RegionSelect
+                        {...field}
+                        currentCapability={
+                          isLkeEnterpriseLAFeatureEnabled &&
+                          selectedTier === 'enterprise'
+                            ? 'Kubernetes Enterprise'
+                            : 'Kubernetes'
+                        }
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
+                        textFieldProps={{
+                          helperText: <RegionHelperText mb={2} />,
+                          helperTextPosition: 'top',
+                        }}
+                        tooltipText={
+                          isLkeEnterpriseLAFeatureEnabled &&
+                          selectedTier === 'enterprise'
+                            ? 'Only regions that support LKE Enterprise clusters are listed.'
+                            : undefined
+                        }
+                        disableClearable
+                        disabled={isCreateClusterRestricted}
+                        errorText={errorMap.region}
+                        onChange={(_, region) => field.onChange(region.id)}
+                        ref={null}
+                        regions={regionsData}
+                      />
+                    )}
+                    control={control}
+                    name="region"
                   />
                 </Stack>
+                <StyledDocsLinkContainer
+                  sx={(theme) => ({ marginTop: theme.spacing(2) })}
+                >
+                  <DocsLink
+                    href="https://www.linode.com/pricing"
+                    label={DOCS_LINK_LABEL_DC_PRICING}
+                  />
+                </StyledDocsLinkContainer>
               </StyledStackWithTabletBreakpoint>
-            </>
-          )}
-          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
-          {showHighAvailability && selectedTier !== 'enterprise' && (
-            <Box data-testid="ha-control-plane">
-              <HAControlPlane
-                highAvailabilityPrice={
-                  isErrorKubernetesTypes || !highAvailabilityPrice
-                    ? UNKNOWN_PRICE
-                    : highAvailabilityPrice
-                }
-                isAPLEnabled={apl_enabled}
-                isErrorKubernetesTypes={isErrorKubernetesTypes}
-                isLoadingKubernetesTypes={isLoadingKubernetesTypes}
-                selectedRegionId={selectedRegion?.id}
-                setHighAvailability={setHighAvailability}
+              <Divider sx={{ marginTop: 4 }} />
+              <StyledStackWithTabletBreakpoint>
+                <Stack>
+                  <Controller
+                    render={() => (
+                      <Autocomplete
+                        onChange={(_, selected) => {
+                          setValue('k8s_version', selected?.value);
+                        }}
+                        value={
+                          versions.find(
+                            (v) => v.value === getValues('k8s_version')
+                          ) ?? null
+                        }
+                        disableClearable={!!getValues('k8s_version')}
+                        disabled={isCreateClusterRestricted}
+                        errorText={errorMap.k8s_version}
+                        label="Kubernetes Version"
+                        loading={isLoadingVersions}
+                        options={versions}
+                        placeholder={' '}
+                        sx={{ minWidth: 416 }}
+                      />
+                    )}
+                    control={control}
+                    name="k8s_version"
+                  />
+                </Stack>
+                <StyledDocsLinkContainer
+                  sx={(theme) => ({ marginTop: theme.spacing(2) })}
+                >
+                  <DocsLink
+                    href={CLUSTER_VERSIONS_DOCS_LINK}
+                    label="Kubernetes Versions"
+                  />
+                </StyledDocsLinkContainer>
+              </StyledStackWithTabletBreakpoint>
+              {showAPL && (
+                <>
+                  <Divider sx={{ marginTop: 4 }} />
+                  <StyledStackWithTabletBreakpoint>
+                    <Stack>
+                      <Controller
+                        render={({ field }) => (
+                          <ApplicationPlatform
+                            setAPL={(value) => {
+                              field.onChange(value);
+                              setValue('control_plane.acl.enabled', value);
+                            }}
+                            setHighAvailability={(value) => {
+                              setValue(
+                                'control_plane.high_availability',
+                                value
+                              );
+                            }}
+                          />
+                        )}
+                        control={control}
+                        name="apl_enabled"
+                      />
+                    </Stack>
+                  </StyledStackWithTabletBreakpoint>
+                </>
+              )}
+              <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+              {showHighAvailability && selectedTier !== 'enterprise' && (
+                <Box data-testid="ha-control-plane">
+                  <Controller
+                    render={() => (
+                      <HAControlPlane
+                        highAvailabilityPrice={
+                          isErrorKubernetesTypes || !highAvailabilityPrice
+                            ? UNKNOWN_PRICE
+                            : highAvailabilityPrice
+                        }
+                        setHighAvailability={(value) =>
+                          setValue('control_plane.high_availability', value)
+                        }
+                        isAPLEnabled={aplEnabled}
+                        isErrorKubernetesTypes={isErrorKubernetesTypes}
+                        isLoadingKubernetesTypes={isLoadingKubernetesTypes}
+                        selectedRegionId={getValues('region')}
+                      />
+                    )}
+                    control={control}
+                    name="control_plane.high_availability"
+                  />
+                </Box>
+              )}
+              {showControlPlaneACL && (
+                <>
+                  {selectedTier !== 'enterprise' && <Divider />}
+                  <Controller
+                    render={() => (
+                      <ControlPlaneACLPane
+                        updateFor={[
+                          getValues('control_plane.acl.addresses.ipv4'),
+                          getValues('control_plane.acl.addresses.ipv6'),
+                          setControlPlaneACL,
+                          errorMap,
+                          controlPlaneACL,
+                        ]}
+                        enableControlPlaneACL={controlPlaneACL}
+                        errorText={errorMap.control_plane}
+                        selectedTier={selectedTier as KubernetesTier}
+                        setControlPlaneACL={setControlPlaneACL}
+                      />
+                    )}
+                    control={control}
+                    name="control_plane.acl"
+                  />
+                </>
+              )}
+              <Divider sx={{ marginBottom: 4 }} />
+              <Controller
+                render={() => (
+                  <NodePoolPanel
+                    addNodePool={(nodePool: Partial<KubeNodePoolResponse>) => {
+                      addPool(nodePool);
+                    }}
+                    isSelectedRegionEligibleForPlan={
+                      isSelectedRegionEligibleForPlan
+                    }
+                    typesError={
+                      typesError
+                        ? getAPIErrorOrDefault(
+                            typesError,
+                            'Error loading Linode type information.'
+                          )[0].reason
+                        : undefined
+                    }
+                    apiError={errorMap.node_pools}
+                    hasSelectedRegion={hasSelectedRegion}
+                    isAPLEnabled={aplEnabled}
+                    isPlanPanelDisabled={isPlanPanelDisabled}
+                    regionsData={regionsData}
+                    selectedRegionId={selectedRegion}
+                    selectedTier={selectedTier as KubernetesTier}
+                    types={typesData || []}
+                    typesLoading={typesLoading}
+                  />
+                )}
+                control={control}
+                name="node_pools"
               />
-            </Box>
-          )}
-          {showControlPlaneACL && (
-            <>
-              {selectedTier !== 'enterprise' && <Divider />}
-              <ControlPlaneACLPane
-                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                  setIPv4Addr(newIpV4Addr);
-                }}
-                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                  setIPv6Addr(newIpV6Addr);
-                }}
-                enableControlPlaneACL={controlPlaneACL}
-                errorText={errorMap.control_plane}
-                ipV4Addr={ipV4Addr}
-                ipV6Addr={ipV6Addr}
-                selectedTier={selectedTier}
-                setControlPlaneACL={setControlPlaneACL}
-              />
-            </>
-          )}
-          <Divider sx={{ marginBottom: 4 }} />
-          <NodePoolPanel
-            typesError={
-              typesError
-                ? getAPIErrorOrDefault(
-                    typesError,
-                    'Error loading Linode type information.'
-                  )[0].reason
-                : undefined
-            }
-            addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
-            apiError={errorMap.node_pools}
-            hasSelectedRegion={hasSelectedRegion}
-            isAPLEnabled={apl_enabled}
-            isPlanPanelDisabled={isPlanPanelDisabled}
-            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-            regionsData={regionsData}
-            selectedRegionId={selectedRegion?.id}
-            selectedTier={selectedTier}
-            types={typesData || []}
-            typesLoading={typesLoading}
-          />
-        </Paper>
-      </Grid>
-      <Grid
-        className={`mlSidebar ${classes.sidebar}`}
-        data-testid="kube-checkout-bar"
-      >
-        <KubeCheckoutBar
-          highAvailabilityPrice={
-            isErrorKubernetesTypes || !highAvailabilityPrice
-              ? UNKNOWN_PRICE
-              : highAvailabilityPrice
-          }
-          updateFor={[
-            hasAgreed,
-            highAvailability,
-            selectedRegion?.id,
-            nodePools,
-            submitting,
-            typesData,
-            updatePool,
-            removePool,
-            createCluster,
-            classes,
-          ]}
-          createCluster={createCluster}
-          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
-          hasAgreed={hasAgreed}
-          highAvailability={highAvailability}
-          pools={nodePools}
-          region={selectedRegion?.id}
-          regionsData={regionsData}
-          removePool={removePool}
-          showHighAvailability={showHighAvailability}
-          submitting={submitting}
-          toggleHasAgreed={toggleHasAgreed}
-          updatePool={updatePool}
-        />
-      </Grid>
-    </Grid>
+            </Paper>
+          </Grid>
+          <Grid
+            className={`mlSidebar ${classes.sidebar}`}
+            data-testid="kube-checkout-bar"
+          >
+            <KubeCheckoutBar
+              highAvailabilityPrice={
+                isErrorKubernetesTypes || !highAvailabilityPrice
+                  ? UNKNOWN_PRICE
+                  : highAvailabilityPrice
+              }
+              updateFor={[
+                hasAgreed,
+                highAvailability,
+                getValues('region'),
+                getValues('node_pools'),
+                isSubmitting,
+                typesData,
+                updatePool,
+                removePool,
+                onSubmit,
+                createCluster,
+                classes,
+              ]}
+              createCluster={onSubmit}
+              enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
+              hasAgreed={hasAgreed}
+              highAvailability={getValues('control_plane.high_availability')}
+              pools={nodePool as KubeNodePoolResponse[]}
+              region={getValues('region')}
+              regionsData={regionsData}
+              removePool={removePool}
+              showHighAvailability={showHighAvailability}
+              submitting={isSubmitting}
+              toggleHasAgreed={toggleHasAgreed}
+              updatePool={updatePool}
+            />
+          </Grid>
+        </Grid>
+      </form>
+    </FormProvider>
   );
 };
 
