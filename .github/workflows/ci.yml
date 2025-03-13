@@ -16,9 +16,10 @@ jobs:
           [
             "linode-manager",
             "@linode/api-v4",
-            "@linode/validation",
+            "@linode/queries",
             "@linode/ui",
             "@linode/utilities",
+            "@linode/validation",
           ]
     runs-on: ubuntu-latest
     steps:
@@ -193,6 +194,7 @@ jobs:
       - run: pnpm run --filter @linode/ui test
 
   test-utilities:
+    needs: build-sdk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -204,8 +206,32 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/utilities test
+
+  test-queries:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter @linode/queries test
 
   typecheck-ui:
     runs-on: ubuntu-latest
@@ -236,9 +262,33 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/utilities typecheck
 
+  typecheck-queries:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter @linode/queries typecheck
+    
   typecheck-manager:
     runs-on: ubuntu-latest
     needs: build-sdk

@@ -25,6 +25,8 @@
     "@hookform/resolvers": "3.9.1",
     "@linode/api-v4": "workspace:*",
     "@linode/design-language-system": "^4.0.0",
+    "@linode/validation": "workspace:*",
+    "@linode/queries": "workspace:*",
     "@linode/search": "workspace:*",
     "@linode/ui": "workspace:*",
     "@linode/utilities": "workspace:*",

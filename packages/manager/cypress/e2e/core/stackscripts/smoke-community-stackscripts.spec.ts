@@ -1,9 +1,4 @@
-import type { StackScript } from '@linode/api-v4';
-import { Profile, getProfile } from '@linode/api-v4';
-
-import { stackScriptFactory } from 'src/factories';
-import { formatDate } from 'src/utilities/formatDate';
-
+import { getProfile } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
@@ -17,16 +12,19 @@ import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { stackScriptFactory } from 'src/factories';
+import { formatDate } from 'src/utilities/formatDate';
+
+import type { Profile, StackScript } from '@linode/api-v4';
+
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
-    id: 443929,
-    username: 'litespeed',
-    user_gravatar_id: 'f7360fb588b5f65d81ee1afe11b6c0ad',
-    label: 'OpenLiteSpeed-WordPress',
+    created: '2019-05-23T16:21:41',
+    deployments_active: 238,
+    deployments_total: 4400,
     description:
       'Blazing-fast WordPress with LSCache, 300+ times faster than regular WordPress\n\nOpenLiteSpeed is the Open Source edition of LiteSpeed Web Server Enterprise and contains all of the essential features. OLS provides enormous scalability, and an accelerated hosting platform for WordPress. \n\nWhole process maybe take up to 10 minutes to finish. ',
-    ordinal: 0,
-    logo_url: '',
+    id: 443929,
     images: [
       'linode/centos7',
       'linode/debian9',
@@ -43,45 +41,47 @@ const mockStackScripts: StackScript[] = [
       'linode/almalinux9',
       'linode/rocky9',
     ],
-    deployments_total: 4400,
-    deployments_active: 238,
     is_public: true,
+    label: 'OpenLiteSpeed-WordPress',
+    logo_url: '',
     mine: false,
-    created: '2019-05-23T16:21:41',
-    updated: '2023-08-22T16:41:48',
+    ordinal: 0,
     rev_note: 'add more OS',
     script:
       '#!/bin/bash\n### linode\n### Install OpenLiteSpeed and WordPress\nbash <( curl -sk https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Setup/wpimgsetup.sh )\n### Regenerate password for Web Admin, Database, setup Welcome Message\nbash <( curl -sk https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Cloud-init/per-instance.sh )\n### Reboot server\nreboot\n',
+    updated: '2023-08-22T16:41:48',
     user_defined_fields: [],
+    user_gravatar_id: 'f7360fb588b5f65d81ee1afe11b6c0ad',
+    username: 'litespeed',
   }),
   stackScriptFactory.build({
-    id: 68166,
-    username: 'serverok',
-    user_gravatar_id: '8c2562f63286df4f8aae5babe5920ade',
-    label: 'Squid Proxy Server',
-    description: 'Auto setup Squid Proxy Server on Ubuntu 16.04 LTS',
-    ordinal: 0,
-    logo_url: '',
-    images: ['linode/ubuntu16.04lts'],
-    deployments_total: 35469,
-    deployments_active: 13,
-    is_public: true,
-    mine: false,
     created: '2017-02-07T02:28:49',
-    updated: '2023-08-07T02:34:15',
+    deployments_active: 13,
+    deployments_total: 35469,
+    description: 'Auto setup Squid Proxy Server on Ubuntu 16.04 LTS',
+    id: 68166,
+    images: ['linode/ubuntu16.04lts'],
+    is_public: true,
+    label: 'Squid Proxy Server',
+    logo_url: '',
+    mine: false,
+    ordinal: 0,
     rev_note: 'Initial import',
     script:
       '#!/bin/bash\n# <UDF name="squid_user" Label="Proxy Username" />\n# <UDF name="squid_password" Label="Proxy Password" />\n# Squid Proxy Server\n# Author: admin@serverok.in\n# Blog: https://www.serverok.in\n\n\n/usr/bin/apt update\n/usr/bin/apt -y install apache2-utils squid3\n\n/usr/bin/htpasswd -b -c /etc/squid/passwd $SQUID_USER $SQUID_PASSWORD\n\n/bin/rm -f /etc/squid/squid.conf\n/usr/bin/touch /etc/squid/blacklist.acl\n/usr/bin/wget --no-check-certificate -O /etc/squid/squid.conf https://raw.githubusercontent.com/hostonnet/squid-proxy-installer/master/squid.conf\n\n/sbin/iptables -I INPUT -p tcp --dport 3128 -j ACCEPT\n/sbin/iptables-save\n\nservice squid restart\nupdate-rc.d squid defaults',
+    updated: '2023-08-07T02:34:15',
     user_defined_fields: [
       {
-        name: 'squid_user',
         label: 'Proxy Username',
+        name: 'squid_user',
       },
       {
-        name: 'squid_password',
         label: 'Proxy Password',
+        name: 'squid_password',
       },
     ],
+    user_gravatar_id: '8c2562f63286df4f8aae5babe5920ade',
+    username: 'serverok',
   }),
 ];
 
@@ -110,13 +110,13 @@ describe('Community Stackscripts integration tests', () => {
 
     cy.defer(getProfile, 'getting profile').then((profile: Profile) => {
       const dateFormatOptionsLanding = {
-        timezone: profile.timezone,
         displayTime: false,
+        timezone: profile.timezone,
       };
 
       const dateFormatOptionsDetails = {
-        timezone: profile.timezone,
         displayTime: true,
+        timezone: profile.timezone,
       };
 
       const updatedTimeLanding = formatDate(

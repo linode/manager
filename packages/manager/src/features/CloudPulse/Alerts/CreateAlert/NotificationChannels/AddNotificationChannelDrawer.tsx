@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Autocomplete, Box, Typography } from '@linode/ui';
+import { ActionsPanel, Autocomplete, Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 
 import { channelTypeOptions } from '../../constants';

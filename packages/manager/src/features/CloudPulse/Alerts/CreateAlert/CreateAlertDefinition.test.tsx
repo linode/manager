@@ -10,8 +10,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -123,7 +123,7 @@ describe('AlertDefinition Create', () => {
     await user.click(container.getByText('Submit'));
     expect(
       await container.findByText(
-        'Name cannot contain special characters: * # & + : \< \> ? @ % { } \\ /.'
+        'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
       )
     ).toBeVisible();
     expect(

@@ -1,7 +1,7 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import React from 'react';
 
-import { useVPCQuery } from 'src/queries/vpcs/vpcs';
+import { useVPCQuery } from '@linode/queries';
 
 interface Props {
   idx: number;

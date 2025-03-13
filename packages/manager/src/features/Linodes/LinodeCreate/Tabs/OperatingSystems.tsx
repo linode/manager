@@ -5,7 +5,7 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionQuery } from 'src/queries/regions/regions';
+import { useRegionQuery } from '@linode/queries';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
