@@ -12,7 +12,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { getValidationSchema } from '../Utils/utils';
+import { enhanceWithEntityIdValidationForCreateFlow } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -74,15 +74,19 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>;
+  const createAlertSchema = CreateAlertDefinitionFormSchema;
 
   // Default resolver
-  const [validationSchema, setValidationSchema] = React.useState(
-    getValidationSchema(
-      null,
-      [],
+  const [validationSchema, setValidationSchema] = React.useState<
+    ObjectSchema<CreateAlertDefinitionForm>
+  >(
+    enhanceWithEntityIdValidationForCreateFlow(
+      {
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        serviceTypeObj: null,
+      },
       createAlertSchema
-    ) as ObjectSchema<CreateAlertDefinitionForm>
+    )
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -152,11 +156,13 @@ export const CreateAlertDefinition = () => {
 
   React.useEffect(() => {
     setValidationSchema(
-      getValidationSchema(
-        serviceTypeWatcher,
-        flags.aclpAlertServiceTypeConfig ?? [],
+      enhanceWithEntityIdValidationForCreateFlow(
+        {
+          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+          serviceTypeObj: serviceTypeWatcher,
+        },
         createAlertSchema
-      ) as ObjectSchema<CreateAlertDefinitionForm>
+      )
     );
   }, [createAlertSchema, flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 

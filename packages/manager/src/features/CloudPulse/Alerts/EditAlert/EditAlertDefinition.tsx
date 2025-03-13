@@ -19,9 +19,9 @@ import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChanne
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import {
   convertAlertDefinitionValues,
-  getValidationSchema,
+  enhanceWithEntityIdValidationForEditPayload,
 } from '../Utils/utils';
-import { EditAlertDefinitionFormSchema } from './schemas';
+import { EditAlertDefinitionSchema } from './schemas';
 
 import type {
   Alert,
@@ -46,7 +46,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const editAlertScheme = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
+  const editAlertSchema = EditAlertDefinitionSchema;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -58,12 +58,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      getValidationSchema(
-        alertDetails?.service_type,
-        flags.aclpAlertServiceTypeConfig ?? [],
-        editAlertScheme,
-        true
-      ) as ObjectSchema<EditAlertDefinitionPayload>
+      enhanceWithEntityIdValidationForEditPayload(
+        {
+          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+          serviceTypeObj: alertDetails.service_type,
+        },
+        editAlertSchema
+      )
     ),
   });
 
