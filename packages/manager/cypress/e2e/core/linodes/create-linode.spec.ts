@@ -284,11 +284,11 @@ describe('Create Linode', () => {
     const rootpass = randomString(32);
     const sshPublicKeyLabel = randomLabel();
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const sshPublicKey = `ssh-rsa e2etestkey${randomKey} e2etest@linode`;
     const linodeLabel = randomLabel();

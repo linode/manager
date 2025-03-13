@@ -15,10 +15,10 @@ import {
   mockGetAccountSettings,
 } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
+  mockGetAccessKeys,
   mockGetBuckets,
   mockGetClusters,
 } from 'support/intercepts/object-storage';

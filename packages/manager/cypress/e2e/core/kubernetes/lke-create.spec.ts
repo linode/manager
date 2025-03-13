@@ -418,13 +418,13 @@ describe('LKE Cluster Creation with APL enabled', () => {
       },
     }).as('getFeatureFlags');
     mockGetAccountBeta({
-      id: 'apl',
-      label: 'Akamai App Platform Beta',
-      enrolled: '2024-11-04T21:39:41',
       description:
         'Akamai App Platform is a platform that combines developer and operations-centric tools, automation and self-service to streamline the application lifecycle when using Kubernetes. This process will pre-register you for an upcoming beta.',
-      started: '2024-10-31T18:00:00',
       ended: null,
+      enrolled: '2024-11-04T21:39:41',
+      id: 'apl',
+      label: 'Akamai App Platform Beta',
+      started: '2024-10-31T18:00:00',
     }).as('getAccountBeta');
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
@@ -668,14 +668,14 @@ describe('LKE Cluster Creation with ACL', () => {
   });
   const mockLinodeTypes = [
     linodeTypeFactory.build({
+      class: 'dedicated',
       id: 'dedicated-1',
       label: 'dedicated-1',
-      class: 'dedicated',
     }),
     linodeTypeFactory.build({
+      class: 'dedicated',
       id: 'dedicated-2',
       label: 'dedicated-2',
-      class: 'dedicated',
     }),
   ];
   const clusterVersion = '1.31';
@@ -711,10 +711,10 @@ describe('LKE Cluster Creation with ACL', () => {
         },
       });
       const mockCluster = kubernetesClusterFactory.build({
+        control_plane: mockACL,
+        k8s_version: clusterVersion,
         label: clusterLabel,
         region: mockRegion.id,
-        k8s_version: clusterVersion,
-        control_plane: mockACL,
       });
       mockCreateCluster(mockCluster).as('createCluster');
       mockGetCluster(mockCluster).as('getCluster');
@@ -815,10 +815,10 @@ describe('LKE Cluster Creation with ACL', () => {
       });
 
       const mockCluster = kubernetesClusterFactory.build({
+        control_plane: mockACL,
+        k8s_version: clusterVersion,
         label: clusterLabel,
         region: mockRegion.id,
-        k8s_version: clusterVersion,
-        control_plane: mockACL,
       });
       mockCreateCluster(mockCluster).as('createCluster');
       mockGetCluster(mockCluster).as('getCluster');
@@ -1094,10 +1094,10 @@ describe('LKE Cluster Creation with LKE-E', () => {
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
       const mockedEnterpriseCluster = kubernetesClusterFactory.build({
+        k8s_version: latestEnterpriseTierKubernetesVersion.id,
         label: clusterLabel,
         region: 'us-iad',
         tier: 'enterprise',
-        k8s_version: latestEnterpriseTierKubernetesVersion.id,
       });
       const mockedEnterpriseClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
 

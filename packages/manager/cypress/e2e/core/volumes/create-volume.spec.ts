@@ -26,7 +26,7 @@ import {
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
-import { randomNumber, randomString, randomLabel } from 'support/util/random';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory, volumeFactory } from 'src/factories';
@@ -73,9 +73,9 @@ describe('volume create flow', () => {
     const region = chooseRegion();
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     interceptCreateVolume().as('createVolume');
@@ -121,17 +121,17 @@ describe('volume create flow', () => {
     const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
-      booted: false,
     });
 
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -211,10 +211,10 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -265,9 +265,9 @@ describe('volume create flow', () => {
 
     // Mock linode
     const mockLinode = linodeFactory.build({
-      region: mockRegions[0].id,
-      id: 123456,
       capabilities: ['Block Storage Encryption'],
+      id: 123456,
+      region: mockRegions[0].id,
     });
 
     mockGetAccount(mockAccount).as('getAccount');
@@ -320,15 +320,15 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const volume = volumeFactory.build({
-      region: mockRegions[0].id,
       encryption: 'enabled',
+      region: mockRegions[0].id,
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -387,10 +387,10 @@ describe('volume create flow', () => {
   it('creates a volume from an existing Linode', () => {
     cy.tag('method:e2e');
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: chooseRegion().id,
       booted: false,
+      label: randomLabel(),
+      region: chooseRegion().id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -449,14 +449,14 @@ describe('volume create flow', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({

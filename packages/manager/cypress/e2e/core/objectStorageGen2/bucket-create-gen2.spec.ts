@@ -154,9 +154,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E0',
       cors_enabled: true,
+      endpoint_type: 'E0',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 

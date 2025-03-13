@@ -38,11 +38,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([mockVlan]);
@@ -125,11 +125,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([]);

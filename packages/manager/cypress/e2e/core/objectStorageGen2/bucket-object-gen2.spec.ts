@@ -135,17 +135,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E0',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E0',
       s3_endpoint: undefined,
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E0',
       cors_enabled: true,
+      endpoint_type: 'E0',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -195,17 +195,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E1',
       s3_endpoint: 'us-sea-1.linodeobjects.com',
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E1',
       cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -255,16 +255,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E2',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E2',
       cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -315,16 +315,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E3',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E3',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E3',
       cors_enabled: true,
+      endpoint_type: 'E3',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');

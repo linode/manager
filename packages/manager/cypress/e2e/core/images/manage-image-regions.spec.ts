@@ -29,13 +29,13 @@ describe('Manage Image Replicas', () => {
     const region4 = extendRegion(regionFactory.build(regionOptions));
 
     const image = imageFactory.build({
-      size: 50,
-      total_size: 100,
       capabilities: ['distributed-sites'],
       regions: [
         { region: region1.id, status: 'available' },
         { region: region2.id, status: 'available' },
       ],
+      size: 50,
+      total_size: 100,
     });
 
     mockGetRegions([region1, region2, region3, region4]).as('getRegions');

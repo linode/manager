@@ -31,9 +31,9 @@ describe('Create Linode in Distributed Region', () => {
     const mockRegion = extendRegion(regionFactory.build(mockRegionOptions));
     const mockLinodeTypes = [
       linodeTypeFactory.build({
+        class: 'nanode',
         id: 'nanode-edge-1',
         label: 'Nanode 1GB',
-        class: 'nanode',
       }),
     ];
     const mockLinode = linodeFactory.build({

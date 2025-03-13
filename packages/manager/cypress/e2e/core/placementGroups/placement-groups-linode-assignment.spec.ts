@@ -391,7 +391,7 @@ describe('Placement Groups Linode assignment', () => {
 
     const mockPlacementGroupAfterUnassignment = {
       ...mockPlacementGroup,
-      members: [{ linode_id: mockLinodeRemaining.id, is_compliant: true }],
+      members: [{ is_compliant: true, linode_id: mockLinodeRemaining.id }],
     };
 
     mockGetRegions(mockRegions);
