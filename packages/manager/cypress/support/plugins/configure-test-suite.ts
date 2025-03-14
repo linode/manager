@@ -33,5 +33,6 @@ export const configureTestSuite: CypressPlugin = (_on, config) => {
   })();
 
   config.env['cypress_test_suite'] = suiteName;
+  config.specPattern = `cypress/e2e/${suiteName}/**/*.spec.{ts,tsx}`;
   return config;
 };

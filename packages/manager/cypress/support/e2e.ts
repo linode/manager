@@ -12,6 +12,7 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
+
 import '@testing-library/cypress/add-commands';
 // Cypress command and assertion setup.
 import chaiString from 'chai-string';
