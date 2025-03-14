@@ -198,7 +198,7 @@ export const mockFlagComponent = (
   return (
     <Box {...props} lineHeight="0">
       <img
-        alt={`${props.country}`}
+        alt={`${props.country} Flag`}
         src={`https://flagcdn.com/${props.country}.svg`}
         width="32"
       />
