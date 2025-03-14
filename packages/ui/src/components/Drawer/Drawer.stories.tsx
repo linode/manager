@@ -162,10 +162,34 @@ const NotFound = (_props: React.PropsWithChildren<{ className?: string }>) => {
   );
 };
 
-export const WithNotFound: Story = {
+export const WithNotFoundComponent: Story = {
   args: {
     NotFoundComponent: NotFound,
     error: 'Not Found',
+    onClose: action('onClose'),
+    open: false,
+    title: 'My Drawer',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [open, setOpen] = React.useState(args.open);
+
+      return (
+        <>
+          <Button buttonType="primary" onClick={() => setOpen(true)}>
+            Click to open Drawer
+          </Button>
+          <Drawer {...args} onClose={() => setOpen(false)} open={open} />
+        </>
+      );
+    };
+    return <DrawerExampleWrapper />;
+  },
+};
+
+export const WithoutNotFoundComponent: Story = {
+  args: {
+    error: 'Some other Error',
     onClose: action('onClose'),
     open: false,
     title: 'My Drawer',

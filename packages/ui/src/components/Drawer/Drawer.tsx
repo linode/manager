@@ -37,17 +37,13 @@ interface BaseProps extends _DrawerProps {
   wide?: boolean;
 }
 
-interface PropsWithoutNotFound extends BaseProps {
-  NotFoundComponent?: never;
-}
-
 interface PropsWithNotFound extends BaseProps {
-  NotFoundComponent: React.ComponentType<
+  NotFoundComponent?: React.ComponentType<
     React.PropsWithChildren<{ className?: string }>
   >;
 }
 
-export type DrawerProps = PropsWithNotFound | PropsWithoutNotFound;
+export type DrawerProps = PropsWithNotFound;
 
 /**
  * ## Overview
