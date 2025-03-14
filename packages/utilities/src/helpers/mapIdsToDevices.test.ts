@@ -1,10 +1,10 @@
-import { nodeBalancerFactory } from 'src/factories';
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 
 import { mapIdsToDevices } from './mapIdsToDevices';
 
 import type { NodeBalancer } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4';
+import { describe, it, expect } from 'vitest';
 
 describe('mapIdsToDevices', () => {
   const linodes = linodeFactory.buildList(5);

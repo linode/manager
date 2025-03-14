@@ -30,7 +30,6 @@ export * from './longviewSubscription';
 export * from './longviewTopProcesses';
 export * from './managed';
 export * from './networking';
-export * from './nodebalancer';
 export * from './notification';
 export * from './oauth';
 export * from './objectStorage';

@@ -16,12 +16,12 @@ const deployNodeBalancer = () => {
   cy.get('[data-qa-deploy-nodebalancer]').click();
 };
 
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
 import { mockGetRegions } from 'support/intercepts/regions';
 
-import { nodeBalancerFactory, regionFactory } from 'src/factories';
+import { regionFactory } from 'src/factories';
 
 const createNodeBalancerWithUI = (
   nodeBal: NodeBalancer,

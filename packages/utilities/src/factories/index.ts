@@ -3,3 +3,4 @@ export * from './factoryProxy';
 export * from './linodes';
 export * from './linodeConfigInterface';
 export * from './linodeInterface';
+export * from './nodebalancer';
