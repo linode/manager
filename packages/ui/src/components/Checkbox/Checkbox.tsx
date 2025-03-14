@@ -97,6 +97,10 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
   }),
+  // ...(props.readOnly && {
+  //   color: 'red !important',
+  //   pointerEvents: 'none',
+  // }),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({

@@ -591,6 +591,12 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           color: Color.Neutrals[40],
+          // '&[aria-disabled="true"]': {
+          //   color: '#E5E5EA',
+          //   '& svg': {
+          //     border: '1px solid #C2C2CA'
+          //   }
+          // },
         },
       },
     },
