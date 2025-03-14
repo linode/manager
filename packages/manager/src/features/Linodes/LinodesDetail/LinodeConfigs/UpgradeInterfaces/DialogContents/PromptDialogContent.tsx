@@ -1,7 +1,4 @@
-import {
-  useAllLinodeConfigsQuery,
-  useUpgradeToLinodeInterfacesMutation,
-} from '@linode/queries';
+import { useAllLinodeConfigsQuery } from '@linode/queries';
 import {
   Box,
   Button,
@@ -12,6 +9,8 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
+
+import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
   PromptDialogState,
@@ -30,10 +29,13 @@ export const PromptDialogContent = (
     isLoading: isLoadingConfigs,
   } = useAllLinodeConfigsQuery(linodeId, open);
 
-  const {
-    isPending,
-    mutateAsync: upgradeInterfaces,
-  } = useUpgradeToLinodeInterfacesMutation(linodeId);
+  const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
+    {
+      linodeId,
+      selectedConfig: configs?.[0],
+      setDialogState,
+    }
+  );
 
   if (isLoadingConfigs) {
     return <CircleProgress />;
@@ -41,32 +43,6 @@ export const PromptDialogContent = (
 
   const isPendingDryRun = isPending && isDryRun;
   const isPendingUpgrade = isPending && !isDryRun;
-
-  const upgradeSingleConfig = async (
-    isDryRun: boolean,
-    dialogTitle: string
-  ) => {
-    setIsDryRun(isDryRun);
-
-    try {
-      const returnedData = await upgradeInterfaces({
-        dry_run: isDryRun,
-      });
-      setDialogState({
-        dialogTitle,
-        isDryRun,
-        linodeInterfaces: returnedData.interfaces,
-        step: 'success',
-      });
-    } catch (errors) {
-      setDialogState({
-        dialogTitle,
-        errors,
-        isDryRun,
-        step: 'error',
-      });
-    }
-  };
 
   const upgradeDryRun =
     configs && configs.length > 1
@@ -77,8 +53,11 @@ export const PromptDialogContent = (
             isDryRun: true,
             step: 'configSelect',
           })
-      : () => upgradeSingleConfig(true, `Dry Run: ${configs?.[0].label}`);
-  const upgradeToLinodeInterfaces =
+      : () => {
+          setIsDryRun(true);
+          upgradeToLinodeInterfaces(true);
+        };
+  const upgradeInterfaces =
     configs && configs?.length > 1
       ? () =>
           setDialogState({
@@ -87,11 +66,10 @@ export const PromptDialogContent = (
             isDryRun: false,
             step: 'configSelect',
           })
-      : () =>
-          upgradeSingleConfig(
-            false,
-            `Upgrade Interfaces: ${configs?.[0].label}`
-          );
+      : () => {
+          setIsDryRun(false);
+          upgradeToLinodeInterfaces(false);
+        };
 
   return (
     <Stack gap={2}>
@@ -143,7 +121,7 @@ export const PromptDialogContent = (
           buttonType="primary"
           disabled={isPendingDryRun}
           loading={isPendingUpgrade}
-          onClick={upgradeToLinodeInterfaces}
+          onClick={upgradeInterfaces}
         >
           Upgrade Interfaces
         </Button>

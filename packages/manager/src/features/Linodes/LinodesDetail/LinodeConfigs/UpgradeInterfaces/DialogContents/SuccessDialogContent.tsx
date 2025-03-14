@@ -1,8 +1,8 @@
-import { useUpgradeToLinodeInterfacesMutation } from '@linode/queries';
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
+import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
   SuccessDialogState,
@@ -16,35 +16,13 @@ export const SuccessDialogContent = (
   const { linodeId, onClose, setDialogState, state } = props;
   const { isDryRun, linodeInterfaces, selectedConfig } = state;
 
-  const {
-    isPending,
-    mutateAsync: upgradeInterfaces,
-  } = useUpgradeToLinodeInterfacesMutation(linodeId);
-
-  const upgradeToLinodeInterfaces = async () => {
-    const dialogTitle = `Upgrade Interfaces: ${selectedConfig?.label}`;
-    try {
-      const returnedData = await upgradeInterfaces({
-        config_id: selectedConfig?.id,
-        dry_run: false,
-      });
-      setDialogState({
-        dialogTitle,
-        isDryRun: false,
-        linodeInterfaces: returnedData.interfaces,
-        selectedConfig,
-        step: 'success',
-      });
-    } catch (errors) {
-      setDialogState({
-        dialogTitle,
-        errors,
-        isDryRun: false,
-        selectedConfig,
-        step: 'error',
-      });
+  const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
+    {
+      linodeId,
+      selectedConfig,
+      setDialogState,
     }
-  };
+  );
 
   return (
     <Stack gap={2}>
@@ -85,7 +63,7 @@ export const SuccessDialogContent = (
           <Button
             buttonType="primary"
             loading={isPending}
-            onClick={upgradeToLinodeInterfaces}
+            onClick={() => upgradeToLinodeInterfaces(false)}
           >
             Upgrade Interfaces
           </Button>
