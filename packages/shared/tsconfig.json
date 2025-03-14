@@ -13,7 +13,8 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "incremental": true,
+    "types": ["@testing-library/jest-dom"]
   },
   "include": ["src"]
 }
