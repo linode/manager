@@ -127,7 +127,7 @@ describe('RegionMultiSelect', () => {
     // Open the dropdown
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
 
-    // Check Newark chip shows becaused it is selected
+    // Check Newark chip shows because it is selected
     expect(
       screen.getByRole('listitem', {
         name: 'Newark, NJ',
@@ -137,14 +137,14 @@ describe('RegionMultiSelect', () => {
     // Newark is selected
     expect(
       screen.getByRole('option', {
-        name: 'Newark, NJ (us-east)',
+        name: /Newark, NJ \(us-east\)/i,
       })
     ).toHaveAttribute('aria-selected', 'true');
 
     // Atlanta is not selected
     expect(
       screen.getByRole('option', {
-        name: 'Atlanta, GA (us-southeast)',
+        name: /Atlanta, GA \(us-southeast\)/i,
       })
     ).toHaveAttribute('aria-selected', 'false');
   });

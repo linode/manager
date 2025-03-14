@@ -195,5 +195,13 @@ export const useIsGeckoEnabled = (
 export const mockFlagComponent = (
   props: React.PropsWithChildren<FlagComponentProps>
 ) => {
-  return <Box {...props}>{props.country} Flag</Box>;
+  return (
+    <Box {...props} lineHeight="0">
+      <img
+        alt={`${props.country}`}
+        src={`https://flagcdn.com/${props.country}.svg`}
+        width="32"
+      />
+    </Box>
+  );
 };
