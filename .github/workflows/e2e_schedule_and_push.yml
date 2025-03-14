@@ -8,6 +8,8 @@ env:
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
   CY_TEST_FAIL_ON_MANAGED: 1
   CY_TEST_RESET_PREFERENCES: 1
+  CY_TEST_SPLIT_RUN: 1
+  CY_TEST_SPLIT_RUN_TOTAL: 4
 on:
   schedule:
     - cron: "0 13 * * 1-5"
@@ -19,14 +21,17 @@ on:
 
 jobs:
   run-cypress-e2e:
+    name: Cypress Tests (User ${{ matrix.user.index }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        user: ["USER_1", "USER_2", "USER_3", "USER_4"]
+        user:
+          - { index: 1, pat: "${{ secrets.USER_1 }}" }
+          - { index: 2, pat: "${{ secrets.USER_2 }}" }
+          - { index: 3, pat: "${{ secrets.USER_3 }}" }
+          - { index: 4, pat: "${{ secrets.USER_4 }}" }
     steps:
-      - name: install command line utilities
-        run: sudo apt-get install -y expect
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
@@ -36,16 +41,7 @@ jobs:
         with:
           node-version: "20.17"
       - run: |
-          echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-      - run: echo "MANAGER_OAUTH=$USER_1" >> ./packages/manager/.env
-        if: matrix['user'] == 'USER_1'
-      - run: echo "MANAGER_OAUTH=$USER_2" >> ./packages/manager/.env
-        if: matrix['user'] == 'USER_2'
-      - run: echo "MANAGER_OAUTH=$USER_3" >> ./packages/manager/.env
-        if: matrix['user'] == 'USER_3'
-      - run: echo "MANAGER_OAUTH=$USER_4" >> ./packages/manager/.env
-        if: matrix['user'] == 'USER_4'
       - run: |
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
@@ -53,6 +49,8 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=${{ matrix.user.pat }}"
+          echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/validation build
       - run: pnpm run --filter @linode/api-v4 build
