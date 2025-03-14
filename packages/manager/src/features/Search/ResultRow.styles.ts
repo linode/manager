@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
