@@ -5,6 +5,7 @@ import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -18,8 +19,8 @@ import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -33,7 +34,6 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { UpgradeInterfacesDialog } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
@@ -109,6 +109,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
+  const location = useLocation();
+  const history = useHistory();
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -139,10 +142,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
-  const [
-    isUpgradeInterfacesDialogOpen,
-    setIsUpgradeInterfacesDialogOpen,
-  ] = React.useState<boolean>(false);
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -464,7 +466,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     })}
                     component="span"
                     label="UPGRADE"
-                    onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
+                    onClick={openUpgradeInterfacesDialog}
                     size="small"
                   />
                 </span>
@@ -473,11 +475,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           )}
         </Grid>
       )}
-      <UpgradeInterfacesDialog
-        linodeId={linodeId}
-        onClose={() => setIsUpgradeInterfacesDialogOpen(false)}
-        open={isUpgradeInterfacesDialogOpen}
-      />
     </>
   );
 });

@@ -6,7 +6,7 @@ import {
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
@@ -26,10 +26,11 @@ import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
-import { UpgradeInterfacesDialog } from './UpgradeInterfaces/UpgradeInterfacesDialog';
 
 const LinodeConfigs = () => {
   const theme = useTheme();
+  const location = useLocation();
+  const history = useHistory();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
@@ -64,10 +65,9 @@ const LinodeConfigs = () => {
     false
   );
 
-  const [
-    isUpgradeInterfacesDialogOpen,
-    setIsUpgradeInterfacesDialogOpen,
-  ] = React.useState<boolean>(false);
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -118,7 +118,7 @@ const LinodeConfigs = () => {
               alwaysShowTooltip
               buttonType="outlined"
               disabled={isReadOnly}
-              onClick={() => setIsUpgradeInterfacesDialogOpen(true)}
+              onClick={openUpgradeInterfacesDialog}
               tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
             >
               Upgrade Interfaces
@@ -234,11 +234,6 @@ const LinodeConfigs = () => {
         linodeId={id}
         onClose={() => setIsDeleteConfigDialogOpen(false)}
         open={isDeleteConfigDialogOpen}
-      />
-      <UpgradeInterfacesDialog
-        linodeId={id}
-        onClose={() => setIsUpgradeInterfacesDialogOpen(false)}
-        open={isUpgradeInterfacesDialogOpen}
       />
     </>
   );
