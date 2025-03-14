@@ -128,10 +128,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <FormControlLabel
               control={
                 <Checkbox
-                  name="acl-acknowledgement"
-                  onChange={(e) =>
+                  onChange={() =>
                     handleIsAcknowledgementChecked(!isAcknowledgementChecked)
                   }
+                  name="acl-acknowledgement"
                 />
               }
               data-qa-checkbox="acl-acknowledgement"
