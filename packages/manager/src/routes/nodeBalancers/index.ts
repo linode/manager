@@ -68,6 +68,15 @@ const nodeBalancerDetailSettingsRoute = createRoute({
   import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
+const nodeBalancerDeleteRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/delete',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodeBalancersLandingLazyRoute
+  )
+);
+
 export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
   nodeBalancersIndexRoute,
   nodeBalancersCreateRoute,
@@ -78,4 +87,5 @@ export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
     ]),
     nodeBalancerDetailSettingsRoute,
   ]),
+  nodeBalancerDeleteRoute,
 ]);

@@ -1,30 +1,33 @@
+import { useNodebalancerDeleteMutation } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useNodebalancerDeleteMutation } from '@linode/queries';
+
+import type { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
-  id: number;
-  label: string;
-  onClose: () => void;
+  isFetching: boolean;
   open: boolean;
+  selectedNodeBalancer: NodeBalancer | undefined;
 }
 
 export const NodeBalancerDeleteDialog = ({
-  id,
-  label,
-  onClose,
+  isFetching,
   open,
+  selectedNodeBalancer,
 }: Props) => {
-  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(id);
-  const { push } = useHistory();
+  const navigate = useNavigate();
+  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
+    selectedNodeBalancer?.id ?? -1
+  );
+
+  const label = selectedNodeBalancer?.label;
 
   const onDelete = async () => {
     await mutateAsync();
-    onClose();
-    push('/nodebalancers');
+    navigate({ to: '/nodebalancers' });
   };
 
   return (
@@ -38,9 +41,9 @@ export const NodeBalancerDeleteDialog = ({
       errors={error ?? undefined}
       expand
       label={'NodeBalancer Label'}
-      loading={isPending}
+      loading={isPending || isFetching}
       onClick={onDelete}
-      onClose={onClose}
+      onClose={() => navigate({ to: '/nodebalancers' })}
       open={open}
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}

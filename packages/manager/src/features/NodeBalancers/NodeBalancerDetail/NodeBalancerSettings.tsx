@@ -14,6 +14,7 @@ import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
@@ -53,6 +54,16 @@ export const NodeBalancerSettings = () => {
   const [connectionThrottle, setConnectionThrottle] = React.useState(
     nodebalancer?.client_conn_throttle
   );
+
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+  } = useDialogData({
+    enabled: !!id,
+    paramKey: 'id',
+    queryHook: useNodeBalancerQuery,
+    redirectToOnNotFound: '/nodebalancers',
+  });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -145,10 +156,9 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
-        id={nodebalancer.id}
-        label={nodebalancer?.label}
-        onClose={() => setIsDeleteDialogOpen(false)}
+        isFetching={isFetchingNodeBalancer}
         open={isDeleteDialogOpen}
+        selectedNodeBalancer={selectedNodeBalancer}
       />
     </div>
   );
