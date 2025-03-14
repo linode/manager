@@ -25,34 +25,26 @@ export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
     const { handleSelectionChange, selectedResources, totalResources } = props;
     const isSelectAll = selectedResources !== totalResources;
+    const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
 
     return (
       <StyledNotice gap={1} variant="info">
         <Typography
           sx={(theme) => ({
-            fontFamily: theme.font.bold,
+            fontFamily: theme.tokens.typography.Body.Bold,
           })}
           data-testid="selection_notice"
-          variant="body2"
         >
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
-
         <Button
-          aria-label={
-            isSelectAll ? 'Select All Resources' : 'Deselect All Resources'
-          }
           data-testid={
             isSelectAll ? 'select_all_notice' : 'deselect_all_notice'
           }
-          onClick={() => {
-            handleSelectionChange(isSelectAll ? 'Select All' : 'Deselect All');
-          }}
-          sx={{
-            p: 0,
-          }}
+          onClick={() => handleSelectionChange(buttonText)}
+          sx={{ p: 0 }}
         >
-          {isSelectAll ? 'Select All' : 'Deselect All'}
+          {buttonText}
         </Button>
       </StyledNotice>
     );
@@ -67,6 +59,6 @@ export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
     display: 'flex',
     flexWrap: 'nowrap',
     marginBottom: 0,
-    padding: theme.spacing(2),
+    padding: theme.tokens.spacing.S16,
   })
 );
