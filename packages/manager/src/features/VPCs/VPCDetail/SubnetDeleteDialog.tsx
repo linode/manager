@@ -1,8 +1,8 @@
+import { useDeleteSubnetMutation } from '@linode/queries';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteSubnetMutation } from '@linode/queries';
 
 import type { Subnet } from '@linode/api-v4';
 

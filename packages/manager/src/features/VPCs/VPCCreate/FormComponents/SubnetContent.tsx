@@ -2,6 +2,7 @@ import { Notice } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';

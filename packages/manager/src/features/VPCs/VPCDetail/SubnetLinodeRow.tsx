@@ -1,3 +1,8 @@
+import {
+  useAllLinodeConfigsQuery,
+  useLinodeFirewallsQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
@@ -10,11 +15,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import {
-  useAllLinodeConfigsQuery,
-  useLinodeFirewallsQuery,
-  useLinodeQuery,
-} from '@linode/queries';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {

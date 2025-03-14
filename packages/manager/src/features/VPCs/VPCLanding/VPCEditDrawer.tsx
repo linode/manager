@@ -16,6 +16,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
@@ -24,7 +25,7 @@ interface Props {
 const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
 
 export const VPCEditDrawer = (props: Props) => {
-  const { onClose, open, vpc } = props;
+  const { isFetching, onClose, open, vpc } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -80,6 +81,7 @@ export const VPCEditDrawer = (props: Props) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
       title="Edit VPC"

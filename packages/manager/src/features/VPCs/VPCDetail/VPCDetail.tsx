@@ -9,14 +9,19 @@ import {
 } from '@linode/ui';
 import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
-import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
+import {
+  VPC_DOCS_LINK,
+  VPC_LABEL,
+  VPC_LANDING_ROUTE,
+} from 'src/features/VPCs/constants';
+import { useDialogData } from 'src/hooks/useDialogData';
 
 import {
   getIsVPCLKEEnterpriseCluster,
@@ -33,15 +38,40 @@ import {
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
+import type { VPC } from '@linode/api-v4';
+
 const VPCDetail = () => {
-  const { vpcId } = useParams<{ vpcId: string }>();
+  const params = useParams({ strict: false });
+  const { vpcId } = params;
+  const navigate = useNavigate();
   const theme = useTheme();
 
-  const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
+  const {
+    data: vpc,
+    error,
+    isFetching: isFetchingVPC,
+    isLoading,
+  } = useVPCQuery(Number(vpcId) ?? -1, Boolean(vpcId));
   const { data: regions } = useRegionsQuery();
 
-  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
-  const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+  const handleEditVPC = (vpc: VPC) => {
+    navigate({
+      params: { action: 'edit', id: vpc.id },
+      to: '/vpcs/$action/$id',
+    });
+  };
+
+  const handleDeleteVPC = (vpc: VPC) => {
+    navigate({
+      params: { action: 'delete', id: vpc.id },
+      to: '/vpcs/$action/$id',
+    });
+  };
+
+  const onCloseVPCDrawer = () => {
+    navigate({ to: VPC_LANDING_ROUTE });
+  };
+
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   if (isLoading) {
@@ -133,13 +163,13 @@ const VPCDetail = () => {
         <Box display="flex" justifyContent="end">
           <StyledActionButton
             disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => setEditVPCDrawerOpen(true)}
+            onClick={() => handleEditVPC(vpc)}
           >
             Edit
           </StyledActionButton>
           <StyledActionButton
             disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => setDeleteVPCDialogOpen(true)}
+            onClick={() => handleDeleteVPC(vpc)}
           >
             Delete
           </StyledActionButton>
@@ -184,14 +214,15 @@ const VPCDetail = () => {
         )}
       </StyledBox>
       <VPCDeleteDialog
-        id={vpc.id}
-        label={vpc.label}
-        onClose={() => setDeleteVPCDialogOpen(false)}
-        open={deleteVPCDialogOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'delete'}
+        vpc={vpc}
       />
       <VPCEditDrawer
-        onClose={() => setEditVPCDrawerOpen(false)}
-        open={editVPCDrawerOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'edit'}
         vpc={vpc}
       />
       {isVPCLKEEnterpriseCluster && (
