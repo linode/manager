@@ -27,12 +27,7 @@ export const VLAN = ({ index }: Props) => {
     selectedRegion?.capabilities.includes('Vlans') ?? false;
 
   return (
-    <Stack
-      alignItems="flex-start"
-      columnGap={2}
-      direction="row"
-      flexWrap="wrap"
-    >
+    <Stack alignItems="flex-start" direction="row" flexWrap="wrap" gap={2}>
       <Controller
         render={({ field, fieldState }) => (
           <VLANSelect

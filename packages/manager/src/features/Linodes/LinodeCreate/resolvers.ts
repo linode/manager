@@ -4,10 +4,7 @@ import { isNullOrUndefined } from '@linode/utilities';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
-import {
-  getLegacyInterfaceFromLinodeInterface,
-  getLinodeInterfacePayload,
-} from './Networking/utilities';
+import { getLinodeInterfacePayload } from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
@@ -35,20 +32,12 @@ export const getLinodeCreateResolver = (
     // Because `interfaces` are so complex, we need to perform some transformations before
     // we even try to valiate them with our vaidation schema.
     if (context?.isLinodeInterfacesEnabled) {
-      const shouldUseNewInterfaces = values.interface_generation === 'linode';
-
-      if (shouldUseNewInterfaces) {
-        values.linodeInterfaces = values.linodeInterfaces.map(
-          getLinodeInterfacePayload
-        );
-        values.interfaces = [];
-      } else {
-        values.interfaces = values.linodeInterfaces.map(
-          getLegacyInterfaceFromLinodeInterface
-        );
-        values.linodeInterfaces = [];
-      }
+      values.interfaces = [];
+      values.linodeInterfaces = values.linodeInterfaces.map(
+        getLinodeInterfacePayload
+      );
     } else {
+      values.linodeInterfaces = [];
       values.interfaces =
         getInterfacesPayload(values.interfaces, values.private_ip) ?? [];
     }

@@ -1,4 +1,5 @@
 import type {
+  APIError,
   CreateLinodeInterfacePayload,
   InterfacePayload,
   InterfacePurpose,
@@ -71,4 +72,35 @@ export const getLegacyInterfaceFromLinodeInterface = (
     subnet_id: purpose === 'vpc' ? linodeInterface.vpc?.subnet_id : null,
     vpc_id: purpose === 'vpc' ? linodeInterface.vpc?.vpc_id : null,
   };
+};
+
+const legacyFieldToNewFieldMap = {
+  '].label': '].vlan.vlan_lanel',
+  '].subnet_id': '].vpc.subnet_id',
+};
+
+/**
+ * Our form's state stores interfaces in the new "Linode Interfaces" shape.
+ * If the user selects legacy interfaces, we tranform the new interface into legacy interfaces.
+ *
+ * If the user selects legacy interfaces and the API returns API errors in the shape of legacy interface,
+ * we need to map the errors to the new Lindoe Interfaces shape so they surface correctly in the UI.
+ */
+export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
+  errors: APIError[]
+) => {
+  for (const error of errors) {
+    for (const key in legacyFieldToNewFieldMap) {
+      if (error.field && error.field.includes(key)) {
+        error.field = error.field.replace(
+          key,
+          legacyFieldToNewFieldMap[key as keyof typeof legacyFieldToNewFieldMap]
+        );
+      }
+      if (error.field && error.field.startsWith('interfaces')) {
+        error.field = error.field.replace('interfaces', 'linodeInterfaces');
+      }
+    }
+  }
+  return errors;
 };
