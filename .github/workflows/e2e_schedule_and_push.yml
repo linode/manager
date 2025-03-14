@@ -65,4 +65,4 @@ jobs:
           start: pnpm start:ci
           browser: chrome
           record: false
-          parallel: true
+          parallel: false
