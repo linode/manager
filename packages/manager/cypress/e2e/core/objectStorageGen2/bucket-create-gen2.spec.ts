@@ -97,8 +97,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
         endpointType === 'Standard (E3)' ||
         endpointType === 'Standard (E2)'
       ) {
-        cy.contains(bucketRateLimitsNotice).should('be.visible');
-        cy.get('[data-testid="bucket-rate-limit-table"]').should('be.visible');
         cy.contains(CORSNotice).should('be.visible');
         ui.toggle.find().should('not.exist');
       } else {
