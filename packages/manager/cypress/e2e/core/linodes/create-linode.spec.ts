@@ -5,6 +5,8 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
+  linodeTypeFactory,
 } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
@@ -43,8 +45,6 @@ import {
   accountUserFactory,
   grantsFactory,
   linodeConfigFactory,
-  linodeFactory,
-  linodeTypeFactory,
   profileFactory,
   regionFactory,
   subnetFactory,

@@ -1,12 +1,9 @@
 import * as React from 'react';
-import {
-  accountSettingsFactory,
-  linodeFactory,
-  typeFactory,
-} from 'src/factories';
+import { accountSettingsFactory, typeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BackupDrawer } from './BackupDrawer';
+import { linodeFactory } from '@linode/utilities';
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({

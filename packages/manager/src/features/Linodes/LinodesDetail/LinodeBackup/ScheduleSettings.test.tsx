@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { userEvent } from '@testing-library/user-event';
 import { profileFactory } from 'src/factories';
-import { linodeFactory } from 'src/factories/linodes';
+import { linodeFactory } from '@linode/utilities';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

@@ -1,4 +1,5 @@
 import {
+  createLinodeRequestFactory,
   getIsLegacyInterfaceArray,
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
@@ -6,7 +7,6 @@ import {
   linodeInterfaceFactoryVlan,
 } from '@linode/utilities';
 
-import { createLinodeRequestFactory } from 'src/factories';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {

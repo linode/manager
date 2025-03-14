@@ -3,6 +3,8 @@
  */
 
 import { getProfile } from '@linode/api-v4/lib/profile';
+import { createLinodeRequestFactory } from '@linode/utilities';
+import { linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
@@ -21,13 +23,11 @@ import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { linodeFactory } from 'src/factories';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { EntityTransferStatus } from '@linode/api-v4';
 import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
+import type { EntityTransferStatus } from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';

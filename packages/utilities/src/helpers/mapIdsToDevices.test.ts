@@ -1,5 +1,5 @@
 import { nodeBalancerFactory } from 'src/factories';
-import { linodeFactory } from 'src/factories';
+import { linodeFactory } from '@linode/utilities';
 
 import { mapIdsToDevices } from './mapIdsToDevices';
 

@@ -1,16 +1,15 @@
-import { configFactory } from '@linode/utilities';
-import { DateTime } from 'luxon';
-import { http } from 'msw';
-
 import {
-  firewallDeviceFactory,
+  configFactory,
   linodeBackupFactory,
-  linodeDiskFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
-} from 'src/factories';
+} from '@linode/utilities';
+import { DateTime } from 'luxon';
+import { http } from 'msw';
+
+import { firewallDeviceFactory, linodeDiskFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,

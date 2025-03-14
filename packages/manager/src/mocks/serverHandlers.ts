@@ -6,7 +6,16 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
-import { pickRandom } from '@linode/utilities';
+import {
+  dedicatedTypeFactory,
+  linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
+  linodeTypeFactory,
+  pickRandom,
+  proDedicatedTypeFactory,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -34,7 +43,6 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  dedicatedTypeFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -51,11 +59,6 @@ import {
   kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
-  linodeFactory,
-  linodeIPFactory,
-  linodeStatsFactory,
-  linodeTransferFactory,
-  linodeTypeFactory,
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
@@ -87,7 +90,6 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
   regionAvailabilityFactory,

@@ -1,12 +1,12 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
 } from '@linode/utilities';
 import {
   VLANFactory,
   kernelFactory,
   linodeConfigFactory,
-  linodeFactory,
   subnetFactory,
   vpcFactory,
 } from '@src/factories';

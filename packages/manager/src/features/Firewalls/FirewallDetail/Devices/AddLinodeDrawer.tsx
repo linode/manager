@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelect } from '@linode/shared';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,

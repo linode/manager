@@ -1,17 +1,17 @@
+import { linodeFactory } from '@linode/utilities';
 import { linodeDiskFactory } from '@src/factories';
-import { linodeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   dcPricingCurrentPriceLabel,
   dcPricingMockLinodeTypes,
   dcPricingNewPriceLabel,
 } from 'support/constants/dc-specific-pricing';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
   mockGetLinodeDisks,
   mockGetLinodeVolumes,
   mockMigrateLinode,
 } from 'support/intercepts/linodes';
+import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { mockGetLinodeType } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';

@@ -1,5 +1,5 @@
 import { createStackScript } from '@linode/api-v4/lib';
-import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
+import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {

@@ -1,7 +1,7 @@
 // TODO: Cypress
+import { linodeTypeFactory } from '@linode/utilities';
 import {
   accountFactory,
-  linodeTypeFactory,
   regionAvailabilityFactory,
   regionFactory,
 } from '@src/factories';

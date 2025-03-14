@@ -1,3 +1,4 @@
+import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
@@ -5,8 +6,6 @@ import React from 'react';
 import {
   grantsFactory,
   imageFactory,
-  linodeFactory,
-  linodeTypeFactory,
   profileFactory,
   regionFactory,
 } from 'src/factories';

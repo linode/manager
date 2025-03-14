@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { backupFactory, linodeFactory } from 'src/factories';
+import { backupFactory, linodeFactory } from '@linode/utilities';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 

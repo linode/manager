@@ -1,8 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 
 import {
   alertFactory,
-  linodeFactory,
   notificationChannelFactory,
   regionFactory,
   serviceTypesFactory,

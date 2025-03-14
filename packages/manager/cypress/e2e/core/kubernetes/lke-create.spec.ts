@@ -1,7 +1,11 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-import { pluralize } from '@linode/utilities';
+import {
+  dedicatedTypeFactory,
+  linodeTypeFactory,
+  pluralize,
+} from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
@@ -44,12 +48,10 @@ import { chooseRegion } from 'support/util/regions';
 import { lkeEnterpriseTypeFactory } from 'src/factories';
 import {
   accountFactory,
-  dedicatedTypeFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
   regionFactory,

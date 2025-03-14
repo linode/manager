@@ -1,3 +1,4 @@
+import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
@@ -12,7 +13,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-import { linodeFactory, linodeTypeFactory, regionFactory } from 'src/factories';
+import { regionFactory } from 'src/factories';
 
 import type { Region } from '@linode/api-v4';
 

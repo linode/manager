@@ -14,7 +14,7 @@ import { number, object } from 'yup';
 import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelect } from '@linode/shared';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from '@linode/queries';
 import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';

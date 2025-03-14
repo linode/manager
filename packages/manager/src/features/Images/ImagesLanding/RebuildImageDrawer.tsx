@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelect } from '@linode/shared';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 

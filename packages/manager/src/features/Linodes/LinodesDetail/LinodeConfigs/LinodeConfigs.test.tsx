@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { linodeFactory } from 'src/factories';
+import { linodeFactory } from '@linode/utilities';
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

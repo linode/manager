@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
+import { linodeFactory } from '@linode/utilities';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsUnassignModal } from './PlacementGroupsUnassignModal';

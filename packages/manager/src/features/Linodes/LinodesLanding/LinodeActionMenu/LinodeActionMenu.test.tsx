@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { linodeBackupsFactory } from 'src/factories/linodes';
+import { linodeBackupsFactory } from '@linode/utilities';
 import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

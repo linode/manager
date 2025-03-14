@@ -1,10 +1,7 @@
+import { linodeTransferFactory } from '@linode/utilities';
 import React from 'react';
 
-import {
-  accountTransferFactory,
-  linodeTransferFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountTransferFactory, regionFactory } from 'src/factories';
 import { typeFactory } from 'src/factories/types';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';

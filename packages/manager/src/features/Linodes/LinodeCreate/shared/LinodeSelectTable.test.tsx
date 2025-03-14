@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw';
 import React from 'react';
 
-import { linodeFactory } from 'src/factories';
+import { linodeFactory } from '@linode/utilities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { server } from 'src/mocks/testServer';
 import {

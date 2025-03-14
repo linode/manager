@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories/linodes';
+import { linodeFactory } from '@linode/utilities';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

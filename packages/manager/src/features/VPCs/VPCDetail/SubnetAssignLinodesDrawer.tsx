@@ -1,5 +1,12 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
+  getAllLinodeConfigs,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   Button,
@@ -19,19 +26,12 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import {
-  useAllLinodesQuery,
-  getAllLinodeConfigs,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 

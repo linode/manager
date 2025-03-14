@@ -1,3 +1,4 @@
+import { linodeFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetLinodeDetails,
@@ -19,7 +20,6 @@ import { chooseRegion } from 'support/util/regions';
 
 import {
   accountFactory,
-  linodeFactory,
   placementGroupFactory,
   regionFactory,
 } from 'src/factories';

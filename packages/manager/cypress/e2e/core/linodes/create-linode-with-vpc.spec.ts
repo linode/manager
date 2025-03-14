@@ -1,4 +1,7 @@
-import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
+import {
+  linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
+} from '@linode/utilities';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -26,7 +29,6 @@ import { chooseRegion } from 'support/util/regions';
 
 import {
   linodeConfigFactory,
-  linodeFactory,
   regionFactory,
   subnetFactory,
   vpcFactory,

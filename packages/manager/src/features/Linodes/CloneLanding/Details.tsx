@@ -13,7 +13,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelect } from '@linode/shared';
 import { useRegionsQuery } from '@linode/queries';
 
 import {

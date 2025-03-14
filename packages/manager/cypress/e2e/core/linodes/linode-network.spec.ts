@@ -1,8 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import {
   firewallDeviceFactory,
   firewallFactory,
   ipAddressFactory,
-  linodeFactory,
 } from '@src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {

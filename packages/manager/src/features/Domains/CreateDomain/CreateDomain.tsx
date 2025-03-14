@@ -22,7 +22,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { reportException } from 'src/exceptionReporting';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { LinodeSelect } from '@linode/shared';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';

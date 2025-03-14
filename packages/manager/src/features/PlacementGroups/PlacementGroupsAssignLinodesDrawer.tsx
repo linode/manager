@@ -3,6 +3,12 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import {
+  useAllLinodesQuery,
+  useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   ActionsPanel,
   Box,
   Divider,
@@ -16,14 +22,8 @@ import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
-import {
-  useAllLinodesQuery,
-  useAllPlacementGroupsQuery,
-  useAssignLinodesToPlacementGroup,
-} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,

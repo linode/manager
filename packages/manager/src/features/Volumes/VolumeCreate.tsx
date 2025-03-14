@@ -1,11 +1,12 @@
 import {
-  useGrants,
-  useProfile,
-  useLinodeQuery,
-  useRegionsQuery,
   useAccountAgreements,
+  useGrants,
+  useLinodeQuery,
   useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
 } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   Button,
@@ -42,7 +43,6 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
