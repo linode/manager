@@ -19,7 +19,7 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { CreateAlertDefinitionFormSchema } from './schemas';
+import { createAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type {
@@ -74,7 +74,7 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const createAlertSchema = CreateAlertDefinitionFormSchema;
+  const createAlertSchema = createAlertDefinitionFormSchema;
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState<
