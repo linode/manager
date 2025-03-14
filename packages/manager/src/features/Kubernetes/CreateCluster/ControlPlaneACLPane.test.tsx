@@ -12,8 +12,10 @@ const props: ControlPlaneACLProps = {
   errorText: undefined,
   handleIPv4Change: vi.fn(),
   handleIPv6Change: vi.fn(),
+  handleIsAcknowledgementChecked: vi.fn(),
   ipV4Addr: [{ address: '' }],
   ipV6Addr: [{ address: '' }],
+  isAcknowledgementChecked: false,
   selectedTier: 'standard',
   setControlPlaneACL: vi.fn(),
 };

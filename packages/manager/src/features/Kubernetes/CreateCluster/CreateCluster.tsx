@@ -74,6 +74,7 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -108,6 +109,10 @@ export const CreateCluster = () => {
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
+  const [
+    isACLAcknowledgementChecked,
+    setIsACLAcknowledgementChecked,
+  ] = React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -190,7 +195,7 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-  const createCluster = () => {
+  const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
       scrollErrorIntoViewV2(formContainerRef);
       return;
@@ -258,21 +263,53 @@ export const CreateCluster = () => {
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
-    createClusterFn(payload)
-      .then((cluster) => {
-        push(`/kubernetes/clusters/${cluster.id}`);
-        if (hasAgreed) {
-          updateAccountAgreements({
-            eu_model: true,
-            privacy_policy: true,
-          }).catch(reportAgreementSigningError);
-        }
-      })
-      .catch((err) => {
-        setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-        setSubmitting(false);
-        scrollErrorIntoViewV2(formContainerRef);
-      });
+    // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
+    if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
+      await createKubeClusterWithRequiredACLSchema
+        .validate(payload, {
+          abortEarly: false,
+        })
+        .then(() => {
+          createClusterFn(payload)
+            .then((cluster) => {
+              push(`/kubernetes/clusters/${cluster.id}`);
+              if (hasAgreed) {
+                updateAccountAgreements({
+                  eu_model: true,
+                  privacy_policy: true,
+                }).catch(reportAgreementSigningError);
+              }
+            })
+            .catch((err) => {
+              setErrors(
+                getAPIErrorOrDefault(err, 'Error creating your cluster')
+              );
+              setSubmitting(false);
+              scrollErrorIntoViewV2(formContainerRef);
+            });
+        })
+        .catch((errors) => {
+          setErrors([{ field: 'control_plane', reason: errors.errors[0] }]);
+          setSubmitting(false);
+          scrollErrorIntoViewV2(formContainerRef);
+        });
+    } else {
+      createClusterFn(payload)
+        .then((cluster) => {
+          push(`/kubernetes/clusters/${cluster.id}`);
+          if (hasAgreed) {
+            updateAccountAgreements({
+              eu_model: true,
+              privacy_policy: true,
+            }).catch(reportAgreementSigningError);
+          }
+        })
+        .catch((err) => {
+          setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+          setSubmitting(false);
+          scrollErrorIntoViewV2(formContainerRef);
+        });
+    }
   };
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
@@ -497,6 +534,10 @@ export const CreateCluster = () => {
                 ipV6Addr={ipV6Addr}
                 selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
+                handleIsAcknowledgementChecked={(isChecked: boolean) =>
+                  setIsACLAcknowledgementChecked(isChecked)
+                }
               />
             </>
           )}
