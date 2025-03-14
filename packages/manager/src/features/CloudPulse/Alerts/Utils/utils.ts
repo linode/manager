@@ -305,29 +305,37 @@ export const handleErrorMap = (
   errors: APIError[],
   errorFieldParentMap: Record<string, string>
 ): Record<string, string> => {
-  const errorMap: Record<string, string> = {};
+  const errorMap = errors.reduce<Record<string, Set<string>>>(
+    (previousValue, error) => {
+      if (error.field) {
+        const { field, reason } = error;
 
-  for (const error of errors) {
-    if (error.field) {
-      const errorField =
-        Object.entries(errorFieldParentMap).find(([key]) =>
-          error.field?.includes(key)
-        )?.[1] || error.field;
+        const errorField =
+          Object.entries(errorFieldParentMap).find(([key]) =>
+            error.field?.includes(key)
+          )?.[1] || field;
 
-      if (!error.reason.endsWith('.')) {
-        error.reason += '.';
-      }
-      const separator = ERROR_FIELD_SEPARATOR_MAP[errorField] || ' ';
-
-      if (errorMap[errorField]) {
-        if (!errorMap[errorField].includes(error.reason)) {
-          errorMap[errorField] += `${separator}${error.reason}`;
+        if (!previousValue[errorField]) {
+          previousValue[errorField] = new Set();
         }
-      } else {
-        errorMap[errorField] = error.reason;
+        previousValue[errorField].add(
+          reason.endsWith('.') ? reason : reason + '.'
+        );
       }
-    }
-  }
 
-  return errorMap;
+      return previousValue;
+    },
+    {}
+  );
+
+  return Object.entries(errorMap).reduce<Record<string, string>>(
+    (previousValue, [field, reasonsSet]) => {
+      const reasons = Array.from(reasonsSet); // Convert the Set to an array for joining
+      return {
+        ...previousValue,
+        [field]: reasons.join(ERROR_FIELD_SEPARATOR_MAP[field] ?? ' '),
+      };
+    },
+    {}
+  );
 };
