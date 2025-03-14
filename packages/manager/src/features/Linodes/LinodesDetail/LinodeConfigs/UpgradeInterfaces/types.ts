@@ -13,13 +13,12 @@ export interface UpgradeInterfacesDialogContentProps<
 export type UpgradeInterfacesDialogState =
   | ConfigSelectDialogState
   | ErrorDialogState
-  | ProgressDialogState
   | PromptDialogState
   | SuccessDialogState;
 
 export interface BaseDialogState {
   dialogTitle: string;
-  step: 'configSelect' | 'error' | 'progress' | 'prompt' | 'success';
+  step: 'configSelect' | 'error' | 'prompt' | 'success';
 }
 
 export interface PromptDialogState extends BaseDialogState {
@@ -30,12 +29,6 @@ export interface ConfigSelectDialogState extends BaseDialogState {
   configs: Config[];
   isDryRun: boolean;
   step: 'configSelect';
-}
-
-export interface ProgressDialogState extends BaseDialogState {
-  isDryRun: boolean;
-  progress: number;
-  step: 'progress';
 }
 
 export interface SuccessDialogState extends BaseDialogState {

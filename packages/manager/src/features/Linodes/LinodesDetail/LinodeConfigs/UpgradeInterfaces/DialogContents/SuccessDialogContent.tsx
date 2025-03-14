@@ -1,8 +1,8 @@
+import { useUpgradeToLinodeInterfacesMutation } from '@linode/queries';
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
-import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
   SuccessDialogState,
@@ -14,14 +14,37 @@ export const SuccessDialogContent = (
   props: UpgradeInterfacesDialogContentProps<SuccessDialogState>
 ) => {
   const { linodeId, onClose, setDialogState, state } = props;
+  const { isDryRun, linodeInterfaces, selectedConfig } = state;
 
-  const { upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces({
-    linodeId,
-    selectedConfig: state.selectedConfig,
-    setDialogState,
-  });
+  const {
+    isPending,
+    mutateAsync: upgradeInterfaces,
+  } = useUpgradeToLinodeInterfacesMutation(linodeId);
 
-  const { isDryRun, linodeInterfaces } = state;
+  const upgradeToLinodeInterfaces = async () => {
+    const dialogTitle = `Upgrade Interfaces: ${selectedConfig?.label}`;
+    try {
+      const returnedData = await upgradeInterfaces({
+        config_id: selectedConfig?.id,
+        dry_run: false,
+      });
+      setDialogState({
+        dialogTitle,
+        isDryRun: false,
+        linodeInterfaces: returnedData.interfaces,
+        selectedConfig,
+        step: 'success',
+      });
+    } catch (errors) {
+      setDialogState({
+        dialogTitle,
+        errors,
+        isDryRun: false,
+        selectedConfig,
+        step: 'error',
+      });
+    }
+  };
 
   return (
     <Stack gap={2}>
@@ -55,13 +78,14 @@ export const SuccessDialogContent = (
         </Box>
       )}
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-        <Button buttonType="secondary" onClick={onClose}>
+        <Button buttonType="secondary" disabled={isPending} onClick={onClose}>
           {isDryRun ? 'Cancel' : 'Close'}
         </Button>
         {isDryRun && (
           <Button
             buttonType="primary"
-            onClick={() => upgradeToLinodeInterfaces(false)}
+            loading={isPending}
+            onClick={upgradeToLinodeInterfaces}
           >
             Upgrade Interfaces
           </Button>
