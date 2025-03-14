@@ -1152,7 +1152,7 @@ export const lightTheme: ThemeOptions = {
               fill: Color.Neutrals[5],
             },
             '&:not(.Mui-checked) svg circle': {
-              fill: '#e5e5e9',
+              fill: Color.Neutrals[20],
             },
             '&:not(.Mui-checked)': {
               color: theme.tokens.radio.Inactive.Disabled.Border,
