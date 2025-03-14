@@ -9,7 +9,6 @@ import {
 } from '@linode/ui';
 import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -225,9 +224,5 @@ const VPCDetail = () => {
     </>
   );
 };
-
-export const vpcDetailLazyRoute = createLazyRoute('/vpcs/$vpcId')({
-  component: VPCDetail,
-});
 
 export default VPCDetail;

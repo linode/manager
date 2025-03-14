@@ -1,5 +1,5 @@
+import { useVPCsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVPCsQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
@@ -183,9 +182,5 @@ const VPCLanding = () => {
     </>
   );
 };
-
-export const vpcLandingLazyRoute = createLazyRoute('/')({
-  component: VPCLanding,
-});
 
 export default VPCLanding;
