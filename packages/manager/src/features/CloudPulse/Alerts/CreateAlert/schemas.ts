@@ -15,16 +15,16 @@ export const dimensionFiltersSchema = dimensionFilters.concat(
     dimension_label: string()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
     operator: string()
       .oneOf(['eq', 'neq', 'startswith', 'endswith'])
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
     value: string()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
   })
 );
 
@@ -34,23 +34,20 @@ export const metricCriteriaSchema = metricCriteria.concat(
       .oneOf(['avg', 'sum', 'min', 'max', 'count'])
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
 
-    dimension_filters: array()
-      .of(dimensionFiltersSchema)
-      .optional()
-      .default([]),
+    dimension_filters: array().of(dimensionFiltersSchema).required(),
 
     metric: string()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
 
     operator: string()
       .oneOf(['eq', 'gt', 'lt', 'gte', 'lte'])
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
   })
 );
 
@@ -59,11 +56,11 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
     evaluation_period_seconds: number()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
     polling_interval_seconds: number()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
   })
 );
 
@@ -74,18 +71,18 @@ export const createAlertDefinitionFormSchema = createAlertDefinitionSchema.conca
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
-        .min(1, 'At least one metric criteria is required.')
-        .default([]),
+        .required()
+        .min(1, 'At least one metric criteria is required.'),
     }),
     serviceType: string()
       .oneOf(['linode', 'dbaas'])
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
     severity: mixed<AlertSeverityType>()
       .required(fieldErrorMessage)
       .nullable()
-      .test('emptyTest', fieldErrorMessage, (value) => value !== null),
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
     trigger_conditions: triggerConditionSchema,
   })
 );

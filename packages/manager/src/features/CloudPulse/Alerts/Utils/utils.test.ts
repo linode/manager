@@ -86,7 +86,7 @@ it('should correctly convert an alert definition values to the required format',
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });
 
-describe('enhanceWithEntityIdValidationForCreateFlow', () => {
+describe('getCreateSchemaWithEntityIdValidation', () => {
   const baseSchema = createAlertDefinitionFormSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
@@ -141,7 +141,7 @@ describe('enhanceWithEntityIdValidationForCreateFlow', () => {
   });
 });
 
-describe('enhanceWithEntityIdValidationForEditPayload', () => {
+describe('getEditSchemaWithEntityIdValidation', () => {
   const baseSchema = EditAlertDefinitionSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
