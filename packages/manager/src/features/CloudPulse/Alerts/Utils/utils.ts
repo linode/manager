@@ -269,7 +269,7 @@ export const processMetricCriteria = (
   );
 };
 
-export const enhanceWithEntityIdValidationForCreateFlow = (
+export const getCreateSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   createSchema: ObjectSchema<CreateAlertDefinitionForm>
 ): ObjectSchema<CreateAlertDefinitionForm> => {
@@ -283,7 +283,7 @@ export const enhanceWithEntityIdValidationForCreateFlow = (
     : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
 };
 
-export const enhanceWithEntityIdValidationForEditPayload = (
+export const getEditSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   editSchema: ObjectSchema<EditAlertDefinitionPayload>
 ): ObjectSchema<EditAlertDefinitionPayload> => {

@@ -6,9 +6,9 @@ import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
-  enhanceWithEntityIdValidationForCreateFlow,
-  enhanceWithEntityIdValidationForEditPayload,
   filterAlertsByStatusAndType,
+  getCreateSchemaWithEntityIdValidation,
+  getEditSchemaWithEntityIdValidation,
   getServiceTypeLabel,
 } from './utils';
 
@@ -98,7 +98,7 @@ describe('enhanceWithEntityIdValidationForCreateFlow', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = enhanceWithEntityIdValidationForCreateFlow(
+    const schema = getCreateSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'unknown',
@@ -109,7 +109,7 @@ describe('enhanceWithEntityIdValidationForCreateFlow', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = enhanceWithEntityIdValidationForCreateFlow(
+    const schema = getCreateSchemaWithEntityIdValidation(
       { ...props },
       baseSchema
     );
@@ -124,7 +124,7 @@ describe('enhanceWithEntityIdValidationForCreateFlow', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = enhanceWithEntityIdValidationForCreateFlow(
+    const schema = getCreateSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'linode',
@@ -153,7 +153,7 @@ describe('enhanceWithEntityIdValidationForEditPayload', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = enhanceWithEntityIdValidationForEditPayload(
+    const schema = getEditSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'unknown',
@@ -164,7 +164,7 @@ describe('enhanceWithEntityIdValidationForEditPayload', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = enhanceWithEntityIdValidationForEditPayload(
+    const schema = getEditSchemaWithEntityIdValidation(
       { ...props },
       baseSchema
     );
@@ -179,7 +179,7 @@ describe('enhanceWithEntityIdValidationForEditPayload', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = enhanceWithEntityIdValidationForEditPayload(
+    const schema = getEditSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'linode',
