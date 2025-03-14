@@ -1,5 +1,4 @@
 import { CypressPlugin } from './plugin';
-// @ts-expect-error cant figure out how to declare module for /lib
 import cypressReporterLib from 'cypress-mochawesome-reporter/lib';
 const { beforeRunHook, afterRunHook } = cypressReporterLib;
 
