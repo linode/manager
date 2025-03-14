@@ -6,15 +6,16 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export const SummaryPanel = () => {
   const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
@@ -91,6 +92,7 @@ export const SummaryPanel = () => {
                   </>
                 ) : (
                   <Link
+                    accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
                     to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
                   >
                     {nodebalancer.lke_cluster.label}
@@ -106,6 +108,7 @@ export const SummaryPanel = () => {
               {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
+                    accessibleAriaLabel={`Port ${port}`}
                     className="secondaryLink"
                     to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                   >
@@ -147,7 +150,11 @@ export const SummaryPanel = () => {
             Firewall
           </StyledTitle>
           <Typography data-qa-firewall variant="body1">
-            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            <Link
+              accessibleAriaLabel={`Firewall ${linkText}`}
+              className="secondaryLink"
+              to={`/firewalls/${linkID}`}
+            >
               {linkText}
             </Link>
           </Typography>

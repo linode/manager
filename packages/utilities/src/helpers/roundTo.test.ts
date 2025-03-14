@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { roundTo } from './roundTo';
 
 describe('roundTo utility', () => {

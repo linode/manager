@@ -28,6 +28,7 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -55,7 +56,6 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';

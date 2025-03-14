@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -9,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
