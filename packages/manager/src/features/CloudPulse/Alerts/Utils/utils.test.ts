@@ -1,7 +1,7 @@
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import { createAlertDefinitionFormSchema } from '../CreateAlert/schemas';
-import { EditAlertDefinitionSchema } from '../EditAlert/schemas';
+import { editAlertDefinitionFormSchema } from '../EditAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
@@ -142,7 +142,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
 });
 
 describe('getEditSchemaWithEntityIdValidation', () => {
-  const baseSchema = EditAlertDefinitionSchema;
+  const baseSchema = editAlertDefinitionFormSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
     { maxResourceSelectionCount: 5, serviceType: 'linode' },

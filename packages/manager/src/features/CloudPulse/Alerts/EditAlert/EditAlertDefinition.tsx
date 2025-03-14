@@ -21,7 +21,7 @@ import {
   convertAlertDefinitionValues,
   getEditSchemaWithEntityIdValidation,
 } from '../Utils/utils';
-import { EditAlertDefinitionSchema } from './schemas';
+import { editAlertDefinitionFormSchema } from './schemas';
 
 import type {
   Alert,
@@ -45,7 +45,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const editAlertSchema = EditAlertDefinitionSchema;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -62,7 +61,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
           serviceTypeObj: alertDetails.service_type,
         },
-        editAlertSchema
+        editAlertDefinitionFormSchema
       )
     ),
   });

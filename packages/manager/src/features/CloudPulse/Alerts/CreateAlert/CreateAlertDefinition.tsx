@@ -74,7 +74,6 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const createAlertSchema = createAlertDefinitionFormSchema;
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState<
@@ -85,7 +84,7 @@ export const CreateAlertDefinition = () => {
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
         serviceTypeObj: null,
       },
-      createAlertSchema
+      createAlertDefinitionFormSchema
     )
   );
 
@@ -161,10 +160,10 @@ export const CreateAlertDefinition = () => {
           aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
           serviceTypeObj: serviceTypeWatcher,
         },
-        createAlertSchema
+        createAlertDefinitionFormSchema
       )
     );
-  }, [createAlertSchema, flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
+  }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
   return (
     <React.Fragment>

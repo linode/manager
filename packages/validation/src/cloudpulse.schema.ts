@@ -67,7 +67,7 @@ export const createAlertDefinitionSchema = object({
     .of(number().defined())
     .min(1, 'At least one notification channel is required.').required(),
   entity_ids: array().of(string().defined()).defined(),
-  tags: array().of(string().defined()).notRequired(),
+  tags: array().of(string().defined()).optional(),
   severity: number().oneOf([0, 1, 2, 3])
     .required(fieldErrorMessage),
 });
