@@ -1,3 +1,5 @@
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import { useTheme } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
@@ -131,6 +133,57 @@ export const Fetching: Story = {
     };
 
     return DrawerExampleWrapper();
+  },
+};
+
+const NotFound = (_props: React.PropsWithChildren<{ className?: string }>) => {
+  const theme = useTheme();
+
+  const sxIcon = {
+    color: theme.color.black,
+    height: 130,
+    marginBottom: theme.spacing(4),
+    width: 130,
+  };
+
+  return (
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        minHeight: '400px',
+      }}
+    >
+      <ErrorOutline sx={sxIcon} />
+      <Typography variant="h1">Not Found</Typography>
+    </div>
+  );
+};
+
+export const WithNotFound: Story = {
+  args: {
+    NotFoundComponent: NotFound,
+    error: 'Not Found',
+    onClose: action('onClose'),
+    open: false,
+    title: 'My Drawer',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [open, setOpen] = React.useState(args.open);
+
+      return (
+        <>
+          <Button buttonType="primary" onClick={() => setOpen(true)}>
+            Click to open Drawer
+          </Button>
+          <Drawer {...args} onClose={() => setOpen(false)} open={open} />
+        </>
+      );
+    };
+    return <DrawerExampleWrapper />;
   },
 };
 
