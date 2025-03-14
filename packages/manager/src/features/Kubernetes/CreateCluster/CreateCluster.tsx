@@ -13,6 +13,7 @@ import {
   TextField,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -47,8 +48,8 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -74,7 +75,6 @@ import type {
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -265,51 +265,34 @@ export const CreateCluster = () => {
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
-      await createKubeClusterWithRequiredACLSchema
-        .validate(payload, {
+      try {
+        await createKubeClusterWithRequiredACLSchema.validate(payload, {
           abortEarly: false,
-        })
-        .then(() => {
-          createClusterFn(payload)
-            .then((cluster) => {
-              push(`/kubernetes/clusters/${cluster.id}`);
-              if (hasAgreed) {
-                updateAccountAgreements({
-                  eu_model: true,
-                  privacy_policy: true,
-                }).catch(reportAgreementSigningError);
-              }
-            })
-            .catch((err) => {
-              setErrors(
-                getAPIErrorOrDefault(err, 'Error creating your cluster')
-              );
-              setSubmitting(false);
-              scrollErrorIntoViewV2(formContainerRef);
-            });
-        })
-        .catch((errors) => {
-          setErrors([{ field: 'control_plane', reason: errors.errors[0] }]);
-          setSubmitting(false);
-          scrollErrorIntoViewV2(formContainerRef);
         });
-    } else {
-      createClusterFn(payload)
-        .then((cluster) => {
-          push(`/kubernetes/clusters/${cluster.id}`);
-          if (hasAgreed) {
-            updateAccountAgreements({
-              eu_model: true,
-              privacy_policy: true,
-            }).catch(reportAgreementSigningError);
-          }
-        })
-        .catch((err) => {
-          setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-          setSubmitting(false);
-          scrollErrorIntoViewV2(formContainerRef);
-        });
+      } catch ({ errors }) {
+        setErrors([{ field: 'control_plane', reason: errors[0] }]);
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+
+        return;
+      }
     }
+
+    createClusterFn(payload)
+      .then((cluster) => {
+        push(`/kubernetes/clusters/${cluster.id}`);
+        if (hasAgreed) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
+      })
+      .catch((err) => {
+        setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+      });
   };
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
@@ -528,16 +511,16 @@ export const CreateCluster = () => {
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
+                handleIsAcknowledgementChecked={(isChecked: boolean) =>
+                  setIsACLAcknowledgementChecked(isChecked)
+                }
                 enableControlPlaneACL={controlPlaneACL}
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
                 selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
-                isAcknowledgementChecked={isACLAcknowledgementChecked}
-                handleIsAcknowledgementChecked={(isChecked: boolean) =>
-                  setIsACLAcknowledgementChecked(isChecked)
-                }
               />
             </>
           )}
