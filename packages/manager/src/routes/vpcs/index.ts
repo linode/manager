@@ -22,9 +22,9 @@ const subnetAction = {
 } as const;
 
 const subnetLinodeAction = {
-  powerOff: 'power-off',
+  powerAction: 'powerAction',
   unassign: 'unassign',
-};
+} as const;
 
 export type VPCAction = typeof vpcAction[keyof typeof vpcAction];
 export type SubnetAction = typeof subnetAction[keyof typeof subnetAction];
@@ -75,18 +75,36 @@ const vpcsCreateRoute = createRoute({
 
 const vpcsDetailRoute = createRoute({
   getParentRoute: () => vpcsRoute,
+  parseParams: (params) => ({
+    vpcId: Number(params.vpcId),
+  }),
   path: '$vpcId',
   validateSearch: (search: SubnetSearchParams) => search,
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
+const subnetCreateRoute = createRoute({
+  getParentRoute: () => vpcsDetailRoute,
+  path: 'subnets/create',
+  validateSearch: (search: SubnetSearchParams) => search,
+}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+
+const subnetDetailRoute = createRoute({
+  getParentRoute: () => vpcsDetailRoute,
+  parseParams: (params) => ({
+    subnetId: Number(params.subnetId),
+  }),
+  path: 'subnets/$subnetId',
+  validateSearch: (search: SubnetSearchParams) => search,
+}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+
 type SubnetActionRouteParams<P = number | string> = {
-  action: SubnetAction;
+  subnetAction: SubnetAction;
   subnetId: P;
 };
 
 const subnetActionRoute = createRoute({
   beforeLoad: async ({ params }) => {
-    if (!(params.action in subnetAction)) {
+    if (!(params.subnetAction in subnetAction)) {
       throw redirect({
         params: {
           vpcId: params.vpcId,
@@ -96,29 +114,27 @@ const subnetActionRoute = createRoute({
       });
     }
   },
-  getParentRoute: () => vpcsDetailRoute,
+  getParentRoute: () => subnetDetailRoute,
   params: {
-    parse: ({ action, subnetId }: SubnetActionRouteParams<string>) => ({
-      action,
-      subnetId: Number(subnetId),
+    parse: ({ subnetAction }: SubnetActionRouteParams<string>) => ({
+      subnetAction,
     }),
-    stringify: ({ action, subnetId }: SubnetActionRouteParams<number>) => ({
-      action,
-      subnetId: String(subnetId),
+    stringify: ({ subnetAction }: SubnetActionRouteParams<number>) => ({
+      subnetAction,
     }),
   },
-  path: 'subnets/$subnetId/$action',
+  path: '$subnetAction',
   validateSearch: (search: SubnetSearchParams) => search,
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
 type SubnetLinodeActionRouteParams<P = number | string> = {
-  action: SubnetLinodeAction;
+  linodeAction: SubnetLinodeAction;
   linodeId: P;
 };
 
 const subnetLinodeActionRoute = createRoute({
   beforeLoad: async ({ params }) => {
-    if (!(params.action in subnetLinodeAction)) {
+    if (!(params.linodeAction in subnetLinodeAction)) {
       throw redirect({
         params: {
           vpcId: params.vpcId,
@@ -128,21 +144,24 @@ const subnetLinodeActionRoute = createRoute({
       });
     }
   },
-  getParentRoute: () => subnetActionRoute,
+  getParentRoute: () => subnetDetailRoute,
   params: {
-    parse: ({ action, linodeId }: SubnetLinodeActionRouteParams<string>) => ({
-      action,
+    parse: ({
+      linodeAction,
+      linodeId,
+    }: SubnetLinodeActionRouteParams<string>) => ({
+      linodeAction,
       linodeId: Number(linodeId),
     }),
     stringify: ({
-      action,
+      linodeAction,
       linodeId,
     }: SubnetLinodeActionRouteParams<number>) => ({
-      action,
+      linodeAction,
       linodeId: String(linodeId),
     }),
   },
-  path: '/linodes/$linodeId/$action',
+  path: '/linodes/$linodeId/$linodeAction',
   validateSearch: (search: SubnetSearchParams) => search,
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
@@ -150,6 +169,7 @@ export const vpcsRouteTree = vpcsRoute.addChildren([
   vpcsLandingRoute.addChildren([vpcActionRoute]),
   vpcsCreateRoute,
   vpcsDetailRoute.addChildren([
-    subnetActionRoute.addChildren([subnetLinodeActionRoute]),
+    subnetCreateRoute,
+    subnetDetailRoute.addChildren([subnetActionRoute, subnetLinodeActionRoute]),
   ]),
 ]);

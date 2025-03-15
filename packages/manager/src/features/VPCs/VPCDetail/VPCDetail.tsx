@@ -21,7 +21,6 @@ import {
   VPC_LABEL,
   VPC_LANDING_ROUTE,
 } from 'src/features/VPCs/constants';
-import { useDialogData } from 'src/hooks/useDialogData';
 
 import {
   getIsVPCLKEEnterpriseCluster,
@@ -69,7 +68,11 @@ const VPCDetail = () => {
   };
 
   const onCloseVPCDrawer = () => {
-    navigate({ to: VPC_LANDING_ROUTE });
+    navigate({
+      params: { vpcId: vpc?.id ?? -1 },
+      search: (prev) => prev,
+      to: '/vpcs/$vpcId',
+    });
   };
 
   const [showFullDescription, setShowFullDescription] = React.useState(false);

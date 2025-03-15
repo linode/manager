@@ -1,6 +1,7 @@
 import { useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -19,6 +20,7 @@ import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 
+import { SUBNET_ACTION_PATH } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
@@ -42,6 +44,11 @@ const preferenceKey = 'vpc-subnets';
 export const VPCSubnetsTable = (props: Props) => {
   const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
   const theme = useTheme();
+
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
+  const location = useLocation();
+
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [selectedSubnet, setSelectedSubnet] = React.useState<
     Subnet | undefined
@@ -49,31 +56,9 @@ export const VPCSubnetsTable = (props: Props) => {
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
   >();
-  const [deleteSubnetDialogOpen, setDeleteSubnetDialogOpen] = React.useState(
-    false
-  );
-  const [editSubnetsDrawerOpen, setEditSubnetsDrawerOpen] = React.useState(
-    false
-  );
-  const [subnetCreateDrawerOpen, setSubnetCreateDrawerOpen] = React.useState(
-    false
-  );
-  const [
-    subnetAssignLinodesDrawerOpen,
-    setSubnetAssignLinodesDrawerOpen,
-  ] = React.useState(false);
-  const [powerActionDialogOpen, setPowerActionDialogOpen] = React.useState(
-    false
-  );
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
   >();
-
-  const [
-    subnetUnassignLinodesDrawerOpen,
-    setSubnetUnassignLinodesDrawerOpen,
-  ] = React.useState(false);
-
   const pagination = usePagination(1, preferenceKey);
 
   const { handleOrderChange, order, orderBy } = useOrder(
@@ -121,36 +106,71 @@ export const VPCSubnetsTable = (props: Props) => {
     pagination.handlePageChange(1);
   };
 
-  const handleSubnetDelete = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setDeleteSubnetDialogOpen(true);
+  const onCloseSubnetDrawer = () => {
+    navigate({
+      params: { vpcId },
+      to: '/vpcs/$vpcId',
+    });
   };
 
-  const handleEditSubnet = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setEditSubnetsDrawerOpen(true);
+  const handleSubnetCreate = () => {
+    navigate({ params: { vpcId }, to: '/vpcs/$vpcId/subnets/create' });
+  };
+
+  const handleSubnetDelete = (subnet: Subnet) => {
+    navigate({
+      params: { subnetAction: 'delete', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
+  };
+
+  const handleSubnetEdit = (subnet: Subnet) => {
+    navigate({
+      params: { subnetAction: 'edit', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
   const handleSubnetUnassignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setSubnetUnassignLinodesDrawerOpen(true);
+    navigate({
+      params: { subnetAction: 'unassign', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
   const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
     setSelectedSubnet(subnet);
     setSelectedLinode(linode);
-    setSubnetUnassignLinodesDrawerOpen(true);
+    navigate({
+      params: {
+        linodeAction: 'unassign',
+        linodeId: linode.id,
+        subnetId: selectedSubnet?.id ?? -1,
+        vpcId,
+      },
+      to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
+    });
   };
 
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
-    setSubnetAssignLinodesDrawerOpen(true);
+    navigate({
+      params: { subnetAction: 'assign', subnetId: subnet.id, vpcId },
+      to: SUBNET_ACTION_PATH,
+    });
   };
 
   const handlePowerActionsLinode = (linode: Linode, action: Action) => {
     setSelectedLinode(linode);
-    setPowerActionDialogOpen(true);
     setLinodePowerAction(action);
+    navigate({
+      params: {
+        linodeAction: 'powerAction',
+        linodeId: linode.id,
+        subnetId: selectedSubnet?.id ?? -1,
+        vpcId,
+      },
+      to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
+    });
   };
 
   // Ensure that the selected subnet passed to the drawer is up to date
@@ -223,7 +243,7 @@ export const VPCSubnetsTable = (props: Props) => {
             <SubnetActionMenu
               handleAssignLinodes={handleSubnetAssignLinodes}
               handleDelete={handleSubnetDelete}
-              handleEdit={handleEditSubnet}
+              handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
               isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
@@ -300,14 +320,14 @@ export const VPCSubnetsTable = (props: Props) => {
           }}
           buttonType="primary"
           disabled={isVPCLKEEnterpriseCluster}
-          onClick={() => setSubnetCreateDrawerOpen(true)}
+          onClick={handleSubnetCreate}
         >
           Create Subnet
         </Button>
       </Box>
       <SubnetCreateDrawer
-        onClose={() => setSubnetCreateDrawerOpen(false)}
-        open={subnetCreateDrawerOpen}
+        onClose={onCloseSubnetDrawer}
+        open={location.pathname.includes('subnets/create')}
         vpcId={vpcId}
       />
       <CollapsibleTable
@@ -326,39 +346,42 @@ export const VPCSubnetsTable = (props: Props) => {
       />
       <SubnetUnassignLinodesDrawer
         onClose={() => {
-          setSubnetUnassignLinodesDrawerOpen(false);
+          onCloseSubnetDrawer();
           setSelectedLinode(undefined);
         }}
-        open={subnetUnassignLinodesDrawerOpen}
+        open={
+          params.subnetAction === 'unassign' ||
+          params.linodeAction === 'unassign'
+        }
         singleLinodeToBeUnassigned={selectedLinode}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />
       <SubnetAssignLinodesDrawer
-        onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
-        open={subnetAssignLinodesDrawerOpen}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'assign'}
         subnet={selectedSubnet}
         vpcId={vpcId}
         vpcRegion={vpcRegion}
       />
       <SubnetDeleteDialog
-        onClose={() => setDeleteSubnetDialogOpen(false)}
-        open={deleteSubnetDialogOpen}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'delete'}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />
       <SubnetEditDrawer
-        onClose={() => setEditSubnetsDrawerOpen(false)}
-        open={editSubnetsDrawerOpen}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'edit'}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />
       <PowerActionsDialog
         action={linodePowerAction ?? 'Reboot'}
-        isOpen={powerActionDialogOpen}
+        isOpen={params.linodeAction === 'powerAction'}
         linodeId={selectedLinode?.id}
         linodeLabel={selectedLinode?.label}
-        onClose={() => setPowerActionDialogOpen(false)}
+        onClose={onCloseSubnetDrawer}
       />
     </>
   );
