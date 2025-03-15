@@ -16,7 +16,9 @@ const props = {
 
 const preference: ManagerPreferences['type_to_confirm'] = true;
 
+const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
@@ -25,6 +27,14 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -50,7 +60,7 @@ describe('NodeBalancerDeleteDialog', () => {
         'Traffic will no longer be routed through this NodeBalancer. Please check your DNS settings and either provide the IP address of another active NodeBalancer, or route traffic directly to your Linode.'
       )
     ).toBeVisible();
-    expect(getByText('Delete nb-1?')).toBeVisible();
+    expect(getByText('Delete nodebalancer-id-1?')).toBeVisible();
     expect(getByText('NodeBalancer Label')).toBeVisible();
     expect(getByText('Cancel')).toBeVisible();
     expect(getByText('Delete')).toBeVisible();
@@ -62,6 +72,6 @@ describe('NodeBalancerDeleteDialog', () => {
     );
 
     await userEvent.click(getByText('Cancel'));
-    // expect(props.onClose).toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalled();
   });
 });
