@@ -16,11 +16,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
-import {
-  VPC_DOCS_LINK,
-  VPC_LABEL,
-  VPC_LANDING_ROUTE,
-} from 'src/features/VPCs/constants';
+import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
 import {
   getIsVPCLKEEnterpriseCluster,
@@ -55,22 +51,21 @@ const VPCDetail = () => {
 
   const handleEditVPC = (vpc: VPC) => {
     navigate({
-      params: { action: 'edit', id: vpc.id },
-      to: '/vpcs/$action/$id',
+      params: { action: 'edit', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/details/$action'
     });
   };
 
   const handleDeleteVPC = (vpc: VPC) => {
     navigate({
-      params: { action: 'delete', id: vpc.id },
-      to: '/vpcs/$action/$id',
+      params: { action: 'delete', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/details/$action',
     });
   };
 
   const onCloseVPCDrawer = () => {
     navigate({
       params: { vpcId: vpc?.id ?? -1 },
-      search: (prev) => prev,
       to: '/vpcs/$vpcId',
     });
   };

@@ -67,15 +67,15 @@ const VPCLanding = () => {
 
   const handleEditVPC = (vpc: VPC) => {
     navigate({
-      params: { action: 'edit', id: vpc.id },
-      to: '/vpcs/$action/$id',
+      params: { action: 'edit', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/$action',
     });
   };
 
   const handleDeleteVPC = (vpc: VPC) => {
     navigate({
-      params: { action: 'delete', id: vpc.id },
-      to: '/vpcs/$action/$id',
+      params: { action: 'delete', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/$action',
     });
   };
 
@@ -92,10 +92,10 @@ const VPCLanding = () => {
   });
 
   const { data: selectedVPC, isFetching: isFetchingVPC } = useDialogData({
-    enabled: !!params.id,
-    paramKey: 'id',
+    enabled: !!params.vpcId,
+    paramKey: 'vpcId',
     queryHook: useVPCQuery,
-    redirectToOnNotFound: '/placement-groups',
+    redirectToOnNotFound: '/vpcs',
   });
 
   if (error) {

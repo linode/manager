@@ -1,4 +1,8 @@
-import { useSubnetsQuery } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useSubnetQuery,
+  useSubnetsQuery,
+} from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
@@ -17,7 +21,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useOrder } from 'src/hooks/useOrder';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePagination } from 'src/hooks/usePagination';
 
 import { SUBNET_ACTION_PATH } from '../constants';
@@ -50,24 +55,27 @@ export const VPCSubnetsTable = (props: Props) => {
   const location = useLocation();
 
   const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
+  const [linodePowerAction, setLinodePowerAction] = React.useState<
+    Action | undefined
+  >();
   const [selectedSubnet, setSelectedSubnet] = React.useState<
     Subnet | undefined
   >();
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
   >();
-  const [linodePowerAction, setLinodePowerAction] = React.useState<
-    Action | undefined
-  >();
   const pagination = usePagination(1, preferenceKey);
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/vpcs/$vpcId',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
   const filter = {
     ['+order']: order,
@@ -118,6 +126,7 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetDelete = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'delete', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -125,6 +134,7 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetEdit = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'edit', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -132,6 +142,7 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetUnassignLinodes = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'unassign', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -145,7 +156,7 @@ export const VPCSubnetsTable = (props: Props) => {
       params: {
         linodeAction: 'unassign',
         linodeId: linode.id,
-        subnetId: selectedSubnet?.id ?? -1,
+        subnetId: subnet.id,
         vpcId,
       },
       to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
@@ -153,6 +164,7 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
+    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'assign', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -160,8 +172,8 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handlePowerActionsLinode = (linode: Linode, action: Action) => {
-    setSelectedLinode(linode);
     setLinodePowerAction(action);
+    setSelectedLinode(linode);
     navigate({
       params: {
         linodeAction: 'powerAction',

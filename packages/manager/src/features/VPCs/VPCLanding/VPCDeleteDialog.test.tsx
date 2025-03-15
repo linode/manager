@@ -8,6 +8,7 @@ import { VPCDeleteDialog } from './VPCDeleteDialog';
 describe('VPC Delete Dialog', () => {
   const props = {
     id: 1,
+    isFetching: false,
     label: 'vpc-1',
     onClose: vi.fn(),
     open: true,
@@ -24,6 +25,7 @@ describe('VPC Delete Dialog', () => {
     const deleteButton = screen.getByText('Delete');
     expect(deleteButton).toBeVisible();
   });
+
   it('closes the VPC delete dialog as expected', () => {
     const screen = renderWithTheme(<VPCDeleteDialog {...props} />);
     const cancelButton = screen.getByText('Cancel');

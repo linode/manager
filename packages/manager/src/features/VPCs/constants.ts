@@ -75,3 +75,5 @@ export const ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK =
 export const VPC_LANDING_TABLE_PREFERENCE_KEY = 'vpcs';
 export const VPC_LANDING_ROUTE = '/vpcs';
 export const VPC_CREATE_ROUTE = '/vpcs/create';
+export const SUBNET_ACTION_PATH =
+  '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';

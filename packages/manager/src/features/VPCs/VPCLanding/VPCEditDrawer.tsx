@@ -54,8 +54,8 @@ export const VPCEditDrawer = (props: Props) => {
     mode: 'onBlur',
     resolver: yupResolver(updateVPCSchema),
     values: {
-      description: vpc?.description,
-      label: vpc?.label,
+      description: vpc?.description ?? '',
+      label: vpc?.label ?? '',
     },
   });
 

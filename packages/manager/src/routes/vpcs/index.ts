@@ -43,10 +43,24 @@ const vpcsLandingRoute = createRoute({
 
 type VPCActionRouteParams<P = number | string> = {
   action: VPCAction;
-  id: P;
+  vpcId: P;
 };
 
+const vpcActionRouteParams = {
+  params: {
+    parse: ({ action, vpcId }: VPCActionRouteParams<string>) => ({
+      action,
+      vpcId: Number(vpcId),
+    }),
+    stringify: ({ action, vpcId }: VPCActionRouteParams<number>) => ({
+      action,
+      vpcId: String(vpcId),
+    }),
+  },
+}
+
 const vpcActionRoute = createRoute({
+  ...vpcActionRouteParams,
   beforeLoad: async ({ params }) => {
     if (!(params.action in vpcAction)) {
       throw redirect({
@@ -55,17 +69,7 @@ const vpcActionRoute = createRoute({
     }
   },
   getParentRoute: () => vpcsLandingRoute,
-  params: {
-    parse: ({ action, id }: VPCActionRouteParams<string>) => ({
-      action,
-      id: Number(id),
-    }),
-    stringify: ({ action, id }: VPCActionRouteParams<number>) => ({
-      action,
-      id: String(id),
-    }),
-  },
-  path: '$action/$id',
+  path: '$vpcId/$action',
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcLandingLazyRoute));
 
 const vpcsCreateRoute = createRoute({
@@ -95,6 +99,23 @@ const subnetDetailRoute = createRoute({
   }),
   path: 'subnets/$subnetId',
   validateSearch: (search: SubnetSearchParams) => search,
+}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+
+const vpcDetailsActionRoute = createRoute({
+  ...vpcActionRouteParams,
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in vpcAction)) {
+      throw redirect({
+        params: {
+          vpcId: params.vpcId,
+        },
+        search: () => ({}),
+        to: `/vpcs/$vpcId`,
+      });
+    }
+  },
+  getParentRoute: () => vpcsDetailRoute,
+  path: 'details/$action',
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
 type SubnetActionRouteParams<P = number | string> = {
@@ -169,6 +190,7 @@ export const vpcsRouteTree = vpcsRoute.addChildren([
   vpcsLandingRoute.addChildren([vpcActionRoute]),
   vpcsCreateRoute,
   vpcsDetailRoute.addChildren([
+    vpcDetailsActionRoute,
     subnetCreateRoute,
     subnetDetailRoute.addChildren([subnetActionRoute, subnetLinodeActionRoute]),
   ]),

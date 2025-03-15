@@ -1,3 +1,9 @@
+import {
+  useAllLinodeConfigsQuery,
+  useBootLinodeMutation,
+  useRebootLinodeMutation,
+  useShutdownLinodeMutation,
+} from '@linode/queries';
 import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -5,12 +11,6 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeConfigsQuery,
-  useBootLinodeMutation,
-  useRebootLinodeMutation,
-  useShutdownLinodeMutation,
-} from '@linode/queries';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
 
@@ -170,15 +170,15 @@ export const PowerActionsDialog = (props: Props) => {
           autoHighlight
           disablePortal={false}
           errorText={configsError?.[0].reason}
+          helperText="If no value is selected, the last booted config will be used."
           label="Config"
           loading={configsLoading}
           onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
           options={configOptions}
-          helperText="If no value is selected, the last booted config will be used."
         />
       )}
       {props.action === 'Power Off' && (
-        <Notice variant="warning" spacingBottom={0}>
+        <Notice spacingBottom={0} variant="warning">
           <Typography>
             <strong>Note: </strong>Powered down Linodes will still accrue
             charges. See the&nbsp;
