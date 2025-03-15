@@ -3,10 +3,14 @@ import {
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
+  updateUserRoles,
 } from './utilities';
 
 import type { CombinedRoles } from './utilities';
 import type { IamAccountPermissions, IamUserPermissions } from '@linode/api-v4';
+
+const accountAccess = 'account_access';
+const resourceAccess = 'resource_access';
 
 const accountPermissions: IamAccountPermissions = {
   account_access: [
@@ -62,19 +66,19 @@ describe('getAllRoles', () => {
   it('should return a list of roles for each access type', () => {
     const expectedRoles = [
       {
-        access: 'account_access',
+        access: accountAccess,
         label: 'account_admin',
         resource_type: 'account',
         value: 'account_admin',
       },
       {
-        access: 'account_access',
+        access: accountAccess,
         label: 'account_linode_admin',
         resource_type: 'linode',
         value: 'account_linode_admin',
       },
       {
-        access: 'resource_access',
+        access: resourceAccess,
         label: 'linode_contributor',
         resource_type: 'linode',
         value: 'linode_contributor',
@@ -89,7 +93,7 @@ describe('getRoleByName', () => {
   it('should return an object with details about this role account_access', () => {
     const roleName = 'account_admin';
     const expectedRole = {
-      access: 'account_access',
+      access: accountAccess,
       description:
         'Access to perform any supported action on all resources in the account',
       name: 'account_admin',
@@ -103,7 +107,7 @@ describe('getRoleByName', () => {
   it('should return an object with details about this role resource_access', () => {
     const roleName = 'linode_contributor';
     const expectedRole = {
-      access: 'resource_access',
+      access: resourceAccess,
       description: 'Access to update a linode instance',
       name: 'linode_contributor',
       permissions: ['update_linode', 'view_linode'],
@@ -136,7 +140,7 @@ describe('mapRolesToPermissions', () => {
 
     const expectedRoles = [
       {
-        access: 'account_access',
+        access: accountAccess,
         description:
           'Access to perform any supported action on all resources in the account',
         id: 'account_admin',
@@ -146,7 +150,7 @@ describe('mapRolesToPermissions', () => {
         resource_type: 'account',
       },
       {
-        access: 'account_access',
+        access: accountAccess,
         description:
           'Access to perform any supported action on all linode instances in the account',
         id: 'account_linode_admin',
@@ -156,7 +160,7 @@ describe('mapRolesToPermissions', () => {
         resource_type: 'linode',
       },
       {
-        access: 'resource_access',
+        access: resourceAccess,
         description: 'Access to update a linode instance',
         id: 'linode_contributor',
         name: 'linode_contributor',
@@ -169,5 +173,26 @@ describe('mapRolesToPermissions', () => {
     expect(mapRolesToPermissions(accountPermissions, userRoles)).toEqual(
       expectedRoles
     );
+  });
+});
+
+describe('updateUserRoles', () => {
+  it('should return an object of updated users roles with resource access', () => {
+    const expectedRoles = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      resource_access: [
+        {
+          resource_id: 12345678,
+          resource_type: 'linode',
+          roles: ['linode_admin'],
+        },
+      ],
+    };
+
+    const initialRole = 'linode_contributor';
+    const newRole = 'linode_admin';
+    expect(
+      updateUserRoles(userPermissions, initialRole, newRole, resourceAccess)
+    ).toEqual(expectedRoles);
   });
 });

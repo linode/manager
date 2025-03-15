@@ -33,9 +33,6 @@ export const useAccountUserPermissionsMutation = (username: string) => {
   return useMutation<IamUserPermissions, APIError[], IamUserPermissions>({
     mutationFn: (data) => updateUserPermissions(username, data),
     onSuccess(role) {
-      queryClient.invalidateQueries({
-        queryKey: iamQueries.user(username).queryKey,
-      });
       queryClient.setQueryData<IamUserPermissions>(
         iamQueries.user(username).queryKey,
         role

@@ -11,6 +11,7 @@ import type {
   IamAccountResource,
   IamUserPermissions,
   PermissionType,
+  ResourceAccess,
   ResourceType,
   ResourceTypePermissions,
   RoleType,
@@ -382,3 +383,37 @@ export interface EntitiesOption {
   label: string;
   value: number;
 }
+
+export const updateUserRoles = (
+  assignedRoles: IamUserPermissions,
+  initialRole: string,
+  newRole: string,
+  access: 'account_access' | 'resource_access'
+): IamUserPermissions => {
+  if (access === 'account_access') {
+    return {
+      ...assignedRoles,
+      account_access: assignedRoles.account_access.map(
+        (role: AccountAccessType) =>
+          role === initialRole ? (newRole as AccountAccessType) : role
+      ),
+    };
+  }
+
+  if (access === 'resource_access') {
+    return {
+      ...assignedRoles,
+      resource_access: assignedRoles.resource_access.map(
+        (resource: ResourceAccess) => ({
+          ...resource,
+          roles: resource.roles.map((role: RoleType) =>
+            role === initialRole ? (newRole as RoleType) : role
+          ),
+        })
+      ),
+    };
+  }
+
+  // If access type is invalid, return unchanged object
+  return assignedRoles;
+};

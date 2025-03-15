@@ -13,15 +13,9 @@ import {
 } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getAllRoles, getRoleByName } from '../utilities';
+import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
 
 import type { EntitiesOption, ExtendedRoleMap, RolesType } from '../utilities';
-import type {
-  AccountAccessType,
-  IamUserPermissions,
-  ResourceAccess,
-  RoleType,
-} from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -110,6 +104,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   const onSubmit = async (data: { roleName: RolesType }) => {
     if (role?.name === data.roleName.label) {
       handleClose();
+      return;
     }
     try {
       const initialRole = role?.name;
@@ -123,7 +118,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
         access
       );
 
-      updateUserPermissions(updatedUserRoles);
+      await updateUserPermissions(updatedUserRoles);
 
       handleClose();
     } catch (errors) {
@@ -144,7 +139,12 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleSubmit(onSubmit);
+        }}
+      >
         <Typography sx={{ marginBottom: 2.5 }}>
           Select a role you want to assign.
           <Link to=""> Learn more about roles and permissions.</Link>
@@ -158,11 +158,6 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
         <Controller
           render={({ field }) => (
             <Autocomplete
-              renderOption={(props, option) => (
-                <li {...props} key={option.label}>
-                  {option.label}
-                </li>
-              )}
               label="Assign New Roles"
               loading={accountPermissionsLoading}
               onChange={(_, value) => field.onChange(value)}
@@ -201,38 +196,4 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
       </form>
     </Drawer>
   );
-};
-
-const updateUserRoles = (
-  assignedRoles: IamUserPermissions,
-  initialRole: string,
-  newRole: string,
-  access: 'account_access' | 'resource_access'
-): IamUserPermissions => {
-  if (access === 'account_access') {
-    return {
-      ...assignedRoles,
-      account_access: assignedRoles.account_access.map(
-        (role: AccountAccessType) =>
-          role === initialRole ? (newRole as AccountAccessType) : role
-      ),
-    };
-  }
-
-  if (access === 'resource_access') {
-    return {
-      ...assignedRoles,
-      resource_access: assignedRoles.resource_access.map(
-        (resource: ResourceAccess) => ({
-          ...resource,
-          roles: resource.roles.map((role: RoleType) =>
-            role === initialRole ? (newRole as RoleType) : role
-          ),
-        })
-      ),
-    };
-  }
-
-  // If access type is invalid, return unchanged object
-  return assignedRoles;
 };
