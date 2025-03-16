@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
@@ -6,7 +7,6 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
@@ -443,10 +443,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             scrollToElement={() =>
               scrollToElement(titleRef.current ?? scrollElement ?? null)
             }
+            selectionsRemaining={
+              maxSelectionCount && selectedResources
+                ? maxSelectionCount - selectedResources.length
+                : undefined
+            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
+            maxSelectionCount={maxSelectionCount}
             serviceType={serviceType}
           />
         </Grid>

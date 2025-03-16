@@ -1,4 +1,4 @@
-import { Checkbox } from '@linode/ui';
+import { Box, Checkbox, Tooltip } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -68,10 +68,15 @@ export interface DisplayAlertResourceProp {
    * This controls whether to show the selection check box or not
    */
   isSelectionsNeeded?: boolean;
+
+  maxSelectionCount?: number;
+
   /**
    * Callback to scroll till the element required on page change change or sorting change
    */
   scrollToElement: () => void;
+
+  selectionsRemaining?: number;
 
   /**
    * The service type associated with the alert
@@ -86,7 +91,9 @@ export const DisplayAlertResources = React.memo(
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
+      maxSelectionCount,
       scrollToElement,
+      selectionsRemaining,
       serviceType,
     } = props;
     const pageSize = 25;
@@ -148,6 +155,19 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
+
+    const disableRootCheckBox = (paginatedData: AlertInstance[]) => {
+      // 3, 3 -> true, 2,4 -> false , 4,2 -> true
+      const uncheckedData = paginatedData.filter(
+        ({ checked = false }) => !checked
+      );
+
+      return (
+        selectionsRemaining !== undefined &&
+        selectionsRemaining <= uncheckedData.length
+      );
+    };
+
     const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
@@ -184,6 +204,7 @@ export const DisplayAlertResources = React.memo(
                         }}
                         checked={isAllPageSelected(paginatedData)}
                         data-testid={`select_all_in_page_${page}`}
+                        disabled={disableRootCheckBox(paginatedData)}
                       />
                     </TableCell>
                   )}
@@ -215,16 +236,34 @@ export const DisplayAlertResources = React.memo(
                       <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                         {isSelectionsNeeded && (
                           <TableCell>
-                            <Checkbox
-                              onClick={() => {
-                                handleSelectionChange([id], !checked);
-                              }}
-                              sx={{
-                                p: 0,
-                              }}
-                              checked={checked}
-                              data-testid={`select_item_${id}`}
-                            />
+                            <Tooltip
+                              title={
+                                !checked &&
+                                selectionsRemaining !== undefined &&
+                                selectionsRemaining === 0 &&
+                                maxSelectionCount !== undefined
+                                  ? `You can select upto ${maxSelectionCount} resources.`
+                                  : undefined
+                              }
+                            >
+                              <Box>
+                                <Checkbox
+                                  disabled={
+                                    !checked &&
+                                    selectionsRemaining !== undefined &&
+                                    selectionsRemaining === 0
+                                  }
+                                  onClick={() => {
+                                    handleSelectionChange([id], !checked);
+                                  }}
+                                  sx={{
+                                    p: 0,
+                                  }}
+                                  checked={checked}
+                                  data-testid={`select_item_${id}`}
+                                />
+                              </Box>
+                            </Tooltip>
                           </TableCell>
                         )}
                         {columns.map(({ accessor, label }) => (

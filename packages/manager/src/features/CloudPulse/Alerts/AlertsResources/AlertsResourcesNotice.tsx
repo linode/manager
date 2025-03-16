@@ -31,7 +31,7 @@ export const AlertsResourcesNotice = React.memo(
       selectedResources,
       totalResources,
     } = props;
-    const isSelectAll = selectedResources !== totalResources;
+    const isSelectAll = selectedResources === 0;
 
     return (
       <StyledNotice gap={1} variant="info">
