@@ -1,6 +1,7 @@
-import { Box, Checkbox, Tooltip } from '@linode/ui';
+import { Box, Checkbox, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
+import EntityIcon from 'src/assets/icons/disabled.svg';
 import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -241,9 +242,19 @@ export const DisplayAlertResources = React.memo(
                                 !checked &&
                                 selectionsRemaining !== undefined &&
                                 selectionsRemaining === 0 &&
-                                maxSelectionCount !== undefined
-                                  ? `You can select upto ${maxSelectionCount} resources.`
-                                  : undefined
+                                maxSelectionCount !== undefined ? (
+                                  <Box
+                                    alignItems="center"
+                                    display="flex"
+                                    flexDirection="row"
+                                    columnGap={1}
+                                  >
+                                    <EntityIcon />
+                                    <Typography>
+                                      {`You can select upto ${maxSelectionCount} resources.`}
+                                    </Typography>
+                                  </Box>
+                                ) : undefined
                               }
                             >
                               <Box>
