@@ -66,7 +66,7 @@ export const CloudPulseModifyAlertResources = React.memo(
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
                 isSelectionsNeeded
-                maxSelectionCount={3}
+                maxSelectionCount={5}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
               />

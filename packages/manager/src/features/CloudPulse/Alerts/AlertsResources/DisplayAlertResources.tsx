@@ -164,7 +164,7 @@ export const DisplayAlertResources = React.memo(
 
       return (
         selectionsRemaining !== undefined &&
-        selectionsRemaining <= uncheckedData.length
+        selectionsRemaining < uncheckedData.length
       );
     };
 
