@@ -1,7 +1,12 @@
 import { useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -18,9 +23,10 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { SUBNET_ACTION_PATH } from '../constants';
+import { VPC_DETAILS_ROUTE } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
@@ -49,7 +55,6 @@ export const VPCSubnetsTable = (props: Props) => {
   const params = useParams({ strict: false });
   const location = useLocation();
 
-  const [subnetsFilterText, setSubnetsFilterText] = React.useState('');
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
   >();
@@ -59,8 +64,6 @@ export const VPCSubnetsTable = (props: Props) => {
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
   >();
-  const pagination = usePagination(1, preferenceKey);
-  console.log(pagination.pageSize)
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -68,9 +71,23 @@ export const VPCSubnetsTable = (props: Props) => {
         order: 'asc',
         orderBy: 'label',
       },
-      from: '/vpcs/$vpcId',
+      from: VPC_DETAILS_ROUTE,
     },
     preferenceKey: `${preferenceKey}-order`,
+  });
+
+  const search = useSearch({
+    from: VPC_DETAILS_ROUTE,
+  });
+  const { query } = search;
+
+  const pagination = usePaginationV2({
+    currentRoute: VPC_DETAILS_ROUTE,
+    preferenceKey,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
   });
 
   const filter = {
@@ -101,19 +118,25 @@ export const VPCSubnetsTable = (props: Props) => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    generateSubnetsXFilter(subnetsFilterText)
+    generateSubnetsXFilter(query ?? '')
   );
 
   const handleSearch = (searchText: string) => {
-    setSubnetsFilterText(searchText);
-    // If you're on page 2+, need to go back to page 1 to see the actual results
-    pagination.handlePageChange(1);
+    navigate({
+      params: { vpcId },
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: searchText || undefined,
+      }),
+      to: VPC_DETAILS_ROUTE,
+    });
   };
 
   const onCloseSubnetDrawer = () => {
     navigate({
       params: { vpcId },
-      to: '/vpcs/$vpcId',
+      to: VPC_DETAILS_ROUTE,
     });
   };
 
@@ -192,7 +215,7 @@ export const VPCSubnetsTable = (props: Props) => {
     if (!selectedSubnet && params.subnetAction === 'delete') {
       navigate({
         params: { vpcId },
-        to: '/vpcs/$vpcId',
+        to: VPC_DETAILS_ROUTE,
       });
     }
   }, [selectedSubnet, params.subnetAction, vpcId, navigate]);
@@ -203,7 +226,7 @@ export const VPCSubnetsTable = (props: Props) => {
     if (params.linodeAction && !selectedLinode) {
       navigate({
         params: { vpcId },
-        to: '/vpcs/$vpcId',
+        to: VPC_DETAILS_ROUTE,
       });
     }
   }, [
@@ -354,7 +377,7 @@ export const VPCSubnetsTable = (props: Props) => {
           label="Filter Subnets by label or id"
           onSearch={handleSearch}
           placeholder="Filter Subnets by label or id"
-          value={subnetsFilterText}
+          value={query ?? ''}
         />
         <Button
           sx={{
@@ -380,7 +403,7 @@ export const VPCSubnetsTable = (props: Props) => {
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
-        count={subnets.data?.length || 0}
+        count={subnets.results || 0}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
