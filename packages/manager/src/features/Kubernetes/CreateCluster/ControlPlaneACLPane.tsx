@@ -135,7 +135,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 />
               }
               data-qa-checkbox="acl-acknowledgement"
-              label="Provide an ACL later. The control plane will be unreachable until IP Addresses are defined."
+              label="Provide an ACL later. The control plane will be unreachable until an ACL is defined."
             />
           )}
         </Box>
