@@ -1,13 +1,14 @@
 import {
+  base64UserData,
   getIsLegacyInterfaceArray,
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  userData,
 } from '@linode/utilities';
 
 import { createLinodeRequestFactory } from 'src/factories';
-import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
   getDefaultInterfaceGenerationFromAccountSetting,

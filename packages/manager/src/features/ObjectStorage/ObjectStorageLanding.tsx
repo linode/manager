@@ -1,4 +1,5 @@
 import { StyledLinkButton, Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -20,7 +21,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';

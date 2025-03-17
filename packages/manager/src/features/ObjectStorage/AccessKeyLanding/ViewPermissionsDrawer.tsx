@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';

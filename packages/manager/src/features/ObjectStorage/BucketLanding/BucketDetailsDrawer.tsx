@@ -1,5 +1,11 @@
+import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
 import { Divider, Typography } from '@linode/ui';
-import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
+import {
+  isFeatureEnabledV2,
+  pluralize,
+  readableBytes,
+  truncateMiddle,
+} from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -10,8 +16,6 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
