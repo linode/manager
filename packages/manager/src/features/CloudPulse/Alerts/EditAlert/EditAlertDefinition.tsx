@@ -20,6 +20,7 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   enhanceValidationSchemaWithEntityIdValidation,
+  handleMultipleError
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
@@ -29,6 +30,11 @@ import type {
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import {
+  EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
 
 export interface EditAlertProps {
   /**
@@ -78,15 +84,19 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       });
       history.push(definitionLanding);
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      handleMultipleError<EditAlertDefinitionPayload>(
+        errors,
+        EDIT_ALERT_ERROR_FIELD_MAP,
+        MULTILINE_ERROR_SEPARATOR,
+        SINGLELINE_ERROR_SEPARATOR,
+        setError
+      );
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Editing alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });
