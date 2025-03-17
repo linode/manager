@@ -1,9 +1,11 @@
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-
 import { ipAddressFactory } from 'src/factories/networking';
 
-import { listIPv6InRange } from './LinodeIPAddressRow';
 import { createType, ipResponseToDisplayRows } from './LinodeIPAddresses';
+import { listIPv6InRange } from './LinodeIPAddressRow';
+
+import type { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+
+// @TODO Linode Interfaces - clean up test cases for IP tests once we remove feature flag
 
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);
@@ -62,12 +64,12 @@ describe('ipResponseToDisplayRows utility function', () => {
   };
 
   it('returns a display row for each IP/range', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows(false, response);
     expect(result).toHaveLength(7);
   });
 
   it('includes the meta _ip field for IP addresses', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows(false, response);
     // Check the first six rows (the IPs)
     for (let i = 0; i < 5; i++) {
       expect(result[i]._ip).toBeDefined();
@@ -75,7 +77,7 @@ describe('ipResponseToDisplayRows utility function', () => {
   });
 
   it('includes the meta _range field for IP ranges', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows(false, response);
     // Check the last row (the IPv6 range)
     expect(result[6]._range).toBeDefined();
   });
@@ -86,21 +88,40 @@ describe('createType utility function', () => {
     const publicIPv4 = ipAddressFactory.build({ public: true, type: 'ipv4' });
     const privateIPv4 = ipAddressFactory.build({ public: false, type: 'ipv4' });
 
-    expect(createType(publicIPv4, 'Public')).toBe('IPv4 – Public');
-    expect(createType(privateIPv4, 'Private')).toBe('IPv4 – Private');
+    expect(createType(publicIPv4, 'Public', false)).toBe('IPv4 – Public');
+    expect(createType(privateIPv4, 'Private', false)).toBe('IPv4 – Private');
 
-    expect(createType(publicIPv4, 'Reserved')).toBe('IPv4 – Reserved (public)');
-    expect(createType(privateIPv4, 'Reserved')).toBe(
+    expect(createType(publicIPv4, 'Reserved', false)).toBe(
+      'IPv4 – Reserved (public)'
+    );
+    expect(createType(privateIPv4, 'Reserved', false)).toBe(
       'IPv4 – Reserved (private)'
     );
 
-    expect(createType(publicIPv4, 'Shared')).toBe('IPv4 – Shared');
+    expect(createType(publicIPv4, 'Shared', false)).toBe('IPv4 – Shared');
+
+    // Linode Interface changes to IP types
+    expect(createType(publicIPv4, 'Public', true)).toBe('Public – IPv4');
+    expect(createType(privateIPv4, 'Private', true)).toBe('Private – IPv4');
+
+    expect(createType(publicIPv4, 'Reserved', true)).toBe(
+      'Reserved IPv4 (public)'
+    );
+    expect(createType(privateIPv4, 'Reserved', true)).toBe(
+      'Reserved IPv4 (private)'
+    );
+
+    expect(createType(publicIPv4, 'Shared', true)).toBe('Shared – IPv4');
   });
 
   it('creates the correct type for ipv6', () => {
     const ipv6 = ipAddressFactory.build({ type: 'ipv6' });
 
-    expect(createType(ipv6, 'SLAAC')).toBe('IPv6 – SLAAC');
-    expect(createType(ipv6, 'Link Local')).toBe('IPv6 – Link Local');
+    expect(createType(ipv6, 'SLAAC', false)).toBe('IPv6 – SLAAC');
+    expect(createType(ipv6, 'Link Local', false)).toBe('IPv6 – Link Local');
+
+    // Linode Interfaces related - test cases:
+    expect(createType(ipv6, 'SLAAC', true)).toBe('Public – SLAAC – IPv6');
+    expect(createType(ipv6, 'Link Local', true)).toBe('Link Local – IPv6');
   });
 });

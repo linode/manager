@@ -1,10 +1,10 @@
+import { useLinodeIPMutation } from '@linode/queries';
 import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { useLinodeIPMutation } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { IPAddress } from '@linode/api-v4/lib/networking';

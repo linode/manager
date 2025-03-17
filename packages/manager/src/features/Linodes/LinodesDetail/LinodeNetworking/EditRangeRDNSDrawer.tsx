@@ -1,3 +1,8 @@
+import {
+  useAllIPsQuery,
+  useLinodeIPMutation,
+  useLinodeQuery,
+} from '@linode/queries';
 import { ActionsPanel, Notice, TextField, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -5,11 +10,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import {
-  useLinodeQuery,
-  useLinodeIPMutation,
-  useAllIPsQuery,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';

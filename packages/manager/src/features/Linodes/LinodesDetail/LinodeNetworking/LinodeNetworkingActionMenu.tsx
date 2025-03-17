@@ -6,15 +6,16 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import type { IPTypes } from './types';
+import type { IPTypes, UpdatedIPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   ipAddress: IPAddress | IPRange;
-  ipType: IPTypes;
+  ipType: IPTypes | UpdatedIPTypes;
   isOnlyPublicIP: boolean;
   isVPCOnlyLinode: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
@@ -25,7 +26,7 @@ interface Props {
 export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
-
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const {
     ipAddress,
     ipType,
@@ -43,9 +44,28 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     'IPv4 – VPC',
     'IPv6 – Link Local',
     'VPC IPv4 – NAT',
+    // @TODO Linode Interfaces - when linode interfaces feature flag is removed, we can update IP types
+    ...(isLinodeInterfacesEnabled
+      ? [
+          'Private – IPv4',
+          'Reserved IPv4 (private)',
+          'Reserved IPv4 (public)',
+          'VPC – IPv4',
+          'Link Local – IPv6',
+          'VPC NAT – IPv4',
+        ]
+      : []),
   ].includes(ipType);
 
-  const deletableIPTypes = ['IPv4 – Public', 'IPv4 – Private', 'IPv6 – Range'];
+  const deletableIPTypes = [
+    'IPv4 – Public',
+    'IPv4 – Private',
+    'IPv6 – Range',
+    // @TODO Linode Interfaces - when linode interfaces feature flag is removed, we can update IP types
+    ...(isLinodeInterfacesEnabled
+      ? ['Private – IPv4', 'Public – IPv4', 'Range – IPv6']
+      : []),
+  ];
 
   // if we have a 116 we don't want to give the option to remove it
   const is116Range = ipAddress?.prefix === 116;
