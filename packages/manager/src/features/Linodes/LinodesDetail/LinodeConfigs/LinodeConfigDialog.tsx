@@ -16,8 +16,8 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -467,7 +467,6 @@ export const LinodeConfigDialog = (props: Props) => {
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
-
         /*
         If device slots are populated out of sequential order (e.g. sda and sdb are assigned
         but no others are until sdf), ascertain the last assigned slot to determine how many

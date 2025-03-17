@@ -12,7 +12,6 @@ import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
@@ -25,6 +24,8 @@ import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
 import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
+
+import { mergeDeepRight } from './mergeDeepRight';
 
 import type { QueryClient } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
@@ -78,7 +79,6 @@ interface Options {
   routePath?: string;
   theme?: 'dark' | 'light';
 }
-
 /**
  * preference state is necessary for all tests using the
  * renderWithTheme() helper function, since the whole app is wrapped with

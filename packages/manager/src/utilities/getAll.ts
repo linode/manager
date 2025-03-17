@@ -1,7 +1,6 @@
-import { Filter, Params } from '@linode/api-v4';
-import { range } from 'ramda';
-
 import { API_MAX_PAGE_SIZE } from 'src/constants';
+
+import type { Filter, Params } from '@linode/api-v4';
 
 export interface APIResponsePage<T> {
   data: T;
@@ -76,10 +75,11 @@ export const getAll: <T>(
       }
 
       // Create an iterable list of the remaining pages.
-      const remainingPages = range(page + 1, pages + 1);
+      const remainingPages = (start: number, end: number) =>
+        [...Array(end - start)].map((_, i) => start + i);
 
       const promises: Promise<any>[] = [];
-      remainingPages.forEach((thisPage) => {
+      remainingPages(page + 1, pages + 1).forEach((thisPage) => {
         const promise = getter({ ...pagination, page: thisPage }, filter).then(
           (response) => response.data
         );
