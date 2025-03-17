@@ -41,6 +41,7 @@ interface Props {
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -65,6 +66,7 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -227,6 +229,7 @@ export const NodePool = (props: Props) => {
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}
+        regionSupportsDiskEncryption={regionSupportsDiskEncryption}
         statusFilter={statusFilter}
         tags={tags}
         typeLabel={typeLabel}

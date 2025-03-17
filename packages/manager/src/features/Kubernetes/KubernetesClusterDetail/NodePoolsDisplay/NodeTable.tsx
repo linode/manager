@@ -51,6 +51,7 @@ export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -67,6 +68,7 @@ export const NodeTable = React.memo((props: Props) => {
     nodes,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -268,6 +270,9 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        regionSupportsDiskEncryption={
+                          regionSupportsDiskEncryption
+                        }
                         encryptionStatus={encryptionStatus}
                         tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
                       />
@@ -309,9 +314,11 @@ export const nodeToRow = (
 
 export const EncryptedStatus = ({
   encryptionStatus,
+  regionSupportsDiskEncryption,
   tooltipText,
 }: {
   encryptionStatus: EncryptionStatus;
+  regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
   return encryptionStatus === 'enabled' ? (
@@ -324,7 +331,9 @@ export const EncryptedStatus = ({
       <Unlock />
       <StyledNotEncryptedBox>
         <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+        {regionSupportsDiskEncryption && tooltipText ? (
+          <TooltipIcon status="help" text={tooltipText} />
+        ) : null}
       </StyledNotEncryptedBox>
     </>
   ) : null;
