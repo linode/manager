@@ -10,9 +10,10 @@ export default defineConfig({
   build: {
     outDir: 'build',
     rollupOptions: {
-      // Optional dependencies that are not needed for the build.
+      // Optional dependency that isn't used in the application,
+      // and has a resolution that could cause run-time issues if ever used with jspdf.
       // See https://www.npmjs.com/package/jspdf
-      external: ['canvg', 'html2canvas', 'dompurify'],
+      external: ['canvg'],
     },
   },
   envPrefix: 'REACT_APP_',
