@@ -1,7 +1,17 @@
-import { kubernetesClusterFactory } from '@src/factories';
-import { randomLabel, randomNumber } from 'support/util/random';
+import {
+  accountUserFactory,
+  grantsFactory,
+  kubernetesClusterFactory,
+  profileFactory,
+} from '@src/factories';
+import { mockGetUser } from 'support/intercepts/account';
 import { mockCreateCluster } from 'support/intercepts/lke';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 /**
@@ -54,8 +64,8 @@ const minimumNodeNotice =
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const mockCluster = kubernetesClusterFactory.build({
-      label: randomLabel(),
       id: randomNumber(10000, 99999),
+      label: randomLabel(),
     });
     mockCreateCluster(mockCluster).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
@@ -95,5 +105,69 @@ describe('LKE Create Cluster', () => {
       'endWith',
       `/kubernetes/clusters/${mockCluster.id}/summary`
     );
+  });
+
+  it('should not allow creating cluster for restricted users', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_kubernetes: false,
+      },
+    });
+
+    const mockCluster = kubernetesClusterFactory.build({
+      id: randomNumber(10000, 99999),
+      label: randomLabel(),
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+    mockCreateCluster(mockCluster).as('createCluster');
+
+    cy.visitWithLogin('/kubernetes/create');
+    cy.findByText('Add Node Pools').should('be.visible');
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Cluster.
+    cy.findByText(
+      "You don't have permissions to create LKE Clusters. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that "Cluster Label" field is disabled.
+    cy.findByLabelText('Cluster Label')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Confirm that "Region" field is disabled.
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
+
+    // Confirm that "Kubernetes Version" field is disabled.
+    cy.get('[data-qa-autocomplete="Kubernetes Version"] input')
+      .should('be.visible')
+      .should('be.disabled');
+
+    // Confirm that "HA" field is disabled.
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    cy.get('[data-testid="ha-radio-button-yes"]').should('not.be.checked');
+
+    cy.get('[data-testid="kube-checkout-bar"]').within(() => {
+      // Confirm that "Create Cluster" field is disabled.
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.disabled');
+    });
   });
 });

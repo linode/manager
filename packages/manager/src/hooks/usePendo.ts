@@ -1,16 +1,14 @@
+import { useAccount, useProfile } from '@linode/queries';
+import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import { sha256 } from 'js-sha256';
 import React from 'react';
 
 import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
-import { useAccount } from 'src/queries/account/account.js';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   ONE_TRUST_COOKIE_CATEGORIES,
   checkOptanonConsent,
   getCookie,
 } from 'src/utilities/analytics/utils';
-
-import { loadScript } from './useScript';
 
 declare global {
   interface Window {
@@ -84,11 +82,8 @@ export const usePendo = () => {
       ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
     );
 
-  // Retrieve our self-hosted Pendo agent script (M3-9347).
-  const PENDO_SCRIPT =
-    APP_ROOT === 'https://cloud.linode.com'
-      ? '/pendo/pendo.js'
-      : '/pendo/pendo-staging.js';
+  // This URL uses a Pendo-configured CNAME (M3-8742).
+  const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
     if (PENDO_API_KEY && hasConsentEnabled) {
@@ -123,7 +118,7 @@ export const usePendo = () => {
       });
 
       // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
-      loadScript(PENDO_SCRIPT, {
+      loadScript(PENDO_URL, {
         location: 'head',
       }).then(() => {
         window.pendo.initialize({
@@ -171,5 +166,5 @@ export const usePendo = () => {
         });
       });
     }
-  }, [PENDO_SCRIPT, accountId, hasConsentEnabled, visitorId]);
+  }, [PENDO_URL, accountId, hasConsentEnabled, visitorId]);
 };

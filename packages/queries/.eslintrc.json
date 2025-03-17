@@ -1,0 +1,5 @@
+{
+  // Temporarily extending ESLint config from linode/manager as the base config.
+  // @todo: modularization - Replace the path with the base shared ESLint config once available.
+  "extends": ["../manager/.eslintrc.cjs"]
+}

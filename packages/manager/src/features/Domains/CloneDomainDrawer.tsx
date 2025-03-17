@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   FormControlLabel,
   Notice,
   Radio,
@@ -9,10 +10,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useCloneDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useGrants, useProfile } from '@linode/queries';
 
 import type { Domain } from '@linode/api-v4';
 

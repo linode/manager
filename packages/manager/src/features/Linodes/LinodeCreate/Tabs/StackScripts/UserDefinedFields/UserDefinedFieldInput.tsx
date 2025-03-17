@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { FieldError, useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
@@ -25,6 +25,7 @@ import {
 } from './utilities';
 
 import type { CreateLinodeRequest, UserDefinedField } from '@linode/api-v4';
+import type { FieldError } from 'react-hook-form';
 
 interface Props {
   userDefinedField: UserDefinedField;

@@ -15,7 +15,12 @@ import InfoIcon from 'src/assets/icons/info.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/alerts';
 
-import { convertAlertsToTypeSet } from '../Utils/utils';
+import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
+import {
+  convertAlertsToTypeSet,
+  filterAlertsByStatusAndType,
+} from '../Utils/utils';
+import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
 
@@ -37,16 +42,24 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { serviceType } = props;
-  const { data: alerts, isLoading } = useAlertDefinitionByServiceTypeQuery(
-    serviceType
-  );
+  const { entityId, entityName, serviceType } = props;
+  const {
+    data: alerts,
+    error,
+    isLoading,
+  } = useAlertDefinitionByServiceTypeQuery(serviceType);
 
   const [searchText, setSearchText] = React.useState<string>('');
-  // This will be replaced with a variable in next PR
-  const [_, setSelectedType] = React.useState<
+  const [selectedType, setSelectedType] = React.useState<
     AlertDefinitionType | undefined
   >();
+
+  // Filter alerts based on serach text & selected type
+  const filteredAlerts = filterAlertsByStatusAndType(
+    alerts,
+    searchText,
+    selectedType
+  );
 
   const history = useHistory();
 
@@ -71,7 +84,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
           <Button
             buttonType="outlined"
             data-testid="manage-alerts"
-            onClick={() => history.push('/monitor/alerts/definitions')}
+            onClick={() => history.push('/alerts/definitions')}
           >
             Manage Alerts
           </Button>
@@ -104,6 +117,15 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               sx={{ width: '250px' }}
             />
           </Box>
+
+          <AlertInformationActionTable
+            alerts={filteredAlerts}
+            columns={AlertContextualViewTableHeaderMap}
+            entityId={entityId}
+            entityName={entityName}
+            error={error}
+            orderByColumn="Alert Name"
+          />
         </Stack>
       </Stack>
     </Paper>

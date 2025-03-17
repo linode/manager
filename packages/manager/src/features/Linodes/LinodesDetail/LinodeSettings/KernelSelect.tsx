@@ -1,5 +1,4 @@
 import { Autocomplete } from '@linode/ui';
-import { groupBy } from 'ramda';
 import * as React from 'react';
 
 import type { Kernel } from '@linode/api-v4';
@@ -66,30 +65,31 @@ export const getSelectedKernelId = (
   return options.find((option) => kernelID === option.value);
 };
 
-export const groupKernels = (kernel: Kernel) => {
-  if (kernel.label.match(/latest/i)) {
-    return 'Current';
-  }
-  if (['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label)) {
-    return 'Current';
-  }
-  if (kernel.label === 'Direct Disk') {
-    return 'Current';
-  }
-  if (kernel.deprecated) {
-    return 'Deprecated';
-  }
-  if (kernel.architecture === 'x86_64') {
-    return '64 bit';
-  } else if (kernel.architecture === 'i386') {
-    return '32 bit';
-  }
-  // Fallback; this should never happen.
-  return 'Current';
-};
-
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
-  const groupedKernels = groupBy(groupKernels, kernels);
+  const groupedKernels: { [index: string]: Kernel[] } = {};
+  kernels.forEach((kernel) => {
+    let group = '';
+    if (
+      kernel.label.match(/latest/i) ||
+      ['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label) ||
+      kernel.label === 'Direct Disk'
+    ) {
+      group = 'Current';
+    } else if (kernel.deprecated) {
+      group = 'Deprecated';
+    } else if (kernel.architecture === 'x86_64') {
+      group = '64 bit';
+    } else if (kernel.architecture === 'i386') {
+      group = '32 bit';
+    } else {
+      group = 'Current';
+    }
+    if (Array.isArray(groupedKernels[group])) {
+      groupedKernels[group].push({ ...kernel });
+    } else {
+      groupedKernels[group] = [{ ...kernel }];
+    }
+  });
 
   groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
   return Object.keys(groupedKernels)

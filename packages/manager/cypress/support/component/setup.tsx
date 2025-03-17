@@ -13,8 +13,15 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import { queryClientFactory } from '@src/queries/base';
+import { queryClientFactory } from '@linode/queries';
 import { QueryClientProvider } from '@tanstack/react-query';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router';
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 import { mount } from 'cypress/react';
@@ -28,6 +35,8 @@ import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
 
 import type { ThemeName } from '@linode/ui';
+import type { AnyRouter } from '@tanstack/react-router';
+import type { Flags } from 'src/featureFlags';
 
 /**
  * Mounts a component with a Cloud Manager theme applied.
@@ -38,10 +47,23 @@ import type { ThemeName } from '@linode/ui';
 export const mountWithTheme = (
   jsx: React.ReactNode,
   theme: ThemeName = 'light',
-  flags: any = {}
+  flags: Partial<Flags> = {},
+  useTanstackRouter: boolean = false
 ) => {
   const queryClient = queryClientFactory();
   const store = storeFactory();
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => jsx,
+    getParentRoute: () => rootRoute,
+    path: '/',
+  });
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: ['/'],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
+  });
 
   return mount(
     <Provider store={store}>
@@ -54,7 +76,13 @@ export const mountWithTheme = (
             options={{ bootstrap: flags }}
           >
             <SnackbarProvider>
-              <MemoryRouter>{jsx}</MemoryRouter>
+              {useTanstackRouter ? (
+                <MemoryRouter>
+                  <RouterProvider router={router} />
+                </MemoryRouter>
+              ) : (
+                <MemoryRouter>{jsx}</MemoryRouter>
+              )}
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>

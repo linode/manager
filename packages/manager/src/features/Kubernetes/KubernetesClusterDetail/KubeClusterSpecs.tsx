@@ -1,7 +1,8 @@
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -9,10 +10,9 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { pluralize } from 'src/utilities/pluralize';
 import {
   HA_PRICE_ERROR_MESSAGE,
   UNKNOWN_PRICE,

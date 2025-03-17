@@ -14,7 +14,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -93,7 +93,7 @@ export const Security = () => {
         control={control}
         name="authorized_users"
       />
-      {isDiskEncryptionFeatureEnabled && (
+      {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) && (
         <>
           <Divider spacingBottom={20} spacingTop={24} />
           <Controller

@@ -21,11 +21,16 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   mutateAsync: vi.fn().mockResolvedValue({}),
   reset: vi.fn(),
 });
-
+const mockScroll = vi.fn();
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
     const { getByText } = renderWithTheme(
-      <AlertsListTable alerts={[]} isLoading={false} services={[]} />
+      <AlertsListTable
+        alerts={[]}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[]}
+      />
     );
     expect(getByText('Alert Name')).toBeVisible();
     expect(getByText('Service')).toBeVisible();
@@ -40,6 +45,7 @@ describe('Alert List Table test', () => {
         alerts={[]}
         error={[{ reason: 'Error in fetching the alerts' }]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[]}
       />
     );
@@ -60,6 +66,7 @@ describe('Alert List Table test', () => {
           }),
         ]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -82,6 +89,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -98,6 +106,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -110,7 +119,9 @@ describe('Alert List Table test', () => {
 
   it('should show error snackbar when enabling alert fails', async () => {
     queryMocks.useEditAlertDefinition.mockReturnValue({
-      mutateAsync: vi.fn().mockRejectedValue({}),
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValue([{ reason: 'Enabling alert failed' }]),
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
@@ -118,6 +129,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );
@@ -131,7 +143,9 @@ describe('Alert List Table test', () => {
 
   it('should show error snackbar when disabling alert fails', async () => {
     queryMocks.useEditAlertDefinition.mockReturnValue({
-      mutateAsync: vi.fn().mockRejectedValue({}),
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValue([{ reason: 'Disabling alert failed' }]),
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
@@ -139,6 +153,7 @@ describe('Alert List Table test', () => {
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
+        scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
       />
     );

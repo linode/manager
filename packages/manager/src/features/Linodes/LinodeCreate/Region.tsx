@@ -1,4 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -15,7 +17,6 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
   sendLinodeCreateFormInputEvent,
@@ -29,7 +30,6 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
-import { getIsLegacyInterfaceArray } from './utilities';
 import {
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
@@ -92,6 +92,10 @@ export const Region = React.memo(() => {
 
     field.onChange(region.id);
 
+    const regionSupportsDiskEncryption = region.capabilities.includes(
+      'Disk Encryption'
+    );
+
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
       setValue('hasSignedEUAgreement', false);
@@ -138,15 +142,13 @@ export const Region = React.memo(() => {
       setValue('private_ip', false);
     }
 
-    if (isDiskEncryptionFeatureEnabled) {
+    if (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) {
       if (region.site_type === 'distributed') {
         // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
-        const defaultDiskEncryptionValue = region.capabilities.includes(
-          'Disk Encryption'
-        )
+        const defaultDiskEncryptionValue = regionSupportsDiskEncryption
           ? 'enabled'
           : undefined;
 

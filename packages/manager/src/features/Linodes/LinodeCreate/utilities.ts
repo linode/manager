@@ -1,17 +1,19 @@
+import { accountQueries, linodeQueries } from '@linode/queries';
 import { omitProps } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  isNotNullOrUndefined,
+} from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { utoa } from 'src/utilities/metadata';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import {
   getLegacyInterfaceFromLinodeInterface,
@@ -23,8 +25,9 @@ import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type { LinodeCreateType } from './types';
 import type {
-  CreateLinodeInterfacePayload,
+  AccountSettings,
   CreateLinodeRequest,
+  InterfaceGenerationType,
   InterfacePayload,
   Linode,
   Profile,
@@ -199,25 +202,6 @@ export const getLinodeCreatePayload = (
 };
 
 /**
- * Determines if the given interfaces payload array is of legacy interface type
- * or of the new Linode Interface type
- * @param interfaces the interfaces to confirm
- * @returns if interfaces is type InterfacePayload
- *
- * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
- * For now, an undefined/empty interfaces array will return true to match existing behavior
- */
-export const getIsLegacyInterfaceArray = (
-  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
-): interfaces is InterfacePayload[] => {
-  return (
-    interfaces === undefined ||
-    interfaces.length === 0 ||
-    interfaces.some((iface) => 'purpose' in iface)
-  );
-};
-
-/**
  * Transforms and orders the Linode Create "interfaces" form data.
  *
  * We need this so we can put interfaces in the correct order and omit unused interfaces.
@@ -353,7 +337,8 @@ export interface LinodeCreateFormContext {
  */
 export const defaultValues = async (
   params: ParsedLinodeCreateQueryParams,
-  queryClient: QueryClient
+  queryClient: QueryClient,
+  isLinodeInterfacesEnabled: boolean
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
@@ -385,12 +370,28 @@ export const defaultValues = async (
     }
   }
 
+  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
+
+  if (isLinodeInterfacesEnabled) {
+    try {
+      const accountSettings = await queryClient.ensureQueryData(
+        accountQueries.settings
+      );
+      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+        accountSettings.interfaces_for_new_linodes
+      );
+    } catch (error) {
+      // silently fail because the user may be a restricted user that can't access this endpoint
+    }
+  }
+
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
+    interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
     linodeInterfaces: defaultLinodeInterfaces,
@@ -653,4 +654,22 @@ export const useHandleLinodeCreateAnalyticsFormError = (
   );
 
   return { handleLinodeCreateAnalyticsFormError };
+};
+
+export const getDefaultInterfaceGenerationFromAccountSetting = (
+  accountSetting: AccountSettings['interfaces_for_new_linodes']
+): InterfaceGenerationType | undefined => {
+  if (
+    accountSetting === 'linode_only' ||
+    accountSetting === 'linode_default_but_legacy_config_allowed'
+  ) {
+    return 'linode';
+  }
+  if (
+    accountSetting === 'legacy_config_only' ||
+    accountSetting === 'legacy_config_default_but_linode_allowed'
+  ) {
+    return 'legacy_config';
+  }
+  return undefined;
 };

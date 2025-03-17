@@ -23,10 +23,6 @@ module.exports = {
     'build',
     'storybook-static',
     '.storybook',
-    'e2e/core/placementGroups',
-    'e2e/core/stackscripts',
-    'e2e/core/volumes',
-    'e2e/core/vpc',
     'public',
     '!.eslintrc.js',
   ],
@@ -88,6 +84,58 @@ module.exports = {
         'testing-library/await-async-query': 'off',
       },
     },
+    {
+      env: {
+        'cypress/globals': true,
+        node: true,
+      },
+      // cypress/e2e/core files have had --fix applied, so enforce error level to maintain code quality
+      files: ['cypress/e2e/core/**'],
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'error',
+        'perfectionist/sort-array-includes': 'error',
+        'perfectionist/sort-classes': 'error',
+        'perfectionist/sort-enums': 'error',
+        'perfectionist/sort-exports': 'error',
+        'perfectionist/sort-imports': [
+          'error',
+          {
+            'custom-groups': {
+              type: {
+                react: ['react', 'react-*'],
+                src: ['src*'],
+              },
+              value: {
+                src: ['src/**/*'],
+              },
+            },
+            groups: [
+              ['builtin', 'libraries', 'external'],
+              ['src', 'internal'],
+              ['parent', 'sibling', 'index'],
+              'object',
+              'unknown',
+              [
+                'type',
+                'internal-type',
+                'parent-type',
+                'sibling-type',
+                'index-type',
+              ],
+            ],
+            'newlines-between': 'always',
+          },
+        ],
+        'perfectionist/sort-interfaces': 'error',
+        'perfectionist/sort-jsx-props': 'error',
+        'perfectionist/sort-map-elements': 'error',
+        'perfectionist/sort-named-exports': 'error',
+        'perfectionist/sort-named-imports': 'error',
+        'perfectionist/sort-object-types': 'error',
+        'perfectionist/sort-objects': 'error',
+        'perfectionist/sort-union-types': 'error',
+      },
+    },
     // restrict usage of react-router-dom during migration to tanstack/react-router
     // TODO: TanStack Router - remove this override when migration is complete
     {
@@ -95,9 +143,11 @@ module.exports = {
         // for each new features added to the migration router, add its directory here
         'src/features/Betas/**/*',
         'src/features/Domains/**/*',
+        'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
         'src/features/PlacementGroups/**/*',
+        'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',
       ],
       rules: {
@@ -140,6 +190,12 @@ module.exports = {
                 message:
                   'Please use useOrderV2 hook for components being migrated to TanStack Router.',
                 name: 'src/components/OrderBy',
+              },
+              {
+                importNames: ['Prompt'],
+                message:
+                  'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
+                name: 'src/components/Prompt/Prompt',
               },
             ],
           },
@@ -185,7 +241,6 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-createLinode': 'off',
-    '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -267,6 +322,12 @@ module.exports = {
         message:
           'Please use Typography component from @linode/ui instead of @mui/material',
         name: '@mui/material',
+      },
+      {
+        importNames: ['Link'],
+        message:
+          'Please use the Link component from src/components/Link instead of react-router-dom',
+        name: 'react-router-dom',
       },
     ],
     'no-restricted-syntax': [

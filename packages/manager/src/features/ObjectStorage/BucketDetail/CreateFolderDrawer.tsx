@@ -1,8 +1,7 @@
-import { TextField } from '@linode/ui';
+import { ActionsPanel, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { useCreateObjectUrlMutation } from 'src/queries/object-storage/queries';
 

@@ -1,28 +1,40 @@
-import type { Linode, Region } from '@linode/api-v4';
-import { createTestLinode } from 'support/util/linodes';
 import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from 'src/factories/linodes';
+  accountUserFactory,
+  grantsFactory,
+  profileFactory,
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
+import { entityTag } from 'support/constants/cypress';
+import { mockGetUser } from 'support/intercepts/account';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptCreateVolume,
   mockGetVolume,
   mockGetVolumes,
 } from 'support/intercepts/volumes';
-import { randomNumber, randomString, randomLabel } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetRegions } from 'support/intercepts/regions';
 import {
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
-import { entityTag } from 'support/constants/cypress';
+  createLinodeRequestFactory,
+  linodeFactory,
+} from 'src/factories/linodes';
+
+import type { Linode, Region } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -60,9 +72,9 @@ describe('volume create flow', () => {
     const region = chooseRegion();
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     interceptCreateVolume().as('createVolume');
@@ -72,9 +84,12 @@ describe('volume create flow', () => {
     });
 
     // Fill out and submit volume create form.
-    cy.contains('Label').click().type(volume.label);
-    cy.findByLabelText('Tags').click().type(entityTag);
-    cy.contains('Size').click().type(`{selectall}{backspace}${volume.size}`);
+    cy.contains('Label').click();
+    cy.focused().type(volume.label);
+    cy.findByLabelText('Tags').click();
+    cy.focused().type(entityTag);
+    cy.contains('Size').click();
+    cy.focused().type(`{selectall}{backspace}${volume.size}`);
     ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
     cy.findByText('Create Volume').click();
@@ -105,17 +120,17 @@ describe('volume create flow', () => {
     const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: region.id,
       root_pass: randomString(16),
-      booted: false,
     });
 
     const volume = {
       label: randomLabel(),
-      size: `${randomNumber(10, 250)}`,
       region: region.id,
       regionLabel: region.label,
+      size: `${randomNumber(10, 250)}`,
     };
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -127,16 +142,14 @@ describe('volume create flow', () => {
         });
 
         // Fill out and submit volume create form.
-        cy.contains('Label').click().type(volume.label);
-        cy.contains('Size')
-          .click()
-          .type(`{selectall}{backspace}${volume.size}`);
+        cy.contains('Label').click();
+        cy.focused().type(volume.label);
+        cy.contains('Size').click();
+        cy.focused().type(`{selectall}{backspace}${volume.size}`);
         ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
-        cy.findByLabelText('Linode')
-          .should('be.visible')
-          .click()
-          .type(linode.label);
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -197,10 +210,10 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -209,10 +222,8 @@ describe('volume create flow', () => {
         cy.wait(['@getFeatureFlags', '@getAccount']);
 
         // Select a linode without the BSE capability
-        cy.findByLabelText('Linode')
-          .should('be.visible')
-          .click()
-          .type(linode.label);
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(linode.label);
 
         ui.autocompletePopper
           .findByTitle(linode.label)
@@ -253,9 +264,9 @@ describe('volume create flow', () => {
 
     // Mock linode
     const mockLinode = linodeFactory.build({
-      region: mockRegions[0].id,
-      id: 123456,
       capabilities: ['Block Storage Encryption'],
+      id: 123456,
+      region: mockRegions[0].id,
     });
 
     mockGetAccount(mockAccount).as('getAccount');
@@ -267,10 +278,8 @@ describe('volume create flow', () => {
     cy.wait(['@getAccount', '@getRegions', '@getLinodes']);
 
     // Select a linode without the BSE capability
-    cy.findByLabelText('Linode')
-      .should('be.visible')
-      .click()
-      .type(mockLinode.label);
+    cy.findByLabelText('Linode').should('be.visible').click();
+    cy.focused().type(mockLinode.label);
 
     ui.autocompletePopper
       .findByTitle(mockLinode.label)
@@ -310,15 +319,15 @@ describe('volume create flow', () => {
     mockGetRegions(mockRegions).as('getRegions');
 
     const volume = volumeFactory.build({
-      region: mockRegions[0].id,
       encryption: 'enabled',
+      region: mockRegions[0].id,
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: mockRegions[0].id,
       booted: false,
+      label: randomLabel(),
+      region: mockRegions[0].id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -353,8 +362,8 @@ describe('volume create flow', () => {
         // Ensure notice is displayed in "Attach Existing Volume" view when an encrypted volume is selected, & that the "Attach Volume" button is disabled
         cy.findByPlaceholderText('Select a Volume')
           .should('be.visible')
-          .click()
-          .type(`${volume.label}{downarrow}{enter}`);
+          .click();
+        cy.focused().type(`${volume.label}{downarrow}{enter}`);
         ui.autocompletePopper
           .findByTitle(volume.label)
           .should('be.visible')
@@ -377,10 +386,10 @@ describe('volume create flow', () => {
   it('creates a volume from an existing Linode', () => {
     cy.tag('method:e2e');
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      root_pass: randomString(16),
-      region: chooseRegion().id,
       booted: false,
+      label: randomLabel(),
+      region: chooseRegion().id,
+      root_pass: randomString(16),
     });
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
@@ -401,7 +410,8 @@ describe('volume create flow', () => {
             'be.visible'
           );
           cy.contains('Create and Attach Volume').click();
-          cy.contains('Label').click().type(volume.label);
+          cy.contains('Label').click();
+          cy.focused().type(volume.label);
           cy.contains('Size').type(`{selectall}{backspace}${volume.size}`);
           cy.findByText('Create Volume').click();
         });
@@ -432,5 +442,60 @@ describe('volume create flow', () => {
           });
       }
     );
+  });
+
+  it('does not allow creation of a volume for restricted users from volume create page', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_volumes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    cy.visitWithLogin('/volumes/create', {
+      localStorageOverrides: pageSizeOverride,
+    });
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create this Volume. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that the "Label" field should be disabled.
+    cy.get('[id="label"]').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Tags" field should be disabled.
+    cy.findByLabelText('Tags').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Region" field should be disabled.
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
+
+    // Confirm that the "Linode" field should be disabled.
+    cy.findByLabelText('Linode').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Config" field should be disabled.
+    cy.findByLabelText('Config').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Size" field should be disabled.
+    cy.get('[id="size"]').should('be.visible').should('be.disabled');
+
+    // Confirm that the "Create Volume" button is disabled.
+    cy.findByText('Create Volume').should('be.visible').should('be.disabled');
   });
 });

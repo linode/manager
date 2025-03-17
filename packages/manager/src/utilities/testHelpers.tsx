@@ -20,7 +20,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
+import { queryClientFactory } from '@linode/queries';
 import { setupInterceptors } from 'src/request';
 import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';

@@ -1,7 +1,5 @@
-import {
-  PAGE_SIZES,
-  getMinimumPageSizeForNumberOfItems,
-} from './PaginationFooter';
+import { PAGE_SIZES } from './PaginationFooter.constants';
+import { getMinimumPageSizeForNumberOfItems } from './PaginationFooter.utils';
 
 describe('getMinimumPageSizeForNumberOfItems', () => {
   it('should return the minimum page size needed to display a given number of items', () => {

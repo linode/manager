@@ -12,8 +12,7 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useAccountSettings, useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 

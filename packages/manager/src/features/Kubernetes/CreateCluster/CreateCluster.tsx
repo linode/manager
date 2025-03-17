@@ -1,4 +1,9 @@
 import {
+  useAccount,
+  useMutateAccountAgreements,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   Autocomplete,
   Box,
   ErrorState,
@@ -7,6 +12,7 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -30,17 +36,11 @@ import {
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
-import {
-  reportAgreementSigningError,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
@@ -50,7 +50,7 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -115,12 +115,16 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
+  // LKE-E does not support APL at this time.
+  const isAPLSupported = showAPL && selectedTier === 'standard';
+
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -128,6 +132,10 @@ export const CreateCluster = () => {
       }
     } else {
       setHighAvailability(undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -237,7 +245,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (showAPL) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -246,7 +254,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -448,6 +456,7 @@ export const CreateCluster = () => {
               <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
+                    isSectionDisabled={!isAPLSupported}
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
@@ -486,6 +495,7 @@ export const CreateCluster = () => {
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>

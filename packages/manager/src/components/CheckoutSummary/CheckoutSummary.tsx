@@ -51,11 +51,7 @@ export const CheckoutSummary = (props: CheckoutSummaryProps) => {
           Please configure your Linode.
         </StyledHeading>
       ) : null}
-      <StyledSummary
-        container
-        direction={matchesSmDown ? 'column' : 'row'}
-        spacing={3}
-      >
+      <StyledSummary container direction={matchesSmDown ? 'column' : 'row'}>
         {displaySections.map((item) => (
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
         ))}
@@ -78,10 +74,12 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
 const StyledSummary = styled(Grid2)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
-      '&:last-child': {
-        borderRight: 'none',
+      '&:first-child': {
+        borderLeft: 'none',
+        paddingLeft: 0,
       },
-      borderRight: `solid 1px ${theme.tokens.color.Neutrals[50]}`,
+      borderLeft: `solid 1px ${theme.tokens.color.Neutrals[50]}`,
+      padding: `0 ${theme.spacing(1.5)}`,
     },
   },
 }));

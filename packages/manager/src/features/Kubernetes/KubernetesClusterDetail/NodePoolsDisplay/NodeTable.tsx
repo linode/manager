@@ -20,8 +20,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAllLinodesQuery, useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -51,6 +50,7 @@ export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -67,6 +67,7 @@ export const NodeTable = React.memo((props: Props) => {
     nodes,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -256,7 +257,8 @@ export const NodeTable = React.memo((props: Props) => {
               />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
-                  {isDiskEncryptionFeatureEnabled &&
+                  {(isDiskEncryptionFeatureEnabled ||
+                    regionSupportsDiskEncryption) &&
                   encryptionStatus !== undefined ? (
                     <Box
                       alignItems="center"

@@ -16,9 +16,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { profileQueries } from './profile/profile';
+import { profileQueries } from '@linode/queries';
 
 import type {
   APIError,
@@ -32,7 +32,7 @@ import type {
   ResourcePage,
   UpdateDomainPayload,
 } from '@linode/api-v4';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 export const getAllDomains = () =>
   getAll<Domain>((params) => getDomains(params))().then((data) => data.data);

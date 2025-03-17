@@ -1,4 +1,6 @@
+import { usePreferences, useProfile } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -14,13 +16,10 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useProfile } from 'src/queries/profile/profile';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { pluralize } from 'src/utilities/pluralize';
 
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -31,7 +30,6 @@ import {
   StyledIPv4Label,
   StyledLabelBox,
   StyledListItem,
-  StyledSummaryGrid,
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
@@ -82,6 +80,7 @@ export interface BodyProps {
   numCPUs: number;
   numVolumes: number;
   region: string;
+  regionSupportsDiskEncryption: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -105,6 +104,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numCPUs,
     numVolumes,
     region,
+    regionSupportsDiskEncryption,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -128,9 +128,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   // since each interface can have a firewall.
   const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
-  // @ TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
+  // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
-    isDiskEncryptionFeatureEnabled && Boolean(encryptionStatus);
+    (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
+    Boolean(encryptionStatus);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
@@ -171,7 +172,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           >
             Summary
           </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
+          <Grid container spacing={1}>
             <Grid
               size={{
                 lg: 6,
@@ -234,26 +235,27 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 )}
               </Box>
             </Grid>
-            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
-              <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    tooltipText={
-                      isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                    encryptionStatus={encryptionStatus}
-                  />
-                </Box>
-              </Grid>
-            )}
-          </StyledSummaryGrid>
+            {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
+              encryptionStatus && (
+                <Grid>
+                  <Box
+                    alignItems="center"
+                    data-testid={encryptionStatusTestId}
+                    display="flex"
+                    flexDirection="row"
+                  >
+                    <EncryptedStatus
+                      tooltipText={
+                        isLKELinode
+                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                      }
+                      encryptionStatus={encryptionStatus}
+                    />
+                  </Box>
+                </Grid>
+              )}
+          </Grid>
         </Grid>
 
         <Grid

@@ -12,8 +12,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
+import { useAccountUsers, useProfile, useSSHKeysQuery } from '@linode/queries';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
