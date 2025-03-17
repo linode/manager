@@ -111,19 +111,35 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
     props.disabled && {
       color: `${theme.tokens.checkbox.Indeterminated.Disabled.Background} !important`,
     }),
-  // ...(props.readOnly && {
-  //   color: 'red !important',
-  //   pointerEvents: 'none',
-  // }),
-  // '&.Mui-checked': {
-  //   color: 'green !important', // Change color when checked
-  // },
-  // '&.Mui-disabled': {
-  //   color: 'yellow', // Change color when disabled
-  // },
-  // '&.Mui-checked.Mui-disabled': {
-  //   color: 'darkgray', // Change color when checked and disabled
-  // },
+  // Unchecked & Readonly
+  ...(props.readOnly && {
+    color: theme.tokens.checkbox.Empty.ReadOnly.Border,
+    pointerEvents: 'none',
+  }),
+  // Checked & Readonly
+  ...(props.checked &&
+    props.readOnly && {
+      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
+      svg: {
+        '#Check': {
+          fill: theme.tokens.checkbox.Checked.ReadOnly.Icon,
+        },
+        border: `1px solid ${theme.tokens.checkbox.Checked.ReadOnly.Border}`,
+      },
+      pointerEvents: 'none',
+    }),
+  // Indeterminate & Readonly
+  ...(props.indeterminate &&
+    props.readOnly && {
+      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
+      svg: {
+        'g rect:nth-of-type(2)': {
+          fill: theme.tokens.checkbox.Indeterminated.ReadOnly.Icon,
+        },
+        border: `1px solid ${theme.tokens.checkbox.Indeterminated.ReadOnly.Border}`,
+      },
+      pointerEvents: 'none',
+    }),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({

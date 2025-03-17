@@ -591,13 +591,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           color: Checkbox.Empty.Default.Border,
-          // '&[aria-disabled="true"]': {
-          //   color: '#E5E5EA',
-          //   '& svg': {
-          //     border: '1px solid #C2C2CA'
-          //   }
+          // '&.Mui-checked.Mui-disabled': {
+          //   color: ${Checkbox.Checked.Disabled.Background},
           // },
-          // ':indeterminate': { color: 'red !important' },
         },
       },
     },

@@ -3,6 +3,7 @@ import React from 'react';
 import { Checkbox } from './Checkbox';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import { Box } from '../Box';
 
 const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
@@ -53,20 +54,6 @@ export const Indeterminate: Story = {
   render: (args) => <Checkbox {...args} />,
 };
 
-// @todo: Akamai Design System
-// export const Focused: Story = {
-//   render: (args) => <Checkbox {...args} />,
-// };
-
-// @todo: Akamai Design System
-// export const ReadOnly: Story = {
-//   args: {
-//     readOnly: true,
-//   },
-//   render: (args) => <Checkbox {...args} />,
-// };
-
-// @todo: Akamai Design System
 export const UncheckedDisabled: Story = {
   args: {
     disabled: true,
@@ -111,14 +98,17 @@ export const WithLabel: Story = {
   args: {
     text: 'This Checkbox has a label',
   },
-  render: (args) => <Checkbox {...args} />,
+  render: (args) => (
+    <Box sx={{ pl: 1.5 }}>
+      <Checkbox {...args} />
+    </Box>
+  ),
 };
 
 export const WithTooltip: Story = {
   args: {
     toolTipText: 'This is the tooltip!',
   },
-  render: (args) => <Checkbox {...args} />,
 };
 
 export const WithLabelAndTooltip: Story = {
@@ -126,5 +116,9 @@ export const WithLabelAndTooltip: Story = {
     text: 'This Checkbox has a tooltip',
     toolTipText: 'This is the tooltip!',
   },
-  render: (args) => <Checkbox {...args} />,
+  render: (args) => (
+    <Box sx={{ pl: 1.5 }}>
+      <Checkbox {...args} />
+    </Box>
+  ),
 };
