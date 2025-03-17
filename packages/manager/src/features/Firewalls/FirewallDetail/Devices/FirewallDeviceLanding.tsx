@@ -12,17 +12,12 @@ import { formattedTypes } from './constants';
 import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
-import type {
-  FirewallDevice,
-  FirewallDeviceEntityType,
-  Linode,
-} from '@linode/api-v4';
+import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceLandingProps {
   disabled: boolean;
   firewallId: number;
   firewallLabel: string;
-  linodesWithInterfaceDevices?: Linode[];
   type: FirewallDeviceEntityType;
 }
 
