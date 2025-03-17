@@ -26,6 +26,7 @@ import {
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
+import { spacingFunction } from '../utils';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -1880,7 +1881,8 @@ export const lightTheme: ThemeOptions = {
     'none',
     'none',
   ],
-  spacing,
+  spacing: 8,
+  spacingFunction,
   textColors,
   tokens: {
     accent: Accent,
