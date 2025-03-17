@@ -232,17 +232,16 @@ export const DisplayAlertResources = React.memo(
                 {!isDataLoadingError &&
                   paginatedData.map((resource, index) => {
                     const { checked, id } = resource;
+                    const boxDisabled =
+                      !checked &&
+                      selectionsRemaining !== undefined &&
+                      selectionsRemaining === 0;
                     return (
                       <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                         {isSelectionsNeeded && (
                           <TableCell
                             sx={{
-                              cursor:
-                                !checked &&
-                                selectionsRemaining !== undefined &&
-                                selectionsRemaining === 0
-                                  ? 'not-allowed'
-                                  : 'auto',
+                              cursor: boxDisabled ? 'not-allowed' : 'auto',
                             }}
                           >
                             <Tooltip
@@ -264,11 +263,6 @@ export const DisplayAlertResources = React.memo(
                             >
                               <Box>
                                 <Checkbox
-                                  disabled={
-                                    !checked &&
-                                    selectionsRemaining !== undefined &&
-                                    selectionsRemaining === 0
-                                  }
                                   onClick={() => {
                                     handleSelectionChange([id], !checked);
                                   }}
@@ -277,6 +271,7 @@ export const DisplayAlertResources = React.memo(
                                   }}
                                   checked={checked}
                                   data-testid={`select_item_${id}`}
+                                  disabled={boxDisabled}
                                 />
                               </Box>
                             </Tooltip>
