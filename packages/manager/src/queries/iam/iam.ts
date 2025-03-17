@@ -34,7 +34,7 @@ export const useAccountUserPermissionsMutation = (username: string) => {
     mutationFn: (data) => updateUserPermissions(username, data),
     onSuccess(role) {
       queryClient.setQueryData<IamUserPermissions>(
-        iamQueries.user(username).queryKey,
+        iamQueries.user(username)._ctx.permissions.queryKey,
         role
       );
     },

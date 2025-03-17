@@ -70,24 +70,25 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     watch,
   } = useForm<{ roleName: RolesType }>({
     defaultValues: {
-      roleName: undefined,
+      roleName: {
+        access: role?.access,
+        label: role?.name,
+        resource_type: role?.resource_type,
+        value: role?.name,
+      },
     },
     mode: 'onBlur',
+    values: role
+      ? {
+          roleName: {
+            access: role.access,
+            label: role.name,
+            resource_type: role.resource_type,
+            value: role.name,
+          },
+        }
+      : undefined,
   });
-
-  // Effect to update form values when role changes
-  React.useEffect(() => {
-    if (role) {
-      reset({
-        roleName: {
-          access: role.access,
-          label: role.name,
-          resource_type: role.resource_type,
-          value: role.name,
-        },
-      });
-    }
-  }, [role, reset]);
 
   // Watch the selected role
   const selectedOptions = watch('roleName');
@@ -111,12 +112,12 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
       const newRole = data.roleName.label;
       const access = data.roleName.access;
 
-      const updatedUserRoles = updateUserRoles(
-        assignedRoles!,
-        initialRole!,
+      const updatedUserRoles = updateUserRoles({
+        access,
+        assignedRoles,
+        initialRole,
         newRole,
-        access
-      );
+      });
 
       await updateUserPermissions(updatedUserRoles);
 
@@ -139,12 +140,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
-      <form
-        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          handleSubmit(onSubmit);
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
           Select a role you want to assign.
           <Link to=""> Learn more about roles and permissions.</Link>

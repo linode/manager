@@ -61,6 +61,7 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
               width: 'max-content',
             }}
             onClick={() => setShowFullDescription((show) => !show)}
+            type="button"
           >
             {showFullDescription ? 'Hide' : 'Expand'}
           </StyledLinkButton>

@@ -384,13 +384,20 @@ export interface EntitiesOption {
   value: number;
 }
 
-export const updateUserRoles = (
-  assignedRoles: IamUserPermissions,
-  initialRole: string,
-  newRole: string,
-  access: 'account_access' | 'resource_access'
-): IamUserPermissions => {
-  if (access === 'account_access') {
+interface UpdateUserRolesProps {
+  access: 'account_access' | 'resource_access';
+  assignedRoles?: IamUserPermissions;
+  initialRole?: string;
+  newRole: string;
+}
+
+export const updateUserRoles = ({
+  access,
+  assignedRoles,
+  initialRole,
+  newRole,
+}: UpdateUserRolesProps): IamUserPermissions => {
+  if (access === 'account_access' && assignedRoles) {
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.map(
@@ -400,7 +407,7 @@ export const updateUserRoles = (
     };
   }
 
-  if (access === 'resource_access') {
+  if (access === 'resource_access' && assignedRoles) {
     return {
       ...assignedRoles,
       resource_access: assignedRoles.resource_access.map(
@@ -415,5 +422,10 @@ export const updateUserRoles = (
   }
 
   // If access type is invalid, return unchanged object
-  return assignedRoles;
+  return (
+    assignedRoles ?? {
+      account_access: [],
+      resource_access: [],
+    }
+  );
 };

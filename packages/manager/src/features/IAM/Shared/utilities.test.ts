@@ -192,7 +192,12 @@ describe('updateUserRoles', () => {
     const initialRole = 'linode_contributor';
     const newRole = 'linode_admin';
     expect(
-      updateUserRoles(userPermissions, initialRole, newRole, resourceAccess)
+      updateUserRoles({
+        access: resourceAccess,
+        assignedRoles: userPermissions,
+        initialRole,
+        newRole,
+      })
     ).toEqual(expectedRoles);
   });
 });
