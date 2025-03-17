@@ -66,12 +66,7 @@ export const useDialogData = <TEntity>({
   const params = useParams({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
-  // Only pass the param value if enabled is true
-  const paramValue = enabled
-    ? params[paramKey as keyof typeof params]
-    : undefined;
-  const query = queryHook(paramValue, enabled);
+  const query = queryHook(params[paramKey as keyof typeof params], enabled);
 
   React.useEffect(() => {
     if (enabled && !query.isLoading && !query.data) {
