@@ -56,13 +56,13 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
 
 export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
   {
-    endpoint: `https://${crypto.randomUUID()}`,
+    endpoint: `https://${crypto.randomUUID && crypto.randomUUID()}`,
   }
 );
 
 export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
   {
-    url: `https://${crypto.randomUUID()}`,
+    url: `https://${crypto.randomUUID && crypto.randomUUID()}`,
   }
 );
 

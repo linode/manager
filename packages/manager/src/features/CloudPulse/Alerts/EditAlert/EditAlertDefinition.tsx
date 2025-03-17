@@ -1,14 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -16,7 +17,10 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { convertAlertDefinitionValues } from '../Utils/utils';
+import {
+  convertAlertDefinitionValues,
+  enhanceValidationSchemaWithEntityIdValidation,
+} from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
@@ -47,11 +51,17 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
+  const flags = useFlags();
+  const editAlertSchema = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
   const formMethods = useForm<EditAlertDefinitionPayload>({
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      enhanceValidationSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: editAlertSchema,
+        serviceTypeObj: alertDetails.service_type,
+      }) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
@@ -80,7 +90,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       }
     }
   });
-  const definitionLanding = '/monitor/alerts/definitions';
+  const definitionLanding = '/alerts/definitions';
 
   const overrides = [
     {

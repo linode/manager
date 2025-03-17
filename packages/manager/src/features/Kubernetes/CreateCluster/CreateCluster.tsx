@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -50,7 +51,6 @@ import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -114,6 +114,9 @@ export const CreateCluster = () => {
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+
+  // LKE-E does not support APL at this time.
+  const isAPLSupported = showAPL && selectedTier === 'standard';
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -242,7 +245,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (showAPL) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -251,7 +254,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -453,6 +456,7 @@ export const CreateCluster = () => {
               <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
+                    isSectionDisabled={!isAPLSupported}
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
