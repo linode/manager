@@ -9,6 +9,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { Draggable } from './components/Draggable';
+import { DesignTokensTool } from './DesignTokensTool';
 import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
@@ -18,7 +19,7 @@ import { isMSWEnabled } from './utils';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ApplicationStore } from 'src/store';
 
-export type DevToolsView = 'mocks' | 'react-query';
+export type DevToolsView = 'design-tokens' | 'mocks' | 'react-query';
 
 const reactQueryDevtoolsStyle = {
   border: '1px solid rgba(255, 255, 255, 0.25)',
@@ -39,6 +40,10 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
 
     const handleOpenMocks = () => {
       setView('mocks');
+    };
+
+    const handleOpenDesignTokens = () => {
+      setView('design-tokens');
     };
 
     const handleDraggableToggle = () => {
@@ -126,6 +131,14 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   >
                     React Query
                   </button>
+                  <button
+                    className={`toggle-button ${
+                      view === 'design-tokens' && 'toggle-button--on'
+                    }`}
+                    onClick={handleOpenDesignTokens}
+                  >
+                    Design Tokens
+                  </button>
                 </div>
                 <div>
                   <button onClick={handleGoToPreferences}>
@@ -153,6 +166,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                     </QueryClientProvider>
                   </StyledReactQueryDevtoolsContainer>
                 )}
+                {view === 'design-tokens' && <DesignTokensTool />}
               </div>
             </div>
           </div>
