@@ -555,7 +555,7 @@ const CreateVlanInterfaceSchema = object({
 });
 
 export const CreateVPCInterfaceSchema = object({
-  subnet_id: number(),
+  subnet_id: number().required('Subnet is required.'),
   ipv4: object({
     addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
     ranges: array().of(VPCInterfaceIPv4RangeSchema),

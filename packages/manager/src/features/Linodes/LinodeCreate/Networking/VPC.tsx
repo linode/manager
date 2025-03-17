@@ -14,7 +14,11 @@ interface Props {
 }
 
 export const VPC = ({ index }: Props) => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    setValue,
+    resetField,
+  } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const [regionId, selectedVPCId] = useWatch({
@@ -60,10 +64,7 @@ export const VPC = ({ index }: Props) => {
                   );
                 } else {
                   // Otherwise, just clear the selected subnet
-                  setValue(
-                    `linodeInterfaces.${index}.vpc.subnet_id`,
-                    undefined
-                  );
+                  resetField(`linodeInterfaces.${index}.vpc.subnet_id`);
                 }
               }}
               textFieldProps={{
