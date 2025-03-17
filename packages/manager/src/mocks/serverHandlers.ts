@@ -2527,6 +2527,20 @@ export const handlers = [
         updated: '2021-10-16T04:00:00',
       }),
       ...customAlertsWithServiceType,
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'in progress',
+        type: 'user',
+        updated_by: 'user1',
+      }),
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'failed',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
