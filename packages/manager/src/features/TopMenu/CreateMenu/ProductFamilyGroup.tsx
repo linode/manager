@@ -27,7 +27,7 @@ export const ProductFamilyGroup = (props: ProductFamilyGroupProps) => {
 
   return (
     <>
-      <StyledHeading paddingTop={productFamily.name === 'Databases'}>
+      <StyledHeading marginTop={productFamily.name === 'Databases'}>
         {productFamily.icon}
         {productFamily.name}
       </StyledHeading>
