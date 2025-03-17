@@ -1,6 +1,6 @@
 import type { IPTypes } from './types';
 
-// Note: when the Linode Interfaces feature flag is no longer needed,
+// @TODO Linode Interfaces: when the Linode Interfaces feature flag is no longer needed,
 // we can instead directly update IPTypes and relevant logic
 export const ipTypeToText: Record<IPTypes, string> = {
   'IPv4 – Private': 'Private – IPv4',
