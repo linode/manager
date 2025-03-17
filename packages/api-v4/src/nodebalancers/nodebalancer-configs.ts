@@ -2,7 +2,7 @@ import {
   createNodeBalancerConfigSchema,
   UpdateNodeBalancerConfigSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
 import { ResourcePage as Page, Params } from '../types';
 import {
@@ -67,6 +67,34 @@ export const createNodeBalancerConfig = (
     setMethod('POST'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`
+    ),
+    setData(
+      data,
+      createNodeBalancerConfigSchema,
+      combineConfigNodeAddressAndPort
+    )
+  );
+
+/**
+ * createNodeBalancerConfigBeta
+ *
+ * Creates a NodeBalancer Config, which allows the NodeBalancer to accept traffic on a new port.
+ * You will need to add NodeBalancer Nodes to the new Config before it can actually serve requests.
+ *
+ * Note: The BETA version accepts a Node's VPC IP address and subnet-id
+ *
+ * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
+ */
+export const createNodeBalancerConfigBeta = (
+  nodeBalancerId: number,
+  data: CreateNodeBalancerConfig
+) =>
+  Request<NodeBalancerConfig>(
+    setMethod('POST'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs`
     ),
     setData(
       data,
