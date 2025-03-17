@@ -14,11 +14,9 @@ import type { FirewallDevice } from '@linode/api-v4';
 
 export interface Props {
   device?: FirewallDevice | undefined;
-  devices?: FirewallDevice[] | undefined;
   firewallId: number;
   firewallLabel: string;
   isFetching?: boolean;
-  nodeBalancerId?: number;
   onClose: () => void;
   onService: boolean | undefined;
   open: boolean;
@@ -26,25 +24,16 @@ export interface Props {
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
   const {
-    device: _device,
-    devices,
+    device,
     firewallId,
     firewallLabel,
     isFetching,
-    nodeBalancerId,
     onClose,
     onService,
     open,
   } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-  const device =
-    _device ??
-    devices?.find(
-      (device) =>
-        device.entity.type === 'nodebalancer' &&
-        device.entity.id === nodeBalancerId
-    );
   const deviceType = device?.entity.type;
 
   const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation(

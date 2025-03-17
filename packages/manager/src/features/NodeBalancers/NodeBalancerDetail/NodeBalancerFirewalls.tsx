@@ -137,6 +137,11 @@ export const NodeBalancerFirewalls = (props: Props) => {
         <TableBody>{renderTableContent()}</TableBody>
       </Table>
       <RemoveDeviceDialog
+        device={devices?.find(
+          (device) =>
+            device.entity.type === 'nodebalancer' &&
+            device.entity.id === nodeBalancerId
+        )}
         onClose={() =>
           navigate({
             params: { id: String(nodeBalancerId) },
@@ -147,11 +152,9 @@ export const NodeBalancerFirewalls = (props: Props) => {
           match.routeId ===
           '/nodebalancers/$id/settings/unassign-firewall/$firewallId'
         }
-        devices={devices}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
         isFetching={isFetchingDevices || isFetchingSelectedFirewall}
-        nodeBalancerId={nodeBalancerId}
         onService
       />
       <Drawer

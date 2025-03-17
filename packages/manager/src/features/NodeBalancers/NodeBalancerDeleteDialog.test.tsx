@@ -68,7 +68,7 @@ describe('NodeBalancerDeleteDialog', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it.skip('calls the onClose function of the dialog', async () => {
+  it('calls the onClose function of the dialog', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerDeleteDialog {...props} />
     );
