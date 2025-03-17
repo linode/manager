@@ -24,7 +24,7 @@ describe('BetaChip', () => {
   it('triggers an onClick callback', () => {
     const onClickMock = vi.fn();
     const { getByTestId } = renderWithTheme(
-      <BetaChip color="default" onClick={onClickMock} />
+      <BetaChip color="primary" onClick={onClickMock} />
     );
     const betaChip = getByTestId('betaChip');
     fireEvent.click(betaChip);
