@@ -48,7 +48,7 @@ import type {
   LinodeIPsResponse,
 } from '@linode/api-v4';
 
-export const ipv4TableID = 'ips';
+export const ipTableID = 'ips';
 
 interface LinodeIPAddressesProps {
   linodeID: number;
@@ -210,7 +210,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
       <OrderBy data={ipDisplay} order="asc" orderBy="type">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
-            <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
+            <Table aria-label="Linode IP Addresses" id={ipTableID}>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: '15%' }}>Address</TableCell>
