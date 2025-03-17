@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed:
 
+- Rate limits table from Object Storage details drawer ([#11848](https://github.com/linode/manager/pull/11848))
 - Move `capitalize` utility and `useInterval` hook to `@linode/utilities` package ([#11666](https://github.com/linode/manager/pull/11666))
 - Migrate utilities from `manager` to `utilities` package ([#11711](https://github.com/linode/manager/pull/11711))
 - Migrate ErrorState to `ui` package ([#11718](https://github.com/linode/manager/pull/11718))
