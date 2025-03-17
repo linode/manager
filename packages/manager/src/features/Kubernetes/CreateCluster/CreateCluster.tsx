@@ -124,6 +124,9 @@ export const CreateCluster = () => {
     isLoading: accountAvailabilityLoading,
   } = useAllAccountAvailabilitiesQuery();
 
+  // LKE-E does not support APL at this time.
+  const isAPLSupported = showAPL && selectedTier === 'standard';
+
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
@@ -251,7 +254,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (showAPL) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -260,7 +263,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -466,6 +469,7 @@ export const CreateCluster = () => {
               <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
+                    isSectionDisabled={!isAPLSupported}
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />

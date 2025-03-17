@@ -60,16 +60,7 @@ export const StackScriptSelectionRow = (props: Props) => {
           </Stack>
         </label>
       </TableCell>
-      <TableCell
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          minWidth: 120,
-          paddingRight: 0,
-          height: 44,
-        }}
-        actionCell
-      >
+      <TableCell actionCell>
         <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
       </TableCell>
     </TableRow>
