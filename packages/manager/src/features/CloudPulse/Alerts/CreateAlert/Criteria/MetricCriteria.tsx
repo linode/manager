@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from '@linode/ui';
+import { Button, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -66,16 +66,9 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
   });
 
   return (
-    <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        sx={{ marginBottom: 1 }}
-      >
-        <Typography variant="h2">3. Criteria</Typography>
-      </Box>
-      <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+    <Stack mt={3} spacing={2}>
+      <Typography variant="h2">3. Criteria</Typography>
+      <Stack spacing={2}>
         {fields !== null &&
           fields.length !== 0 &&
           fields.map((field, index) => {
@@ -102,15 +95,16 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
             threshold: 0,
           })
         }
+        sx={{
+          width: '130px', // added a nice width for the button
+        }}
         buttonType="outlined"
         disabled={metricCriteriaWatcher.length === 5}
         size="medium"
-        sx={(theme) => ({ marginTop: theme.spacing(2) })}
-        sxEndIcon={{ display: 'none' }}
         tooltipText="You can add up to 5 metrics."
       >
         Add metric
       </Button>
-    </Box>
+    </Stack>
   );
 };

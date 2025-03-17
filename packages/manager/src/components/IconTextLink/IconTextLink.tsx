@@ -1,7 +1,8 @@
 import { Button } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+
+import { Link } from 'src/components/Link';
 
 import type { Theme } from '@mui/material/styles';
 import type { SvgIcon } from 'src/components/SvgIcon';

@@ -115,7 +115,10 @@ describe('linode landing checks', () => {
       );
       ui.mainSearch.find().should('be.visible');
 
-      cy.findByLabelText('Help & Support').should('be.enabled').click();
+      cy.findByTestId('top-menu-help-and-support')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       cy.url().should('endWith', '/support');
       cy.go('back');
