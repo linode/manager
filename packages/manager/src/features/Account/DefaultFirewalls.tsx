@@ -23,6 +23,8 @@ import { Controller, useForm } from 'react-hook-form';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
+const DEFAULT_FIREWALL_PLACEHOLDER = 'Select a default firewall';
+
 export const DefaultFirewalls = () => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -118,7 +120,7 @@ export const DefaultFirewalls = () => {
                 errorText={fieldState.error?.message}
                 label="All"
                 options={firewallOptions}
-                placeholder="Select a firewall"
+                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
             )}
             control={control}
@@ -140,7 +142,7 @@ export const DefaultFirewalls = () => {
                 errorText={fieldState.error?.message}
                 label="Public Interface"
                 options={firewallOptions}
-                placeholder="Select a firewall"
+                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
             )}
             control={control}
@@ -160,7 +162,7 @@ export const DefaultFirewalls = () => {
                 errorText={fieldState.error?.message}
                 label="VPC Interface"
                 options={firewallOptions}
-                placeholder="Select a firewall"
+                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
             )}
             control={control}
@@ -182,7 +184,7 @@ export const DefaultFirewalls = () => {
                 errorText={fieldState.error?.message}
                 label="NodeBalancers"
                 options={firewallOptions}
-                placeholder="Select a firewall"
+                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
             )}
             control={control}
