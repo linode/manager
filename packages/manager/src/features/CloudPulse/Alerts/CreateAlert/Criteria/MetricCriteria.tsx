@@ -9,6 +9,7 @@ import {
 
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
+import { MULTILINE_ERROR_SEPARATOR } from '../../constants';
 import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { convertToSeconds } from '../utilities';
 import { Metric } from './Metric';
@@ -78,9 +79,10 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
           <Typography variant="h2">3. Criteria</Typography>
           {formState.isSubmitted &&
             fieldState.error &&
-            fieldState.error.message && (
+            fieldState.error.message?.length && (
               <AlertListNoticeMessages
                 errorMessage={fieldState.error.message}
+                separator={MULTILINE_ERROR_SEPARATOR}
                 variant="error"
               />
             )}

@@ -4,7 +4,12 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -12,8 +17,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { ERROR_PARENT_FIELD_MAP } from '../constants';
-import { getValidationSchema, handleErrorMap } from '../Utils/utils';
+import {
+  CREATE_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
+import { getValidationSchema, handleMultipleErrorMapper } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -113,22 +122,22 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created', {
+      enqueueSnackbar('Alert successfully created.', {
         variant: 'success',
       });
       alertCreateExit();
     } catch (errors) {
-      const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
-
-      for (const [errorField, errorMessage] of Object.entries(errorMap)) {
-        setError(errorField as keyof CreateAlertDefinitionForm, {
-          message: errorMessage,
-        });
-      }
+      handleMultipleErrorMapper<CreateAlertDefinitionForm>(
+        errors,
+        CREATE_ALERT_ERROR_FIELD_MAP,
+        MULTILINE_ERROR_SEPARATOR,
+        SINGLELINE_ERROR_SEPARATOR,
+        setError
+      );
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {
-        enqueueSnackbar(`Alert failed: ${rootError.reason}`, {
+        enqueueSnackbar(`Creating alert failed: ${rootError.reason}`, {
           variant: 'error',
         });
       }

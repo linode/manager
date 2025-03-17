@@ -11,7 +11,6 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { ERROR_PARENT_FIELD_MAP } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -21,7 +20,7 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   getValidationSchema,
-  handleErrorMap,
+  handleMultipleErrorMapper,
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
@@ -32,6 +31,11 @@ import type {
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import {
+  EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
 
 export interface EditAlertProps {
   /**
@@ -83,17 +87,17 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       });
       history.push(definitionLanding);
     } catch (errors) {
-      const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
-
-      for (const [errorField, errorMessage] of Object.entries(errorMap)) {
-        setError(errorField as keyof EditAlertDefinitionPayload, {
-          message: errorMessage,
-        });
-      }
+      handleMultipleErrorMapper<EditAlertDefinitionPayload>(
+        errors,
+        EDIT_ALERT_ERROR_FIELD_MAP,
+        MULTILINE_ERROR_SEPARATOR,
+        SINGLELINE_ERROR_SEPARATOR,
+        setError
+      );
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {
-        enqueueSnackbar(`Alert failed: ${rootError.reason}`, {
+        enqueueSnackbar(`Editing alert failed: ${rootError.reason}`, {
           variant: 'error',
         });
       }
@@ -104,17 +108,12 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const overrides = [
     {
       label: 'Definitions',
-
       linkTo: definitionLanding,
-
       position: 1,
     },
-
     {
       label: 'Edit',
-
       linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-
       position: 2,
     },
   ];

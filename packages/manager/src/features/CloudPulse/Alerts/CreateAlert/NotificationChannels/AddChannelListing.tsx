@@ -5,7 +5,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
-import { channelTypeOptions } from '../../constants';
+import { MULTILINE_ERROR_SEPARATOR, channelTypeOptions } from '../../constants';
 import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
@@ -147,9 +147,10 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           </Typography>
           {(formState.isSubmitted || fieldState.isTouched) &&
             fieldState.error &&
-            fieldState.error.message && (
+            fieldState.error.message?.length&& (
               <AlertListNoticeMessages
                 errorMessage={fieldState.error.message}
+                separator={MULTILINE_ERROR_SEPARATOR}
                 variant="error"
               />
             )}
@@ -169,7 +170,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             disabled={notificationChannelWatcher.length === 5}
             onClick={handleOpenDrawer}
             size="medium"
-            sx={(theme) => ({ marginTop: theme.spacing(1), width: '215px' })}
+            sx={{ width: '215px' }}
             tooltipText="You can add up to 5 notification channels."
           >
             Add notification channel

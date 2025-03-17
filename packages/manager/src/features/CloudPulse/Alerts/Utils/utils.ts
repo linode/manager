@@ -1,6 +1,5 @@
 import { array, object, string } from 'yup';
 
-import { ERROR_FIELD_SEPARATOR_MAP } from '../constants';
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
@@ -17,6 +16,7 @@ import type {
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
@@ -297,45 +297,74 @@ export const getValidationSchema = (
 };
 
 /**
- * @param errors list of errors returned from the API.
- * @param errorFieldParentMap a map of error parent field matcher value to the desired error field
- * @returns map of errors with field as key and collated error messages as the value.
+ * Handles multiple API errors and maps them to form fields, setting form errors appropriately.
+ * 
+ * @param errors - List of errors returned from the API
+ * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors 
+ *                        to specific form fields. For example, if the API returns an error for "user.name" but 
+ *                        your form field is called "fullName", you would map "user" to "fullName".
+ * @param multiLineErrorSeparator - Separator for multiple errors on fields that are rendered explicitly. Ex: @AlertListNoticeMessages component
+ * @param singleLineErrorSeparator - Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+ * @param setError - React Hook Form's setError function to register errors with the form
+ * 
+ * @example
+ * // Example usage:
+ * const errors = [
+ *   { field: "email", reason: "Email already exists" },
+ *   { field: "password.length", reason: "Password is too short" }
+ * ];
+ * 
+ * // Map API field names to form field paths
+ * const errorFieldMap = {
+ *   "email": "userEmail" as FieldPath<RegisterForm>,
+ *   "password": "userPassword" as FieldPath<RegisterForm>
+ * };
+ * 
+ * handleMultipleErrorMapper(
+ *   errors,
+ *   errorFieldMap,
+ *   " | ", // Multiline separator
+ *   " ",   // Single line separator
+ *   setError
+ * );
  */
-export const handleErrorMap = (
+export const handleMultipleErrorMapper = <T extends FieldValues>(
   errors: APIError[],
-  errorFieldParentMap: Record<string, string>
-): Record<string, string> => {
-  const errorMap = errors.reduce<Record<string, Set<string>>>(
-    (previousValue, error) => {
-      if (error.field) {
-        const { field, reason } = error;
+  errorFieldMap: Record<string, FieldPath<T>>,
+  multiLineErrorSeparator: string,
+  singleLineErrorSeparator: string,
+  setError: UseFormSetError<T>
+) => {
+  const errorMap: Map<FieldPath<T>, string> = new Map();
 
-        const errorField =
-          Object.entries(errorFieldParentMap).find(([key]) =>
-            error.field?.includes(key)
-          )?.[1] || field;
+  for (const error of errors) {
+    if (!error.field) {
+      continue;
+    }
 
-        if (!previousValue[errorField]) {
-          previousValue[errorField] = new Set();
-        }
-        previousValue[errorField].add(
-          reason.endsWith('.') ? reason : reason + '.'
+    const errorFieldParent = error.field.split('.')[0];
+    const errorParent: FieldPath<T> =
+      errorFieldMap[errorFieldParent] ?? error.field;
+
+    const formattedReason = error.reason.endsWith('.')
+      ? error.reason
+      : `${error.reason}.`;
+
+    const separator = errorFieldMap[errorFieldParent]
+      ? multiLineErrorSeparator
+      : singleLineErrorSeparator;
+
+    if (errorMap.has(errorParent)) {
+      const existingMessage = errorMap.get(errorParent)!;
+      if (!existingMessage.includes(formattedReason)) {
+        errorMap.set(
+          errorParent,
+          `${existingMessage}${separator}${formattedReason}`
         );
       }
-
-      return previousValue;
-    },
-    {}
-  );
-
-  return Object.entries(errorMap).reduce<Record<string, string>>(
-    (previousValue, [field, reasonsSet]) => {
-      const reasons = Array.from(reasonsSet); // Convert the Set to an array for joining
-      return {
-        ...previousValue,
-        [field]: reasons.join(ERROR_FIELD_SEPARATOR_MAP[field] ?? ' '),
-      };
-    },
-    {}
-  );
+    } else {
+      errorMap.set(errorParent, formattedReason);
+    }
+    setError(errorParent, { message: errorMap.get(errorParent) });
+  }
 };

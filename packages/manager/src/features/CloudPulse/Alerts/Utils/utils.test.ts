@@ -2,7 +2,6 @@ import { object } from 'yup';
 
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
-import { ERROR_PARENT_FIELD_MAP } from '../constants';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
@@ -10,7 +9,7 @@ import {
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
   getValidationSchema,
-  handleErrorMap,
+  handleMultipleErrorMapper,
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
@@ -150,7 +149,7 @@ describe('getValidationSchema', () => {
     ).rejects.toThrow('Number of entities after update must not exceed 5');
   });
 
-  it('should combine the API errors from the same field and return in errorMap properly', () => {
+  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
     const errors: APIError[] = [
       {
         field: 'label',
@@ -164,17 +163,6 @@ describe('getValidationSchema', () => {
         field: 'label',
         reason: 'Label should not start with special characters',
       },
-    ];
-    const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
-    const resultErrorMap = {
-      label:
-        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
-    };
-    expect(errorMap).toStrictEqual(resultErrorMap);
-  });
-
-  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
-    const errors: APIError[] = [
       { field: 'severity', reason: 'Wrong field.' },
       {
         field: 'rule_criteria.rules[0].aggregate_function',
@@ -193,13 +181,35 @@ describe('getValidationSchema', () => {
         reason: 'Invalid value.',
       },
     ];
-
-    const errorMap = handleErrorMap(errors, ERROR_PARENT_FIELD_MAP);
-    const resultErrorMap = {
-      'rule_criteria.rules':
-        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
-      severity: 'Wrong field.',
+    
+    const CREATE_ALERT_ERROR_FIELD_MAP = {
+      rule_criteria: 'rule_criteria.rules',
     };
-    expect(errorMap).toStrictEqual(resultErrorMap);
-  });
+    
+    const MULTILINE_ERROR_SEPARATOR = '|';
+    const SINGLELINE_ERROR_SEPARATOR = ' ';
+    
+    const setError = vi.fn();
+    
+    handleMultipleErrorMapper(
+      errors,
+      CREATE_ALERT_ERROR_FIELD_MAP,
+      MULTILINE_ERROR_SEPARATOR,
+      SINGLELINE_ERROR_SEPARATOR,
+      setError,
+    );
+    
+    // Check that setError was called for each field correctly
+    expect(setError).toHaveBeenCalledWith('label', {
+      message: 'Label already exists. Label should have less than 100 character. Label should not start with special characters.'
+    });
+    
+    expect(setError).toHaveBeenCalledWith('severity', {
+      message: 'Wrong field.'
+    });
+    
+    expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
+      message: 'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.'
+    });
+  }); 
 });

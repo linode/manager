@@ -1,11 +1,15 @@
+import { CreateAlertDefinitionForm } from './CreateAlert/types';
+
 import type {
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
   DimensionFilterOperatorType,
+  EditAlertDefinitionPayload,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
+import type { FieldPath } from 'react-hook-form';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
@@ -178,12 +182,21 @@ export const engineTypeMap: Record<string, string> = {
   postgresql: 'PostgreSQL',
 };
 
-export const ERROR_FIELD_SEPARATOR_MAP: Record<string, string> = {
-  channel_ids: '|',
-  'rule_criteria.rules': '|',
-};
-
-export const ERROR_PARENT_FIELD_MAP: Record<string, string> = {
+export const CREATE_ALERT_ERROR_FIELD_MAP: Record<
+  string,
+  FieldPath<CreateAlertDefinitionForm>
+> = {
   channel_ids: 'channel_ids',
   rule_criteria: 'rule_criteria.rules',
 };
+
+export const EDIT_ALERT_ERROR_FIELD_MAP: Record<
+  string,
+  FieldPath<EditAlertDefinitionPayload>
+> = {
+  channel_ids: 'channel_ids',
+  rule_criteria: 'rule_criteria.rules',
+};
+
+export const MULTILINE_ERROR_SEPARATOR = '|';
+export const SINGLELINE_ERROR_SEPARATOR = ' ';

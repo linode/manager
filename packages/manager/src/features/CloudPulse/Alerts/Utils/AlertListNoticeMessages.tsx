@@ -4,18 +4,25 @@ import React from 'react';
 import type { NoticeVariant } from '@linode/ui';
 
 interface AlertListNoticeMessagesProps {
+  /**
+   * The error message to display, potentially containing multiple errors
+   */
   errorMessage: string;
+  /**
+   * The separator used to split the error message into individual errors
+   */
+  separator: string;
+  /**
+   * The visual variant of the notice (e.g., 'error', 'warning', 'success')
+   */
   variant: NoticeVariant;
 }
 
 export const AlertListNoticeMessages = (
   props: AlertListNoticeMessagesProps
 ) => {
-  const { errorMessage, variant } = props;
-  if (!errorMessage.length) {
-    return null;
-  }
-  const errorList = errorMessage.split('|');
+  const { errorMessage, separator, variant } = props;
+  const errorList = errorMessage.split(separator);
 
   if (errorList.length > 1) {
     return (
@@ -38,7 +45,7 @@ export const AlertListNoticeMessages = (
       <AlertNoticeErrorState variant={variant}>
         <Typography
           sx={(theme) => ({
-            fontFamily: theme.font.bold,
+            fontFamily: theme.tokens.typography.Body.Bold,
           })}
           data-testid="alert_message_notice"
           variant="body2"
@@ -50,15 +57,18 @@ export const AlertListNoticeMessages = (
   }
 };
 
+/**
+ * Wrapper component for displaying error messages within a Notice component
+ */
 const AlertNoticeErrorState = ({
   children,
-  variant,
+  variant
 }: {
   children: React.ReactNode;
   variant: NoticeVariant;
-}) => {
+}): JSX.Element => {
   return (
-    <Notice spacingBottom={0} spacingTop={4} variant={variant}>
+    <Notice variant={variant}>
       {children}
     </Notice>
   );

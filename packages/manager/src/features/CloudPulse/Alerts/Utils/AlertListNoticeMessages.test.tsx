@@ -9,7 +9,11 @@ describe('AlertListNoticeMessages Component', () => {
     const errorMessage = 'This is a single error message';
 
     const { getByTestId } = renderWithTheme(
-      <AlertListNoticeMessages errorMessage={errorMessage} variant="error" />
+      <AlertListNoticeMessages
+        errorMessage={errorMessage}
+        separator={'|'}
+        variant="error"
+      />
     );
 
     const noticeElement = getByTestId('alert_message_notice');
@@ -22,7 +26,11 @@ describe('AlertListNoticeMessages Component', () => {
     const errorMessage = 'Error 1|Error 2|Error 3';
 
     const { getAllByTestId } = renderWithTheme(
-      <AlertListNoticeMessages errorMessage={errorMessage} variant="error" />
+      <AlertListNoticeMessages
+        errorMessage={errorMessage}
+        separator={'|'}
+        variant="error"
+      />
     );
 
     const listItems = getAllByTestId('alert_notice_message_list');
@@ -36,11 +44,15 @@ describe('AlertListNoticeMessages Component', () => {
   it('should not render any message when errorMessage is empty', () => {
     const errorMessage = '';
 
-    const { queryByTestId } = renderWithTheme(
-      <AlertListNoticeMessages errorMessage={errorMessage} variant="error" />
+    const { queryAllByTestId, queryByTestId } = renderWithTheme(
+      <AlertListNoticeMessages
+        errorMessage={errorMessage}
+        separator={''}
+        variant="error"
+      />
     );
 
-    expect(queryByTestId('alert_message_notice')).toBeNull();
-    expect(queryByTestId('alert_notice_message_list')).toBeNull();
+    expect(queryByTestId('alert_message_notice')).toHaveTextContent('');
+    expect(queryAllByTestId('alert_notice_message_list').length).toBe(0);
   });
 });
