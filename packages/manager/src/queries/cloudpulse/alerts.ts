@@ -86,46 +86,72 @@ export const useEditAlertDefinition = () => {
 
 export const useAddEntityToAlert = () => {
   const queryClient = useQueryClient();
+
+  // Todo: Will update the type of api response once it is finalized
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
-      const { alertId, entityId, serviceType } = payload;
+      const { alert, entityId } = payload;
+      const { id: alertId, service_type: serviceType } = alert;
       return addEntityToAlert(serviceType, entityId, {
         'alert-definition-id': alertId,
       });
     },
-    onSuccess(_data, variables, _context) {
-      const { alertId, serviceType } = variables;
-      queryClient.removeQueries({
-        queryKey: queryFactory.alerts._ctx.all().queryKey,
-      });
 
-      queryClient.removeQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+    onSuccess(_data, variable) {
+      const { alert, entityId } = variable;
+      const { id: alertId, service_type: serviceType } = alert;
+
+      alert.entity_ids.push(entityId);
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
           String(alertId)
         ).queryKey,
+        alert
+      );
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
       });
     },
   });
 };
 export const useRemoveEntityFromAlert = () => {
   const queryClient = useQueryClient();
+
+  // Todo: Will update the type of api response once it is finalized
   return useMutation<{}, APIError[], EntityAlertUpdatePayload>({
     mutationFn: (payload: EntityAlertUpdatePayload) => {
-      const { alertId, entityId, serviceType } = payload;
+      const { alert, entityId } = payload;
+      const { id: alertId, service_type: serviceType } = alert;
       return deleteEntityFromAlert(serviceType, entityId, alertId);
     },
-    onSuccess(_data, variables, _context) {
-      const { alertId, serviceType } = variables;
-      queryClient.removeQueries({
-        queryKey: queryFactory.alerts._ctx.all().queryKey,
-      });
+    onSuccess(_data, variable) {
+      const { alert, entityId } = variable;
+      const { id: alertId, service_type: serviceType } = alert;
 
-      queryClient.removeQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+      const index = alert.entity_ids.indexOf(entityId);
+      if (index > -1) {
+        alert.entity_ids.splice(index, 1);
+      }
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
           String(alertId)
         ).queryKey,
+        alert
+      );
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
+          .queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
       });
     },
   });

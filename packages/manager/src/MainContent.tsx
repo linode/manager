@@ -1,3 +1,9 @@
+import {
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+  useProfile,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -24,12 +30,6 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import {
-  useMutatePreferences,
-  usePreferences,
-  useAccountSettings,
-  useProfile,
-} from '@linode/queries';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
@@ -130,9 +130,6 @@ const Profile = React.lazy(() =>
 );
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
-);
-const StackScripts = React.lazy(
-  () => import('src/features/StackScripts/StackScripts')
 );
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
@@ -373,10 +370,6 @@ export const MainContent = () => {
                               path="/nodebalancers"
                             />
                             <Route component={Managed} path="/managed" />
-                            <Route
-                              component={StackScripts}
-                              path="/stackscripts"
-                            />
                             <Route
                               component={ObjectStorage}
                               path="/object-storage"

@@ -205,7 +205,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     cy.findByText('Definitions')
       .should('be.visible')
       .and('have.attr', 'href', '/alerts/definitions');
-
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers

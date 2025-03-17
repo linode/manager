@@ -330,7 +330,6 @@ export interface EditAlertPayloadWithService
 export type AlertStatusUpdateType = 'Enable' | 'Disable';
 
 export interface EntityAlertUpdatePayload {
-  serviceType: string;
   entityId: string;
-  alertId: number;
+  alert: Alert;
 }

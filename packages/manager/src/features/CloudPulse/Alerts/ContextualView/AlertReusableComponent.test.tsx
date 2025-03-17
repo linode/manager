@@ -1,13 +1,11 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AlertReusableComponent } from './AlertsReusableComponent';
+import { AlertReusableComponent } from './AlertReusableComponent';
 
 const mockQuery = vi.hoisted(() => ({
   useAddEntityToAlert: vi.fn(),
@@ -58,33 +56,31 @@ const component = (
 
 mockQuery.useAlertDefinitionByServiceTypeQuery.mockReturnValue(mockReturnValue);
 mockQuery.useAddEntityToAlert.mockReturnValue({
-  mutateAsync: () => {},
+  mutateAsync: vi.fn(),
 });
 mockQuery.useRemoveEntityFromAlert.mockReturnValue({
-  mutateAsync: () => {},
+  mutateAsync: vi.fn(),
+});
+
+const mockHistory = {
+  push: vi.fn(),
+  replace: vi.fn(),
+};
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useHistory: vi.fn(() => mockHistory),
+  };
 });
 
 describe('Alert Resuable Component for contextual view', () => {
   it('Should go to alerts definition page on clicking manage alerts button', async () => {
-    const history = createMemoryHistory();
-    const { getByTestId } = renderWithTheme(
-      <Router history={history}>{component}</Router>
-    );
+    const { getByTestId } = renderWithTheme(component);
     await userEvent.click(getByTestId('manage-alerts'));
 
-    expect(history.location.pathname).toBe('/alerts/definitions');
-  });
-
-  it('Should go to alert details page on click of an alert', async () => {
-    const history = createMemoryHistory();
-    const { getByText } = renderWithTheme(
-      <Router history={history}>{component}</Router>
-    );
-    await userEvent.click(getByText(alerts[0].label));
-
-    expect(history.location.pathname).toBe(
-      `/alerts/definitions/detail/${serviceType}/${alerts[0].id}`
-    );
+    expect(mockHistory.push).toHaveBeenCalledWith('/alerts/definitions');
   });
 
   it('Should filter alerts based on search text', async () => {

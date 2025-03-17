@@ -43,12 +43,16 @@ describe('Alerts Listing Page - Error Handling', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    mockUpdateAlertDefinitionsError('dbaas', 1, 'An error occurred while disabling the alert').as(
-      'getFirstAlertDefinitions'
-    );
-    mockUpdateAlertDefinitionsError('dbaas', 2, 'An error occurred while enabling the alert').as(
-      'getSecondAlertDefinitions'
-    );
+    mockUpdateAlertDefinitionsError(
+      'dbaas',
+      1,
+      'An error occurred while disabling the alert'
+    ).as('getFirstAlertDefinitions');
+    mockUpdateAlertDefinitionsError(
+      'dbaas',
+      2,
+      'An error occurred while enabling the alert'
+    ).as('getSecondAlertDefinitions');
     cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
@@ -68,7 +72,7 @@ describe('Alerts Listing Page - Error Handling', () => {
     const toggleAlertStatus = (
       alertName: string,
       action: 'Disable' | 'Enable',
-      alias: string,
+      alias: string
     ) => {
       cy.findByText(alertName)
         .should('be.visible')
@@ -87,16 +91,10 @@ describe('Alerts Listing Page - Error Handling', () => {
     };
     // Disable "Alert-1"
     searchAlert('Alert-1');
-    toggleAlertStatus(
-      'Alert-1',
-      'Disable',
-      '@getFirstAlertDefinitions')
+    toggleAlertStatus('Alert-1', 'Disable', '@getFirstAlertDefinitions');
 
     // Enable "Alert-2"
     searchAlert('Alert-2');
-    toggleAlertStatus(
-      'Alert-2',
-      'Enable',
-      '@getSecondAlertDefinitions');
+    toggleAlertStatus('Alert-2', 'Enable', '@getSecondAlertDefinitions');
   });
 });

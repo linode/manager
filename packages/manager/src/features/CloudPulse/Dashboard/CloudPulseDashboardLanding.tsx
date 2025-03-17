@@ -2,6 +2,7 @@ import { Box, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -112,6 +113,7 @@ export const CloudPulseDashboardLanding = () => {
           timeDuration={timeDuration}
         />
       </Grid>
+      <Redirect from="*" to="/metrics" />
     </React.Suspense>
   );
 };
