@@ -1,8 +1,4 @@
-import {
-  useLinodeQuery,
-  useSubnetQuery,
-  useSubnetsQuery,
-} from '@linode/queries';
+import { useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
@@ -21,7 +17,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePagination } from 'src/hooks/usePagination';
 
@@ -65,6 +60,7 @@ export const VPCSubnetsTable = (props: Props) => {
     Linode | undefined
   >();
   const pagination = usePagination(1, preferenceKey);
+  console.log(pagination.pageSize)
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -171,19 +167,53 @@ export const VPCSubnetsTable = (props: Props) => {
     });
   };
 
-  const handlePowerActionsLinode = (linode: Linode, action: Action) => {
+  const handlePowerActionsLinode = (
+    linode: Linode,
+    action: Action,
+    subnet?: Subnet
+  ) => {
     setLinodePowerAction(action);
     setSelectedLinode(linode);
+    setSelectedSubnet(subnet);
     navigate({
       params: {
         linodeAction: 'powerAction',
         linodeId: linode.id,
-        subnetId: selectedSubnet?.id ?? -1,
+        subnetId: subnet?.id ?? selectedSubnet?.id ?? -1,
         vpcId,
       },
       to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
     });
   };
+
+  // If the user initiates a history -/+ to delete a subnet and the subnet is not found,
+  // push navigation to the vpc's detail page
+  React.useEffect(() => {
+    if (!selectedSubnet && params.subnetAction === 'delete') {
+      navigate({
+        params: { vpcId },
+        to: '/vpcs/$vpcId',
+      });
+    }
+  }, [selectedSubnet, params.subnetAction, vpcId, navigate]);
+
+  // If the user initiates a history -/+ to complete a linode action and the linode
+  // is no longer assigned to a subnet, push navigation to the vpc's detail page
+  React.useEffect(() => {
+    if (params.linodeAction && !selectedLinode) {
+      navigate({
+        params: { vpcId },
+        to: '/vpcs/$vpcId',
+      });
+    }
+  }, [
+    selectedSubnet,
+    params.subnetAction,
+    vpcId,
+    navigate,
+    params.linodeAction,
+    selectedLinode,
+  ]);
 
   // Ensure that the selected subnet passed to the drawer is up to date
   React.useEffect(() => {

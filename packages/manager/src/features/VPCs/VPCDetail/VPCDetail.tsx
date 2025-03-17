@@ -52,7 +52,7 @@ const VPCDetail = () => {
   const handleEditVPC = (vpc: VPC) => {
     navigate({
       params: { action: 'edit', vpcId: vpc.id },
-      to: '/vpcs/$vpcId/details/$action'
+      to: '/vpcs/$vpcId/details/$action',
     });
   };
 

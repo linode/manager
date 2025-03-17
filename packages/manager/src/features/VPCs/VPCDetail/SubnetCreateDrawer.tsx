@@ -61,7 +61,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     setError,
     watch,
   } = useForm<CreateSubnetPayload>({
-    defaultValues: {
+    values: {
       ipv4: recommendedIPv4,
       label: '',
     },
