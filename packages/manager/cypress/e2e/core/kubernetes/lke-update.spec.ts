@@ -2964,7 +2964,7 @@ describe('LKE ACL updates', () => {
       cy.contains(mockErrorMessage).should('be.visible');
     });
 
-    it.only('can handle validation for an enterprise cluster', () => {
+    it('can handle validation for an enterprise cluster', () => {
       const mockEnterpriseCluster = kubernetesClusterFactory.build({
         tier: 'enterprise',
       });
