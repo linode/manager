@@ -85,9 +85,11 @@ export interface NodeBalancerConfigurationsBaseProps {
   nodeBalancerRegion: string;
 }
 
-interface MatchProps {
-  configId?: string;
-  nodeBalancerId?: string;
+interface Params {
+  params: {
+    configId?: string;
+    id: string;
+  };
 }
 
 interface PreloadedProps {
@@ -120,7 +122,7 @@ interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
 
 interface NodeBalancerConfigurationsProps
   extends NodeBalancerConfigurationsBaseProps,
-    MatchProps,
+    Params,
     PreloadedProps,
     WithQueryClientProps {}
 
@@ -265,7 +267,7 @@ class NodeBalancerConfigurations extends React.Component<
       .join(',');
 
   createNode = (configIdx: number, nodeIdx: number) => {
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
@@ -323,7 +325,7 @@ class NodeBalancerConfigurations extends React.Component<
       },
     });
 
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
 
     if (!nodeBalancerId) {
       return;
@@ -366,7 +368,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   deleteNode = (configIdx: number, nodeIdx: number) => {
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
 
     if (!nodeBalancerId) {
       return;
@@ -476,7 +478,7 @@ class NodeBalancerConfigurations extends React.Component<
 
   isNodeBalancerReadOnly = () => {
     const { grants } = this.props;
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
     return Boolean(
       grants?.nodebalancer?.some(
         (grant) =>
@@ -564,7 +566,7 @@ class NodeBalancerConfigurations extends React.Component<
     const lensTo = lensFrom(['configs', idx]);
 
     // Check whether config is expended based on the URL
-    const expandedConfigId = this.props.configId;
+    const expandedConfigId = this.props.params.configId;
     const isExpanded = expandedConfigId
       ? parseInt(expandedConfigId, 10) === config.id
       : false;
@@ -719,7 +721,7 @@ class NodeBalancerConfigurations extends React.Component<
      * subsequent saves.
      */
 
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
 
     if (!nodeBalancerId) {
       return;
@@ -820,7 +822,7 @@ class NodeBalancerConfigurations extends React.Component<
     configPayload: NodeBalancerConfigFieldsWithStatus
   ) => {
     /* Update a config and its nodes simultaneously */
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
 
     if (!nodeBalancerId) {
       return;
@@ -998,7 +1000,7 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   updateNode = (configIdx: number, nodeIdx: number) => {
-    const { nodeBalancerId } = this.props;
+    const { id: nodeBalancerId } = this.props.params;
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
@@ -1125,7 +1127,7 @@ class NodeBalancerConfigurations extends React.Component<
 
 const preloaded = PromiseLoader<NodeBalancerConfigurationsProps>({
   configs: (props) => {
-    const { nodeBalancerId } = props;
+    const { id: nodeBalancerId } = props.params;
     return getConfigsWithNodes(+nodeBalancerId!);
   },
 });

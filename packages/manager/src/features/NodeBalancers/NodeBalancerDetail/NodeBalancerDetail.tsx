@@ -161,8 +161,10 @@ const NodeBalancerConfigurationWrapper = (
   }
 
   const matchProps = {
-    configId,
-    nodeBalancerId,
+    params: {
+      configId,
+      id: nodeBalancerId,
+    },
   };
 
   return <NodeBalancerConfigurations {...props} {...matchProps} />;
