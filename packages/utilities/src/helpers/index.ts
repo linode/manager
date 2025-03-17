@@ -20,7 +20,6 @@ export * from './isNumber';
 export * from './link';
 export * from './manuallySetVPCConfigInterfacesToActive';
 export * from './metadata';
-export * from './metadata.test';
 export * from './minute-conversion';
 export * from './mockLocalStorage';
 export * from './nullOrUndefined';
