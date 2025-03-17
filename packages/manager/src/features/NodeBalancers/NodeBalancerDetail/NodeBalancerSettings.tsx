@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useParams } from '@tanstack/react-router';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -22,6 +22,10 @@ import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const match = useMatch({
+    strict: false,
+  });
   const { id } = useParams({
     strict: false,
   });
@@ -44,10 +48,6 @@ export const NodeBalancerSettings = () => {
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
   } = useNodebalancerUpdateMutation(Number(id));
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
@@ -147,17 +147,22 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
+          onClick={() =>
+            navigate({
+              params: { id: String(id) },
+              to: '/nodebalancers/$id/settings/delete',
+            })
+          }
           buttonType="primary"
           data-testid="delete-nodebalancer"
           disabled={isNodeBalancerReadOnly}
-          onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
-        open={isDeleteDialogOpen}
+        open={match.routeId === '/nodebalancers/$id/settings/delete'}
         selectedNodeBalancer={selectedNodeBalancer}
       />
     </div>

@@ -10,6 +10,7 @@ import { NodeBalancerSettings } from './NodeBalancerSettings';
 vi.mock('src/hooks/useIsResourceRestricted');
 
 const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn(() => ({})),
   useNavigate: vi.fn(() => vi.fn()),
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
@@ -29,6 +30,7 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useMatch: queryMocks.useMatch,
     useNavigate: queryMocks.useNavigate,
     useParams: queryMocks.useParams,
   };

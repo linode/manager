@@ -18,6 +18,7 @@ const preference: ManagerPreferences['type_to_confirm'] = true;
 
 const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn(() => ({})),
   useNavigate: vi.fn(() => navigate),
   usePreferences: vi.fn().mockReturnValue({}),
 }));
@@ -34,6 +35,7 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useMatch: queryMocks.useMatch,
     useNavigate: queryMocks.useNavigate,
   };
 });

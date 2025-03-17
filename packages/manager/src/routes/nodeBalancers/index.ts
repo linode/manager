@@ -68,6 +68,27 @@ const nodeBalancerDetailSettingsRoute = createRoute({
   import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
+const nodeBalancerDetailSettingsDeleteRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/settings/delete',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
+const nodeBalancerDetailSettingsAddFirewallRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/settings/add-firewall',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
+const nodeBalancerDetailSettingsUnassignFirewallRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/settings/unassign-firewall/$firewallId',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
 const nodeBalancerDeleteRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/delete',
@@ -85,7 +106,11 @@ export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
     nodeBalancerDetailConfigurationsRoute.addChildren([
       nodeBalancerDetailConfigurationRoute,
     ]),
-    nodeBalancerDetailSettingsRoute,
+    nodeBalancerDetailSettingsRoute.addChildren([
+      nodeBalancerDetailSettingsDeleteRoute,
+      nodeBalancerDetailSettingsAddFirewallRoute,
+      nodeBalancerDetailSettingsUnassignFirewallRoute,
+    ]),
   ]),
   nodeBalancerDeleteRoute,
 ]);

@@ -1,6 +1,6 @@
 import { useNodebalancerDeleteMutation } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
@@ -19,6 +19,9 @@ export const NodeBalancerDeleteDialog = ({
   selectedNodeBalancer,
 }: Props) => {
   const navigate = useNavigate();
+  const match = useMatch({
+    strict: false,
+  });
   const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
     selectedNodeBalancer?.id ?? -1
   );
@@ -38,12 +41,20 @@ export const NodeBalancerDeleteDialog = ({
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
       }}
+      onClose={
+        match.routeId === '/nodebalancers/$id/settings/delete'
+          ? () =>
+              navigate({
+                params: { id: String(selectedNodeBalancer?.id) },
+                to: '/nodebalancers/$id/settings',
+              })
+          : () => navigate({ to: '/nodebalancers' })
+      }
       errors={error ?? undefined}
       expand
       label={'NodeBalancer Label'}
       loading={isPending || isFetching}
       onClick={onDelete}
-      onClose={() => navigate({ to: '/nodebalancers' })}
       open={open}
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}
