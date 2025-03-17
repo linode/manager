@@ -13,9 +13,9 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Link } from 'src/components/Link';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';

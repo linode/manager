@@ -46,7 +46,7 @@
     "@tanstack/react-router": "^1.111.11",
     "@xterm/xterm": "^5.5.0",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.7.4",
+    "axios": "~1.8.3",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",

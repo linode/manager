@@ -17,6 +17,7 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -57,6 +58,11 @@ export interface AlertResourcesProp {
   alertType: AlertDefinitionType;
 
   /**
+   * The error text that needs to displayed incase needed
+   */
+  errorText?: string;
+
+  /**
    * Callback for publishing the selected resources
    */
   handleResourcesSelection?: (resources: string[]) => void;
@@ -72,6 +78,11 @@ export interface AlertResourcesProp {
   isSelectionsNeeded?: boolean;
 
   /**
+   * The maximum number of elements that can be selected
+   */
+  maxSelectionCount?: number;
+
+  /**
    * The element until which we need to scroll on pagination and order change
    */
   scrollElement?: HTMLDivElement | null;
@@ -82,7 +93,7 @@ export interface AlertResourcesProp {
   serviceType?: AlertServiceType;
 }
 
-export type SelectUnselectAll = 'Select All' | 'Unselect All';
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -90,9 +101,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     alertType,
+    errorText,
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    maxSelectionCount,
     scrollElement,
     serviceType,
   } = props;
@@ -267,15 +280,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: SelectUnselectAll) => {
+    (action: SelectDeselectAll) => {
       if (!resources) {
         return;
       }
 
       let currentSelections: string[] = [];
 
-      if (action === 'Unselect All') {
-        // Unselect all
+      if (action === 'Deselect All') {
+        // Deselect all
         setSelectedResources([]);
       } else {
         // Select all
@@ -309,14 +322,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
-          icon={EntityIcon}
-          subtitle="Once you assign the resources, they will show up here."
-          title="No resources associated with this alert definition."
           sx={{
             h2: {
               fontSize: '16px',
             },
           }}
+          icon={EntityIcon}
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
         />
       </Stack>
     );
@@ -341,14 +354,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       )}
       <Grid container spacing={2}>
         <Grid
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item
           rowSpacing={3}
           xs={12}
-          sx={{
-            alignItems: 'center',
-          }}
         >
           <Grid item md={3} xs={12}>
             <DebouncedSearchTextField
@@ -400,6 +413,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               value="Show Selected"
             />
           </Grid>
+        )}
+        {errorText?.length && (
+          <AlertsNoticeMessage text={errorText} variant="error" />
+        )}
+        {maxSelectionCount !== undefined && (
+          <AlertsNoticeMessage
+            text={`You can select up to ${maxSelectionCount} resources.`}
+            variant="warning"
+          />
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&

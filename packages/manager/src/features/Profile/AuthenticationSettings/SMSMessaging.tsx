@@ -1,5 +1,12 @@
-import { useSMSOptOutMutation, useProfile } from '@linode/queries';
-import { ActionsPanel, Box, Button, Notice, Typography } from '@linode/ui';
+import { useProfile, useSMSOptOutMutation } from '@linode/queries';
+import {
+  ActionsPanel,
+  Box,
+  Button,
+  Notice,
+  Typography,
+  omittedProps,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -126,6 +133,7 @@ const StyledCopy = styled(Typography, {
 
 const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
+  shouldForwardProp: omittedProps(['hasVerifiedPhoneNumber']),
 })<{ hasVerifiedPhoneNumber: boolean }>(
   ({ hasVerifiedPhoneNumber, theme }) => ({
     borderLeft: hasVerifiedPhoneNumber

@@ -4,9 +4,9 @@ import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
