@@ -91,7 +91,7 @@ export interface SelectProps<T extends { label: string }>
   listItemProps?: (
     value: T
   ) => {
-    dataAttributes?: Record<string, string | boolean | T>;
+    dataAttributes?: Record<string, T | boolean | string>;
   };
   /**
    * The callback function that is invoked when the value changes.
@@ -132,8 +132,8 @@ export const Select = <T extends SelectOption = SelectOption>(
     creatable = false,
     hideLabel = false,
     label,
-    loading = false,
     listItemProps,
+    loading = false,
     noOptionsText = 'No options available',
     onChange,
     options,
@@ -191,7 +191,7 @@ export const Select = <T extends SelectOption = SelectOption>(
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress size="sm" />
+                    <CircleProgress noPadding size="xs" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}

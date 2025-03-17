@@ -423,6 +423,10 @@ export const lightTheme: ThemeOptions = {
           padding: 0,
         },
         root: {
+          // Spacing for clear and popup icons (circular loading)
+          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot': {
+            paddingRight: Spacing.S48,
+          },
           maxWidth: inputMaxWidth,
         },
         tag: {
@@ -863,6 +867,8 @@ export const lightTheme: ThemeOptions = {
     MuiInputAdornment: {
       styleOverrides: {
         positionEnd: {
+          display: 'flex',
+          gap: Spacing.S4,
           marginLeft: Spacing.S8,
           svg: {
             fontSize: Font.FontSize.L,

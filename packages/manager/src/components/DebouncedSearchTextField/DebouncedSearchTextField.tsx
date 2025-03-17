@@ -98,9 +98,8 @@ export const DebouncedSearchTextField = React.memo(
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                {isSearching ? (
-                  <CircleProgress size="xs" />
-                ) : clearable && textFieldValue ? (
+                {isSearching && <CircleProgress noPadding size="xs" />}
+                {clearable && Boolean(textFieldValue) && (
                   <IconButton
                     onClick={() => {
                       setTextFieldValue('');
@@ -114,7 +113,7 @@ export const DebouncedSearchTextField = React.memo(
                   >
                     <Close />
                   </IconButton>
-                ) : null}
+                )}
               </InputAdornment>
             ),
             startAdornment: (

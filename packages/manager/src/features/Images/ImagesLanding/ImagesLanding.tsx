@@ -452,8 +452,11 @@ export const ImagesLanding = () => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
+              {isFetching && <CircleProgress noPadding size="xs" />}
               <IconButton
+                sx={{
+                  padding: 0,
+                }}
                 aria-label="Clear"
                 data-testid="clear-images-search"
                 onClick={resetSearch}
