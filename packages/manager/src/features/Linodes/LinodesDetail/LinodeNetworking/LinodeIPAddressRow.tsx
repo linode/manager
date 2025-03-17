@@ -1,8 +1,8 @@
 import {
-  usePreferences,
+  useAllIPsQuery,
   useLinodeIPsQuery,
   useLinodeQuery,
-  useAllIPsQuery,
+  usePreferences,
 } from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -13,7 +13,9 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { ipTypeToText } from './constants';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
 import type { IPAddress, IPRange } from '@linode/api-v4';
@@ -53,6 +55,8 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     type,
   } = props;
 
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const { data: ips } = useLinodeIPsQuery(linodeId);
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -78,7 +82,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
-        {type}
+        {isLinodeInterfacesEnabled ? ipTypeToText[type] : type}
       </TableCell>
       <TableCell>{gateway}</TableCell>
       <TableCell>{subnetMask}</TableCell>
