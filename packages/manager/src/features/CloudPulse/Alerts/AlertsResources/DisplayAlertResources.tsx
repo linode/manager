@@ -1,7 +1,6 @@
 import { Box, Checkbox, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
-import EntityIcon from 'src/assets/icons/disabled.svg';
 import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -236,26 +235,32 @@ export const DisplayAlertResources = React.memo(
                     return (
                       <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                         {isSelectionsNeeded && (
-                          <TableCell>
+                          <TableCell
+                            sx={{
+                              cursor:
+                                !checked &&
+                                selectionsRemaining !== undefined &&
+                                selectionsRemaining === 0
+                                  ? 'not-allowed'
+                                  : 'auto',
+                            }}
+                          >
                             <Tooltip
                               title={
                                 !checked &&
                                 selectionsRemaining !== undefined &&
                                 selectionsRemaining === 0 &&
                                 maxSelectionCount !== undefined ? (
-                                  <Box
-                                    alignItems="center"
-                                    display="flex"
-                                    flexDirection="row"
-                                    columnGap={1}
+                                  <Typography
+                                    sx={{
+                                      fontSize: '12px',
+                                    }}
                                   >
-                                    <EntityIcon />
-                                    <Typography>
-                                      {`You can select upto ${maxSelectionCount} resources.`}
-                                    </Typography>
-                                  </Box>
+                                    {`You can select upto ${maxSelectionCount} resources.`}
+                                  </Typography>
                                 ) : undefined
                               }
+                              placement="right"
                             >
                               <Box>
                                 <Checkbox
