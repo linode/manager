@@ -81,7 +81,10 @@ export const FirewallDetail = () => {
       nodebalancerCount: 0,
       seenLinodeIdsForInterfaces: new Set<string>(),
     }
-  ) || { linodeCount: 0, nodebalancerCount: 0 };
+  ) || {
+    linodeCount: 0,
+    nodebalancerCount: 0,
+  };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {

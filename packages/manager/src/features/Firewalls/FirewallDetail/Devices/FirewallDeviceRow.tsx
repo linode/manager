@@ -1,4 +1,3 @@
-import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 
@@ -24,18 +23,13 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   // we need the Linode ID to create a link
   const entityId = isInterfaceDevice ? Number(url.split('/')[4]) : id;
 
-  // Since we're not given the Linode's label for a Linode Interface device, we must fetch it
-  const { data: linode, isLoading } = useLinodeQuery(
-    entityId,
-    isInterfaceDevice
-  );
-
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
-        {isLoading ? (
+        {/* invariant: due to the processing we do in FirewallDeviceTable, a firewall device entity's label will not stay null */}
+        {isInterfaceDevice && !label ? (
           <CircleProgress size="xs" />
         ) : (
           // @TODO Linode Interfaces - perhaps link to the interface's details later
@@ -45,7 +39,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
             }s/${entityId}/networking`}
             tabIndex={0}
           >
-            {label ?? linode?.label}
+            {label}
           </Link>
         )}
       </TableCell>
