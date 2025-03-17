@@ -20,9 +20,8 @@ import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
-
 import type { SelectOption } from '@linode/ui';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   formControlDropdown: {

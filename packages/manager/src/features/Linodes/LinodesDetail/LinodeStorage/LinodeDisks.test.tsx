@@ -1,9 +1,9 @@
+import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 
 import { linodeDiskFactory } from 'src/factories';
-import { linodeFactory } from '@linode/utilities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeDisks } from './LinodeDisks';

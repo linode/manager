@@ -17,8 +17,7 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomNumber } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
-import { chooseRegions } from 'support/util/regions';
+import { chooseRegions, extendRegion } from 'support/util/regions';
 
 import type { Linode, Region } from '@linode/api-v4';
 

@@ -11,8 +11,11 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
-import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
+import {
+  LinodeConfigDialog,
+  padList,
+  unrecommendedConfigNoticeSelector,
+} from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
 

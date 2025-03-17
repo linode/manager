@@ -1,8 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory } from '@linode/utilities';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';

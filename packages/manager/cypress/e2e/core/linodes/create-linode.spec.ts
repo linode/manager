@@ -11,8 +11,7 @@ import {
 import { authenticate } from 'support/api/authentication';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetUser } from 'support/intercepts/account';
+import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -24,8 +23,8 @@ import {
   mockGetLinodeTypes,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
-import { interceptGetProfile } from 'support/intercepts/profile';
 import {
+  interceptGetProfile,
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
@@ -36,8 +35,7 @@ import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-import { getRegionById } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 import {
   VLANFactory,

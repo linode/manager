@@ -1,5 +1,4 @@
-import { linodeFactory } from '@linode/utilities';
-import { configFactory } from '@linode/utilities';
+import { linodeFactory, configFactory } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { mswDB } from 'src/mocks/indexedDB';

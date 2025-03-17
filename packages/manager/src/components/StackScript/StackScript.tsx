@@ -1,3 +1,4 @@
+import { listToItemsByID } from '@linode/queries';
 import {
   Box,
   Button,
@@ -15,7 +16,6 @@ import { makeStyles } from 'tss-react/mui';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { listToItemsByID } from '@linode/queries';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';

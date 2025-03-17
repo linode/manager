@@ -14,8 +14,11 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomNumber, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-import { accountFactory, placementGroupFactory } from 'src/factories';
-import { regionFactory } from 'src/factories';
+import {
+  accountFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();

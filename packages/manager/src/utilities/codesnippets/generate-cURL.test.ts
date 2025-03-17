@@ -1,4 +1,5 @@
 import { createLinodeRequestFactory } from '@linode/utilities';
+
 import { generateCurlCommand } from './generate-cURL';
 
 const linodeRequest = createLinodeRequestFactory.build();

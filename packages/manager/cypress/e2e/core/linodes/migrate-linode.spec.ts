@@ -7,12 +7,12 @@ import {
   dcPricingNewPriceLabel,
 } from 'support/constants/dc-specific-pricing';
 import {
+  mockGetLinodeDetails,
   mockGetLinodeDisks,
+  mockGetLinodeType,
   mockGetLinodeVolumes,
   mockMigrateLinode,
 } from 'support/intercepts/linodes';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import { mockGetLinodeType } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { getRegionById } from 'support/util/regions';

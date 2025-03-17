@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory } from '@linode/utilities';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';

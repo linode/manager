@@ -1,3 +1,4 @@
+import { useAllFirewallDevicesQuery } from '@linode/queries';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,6 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
-import { useAllFirewallDevicesQuery } from '@linode/queries';
 
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 

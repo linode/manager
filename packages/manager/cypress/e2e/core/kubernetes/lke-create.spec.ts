@@ -42,16 +42,15 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
-import { lkeEnterpriseTypeFactory } from 'src/factories';
 import {
   accountFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
   regionFactory,

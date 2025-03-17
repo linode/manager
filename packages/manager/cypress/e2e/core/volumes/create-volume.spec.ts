@@ -6,8 +6,7 @@ import {
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetUser } from 'support/intercepts/account';
+import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,

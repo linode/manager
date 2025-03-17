@@ -33,8 +33,7 @@ import {
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { randomIp, randomLabel } from 'support/util/random';
-import { randomString } from 'support/util/random';
+import { randomIp, randomLabel, randomString } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 
 import {

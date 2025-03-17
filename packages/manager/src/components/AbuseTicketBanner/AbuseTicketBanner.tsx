@@ -1,3 +1,4 @@
+import { useNotificationsQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useNotificationsQuery } from '@linode/queries';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';

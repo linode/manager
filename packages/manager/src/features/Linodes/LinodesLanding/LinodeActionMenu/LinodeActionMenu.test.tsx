@@ -1,14 +1,16 @@
+import { linodeBackupsFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { linodeBackupsFactory } from '@linode/utilities';
 import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeActionMenu, LinodeActionMenuProps } from './LinodeActionMenu';
+import { LinodeActionMenu } from './LinodeActionMenu';
 import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
+
+import type { LinodeActionMenuProps } from './LinodeActionMenu';
 
 const props: LinodeActionMenuProps = {
   inListView: true,

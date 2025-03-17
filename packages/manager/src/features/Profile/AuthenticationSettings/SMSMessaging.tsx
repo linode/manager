@@ -1,3 +1,4 @@
+import { useSMSOptOutMutation, useProfile } from '@linode/queries';
 import { ActionsPanel, Box, Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -5,7 +6,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useSMSOptOutMutation, useProfile } from '@linode/queries';
 
 import { getFormattedNumber } from './PhoneVerification/helpers';
 

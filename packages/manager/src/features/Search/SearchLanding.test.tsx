@@ -1,10 +1,10 @@
+import { linodeTypeFactory } from '@linode/utilities';
 import { render } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
-import { linodeTypeFactory } from '@linode/utilities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';

@@ -3,8 +3,7 @@
  */
 
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { createLinodeRequestFactory } from '@linode/utilities';
-import { linodeFactory } from '@linode/utilities';
+import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
@@ -26,8 +25,12 @@ import { chooseRegion } from 'support/util/regions';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
-import type { EntityTransferStatus } from '@linode/api-v4';
+import type {
+  EntityTransfer,
+  EntityTransferStatus,
+  Linode,
+  Profile,
+} from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';

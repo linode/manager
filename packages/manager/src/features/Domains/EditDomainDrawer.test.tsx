@@ -1,4 +1,5 @@
 import { linodeFactory } from '@linode/utilities';
+
 import { generateDefaultDomainRecords } from './domainUtils';
 
 const testLinode = linodeFactory.build({

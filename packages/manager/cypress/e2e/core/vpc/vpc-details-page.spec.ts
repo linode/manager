@@ -18,8 +18,7 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 

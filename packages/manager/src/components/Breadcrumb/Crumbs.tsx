@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import {
   StyledDiv,
@@ -8,7 +8,9 @@ import {
 } from './Crumbs.styles';
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
+
 import type { EditableProps, LabelProps } from './types';
+import type { LinkProps } from 'react-router-dom';
 
 export interface CrumbOverridesProps {
   label?: string;

@@ -1,8 +1,7 @@
-import { Autocomplete, Box, SelectedIcon, Stack } from '@linode/ui';
-import React from 'react';
-
-import { linodeFactory } from '@linode/utilities';
 import { useInfiniteLinodesQuery, useRegionsQuery } from '@linode/queries';
+import { Autocomplete, Box, SelectedIcon, Stack } from '@linode/ui';
+import { linodeFactory } from '@linode/utilities';
+import React from 'react';
 
 import type { Filter } from '@linode/api-v4';
 import type { TextFieldProps } from '@linode/ui';
