@@ -1,3 +1,4 @@
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
@@ -10,6 +11,8 @@ import {
 } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
+
+const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
 
@@ -24,7 +27,14 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getAllByText } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCLanding />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     // Static text and table column headers
     getAllByText('Label');
@@ -41,7 +51,14 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCLanding />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     expect(
       getByText('Create a private and isolated network')

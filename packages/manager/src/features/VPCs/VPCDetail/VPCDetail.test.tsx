@@ -1,7 +1,8 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithThemeAndRouter,
@@ -14,7 +15,6 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  useVPCQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -30,6 +30,8 @@ vi.mock('@tanstack/react-router', async () => {
 
 beforeAll(() => mockMatchMedia());
 
+const loadingTestId = 'circle-progress';
+
 describe('VPC Detail Summary section', () => {
   beforeEach(() => {
     queryMocks.useLocation.mockReturnValue({
@@ -42,13 +44,20 @@ describe('VPC Detail Summary section', () => {
 
   it('should display number of subnets and linodes, region, id, creation and update dates', async () => {
     const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory1,
-    });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
+    );
 
-    const { getAllByText } = await renderWithThemeAndRouter(<VPCDetail />, {
-      initialRoute: '/vpcs/1',
-    });
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     getAllByText('Subnets');
     getAllByText('Linodes');
@@ -67,26 +76,44 @@ describe('VPC Detail Summary section', () => {
     getAllByText(vpcFactory1.updated);
   });
 
-  it.only('should display description if one is provided', async () => {
+  it('should display description if one is provided', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database.`,
     });
-    queryMocks.useVPCQuery.mockReturnValue({
-      ...vpcFactory1,
-    });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
+    );
 
-    const { getByText } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     getByText('Description');
     getByText(vpcFactory1.description);
   });
 
   it('should hide description if none is provided', async () => {
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory.build(),
-    });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory.build());
+      })
+    );
 
-    const { queryByText } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { queryByTestId, queryByText } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
@@ -95,11 +122,20 @@ describe('VPC Detail Summary section', () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver. VPC for webserver.`,
     });
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory1,
-    });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
+    );
 
-    const { getAllByRole } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getAllByRole, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     const readMoreButton = getAllByRole('button')[2];
     expect(readMoreButton.innerHTML).toBe('Read More');
@@ -113,13 +149,22 @@ describe('VPC Detail Summary section', () => {
       description: `workload VPC for LKE Enterprise Cluster lke1234567.`,
       label: 'lke1234567',
     });
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory1,
-    });
-
-    const { getByRole, getByText } = await renderWithThemeAndRouter(
-      <VPCDetail />
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
     );
+
+    const {
+      getByRole,
+      getByText,
+      queryByTestId,
+    } = await renderWithThemeAndRouter(<VPCDetail />);
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     expect(
       getByText(
