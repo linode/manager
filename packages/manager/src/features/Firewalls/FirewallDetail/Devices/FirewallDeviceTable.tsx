@@ -72,7 +72,7 @@ export const FirewallDeviceTable = React.memo(
     const { data: linodesWithInterfaces } = useAllLinodesQuery(
       {},
       filterForInterfaceDeviceLinodes,
-      linodeInterfaceDevices.length > 0
+      isLinodeInterfacesEnabled && linodeInterfaceDevices.length > 0
     );
 
     const updatedDevices = devices.map((device) => {
