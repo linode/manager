@@ -144,11 +144,11 @@ export const Region = React.memo(() => {
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
-        const defaultDiskEncryptionValue = region.capabilities.includes(
-          'Disk Encryption'
-        )
-          ? 'enabled'
-          : undefined;
+        const defaultDiskEncryptionValue =
+          region.capabilities.includes('Disk Encryption') ||
+          region.capabilities.includes('LA Disk Encryption')
+            ? 'enabled'
+            : undefined;
 
         setValue('disk_encryption', defaultDiskEncryptionValue);
       }
