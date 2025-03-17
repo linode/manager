@@ -590,13 +590,14 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: Color.Neutrals[40],
+          color: Checkbox.Empty.Default.Border,
           // '&[aria-disabled="true"]': {
           //   color: '#E5E5EA',
           //   '& svg': {
           //     border: '1px solid #C2C2CA'
           //   }
           // },
+          // ':indeterminate': { color: 'red !important' },
         },
       },
     },

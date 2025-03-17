@@ -9,6 +9,8 @@ const meta: Meta<typeof Checkbox> = {
   title: 'Foundations/Checkbox',
 };
 
+export default meta;
+
 type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
@@ -30,13 +32,6 @@ export const Default: Story = {
   render: (args) => <Checkbox {...args} />,
 };
 
-export const Checked: Story = {
-  args: {
-    checked: true,
-  },
-  render: (args) => <Checkbox {...args} />,
-};
-
 export const Unchecked: Story = {
   args: {
     checked: false,
@@ -44,31 +39,16 @@ export const Unchecked: Story = {
   render: (args) => <Checkbox {...args} />,
 };
 
+export const Checked: Story = {
+  args: {
+    checked: true,
+  },
+  render: (args) => <Checkbox {...args} />,
+};
+
 export const Indeterminate: Story = {
   args: {
     indeterminate: true,
-  },
-  render: (args) => <Checkbox {...args} />,
-};
-
-export const WithLabel: Story = {
-  args: {
-    text: 'This Checkbox has a label',
-  },
-  render: (args) => <Checkbox {...args} />,
-};
-
-export const WithTooltip: Story = {
-  args: {
-    toolTipText: 'This is the tooltip!',
-  },
-  render: (args) => <Checkbox {...args} />,
-};
-
-export const WithLabelAndTooltip: Story = {
-  args: {
-    text: 'This Checkbox has a tooltip',
-    toolTipText: 'This is the tooltip!',
   },
   render: (args) => <Checkbox {...args} />,
 };
@@ -127,4 +107,24 @@ export const IndeterminateReadOnly: Story = {
   },
 };
 
-export default meta;
+export const WithLabel: Story = {
+  args: {
+    text: 'This Checkbox has a label',
+  },
+  render: (args) => <Checkbox {...args} />,
+};
+
+export const WithTooltip: Story = {
+  args: {
+    toolTipText: 'This is the tooltip!',
+  },
+  render: (args) => <Checkbox {...args} />,
+};
+
+export const WithLabelAndTooltip: Story = {
+  args: {
+    text: 'This Checkbox has a tooltip',
+    toolTipText: 'This is the tooltip!',
+  },
+  render: (args) => <Checkbox {...args} />,
+};

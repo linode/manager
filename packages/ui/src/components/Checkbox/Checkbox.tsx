@@ -81,26 +81,49 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
     transition: theme.transitions.create(['fill']),
   },
   '&:hover': {
-    color: theme.palette.primary.main,
+    color: `${theme.tokens.checkbox.Empty.Hover.Border} !important`,
   },
-  color: theme.tokens.color.Neutrals[40],
+  color: theme.tokens.checkbox.Empty.Default.Border,
   transition: theme.transitions.create(['color']),
+  // Checked
   ...(props.checked && {
-    color: theme.palette.primary.main,
+    color: `${theme.tokens.checkbox.Checked.Default.Background} !important`,
   }),
+  // Indeterminate
+  ...(props.indeterminate && {
+    color: `${theme.tokens.checkbox.Indeterminated.Default.Background} !important`,
+  }),
+  // Unchecked & Disabled
   ...(props.disabled && {
-    '& .defaultFill': {
-      fill: `${theme.bg.main}`,
-      opacity: 0.5,
+    color: `${theme.tokens.checkbox.Empty.Disabled.Border} !important`,
+    '& svg': {
+      backgroundColor: theme.tokens.checkbox.Empty.Disabled.Background,
     },
-    color: `${theme.tokens.color.Neutrals[40]} !important`,
-    fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
   }),
+  // Checked & Disabled
+  ...(props.checked &&
+    props.disabled && {
+      color: `${theme.tokens.checkbox.Checked.Disabled.Background} !important`,
+    }),
+  // Indeterminate & Disabled
+  ...(props.indeterminate &&
+    props.disabled && {
+      color: `${theme.tokens.checkbox.Indeterminated.Disabled.Background} !important`,
+    }),
   // ...(props.readOnly && {
   //   color: 'red !important',
   //   pointerEvents: 'none',
   // }),
+  // '&.Mui-checked': {
+  //   color: 'green !important', // Change color when checked
+  // },
+  // '&.Mui-disabled': {
+  //   color: 'yellow', // Change color when disabled
+  // },
+  // '&.Mui-checked.Mui-disabled': {
+  //   color: 'darkgray', // Change color when checked and disabled
+  // },
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({
