@@ -72,7 +72,7 @@ describe('Alerts Listing Page - Error Handling', () => {
     const toggleAlertStatus = (
       alertName: string,
       action: 'Disable' | 'Enable',
-      alias: string,
+      alias: string
     ) => {
       cy.findByText(alertName)
         .should('be.visible')
