@@ -12,14 +12,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { getValidationSchema } from '../Utils/utils';
+import { getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { CreateAlertDefinitionFormSchema } from './schemas';
+import { createAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type {
@@ -74,15 +74,18 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () => history.push('/alerts/definitions');
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const createAlertSchema = CreateAlertDefinitionFormSchema as ObjectSchema<CreateAlertDefinitionForm>;
 
   // Default resolver
-  const [validationSchema, setValidationSchema] = React.useState(
-    getValidationSchema(
-      null,
-      [],
-      createAlertSchema
-    ) as ObjectSchema<CreateAlertDefinitionForm>
+  const [validationSchema, setValidationSchema] = React.useState<
+    ObjectSchema<CreateAlertDefinitionForm>
+  >(
+    getCreateSchemaWithEntityIdValidation(
+      {
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        serviceTypeObj: null,
+      },
+      createAlertDefinitionFormSchema
+    )
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -152,13 +155,15 @@ export const CreateAlertDefinition = () => {
 
   React.useEffect(() => {
     setValidationSchema(
-      getValidationSchema(
-        serviceTypeWatcher,
-        flags.aclpAlertServiceTypeConfig ?? [],
-        createAlertSchema
-      ) as ObjectSchema<CreateAlertDefinitionForm>
+      getCreateSchemaWithEntityIdValidation(
+        {
+          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+          serviceTypeObj: serviceTypeWatcher,
+        },
+        createAlertDefinitionFormSchema
+      )
     );
-  }, [createAlertSchema, flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
+  }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
   return (
     <React.Fragment>

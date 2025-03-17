@@ -1,8 +1,12 @@
-import { createAlertDefinitionSchema } from '@linode/validation';
-import { object, string } from 'yup';
+import { editAlertDefinitionSchema } from '@linode/validation';
+import { mixed, object, string } from 'yup';
 
-export const EditAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
+import type { AlertSeverityType } from '@linode/api-v4';
+
+export const editAlertDefinitionFormSchema = editAlertDefinitionSchema.concat(
   object({
+    serviceType: string().oneOf(['linode', 'dbaas']).optional(),
+    severity: mixed<AlertSeverityType>().optional(),
     status: string().oneOf(['enabled', 'disabled']).optional(),
   })
 );
