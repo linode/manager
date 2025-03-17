@@ -28,8 +28,8 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
-        {/* due to the processing we do in FirewallDeviceTable, a firewall device entity's label will not stay null. However,
-        for Linode Interface devices, this processing may take time, so we show a loading indicator first */}
+        {/* The only time a firewall device's label comes in as null is for Linode Interface devices. This label won't stay null - we do some
+        processing to give the interface device its associated Linode's label. However, processing may take time, so we show a loading indicator first */}
         {isInterfaceDevice && !label ? (
           <CircleProgress size="xs" />
         ) : (
