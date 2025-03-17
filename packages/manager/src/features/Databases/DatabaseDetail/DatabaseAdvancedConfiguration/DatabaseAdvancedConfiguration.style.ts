@@ -9,10 +9,7 @@ export const StyledConfigValue = styled(StyledValueGrid, {
 }));
 
 export const GroupHeader = styled('div')(({ theme }) => ({
-  background:
-    theme.palette.mode === 'dark'
-      ? theme.tokens.color.Neutrals[90]
-      : theme.tokens.color.Neutrals[5],
+  background: theme.tokens.background.Neutral,
   color:
     theme.palette.mode === 'dark'
       ? theme.tokens.color.Neutrals[5]

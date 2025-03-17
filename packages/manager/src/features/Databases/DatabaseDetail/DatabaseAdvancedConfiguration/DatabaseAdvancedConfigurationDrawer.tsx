@@ -100,7 +100,9 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       <Typography>
         Advanced parameters to configure your database cluster.
       </Typography>
-      <Link to="">Learn more.</Link>
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters">
+        Learn more.
+      </Link>
 
       <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
         <Typography>
