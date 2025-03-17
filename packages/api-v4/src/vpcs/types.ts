@@ -1,3 +1,12 @@
+interface VPCIPv6 {
+  range?: string[];
+}
+
+interface CreateVPCIPV6 extends VPCIPv6 {
+  // Omitted from VPC response, only permitted in requests
+  allocation_class?: string[]
+}
+
 export interface VPC {
   id: number;
   label: string;
@@ -6,12 +15,14 @@ export interface VPC {
   subnets: Subnet[];
   created: string;
   updated: string;
+  ipv6?: VPCIPv6[];
 }
 
 export interface CreateVPCPayload {
   label: string;
   description?: string;
   region: string;
+  ipv6?: CreateVPCIPV6[];
   subnets?: CreateSubnetPayload[];
 }
 
