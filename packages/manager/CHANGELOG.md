@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2025-03-11] - v1.138.0
+## [2025-03-17] - v1.138.0
 
 ### Added:
 
@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Allow Tags in Volume Create flow ([#11696](https://github.com/linode/manager/pull/11696))
 - Update copy for LKE ACL section ([#11746](https://github.com/linode/manager/pull/11746))
 - Update copy for LKE Recycle, Upgrade Version, and Delete Pool modals ([#11775](https://github.com/linode/manager/pull/11775))
+- Account for `LA Disk Encryption` region capability when checking if region supports Disk Encryption ([#11833](https://github.com/linode/manager/pull/11833))
+- Account for whether region supports LDE when determining tooltip display for unencrypted linodes & node pools ([#11833](https://github.com/linode/manager/pull/11833))
 
 ### Fixed:
 
@@ -93,12 +95,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve UX of CloudPulse Alerts create flow and resources section ([#11748](https://github.com/linode/manager/pull/11748))
 - Fix CloudPulse document titles with appropriate keywords (#11662)
 - Update LKE checkout bar & NodeBalancer details summary ([#11653](https://github.com/linode/manager/pull/11653))
+- 
 
 ## [2025-02-27] - v1.137.2
 
 ### Fixed:
 
-- Disk Encryption logic preventing Linode deployment in distributed regions ([#11760](https://github.com/linode/manager/pull/11760)
+- Disk Encryption logic preventing Linode deployment in distributed regions ([#11760](https://github.com/linode/manager/pull/11760))
 
 ## [2025-02-25] - v1.137.1
 
