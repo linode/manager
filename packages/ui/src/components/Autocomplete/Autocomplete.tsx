@@ -1,8 +1,8 @@
-import CloseIcon from '@mui/icons-material/Close';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
 import ChevronDownIcon from '../../assets/icons/chevron-down.svg';
+import CloseIcon from '../../assets/icons/close.svg';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { InputAdornment } from '../InputAdornment';
