@@ -49,6 +49,8 @@ const VPCDetail = () => {
   } = useVPCQuery(Number(vpcId) ?? -1, Boolean(vpcId));
   const { data: regions } = useRegionsQuery();
 
+  console.log('\n\n\nsend hlep pls', vpcId, vpc, params)
+
   const handleEditVPC = (vpc: VPC) => {
     navigate({
       params: { action: 'edit', vpcId: vpc.id },
