@@ -336,14 +336,14 @@ export const MainContent = () => {
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
                       pt: {
-                        md: 1.5,
+                        md: theme.spacing(3),
                         xs: theme.spacing(2),
                       },
                       px: {
-                        md: theme.spacing(2),
+                        md: theme.spacing(3),
                         xs: 0,
                       },
-                      py: 1.5,
+                      py: theme.spacing(3),
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
