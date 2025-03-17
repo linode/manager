@@ -53,25 +53,28 @@ export const getLegacyInterfaceFromLinodeInterface = (
 ): InterfacePayload => {
   const purpose = linodeInterface.purpose;
 
-  return {
-    ip_ranges:
-      purpose === 'vpc'
-        ? linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range)
-        : null,
-    ipam_address:
-      purpose === 'vlan' ? linodeInterface.vlan?.ipam_address : null,
-    ipv4:
-      purpose === 'vpc'
-        ? {
-            nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
-            vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
-          }
-        : undefined,
-    label: purpose === 'vlan' ? linodeInterface.vlan?.vlan_label : null,
-    purpose,
-    subnet_id: purpose === 'vpc' ? linodeInterface.vpc?.subnet_id : null,
-    vpc_id: purpose === 'vpc' ? linodeInterface.vpc?.vpc_id : null,
-  };
+  if (purpose === 'vlan') {
+    return {
+      ipam_address: linodeInterface.vlan?.ipam_address,
+      label: linodeInterface.vlan?.vlan_label,
+      purpose,
+    };
+  }
+
+  if (purpose === 'vpc') {
+    return {
+      ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
+      ipv4: {
+        nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
+        vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
+      },
+      purpose,
+      subnet_id: linodeInterface.vpc?.subnet_id,
+      vpc_id: linodeInterface.vpc?.vpc_id,
+    };
+  }
+
+  return { purpose: 'public' };
 };
 
 const legacyFieldToNewFieldMap = {
