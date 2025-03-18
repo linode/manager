@@ -1,4 +1,4 @@
-import { ActionsPanel, Box, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
 import {
   isNumber,
   plansNoticesUtils,
@@ -8,8 +8,8 @@ import {
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
+import { NotFound } from 'src/components/NotFound';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -162,6 +162,7 @@ export const AddNodePoolDrawer = (props: Props) => {
       PaperProps={{
         sx: { maxWidth: '790px !important' },
       }}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       ref={drawerRef}

@@ -143,4 +143,48 @@ describe('Alert Row', () => {
     await userEvent.click(ActionMenu);
     expect(getByText('Disable')).toBeInTheDocument();
   });
+
+  it("should disable 'Disable' action item in menu if alert has no enabled/disabled status", async () => {
+    const alert = alertFactory.build({ status: 'in progress', type: 'user' });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(ActionMenu);
+    expect(getByText('In Progress')).toBeInTheDocument();
+    expect(getByText('Disable').closest('li')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it("should disable 'Edit' action item in menu if alert has no enabled/disabled status", async () => {
+    const alert = alertFactory.build({ status: 'in progress', type: 'user' });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleEnableDisable: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(ActionMenu);
+    expect(getByText('In Progress')).toBeInTheDocument();
+    expect(getByText('Edit').closest('li')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
 });

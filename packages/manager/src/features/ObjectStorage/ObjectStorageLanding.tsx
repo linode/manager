@@ -1,5 +1,5 @@
 import { StyledLinkButton, Typography } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
+import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -18,7 +18,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
