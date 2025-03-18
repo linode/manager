@@ -58,11 +58,11 @@ const StyledBetaChip = styled(Chip, {
   background:
     color === 'primary'
       ? 'lch(77.7 28.7 275 / 0.12)'
-      : theme.tokens.background.Neutralsubtle,
+      : theme.tokens.color.Neutrals[60],
   color:
     color === 'primary'
       ? theme.tokens.color.Ultramarine[50]
-      : theme.tokens.color.Brand[60],
+      : theme.tokens.color.Neutrals.White,
 
   font: theme.font.bold,
   fontSize: '0.625rem',
