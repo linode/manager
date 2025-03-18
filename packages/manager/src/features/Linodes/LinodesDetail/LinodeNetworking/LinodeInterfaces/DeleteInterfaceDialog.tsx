@@ -26,7 +26,11 @@ export const DeleteInterfaceDialog = (props: Props) => {
     data: linodeInterface,
     error: interfaceError,
     isLoading,
-  } = useLinodeInterfaceQuery(linodeId, interfaceId ?? -1);
+  } = useLinodeInterfaceQuery(
+    linodeId,
+    interfaceId ?? -1,
+    open && Boolean(interfaceId)
+  );
 
   const { error, isPending, mutate } = useDeleteLinodeInterfaceMutation(
     linodeId,
@@ -63,7 +67,7 @@ export const DeleteInterfaceDialog = (props: Props) => {
       isFetching={isLoading}
       onClose={onClose}
       open={open}
-      title={`Delete ${type} Interface?`}
+      title={`Delete ${type} Interface ID #${interfaceId}?`}
     >
       Are you sure you want to delete this {type} interface?
     </ConfirmationDialog>
