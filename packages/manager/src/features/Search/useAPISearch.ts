@@ -1,5 +1,6 @@
-import { useInfiniteNodebalancersQuery } from '@linode/queries';
+import { useInfiniteVolumesQuery } from '@linode/queries';
 import { useFirewallsInfiniteQuery } from '@linode/queries';
+import { useInfiniteNodebalancersQuery } from '@linode/queries';
 import { useInfiniteLinodesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { useDebouncedValue } from '@linode/utilities';
@@ -9,7 +10,6 @@ import { useDomainsInfiniteQuery } from 'src/queries/domains';
 import { useImagesInfiniteQuery } from 'src/queries/images';
 import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
-import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   databaseToSearchableItem,
   domainToSearchableItem,

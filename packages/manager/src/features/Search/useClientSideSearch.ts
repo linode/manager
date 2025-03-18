@@ -1,5 +1,6 @@
-import { useAllNodeBalancersQuery } from '@linode/queries';
+import { useAllVolumesQuery } from '@linode/queries';
 import { useAllFirewallsQuery } from '@linode/queries';
+import { useAllNodeBalancersQuery } from '@linode/queries';
 import { useAllLinodesQuery } from '@linode/queries';
 
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
@@ -8,7 +9,6 @@ import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useAllAccountStackScriptsQuery } from 'src/queries/stackscripts';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   bucketToSearchableItem,
   databaseToSearchableItem,

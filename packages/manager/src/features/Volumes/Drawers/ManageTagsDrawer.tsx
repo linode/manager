@@ -1,11 +1,10 @@
-import { useGrants } from '@linode/queries';
+import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 
 import type { APIError, Volume } from '@linode/api-v4';
 
