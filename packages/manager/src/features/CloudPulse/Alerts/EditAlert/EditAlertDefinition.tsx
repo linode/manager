@@ -11,6 +11,11 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import {
+  EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -20,21 +25,17 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   enhanceValidationSchemaWithEntityIdValidation,
-  handleMultipleError
+  handleMultipleError,
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
+  APIError,
   Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
-import {
-  EDIT_ALERT_ERROR_FIELD_MAP,
-  MULTILINE_ERROR_SEPARATOR,
-  SINGLELINE_ERROR_SEPARATOR,
-} from '../constants';
 
 export interface EditAlertProps {
   /**

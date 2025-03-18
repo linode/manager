@@ -1,4 +1,4 @@
-import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
+import { Box, Button, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -147,7 +147,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           </Typography>
           {(formState.isSubmitted || fieldState.isTouched) &&
             fieldState.error &&
-            fieldState.error.message?.length&& (
+            fieldState.error.message?.length && (
               <AlertListNoticeMessages
                 errorMessage={fieldState.error.message}
                 separator={MULTILINE_ERROR_SEPARATOR}
