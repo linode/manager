@@ -1,7 +1,6 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
-
 import {
   accountFactory,
   accountSettingsFactory,

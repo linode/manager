@@ -7,6 +7,7 @@ import {
   ActionsPanel,
   Box,
   Checkbox,
+  Drawer,
   Notice,
   TextField,
   Typography,
@@ -15,9 +16,9 @@ import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -97,6 +98,7 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

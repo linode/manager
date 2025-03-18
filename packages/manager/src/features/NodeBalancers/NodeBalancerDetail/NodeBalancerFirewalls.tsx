@@ -1,9 +1,9 @@
 import { useNodeBalancersFirewallsQuery } from '@linode/queries';
-import { Box, Button, Stack, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -122,6 +122,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
         open={isRemoveDeviceDialogOpen}
       />
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={() => setIsAddFirewalDrawerOpen(false)}
         open={isAddFirewallDrawerOpen}
         title="Add Firewall"

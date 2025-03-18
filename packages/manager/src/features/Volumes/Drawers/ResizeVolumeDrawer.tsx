@@ -3,13 +3,13 @@ import {
   useResizeVolumeMutation,
   useVolumeTypesQuery,
 } from '@linode/queries';
-import { ActionsPanel, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import { ResizeVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -95,6 +95,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
