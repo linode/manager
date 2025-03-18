@@ -391,7 +391,6 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: `${Checkbox.Empty.Hover.Border} !important`,
           },
-          color: Checkbox.Empty.Default.Border,
           // Checked
           '&.Mui-checked': {
             color: Checkbox.Checked.Default.Background,
@@ -416,6 +415,7 @@ export const darkTheme: ThemeOptions = {
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Checkbox.Indeterminated.Disabled.Background,
           },
+          color: Checkbox.Empty.Default.Border,
         },
       },
     },
