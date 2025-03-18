@@ -23,7 +23,7 @@ theme.tokens.alias.Typography.Heading.Xxl  // "800 1.625rem/2rem 'Nunito Sans'"
 // ✅ Correct: Using alias (semantic) color tokens
 <Paper sx={(theme) => ({ backgroundColor: theme.tokens.alias.Content.Background.Normal })}>
 
-<Paper sx={(theme) => ({ backgroundColor: theme.semanticTokens.textColors.primary })}>
+<Paper sx={(theme) => ({ backgroundColor: theme.tokens.alias.Content.Text.Primary })}>
 ```
 
 ### Best Practices for Token Usage
