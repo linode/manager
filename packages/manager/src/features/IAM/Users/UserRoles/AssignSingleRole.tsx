@@ -46,7 +46,7 @@ export const AssignSingleRole = ({
           render={({ field: { onChange, value } }) => (
             <>
               <Autocomplete
-                onChange={(newValue) => {
+                onChange={(event, newValue) => {
                   onChange(newValue);
                 }}
                 label="Assign New Roles"
