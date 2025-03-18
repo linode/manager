@@ -27,12 +27,14 @@ const props = {
   isLinodeRelatedDevice: true,
 };
 
+const INTERFACE_TEXT = 'Configuration Profile Interface';
+
 describe('FirewallDeviceRow', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  it('shows the network interface type if the feature flag is enabled for Linode related devices', () => {
+  it('shows the network interface type if the linodeInterfaces feature flag is enabled for Linode related devices', () => {
     queryMocks.useFlags.mockReturnValue({
       linodeInterfaces: {
         enabled: true,
@@ -43,12 +45,12 @@ describe('FirewallDeviceRow', () => {
     );
 
     expect(getByText('entity')).toBeVisible();
-    expect(getByText('Configuration Profile Interface')).toBeVisible();
+    expect(getByText(INTERFACE_TEXT)).toBeVisible();
     expect(getAllByRole('cell')).toHaveLength(3);
     expect(getByText('Remove')).toBeVisible();
   });
 
-  it('does not show the network interface type if the feature flag is not enabled for Linode related devices', () => {
+  it('does not show the network interface type if the linodeInterfaces feature flag is not enabled for Linode related devices', () => {
     queryMocks.useFlags.mockReturnValue({
       linodeInterfaces: {
         enabled: false,
@@ -59,17 +61,15 @@ describe('FirewallDeviceRow', () => {
     );
 
     expect(getByText('entity')).toBeVisible();
-    expect(
-      queryByText('Configuration Profile Interface')
-    ).not.toBeInTheDocument();
+    expect(queryByText(INTERFACE_TEXT)).not.toBeInTheDocument();
     expect(getAllByRole('cell')).toHaveLength(2);
     expect(getByText('Remove')).toBeVisible();
   });
 
-  it('does not show the network interface type if the feature flag is not enabled for nodebalancer devices', () => {
+  it('does not show the network interface type for nodebalancer devices', () => {
     queryMocks.useFlags.mockReturnValue({
       linodeInterfaces: {
-        enabled: false,
+        enabled: true,
       },
     });
     const nodeBalancerEntity = firewallDeviceFactory.build({
@@ -90,9 +90,7 @@ describe('FirewallDeviceRow', () => {
     );
 
     expect(getByText('entity')).toBeVisible();
-    expect(
-      queryByText('Configuration Profile Interface')
-    ).not.toBeInTheDocument();
+    expect(queryByText(INTERFACE_TEXT)).not.toBeInTheDocument();
     expect(getAllByRole('cell')).toHaveLength(2);
     expect(getByText('Remove')).toBeVisible();
   });
@@ -110,7 +108,7 @@ describe('FirewallDeviceRow', () => {
     expect(props.handleRemoveDevice).toHaveBeenCalledTimes(1);
   });
 
-  it('cannot remove a device with an enabled Remove button', async () => {
+  it('cannot remove a device with a disabled Remove button', async () => {
     queryMocks.useFlags.mockReturnValue({
       linodeInterfaces: {
         enabled: true,
