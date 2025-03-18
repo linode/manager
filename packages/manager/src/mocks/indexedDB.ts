@@ -487,7 +487,8 @@ export const mswDB = {
     entity: T,
     id: number,
     payload: Partial<MockState[T] extends Array<infer U> ? U : MockState[T]>,
-    state: MockState
+    state: MockState,
+    additionalId?: number
   ): Promise<void> => {
     const db = await mswDB.open('MockDB', 1);
 
