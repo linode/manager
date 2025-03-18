@@ -6,13 +6,12 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { capitalize, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useBucketAccess,
   useObjectAccess,

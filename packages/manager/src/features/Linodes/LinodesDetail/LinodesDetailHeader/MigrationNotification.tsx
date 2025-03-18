@@ -1,13 +1,12 @@
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
+import { useProfile } from '@linode/queries';
 import { ActionsPanel, Notice, StyledLinkButton, Typography } from '@linode/ui';
-import { capitalize, pluralize } from '@linode/utilities';
+import { capitalize, pluralize, useDialog } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDialog } from 'src/hooks/useDialog';
-import { useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
