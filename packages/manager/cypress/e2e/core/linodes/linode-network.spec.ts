@@ -73,7 +73,7 @@ describe('IP Addresses', () => {
    * - Confirms the success toast message after editing RDNS
    */
   it('checks for the toast message upon editing an RDNS', () => {
-    cy.findByLabelText('IPv4 Addresses')
+    cy.findByLabelText('Linode IP Addresses')
       .should('be.visible')
       .within(() => {
         // confirm table headers
