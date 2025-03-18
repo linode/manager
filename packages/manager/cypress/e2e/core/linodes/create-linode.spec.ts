@@ -35,6 +35,8 @@ import {
   regionFactory,
 } from 'src/factories';
 
+import type { Capabilities } from '@linode/api-v4';
+
 let username: string;
 
 authenticate();
@@ -88,9 +90,15 @@ describe('Create Linode', () => {
             cy.tag('env:premiumPlans');
           }
 
+          const regionCapabilities: Capabilities[] =
+            planConfig.planType === 'Premium CPU'
+              ? ['Linodes', 'Premium Plans', 'Vlans']
+              : ['Linodes', 'Vlans'];
+
           const linodeRegion = chooseRegion({
-            capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
+            capabilities: regionCapabilities,
           });
+
           const linodeLabel = randomLabel();
 
           interceptGetProfile().as('getProfile');
