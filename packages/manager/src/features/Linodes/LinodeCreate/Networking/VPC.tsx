@@ -115,14 +115,19 @@ export const VPC = ({ index }: Props) => {
       </Stack>
       <VPCCreateDrawer
         onSuccess={(vpc) => {
-          setValue(`linodeInterfaces.${index}.vpc.vpc_id`, vpc.id);
+          setValue(`linodeInterfaces.${index}.vpc.vpc_id`, vpc.id, {
+            shouldValidate: true,
+          });
 
           if (vpc.subnets.length === 1) {
             // If the user creates a VPC with just one subnet,
             // preselect it for them
             setValue(
               `linodeInterfaces.${index}.vpc.subnet_id`,
-              vpc.subnets[0].id
+              vpc.subnets[0].id,
+              {
+                shouldValidate: true,
+              }
             );
           }
         }}
