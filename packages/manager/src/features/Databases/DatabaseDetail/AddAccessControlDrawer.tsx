@@ -1,11 +1,11 @@
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import { NotFound } from 'src/components/NotFound';
 import {
   ACCESS_CONTROLS_DRAWER_TEXT,
   ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
@@ -182,7 +182,12 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
 
   const learnMoreLink = isDefaultDB ? LEARN_MORE_LINK : LEARN_MORE_LINK_LEGACY;
   return (
-    <Drawer onClose={onClose} open={open} title="Manage Access">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Manage Access"
+    >
       <React.Fragment>
         {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors

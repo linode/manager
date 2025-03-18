@@ -3,12 +3,12 @@ import {
   useFirewallQuery,
   useNodeBalancersFirewallsQuery,
 } from '@linode/queries';
-import { Box, Button, Stack, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -164,6 +164,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
             to: '/nodebalancers/$id/settings',
           })
         }
+        NotFoundComponent={NotFound}
         open={match.routeId === '/nodebalancers/$id/settings/add-firewall'}
         title="Add Firewall"
       >
