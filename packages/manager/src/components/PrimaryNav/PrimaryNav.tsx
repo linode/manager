@@ -227,7 +227,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           {
             display: 'Alerts',
             hide:
-              !isACLPEnabled &&
+              !isACLPEnabled ||
               !(
                 flags.aclpAlerting?.alertDefinitions ||
                 flags.aclpAlerting?.recentActivity ||
