@@ -61,15 +61,15 @@ export const createAlertDefinitionSchema = object({
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
-      .min(1, 'At least one metric criteria is required.'),
-  }),
+      .min(1, 'At least one metric criteria is required.').required(),
+  }).required(),
   trigger_conditions: triggerConditionValidation,
   channel_ids: array()
     .of(number().required())
     .required()
     .min(1, 'At least one notification channel is required.'),
   tags: array().of(string().defined()).optional(),
-  entity_ids: array().of(string().defined()).defined(),
+  entity_ids: array().of(string().defined()).optional(),
 });
 
 export const editAlertDefinitionSchema = object({
