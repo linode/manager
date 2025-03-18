@@ -33,6 +33,7 @@ export * from './roundTo';
 export * from './scrollErrorIntoView';
 export * from './scrollErrorIntoViewV2';
 export * from './scrollTo';
+export * from './sort-by';
 export * from './splitAt';
 export * from './stripImageName';
 export * from './tail';

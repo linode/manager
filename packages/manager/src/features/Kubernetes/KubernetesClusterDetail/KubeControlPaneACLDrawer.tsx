@@ -3,6 +3,7 @@ import {
   ActionsPanel,
   Box,
   Checkbox,
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
@@ -19,8 +20,8 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
+import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
@@ -184,6 +185,7 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}
