@@ -229,15 +229,20 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
+    const { findAllByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
     const monitorMetricsDisplayItem = await findByText('Metrics');
     const monitorAlertsDisplayItem = await findByText('Alerts');
+    const betaChip = await findAllByTestId('betaChip');
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(betaChip).toHaveLength(2);
   });
 
   it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
@@ -253,7 +258,7 @@ describe('PrimaryNav', () => {
 
     const flags = {
       aclp: {
-        beta: true,
+        beta: false,
         enabled: false,
       },
       aclpAlerting: {
@@ -263,15 +268,19 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
+    const { queryByTestId, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
     const monitorMetricsDisplayItem = queryByText('Metrics');
     const monitorAlertsDisplayItem = queryByText('Alerts');
 
     expect(monitorMetricsDisplayItem).toBeNull();
     expect(monitorAlertsDisplayItem).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
   });
 
   it('should not show Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag does not have any of the properties true', async () => {
@@ -297,7 +306,7 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText, queryByText } = renderWithTheme(
+    const { findByTestId, findByText, queryByText } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -306,8 +315,10 @@ describe('PrimaryNav', () => {
 
     const monitorMetricsDisplayItem = await findByText('Metrics'); // Metrics should be visible
     const monitorAlertsDisplayItem = queryByText('Alerts');
+    const betaChip = await findByTestId('betaChip');
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeNull();
+    expect(betaChip).toBeVisible();
   });
 });
