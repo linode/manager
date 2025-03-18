@@ -11,6 +11,7 @@ import {
   convertEngineConfigToOptions,
   convertExistingConfigsToArray,
   findConfigItem,
+  formatConfigPayload,
   formatConfigValue,
   getDatabasesDescription,
   hasPendingUpdates,
@@ -737,5 +738,36 @@ describe('convertEngineConfigToOptions', () => {
     expect(convertEngineConfigToOptions(configs)).toEqual(
       expectedConfigOptions
     );
+  });
+});
+
+describe('formatConfigPayload', () => {
+  it('should correctly format a flat configuration', () => {
+    const formData = [
+      { category: 'other', label: 'binlog_retention_period', value: 600 },
+    ];
+    const configurations = [
+      { category: 'other', label: 'binlog_retention_period' },
+    ];
+    expect(formatConfigPayload(formData, configurations)).toEqual({
+      binlog_retention_period: 600,
+    });
+  });
+
+  it('should correctly format a nested configuration', () => {
+    const formData = [
+      { category: '', label: 'connect_timeout', value: 10 },
+      { category: 'mysql', label: 'default_time_zone', value: '+03:00' },
+    ];
+    const configurations = [
+      { category: 'mysql', label: 'connect_timeout' },
+      { category: 'mysql', label: 'default_time_zone' },
+    ];
+    expect(formatConfigPayload(formData, configurations)).toEqual({
+      mysql: {
+        connect_timeout: 10,
+        default_time_zone: '+03:00',
+      },
+    });
   });
 });

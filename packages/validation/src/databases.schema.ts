@@ -89,8 +89,12 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     );
   }
   if (field.pattern) {
+    let pattern = field.pattern;
+    if (key === 'default_time_zone') {
+      pattern = '^(SYSTEM|[+-](0[0-9]|1[0-2]):([0-5][0-9]))$';
+    }
     validator = validator.matches(
-      new RegExp(field.pattern),
+      new RegExp(pattern),
       `Please ensure that ${key} follows the format ${field.example}`
     );
   }

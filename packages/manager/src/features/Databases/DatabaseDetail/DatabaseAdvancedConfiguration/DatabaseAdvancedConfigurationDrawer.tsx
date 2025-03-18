@@ -101,10 +101,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const configs = watch('configs');
 
   useEffect(() => {
-    if (allConfigs) {
+    if (databaseConfig) {
       reset({ configs: existingConfigsArray });
     }
-  }, [databaseConfig]);
+  }, [databaseConfig, onClose]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -120,7 +120,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     if (!config || usedConfigs.has(config.label)) {
       return;
     }
-    const item = findConfigItem(allConfigs, String(config.label));
+    const item = findConfigItem(databaseConfig, String(config.label));
     prepend({
       ...item,
       category: config?.category ?? '',
