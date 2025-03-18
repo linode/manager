@@ -1,4 +1,4 @@
-import { useGrants } from '@linode/queries';
+import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -14,7 +14,6 @@ import React from 'react';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { NotFound } from 'src/components/NotFound';
-import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,

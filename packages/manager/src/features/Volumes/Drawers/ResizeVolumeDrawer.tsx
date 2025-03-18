@@ -1,4 +1,8 @@
-import { useGrants } from '@linode/queries';
+import {
+  useGrants,
+  useResizeVolumeMutation,
+  useVolumeTypesQuery,
+} from '@linode/queries';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import { ResizeVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
@@ -7,10 +11,6 @@ import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useResizeVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,

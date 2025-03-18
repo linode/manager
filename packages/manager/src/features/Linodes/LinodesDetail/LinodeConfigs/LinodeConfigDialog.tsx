@@ -1,6 +1,7 @@
 import {
   useAllLinodeDisksQuery,
   useAllLinodeKernelsQuery,
+  useAllVolumesQuery,
   useLinodeConfigCreateMutation,
   useLinodeConfigUpdateMutation,
   useLinodeQuery,
@@ -48,7 +49,6 @@ import {
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {

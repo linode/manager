@@ -1,3 +1,4 @@
+import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
@@ -26,7 +27,6 @@ import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVolumeQuery, useVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,

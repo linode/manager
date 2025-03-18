@@ -1,4 +1,8 @@
-import { useGrants } from '@linode/queries';
+import {
+  useCloneVolumeMutation,
+  useGrants,
+  useVolumeTypesQuery,
+} from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -16,10 +20,6 @@ import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encrypt
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useCloneVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
