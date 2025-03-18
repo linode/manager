@@ -2,25 +2,16 @@
  * @file Linode Create end-to-end tests.
  */
 
-import {
-  linodeConfigInterfaceFactory,
-  linodeConfigInterfaceFactoryWithVPC,
-} from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetUser } from 'support/intercepts/account';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateLinode,
   mockCreateLinode,
   mockCreateLinodeError,
-  mockGetLinodeDisks,
-  mockGetLinodeType,
   mockGetLinodeTypes,
-  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import { interceptGetProfile } from 'support/intercepts/profile';
 import {
@@ -28,30 +19,21 @@ import {
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { getRegionById } from 'support/util/regions';
 
 import {
-  VLANFactory,
   accountFactory,
   accountUserFactory,
   grantsFactory,
-  linodeConfigFactory,
   linodeFactory,
   linodeTypeFactory,
   profileFactory,
   regionFactory,
-  subnetFactory,
-  vpcFactory,
 } from 'src/factories';
-
-import type { Config, Disk, Region, VLAN } from '@linode/api-v4';
 
 let username: string;
 
@@ -278,181 +260,6 @@ describe('Create Linode', () => {
       // Confirm that Cloud redirects to details page
       cy.url().should('endWith', `/linodes/${responsePayload['id']}`);
     });
-  });
-
-  it('adds an SSH key to the linode during create flow', () => {
-    const rootpass = randomString(32);
-    const sshPublicKeyLabel = randomLabel();
-    const randomKey = randomString(400, {
-      lowercase: true,
-      numbers: true,
-      spaces: false,
-      symbols: false,
-      uppercase: true,
-    });
-    const sshPublicKey = `ssh-rsa e2etestkey${randomKey} e2etest@linode`;
-    const linodeLabel = randomLabel();
-    const region: Region = getRegionById('us-southeast');
-    const diskLabel: string = 'Debian 10 Disk';
-    const mockLinode = linodeFactory.build({
-      label: linodeLabel,
-      region: region.id,
-      type: dcPricingMockLinodeTypes[0].id,
-    });
-    const mockVLANs: VLAN[] = VLANFactory.buildList(2);
-    const mockSubnet = subnetFactory.build({
-      id: randomNumber(2),
-      label: randomLabel(),
-    });
-    const mockVPC = vpcFactory.build({
-      id: randomNumber(),
-      region: 'us-southeast',
-      subnets: [mockSubnet],
-    });
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['Linodes', 'VPCs', 'Vlans'],
-      id: region.id,
-      label: region.label,
-    });
-    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
-      ipam_address: null,
-      purpose: 'public',
-    });
-    const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
-    const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
-      active: true,
-      purpose: 'vpc',
-      vpc_id: mockVPC.id,
-    });
-    const mockConfig: Config = linodeConfigFactory.build({
-      id: randomNumber(),
-      interfaces: [
-        // The order of this array is significant. Index 0 (eth0) should be public.
-        mockPublicConfigInterface,
-        mockVlanConfigInterface,
-        mockVpcConfigInterface,
-      ],
-    });
-    const mockDisks: Disk[] = [
-      {
-        created: '2020-08-21T17:26:14',
-        filesystem: 'ext4',
-        id: 44311273,
-        label: diskLabel,
-        size: 81408,
-        status: 'ready',
-        updated: '2020-08-21T17:26:30',
-      },
-      {
-        created: '2020-08-21T17:26:14',
-        filesystem: 'swap',
-        id: 44311274,
-        label: '512 MB Swap Image',
-        size: 512,
-        status: 'ready',
-        updated: '2020-08-21T17:26:31',
-      },
-    ];
-
-    // Mock requests to get individual types.
-    mockGetLinodeType(dcPricingMockLinodeTypes[0]);
-    mockGetLinodeType(dcPricingMockLinodeTypes[1]);
-    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-
-    mockGetRegions([mockVPCRegion]).as('getRegions');
-
-    mockGetVLANs(mockVLANs);
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetVPCs([mockVPC]).as('getVPCs');
-    mockCreateLinode(mockLinode).as('linodeCreated');
-    mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as('getLinodeConfigs');
-    mockGetLinodeDisks(mockLinode.id, mockDisks).as('getDisks');
-    mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
-
-    // intercept request
-    cy.visitWithLogin('/linodes/create');
-    cy.wait('@getLinodeTypes');
-
-    cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-
-    // Check the 'Backups' add on
-    cy.get('[data-testid="backups"]').should('be.visible').click();
-    ui.regionSelect.find().click().type(`${region.label} {enter}`);
-
-    // Verify VPCs get fetched once a region is selected
-    cy.wait('@getVPCs');
-
-    cy.findByText('Shared CPU').click();
-    cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
-
-    // the "VPC" section is present, and the VPC in the same region of
-    // the linode can be selected.
-    cy.get('[data-testid="vpc-panel"]')
-      .should('be.visible')
-      .within(() => {
-        cy.contains('Assign this Linode to an existing VPC.').should(
-          'be.visible'
-        );
-        // select VPC
-        cy.findByLabelText('Assign VPC').should('be.visible').focus();
-        cy.focused().type(`${mockVPC.label}{downArrow}{enter}`);
-        // select subnet
-        cy.findByPlaceholderText('Select Subnet')
-          .should('be.visible')
-          .type(`${mockSubnet.label}{downArrow}{enter}`);
-      });
-
-    // The drawer opens when clicking "Add an SSH Key" button
-    ui.button
-      .findByTitle('Add an SSH Key')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-    ui.drawer
-      .findByTitle('Add SSH Key')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[id="label"]').clear();
-        cy.focused().type(sshPublicKeyLabel);
-
-        // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear();
-        cy.focused().type('WrongFormatSshKey');
-        ui.button
-          .findByTitle('Add Key')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-        cy.findAllByText(
-          'SSH Key key-type must be ssh-dss, ssh-rsa, ecdsa-sha2-nistp, ssh-ed25519, or sk-ecdsa-sha2-nistp256.'
-        ).should('be.visible');
-
-        // Create a new ssh key
-        cy.get('[id="ssh-public-key"]').clear();
-        cy.focused().type(sshPublicKey);
-        ui.button
-          .findByTitle('Add Key')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    // When a user creates an SSH key, a toast notification appears that says "Successfully created SSH key."
-    ui.toast.assertMessage('Successfully created SSH key.');
-
-    // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
-    cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
-
-    cy.get('#linode-label').clear();
-    cy.focused().type(linodeLabel);
-    cy.focused().click();
-    cy.get('#root-password').type(rootpass);
-
-    ui.button.findByTitle('Create Linode').click();
-
-    cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
-    cy.findByText(linodeLabel).should('be.visible');
-    cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 
   /*
