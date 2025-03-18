@@ -122,6 +122,7 @@ export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
 
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
+    alignItems: 'center',
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
     display: 'flex',
