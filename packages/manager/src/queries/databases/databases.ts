@@ -16,6 +16,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -66,6 +67,11 @@ export const databaseQueries = createQueryKeys('databases', {
         queryFn: () => getAllDatabases(params, filter),
         queryKey: [params, filter],
       }),
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDatabases({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
         queryKey: [params, filter],
@@ -110,6 +116,21 @@ export const useDatabasesQuery = (
     // @TODO Consider removing polling
     refetchInterval: 20000,
   });
+
+export const useDatabasesInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<DatabaseInstance>, APIError[]>({
+    ...databaseQueries.databases._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useAllDatabasesQuery = (
   enabled: boolean = true,

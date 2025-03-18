@@ -171,7 +171,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
-    bucket: bucketsError,
+    bucket: bucketsError ? [{ reason: bucketsError.message }] : null,
     database_id: databasesError,
     domain_id: domainsError,
     firewall_id: firewallsError,

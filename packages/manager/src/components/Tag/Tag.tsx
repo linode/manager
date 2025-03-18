@@ -58,7 +58,7 @@ export const Tag = (props: TagProps) => {
     if (closeMenu) {
       closeMenu();
     }
-    history.push(`/search/?query=tag:${label}`);
+    history.push(`/search?query=tag:${label}`);
   };
 
   // If maxLength is set, truncate display to that length.

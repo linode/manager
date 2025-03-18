@@ -1,43 +1,18 @@
 import {
-  useAllFirewallsQuery,
-  useAllLinodesQuery,
-  useAllNodeBalancersQuery,
-  useAllVolumesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
-import {
   Autocomplete,
   Box,
   IconButton,
   InputAdornment,
   TextField,
 } from '@linode/ui';
-import {
-  getQueryParamsFromQueryString,
-  isNotNullOrUndefined,
-} from '@linode/utilities';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
-import * as React from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { debounce } from 'throttle-debounce';
 
 import Search from 'src/assets/icons/search.svg';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { getImageLabelForLinode } from 'src/features/Images/utils';
-import { useAPISearch } from 'src/features/Search/useAPISearch';
-import withStoreSearch from 'src/features/Search/withStoreSearch';
-import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllImagesQuery } from 'src/queries/images';
-import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useSpecificTypes } from 'src/queries/types';
-import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
+import { useSearch } from 'src/features/Search/useSearch';
 
 import { StyledIconButton, StyledSearchIcon } from './SearchBar.styles';
 import { SearchSuggestion } from './SearchSuggestion';
@@ -46,7 +21,6 @@ import { SearchSuggestionContainer } from './SearchSuggestionContainer';
 import { createFinalOptions } from './utils';
 
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
-import type { SearchProps } from 'src/features/Search/withStoreSearch';
 
 export interface ExtendedSearchableItem
   extends Omit<SearchableItem, 'entityType'> {
@@ -65,87 +39,23 @@ const isSpecialOption = (
   return ['error', 'info', 'redirect'].includes(String(option.value));
 };
 
-const SearchBarComponent = (props: SearchProps) => {
-  const { combinedResults, entitiesLoading, search } = props;
+export const SearchBar = () => {
+  // Search state
   const [searchText, setSearchText] = React.useState<string>('');
+  const { combinedResults, isLargeAccount, isLoading } = useSearch({
+    query: searchText,
+  });
+
+  // MUI Autocomplete state
   const [value, setValue] = React.useState<SearchResultItem | null>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const [apiResults, setAPIResults] = React.useState<SearchableItem[]>([]);
-  const [apiError, setAPIError] = React.useState<null | string>(null);
-  const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
+  // Hooks
   const history = useHistory();
-  const isLargeAccount = useIsLargeAccount(searchActive);
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const theme = useTheme();
 
-  // Only request things if the search bar is open/active and we
-  // know if the account is large or not
-  const shouldMakeRequests =
-    searchActive && isLargeAccount !== undefined && !isLargeAccount;
-  const shouldMakeDBRequests =
-    shouldMakeRequests && Boolean(isDatabasesEnabled);
-  const { data: regions } = useRegionsQuery();
-  const { data: objectStorageBuckets } = useObjectStorageBuckets(
-    shouldMakeRequests
-  );
-  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
-  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
-  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
-  const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
-  const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
-  /*
-  @TODO DBaaS: Change the passed argument to 'shouldMakeRequests' and
-  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
-  */
-  const { data: databases } = useAllDatabasesQuery(shouldMakeDBRequests);
-  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
-    {},
-    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
-    shouldMakeRequests
-  );
-  const { data: publicImages } = useAllImagesQuery(
-    {},
-    { is_public: true },
-    searchActive
-  );
-  const { data: linodes, isLoading: linodesLoading } = useAllLinodesQuery(
-    {},
-    {},
-    shouldMakeRequests
-  );
-  const typesQuery = useSpecificTypes(
-    (linodes ?? []).map((linode) => linode.type).filter(isNotNullOrUndefined),
-    shouldMakeRequests
-  );
-  const extendedTypes = extendTypesQueryResult(typesQuery);
-  const searchableLinodes = (linodes ?? []).map((linode) => {
-    const imageLabel = getImageLabelForLinode(linode, publicImages ?? []);
-    return formatLinode(linode, extendedTypes, imageLabel);
-  });
-  const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
-
-  const _searchAPI = React.useRef(
-    debounce(500, false, (_searchText: string) => {
-      setAPILoading(true);
-      searchAPI(_searchText)
-        .then((searchResults) => {
-          setAPIResults(searchResults.combinedResults);
-          setAPILoading(false);
-          setAPIError(null);
-        })
-        .catch((error) => {
-          setAPIError(
-            getAPIErrorOrDefault(error, 'Error loading search results')[0]
-              .reason
-          );
-          setAPILoading(false);
-        });
-    })
-  ).current;
-
-  const buckets = objectStorageBuckets?.buckets || [];
-
+  // Sync state with query params
   React.useEffect(() => {
     const { pathname, search } = history.location;
     const query = getQueryParamsFromQueryString(search);
@@ -163,43 +73,6 @@ const SearchBarComponent = (props: SearchProps) => {
     }
   }, [history.location]);
 
-  React.useEffect(() => {
-    // We can't store all data for large accounts for client side search,
-    // so use the API's filtering instead.
-    if (isLargeAccount) {
-      _searchAPI(searchText);
-    } else {
-      search(
-        searchText,
-        buckets,
-        domains ?? [],
-        volumes ?? [],
-        clusters ?? [],
-        _privateImages ?? [],
-        regions ?? [],
-        searchableLinodes ?? [],
-        nodebalancers ?? [],
-        firewalls ?? [],
-        databases ?? []
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    imagesLoading,
-    search,
-    searchText,
-    _searchAPI,
-    isLargeAccount,
-    objectStorageBuckets,
-    domains,
-    volumes,
-    _privateImages,
-    regions,
-    nodebalancers,
-    firewalls,
-    databases,
-  ]);
-
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
   };
@@ -212,7 +85,9 @@ const SearchBarComponent = (props: SearchProps) => {
   const handleClose = () => {
     document.body.classList.remove('searchOverlay');
     setSearchActive(false);
-    setSearchText('');
+    if (history.location.pathname !== '/search') {
+      setSearchText('');
+    }
     setMenuOpen(false);
   };
 
@@ -224,7 +99,9 @@ const SearchBarComponent = (props: SearchProps) => {
 
   const handleFocus = () => {
     setSearchActive(true);
-    setSearchText('');
+    if (history.location.pathname !== '/search') {
+      setSearchText('');
+    }
   };
 
   const handleBlur = () => {
@@ -253,11 +130,10 @@ const SearchBarComponent = (props: SearchProps) => {
     }
 
     if (isSpecialOption(item)) {
-      const text = item.data.searchText;
       if (item.value === 'redirect') {
         history.push({
           pathname: `/search`,
-          search: `?query=${encodeURIComponent(text)}`,
+          search: `?query=${encodeURIComponent(searchText)}`,
         });
       }
       return;
@@ -267,20 +143,17 @@ const SearchBarComponent = (props: SearchProps) => {
     handleClose();
   };
 
+  const options = createFinalOptions(
+    combinedResults,
+    searchText,
+    isLoading,
+    false // @todo handle errors. Because we make many API calls, we need a good way to handle partial errors.
+  );
+
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const label = isSmallScreen
     ? 'Search...'
     : 'Search Products, IP Addresses, Tags...';
-
-  const options = createFinalOptions(
-    isLargeAccount ? apiResults : combinedResults,
-    searchText,
-    isLargeAccount ? apiSearchLoading : linodesLoading || imagesLoading,
-    // Ignore "Unauthorized" errors, since these will always happen on LKE
-    // endpoints for restricted users. It's not really an "error" in this case.
-    // We still want these users to be able to use the search feature.
-    Boolean(apiError) && apiError !== 'Unauthorized'
-  );
 
   return (
     <React.Fragment>
@@ -438,10 +311,7 @@ const SearchBarComponent = (props: SearchProps) => {
             return (
               <SearchSuggestion
                 {...rest}
-                data={{
-                  data: option.data,
-                  label: option.label,
-                }}
+                data={option}
                 key={`${key}-${value}`}
                 searchText={searchText}
                 selectOption={() => onSelect(option)}
@@ -465,7 +335,7 @@ const SearchBarComponent = (props: SearchProps) => {
           disableClearable
           inputValue={searchText}
           label={label}
-          loading={entitiesLoading}
+          loading={isLoading}
           multiple={false}
           noOptionsText="No results"
           onBlur={handleBlur}
@@ -483,5 +353,3 @@ const SearchBarComponent = (props: SearchProps) => {
     </React.Fragment>
   );
 };
-
-export const SearchBar = withStoreSearch()(SearchBarComponent);
