@@ -3,10 +3,9 @@ import * as React from 'react';
 
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  SSHAccessActionMenu,
-  SSHAccessActionMenuProps,
-} from './SSHAccessActionMenu';
+import { SSHAccessActionMenu } from './SSHAccessActionMenu';
+
+import type { SSHAccessActionMenuProps } from './SSHAccessActionMenu';
 
 const mockOpenDrawer = vi.fn();
 
