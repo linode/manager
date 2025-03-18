@@ -11,7 +11,6 @@ import {
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
-import { profileQueries, accountQueries, queryPresets } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -21,6 +20,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { accountQueries } from '../account';
+import { queryPresets } from '../base';
+import { profileQueries } from '../profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
 
 import type {
