@@ -320,7 +320,7 @@ export const getValidationSchema = (
  *   "password": "userPassword" as FieldPath<RegisterForm>
  * };
  * 
- * handleMultipleErrorMapper(
+ * handleMultipleError(
  *   errors,
  *   errorFieldMap,
  *   " | ", // Multiline separator
@@ -328,7 +328,7 @@ export const getValidationSchema = (
  *   setError
  * );
  */
-export const handleMultipleErrorMapper = <T extends FieldValues>(
+export const handleMultipleError = <T extends FieldValues>(
   errors: APIError[],
   errorFieldMap: Record<string, FieldPath<T>>,
   multiLineErrorSeparator: string,
@@ -342,29 +342,29 @@ export const handleMultipleErrorMapper = <T extends FieldValues>(
       continue;
     }
 
-    const errorFieldParent = error.field.split('.')[0];
-    const errorParent: FieldPath<T> =
-      errorFieldMap[errorFieldParent] ?? error.field;
+    const errorField = error.field.split('.')[0];
+    const errorFieldToSet: FieldPath<T> =
+      errorFieldMap[errorField] ?? error.field;
 
     const formattedReason = error.reason.endsWith('.')
       ? error.reason
       : `${error.reason}.`;
 
-    const separator = errorFieldMap[errorFieldParent]
+    const separator = errorFieldMap[errorField]
       ? multiLineErrorSeparator
       : singleLineErrorSeparator;
 
-    if (errorMap.has(errorParent)) {
-      const existingMessage = errorMap.get(errorParent)!;
+    if (errorMap.has(errorFieldToSet)) {
+      const existingMessage = errorMap.get(errorFieldToSet)!;
       if (!existingMessage.includes(formattedReason)) {
         errorMap.set(
-          errorParent,
+          errorFieldToSet,
           `${existingMessage}${separator}${formattedReason}`
         );
       }
     } else {
-      errorMap.set(errorParent, formattedReason);
+      errorMap.set(errorFieldToSet, formattedReason);
     }
-    setError(errorParent, { message: errorMap.get(errorParent) });
+    setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
   }
 };

@@ -20,7 +20,7 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   getValidationSchema,
-  handleMultipleErrorMapper,
+  handleMultipleError,
 } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
@@ -87,7 +87,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       });
       history.push(definitionLanding);
     } catch (errors) {
-      handleMultipleErrorMapper<EditAlertDefinitionPayload>(
+      handleMultipleError<EditAlertDefinitionPayload>(
         errors,
         EDIT_ALERT_ERROR_FIELD_MAP,
         MULTILINE_ERROR_SEPARATOR,

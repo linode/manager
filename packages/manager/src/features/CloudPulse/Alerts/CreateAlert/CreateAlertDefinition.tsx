@@ -22,7 +22,7 @@ import {
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
-import { getValidationSchema, handleMultipleErrorMapper } from '../Utils/utils';
+import { getValidationSchema, handleMultipleError } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -127,7 +127,7 @@ export const CreateAlertDefinition = () => {
       });
       alertCreateExit();
     } catch (errors) {
-      handleMultipleErrorMapper<CreateAlertDefinitionForm>(
+      handleMultipleError<CreateAlertDefinitionForm>(
         errors,
         CREATE_ALERT_ERROR_FIELD_MAP,
         MULTILINE_ERROR_SEPARATOR,

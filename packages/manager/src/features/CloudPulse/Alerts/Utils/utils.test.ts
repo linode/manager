@@ -9,7 +9,7 @@ import {
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
   getValidationSchema,
-  handleMultipleErrorMapper,
+  handleMultipleError,
 } from './utils';
 
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
@@ -191,7 +191,7 @@ describe('getValidationSchema', () => {
     
     const setError = vi.fn();
     
-    handleMultipleErrorMapper(
+    handleMultipleError(
       errors,
       CREATE_ALERT_ERROR_FIELD_MAP,
       MULTILINE_ERROR_SEPARATOR,
