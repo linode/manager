@@ -8,6 +8,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
+import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
@@ -16,7 +17,10 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { convertAlertDefinitionValues } from '../Utils/utils';
+import {
+  convertAlertDefinitionValues,
+  enhanceValidationSchemaWithEntityIdValidation,
+} from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
@@ -47,11 +51,17 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
+  const flags = useFlags();
+  const editAlertSchema = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
   const formMethods = useForm<EditAlertDefinitionPayload>({
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
+      enhanceValidationSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: editAlertSchema,
+        serviceTypeObj: alertDetails.service_type,
+      }) as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
