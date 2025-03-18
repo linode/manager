@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
 
+import type { EntitiesOption } from '../utilities';
 import type {
   IamAccessType,
   ResourceTypePermissions,
@@ -17,11 +18,12 @@ interface ExtendedRole extends Roles {
   resource_type: ResourceTypePermissions;
 }
 
-type Props = {
+interface Props {
+  assignedEntities?: EntitiesOption[];
   role: ExtendedRole;
-};
+}
 
-export const AssignedPermissionsPanel = ({ role }: Props) => {
+export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   const theme = useTheme();
@@ -59,13 +61,18 @@ export const AssignedPermissionsPanel = ({ role }: Props) => {
               width: 'max-content',
             }}
             onClick={() => setShowFullDescription((show) => !show)}
+            type="button"
           >
             {showFullDescription ? 'Hide' : 'Expand'}
           </StyledLinkButton>
         )}
       </Typography>
       <Permissions permissions={role.permissions} />
-      <Entities access={role.access} type={role.resource_type} />
+      <Entities
+        access={role.access}
+        assignedEntities={assignedEntities ?? []}
+        type={role.resource_type}
+      />
     </Paper>
   );
 };
