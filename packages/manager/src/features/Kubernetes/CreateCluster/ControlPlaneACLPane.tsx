@@ -15,8 +15,7 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { validateIPs } from 'src/utilities/ipUtils';
 
 import {
-  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY_BASE,
-  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY_REQUIRED_IPs,
+  CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
   CREATE_CLUSTER_STANDARD_TIER_ACL_COPY,
 } from '../constants';
 
@@ -52,18 +51,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
 
   const isEnterpriseCluster = selectedTier === 'enterprise';
 
-  const getACLCopy = () => {
-    {
-      if (isEnterpriseCluster && isAcknowledgementChecked) {
-        return CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY_BASE;
-      } else if (isEnterpriseCluster) {
-        return CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY_REQUIRED_IPs;
-      } else {
-        return CREATE_CLUSTER_STANDARD_TIER_ACL_COPY;
-      }
-    }
-  };
-
   return (
     <>
       <FormControl data-testid="control-plane-ipacl-form">
@@ -76,7 +63,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
-          {getACLCopy()}
+          {isEnterpriseCluster && isAcknowledgementChecked
+            ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY
+            : CREATE_CLUSTER_STANDARD_TIER_ACL_COPY}
         </Typography>
         <FormControlLabel
           control={
