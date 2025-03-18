@@ -267,19 +267,22 @@ export const createLinode = (mockState: MockState) => [
           (iface: CreateLinodeInterfacePayload) => iface.vpc
         )
       ) {
-        const interfacePayload = payload.interfaces.find(
+        const vpcIfacePayload = payload.interfaces.find(
           (iface: CreateLinodeInterfacePayload) => iface.vpc
         );
 
         const subnetFromDB = await mswDB.get(
           'subnets',
-          interfacePayload.subnet_id
+          vpcIfacePayload.vpc.subnet_id ?? -1
         );
-        const vpc = await mswDB.get('vpcs', subnetFromDB?.[0] ?? -1);
+        const vpc = await mswDB.get(
+          'vpcs',
+          vpcIfacePayload.vpc.vpc_id ?? subnetFromDB?.[0] ?? -1
+        );
 
         if (subnetFromDB && vpc) {
           const vpcInterface = linodeInterfaceFactoryVPC.build({
-            ...interfacePayload,
+            ...vpcIfacePayload,
             created: DateTime.now().toISO(),
             updated: DateTime.now().toISO(),
           });
@@ -328,11 +331,11 @@ export const createLinode = (mockState: MockState) => [
           await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
 
           // if firewall given in interface payload, add a device
-          if (interfacePayload.firewall_id) {
+          if (vpcIfacePayload.firewall_id) {
             await addFirewallDevice({
               entityId: vpcInterface.id,
               entityLabel: linode.label,
-              firewallId: interfacePayload.firewall_id,
+              firewallId: vpcIfacePayload.firewall_id,
               interfaceType: 'interface',
               mockState,
             });
