@@ -11,8 +11,8 @@ export const linodeInterfaceSettingsFactory = Factory.Sync.makeFactory<LinodeInt
       ipv4_interface_id: 1,
       ipv4_eligible_interface_ids: [],
       ipv6_interface_id: 1,
-      ipv6_eligible_interface_ids: []
-    }
+      ipv6_eligible_interface_ids: [],
+    },
   }
 );
 
@@ -53,6 +53,10 @@ export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterfac
           {
             address: '10.0.0.0',
             primary: true,
+          },
+          {
+            address: '10.0.1.0',
+            primary: false,
           },
         ],
         ranges: [],
