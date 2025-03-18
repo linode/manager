@@ -1,5 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface OpenCloseState {
   error?: APIError[];
