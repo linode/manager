@@ -1,3 +1,10 @@
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVolumesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { CircleProgress, Notice, Typography } from '@linode/ui';
 import {
   getQueryParamFromQueryString,
@@ -13,18 +20,11 @@ import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import {
-  useAllFirewallsQuery,
-  useAllLinodesQuery,
-  useAllNodeBalancersQuery,
-  useRegionsQuery,
-} from '@linode/queries';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isBucketError } from 'src/queries/object-storage/requests';
 import { useSpecificTypes } from 'src/queries/types';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
