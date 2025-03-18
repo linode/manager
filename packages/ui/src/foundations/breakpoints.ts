@@ -20,11 +20,4 @@ export const breakpoints = createTheme({
     },
   },
   name: 'light',
-  tokens: {
-    alias: Alias,
-    color: Color,
-    component: Component,
-    font: Font,
-    spacing: Spacing,
-  },
 }).breakpoints;
