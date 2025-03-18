@@ -1,4 +1,10 @@
-import { Autocomplete, Box, IconButton, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isNotNullOrUndefined,
@@ -17,13 +23,15 @@ import withStoreSearch from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
@@ -304,12 +312,6 @@ const SearchBarComponent = (props: SearchProps) => {
           Main search
         </label>
         <Autocomplete<SearchResultItem, false, boolean, false>
-          PaperComponent={(props) => (
-            <SearchSuggestionContainer
-              {...props}
-              isLargeAccount={isLargeAccount}
-            />
-          )}
           filterOptions={(options) => {
             /* Need to override the default RS filtering; otherwise entities whose label
              * doesn't match the search term will be automatically filtered, meaning that
@@ -325,56 +327,70 @@ const SearchBarComponent = (props: SearchProps) => {
             return (
               <TextField
                 {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <IconButton
-                      sx={{
-                        '> svg': {
-                          '&:hover': {
-                            color: theme.tokens.header.Search.Icon.Hover,
-                          },
-
-                          color: theme.tokens.header.Search.Icon.Default,
-                        },
-                        height: 16,
-                        [theme.breakpoints.up('sm')]: {
-                          display: 'none',
-                        },
-                        width: 16,
-                      }}
-                      aria-label="close menu"
-                      color="inherit"
-                      onClick={toggleSearch}
-                      size="large"
-                    >
-                      <Close />
-                    </IconButton>
-                  ),
-                  startAdornment: (
-                    <StyledSearchIcon data-qa-search-icon="true" />
-                  ),
-                }}
-                inputProps={{
-                  ...params.inputProps,
-                  sx: {
-                    '&::placeholder': {
-                      color: theme.tokens.header.Search.Text.Placeholder,
-                      fontStyle: 'italic',
-                    },
-                  },
-                }}
                 onChange={(e) => {
                   handleSearchChange(e.target.value);
                 }}
+                slotProps={{
+                  htmlInput: {
+                    ...params.inputProps,
+                    sx: {
+                      '&::placeholder': {
+                        color: theme.tokens.header.Search.Text.Placeholder,
+                      },
+                    },
+                  },
+                  input: {
+                    ...params.InputProps,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          sx={{
+                            '> svg': {
+                              '&:hover': {
+                                color: theme.tokens.header.Search.Icon.Hover,
+                              },
+                              color: theme.tokens.header.Search.Icon.Default,
+                            },
+                            padding: 0,
+                            [theme.breakpoints.up('sm')]: {
+                              display: 'none',
+                            },
+                          }}
+                          aria-label="close menu"
+                          color="inherit"
+                          onClick={toggleSearch}
+                          size="large"
+                        >
+                          <Close />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <StyledSearchIcon data-qa-search-icon="true" />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
+                        backgroundColor: theme.tokens.header.Search.Background,
+                        borderColor: theme.tokens.header.Search.Border.Active,
+                        color: theme.tokens.header.Search.Text.Filled,
+                      },
+                      '&:hover': {
+                        backgroundColor: theme.tokens.header.Search.Background,
+                        borderColor: theme.tokens.header.Search.Border.Hover,
+                        color: theme.tokens.header.Search.Text.Filled,
+                      },
+                      backgroundColor: theme.tokens.header.Search.Background,
+                      borderColor: theme.tokens.header.Search.Border.Default,
+                      color: theme.tokens.header.Search.Text.Filled,
+                      maxWidth: '100%',
+                    },
+                  },
+                }}
                 sx={{
-                  '& .MuiInputBase-root': {
-                    backgroundColor: theme.tokens.header.Search.Background,
-                    border: 'none',
-                    boxShadow: 'none !important',
-                    color: theme.tokens.header.Search.Text.Filled,
-                    maxWidth: '100%',
-                    minHeight: 30,
+                  '& .MuiInputBase-root.MuiAutocomplete-inputRoot': {
+                    paddingRight: theme.tokens.spacing.S8,
                   },
                 }}
                 hideLabel
@@ -433,25 +449,17 @@ const SearchBarComponent = (props: SearchProps) => {
               />
             );
           }}
-          sx={(theme) => ({
-            '& .MuiInput-root .MuiInput-input': {
-              padding: `${theme.tokens.spacing.S6} ${theme.tokens.spacing.S8}`,
-            },
-            '&.MuiAutocomplete-root': {
-              '&.Mui-focused, &.Mui-focused:hover': {
-                borderColor: theme.tokens.header.Search.Border.Active,
-              },
-              '&:hover': {
-                borderColor: theme.tokens.header.Search.Border.Hover,
-              },
-              '.MuiInput-root': {
-                paddingRight: theme.tokens.spacing.S8,
-              },
-              border: `1px solid ${theme.tokens.header.Search.Border.Default}`,
-            },
+          slots={{
+            paper: (props) => (
+              <SearchSuggestionContainer
+                {...props}
+                isLargeAccount={isLargeAccount}
+              />
+            ),
+          }}
+          sx={{
             maxWidth: '100%',
-            width: '100%',
-          })}
+          }}
           autoHighlight
           data-qa-main-search
           disableClearable

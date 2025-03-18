@@ -1,4 +1,5 @@
 export * from './Accordion';
+export * from './ActionsPanel';
 export * from './Autocomplete';
 export * from './BetaChip';
 export * from './Box';

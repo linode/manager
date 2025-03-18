@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
+import { queryClientFactory } from '@linode/queries';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
 
 import type { Flags } from 'src/featureFlags';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const props = {
   closeMenu: vi.fn(),
@@ -28,8 +28,8 @@ describe('PrimaryNav', () => {
     usePreferences: vi.fn().mockReturnValue({}),
   }));
 
-  vi.mock('src/queries/profile/preferences', async () => {
-    const actual = await vi.importActual('src/queries/profile/preferences');
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
     return {
       ...actual,
       usePreferences: queryMocks.usePreferences,
@@ -229,7 +229,11 @@ describe('PrimaryNav', () => {
     });
 
     const monitorNavItem = await findByText('Monitor');
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
 
     expect(monitorNavItem).toBeVisible();
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
   });
 });

@@ -1,9 +1,8 @@
-import { CircleProgress, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, CircleProgress, Notice, Typography } from '@linode/ui';
 import { isNumber, pluralize } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';

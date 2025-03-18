@@ -1,7 +1,10 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
-import { LongviewResponse } from 'src/features/Longview/request.types';
-import { AllData, LongviewPackage } from 'src/features/Longview/request.types';
+import {
+  LongviewResponse,
+  AllData,
+  LongviewPackage,
+} from 'src/features/Longview/request.types';
 
 import {
   longviewDiskFactory,

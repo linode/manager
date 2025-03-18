@@ -97,6 +97,22 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
   );
 
 /**
+ * createNodeBalancerBeta
+ *
+ * Add a NodeBalancer to your account using the beta API
+ */
+export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
+  Request<NodeBalancer>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/nodebalancers`),
+    setData(
+      data,
+      NodeBalancerSchema,
+      combineNodeBalancerConfigNodeAddressAndPort
+    )
+  );
+
+/**
  * deleteNodeBalancer
  *
  * Remove a NodeBalancer from your account.

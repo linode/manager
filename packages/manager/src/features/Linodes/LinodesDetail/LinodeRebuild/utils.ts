@@ -8,9 +8,9 @@ import { stackscriptQueries } from 'src/queries/stackscripts';
 import { getIsUDFRequired } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { RebuildRequest, StackScript } from '@linode/api-v4';
+import type { ManagerPreferences } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldError, FieldErrors, Resolver } from 'react-hook-form';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const REBUILD_OPTIONS = [
   { label: 'Image' },

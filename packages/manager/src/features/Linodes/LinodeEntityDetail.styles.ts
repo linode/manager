@@ -1,13 +1,12 @@
 // This component was built assuming an unmodified MUI <Table />
-import { Box, Typography } from '@linode/ui';
 import { Typography as FontTypography } from '@linode/design-language-system';
-
+import { Box, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
-import Grid from '@mui/material/Grid2';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -44,14 +43,6 @@ export const StyledColumnLabelGrid = styled(Grid, {
   color: theme.textColors.headlineStatic,
   font: theme.font.bold,
 }));
-
-export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
-  ({ theme }) => ({
-    '& p': {
-      color: theme.textColors.tableStatic,
-    },
-  })
-);
 
 export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
   ({ theme }) => ({

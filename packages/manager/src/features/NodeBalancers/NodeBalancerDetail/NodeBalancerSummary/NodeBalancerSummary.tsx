@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useNodeBalancerQuery } from 'src/queries/nodebalancers';
+import { useNodeBalancerQuery } from '@linode/queries';
 
 import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';

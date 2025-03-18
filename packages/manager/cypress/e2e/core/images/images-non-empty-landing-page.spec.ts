@@ -1,16 +1,18 @@
-import { imageFactory } from 'src/factories';
-import { ui } from 'support/ui';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { profileFactory } from 'src/factories';
-import { randomLabel } from 'support/util/random';
-import { grantsFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockGetAllImages } from 'support/intercepts/images';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { Image } from '@linode/api-v4';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+
+import { grantsFactory } from 'src/factories';
+import { profileFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories';
+import { imageFactory } from 'src/factories';
+
+import type { Image } from '@linode/api-v4';
 
 function checkActionMenu(tableAlias: string, mockImages: any[]) {
   mockImages.forEach((image) => {
@@ -67,14 +69,14 @@ describe('image landing checks for non-empty state with restricted user', () => 
   it('checks restricted user with read access has no access to create image and can see existing images', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({

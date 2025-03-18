@@ -2474,6 +2474,7 @@ export const handlers = [
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
       const serviceType = params.serviceType;
+      alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
           ...alertFactory.buildList(20, {
@@ -2523,6 +2524,20 @@ export const handlers = [
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
       ...customAlertsWithServiceType,
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'in progress',
+        type: 'user',
+        updated_by: 'user1',
+      }),
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'failed',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),

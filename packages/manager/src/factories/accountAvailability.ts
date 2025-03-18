@@ -1,6 +1,5 @@
 import { pickRandom } from '@linode/utilities';
-
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { AccountAvailability } from '@linode/api-v4';
 

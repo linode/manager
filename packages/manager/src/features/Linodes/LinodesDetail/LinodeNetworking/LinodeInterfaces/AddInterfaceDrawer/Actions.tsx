@@ -1,7 +1,6 @@
+import { ActionsPanel } from '@linode/ui';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 
 import type { CreateLinodeInterfacePayload } from '@linode/api-v4';
 

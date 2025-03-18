@@ -2,9 +2,9 @@ import { Box, Stack } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { AppBar } from 'src/components/AppBar';
+import { Link } from 'src/components/Link';
 import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
 import { isLoggedInAsCustomer } from 'src/utilities/authentication';
@@ -81,7 +81,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           >
             {!isNarrowViewport && (
               <Link
-                aria-label="Akamai - Dashboard"
+                accessibleAriaLabel="Akamai - Dashboard"
                 style={{ lineHeight: 0 }}
                 title="Akamai - Dashboard"
                 to={`/dashboard`}

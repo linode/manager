@@ -1,3 +1,4 @@
+import { getRoot } from '@linode/utilities';
 import CloseIcon from '@mui/icons-material/Close';
 import Handyman from '@mui/icons-material/Handyman';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -6,8 +7,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { Provider } from 'react-redux';
-
-import { getRoot } from 'src/utilities/rootManager';
 
 import { Draggable } from './components/Draggable';
 import './dev-tools.css';

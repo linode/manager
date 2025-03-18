@@ -10,7 +10,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {

@@ -1,8 +1,8 @@
 import { Button, Dialog, Notice, Stack, Typography } from '@linode/ui';
+import { replaceNewlinesWithLineBreaks } from '@linode/utilities';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
 import { ErrorMessage } from '../ErrorMessage';
 import { LinearProgress } from '../LinearProgress';

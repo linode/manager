@@ -1,8 +1,9 @@
-import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+
 import type { Linode } from '@linode/api-v4';
 
 authenticate();

@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Link } from 'src/components/Link';
 
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
   ({ theme }) => ({

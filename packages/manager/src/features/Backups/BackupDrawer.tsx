@@ -1,10 +1,9 @@
-import { Box, Notice, Stack, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Notice, Stack, Typography } from '@linode/ui';
 import { isNumber, pluralize } from '@linode/utilities';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
@@ -18,8 +17,8 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/account/settings';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+  useAllLinodesQuery,
+} from '@linode/queries';
 import { useAllTypes } from 'src/queries/types';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
