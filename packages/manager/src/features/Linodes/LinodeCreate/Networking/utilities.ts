@@ -87,7 +87,7 @@ const legacyFieldToNewFieldMap = {
  * If the user selects legacy interfaces, we tranform the new interface into legacy interfaces.
  *
  * If the user selects legacy interfaces and the API returns API errors in the shape of legacy interface,
- * we need to map the errors to the new Lindoe Interfaces shape so they surface correctly in the UI.
+ * we need to map the errors to the new Linode Interfaces shape so they surface correctly in the UI.
  */
 export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
   errors: APIError[]
