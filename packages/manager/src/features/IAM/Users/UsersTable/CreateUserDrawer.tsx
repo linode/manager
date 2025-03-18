@@ -1,6 +1,8 @@
+import { useCreateUserMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
@@ -10,8 +12,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { Drawer } from 'src/components/Drawer';
-import { useCreateUserMutation } from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 
 import type { User } from '@linode/api-v4/lib/account';
 
@@ -66,7 +67,12 @@ export const CreateUserDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Add a User">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title="Add a User"
+    >
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
