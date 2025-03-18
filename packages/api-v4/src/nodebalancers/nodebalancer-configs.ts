@@ -123,7 +123,11 @@ export const rebuildNodeBalancerConfigBeta = (
         nodeBalancerId
       )}/configs/${encodeURIComponent(configId)}/rebuild`
     ),
-    setData(data, UpdateNodeBalancerConfigSchema)
+    setData(
+      data,
+      createNodeBalancerConfigSchema,
+      combineConfigNodeAddressAndPort
+    )
   );
 
 /**
