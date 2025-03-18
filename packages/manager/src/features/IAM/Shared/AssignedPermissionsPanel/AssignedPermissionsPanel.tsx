@@ -55,7 +55,7 @@ export const AssignedPermissionsPanel = ({ role }: Props) => {
         {description.length > 110 && (
           <StyledLinkButton
             sx={{
-              font: theme.tokens.typography.Label.Semibold.Xs,
+              font: theme.tokens.alias.Typography.Label.Semibold.Xs,
               width: 'max-content',
             }}
             onClick={() => setShowFullDescription((show) => !show)}
