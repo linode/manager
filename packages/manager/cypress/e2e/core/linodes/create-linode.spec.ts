@@ -84,6 +84,10 @@ describe('Create Linode', () => {
          * - Confirms that a Linode of the given plan type can be deployed.
          */
         it(`creates a ${planConfig.planType} Linode`, () => {
+          if (planConfig.planType === 'Premium CPU') {
+            cy.tag('env:premiumPlans');
+          }
+
           const linodeRegion = chooseRegion({
             capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
           });
