@@ -67,7 +67,7 @@ export const DeleteInterfaceDialog = (props: Props) => {
       isFetching={isLoading}
       onClose={onClose}
       open={open}
-      title={`Delete ${type} Interface ID #${interfaceId}?`}
+      title={`Delete ${type} Interface (ID: ${interfaceId})?`}
     >
       Are you sure you want to delete this {type} interface?
     </ConfirmationDialog>
