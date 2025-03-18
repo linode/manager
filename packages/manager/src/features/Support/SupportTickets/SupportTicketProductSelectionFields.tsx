@@ -1,18 +1,18 @@
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+  useAllVolumesQuery,
+} from '@linode/queries';
 import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import {
-  useAllFirewallsQuery,
-  useAllLinodesQuery,
-  useAllNodeBalancersQuery,
-  useAllVPCsQuery,
-} from '@linode/queries';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,

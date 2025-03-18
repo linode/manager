@@ -80,7 +80,10 @@ export const Permissions = ({ permissions }: Props) => {
 
         {(numHiddenItems > 0 || showAll) && (
           <StyledBox>
-            <StyledLinkButton onClick={() => setShowAll(!showAll)}>
+            <StyledLinkButton
+              onClick={() => setShowAll(!showAll)}
+              type="button"
+            >
               {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
             </StyledLinkButton>
           </StyledBox>
