@@ -14,6 +14,7 @@ import {
   shutDownLinode,
   updateLinode,
   updateLinodeInterface,
+  updateLinodeInterfaceSettings,
   upgradeToLinodeInterfaces,
 } from 'src/mocks/presets/crud/handlers/linodes';
 
@@ -37,6 +38,7 @@ export const linodeCrudPreset: MockPresetCrud = {
     deleteLinodeInterface,
     createLinodeInterface,
     updateLinodeInterface,
+    updateLinodeInterfaceSettings,
     getLinodeInterfaceFirewalls,
   ],
   id: 'linodes:crud',

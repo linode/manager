@@ -3,6 +3,7 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceSettingsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
@@ -36,6 +37,7 @@ import type {
   LinodeBackupsResponse,
   LinodeIPsResponse,
   LinodeInterface,
+  LinodeInterfaceSettings,
   LinodeInterfaces,
   RegionalNetworkUtilization,
   Stats,
@@ -85,7 +87,7 @@ export const getLinodes = () => [
   ),
 
   http.get(
-    '*/v4beta/linode/instances/:id/interfaces',
+    '*/v4*/linode/instances/:id/interfaces',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaces>> => {
@@ -112,7 +114,7 @@ export const getLinodes = () => [
   ),
 
   http.get(
-    '*/v4beta/linode/instances/:id/interfaces/:interfaceId',
+    '*/v4*/linode/instances/:id/interfaces/:interfaceId',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | LinodeInterface>> => {
@@ -126,6 +128,25 @@ export const getLinodes = () => [
       }
 
       return makeResponse(linodeInterface[1]);
+    }
+  ),
+
+  // todo: connect this to the DB eventually
+  http.get(
+    '*/v4*/linode/instances/:id/interfaces/settings',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaceSettings>> => {
+      const linodeId = Number(params.id);
+      const linode = await mswDB.get('linodes', linodeId);
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const linodeSettings = linodeInterfaceSettingsFactory.build();
+
+      return makeResponse(linodeSettings);
     }
   ),
 
@@ -1006,6 +1027,31 @@ export const upgradeToLinodeInterfaces = (mockState: MockState) => [
         dry_run: dry_run ?? true,
         interfaces: linodeInterfaces,
       });
+    }
+  ),
+];
+
+export const updateLinodeInterfaceSettings = () => [
+  http.put(
+    '*/v4*/linodes/instances/:id/interfaces/settings',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | LinodeInterfaceSettings>> => {
+      const linodeId = Number(params.id);
+      const linode = await mswDB.get('linodes', linodeId);
+
+      if (!linode) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+
+      const updatedSettings = linodeInterfaceSettingsFactory.build({
+        ...payload,
+      });
+
+      return makeResponse(updatedSettings);
     }
   ),
 ];
