@@ -95,9 +95,9 @@ export const CreateUserDrawer = (props: Props) => {
           rules={{ required: 'Email is required' }}
         />
 
-        <Box sx={{ marginTop: 1 }}>
+        <Box sx={{ marginTop: 2 }}>
           <Notice
-            text="The user will be sent an email to set their password"
+            text="The user will be sent an email to set their password."
             variant="warning"
           />
         </Box>
