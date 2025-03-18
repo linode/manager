@@ -1,5 +1,5 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import { Autocomplete, Box, Stack } from '@linode/ui';
+import { Autocomplete, Box, Notice, Stack } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -41,16 +41,21 @@ export const VPC = ({ index }: Props) => {
   return (
     <Box>
       <Stack spacing={1.5}>
+        {!regionId && (
+          <Notice
+            text="Select a region to see available VPCs."
+            variant="warning"
+          />
+        )}
+        {selectedRegion && !regionSupportsVPCs && (
+          <Notice
+            text="VPC is not available in the selected region."
+            variant="warning"
+          />
+        )}
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
-              helperText={
-                !regionId
-                  ? 'Select a region to see available VPCs.'
-                  : selectedRegion && !regionSupportsVPCs
-                  ? 'VPC is not available in the selected region.'
-                  : undefined
-              }
               onChange={(e, vpc) => {
                 field.onChange(vpc?.id ?? null);
 
@@ -99,6 +104,7 @@ export const VPC = ({ index }: Props) => {
                   (subnet) => subnet.id === field.value
                 ) ?? null
               }
+              disabled={!regionSupportsVPCs}
               errorText={fieldState.error?.message}
               getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
               label="Subnet"
