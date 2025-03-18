@@ -1,8 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Drawer } from '@linode/ui';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
@@ -24,7 +24,12 @@ export const HostNamesDrawer = (props: Props) => {
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title="Regions / S3 Hostnames">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Regions / S3 Hostnames"
+    >
       <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         <CopyAllHostnames
           text={

@@ -1,6 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useCreateSubnetMutation,
+  useGrants,
+  useProfile,
+  useVPCQuery,
+} from '@linode/queries';
+import {
   ActionsPanel,
+  Drawer,
   FormHelperText,
   Notice,
   Stack,
@@ -10,13 +17,7 @@ import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
-import {
-  useGrants,
-  useProfile,
-  useCreateSubnetMutation,
-  useVPCQuery,
-} from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   RESERVED_IP_NUMBER,
@@ -89,7 +90,12 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title={'Create Subnet'}
+    >
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
