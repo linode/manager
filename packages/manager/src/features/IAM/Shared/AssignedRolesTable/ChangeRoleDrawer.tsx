@@ -1,10 +1,15 @@
-import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import {
   useAccountPermissions,
