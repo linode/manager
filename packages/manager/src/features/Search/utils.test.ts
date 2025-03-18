@@ -9,41 +9,42 @@ const data = searchableItems as SearchableItem[];
 describe('separate results by entity', () => {
   const results = separateResultsByEntity(data);
   it('contains keys of each entity type', () => {
-    expect(results).toHaveProperty('linodes');
-    expect(results).toHaveProperty('volumes');
-    expect(results).toHaveProperty('domains');
-    expect(results).toHaveProperty('images');
-    expect(results).toHaveProperty('nodebalancers');
-    expect(results).toHaveProperty('kubernetesClusters');
-    expect(results).toHaveProperty('buckets');
-    expect(results).toHaveProperty('firewalls');
-    expect(results).toHaveProperty('databases');
+    expect(results).toHaveProperty('linode');
+    expect(results).toHaveProperty('volume');
+    expect(results).toHaveProperty('domain');
+    expect(results).toHaveProperty('image');
+    expect(results).toHaveProperty('nodebalancer');
+    expect(results).toHaveProperty('kubernetesCluster');
+    expect(results).toHaveProperty('bucket');
+    expect(results).toHaveProperty('firewall');
+    expect(results).toHaveProperty('database');
   });
 
   it('the value of each entity type is an array', () => {
-    expect(results.linodes).toBeInstanceOf(Array);
-    expect(results.volumes).toBeInstanceOf(Array);
-    expect(results.domains).toBeInstanceOf(Array);
-    expect(results.images).toBeInstanceOf(Array);
-    expect(results.nodebalancers).toBeInstanceOf(Array);
-    expect(results.kubernetesClusters).toBeInstanceOf(Array);
-    expect(results.buckets).toBeInstanceOf(Array);
-    expect(results.firewalls).toBeInstanceOf(Array);
-    expect(results.databases).toBeInstanceOf(Array);
+    expect(results.linode).toBeInstanceOf(Array);
+    expect(results.volume).toBeInstanceOf(Array);
+    expect(results.domain).toBeInstanceOf(Array);
+    expect(results.image).toBeInstanceOf(Array);
+    expect(results.nodebalancer).toBeInstanceOf(Array);
+    expect(results.kubernetesCluster).toBeInstanceOf(Array);
+    expect(results.bucket).toBeInstanceOf(Array);
+    expect(results.firewall).toBeInstanceOf(Array);
+    expect(results.database).toBeInstanceOf(Array);
   });
 
   it('returns empty results if there is no data', () => {
     const newResults = separateResultsByEntity([]);
     expect(newResults).toEqual({
-      buckets: [],
-      databases: [],
-      domains: [],
-      firewalls: [],
-      images: [],
-      kubernetesClusters: [],
-      linodes: [],
-      nodebalancers: [],
-      volumes: [],
+      bucket: [],
+      database: [],
+      domain: [],
+      firewall: [],
+      image: [],
+      kubernetesCluster: [],
+      linode: [],
+      nodebalancer: [],
+      stackscript: [],
+      volume: [],
     });
   });
 });
