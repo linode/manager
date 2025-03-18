@@ -1,3 +1,4 @@
+import { isEmpty } from '@linode/api-v4';
 import { Autocomplete, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
@@ -7,31 +8,34 @@ import { useAccountResources } from 'src/queries/resources/resources';
 
 import { placeholderMap } from '../utilities';
 
+import type { EntitiesOption } from '../utilities';
 import type {
   IamAccessType,
   IamAccountResource,
   Resource,
   ResourceType,
   ResourceTypePermissions,
-} from '@linode/api-v4';
+} from '@linode/api-v4/lib/iam/types';
 
 interface Props {
   access: IamAccessType;
+  assignedEntities?: EntitiesOption[];
   type: ResourceType | ResourceTypePermissions;
 }
 
-interface EntitiesOption {
-  label: string;
-  value: number;
-}
-
-export const Entities = ({ access, type }: Props) => {
+export const Entities = ({ access, assignedEntities, type }: Props) => {
   const { data: resources } = useAccountResources();
   const theme = useTheme();
 
   const [selectedEntities, setSelectedEntities] = React.useState<
     EntitiesOption[]
   >([]);
+
+  React.useEffect(() => {
+    if (!isEmpty(assignedEntities) && assignedEntities !== undefined) {
+      setSelectedEntities(assignedEntities);
+    }
+  }, [assignedEntities]);
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'resource_access' || !resources) {
@@ -68,12 +72,14 @@ export const Entities = ({ access, type }: Props) => {
         </li>
       )}
       ListboxProps={{ sx: { overflowX: 'hidden' } }}
+      getOptionLabel={(option) => option.label}
       label="Entities"
       multiple
       noMarginTop
       onChange={(_, value) => setSelectedEntities(value)}
       options={memoizedEntities}
       placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
+      readOnly={!isEmpty(assignedEntities)}
       sx={{ marginTop: theme.tokens.spacing.S12 }}
       value={selectedEntities}
     />
