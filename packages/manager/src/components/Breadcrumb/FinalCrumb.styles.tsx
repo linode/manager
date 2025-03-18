@@ -14,11 +14,6 @@ export const StyledEditableText = styled(EditableText, {
   '& > div': {
     width: 250,
   },
-  '& .breadcrumb-text': {
-    color: theme.tokens.breadcrumb.Normal.Text.Default,
-    fontSize: '1rem !important',
-    paddingLeft: 0,
-  },
 }));
 
 export const StyledH1Header = styled(H1Header, { label: 'StyledH1Header' })(
