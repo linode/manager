@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { Box } from '../Box';
 import { Checkbox } from './Checkbox';
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
-import { Box } from '../Box';
 
 const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
