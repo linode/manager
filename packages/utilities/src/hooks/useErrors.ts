@@ -1,5 +1,6 @@
-import { scrollErrorIntoView } from '@linode/utilities';
 import * as React from 'react';
+
+import { scrollErrorIntoView } from '../helpers/scrollErrorIntoView';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
