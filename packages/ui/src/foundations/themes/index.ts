@@ -5,6 +5,7 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
+import type { SpacingFunction } from '../utils';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
@@ -39,6 +40,7 @@ import type {
   SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
   TableTypes as TableTypesLight,
+  TextFieldTypes as TextFieldTypesLight,
   TypographyTypes,
 } from '@linode/design-language-system';
 import type {
@@ -56,6 +58,7 @@ import type {
   SearchTypes as SearchTypesDark,
   SideNavigationTypes as SideNavigationTypesDark,
   TableTypes as TableTypesDark,
+  TextFieldTypes as TextFieldTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
@@ -77,7 +80,7 @@ type SideNavigationTypes = MergeTypes<
 >;
 type DropdownTypes = MergeTypes<DropdownTypesLight, DropdownTypesDark>;
 type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
-
+type TextFieldTypes = MergeTypes<TextFieldTypesLight, TextFieldTypesDark>;
 type Fonts = {
   bold: TypographyTypes['Body']['Bold'];
   extrabold: TypographyTypes['Body']['Extrabold'];
@@ -137,6 +140,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles: any;
     name: ThemeName;
     notificationToast: NotificationToast;
+    spacingFunction: SpacingFunction;
     textColors: TextColors;
     tokens: {
       // ----------------------------------------
@@ -162,6 +166,7 @@ declare module '@mui/material/styles/createTheme' {
       sideNavigation: SideNavigationTypes;
       spacing: SpacingTypes;
       table: TableTypes;
+      textField: TextFieldTypes;
       typography: TypographyTypes;
     };
     visually: any;
@@ -182,6 +187,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles?: any;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    spacingFunction?: SpacingFunction;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
       // ----------------------------------------
@@ -207,6 +213,7 @@ declare module '@mui/material/styles/createTheme' {
       sideNavigation?: SideNavigationTypes;
       spacing?: SpacingTypes;
       table?: TableTypes;
+      textField?: TextFieldTypes;
       typography?: TypographyTypes;
     };
     visually?: any;

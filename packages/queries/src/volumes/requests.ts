@@ -1,14 +1,7 @@
-import {
-  Filter,
-  Params,
-  Volume,
-  getVolumeTypes,
-  getVolumes,
-} from '@linode/api-v4';
-
+import { getVolumeTypes, getVolumes } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
-import type { PriceType } from '@linode/api-v4';
+import type { Filter, Params, PriceType, Volume } from '@linode/api-v4';
 
 export const getAllVolumeTypes = () =>
   getAll<PriceType>((params) => getVolumeTypes(params))().then(

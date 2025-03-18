@@ -1,4 +1,8 @@
-import { useLinodeFirewallsQuery, useRegionsQuery } from '@linode/queries';
+import {
+  useLinodeFirewallsQuery,
+  useLinodeVolumesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -12,7 +16,6 @@ import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
-import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
