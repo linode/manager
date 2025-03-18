@@ -1,6 +1,8 @@
+import { useAccountSettings } from '@linode/queries';
 import {
   ActionsPanel,
   CircleProgress,
+  Drawer,
   Notice,
   TextField,
   Typography,
@@ -9,9 +11,8 @@ import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStor
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { useAccountSettings } from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
@@ -161,6 +162,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}

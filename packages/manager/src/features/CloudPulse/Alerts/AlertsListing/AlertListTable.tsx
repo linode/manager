@@ -75,9 +75,13 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
             variant: 'success',
           });
         })
-        .catch(() => {
+        .catch((updateError: APIError[]) => {
           // Handle error
-          enqueueSnackbar(`${errorStatus} alert failed`, {
+          const errorResponse = getAPIErrorOrDefault(
+            updateError,
+            `${errorStatus} alert failed`
+          );
+          enqueueSnackbar(errorResponse[0].reason, {
             variant: 'error',
           });
         });

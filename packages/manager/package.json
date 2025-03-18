@@ -45,7 +45,7 @@
     "@tanstack/react-router": "^1.111.11",
     "@xterm/xterm": "^5.5.0",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.7.4",
+    "axios": "~1.8.3",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",
@@ -209,7 +209,7 @@
     "redux-mock-store": "^1.5.3",
     "storybook": "^8.4.7",
     "storybook-dark-mode": "4.0.1",
-    "vite": "^6.1.1",
+    "vite": "^6.2.2",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
