@@ -881,7 +881,7 @@ export const updateLinodeInterface = (mockState: MockState) => [
       };
 
       await mswDB.update(
-        'subnets',
+        'linodeInterfaces',
         interfaceId,
         [linodeId, updatedInterface],
         mockState
