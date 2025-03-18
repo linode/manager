@@ -302,7 +302,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
       .of(string().defined())
-      .defined()
+      .required()
       .max(
         maxSelectionCount,
         `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
