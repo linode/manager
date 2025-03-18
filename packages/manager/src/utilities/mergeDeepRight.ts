@@ -1,6 +1,8 @@
-// Creates a new object with the own properties of the first object merged
-// with the own properties of the second object. If a key exists in both objects: and both values are objects,
-// the two values will be recursively merged otherwise the value from the second object will be used.
+/**
+ * Creates a new object with the own properties of the first object merged
+ * with the own properties of the second object. If a key exists in both objects: and both values are objects,
+ * the two values will be recursively merged otherwise the value from the second object will be used.
+ */
 export const mergeDeepRight = <
   T extends Record<string, any>,
   U extends Record<string, any>
