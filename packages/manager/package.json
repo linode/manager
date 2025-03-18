@@ -58,7 +58,7 @@
     "immer": "^9.0.6",
     "ipaddr.js": "^1.9.1",
     "js-sha256": "^0.11.0",
-    "jspdf": "^3.0.0",
+    "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "launchdarkly-react-client-sdk": "3.0.10",
     "libphonenumber-js": "^1.10.6",

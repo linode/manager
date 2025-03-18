@@ -9,12 +9,6 @@ const DIRNAME = new URL('.', import.meta.url).pathname;
 export default defineConfig({
   build: {
     outDir: 'build',
-    rollupOptions: {
-      // Optional dependency that isn't used in the application,
-      // and has a resolution that could cause run-time issues if ever used with jspdf.
-      // See https://www.npmjs.com/package/jspdf
-      external: ['canvg'],
-    },
   },
   envPrefix: 'REACT_APP_',
   plugins: [react(), svgr({ exportAsDefault: true })],
