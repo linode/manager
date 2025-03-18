@@ -1,11 +1,17 @@
-import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import {
   useAccountPermissions,
   useAccountUserPermissions,
@@ -136,7 +142,12 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer onClose={handleClose} open={open} title="Change Role">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title="Change Role"
+    >
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
