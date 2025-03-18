@@ -1,5 +1,4 @@
-import { CreateAlertDefinitionForm } from './CreateAlert/types';
-
+import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertSeverityType,
   AlertStatusType,
