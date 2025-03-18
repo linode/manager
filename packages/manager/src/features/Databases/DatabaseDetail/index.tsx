@@ -1,4 +1,5 @@
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { useEditableLabelState } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
@@ -11,7 +12,6 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
