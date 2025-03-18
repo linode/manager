@@ -219,7 +219,7 @@ describe('PrimaryNav', () => {
 
     const flags = {
       aclp: {
-        beta: false,
+        beta: true,
         enabled: true,
       },
       aclpAlerting: {
@@ -253,7 +253,7 @@ describe('PrimaryNav', () => {
 
     const flags = {
       aclp: {
-        beta: false,
+        beta: true,
         enabled: false,
       },
       aclpAlerting: {
@@ -287,7 +287,7 @@ describe('PrimaryNav', () => {
 
     const flags = {
       aclp: {
-        beta: false,
+        beta: true,
         enabled: true,
       },
       aclpAlerting: {
