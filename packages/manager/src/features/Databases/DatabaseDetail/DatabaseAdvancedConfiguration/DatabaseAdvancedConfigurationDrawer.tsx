@@ -104,7 +104,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     if (databaseConfig) {
       reset({ configs: existingConfigsArray });
     }
-  }, [databaseConfig, onClose]);
+  }, [databaseConfig]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -140,7 +140,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     remove(index);
     reset(watch(), { keepDirty: true });
   };
-
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     const payload: UpdateDatabasePayload = {
       engine_config: formatConfigPayload(formData.configs, configurations),
@@ -239,7 +242,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       </form>
