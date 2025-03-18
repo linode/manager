@@ -270,6 +270,11 @@ export const processMetricCriteria = (
   );
 };
 
+/**
+ * @param props The props required foe the max selection count calculation
+ * @param createSchema The schema in which the entity id max validation will be added
+ * @returns The updated schema with entity id max validation based on max selection count
+ */
 export const getCreateSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   createSchema: ObjectSchema<CreateAlertDefinitionForm>
@@ -284,6 +289,11 @@ export const getCreateSchemaWithEntityIdValidation = (
     : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
 };
 
+/**
+ * @param props The props required foe the max selection count calculation
+ * @param createSchema The schema in which the entity id max validation will be added
+ * @returns The updated schema with entity id max validation based on max selection count
+ */
 export const getEditSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   editSchema: ObjectSchema<EditAlertDefinitionPayload>
@@ -298,6 +308,10 @@ export const getEditSchemaWithEntityIdValidation = (
     : editSchema.concat(getEntityIdWithMax(maxSelectionCount));
 };
 
+/**
+ * @param maxSelectionCount The max selection count that needs to be applied for entity_id property
+ * @returns The entity_ids prop with max validation based on the max selection count passed
+ */
 const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
