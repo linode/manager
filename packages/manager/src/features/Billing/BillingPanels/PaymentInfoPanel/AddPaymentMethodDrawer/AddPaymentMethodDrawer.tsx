@@ -1,13 +1,20 @@
-import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
+import { useProfile } from '@linode/queries';
+import {
+  Box,
+  Divider,
+  Drawer,
+  Notice,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
+import { NotFound } from 'src/components/NotFound';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from '@linode/queries';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
@@ -86,7 +93,12 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const disabled = isProcessing || hasMaxPaymentMethods || isReadOnly;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Payment Method">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add Payment Method"
+    >
       {isProcessing ? (
         <LinearProgress
           sx={{
@@ -136,7 +148,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                container
                 size={{
                   md: 3,
                   xs: 4,
@@ -145,6 +156,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                   alignContent: 'center',
                   justifyContent: 'flex-end',
                 }}
+                container
               >
                 <GooglePayChip
                   disabled={disabled}
@@ -173,7 +185,6 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                container
                 size={{
                   md: 3,
                   xs: 4,
@@ -182,6 +193,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
                   alignContent: 'center',
                   justifyContent: 'flex-end',
                 }}
+                container
               >
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalChip

@@ -1,9 +1,9 @@
-import { ActionsPanel, Typography } from '@linode/ui';
+import { useRegionsQuery } from '@linode/queries';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
-import { useRegionsQuery } from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 
 import type { IPRange } from '@linode/api-v4/lib/networking';
 
@@ -23,6 +23,7 @@ export const ViewRangeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={props.onClose}
       open={props.open}
       title={`Details for IP Range`}

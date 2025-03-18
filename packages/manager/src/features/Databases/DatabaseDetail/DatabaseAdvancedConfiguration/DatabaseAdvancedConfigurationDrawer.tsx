@@ -1,8 +1,8 @@
-import { ActionsPanel, Divider, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Divider, Drawer, Notice, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
 
@@ -24,7 +24,12 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   // The implementation will be updated in the second PR after UI work is completed.
   const engineConfigs = undefined;
   return (
-    <Drawer onClose={onClose} open={open} title="Advanced Configuration">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Advanced Configuration"
+    >
       <Typography>
         Advanced parameters to configure your database cluster.
       </Typography>

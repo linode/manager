@@ -2,6 +2,7 @@ import { useAccountSettings } from '@linode/queries';
 import {
   ActionsPanel,
   CircleProgress,
+  Drawer,
   Notice,
   TextField,
   Typography,
@@ -14,8 +15,8 @@ import {
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -222,6 +223,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}

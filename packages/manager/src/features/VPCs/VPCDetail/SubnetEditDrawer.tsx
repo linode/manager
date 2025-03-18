@@ -4,12 +4,12 @@ import {
   useProfile,
   useUpdateSubnetMutation,
 } from '@linode/queries';
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
@@ -75,7 +75,12 @@ export const SubnetEditDrawer = (props: Props) => {
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit Subnet">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit Subnet"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}

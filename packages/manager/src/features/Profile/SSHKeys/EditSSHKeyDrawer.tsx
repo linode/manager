@@ -1,11 +1,11 @@
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { useUpdateSSHKeyMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { Drawer } from 'src/components/Drawer';
-import { useUpdateSSHKeyMutation } from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { SSHKey } from '@linode/api-v4';
@@ -56,6 +56,7 @@ export const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Edit SSH Key ${sshKey?.label}`}

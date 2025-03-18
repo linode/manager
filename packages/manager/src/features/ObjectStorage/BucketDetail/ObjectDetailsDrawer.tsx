@@ -1,12 +1,12 @@
 import { useProfile } from '@linode/queries';
-import { Divider, Typography } from '@linode/ui';
+import { Divider, Drawer, Typography } from '@linode/ui';
 import { readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from './AccessSelect';
@@ -56,6 +56,7 @@ export const ObjectDetailsDrawer = React.memo(
 
     return (
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(displayName ?? 'Object Detail')}

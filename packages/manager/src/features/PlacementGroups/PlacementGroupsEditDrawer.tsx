@@ -3,7 +3,14 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import { useMutatePlacementGroup } from '@linode/queries';
-import { ActionsPanel, Divider, Notice, Stack, TextField } from '@linode/ui';
+import {
+  ActionsPanel,
+  Divider,
+  Drawer,
+  Notice,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import {
   scrollErrorIntoView,
   useFormValidateOnChange,
@@ -14,7 +21,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -107,6 +113,7 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

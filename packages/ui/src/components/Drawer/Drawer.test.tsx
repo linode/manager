@@ -1,9 +1,9 @@
-import { Button } from '@linode/ui';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
+import { Button } from '../Button';
 import { Drawer } from './Drawer';
 
 import type { DrawerProps } from './Drawer';
