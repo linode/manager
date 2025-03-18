@@ -29,6 +29,7 @@ export const getAlertTypeToActionsList = (
       title: 'Show Details',
     },
     {
+      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
       onClick: handleEdit,
       title: 'Edit',
     },
