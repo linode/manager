@@ -71,9 +71,11 @@ const alertConfigs = [
     type: 'user',
   },
 ];
-const alerts = alertConfigs.flatMap((config) =>
-  alertFactory.build({
+const alerts = alertConfigs.flatMap((config) => {
+  // Create the alert
+  const alert = alertFactory.build({
     created_by: config.created_by,
+    entity_ids: ['1'],  // Default to ['1']
     rule_criteria: {
       rules: [
         {
@@ -90,8 +92,17 @@ const alerts = alertConfigs.flatMap((config) =>
     severity: 1,
     status: 'enabled',
     type: config.type as AlertDefinitionType,
-  })
-);
+  });
+
+  // Update the entity_ids if the label is 'alert-4'
+  if (alert.label === 'Alert-4') {
+    alert.entity_ids = ['100'];
+    alert.type = 'system';
+  }
+
+  return alert;
+});
+
 
 // Verify Sorting Function
 const verifyTableSorting = (
@@ -119,7 +130,7 @@ const verifyTableSorting = (
 const sortCases = [
   { ascending: [1, 2, 3, 4], column: 'label', descending: [4, 3, 2, 1] },
   { ascending: [1, 2, 3, 4], column: 'id', descending: [4, 3, 2, 1] },
-  { ascending: [1, 3, 2, 4], column: 'type', descending: [2, 4, 1, 3] },
+  { ascending: [1, 3, 4, 2], column: 'type', descending: [2, 1, 3, 4] },
 ];
 
 /*
@@ -147,7 +158,7 @@ it('should verify sorting, alert management, and search functionality for contex
   mockAddEntityToAlert(DBaaS, '100', { [ALERT_TYPE]: 100 }).as(
     'addEntityToAlert'
   );
-  mockDeleteEntityFromAlert(DBaaS, '100', 1).as('deleteEntityToAlert');
+  mockDeleteEntityFromAlert(DBaaS, '100', 4).as('deleteEntityToAlert');
 
   // Visit the database alerts page
   cy.visitWithLogin(
@@ -221,8 +232,9 @@ it('should verify sorting, alert management, and search functionality for contex
     );
   });
 
+  cy.findByPlaceholderText('Search for Alerts').should('be.visible').type('Alert-4');
   // Disable Alert
-  cy.get('[data-qa-alert-cell="1"]')
+  cy.get('[data-qa-alert-cell="4"]')
     .find('[data-qa-toggle="true"]')
     .find('[type="checkbox"]')
     .uncheck();

@@ -21,8 +21,9 @@ import {
   convertAlertDefinitionValues,
   getValidationSchema,
   handleMultipleError,
+  getEditSchemaWithEntityIdValidation,
 } from '../Utils/utils';
-import { EditAlertDefinitionFormSchema } from './schemas';
+import { editAlertDefinitionFormSchema } from './schemas';
 
 import type {
   APIError,
@@ -30,7 +31,6 @@ import type {
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
-import type { ObjectSchema } from 'yup';
 import {
   EDIT_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
@@ -53,7 +53,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
-  const editAlertScheme = EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -65,12 +64,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      getValidationSchema(
-        alertDetails?.service_type,
-        flags.aclpAlertServiceTypeConfig ?? [],
-        editAlertScheme,
-        true
-      ) as ObjectSchema<EditAlertDefinitionPayload>
+      getEditSchemaWithEntityIdValidation(
+        {
+          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+          serviceTypeObj: alertDetails.service_type,
+        },
+        editAlertDefinitionFormSchema
+      )
     ),
   });
 
