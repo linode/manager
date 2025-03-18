@@ -1,4 +1,3 @@
-import { parseAPIDate } from 'src/utilities/date';
 type SortOrder = 'asc' | 'desc';
 
 export const sortByString = (a: string, b: string, order: SortOrder) => {
@@ -8,14 +7,6 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
   } else if (a.toLowerCase() > b.toLowerCase()) {
     result = 1;
   }
-  if (order === 'asc') {
-    return result; // ascending order
-  }
-  return -result; // descending order
-};
-
-export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  const result = parseAPIDate(a).diff(parseAPIDate(b)).valueOf();
   if (order === 'asc') {
     return result; // ascending order
   }

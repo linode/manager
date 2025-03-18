@@ -1,12 +1,13 @@
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount, useAccountBetaQuery } from '@linode/queries';
+import { sortByVersion } from '@linode/utilities';
+
+import { useFlags } from 'src/hooks/useFlags';
 import {
   useKubernetesTieredVersionsQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getBetaStatus } from 'src/utilities/betaUtils';
-import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
 import type {

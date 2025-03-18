@@ -1,12 +1,13 @@
+import { sortByString } from '@linode/utilities';
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { sortByString } from 'src/utilities/sort-by';
 
-import type { Region } from '@linode/api-v4';
 import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
 import { WHITELISTED_REGIONS } from '../../utilities';
+
+import type { Region } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
