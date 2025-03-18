@@ -7,7 +7,7 @@ import { renderWithTheme } from '../../utilities/testHelpers';
 import { BetaChip } from './BetaChip';
 
 describe('BetaChip', () => {
-  it('renders with default color', () => {
+  it('renders with default color (primary)', () => {
     const { getByTestId } = renderWithTheme(<BetaChip />);
     const betaChip = getByTestId('betaChip');
     expect(betaChip).toBeInTheDocument();
@@ -15,10 +15,10 @@ describe('BetaChip', () => {
   });
 
   it('renders with primary color', () => {
-    const { getByTestId } = renderWithTheme(<BetaChip color="primary" />);
+    const { getByTestId } = renderWithTheme(<BetaChip color="secondary" />);
     const betaChip = getByTestId('betaChip');
     expect(betaChip).toBeInTheDocument();
-    expect(betaChip).toHaveStyle('background-color: rgb(16, 138, 214)');
+    expect(betaChip).toHaveStyle('background-color: rgb(131, 131, 140)');
   });
 
   it('triggers an onClick callback', () => {
