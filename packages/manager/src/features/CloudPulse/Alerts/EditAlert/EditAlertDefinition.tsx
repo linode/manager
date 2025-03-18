@@ -19,7 +19,6 @@ import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChanne
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import {
   convertAlertDefinitionValues,
-  getValidationSchema,
   handleMultipleError,
   getEditSchemaWithEntityIdValidation,
 } from '../Utils/utils';

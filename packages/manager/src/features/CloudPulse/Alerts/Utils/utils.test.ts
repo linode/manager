@@ -10,11 +10,9 @@ import {
   getCreateSchemaWithEntityIdValidation,
   getEditSchemaWithEntityIdValidation,
   getServiceTypeLabel,
-  getValidationSchema,
   handleMultipleError,
 } from './utils';
 
-import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   APIError,
   Alert,

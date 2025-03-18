@@ -22,7 +22,7 @@ import {
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
-import { getValidationSchema, handleMultipleError, getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
+import { handleMultipleError, getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
