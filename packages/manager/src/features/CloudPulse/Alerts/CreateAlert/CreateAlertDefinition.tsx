@@ -4,7 +4,12 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -12,7 +17,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
+import {
+  CREATE_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
+import { handleMultipleError, getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -27,6 +37,7 @@ import type {
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
+import type { APIError } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
@@ -114,20 +125,24 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created', {
+      enqueueSnackbar('Alert successfully created.', {
         variant: 'success',
       });
       alertCreateExit();
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      handleMultipleError<CreateAlertDefinitionForm>(
+        errors,
+        CREATE_ALERT_ERROR_FIELD_MAP,
+        MULTILINE_ERROR_SEPARATOR,
+        SINGLELINE_ERROR_SEPARATOR,
+        setError
+      );
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Creating alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });

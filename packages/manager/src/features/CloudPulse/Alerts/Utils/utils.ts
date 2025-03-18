@@ -5,6 +5,7 @@ import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
+  APIError,
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
@@ -15,6 +16,7 @@ import type {
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
@@ -216,26 +218,26 @@ export const convertAlertsToTypeSet = (
  */
 export const convertAlertDefinitionValues = (
   {
-    alert_channels,
+    alert_channels: alertChannels,
     description,
-    entity_ids,
+    entity_ids: entityIds,
     id,
     label,
-    rule_criteria,
+    rule_criteria: ruleCriteria,
     severity,
     tags,
-    trigger_conditions,
+    trigger_conditions: triggerConditions,
   }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
     alertId: id,
-    channel_ids: alert_channels.map((channel) => channel.id),
+    channel_ids: alertChannels.map((channel) => channel.id),
     description: description || undefined,
-    entity_ids,
+    entity_ids: entityIds,
     label,
     rule_criteria: {
-      rules: rule_criteria.rules.map((rule) => ({
+      rules: ruleCriteria.rules.map((rule) => ({
         ...rule,
         dimension_filters:
           rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
@@ -244,7 +246,7 @@ export const convertAlertDefinitionValues = (
     serviceType,
     severity,
     tags,
-    trigger_conditions,
+    trigger_conditions: triggerConditions,
   };
 };
 
@@ -257,10 +259,16 @@ export const processMetricCriteria = (
   criterias: AlertDefinitionMetricCriteria[]
 ): ProcessedCriteria[] => {
   return criterias.map(
-    ({ aggregate_function, label, operator, threshold, unit }) => {
+    ({
+      aggregate_function: aggregateFunction,
+      label,
+      operator,
+      threshold,
+      unit,
+    }) => {
       return {
         label,
-        metricAggregationType: aggregationTypeMap[aggregate_function],
+        metricAggregationType: aggregationTypeMap[aggregateFunction],
         metricOperator: metricOperatorTypeMap[operator],
         threshold,
         unit,
@@ -307,4 +315,77 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
         `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
       ),
   });
+};
+
+/**
+ * Handles multiple API errors and maps them to form fields, setting form errors appropriately.
+ * 
+ * @param errors - List of errors returned from the API
+ * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors 
+ *                        to specific form fields. For example, if the API returns an error for "user.name" but 
+ *                        your form field is called "fullName", you would map "user" to "fullName".
+ * @param multiLineErrorSeparator - Separator for multiple errors on fields that are rendered explicitly. Ex: @AlertListNoticeMessages component
+ * @param singleLineErrorSeparator - Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+ * @param setError - React Hook Form's setError function to register errors with the form
+ * 
+ * @example
+ * // Example usage:
+ * const errors = [
+ *   { field: "email", reason: "Email already exists" },
+ *   { field: "password.length", reason: "Password is too short" }
+ * ];
+ * 
+ * // Map API field names to form field paths
+ * const errorFieldMap = {
+ *   "email": "userEmail" as FieldPath<RegisterForm>,
+ *   "password": "userPassword" as FieldPath<RegisterForm>
+ * };
+ * 
+ * handleMultipleError(
+ *   errors,
+ *   errorFieldMap,
+ *   " | ", // Multiline separator
+ *   " ",   // Single line separator
+ *   setError
+ * );
+ */
+export const handleMultipleError = <T extends FieldValues>(
+  errors: APIError[],
+  errorFieldMap: Record<string, FieldPath<T>>,
+  multiLineErrorSeparator: string,
+  singleLineErrorSeparator: string,
+  setError: UseFormSetError<T>
+) => {
+  const errorMap: Map<FieldPath<T>, string> = new Map();
+
+  for (const error of errors) {
+    if (!error.field) {
+      continue;
+    }
+
+    const errorField = error.field.split('.')[0];
+    const errorFieldToSet: FieldPath<T> =
+      errorFieldMap[errorField] ?? error.field;
+
+    const formattedReason = error.reason.endsWith('.')
+      ? error.reason
+      : `${error.reason}.`;
+
+    const separator = errorFieldMap[errorField]
+      ? multiLineErrorSeparator
+      : singleLineErrorSeparator;
+
+    if (errorMap.has(errorFieldToSet)) {
+      const existingMessage = errorMap.get(errorFieldToSet)!;
+      if (!existingMessage.includes(formattedReason)) {
+        errorMap.set(
+          errorFieldToSet,
+          `${existingMessage}${separator}${formattedReason}`
+        );
+      }
+    } else {
+      errorMap.set(errorFieldToSet, formattedReason);
+    }
+    setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
+  }
 };
