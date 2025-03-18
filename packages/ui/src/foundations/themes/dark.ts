@@ -1,10 +1,13 @@
 import {
   Action,
+  Alias,
   Background,
   Badge,
   Border,
   Button,
+  Component,
   Color,
+  Font,
   Content,
   Dropdown,
   GlobalHeader,
@@ -12,6 +15,7 @@ import {
   NotificationToast,
   Search,
   Select,
+  Spacing,
   Table,
   TextField,
   Typography,
@@ -1029,6 +1033,13 @@ export const darkTheme: ThemeOptions = {
     },
   },
   textColors: customDarkModeOptions.textColors,
+  tokens: {
+    alias: Alias,
+    color: Color,
+    component: Component,
+    font: Font,
+    spacing: Spacing,
+  },
   typography: {
     body1: {
       color: Content.Text.Primary.Default,
