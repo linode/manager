@@ -2,11 +2,18 @@ import React from 'react';
 
 import { Checkbox } from './Checkbox';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 import { Box } from '../Box';
 
 const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
+  decorators: [
+    (Story: StoryFn) => (
+      <Box sx={(theme) => ({ margin: theme.tokens.spacing.S16 })}>
+        <Story />
+      </Box>
+    ),
+  ],
   title: 'Foundations/Checkbox',
 };
 
@@ -30,28 +37,24 @@ export const Default: Story = {
   args: {
     checked: false,
   },
-  render: (args) => <Checkbox {...args} />,
 };
 
 export const Unchecked: Story = {
   args: {
     checked: false,
   },
-  render: (args) => <Checkbox {...args} />,
 };
 
 export const Checked: Story = {
   args: {
     checked: true,
   },
-  render: (args) => <Checkbox {...args} />,
 };
 
 export const Indeterminate: Story = {
   args: {
     indeterminate: true,
   },
-  render: (args) => <Checkbox {...args} />,
 };
 
 export const UncheckedDisabled: Story = {
@@ -98,11 +101,6 @@ export const WithLabel: Story = {
   args: {
     text: 'This Checkbox has a label',
   },
-  render: (args) => (
-    <Box sx={{ pl: 1.5 }}>
-      <Checkbox {...args} />
-    </Box>
-  ),
 };
 
 export const WithTooltip: Story = {
@@ -116,9 +114,4 @@ export const WithLabelAndTooltip: Story = {
     text: 'This Checkbox has a tooltip',
     toolTipText: 'This is the tooltip!',
   },
-  render: (args) => (
-    <Box sx={{ pl: 1.5 }}>
-      <Checkbox {...args} />
-    </Box>
-  ),
 };

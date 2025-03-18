@@ -385,6 +385,40 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            color: `${Checkbox.Empty.Hover.Border} !important`,
+          },
+          color: Checkbox.Empty.Default.Border,
+          // Checked
+          '&.Mui-checked': {
+            color: Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Checkbox.Indeterminated.Default.Background,
+          },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Checkbox.Empty.Disabled.Background,
+            },
+            color: Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Checkbox.Indeterminated.Disabled.Background,
+          },
+        },
+      },
+    },
     MuiChip: {
       defaultProps: {
         // In dark mode, we decided our Chips will be our primary color by default.

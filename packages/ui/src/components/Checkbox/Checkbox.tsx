@@ -1,5 +1,3 @@
-// @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
-import { FormControlLabel } from '@mui/material';
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -10,6 +8,7 @@ import {
   CheckboxIndeterminateIcon,
 } from '../../assets/icons';
 import { TooltipIcon } from '../TooltipIcon';
+import { FormControlLabel } from '../FormControlLabel';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -80,37 +79,8 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
-  '&:hover': {
-    color: `${theme.tokens.checkbox.Empty.Hover.Border} !important`,
-  },
-  color: theme.tokens.checkbox.Empty.Default.Border,
+  padding: 0,
   transition: theme.transitions.create(['color']),
-  // Checked
-  ...(props.checked && {
-    color: `${theme.tokens.checkbox.Checked.Default.Background} !important`,
-  }),
-  // Indeterminate
-  ...(props.indeterminate && {
-    color: `${theme.tokens.checkbox.Indeterminated.Default.Background} !important`,
-  }),
-  // Unchecked & Disabled
-  ...(props.disabled && {
-    color: `${theme.tokens.checkbox.Empty.Disabled.Border} !important`,
-    '& svg': {
-      backgroundColor: theme.tokens.checkbox.Empty.Disabled.Background,
-    },
-    pointerEvents: 'none',
-  }),
-  // Checked & Disabled
-  ...(props.checked &&
-    props.disabled && {
-      color: `${theme.tokens.checkbox.Checked.Disabled.Background} !important`,
-    }),
-  // Indeterminate & Disabled
-  ...(props.indeterminate &&
-    props.disabled && {
-      color: `${theme.tokens.checkbox.Indeterminated.Disabled.Background} !important`,
-    }),
   // Unchecked & Readonly
   ...(props.readOnly && {
     color: theme.tokens.checkbox.Empty.ReadOnly.Border,
@@ -119,29 +89,33 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
   // Checked & Readonly
   ...(props.checked &&
     props.readOnly && {
-      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
       svg: {
         '#Check': {
           fill: theme.tokens.checkbox.Checked.ReadOnly.Icon,
         },
         border: `1px solid ${theme.tokens.checkbox.Checked.ReadOnly.Border}`,
       },
+      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
       pointerEvents: 'none',
     }),
   // Indeterminate & Readonly
   ...(props.indeterminate &&
     props.readOnly && {
-      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
       svg: {
         'g rect:nth-of-type(2)': {
           fill: theme.tokens.checkbox.Indeterminated.ReadOnly.Icon,
         },
         border: `1px solid ${theme.tokens.checkbox.Indeterminated.ReadOnly.Border}`,
       },
+      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
       pointerEvents: 'none',
     }),
 }));
 
-const StyledFormControlLabel = styled(FormControlLabel)(() => ({
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+  '& .MuiFormControlLabel-label': {
+    paddingTop: theme.tokens.spacing.S2,
+  },
+  gap: theme.tokens.spacing.S8,
   marginRight: 0,
 }));

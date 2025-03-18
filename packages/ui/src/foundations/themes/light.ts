@@ -590,10 +590,34 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '&:hover': {
+            color: `${Checkbox.Empty.Hover.Border} !important`,
+          },
           color: Checkbox.Empty.Default.Border,
-          // '&.Mui-checked.Mui-disabled': {
-          //   color: ${Checkbox.Checked.Disabled.Background},
-          // },
+          // Checked
+          '&.Mui-checked': {
+            color: Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Checkbox.Indeterminated.Default.Background,
+          },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Checkbox.Empty.Disabled.Background,
+            },
+            color: Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Checkbox.Indeterminated.Disabled.Background,
+          },
         },
       },
     },
