@@ -188,7 +188,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -268,7 +268,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
@@ -329,7 +329,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -394,7 +394,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
@@ -455,7 +455,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -518,7 +518,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
@@ -579,7 +579,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -642,7 +642,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
@@ -717,7 +717,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
 
         cy.contains('Label is required.').should('be.visible');
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         cy.contains('Label is required.').should('not.exist');
 

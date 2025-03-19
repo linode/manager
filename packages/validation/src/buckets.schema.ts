@@ -6,18 +6,18 @@ export const CreateBucketSchema = object()
   .shape(
     {
       label: string()
-        .required('Bucket Name is required.')
-        .min(3, 'Bucket Name must be between 3 and 63 characters.')
-        .matches(/^\S*$/, 'Bucket Name must not contain spaces.')
+        .required('Bucket name is required.')
+        .min(3, 'Bucket name must be between 3 and 63 characters.')
+        .matches(/^\S*$/, 'Bucket name must not contain spaces.')
         .matches(
           /^[a-z0-9].*[a-z0-9]$/,
-          'Bucket Name must start and end with a lowercase letter or number.'
+          'Bucket name must start and end with a lowercase letter or number.'
         )
         .matches(
           /^(?!.*[.-]{2})[a-z0-9.-]+$/,
-          'Bucket Name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
+          'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
         )
-        .max(63, 'Bucket Name must be between 3 and 63 characters.')
+        .max(63, 'Bucket name must be between 3 and 63 characters.')
         .test(
           'unique-label',
           'A bucket with this name already exists in your selected region',
