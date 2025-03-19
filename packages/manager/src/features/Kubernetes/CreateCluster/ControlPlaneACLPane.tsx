@@ -63,7 +63,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
-          {isEnterpriseCluster && isAcknowledgementChecked
+          {isEnterpriseCluster
             ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY
             : CREATE_CLUSTER_STANDARD_TIER_ACL_COPY}
         </Typography>
