@@ -24,6 +24,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { skip } from 'support/util/skip';
 
 import {
   accountFactory,
@@ -95,9 +96,16 @@ describe('Create Linode', () => {
               ? ['Linodes', 'Premium Plans', 'Vlans']
               : ['Linodes', 'Vlans'];
 
-          const linodeRegion = chooseRegion({
-            capabilities: regionCapabilities,
-          });
+          const linodeRegion = (() => {
+            try {
+              return chooseRegion({
+                capabilities: regionCapabilities,
+              });
+            } catch {
+              skip();
+            }
+            return;
+          })()!;
 
           const linodeLabel = randomLabel();
 
