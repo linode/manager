@@ -5,6 +5,7 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
+import type { SpacingFunction } from '../utils';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
@@ -136,6 +137,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles: any;
     name: ThemeName;
     notificationToast: NotificationToast;
+    spacingFunction: SpacingFunction;
     textColors: TextColors;
     tokens: {
       // ----------------------------------------
@@ -181,6 +183,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles?: any;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    spacingFunction?: SpacingFunction;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
       // ----------------------------------------

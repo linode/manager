@@ -27,6 +27,7 @@ import {
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
+import { spacingFunction } from '../utils';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -55,7 +56,7 @@ const primaryColors = {
   headline: Color.Neutrals[100],
   light: Color.Brand[60],
   main: Color.Brand[80],
-  text: Color.Neutrals[70],
+  text: Content.Text.Primary.Default,
   white: Color.Neutrals.White,
 };
 
@@ -81,7 +82,7 @@ export const color = {
   grey8: Color.Neutrals[30],
   grey9: Color.Neutrals[5],
   grey10: Color.Neutrals[10],
-  headline: primaryColors.headline,
+  headline: Content.Text.Primary.Default,
   label: Color.Neutrals[70],
   offBlack: Color.Neutrals[90],
   orange: Color.Amber[70],
@@ -423,6 +424,10 @@ export const lightTheme: ThemeOptions = {
           padding: 0,
         },
         root: {
+          // Spacing for clear and popup icons (circular loading)
+          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot': {
+            paddingRight: Spacing.S48,
+          },
           maxWidth: inputMaxWidth,
         },
         tag: {
@@ -436,7 +441,7 @@ export const lightTheme: ThemeOptions = {
               color: primaryColors.white,
             },
             borderRadius: '50%',
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             fontSize: '16px',
             margin: '0 4px',
           },
@@ -633,7 +638,7 @@ export const lightTheme: ThemeOptions = {
           color: color.white,
         },
         deleteIcon: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           margin: 0,
           padding: 2,
         },
@@ -663,7 +668,7 @@ export const lightTheme: ThemeOptions = {
           },
           alignItems: 'center',
           borderRadius: 4,
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           display: 'inline-flex',
           fontSize: '.8rem',
           height: 20,
@@ -738,7 +743,7 @@ export const lightTheme: ThemeOptions = {
             lineHeight: 1.2,
           },
           borderBottom: `1px solid ${Color.Neutrals[20]}`,
-          color: primaryColors.headline,
+          color: Content.Text.Primary.Default,
           marginBottom: 20,
           padding: '16px 24px',
         },
@@ -783,7 +788,7 @@ export const lightTheme: ThemeOptions = {
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
         root: {
           marginLeft: -11,
@@ -863,6 +868,8 @@ export const lightTheme: ThemeOptions = {
     MuiInputAdornment: {
       styleOverrides: {
         positionEnd: {
+          display: 'flex',
+          gap: Spacing.S4,
           marginLeft: Spacing.S8,
           svg: {
             fontSize: Font.FontSize.L,
@@ -996,11 +1003,11 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
           },
           '&.selectHeader': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
             opacity: 1,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -1053,7 +1060,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.loading': {
-            backgroundColor: primaryColors.text,
+            backgroundColor: Content.Text.Primary.Default,
           },
           '&:active': {
             backgroundColor: Dropdown.Background.Default,
@@ -1298,7 +1305,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$selected, &$selected:hover': {
-            color: primaryColors.headline,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
           },
           '&:hover': {
@@ -1753,7 +1760,7 @@ export const lightTheme: ThemeOptions = {
       main: Color.Green[40],
     },
     text: {
-      primary: primaryColors.text,
+      primary: Content.Text.Primary.Default,
     },
     warning: {
       dark: Color.Amber[70],
@@ -1788,7 +1795,8 @@ export const lightTheme: ThemeOptions = {
     'none',
     'none',
   ],
-  spacing,
+  spacing: 8,
+  spacingFunction,
   textColors,
   tokens: {
     accent: Accent,
@@ -1816,12 +1824,12 @@ export const lightTheme: ThemeOptions = {
   typography: {
     body1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Body.Regular,
     },
     caption: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Overline,
       letterSpacing: Typography.Heading.OverlineLetterSpacing,
       textTransform: Typography.Heading.OverlineTextCase,
@@ -1833,23 +1841,23 @@ export const lightTheme: ThemeOptions = {
       [breakpoints.up('lg')]: {
         font: Typography.Heading.Xl,
       },
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.L,
     },
     h2: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.M,
     },
     h3: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.S,
     },
     htmlFontSize: undefined,
     subtitle1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Xs,
     },
   },

@@ -1,17 +1,17 @@
 import {
-  LinodeConfigInterfaceFactory,
-  createLinodeRequestFactory,
-} from 'src/factories';
-import {
+  getIsLegacyInterfaceArray,
+  linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
-} from 'src/factories/linodeInterface';
+} from '@linode/utilities';
+
+import { createLinodeRequestFactory } from 'src/factories';
 import { base64UserData, userData } from 'src/utilities/metadata.test';
 
 import {
+  getDefaultInterfaceGenerationFromAccountSetting,
   getInterfacesPayload,
-  getIsLegacyInterfaceArray,
   getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
   getLinodeLabelFromLabelParts,
@@ -325,7 +325,7 @@ describe('getInterfacesPayload', () => {
 
 describe('getIsLegacyInterfaceArray', () => {
   it('determines the given interfaces are legacy', () => {
-    const legacyInterfaces = LinodeConfigInterfaceFactory.buildList(3);
+    const legacyInterfaces = linodeConfigInterfaceFactory.buildList(3);
     expect(getIsLegacyInterfaceArray(legacyInterfaces)).toBe(true);
     expect(getIsLegacyInterfaceArray(undefined)).toBe(true);
     expect(getIsLegacyInterfaceArray([])).toBe(true);
@@ -389,5 +389,35 @@ describe('getIsValidLinodeLabelCharacter', () => {
     expect(getIsValidLinodeLabelCharacter('&')).toBe(false);
     expect(getIsValidLinodeLabelCharacter('!')).toBe(false);
     expect(getIsValidLinodeLabelCharacter(' ')).toBe(false);
+  });
+});
+
+describe('getDefaultInterfaceGenerationFromAccountSetting', () => {
+  it('returns "legacy_config" for "legacy_config_default_but_linode_allowed"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting(
+        'legacy_config_default_but_linode_allowed'
+      )
+    ).toBe('legacy_config');
+  });
+
+  it('returns "legacy_config" for "legacy_config_only"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting('legacy_config_only')
+    ).toBe('legacy_config');
+  });
+
+  it('returns "linode" for "linode_only"', () => {
+    expect(getDefaultInterfaceGenerationFromAccountSetting('linode_only')).toBe(
+      'linode'
+    );
+  });
+
+  it('returns "linode" for "linode_default_but_legacy_config_allowed"', () => {
+    expect(
+      getDefaultInterfaceGenerationFromAccountSetting(
+        'linode_default_but_legacy_config_allowed'
+      )
+    ).toBe('linode');
   });
 });

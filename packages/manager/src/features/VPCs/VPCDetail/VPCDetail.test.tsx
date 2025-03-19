@@ -3,7 +3,7 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
@@ -96,5 +96,38 @@ describe('VPC Detail Summary section', () => {
 
     fireEvent.click(readMoreButton);
     expect(readMoreButton.innerHTML).toBe('Read Less');
+  });
+
+  it('should display a warning notice and disable actions if the VPC was automatically generated for a LKE-E cluster', async () => {
+    const vpcFactory1 = vpcFactory.build({
+      description: `workload VPC for LKE Enterprise Cluster lke1234567.`,
+      label: 'lke1234567',
+    });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
+    );
+
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
+      <VPCDetail />
+    );
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    expect(
+      getByText(
+        'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits is disabled to avoid disruption to cluster communication.'
+      )
+    ).toBeVisible();
+
+    const editButton = getByRole('button', {
+      name: 'Edit',
+    });
+    const deleteButton = getByRole('button', {
+      name: 'Delete',
+    });
+    expect(editButton).toBeDisabled();
+    expect(deleteButton).toBeDisabled();
   });
 });

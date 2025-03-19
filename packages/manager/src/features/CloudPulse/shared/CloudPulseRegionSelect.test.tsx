@@ -9,8 +9,8 @@ import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
+import type { useRegionsQuery } from '@linode/queries';
 import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
-import type * as regions from 'src/queries/regions/regions';
 
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
@@ -35,13 +35,10 @@ const flags: Partial<Flags> = {
   ] as CloudPulseResourceTypeMapFlag[],
 };
 
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
 
 describe('CloudPulseRegionSelect', () => {
   it('should render a Region Select component', () => {
@@ -58,7 +55,7 @@ describe('CloudPulseRegionSelect', () => {
       data: undefined,
       isError: true,
       isLoading: false,
-    } as ReturnType<typeof regions.useRegionsQuery>);
+    } as ReturnType<typeof useRegionsQuery>);
     const { getByText } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
     );

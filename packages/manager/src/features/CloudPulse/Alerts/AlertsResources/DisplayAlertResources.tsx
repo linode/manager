@@ -16,7 +16,7 @@ import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
-import type { Order } from 'src/hooks/useOrder';
+import type { Order } from '@linode/utilities';
 
 export interface AlertInstance {
   /**

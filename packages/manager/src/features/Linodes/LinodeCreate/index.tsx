@@ -1,5 +1,12 @@
 import { isEmpty } from '@linode/api-v4';
+import {
+  useCloneLinodeMutation,
+  useCreateLinodeMutation,
+  useMutateAccountAgreements,
+  useProfile,
+} from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -17,18 +24,14 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useMutateAccountAgreements } from 'src/queries/account/agreements';
-import {
-  useCloneLinodeMutation,
-  useCreateLinodeMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import {
+  useIsLinodeCloneFirewallEnabled,
+  useIsLinodeInterfacesEnabled,
+} from 'src/utilities/linodes';
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
@@ -73,12 +76,14 @@ export const LinodeCreate = () => {
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
+  const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
 
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
-    defaultValues: () => defaultValues(params, queryClient),
+    defaultValues: () =>
+      defaultValues(params, queryClient, isLinodeInterfacesEnabled),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
@@ -104,7 +109,11 @@ export const LinodeCreate = () => {
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
-      defaultValues({ ...params, type: newTab }, queryClient).then((values) => {
+      defaultValues(
+        { ...params, type: newTab },
+        queryClient,
+        isLinodeInterfacesEnabled
+      ).then((values) => {
         // Reset the form values
         form.reset(values);
         // Update tab "type" query param. (This changes the selected tab)
@@ -151,6 +160,15 @@ export const LinodeCreate = () => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
+          if (
+            isLinodeInterfacesEnabled &&
+            error.field.startsWith('interfaces')
+          ) {
+            form.setError(
+              error.field.replace('interfaces', 'linodeInterfaces'),
+              { message: error.reason }
+            );
+          }
           form.setError(error.field, { message: error.reason });
         } else {
           form.setError('root', { message: error.reason });
@@ -239,8 +257,12 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          {!isLinodeInterfacesEnabled && <VPC />}
-          {!isLinodeInterfacesEnabled && <Firewall />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VPC />
+          )}
+          {!isLinodeInterfacesEnabled &&
+            (params.type !== 'Clone Linode' ||
+              isLinodeCloneFirewallEnabled) && <Firewall />}
           {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <VLAN />
           )}

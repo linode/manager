@@ -26,9 +26,12 @@ import {
 } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import {
+  useAllLinodesQuery,
+  getAllLinodeConfigs,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 

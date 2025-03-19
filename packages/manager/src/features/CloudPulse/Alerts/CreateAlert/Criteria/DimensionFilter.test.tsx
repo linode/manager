@@ -6,7 +6,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { DimensionFilters } from './DimensionFilter';
 
-import type { CreateAlertDefinitionForm } from '../types';
+import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { MetricDefinition } from '@linode/api-v4';
 
 const mockData: MetricDefinition[] = [
@@ -138,6 +138,47 @@ describe('DimensionFilterField', () => {
     );
     await waitFor(() =>
       expect(container.queryByTestId(dimensionFilterID)).not.toBeInTheDocument()
+    );
+  });
+  it('should show tooltip when the max limit of dimension filters is reached', async () => {
+    const dimensionFilterValue: DimensionFilterForm = {
+      dimension_label: 'state',
+      operator: 'eq',
+      value: 'free',
+    };
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <DimensionFilters
+          dataFieldDisabled={true}
+          dimensionOptions={mockData[0].dimensions}
+          name={`rule_criteria.rules.${0}.dimension_filters`}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [
+              {
+                ...mockData[0],
+                dimension_filters: Array(5).fill(dimensionFilterValue),
+              },
+            ],
+          },
+          serviceType: 'linode',
+        },
+      },
+    });
+    const addButton = screen.getByRole('button', {
+      name: dimensionFilterButton,
+    });
+    expect(addButton).toBeDisabled();
+    userEvent.hover(addButton);
+    await waitFor(() =>
+      expect(
+        getByText('You can add up to 5 dimension filters.')
+      ).toBeInTheDocument()
     );
   });
 });

@@ -1,29 +1,33 @@
 import {
-  mockGetVPC,
-  mockGetVPCs,
-  mockDeleteVPC,
-  mockUpdateVPC,
-  mockCreateSubnet,
-  mockDeleteSubnet,
-  mockEditSubnet,
-  mockGetSubnets,
-} from 'support/intercepts/vpc';
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+import {
+  linodeConfigFactory,
+  linodeFactory,
+  subnetFactory,
+  vpcFactory,
+} from '@src/factories';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
-  linodeFactory,
-  linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-  subnetFactory,
-  vpcFactory,
-  LinodeConfigInterfaceFactory,
-} from '@src/factories';
-import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-import type { VPC } from '@linode/api-v4';
-import { getRegionById } from 'support/util/regions';
+  mockCreateSubnet,
+  mockDeleteSubnet,
+  mockDeleteVPC,
+  mockEditSubnet,
+  mockGetSubnets,
+  mockGetVPC,
+  mockGetVPCs,
+  mockUpdateVPC,
+} from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
+
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
+
+import type { VPC } from '@linode/api-v4';
 
 describe('VPC details page', () => {
   /**
@@ -40,8 +44,8 @@ describe('VPC details page', () => {
 
     const mockVPCUpdated = {
       ...mockVPC,
-      label: randomLabel(),
       description: randomPhrase(),
+      label: randomLabel(),
     };
 
     const vpcRegion = getRegionById(mockVPC.region);
@@ -68,17 +72,13 @@ describe('VPC details page', () => {
       .findByTitle('Edit VPC')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(mockVPCUpdated.label);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(mockVPCUpdated.label);
 
-        cy.findByLabelText('Description')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(mockVPCUpdated.description);
+        cy.findByLabelText('Description').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(mockVPCUpdated.description);
 
         ui.button
           .findByTitle('Save')
@@ -102,10 +102,8 @@ describe('VPC details page', () => {
       .findByTitle(`Delete VPC ${mockVPCUpdated.label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCUpdated.label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.focused().type(mockVPCUpdated.label);
 
         ui.button
           .findByTitle('Delete')
@@ -167,10 +165,8 @@ describe('VPC details page', () => {
       .findByTitle('Create Subnet')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet Label')
-          .should('be.visible')
-          .click()
-          .type(mockSubnet.label);
+        cy.findByText('Subnet Label').should('be.visible').click();
+        cy.focused().type(mockSubnet.label);
 
         cy.findByTestId('create-subnet-drawer-button')
           .should('be.visible')
@@ -213,11 +209,9 @@ describe('VPC details page', () => {
       .findByTitle('Edit Subnet')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(mockEditedSubnet.label);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(mockEditedSubnet.label);
 
         cy.findByLabelText('Subnet IP Address Range')
           .should('be.visible')
@@ -256,10 +250,8 @@ describe('VPC details page', () => {
       .findByTitle(`Delete Subnet ${mockEditedSubnet.label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Subnet Label')
-          .should('be.visible')
-          .click()
-          .type(mockEditedSubnet.label);
+        cy.findByLabelText('Subnet Label').should('be.visible').click();
+        cy.focused().type(mockEditedSubnet.label);
 
         ui.button
           .findByTitle('Delete')
@@ -293,14 +285,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -310,11 +302,11 @@ describe('VPC details page', () => {
       subnets: [mockSubnet],
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: true,
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      primary: true,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -349,14 +341,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -366,12 +358,12 @@ describe('VPC details page', () => {
       subnets: [mockSubnet],
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      id: mockInterfaceId,
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: false,
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      id: mockInterfaceId,
+      primary: false,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -406,14 +398,14 @@ describe('VPC details page', () => {
 
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
+      ipv4: '10.0.0.0/24',
       label: randomLabel(),
       linodes: [
         {
           id: mockLinode.id,
-          interfaces: [{ id: mockInterfaceId, active: true }],
+          interfaces: [{ active: true, id: mockInterfaceId }],
         },
       ],
-      ipv4: '10.0.0.0/24',
     });
 
     const mockVPC = vpcFactory.build({
@@ -423,18 +415,18 @@ describe('VPC details page', () => {
       subnets: [mockSubnet],
     });
 
-    const mockPrimaryInterface = LinodeConfigInterfaceFactory.build({
-      primary: true,
+    const mockPrimaryInterface = linodeConfigInterfaceFactory.build({
       active: false,
+      primary: true,
       purpose: 'public',
     });
 
-    const mockInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      id: mockInterfaceId,
-      vpc_id: mockVPC.id,
-      subnet_id: mockSubnet.id,
-      primary: false,
+    const mockInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      id: mockInterfaceId,
+      primary: false,
+      subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({

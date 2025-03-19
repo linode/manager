@@ -7,6 +7,8 @@ import {
   updateImageRegions,
   uploadImage,
 } from '@linode/api-v4';
+import { profileQueries } from '@linode/queries';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -14,10 +16,6 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-
-import { getAll } from 'src/utilities/getAll';
-
-import { profileQueries } from './profile/profile';
 
 import type {
   APIError,
@@ -30,8 +28,8 @@ import type {
   UpdateImageRegionsPayload,
   UploadImageResponse,
 } from '@linode/api-v4';
+import type { EventHandlerData } from '@linode/queries';
 import type { UseQueryOptions } from '@tanstack/react-query';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const getAllImages = (
   passedParams: Params = {},

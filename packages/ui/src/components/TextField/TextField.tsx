@@ -3,7 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
 import React from 'react';
 
-import { clamp, convertToKebabCase } from '../../utilities';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { FormHelperText } from '../FormHelperText';
@@ -116,7 +115,7 @@ interface InputToolTipProps {
 }
 
 interface TextFieldPropsOverrides
-  extends Omit<StandardTextFieldProps, 'label'> {
+  extends Omit<StandardTextFieldProps, 'label' | 'select'> {
   // We override this prop to make it required
   label: string;
 }

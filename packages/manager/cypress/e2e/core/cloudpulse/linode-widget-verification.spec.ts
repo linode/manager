@@ -179,8 +179,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetRegions([mockRegion]);
     mockGetUserPreferences({});
 
-    // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor');
+    // navigate to the metrics page
+    cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard']);

@@ -1,3 +1,9 @@
+import {
+  usePreferences,
+  useLinodeIPsQuery,
+  useLinodeQuery,
+  useAllIPsQuery,
+} from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
@@ -7,10 +13,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useAllIPsQuery } from 'src/queries/networking/networking';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 

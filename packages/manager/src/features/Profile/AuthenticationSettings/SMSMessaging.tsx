@@ -1,13 +1,18 @@
-import { Box, Button, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Box,
+  Button,
+  Notice,
+  Typography,
+  omittedProps,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useSMSOptOutMutation } from 'src/queries/profile/profile';
-import { useProfile } from 'src/queries/profile/profile';
+import { useSMSOptOutMutation, useProfile } from '@linode/queries';
 
 import { getFormattedNumber } from './PhoneVerification/helpers';
 
@@ -128,6 +133,7 @@ const StyledCopy = styled(Typography, {
 
 const StyledNotice = styled(Notice, {
   label: 'StyledNotice',
+  shouldForwardProp: omittedProps(['hasVerifiedPhoneNumber']),
 })<{ hasVerifiedPhoneNumber: boolean }>(
   ({ hasVerifiedPhoneNumber, theme }) => ({
     borderLeft: hasVerifiedPhoneNumber

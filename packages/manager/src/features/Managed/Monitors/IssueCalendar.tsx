@@ -2,7 +2,7 @@ import { ManagedIssue } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 

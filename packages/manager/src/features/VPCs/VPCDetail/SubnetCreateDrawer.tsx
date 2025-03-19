@@ -1,13 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormHelperText, Notice, Stack, TextField } from '@linode/ui';
+import {
+  ActionsPanel,
+  FormHelperText,
+  Notice,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
+import {
+  useGrants,
+  useProfile,
+  useCreateSubnetMutation,
+  useVPCQuery,
+} from '@linode/queries';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   RESERVED_IP_NUMBER,

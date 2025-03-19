@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
 import {
   Accordion,
+  ActionsPanel,
   Autocomplete,
   Box,
   Dialog,
@@ -9,18 +10,16 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { reduceAsync } from '@linode/utilities';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';

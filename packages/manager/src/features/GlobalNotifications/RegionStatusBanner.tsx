@@ -2,7 +2,7 @@ import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 const getFacilitiesList = (warnings: string[]) => (
   <ul>

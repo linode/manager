@@ -1,5 +1,9 @@
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamsFromQueryString,
+  scrollErrorIntoView,
+} from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -10,16 +14,11 @@ import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode'
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';

@@ -1,5 +1,5 @@
 import { Box, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -8,7 +8,6 @@ import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleB
 import { Link } from 'src/components/Link';
 import { useIncidentQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
-import { truncateEnd } from 'src/utilities/truncate';
 
 import type { IncidentImpact, IncidentStatus } from 'src/queries/statusPage';
 

@@ -1,5 +1,5 @@
 import { Tooltip } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { capitalize, truncate } from '@linode/utilities';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -8,10 +8,9 @@ import { Markdown } from 'src/components/Markdown/Markdown';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { truncate } from 'src/utilities/truncate';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';

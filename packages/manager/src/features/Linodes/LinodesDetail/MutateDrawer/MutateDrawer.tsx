@@ -1,7 +1,6 @@
-import { ListItem, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 

@@ -7,13 +7,6 @@ export const sxTooltipIcon = {
   padding: 0,
 };
 
-export const StyledTypography = styled(Typography, {
-  label: 'StyledTypography',
-})(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  marginBottom: 0,
-}));
-
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(() => ({
   alignItems: 'center',
   marginBottom: 2,
@@ -37,6 +30,9 @@ export const StyledContainer = styled('div', {
 export const StyledClampedContent = styled('div', {
   label: 'StyledClampedContent',
 })<{ showAll?: boolean }>(({ showAll }) => ({
+  '& p:last-child': {
+    borderRight: 0,
+  },
   WebkitBoxOrient: 'vertical',
   WebkitLineClamp: showAll ? 'unset' : 2,
   display: '-webkit-box',
@@ -46,23 +42,6 @@ export const StyledClampedContent = styled('div', {
 export const StyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
-  backgroundColor:
-    theme.name === 'light'
-      ? theme.tokens.color.Neutrals[5]
-      : theme.tokens.color.Neutrals[90],
-  bottom: 1,
-  display: 'flex',
-  justifyContent: 'space-between',
-  position: 'absolute',
-  right: 0,
+  font: theme.tokens.typography.Label.Semibold.Xs,
+  paddingLeft: theme.tokens.spacing.S6,
 }));
-
-export const StyledSpan = styled(Typography, { label: 'StyledSpan' })(
-  ({ theme }) => ({
-    borderRight: `1px solid ${theme.tokens.border.Normal}`,
-    bottom: 0,
-    marginRight: theme.spacing(0.5),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-  })
-);
