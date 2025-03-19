@@ -445,7 +445,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             }
             selectionsRemaining={
               maxSelectionCount && selectedResources
-                ? maxSelectionCount - selectedResources.length
+                ? maxSelectionCount < selectedResources.length
+                  ? 0
+                  : maxSelectionCount - selectedResources.length
                 : undefined
             }
             filteredResources={filteredResources}
