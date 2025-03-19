@@ -1,6 +1,4 @@
-import { accountQueries } from '@linode/queries';
-
-import { volumeQueries } from './volumes';
+import { accountQueries, volumeQueries } from '@linode/queries';
 
 import type { EventHandlerData } from '@linode/queries';
 

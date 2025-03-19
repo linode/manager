@@ -16,7 +16,6 @@ import type {
   KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 interface ClusterData {
@@ -51,14 +50,10 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getDescriptionForCluster = (
-  cluster: KubernetesCluster,
-  regions: Region[]
-) => {
-  const region = regions.find((r) => r.id === cluster.region);
+export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
   const description: string[] = [
     `Kubernetes ${cluster.k8s_version}`,
-    region?.label ?? cluster.region,
+    cluster.region,
   ];
 
   if (cluster.control_plane.high_availability) {
