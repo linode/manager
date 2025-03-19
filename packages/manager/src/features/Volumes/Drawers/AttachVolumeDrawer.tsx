@@ -1,4 +1,4 @@
-import { useGrants } from '@linode/queries';
+import { useAttachVolumeMutation, useGrants } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -18,7 +18,6 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { NotFound } from 'src/components/NotFound';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
