@@ -146,7 +146,9 @@ export const CreateAlertDefinition = () => {
         threshold: 0,
       },
     ]);
-    setValue('entity_ids', []);
+    setValue('entity_ids', [], {
+      shouldValidate: true,
+    });
   }, [setValue]);
 
   React.useEffect(() => {

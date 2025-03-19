@@ -281,7 +281,7 @@ export const getCreateSchemaWithEntityIdValidation = (
 ): ObjectSchema<CreateAlertDefinitionForm> => {
   const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
 
-  if (!serviceTypeObj || !aclpAlertServiceTypeConfig.length) {
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
     return createSchema;
   }
 
@@ -304,7 +304,7 @@ export const getEditSchemaWithEntityIdValidation = (
   editSchema: ObjectSchema<EditAlertDefinitionPayload>
 ): ObjectSchema<EditAlertDefinitionPayload> => {
   const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
-  if (!serviceTypeObj || !aclpAlertServiceTypeConfig.length) {
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
     return editSchema;
   }
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
