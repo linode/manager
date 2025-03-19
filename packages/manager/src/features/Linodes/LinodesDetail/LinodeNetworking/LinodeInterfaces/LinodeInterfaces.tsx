@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
+import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -11,12 +12,18 @@ interface Props {
 
 export const LinodeInterfaces = ({ linodeId }: Props) => {
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
-  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [selectedInterfaceId, setSelectedInterfaceId] = useState<number>();
 
   const onDelete = (interfaceId: number) => {
     setSelectedInterfaceId(interfaceId);
-    setIsDeleteDrawerOpen(true);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const onShowDetails = (interfaceId: number) => {
+    setSelectedInterfaceId(interfaceId);
+    setIsDetailsDrawerOpen(true);
   };
 
   return (
@@ -36,7 +43,7 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
           Add Network Interface
         </Button>
       </Paper>
-      <LinodeInterfacesTable handlers={{ onDelete }} linodeId={linodeId} />
+      <LinodeInterfacesTable handlers={{ onDelete, onShowDetails }} linodeId={linodeId} />
       <AddInterfaceDrawer
         linodeId={linodeId}
         onClose={() => setIsAddDrawerOpen(false)}
@@ -45,8 +52,14 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
       <DeleteInterfaceDialog
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
-        onClose={() => setIsDeleteDrawerOpen(false)}
-        open={isDeleteDrawerOpen}
+        onClose={() => setIsDetailsDrawerOpen(false)}
+        open={isDeleteDialogOpen}
+      />
+      <InterfaceDetailsDrawer
+        interfaceId={selectedInterfaceId}
+        linodeId={linodeId}
+        onClose={() => setIsDetailsDrawerOpen(false)}
+        open={isDetailsDrawerOpen}
       />
     </Box>
   );
