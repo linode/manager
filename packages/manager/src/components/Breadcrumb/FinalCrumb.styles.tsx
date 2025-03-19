@@ -18,7 +18,7 @@ export const StyledEditableText = styled(EditableText, {
 
 export const StyledH1Header = styled(H1Header, { label: 'StyledH1Header' })(
   ({ theme }) => ({
-    color: theme.tokens.breadcrumb.Normal.Text.Default,
+    color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
     fontSize: '1rem',
     paddingLeft: 0,
     textTransform: 'capitalize',

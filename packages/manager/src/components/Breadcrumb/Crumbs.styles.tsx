@@ -11,7 +11,7 @@ export const StyledTypography = styled(Typography, {
   lineHeight: 'normal',
   textTransform: 'capitalize',
   whiteSpace: 'nowrap',
-  color: theme.tokens.breadcrumb.LastItem.Text,
+  color: theme.tokens.component.Breadcrumb.LastItem.Text,
 }));
 
 export const StyledSlashTypography = styled(Typography, {

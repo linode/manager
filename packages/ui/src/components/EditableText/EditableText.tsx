@@ -100,7 +100,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon' | 'breadcrumbText'>()(
       },
     },
     breadcrumbText: {
-      color: theme.tokens.breadcrumb.Normal.Text.Default,
+      color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
       fontSize: '1rem !important',
       paddingLeft: 0,
     },
