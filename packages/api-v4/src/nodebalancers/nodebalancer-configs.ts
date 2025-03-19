@@ -11,7 +11,10 @@ import {
   RebuildNodeBalancerConfig,
   UpdateNodeBalancerConfig,
 } from './types';
-import { combineConfigNodeAddressAndPort } from './utils';
+import {
+  combineConfigNodeAddressAndPort,
+  combineConfigNodeAddressAndPortBeta,
+} from './utils';
 
 /**
  * getNodeBalancerConfigs
@@ -100,7 +103,7 @@ export const createNodeBalancerConfigBeta = (
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort
+      combineConfigNodeAddressAndPortBeta
     )
   );
 
@@ -154,7 +157,7 @@ export const rebuildNodeBalancerConfigBeta = (
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort
+      combineConfigNodeAddressAndPortBeta
     )
   );
 
