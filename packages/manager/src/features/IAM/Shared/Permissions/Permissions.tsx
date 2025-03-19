@@ -52,7 +52,7 @@ export const Permissions = ({ permissions }: Props) => {
       <StyledGrid container item md={1}>
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Label.Bold.S,
+            font: theme.tokens.alias.Typography.Label.Bold.S,
           })}
         >
           Permissions
