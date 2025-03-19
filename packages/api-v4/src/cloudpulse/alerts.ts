@@ -1,4 +1,4 @@
-import { createAlertDefinitionSchema } from '@linode/validation';
+import { createAlertDefinitionSchema, editAlertDefinitionSchema } from '@linode/validation';
 import Request, {
   setURL,
   setMethod,
@@ -63,7 +63,7 @@ export const editAlertDefinition = (
       )}/alert-definitions/${encodeURIComponent(alertId)}`
     ),
     setMethod('PUT'),
-    setData(data)
+    setData(data, editAlertDefinitionSchema)
   );
 export const getNotificationChannels = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<NotificationChannel>>(

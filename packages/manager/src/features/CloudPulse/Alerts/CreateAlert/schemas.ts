@@ -63,9 +63,7 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 
 export const createAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    engineType: string().defined().nullable(),
     entity_ids: array().of(string().defined()).required(),
-    region: string().defined(),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)

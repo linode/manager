@@ -77,19 +77,7 @@ export const editAlertDefinitionSchema = object({
   description: string().optional(),
   entity_ids: array().of(string().defined()).optional(),
   label: string()
-    .required(fieldErrorMessage)
-    .matches(
-      /^[^*#&+:<>"?@%{}\\\/]+$/,
-      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
-    )
-    .max(100, 'Name must be 100 characters or less.')
-    .test(
-      'no-special-start-end',
-      'Name cannot start or end with a special character.',
-      (value) => {
-        return !specialStartEndRegex.test(value ?? '');
-      }
-    ).optional(),
+    .optional(),
   rule_criteria:
     object({
       rules: array().of(metricCriteria.required())

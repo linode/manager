@@ -1,14 +1,12 @@
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import { createAlertDefinitionFormSchema } from '../CreateAlert/schemas';
-import { editAlertDefinitionFormSchema } from '../EditAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
   filterAlertsByStatusAndType,
-  getCreateSchemaWithEntityIdValidation,
-  getEditSchemaWithEntityIdValidation,
+  getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
 } from './utils';
 
@@ -98,7 +96,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
+    const schema = getSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'unknown',
@@ -109,7 +107,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
+    const schema = getSchemaWithEntityIdValidation(
       { ...props },
       baseSchema
     );
@@ -124,69 +122,13 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
+    const schema = getSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'linode',
       },
       baseSchema
     );
-    await expect(
-      schema.pick(['entity_ids']).validate({
-        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
-      })
-    ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 5."
-    );
-  });
-});
-
-describe('getEditSchemaWithEntityIdValidation', () => {
-  const baseSchema = editAlertDefinitionFormSchema;
-  const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
-    { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
-    { maxResourceSelectionCount: 5, serviceType: 'linode' },
-  ];
-  const props: AlertValidationSchemaProps = {
-    aclpAlertServiceTypeConfig,
-    serviceTypeObj: 'dbaas',
-  };
-
-  it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'unknown',
-      },
-      baseSchema
-    );
-    expect(schema).toBe(baseSchema);
-  });
-
-  it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      { ...props },
-      baseSchema
-    );
-
-    await expect(
-      schema.pick(['entity_ids']).validate({
-        entity_ids: ['id1', 'id2', 'id3', 'id4'],
-      })
-    ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 3."
-    );
-  });
-
-  it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'linode',
-      },
-      baseSchema
-    );
-
     await expect(
       schema.pick(['entity_ids']).validate({
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],

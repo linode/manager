@@ -9,7 +9,6 @@ import type {
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
-  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
@@ -275,7 +274,7 @@ export const processMetricCriteria = (
  * @param createSchema The schema in which the entity id max validation will be added
  * @returns The updated schema with entity id max validation based on max selection count
  */
-export const getCreateSchemaWithEntityIdValidation = (
+export const getSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   createSchema: ObjectSchema<CreateAlertDefinitionForm>
 ): ObjectSchema<CreateAlertDefinitionForm> => {
@@ -292,28 +291,6 @@ export const getCreateSchemaWithEntityIdValidation = (
   return !maxSelectionCount
     ? createSchema
     : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
-};
-
-/**
- * @param props The props required foe the max selection count calculation
- * @param createSchema The schema in which the entity id max validation will be added
- * @returns The updated schema with entity id max validation based on max selection count
- */
-export const getEditSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  editSchema: ObjectSchema<EditAlertDefinitionPayload>
-): ObjectSchema<EditAlertDefinitionPayload> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
-  if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
-    return editSchema;
-  }
-  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    (config) => config && serviceTypeObj === config.serviceType
-  )?.maxResourceSelectionCount;
-
-  return !maxSelectionCount
-    ? editSchema
-    : editSchema.concat(getEntityIdWithMax(maxSelectionCount));
 };
 
 /**
