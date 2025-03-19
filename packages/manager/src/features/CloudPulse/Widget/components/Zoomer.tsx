@@ -6,6 +6,8 @@ import ZoomOutMap from 'src/assets/icons/zoomout.svg';
 
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 
+import type { Theme } from '@mui/material';
+
 export interface ZoomIconProperties {
   className?: string;
   handleZoomToggle: (zoomIn: boolean) => void;
@@ -56,24 +58,19 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   return <ToggleZoomer />;
 });
 
-const StyledZoomIn = styled(ZoomInMap, { label: 'StyledZoomIn' })(
-  ({ theme }) => ({
-    '&:hover': {
-      '& path': {
-        fill: theme.color.blue,
-        stroke: theme.color.blue,
-      },
-      cursor: 'pointer',
-    },
-  })
+const StyledZoomIn = styled(ZoomInMap, { label: 'StyledZoomIn' })(({ theme }) =>
+  getHoverStyles(theme, true)
 );
-const StyledZoomOut = styled(ZoomOutMap, { label: 'StyledZoomOut' })(
-  ({ theme }) => ({
-    '&:hover': {
-      '& path': {
-        fill: theme.color.blue,
-      },
-      cursor: 'pointer',
+const StyledZoomOut = styled(ZoomOutMap, {
+  label: 'StyledZoomOut',
+})(({ theme }) => getHoverStyles(theme, false));
+
+const getHoverStyles = (theme: Theme, isZoomIn: boolean) => ({
+  '&:hover': {
+    '& path': {
+      fill: theme.color.blue,
+      stroke: isZoomIn ? theme.color.blue : 'none',
     },
-  })
-);
+    cursor: 'pointer',
+  },
+});
