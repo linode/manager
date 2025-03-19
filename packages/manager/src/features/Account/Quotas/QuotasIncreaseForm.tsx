@@ -116,7 +116,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                       endAdornment: (
                         <Typography
                           sx={(theme) => ({
-                            color: theme.tokens.content.Text,
+                            color: theme.tokens.alias.Content.Text,
                             font: theme.font.bold,
                             fontSize: theme.tokens.font.FontSize.Xxxs,
                             mx: 1,
@@ -177,7 +177,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
           >
             <Stack
               sx={(theme) => ({
-                backgroundColor: theme.tokens.background.Neutral,
+                backgroundColor: theme.tokens.alias.Background.Neutral,
                 p: 2,
               })}
               data-testid="quota-increase-form-preview-content"
