@@ -23,7 +23,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
-const DEFAULT_FIREWALL_PLACEHOLDER = 'Select a default firewall';
+const DEFAULT_FIREWALL_PLACEHOLDER = 'None';
 
 export const DefaultFirewalls = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -97,14 +97,15 @@ export const DefaultFirewalls = () => {
         )}
         <Stack>
           <Typography>
-            Choose the preferred firewall to be assigned for each type of
-            interface/connection
+            Set the default firewall that is assigned to each network interface
+            type when creating a Linode. The same firewall (new or existing) can
+            be assigned to each type of interface/connection.
           </Typography>
           <Typography
             sx={(theme) => ({ marginTop: theme.spacing(2) })}
             variant="h3"
           >
-            Linodes - Configuration Profile Interfaces
+            Linodes
           </Typography>
           <Controller
             render={({ field, fieldState }) => (
@@ -118,7 +119,7 @@ export const DefaultFirewalls = () => {
                   ) ?? null
                 }
                 errorText={fieldState.error?.message}
-                label="All"
+                label="Configuration Profile Interfaces Firewall"
                 options={firewallOptions}
                 placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
@@ -126,8 +127,6 @@ export const DefaultFirewalls = () => {
             control={control}
             name="default_firewall_ids.linode"
           />
-          <Divider spacingBottom={16} spacingTop={16} />
-          <Typography variant="h3">Linodes - Linode Interfaces</Typography>
           <Controller
             render={({ field, fieldState }) => (
               <Select
@@ -140,7 +139,7 @@ export const DefaultFirewalls = () => {
                   ) ?? null
                 }
                 errorText={fieldState.error?.message}
-                label="Public Interface"
+                label="Linode Interfaces - Public Interface Firewall"
                 options={firewallOptions}
                 placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
@@ -160,7 +159,7 @@ export const DefaultFirewalls = () => {
                   ) ?? null
                 }
                 errorText={fieldState.error?.message}
-                label="VPC Interface"
+                label="Linode Interfaces - VPC Interface Firewall"
                 options={firewallOptions}
                 placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />
@@ -182,7 +181,7 @@ export const DefaultFirewalls = () => {
                   ) ?? null
                 }
                 errorText={fieldState.error?.message}
-                label="NodeBalancers"
+                label="NodeBalancers Firewall"
                 options={firewallOptions}
                 placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
               />

@@ -20,9 +20,7 @@ describe('NetworkInterfaces', () => {
         HttpResponse.json(makeResourcePage(firewallFactory.buildList(1)))
       )
     );
-    const { getAllByText, getByTestId, getByText } = renderWithTheme(
-      <DefaultFirewalls />
-    );
+    const { getByTestId, getByText } = renderWithTheme(<DefaultFirewalls />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -30,14 +28,18 @@ describe('NetworkInterfaces', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(getByText('Default Firewalls')).toBeVisible();
+    expect(getByText('Linodes')).toBeVisible();
     expect(
-      getByText('Linodes - Configuration Profile Interfaces')
+      getByText('Configuration Profile Interfaces Firewall')
     ).toBeVisible();
-    expect(getByText('All')).toBeVisible();
-    expect(getByText('Linodes - Linode Interfaces')).toBeVisible();
-    expect(getByText('Public Interface')).toBeVisible();
-    expect(getByText('VPC Interface')).toBeVisible();
-    expect(getAllByText('NodeBalancers')).toHaveLength(2);
+    expect(
+      getByText('Linode Interfaces - Public Interface Firewall')
+    ).toBeVisible();
+    expect(
+      getByText('Linode Interfaces - VPC Interface Firewall')
+    ).toBeVisible();
+    expect(getByText('NodeBalancers')).toBeVisible();
+    expect(getByText('NodeBalancers Firewall')).toBeVisible();
     expect(getByText('Save')).toBeVisible();
   });
 });
