@@ -1,6 +1,8 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { describe, expect, it } from 'vitest';
 
 import { getRegionsByRegionId } from './regions';
+
+import type { Region } from '@linode/api-v4/lib/regions';
 
 describe('getRegionsByRegionId', () => {
   it('converts an array of regions to a lookup object', () => {

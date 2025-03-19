@@ -3,6 +3,7 @@ import { omitProps } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isNotNullOrUndefined,
+  utoa,
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
@@ -13,7 +14,6 @@ import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { utoa } from 'src/utilities/metadata';
 
 import {
   getLegacyInterfaceFromLinodeInterface,
