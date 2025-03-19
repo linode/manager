@@ -1,11 +1,10 @@
+import { useDetachVolumeMutation, useLinodeQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeQuery } from '@linode/queries';
-import { useDetachVolumeMutation } from 'src/queries/volumes/volumes';
 
 import type { Volume } from '@linode/api-v4';
 

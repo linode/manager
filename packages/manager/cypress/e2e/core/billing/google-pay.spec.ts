@@ -52,7 +52,8 @@ const mockPaymentMethodsExpired: PaymentMethod[] = [
 ];
 
 const pastDueExpiry = 'Expired 07/20';
-const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
+const braintreeURL =
+  'https://+(payments.braintree-api.com|payments.sandbox.braintree-api.com)/*';
 
 describe('Google Pay', () => {
   it('adds google pay method', () => {

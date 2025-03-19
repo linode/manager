@@ -1,5 +1,6 @@
 import {
   useAllLinodeDisksQuery,
+  useAllVolumesQuery,
   useGrants,
   useLinodeQuery,
   useLinodeRescueMutation,
@@ -20,7 +21,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';

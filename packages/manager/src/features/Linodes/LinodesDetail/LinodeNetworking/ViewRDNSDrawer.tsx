@@ -1,9 +1,9 @@
 import { useAllIPsQuery, useLinodeQuery } from '@linode/queries';
-import { Typography } from '@linode/ui';
+import { Drawer, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
 
@@ -35,7 +35,12 @@ export const ViewRDNSDrawer = (props: Props) => {
     : [];
 
   return (
-    <Drawer onClose={onClose} open={open} title={`View Reverse DNS`}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={`View Reverse DNS`}
+    >
       <div>
         {ips.map((ip) => {
           return (

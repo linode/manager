@@ -1,3 +1,8 @@
+import {
+  useAttachVolumeMutation,
+  useGrants,
+  useVolumeQuery,
+} from '@linode/queries';
 import { ActionsPanel, Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -5,11 +10,6 @@ import * as React from 'react';
 import { number, object } from 'yup';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from '@linode/queries';
-import {
-  useAttachVolumeMutation,
-  useVolumeQuery,
-} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,

@@ -1,10 +1,9 @@
 import {
-  linodeQueries,
   accountQueries,
   firewallQueries,
+  linodeQueries,
+  volumeQueries,
 } from '@linode/queries';
-
-import { volumeQueries } from '../volumes/volumes';
 
 import type { Event } from '@linode/api-v4';
 import type { EventHandlerData } from '@linode/queries';

@@ -11,6 +11,7 @@ export * from './ClickAwayListener';
 export * from './Dialog';
 export * from './DialogTitle';
 export * from './Divider';
+export * from './Drawer';
 export * from './EditableText';
 export * from './ErrorState';
 export * from './FormControl';

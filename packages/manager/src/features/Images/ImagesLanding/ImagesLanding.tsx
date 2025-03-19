@@ -2,6 +2,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
   CircleProgress,
+  Drawer,
   ErrorState,
   IconButton,
   InputAdornment,
@@ -22,9 +23,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Drawer } from 'src/components/Drawer';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -653,6 +654,7 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
+        NotFoundComponent={NotFound}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}

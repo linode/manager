@@ -1,10 +1,12 @@
 import {
-  useGrants,
-  useProfile,
-  useLinodeQuery,
-  useRegionsQuery,
   useAccountAgreements,
+  useCreateVolumeMutation,
+  useGrants,
+  useLinodeQuery,
   useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+  useVolumeTypesQuery,
 } from '@linode/queries';
 import {
   Box,
@@ -43,10 +45,6 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import {
-  useCreateVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

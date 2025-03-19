@@ -188,10 +188,7 @@ export const useObjectStorageBuckets = (enabled = true) => {
     ? () => getAllBucketsFromRegions(regions)
     : () => getAllBucketsFromClusters(clusters);
 
-  return useQuery<
-    BucketsResponseType<typeof isObjectStorageGen2Enabled>,
-    APIError[]
-  >({
+  return useQuery<BucketsResponseType<typeof isObjectStorageGen2Enabled>>({
     enabled: queryEnabled,
     queryFn,
     queryKey: objectStorageQueries.buckets.queryKey,

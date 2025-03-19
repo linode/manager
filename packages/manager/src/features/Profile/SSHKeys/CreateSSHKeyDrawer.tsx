@@ -1,12 +1,18 @@
-import { ActionsPanel, Notice, TextField, Typography } from '@linode/ui';
+import { useCreateSSHKeyMutation } from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { useCreateSSHKeyMutation } from '@linode/queries';
+import { NotFound } from 'src/components/NotFound';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -65,6 +71,7 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       // Adding zIndex value so that the SSH drawer is not hidden behind the Rebuild Linode dialog, which prevented users from adding an SSH key

@@ -6,13 +6,13 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
@@ -147,7 +147,12 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={isOpen}
+      title="Create Bucket"
+    >
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice

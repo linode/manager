@@ -1,5 +1,6 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
+import { readableBytes, useOpenClose } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -10,12 +11,10 @@ import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
-import { useProfile } from '@linode/queries';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,

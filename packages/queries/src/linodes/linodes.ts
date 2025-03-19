@@ -206,9 +206,13 @@ export const useAllLinodesQuery = (
   });
 };
 
-export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
+export const useInfiniteLinodesQuery = (
+  filter: Filter = {},
+  enabled: boolean
+) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.infinite(filter),
+    enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;
@@ -216,6 +220,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
       return page + 1;
     },
     initialPageParam: 1,
+    retry: false,
   });
 
 export const useLinodeQuery = (id: number, enabled = true) => {

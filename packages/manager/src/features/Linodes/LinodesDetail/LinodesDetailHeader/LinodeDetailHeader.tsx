@@ -3,6 +3,7 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   scrollErrorIntoView,
+  useEditableLabelState,
 } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
@@ -12,7 +13,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,

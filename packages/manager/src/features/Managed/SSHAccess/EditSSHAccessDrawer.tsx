@@ -1,5 +1,6 @@
 import {
   ActionsPanel,
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
@@ -10,8 +11,8 @@ import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
+import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -78,7 +79,12 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   };
 
   return (
-    <Drawer onClose={closeDrawer} open={isOpen} title={title}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={closeDrawer}
+      open={isOpen}
+      title={title}
+    >
       {!linodeSetting ? null : (
         <>
           {/* We're intentionally not validating with Formik, because we want to allow "Port" to
@@ -189,11 +195,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
 
                       <Grid size={{ md: 4, xs: 12 }}>
                         <TextField
-                          noMarginTop
                           error={!!portError}
                           errorText={portError}
                           label="Port"
                           name="ssh.port"
+                          noMarginTop
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder={String(port || DEFAULTS.port)}

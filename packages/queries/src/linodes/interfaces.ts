@@ -1,10 +1,9 @@
-import { createLinodeInterface, deleteLinodeInterface } from '@linode/api-v4';
 import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+  createLinodeInterface,
+  deleteLinodeInterface,
+  upgradeToLinodeInterface,
+} from '@linode/api-v4';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { linodeQueries } from './linodes';
 
@@ -15,7 +14,10 @@ import type {
   LinodeInterface,
   LinodeInterfaces,
   ResourcePage,
+  UpgradeInterfaceData,
+  UpgradeInterfacePayload,
 } from '@linode/api-v4';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
 export const useLinodeInterfacesQuery = (linodeId: number) => {
   return useQuery<LinodeInterfaces, APIError[]>(
@@ -75,4 +77,21 @@ export const useDeleteLinodeInterfaceMutation = (
       });
     },
   });
+};
+
+export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<UpgradeInterfaceData, APIError[], UpgradeInterfacePayload>(
+    {
+      mutationFn: (data) => upgradeToLinodeInterface(linodeId, data),
+      onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+        });
+      },
+    }
+  );
 };
