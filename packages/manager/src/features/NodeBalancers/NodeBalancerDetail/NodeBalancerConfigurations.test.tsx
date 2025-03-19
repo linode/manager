@@ -16,6 +16,9 @@ const props = {
   grants: undefined,
   nodeBalancerLabel: 'nb-1',
   nodeBalancerRegion: 'us-east',
+  params: {
+    nodeBalancerId: '1',
+  },
 };
 
 const loadingTestId = 'circle-progress';

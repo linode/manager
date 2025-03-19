@@ -146,6 +146,7 @@ module.exports = {
         'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
+        'src/features/NodeBalancers/**/*',
         'src/features/PlacementGroups/**/*',
         'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',

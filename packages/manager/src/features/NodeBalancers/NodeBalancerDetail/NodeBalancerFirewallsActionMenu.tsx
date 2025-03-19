@@ -1,9 +1,9 @@
+import { useGrants, useProfile } from '@linode/queries';
 import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
 import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
-import { useGrants, useProfile } from '@linode/queries';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 

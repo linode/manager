@@ -101,10 +101,14 @@ export const firewallQueries = createQueryKeys('firewalls', {
   },
 });
 
-export const useAllFirewallDevicesQuery = (id: number) =>
-  useQuery<FirewallDevice[], APIError[]>(
-    firewallQueries.firewall(id)._ctx.devices
-  );
+export const useAllFirewallDevicesQuery = (
+  id: number,
+  enabled: boolean = true
+) =>
+  useQuery<FirewallDevice[], APIError[]>({
+    ...firewallQueries.firewall(id)._ctx.devices,
+    enabled,
+  });
 
 export const useFirewallsInfiniteQuery = (filter: Filter, enabled: boolean) => {
   return useInfiniteQuery<ResourcePage<Firewall>, APIError[]>({
@@ -279,8 +283,11 @@ export const useFirewallTemplatesQuery = () => {
   });
 };
 
-export const useFirewallQuery = (id: number) =>
-  useQuery<Firewall, APIError[]>(firewallQueries.firewall(id));
+export const useFirewallQuery = (id: number, enabled: boolean = true) =>
+  useQuery<Firewall, APIError[]>({
+    ...firewallQueries.firewall(id),
+    enabled,
+  });
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>({

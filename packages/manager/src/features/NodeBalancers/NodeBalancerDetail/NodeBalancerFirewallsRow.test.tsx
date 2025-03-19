@@ -25,8 +25,9 @@ vi.mock('@linode/queries', async () => {
 });
 
 const props = {
+  devices: [],
   firewall,
-  nodeBalancerID: 1,
+  nodeBalancerId: 1,
   onClickUnassign: vi.fn(),
 };
 
