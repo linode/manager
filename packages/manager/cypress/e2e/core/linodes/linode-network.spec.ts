@@ -1,3 +1,4 @@
+import { linodeInterfaceFactoryPublic } from '@linode/utilities';
 import {
   firewallDeviceFactory,
   firewallFactory,
@@ -8,11 +9,14 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockAddFirewallDevice,
   mockGetFirewalls,
+  mockGetLinodeInterfaceFirewalls,
 } from 'support/intercepts/firewalls';
 import {
+  mockCreateLinodeInterface,
   mockGetLinodeDetails,
   mockGetLinodeFirewalls,
   mockGetLinodeIPAddresses,
+  mockGetLinodeInterfaces,
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { ui } from 'support/ui';
@@ -233,5 +237,84 @@ describe('Firewalls', () => {
       .findByTitle('Add Firewall')
       .should('be.visible')
       .should('be.disabled');
+  });
+});
+
+describe.only('Interfaces', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: true },
+    });
+  });
+
+  it('allows the user to add a public network interface', () => {
+    const linode = linodeFactory.build({ interface_generation: 'linode' });
+    const firewalls = firewallFactory.buildList(3);
+    const linodeInterface = linodeInterfaceFactoryPublic.build();
+
+    const selectedFirewall = firewalls[1];
+
+    mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetLinodeInterfaces(linode.id, { interfaces: [] }).as('getInterfaces');
+    mockGetFirewalls(firewalls).as('getFirewalls');
+    mockCreateLinodeInterface(linode.id, linodeInterface).as('createInterface');
+    mockGetLinodeInterfaceFirewalls(linode.id, linodeInterface.id, [
+      selectedFirewall,
+    ]).as('getInterfaceFirewalls');
+
+    cy.visitWithLogin(`/linodes/${linode.id}/networking`);
+
+    cy.wait(['@getLinode', '@getInterfaces']);
+
+    ui.button.findByTitle('Add Network Interface').scrollIntoView().click();
+
+    ui.drawer.findByTitle('Add Network Interface').within(() => {
+      // Verify firewalls fetch
+      cy.wait('@getFirewalls');
+
+      // Try submitting the form
+      ui.button.findByAttribute('type', 'submit').should('be.enabled').click();
+
+      // Verify a validation error shows
+      cy.findByText('You must selected an Interface type.').should(
+        'be.visible'
+      );
+
+      cy.findByLabelText('Public').click();
+
+      // Verify a validation error goes away
+      cy.findByText('You must selected an Interface type.').should('not.exist');
+
+      ui.autocomplete.findByLabel('Firewall').click();
+
+      ui.autocompletePopper.findByTitle(selectedFirewall.label).click();
+
+      mockGetLinodeInterfaces(linode.id, { interfaces: [linodeInterface] });
+
+      ui.button.findByAttribute('type', 'submit').should('be.enabled').click();
+    });
+
+    cy.wait('@createInterface').then((xhr) => {
+      const requestPayload = xhr.request.body;
+
+      // Confirm that request payload includes VPC interface.
+      expect(requestPayload['public']).to.be.an('object');
+      expect(requestPayload['vpc']).to.equal(null);
+      expect(requestPayload['vlan']).to.equal(null);
+    });
+
+    ui.toast.assertMessage('Successfully added network interface.');
+
+    // Verify the interface row shows upon creation
+    cy.findByText(linodeInterface.mac_address)
+      .closest('tr')
+      .within(() => {
+        // Verify we fetch the interfaces firewalls and the label shows
+        cy.wait('@getInterfaceFirewalls');
+        cy.findByText(selectedFirewall.label).should('be.visible');
+
+        // Verify the interface type shows
+        cy.findByText('Public').should('be.visible');
+      });
   });
 });

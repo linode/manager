@@ -6,14 +6,14 @@ import type { LinodeInterface } from '@linode/api-v4';
 
 export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterface>(
   {
-    created: '2020-01-01 00:00:00',
+    created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
     },
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
     public: null,
-    updated: '2020-01-01 00:00:00',
+    updated: '2025-03-19T03:58:04',
     version: 1,
     vlan: {
       ipam_address: '192.168.0.1',
@@ -25,14 +25,14 @@ export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterfa
 
 export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterface>(
   {
-    created: '2020-01-01 00:00:00',
+    created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
     },
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
     public: null,
-    updated: '2020-01-01 00:00:00',
+    updated: '2025-03-19T03:58:04',
     version: 1,
     vlan: null,
     vpc: {
@@ -57,7 +57,7 @@ export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterfac
 
 export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInterface>(
   {
-    created: '2020-01-01 00:00:00',
+    created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
     },
@@ -79,7 +79,7 @@ export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInter
         slaac: [],
       },
     },
-    updated: '2020-01-01 00:00:00',
+    updated: '2025-03-19T03:58:04',
     version: 1,
     vlan: null,
     vpc: null,

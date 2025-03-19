@@ -13,6 +13,8 @@ import type {
   Firewall,
   Kernel,
   Linode,
+  LinodeInterface,
+  LinodeInterfaces,
   LinodeIPsResponse,
   LinodeType,
   Volume,
@@ -620,5 +622,43 @@ export const interceptCancelLinodeBackups = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/backups/cancel`)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's Interfaces.
+ *
+ * @param linodeId - ID of Linode to get interfaces associated with it
+ * @param interfaces - the mocked Linode interfaces
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeInterfaces = (
+  linodeId: number,
+  interfaces: LinodeInterfaces
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/interfaces`),
+    interfaces
+  );
+};
+
+/**
+ * Intercepts POST request to create a Linode Interface.
+ *
+ * @param linodeId - the Linodes ID to add the interface to.
+ * @param linodeInterface - a mock linode interface object.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeInterface = (
+  linodeId: number,
+  linodeInterface: LinodeInterface
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/interfaces`),
+    makeResponse(linodeInterface)
   );
 };
