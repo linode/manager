@@ -81,9 +81,11 @@ export const UserMenu = React.memo(() => {
       return undefined;
     }
     return open ? (
-      <ChevronUp color={theme.tokens.header.Text.Hover} />
+      <ChevronUp color={theme.tokens.component.GlobalHeader.Text.Hover} />
     ) : (
-      <ChevronDownIcon color={theme.tokens.header.Text.Default} />
+      <ChevronDownIcon
+        color={theme.tokens.component.GlobalHeader.Text.Default}
+      />
     );
   };
 
@@ -110,7 +112,7 @@ export const UserMenu = React.memo(() => {
           >
             <Typography
               sx={{
-                font: theme.tokens.typography.Label.Semibold.S,
+                font: theme.tokens.alias.Typography.Label.Semibold.S,
               }}
             >
               {userName}
@@ -118,12 +120,14 @@ export const UserMenu = React.memo(() => {
             {companyNameOrEmail && (
               <Typography
                 letterSpacing={
-                  theme.tokens.typography.Heading.OverlineLetterSpacing
+                  theme.tokens.alias.Typography.Heading.OverlineLetterSpacing
                 }
                 sx={{
-                  font: theme.tokens.typography.Heading.Overline,
+                  font: theme.tokens.alias.Typography.Heading.Overline,
                 }}
-                textTransform={theme.tokens.typography.Heading.OverlineTextCase}
+                textTransform={
+                  theme.tokens.alias.Typography.Heading.OverlineTextCase
+                }
               >
                 {truncateEnd(companyNameOrEmail, 24)}
               </Typography>
@@ -152,25 +156,25 @@ const StyledUserMenuButton = styled(Button, {
 })<{ open: boolean }>(({ open, theme }) => ({
   '&:hover, &:focus, &:active': {
     '.MuiButton-icon svg, .MuiStack-root .MuiTypography-root': {
-      color: theme.tokens.header.Text.Hover,
+      color: theme.tokens.component.GlobalHeader.Text.Hover,
     },
   },
   '.MuiButton-icon svg': {
     color: open
-      ? theme.tokens.header.Text.Hover
-      : theme.tokens.header.Text.Default,
+      ? theme.tokens.component.GlobalHeader.Text.Hover
+      : theme.tokens.component.GlobalHeader.Text.Default,
   },
   '.MuiButton-startIcon': {
     '.MuiAvatar-root, .MuiTypography-root': {
-      font: theme.tokens.typography.Label.Bold.S,
+      font: theme.tokens.alias.Typography.Label.Bold.S,
     },
     marginLeft: 0,
     marginRight: theme.tokens.spacing.S8,
   },
   '.MuiStack-root .MuiTypography-root': {
     color: open
-      ? theme.tokens.header.Text.Hover
-      : theme.tokens.header.Text.Default,
+      ? theme.tokens.component.GlobalHeader.Text.Hover
+      : theme.tokens.component.GlobalHeader.Text.Default,
   },
   padding: 0,
   textTransform: 'none',

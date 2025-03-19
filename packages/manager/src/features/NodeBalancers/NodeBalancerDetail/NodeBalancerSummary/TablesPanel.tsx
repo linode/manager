@@ -4,6 +4,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
+import { formatNumber, getMetrics } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -13,7 +14,6 @@ import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
-import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 import type { Theme } from '@mui/material/styles';
 import type {
