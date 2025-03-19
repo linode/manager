@@ -1,10 +1,10 @@
 import { Drawer, Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
