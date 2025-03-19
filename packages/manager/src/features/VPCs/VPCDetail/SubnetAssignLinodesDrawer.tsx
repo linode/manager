@@ -57,6 +57,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
 interface SubnetAssignLinodesDrawerProps {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -73,7 +74,7 @@ interface LinodeAndConfigData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -413,6 +414,7 @@ export const SubnetAssignLinodesDrawer = (
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
     >

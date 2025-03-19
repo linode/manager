@@ -1,4 +1,4 @@
-import { useSubnetsQuery } from '@linode/queries';
+import { useSubnetQuery, useSubnetsQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -22,11 +22,12 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { useDialogSecondaryData } from 'src/hooks/useDialogSecondaryData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { SUBNET_ACTION_PATH } from '../constants';
 import { VPC_DETAILS_ROUTE } from '../constants';
+import { SUBNET_ACTION_PATH } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
@@ -57,9 +58,6 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
-  >();
-  const [selectedSubnet, setSelectedSubnet] = React.useState<
-    Subnet | undefined
   >();
   const [selectedLinode, setSelectedLinode] = React.useState<
     Linode | undefined
@@ -121,6 +119,17 @@ export const VPCSubnetsTable = (props: Props) => {
     generateSubnetsXFilter(query ?? '')
   );
 
+  const {
+    data: selectedSubnet,
+    isFetching: isFetchingSubnet,
+  } = useDialogSecondaryData({
+    childParamKey: 'subnetId',
+    childQueryHook: useSubnetQuery,
+    enabled: !!params.vpcId && !!params.subnetId,
+    paramKey: 'vpcId',
+    redirectToOnNotFound: '/vpcs/$vpcId',
+  });
+
   const handleSearch = (searchText: string) => {
     navigate({
       params: { vpcId },
@@ -145,7 +154,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetDelete = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'delete', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -153,7 +161,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetEdit = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'edit', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -161,7 +168,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetUnassignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'unassign', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -169,7 +175,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
-    setSelectedSubnet(subnet);
     setSelectedLinode(linode);
     navigate({
       params: {
@@ -183,7 +188,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetAssignLinodes = (subnet: Subnet) => {
-    setSelectedSubnet(subnet);
     navigate({
       params: { subnetAction: 'assign', subnetId: subnet.id, vpcId },
       to: SUBNET_ACTION_PATH,
@@ -197,7 +201,6 @@ export const VPCSubnetsTable = (props: Props) => {
   ) => {
     setLinodePowerAction(action);
     setSelectedLinode(linode);
-    setSelectedSubnet(subnet);
     navigate({
       params: {
         linodeAction: 'powerAction',
@@ -208,17 +211,6 @@ export const VPCSubnetsTable = (props: Props) => {
       to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
     });
   };
-
-  // If the user initiates a history -/+ to delete a subnet and the subnet is not found,
-  // push navigation to the vpc's detail page
-  React.useEffect(() => {
-    if (!selectedSubnet && params.subnetAction === 'delete') {
-      navigate({
-        params: { vpcId },
-        to: VPC_DETAILS_ROUTE,
-      });
-    }
-  }, [selectedSubnet, params.subnetAction, vpcId, navigate]);
 
   // If the user initiates a history -/+ to complete a linode action and the linode
   // is no longer assigned to a subnet, push navigation to the vpc's detail page
@@ -237,16 +229,6 @@ export const VPCSubnetsTable = (props: Props) => {
     params.linodeAction,
     selectedLinode,
   ]);
-
-  // Ensure that the selected subnet passed to the drawer is up to date
-  React.useEffect(() => {
-    if (subnets && selectedSubnet) {
-      const updatedSubnet = subnets.data.find(
-        (subnet) => subnet.id === selectedSubnet.id
-      );
-      setSelectedSubnet(updatedSubnet);
-    }
-  }, [subnets, selectedSubnet]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -418,11 +400,13 @@ export const VPCSubnetsTable = (props: Props) => {
           params.subnetAction === 'unassign' ||
           params.linodeAction === 'unassign'
         }
+        isFetching={isFetchingSubnet}
         singleLinodeToBeUnassigned={selectedLinode}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />
       <SubnetAssignLinodesDrawer
+        isFetching={isFetchingSubnet}
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'assign'}
         subnet={selectedSubnet}
@@ -430,12 +414,14 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcRegion={vpcRegion}
       />
       <SubnetDeleteDialog
+        isFetching={isFetchingSubnet}
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'delete'}
         subnet={selectedSubnet}
         vpcId={vpcId}
       />
       <SubnetEditDrawer
+        isFetching={isFetchingSubnet}
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'edit'}
         subnet={selectedSubnet}

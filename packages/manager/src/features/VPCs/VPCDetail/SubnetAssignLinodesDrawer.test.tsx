@@ -13,6 +13,7 @@ import type { Subnet } from '@linode/api-v4';
 beforeAll(() => mockMatchMedia());
 
 const props = {
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
   subnet: {
