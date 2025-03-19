@@ -14,11 +14,11 @@ export const StyledIconButton = styled(IconButton, {
     width: 24,
   },
   '&:hover, &:focus': {
-    color: theme.tokens.header.Search.Icon.Hover,
+    color: theme.tokens.component.GlobalHeader.Search.Icon.Hover,
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: theme.tokens.header.Search.Icon.Default,
+  color: theme.tokens.component.GlobalHeader.Search.Icon.Default,
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',
@@ -64,9 +64,9 @@ export const StyledSearchIcon = styled(Search, {
 })(({ theme }) => ({
   '&&': {
     '&:hover': {
-      color: theme.tokens.header.Search.Icon.Hover,
+      color: theme.tokens.component.GlobalHeader.Search.Icon.Hover,
     },
 
-    color: theme.tokens.header.Search.Icon.Default,
+    color: theme.tokens.component.GlobalHeader.Search.Icon.Default,
   },
 }));

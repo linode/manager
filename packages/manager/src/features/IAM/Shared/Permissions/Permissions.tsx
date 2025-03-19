@@ -52,7 +52,7 @@ export const Permissions = ({ permissions }: Props) => {
       <StyledGrid container item md={1}>
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Label.Bold.S,
+            font: theme.tokens.alias.Typography.Label.Bold.S,
           })}
         >
           Permissions
@@ -80,7 +80,10 @@ export const Permissions = ({ permissions }: Props) => {
 
         {(numHiddenItems > 0 || showAll) && (
           <StyledBox>
-            <StyledLinkButton onClick={() => setShowAll(!showAll)}>
+            <StyledLinkButton
+              onClick={() => setShowAll(!showAll)}
+              type="button"
+            >
               {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
             </StyledLinkButton>
           </StyledBox>
