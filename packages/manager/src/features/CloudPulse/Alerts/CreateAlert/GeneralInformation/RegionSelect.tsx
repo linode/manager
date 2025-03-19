@@ -1,7 +1,4 @@
-import {
-  useAllAccountAvailabilitiesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -23,10 +20,6 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
   const { data: regions, isError, isLoading } = useRegionsQuery();
   const { control } = useFormContext<CreateAlertDefinitionForm>();
   const flags = useFlags();
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   return (
     <Controller
@@ -39,8 +32,6 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
           onChange={(_, value) => {
             field.onChange(value?.id);
           }}
-          accountAvailabilityData={accountAvailabilityData}
-          accountAvailabilityLoading={accountAvailabilityLoading}
           currentCapability={undefined}
           flags={flags}
           fullWidth

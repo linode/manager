@@ -1,6 +1,5 @@
 import {
   useAccount,
-  useAllAccountAvailabilitiesQuery,
   useMutateAccountAgreements,
   useRegionsQuery,
 } from '@linode/queries';
@@ -116,11 +115,6 @@ export const CreateCluster = () => {
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   // LKE-E does not support APL at this time.
   const isAPLSupported = showAPL && selectedTier === 'standard';
@@ -413,8 +407,6 @@ export const CreateCluster = () => {
                     ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
-                accountAvailabilityData={accountAvailabilityData}
-                accountAvailabilityLoading={accountAvailabilityLoading}
                 disableClearable
                 disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}

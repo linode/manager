@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { TextField } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
@@ -33,11 +32,6 @@ export const VPCTopSectionContent = (props: Props) => {
     location.search
   );
 
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
-
   const { control } = useFormContext<CreateVPCPayload>();
 
   return (
@@ -63,8 +57,6 @@ export const VPCTopSectionContent = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <RegionSelect
-            accountAvailabilityData={accountAvailabilityData}
-            accountAvailabilityLoading={accountAvailabilityLoading}
             aria-label="Choose a region"
             currentCapability="VPCs"
             disabled={isDrawer ? true : disabled}

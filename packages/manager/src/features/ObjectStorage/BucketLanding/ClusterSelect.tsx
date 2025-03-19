@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 
@@ -29,10 +28,6 @@ export const ClusterSelect: React.FC<Props> = (props) => {
 
   const { data: clusters, error: clustersError } = useObjectStorageClusters();
   const { data: regions } = useRegionsQuery();
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const flags = useFlags();
 
@@ -53,8 +48,6 @@ export const ClusterSelect: React.FC<Props> = (props) => {
 
   return (
     <RegionSelect
-      accountAvailabilityData={accountAvailabilityData}
-      accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"
       data-qa-select-cluster
       disableClearable

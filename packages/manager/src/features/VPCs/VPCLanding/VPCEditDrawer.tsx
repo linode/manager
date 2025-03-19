@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  useAllAccountAvailabilitiesQuery,
   useGrants,
   useProfile,
   useRegionsQuery,
@@ -45,11 +44,6 @@ export const VPCEditDrawer = (props: Props) => {
     mutateAsync: updateVPC,
     reset: resetMutation,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const {
     control,
@@ -136,8 +130,6 @@ export const VPCEditDrawer = (props: Props) => {
         />
         {regionsData && (
           <RegionSelect
-            accountAvailabilityData={accountAvailabilityData}
-            accountAvailabilityLoading={accountAvailabilityLoading}
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
             errorText={(regionsError && regionsError[0].reason) || undefined}

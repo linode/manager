@@ -1,7 +1,4 @@
-import {
-  useAllAccountAvailabilitiesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -79,11 +76,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { params } = useLinodeCreateQueryParams();
   const flags = useFlags();
 
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
-
   return (
     <Paper data-qa-linode-region data-testid="region">
       <Box display="flex" justifyContent="space-between" mb={1}>
@@ -115,8 +107,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               />
             </Box>
             <RegionSelect
-              accountAvailabilityData={accountAvailabilityData}
-              accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="Linodes"
               disableClearable
               disabled={disabled}
@@ -148,8 +138,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               options={GEOGRAPHICAL_AREA_OPTIONS}
             />
             <RegionSelect
-              accountAvailabilityData={accountAvailabilityData}
-              accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="Linodes"
               disableClearable
               disabled={disabled}

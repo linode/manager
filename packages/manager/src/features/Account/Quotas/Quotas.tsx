@@ -1,5 +1,4 @@
 import { quotaTypes } from '@linode/api-v4';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -40,11 +39,6 @@ export const Quotas = () => {
     'isFetchingS3Endpoints' in locationData
       ? locationData.isFetchingS3Endpoints
       : locationData.isFetchingRegions;
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   // Handlers
   const onSelectServiceChange = (
@@ -115,8 +109,6 @@ export const Quotas = () => {
                     ? `Loading ${selectedService.label} regions...`
                     : `Select a region for ${selectedService.label}`
                 }
-                accountAvailabilityData={accountAvailabilityData}
-                accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability={undefined}
                 disableClearable
                 disabled={isFetchingLocations}

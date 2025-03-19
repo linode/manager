@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -27,11 +26,6 @@ export const BucketRegions = (props: Props) => {
 
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
-
   const flags = useFlags();
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
@@ -42,8 +36,6 @@ export const BucketRegions = (props: Props) => {
       forcefullyShownRegionIds={
         isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
       }
-      accountAvailabilityData={accountAvailabilityData}
-      accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"
       disableClearable
       disabled={disabled}

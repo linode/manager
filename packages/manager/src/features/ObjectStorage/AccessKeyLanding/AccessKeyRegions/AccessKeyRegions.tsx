@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { sortByString } from '@linode/utilities';
 import * as React from 'react';
 
@@ -38,11 +37,6 @@ export const AccessKeyRegions = (props: Props) => {
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
 
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
-
   return (
     <RegionMultiSelect
       forcefullyShownRegionIds={
@@ -51,8 +45,6 @@ export const AccessKeyRegions = (props: Props) => {
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
-      accountAvailabilityData={accountAvailabilityData}
-      accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}

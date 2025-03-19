@@ -1,6 +1,5 @@
 import {
   useAccountAgreements,
-  useAllAccountAvailabilitiesQuery,
   useMutateAccountAgreements,
   useNodeBalancerTypesQuery,
   useNodebalancerCreateMutation,
@@ -141,11 +140,6 @@ const NodeBalancerCreate = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
   });
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -547,8 +541,6 @@ const NodeBalancerCreate = () => {
                 helperText: <RegionHelperText mb={2} />,
                 helperTextPosition: 'top',
               }}
-              accountAvailabilityData={accountAvailabilityData}
-              accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}

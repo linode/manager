@@ -1,7 +1,4 @@
-import {
-  useAllAccountAvailabilitiesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -89,11 +86,6 @@ export const Region = React.memo(() => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -255,8 +247,6 @@ export const Region = React.memo(() => {
             ? 'core'
             : undefined
         }
-        accountAvailabilityData={accountAvailabilityData}
-        accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}

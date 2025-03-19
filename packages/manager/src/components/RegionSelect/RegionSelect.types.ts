@@ -31,14 +31,6 @@ export interface RegionSelectProps<
     'label' | 'options' | 'value'
   > {
   /**
-   * accountAvailabilityData from useAllAccountAvailabilitiesQuery
-   */
-  accountAvailabilityData: AccountAvailability[] | undefined;
-  /**
-   * accountAvailabilityLoading from useAllAccountAvailabilitiesQuery
-   */
-  accountAvailabilityLoading: boolean;
-  /**
    * The specified capability to filter the regions on. Any region that does not have the `currentCapability` will not appear in the RegionSelect dropdown.
    * Only use `undefined` for situations where there is no relevant capability for the RegionSelect - this will not filter any of the regions passed in.
    * Otherwise, a capability should always be passed in.
@@ -89,14 +81,6 @@ export interface RegionMultiSelectProps
     onRemove: (region: string) => void;
     selectedRegions: Region[];
   }>;
-  /**
-   * accountAvailabilityData from useAllAccountAvailabilitiesQuery
-   */
-  accountAvailabilityData: AccountAvailability[] | undefined;
-  /**
-   * accountAvailabilityLoading from useAllAccountAvailabilitiesQuery
-   */
-  accountAvailabilityLoading: boolean;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
   /**

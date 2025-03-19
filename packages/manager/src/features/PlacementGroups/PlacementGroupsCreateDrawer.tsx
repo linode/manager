@@ -1,5 +1,4 @@
 import {
-  useAllAccountAvailabilitiesQuery,
   useAllPlacementGroupsQuery,
   useCreatePlacementGroup,
   useRegionsQuery,
@@ -82,11 +81,6 @@ export const PlacementGroupsCreateDrawer = (
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString(location.search);
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);
@@ -270,8 +264,6 @@ export const PlacementGroupsCreateDrawer = (
                   Boolean(selectedRegionId) ||
                   disabledPlacementGroupCreateButton
                 }
-                accountAvailabilityData={accountAvailabilityData}
-                accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability="Placement Group"
                 disableClearable
                 disabledRegions={disabledRegions}

@@ -1,7 +1,4 @@
-import {
-  useAllAccountAvailabilitiesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -65,11 +62,6 @@ export const ConfigureForm = React.memo((props: Props) => {
     linodeType || '',
     Boolean(linodeType)
   );
-
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const [
     selectedPlacementGroup,
@@ -184,8 +176,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             textFieldProps={{
               helperText,
             }}
-            accountAvailabilityData={accountAvailabilityData}
-            accountAvailabilityLoading={accountAvailabilityLoading}
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}

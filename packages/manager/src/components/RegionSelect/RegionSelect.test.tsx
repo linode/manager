@@ -13,8 +13,6 @@ describe('RegionSelect', () => {
   const regions: Region[] = regionFactory.buildList(3);
 
   const props: RegionSelectProps = {
-    accountAvailabilityData: [],
-    accountAvailabilityLoading: false,
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',

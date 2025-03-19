@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
@@ -22,10 +21,6 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
 
   const [selectedRegion, setSelectedRegion] = React.useState<Region[]>([]);
   const flags = useFlags();
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
 
   const handleRegionChange = React.useCallback(
     (regionIds: string[]) => {
@@ -51,8 +46,6 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       textFieldProps={{
         hideLabel: true,
       }}
-      accountAvailabilityData={accountAvailabilityData}
-      accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability={undefined} // this is a required property, no specific capability required here
       disableSelectAll
       flags={flags}

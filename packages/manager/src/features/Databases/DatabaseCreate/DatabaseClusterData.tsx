@@ -1,4 +1,3 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Divider, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
@@ -55,11 +54,6 @@ export const DatabaseClusterData = (props: Props) => {
   });
   const flags = useFlags();
 
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
-
   const labelToolTip = (
     <StyledLabelTooltip>
       <strong>Label must:</strong>
@@ -97,8 +91,6 @@ export const DatabaseClusterData = (props: Props) => {
       </Grid>
       <Grid>
         <RegionSelect
-          accountAvailabilityData={accountAvailabilityData}
-          accountAvailabilityLoading={accountAvailabilityLoading}
           currentCapability="Managed Databases"
           disableClearable
           disabled={isRestricted}

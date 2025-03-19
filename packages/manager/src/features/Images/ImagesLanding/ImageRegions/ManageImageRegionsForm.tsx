@@ -1,7 +1,4 @@
-import {
-  useAllAccountAvailabilitiesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useRegionsQuery } from '@linode/queries';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -42,12 +39,6 @@ export const ManageImageReplicasForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
-
-  const ignoreAccountAvailability: boolean = true;
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const {
     formState: { errors, isDirty, isSubmitting },
@@ -124,13 +115,11 @@ export const ManageImageReplicasForm = (props: Props) => {
             shouldValidate: true,
           })
         }
-        accountAvailabilityData={accountAvailabilityData}
-        accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         flags={flags}
-        ignoreAccountAvailability={ignoreAccountAvailability} // Ignore the account capability because we are just using "Object Storage" for region compatibility
+        ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         label="Add Regions"
         placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}

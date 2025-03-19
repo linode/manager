@@ -43,8 +43,6 @@ describe('RegionMultiSelect', () => {
   it('renders correctly with initial props', () => {
     renderWithTheme(
       <RegionMultiSelect
-        accountAvailabilityData={[]}
-        accountAvailabilityLoading={false}
         currentCapability="Block Storage"
         flags={{}}
         onChange={mockHandleSelection}
@@ -60,8 +58,6 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
-        accountAvailabilityData={[]}
-        accountAvailabilityLoading={false}
         currentCapability="Block Storage"
         flags={{}}
         onChange={onChange}
@@ -82,8 +78,6 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
-        accountAvailabilityData={[]}
-        accountAvailabilityLoading={false}
         currentCapability="Block Storage"
         flags={{}}
         onChange={onChange}
@@ -109,8 +103,6 @@ describe('RegionMultiSelect', () => {
             selectedRegions={selectedRegions}
           />
         )}
-        accountAvailabilityData={[]}
-        accountAvailabilityLoading={false}
         currentCapability="Block Storage"
         flags={{}}
         onChange={mockHandleSelection}

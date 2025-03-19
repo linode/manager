@@ -1,3 +1,4 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
@@ -24,7 +25,6 @@ interface RegionChipLabelProps {
   region: Region;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
   return (
     <Stack alignItems="center" direction="row" gap={1}>
@@ -37,8 +37,6 @@ const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
     SelectedRegionsList,
-    accountAvailabilityData,
-    accountAvailabilityLoading,
     currentCapability,
     disabled,
     disabledRegions: disabledRegionsFromProps,
@@ -58,6 +56,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     width,
     ...rest
   } = props;
+
+  const {
+    data: accountAvailability,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -83,7 +86,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     if (
       !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
-        accountAvailabilityData,
+        accountAvailabilityData: accountAvailability,
         currentCapability,
         region,
       })

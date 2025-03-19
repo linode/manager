@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAccountAgreements,
-  useAllAccountAvailabilitiesQuery,
   useMutateAccountAgreements,
   useProfile,
   useRegionsQuery,
@@ -72,12 +71,6 @@ export const ImageUpload = () => {
   const { data: regions } = useRegionsQuery();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
-
-  const ignoreAccountAvailability: boolean = true;
-  const {
-    data: accountAvailabilityData,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const form = useForm<ImageUploadFormData>({
     defaultValues: {
@@ -271,13 +264,11 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
-                  accountAvailabilityData={accountAvailabilityData}
-                  accountAvailabilityLoading={accountAvailabilityLoading}
                   currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
                   flags={flags}
-                  ignoreAccountAvailability={ignoreAccountAvailability}
+                  ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
