@@ -1,8 +1,8 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Drawer, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountPermissions } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
@@ -44,7 +44,12 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer onClose={onClose} open={open} title="Assign New Roles">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Assign New Roles"
+    >
       <Typography sx={{ marginBottom: 2.5 }}>
         Select a role you want to assign to a user. Some roles require selecting
         resources they should apply to. Configure the first role and continue

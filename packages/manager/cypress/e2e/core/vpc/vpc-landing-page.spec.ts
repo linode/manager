@@ -18,7 +18,9 @@ describe('VPC landing page', () => {
    * - Confirms that VPCs are listed on the VPC landing page.
    */
   it('lists VPC instances', () => {
-    const mockVPCs = vpcFactory.buildList(5);
+    const mockVPCs = vpcFactory.buildList(5, {
+      region: chooseRegion().id,
+    });
     mockGetVPCs(mockVPCs).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');

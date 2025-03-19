@@ -11,6 +11,7 @@ import type {
   IamAccountResource,
   IamUserPermissions,
   PermissionType,
+  ResourceAccess,
   ResourceType,
   ResourceTypePermissions,
   RoleType,
@@ -49,7 +50,7 @@ export const placeholderMap: Record<string, string> = {
 };
 
 export interface RoleMap {
-  access: 'account' | 'resource';
+  access: 'account_access' | 'resource_access';
   description: string;
   id: AccountAccessType | RoleType;
   name: AccountAccessType | RoleType;
@@ -128,7 +129,9 @@ const getDoesRolesMatchQuery = (
 };
 
 export interface RolesType {
+  access: IamAccessType;
   label: string;
+  resource_type: ResourceTypePermissions;
   value: string;
 }
 
@@ -145,7 +148,9 @@ export const getAllRoles = (
   return accessTypes.flatMap((accessType: IamAccessType) =>
     permissions[accessType].flatMap((resource: IamAccess) =>
       resource.roles.map((role: Roles) => ({
+        access: accessType,
         label: role.name,
+        resource_type: resource.resource_type,
         value: role.name,
       }))
     )
@@ -247,7 +252,7 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
 
 interface AllResources {
   resource: IamAccess;
-  type: 'account' | 'resource';
+  type: 'account_access' | 'resource_access';
 }
 
 /**
@@ -263,11 +268,11 @@ export const mapRolesToPermissions = (
   const allResources: AllResources[] = [
     ...accountPermissions.account_access.map((resource) => ({
       resource,
-      type: 'account' as const,
+      type: 'account_access' as const,
     })),
     ...accountPermissions.resource_access.map((resource) => ({
       resource,
-      type: 'resource' as const,
+      type: 'resource_access' as const,
     })),
   ];
 
@@ -372,4 +377,55 @@ export const useCalculateHiddenItems = (
   }, [items, showAll]);
 
   return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
+};
+
+export interface EntitiesOption {
+  label: string;
+  value: number;
+}
+
+interface UpdateUserRolesProps {
+  access: 'account_access' | 'resource_access';
+  assignedRoles?: IamUserPermissions;
+  initialRole?: string;
+  newRole: string;
+}
+
+export const updateUserRoles = ({
+  access,
+  assignedRoles,
+  initialRole,
+  newRole,
+}: UpdateUserRolesProps): IamUserPermissions => {
+  if (access === 'account_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      account_access: assignedRoles.account_access.map(
+        (role: AccountAccessType) =>
+          role === initialRole ? (newRole as AccountAccessType) : role
+      ),
+    };
+  }
+
+  if (access === 'resource_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      resource_access: assignedRoles.resource_access.map(
+        (resource: ResourceAccess) => ({
+          ...resource,
+          roles: resource.roles.map((role: RoleType) =>
+            role === initialRole ? (newRole as RoleType) : role
+          ),
+        })
+      ),
+    };
+  }
+
+  // If access type is invalid, return unchanged object
+  return (
+    assignedRoles ?? {
+      account_access: [],
+      resource_access: [],
+    }
+  );
 };
