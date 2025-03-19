@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { convertForAria } from '../../utilities/stringUtils';
@@ -10,6 +11,7 @@ import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
 import { Typography } from '../Typography';
 
+import type { SxProps, Theme } from '@mui/material';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
 // simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
@@ -29,6 +31,7 @@ interface BaseProps extends _DrawerProps {
   /**
    * Title that appears at the top of the drawer
    */
+  sx?: SxProps<Theme>;
   title: string;
   /**
    * Increases the Drawers width from 480px to 700px on desktop-sized viewports
@@ -65,11 +68,44 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       isFetching,
       onClose,
       open,
+      sx,
       title,
       wide,
       ...rest
     } = props;
     const titleID = convertForAria(title);
+
+    const theme = useTheme();
+
+    const sxDrawer = {
+      '& .MuiDrawer-paper': {
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('sm')]: {
+          padding: theme.spacing(2),
+        },
+        ...(wide
+          ? {
+              maxWidth: 700,
+              width: '100%',
+            }
+          : {
+              [theme.breakpoints.down('sm')]: {
+                maxWidth: 445,
+                width: '100%',
+              },
+              width: 480,
+            }),
+      },
+      '& .actionPanel': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(1),
+      },
+      '& .selectionCard': {
+        flexBasis: '100%',
+        maxWidth: '100%',
+      },
+    };
 
     // Store the last valid children and title in refs
     // This is to prevent flashes of content during the drawer's closing transition,
@@ -89,35 +125,10 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             onClose({}, 'escapeKeyDown');
           }
         }}
-        sx={(theme) => ({
-          '& .MuiDrawer-paper': {
-            padding: (theme) => theme.spacing(4),
-            [theme.breakpoints.down('sm')]: {
-              padding: theme.spacing(2),
-            },
-            ...(wide
-              ? {
-                  maxWidth: 700,
-                  width: '100%',
-                }
-              : {
-                  [theme.breakpoints.down('sm')]: {
-                    maxWidth: 445,
-                    width: '100%',
-                  },
-                  width: 480,
-                }),
-          },
-          '& .actionPanel': {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: (theme) => theme.spacing(1),
-          },
-          '& .selectionCard': {
-            flexBasis: '100%',
-            maxWidth: '100%',
-          },
-        })}
+        sx={{
+          ...sxDrawer,
+          ...sx,
+        }}
         anchor="right"
         open={open}
         ref={ref}

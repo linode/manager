@@ -75,7 +75,7 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
       onClose={handleClose}
       open={open}
       // Adding zIndex value so that the SSH drawer is not hidden behind the Rebuild Linode dialog, which prevented users from adding an SSH key
-      style={{ zIndex: 1300 }}
+      sx={{ zIndex: 1300 }}
       title="Add SSH Key"
     >
       {generalError && <Notice text={generalError} variant="error" />}
