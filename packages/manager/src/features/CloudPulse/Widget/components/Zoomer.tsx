@@ -56,7 +56,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   return <ToggleZoomer />;
 });
 
-const StyledZoomIn = styled(ZoomInMap, { label: 'StyledReload' })(
+const StyledZoomIn = styled(ZoomInMap, { label: 'StyledZoomIn' })(
   ({ theme }) => ({
     '&:hover': {
       '& path': {
@@ -67,7 +67,7 @@ const StyledZoomIn = styled(ZoomInMap, { label: 'StyledReload' })(
     },
   })
 );
-const StyledZoomOut = styled(ZoomOutMap, { label: 'StyledReload' })(
+const StyledZoomOut = styled(ZoomOutMap, { label: 'StyledZoomOut' })(
   ({ theme }) => ({
     '&:hover': {
       '& path': {
