@@ -31,7 +31,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     alignItems: 'center',
-    borderRadius: theme.tokens.borderRadius.None,
+    borderRadius: theme.tokens.alias.Radius.Default,
     display: 'flex',
     gap: theme.spacing(2),
     padding: theme.spacing(0.5),
