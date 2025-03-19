@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const AddInterfaceForm = (props: Props) => {
-  const { linodeId, regionId, onClose } = props;
+  const { linodeId, onClose, regionId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
