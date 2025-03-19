@@ -4,15 +4,18 @@ import {
   InputAdornment,
   TextField,
 } from '@linode/ui';
-import Clear from '@mui/icons-material/Clear';
-import Search from '@mui/icons-material/Search';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import type { TextFieldProps } from '@linode/ui';
+import Close from 'src/assets/icons/close.svg';
+import Search from 'src/assets/icons/search.svg';
+
+import type { InputProps, TextFieldProps } from '@linode/ui';
 
 export interface DebouncedSearchProps extends TextFieldProps {
+  /**
+   * Class name to apply to the component.
+   */
   className?: string;
   /**
    * Whether to show a clear button at the end of the input.
@@ -23,9 +26,18 @@ export interface DebouncedSearchProps extends TextFieldProps {
    * @default 400
    */
   debounceTime?: number;
+  /**
+   * Default value of the input.
+   */
   defaultValue?: string;
+  /**
+   * Whether to hide the label.
+   */
   hideLabel?: boolean;
-
+  /**
+   * Custom props to apply to the input element.
+   */
+  inputSlotProps?: InputProps;
   /**
    * Determines if the textbox is currently searching for inputted query
    */
@@ -34,19 +46,25 @@ export interface DebouncedSearchProps extends TextFieldProps {
    * Function to perform when searching for query
    */
   onSearch: (query: string) => void;
+  /**
+   * Placeholder text for the input.
+   */
   placeholder?: string;
+  /**
+   * Value of the input.
+   */
   value: string;
 }
 
 export const DebouncedSearchTextField = React.memo(
   (props: DebouncedSearchProps) => {
     const {
-      InputProps,
       className,
       clearable,
       debounceTime,
       defaultValue,
       hideLabel,
+      inputSlotProps,
       isSearching,
       label,
       onSearch,
@@ -76,38 +94,35 @@ export const DebouncedSearchTextField = React.memo(
 
     return (
       <TextField
-        InputProps={{
-          endAdornment: isSearching ? (
-            <InputAdornment position="end">
-              <CircleProgress size="sm" />
-            </InputAdornment>
-          ) : (
-            clearable &&
-            textFieldValue && (
-              <IconButton
-                onClick={() => {
-                  setTextFieldValue('');
-                  onSearch('');
-                }}
-                aria-label="Clear"
-                size="small"
-              >
-                <Clear
-                  sx={(theme) => ({
-                    '&&': {
-                      color: theme.color.grey1,
-                    },
-                  })}
-                />
-              </IconButton>
-            )
-          ),
-          startAdornment: (
-            <InputAdornment position="end">
-              <StyledSearchIcon />
-            </InputAdornment>
-          ),
-          ...InputProps,
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                {isSearching && <CircleProgress noPadding size="xs" />}
+                {clearable && Boolean(textFieldValue) && (
+                  <IconButton
+                    onClick={() => {
+                      setTextFieldValue('');
+                      onSearch('');
+                    }}
+                    sx={{
+                      padding: 0,
+                    }}
+                    aria-label="Clear"
+                    size="small"
+                  >
+                    <Close />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            ),
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search data-testid="SearchIcon" />
+              </InputAdornment>
+            ),
+            ...inputSlotProps,
+          },
         }}
         className={className}
         data-qa-debounced-search
@@ -122,9 +137,3 @@ export const DebouncedSearchTextField = React.memo(
     );
   }
 );
-
-const StyledSearchIcon = styled(Search)(({ theme }) => ({
-  '&&, &&:hover': {
-    color: theme.color.grey1,
-  },
-}));

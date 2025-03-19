@@ -64,5 +64,5 @@ jobs:
           build: pnpm run build
           start: pnpm start:ci
           browser: chrome
-          record: true
-          parallel: true
+          record: false
+          parallel: false
