@@ -1,8 +1,9 @@
+import { useProfile } from '@linode/queries';
 import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -11,7 +12,6 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from '@linode/queries';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -128,9 +128,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     return (
       <Grid key={link.display} size={12}>
         <Link
+          style={{
+            color: theme.tokens.content.Text.Link.Default,
+            font: theme.tokens.typography.Body.Semibold,
+          }}
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
-          style={{ font: theme.tokens.typography.Body.Regular }}
           to={link.href}
         >
           {link.display}
@@ -158,6 +161,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
+            backgroundColor: theme.tokens.background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
           }),
@@ -179,11 +183,19 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       >
         <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
           {canSwitchBetweenParentOrProxyAccount && (
-            <Typography>Current account:</Typography>
+            <Typography
+              sx={(theme) => ({
+                color: theme.tokens.content.Text.Primary.Default,
+                font: theme.tokens.typography.Label.Semibold.S,
+              })}
+            >
+              Current account:
+            </Typography>
           )}
           <Typography
             sx={(theme) => ({
-              font: theme.tokens.typography.Heading.M,
+              color: theme.tokens.content.Text.Primary.Default,
+              font: theme.tokens.typography.Label.Bold.L,
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
@@ -205,10 +217,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           <Heading>My Profile</Heading>
           <Divider />
           <Grid columnSpacing={2} container rowSpacing={1}>
-            <Grid container direction="column" wrap="nowrap" size={6}>
+            <Grid container direction="column" size={6} wrap="nowrap">
               {profileLinks.slice(0, 4).map(renderLink)}
             </Grid>
-            <Grid container direction="column" wrap="nowrap" size={6}>
+            <Grid container direction="column" size={6} wrap="nowrap">
               {profileLinks.slice(4).map(renderLink)}
             </Grid>
           </Grid>
@@ -224,10 +236,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (
                   <Link
+                    style={{
+                      color: theme.tokens.content.Text.Link.Default,
+                      font: theme.tokens.typography.Body.Semibold,
+                    }}
                     data-testid={`menu-item-${menuLink.display}`}
                     key={menuLink.display}
                     onClick={onClose}
-                    style={{ font: theme.tokens.typography.Body.Regular }}
                     to={menuLink.href}
                   >
                     {menuLink.display}
@@ -243,6 +258,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 };
 
 const Heading = styled(Typography)(({ theme }) => ({
+  color: theme.tokens.content.Text.Primary.Default,
   font: theme.tokens.typography.Heading.Overline,
   letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
   textTransform: theme.tokens.typography.Heading.OverlineTextCase,
