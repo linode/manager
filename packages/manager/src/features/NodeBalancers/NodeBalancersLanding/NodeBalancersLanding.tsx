@@ -86,6 +86,9 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: '/nodebalancers',
+        }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
