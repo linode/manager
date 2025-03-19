@@ -451,7 +451,12 @@ export const SubnetAssignLinodesDrawer = (
         />
         {values.selectedLinode?.id && (
           <>
-            <Box alignItems="center" display="flex" flexDirection="row">
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              sx={{ marginLeft: '2px' }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
