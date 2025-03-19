@@ -47,3 +47,22 @@ export const enableJunitReport = (
     return config;
   };
 };
+
+export const jUnitReportOptions = (
+  config: Cypress.PluginConfigOptions,
+  suiteName?: string,
+  jenkinsMode: boolean = false
+) => {
+  if (!!config.env[envVarName]) {
+    const testSuite = suiteName || config.env['cypress_test_suite'] || 'core';
+    const testSuiteName = `${capitalize(testSuite)} Test Suite`;
+    return {
+      mochaFile: 'cypress/results/test-results-[hash].xml',
+      rootSuiteTitle: 'Cloud Manager Cypress Tests',
+      testsuitesTitle: testSuiteName,
+      jenkinsMode,
+      suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
+    };
+  }
+  return {};
+};
