@@ -1,10 +1,9 @@
 interface VPCIPv6 {
-  range?: string[];
+  range?: string;
 }
 
 interface CreateVPCIPV6 extends VPCIPv6 {
-  // Omitted from VPC response, only permitted in requests
-  allocation_class?: string[]
+  allocation_class?: string;
 }
 
 export interface VPC {

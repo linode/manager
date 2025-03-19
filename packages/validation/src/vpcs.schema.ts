@@ -214,29 +214,31 @@ export const createSubnetSchema = object().shape(
   ]
 );
 
-const createVPCIPv6Schema = object().shape({
-  range: array().of(string().test({
-    name: 'IPv6 prefix length',
-    message: 'Must be the prefix length 52, 48, or 44 of the IP, e.g. /52',
-    test: (value) => {
-      if (value && value !== 'auto' && value.length > 0) {
-        vpcsValidateIP({
-          value,
-          shouldHaveIPMask: true,
-          mustBeIPMask: false,
-        })
-      }
-    }
-  })),
-  allocation_class: array().of(string()).optional()
-})
+const createVPCIPv6Schema = object({
+  range: string()
+    .optional()
+    .test({
+      name: 'IPv6 prefix length',
+      message: 'Must be the prefix length 52, 48, or 44 of the IP, e.g. /52',
+      test: (value) => {
+        if (value && value !== 'auto' && value.length > 0) {
+          vpcsValidateIP({
+            value,
+            shouldHaveIPMask: true,
+            mustBeIPMask: false,
+          });
+        }
+      },
+    }),
+  allocation_class: string().optional(),
+});
 
 export const createVPCSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),
   description: string(),
   region: string().required('Region is required'),
   subnets: array().of(createSubnetSchema),
-  ipv6: array().of(createVPCIPv6Schema).length(1).notRequired()
+  ipv6: array().of(createVPCIPv6Schema).max(1).optional(),
 });
 
 export const modifySubnetSchema = object({
