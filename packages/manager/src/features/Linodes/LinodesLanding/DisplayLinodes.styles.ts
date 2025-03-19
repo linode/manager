@@ -27,7 +27,7 @@ export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
 })(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.tokens.table.HeaderNested.Background,
+  backgroundColor: theme.tokens.component.Table.HeaderNested.Background,
   display: 'flex',
   height: 42,
   justifyContent: 'flex-end',
@@ -43,7 +43,7 @@ export const StyledToggleButton = styled(IconButton, {
   },
   '&:focus': {
     // Browser default until we get styling direction for focus states
-    outline: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
+    outline: `1px dotted ${theme.tokens.alias.Border.Neutral}`,
   },
   '&:hover': {
     backgroundColor: theme.palette.grey[300],

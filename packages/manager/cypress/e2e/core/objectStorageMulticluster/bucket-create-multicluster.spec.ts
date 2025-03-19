@@ -74,7 +74,7 @@ describe('Object Storage Multicluster Bucket create', () => {
       .should('be.visible')
       .within(() => {
         // Enter label.
-        cy.contains('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(mockBucket.label);
         cy.log(`${mockRegionWithObj.label}`);
         cy.contains('Region').click();

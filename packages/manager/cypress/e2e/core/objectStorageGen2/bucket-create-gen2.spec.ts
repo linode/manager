@@ -188,7 +188,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -329,7 +329,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -455,7 +455,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -579,7 +579,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${mockRegion.label}{enter}`);
@@ -716,10 +716,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
 
-        cy.contains('Label is required.').should('be.visible');
-        cy.findByText('Label').click();
+        cy.contains('Bucket name is required.').should('be.visible');
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
-        cy.contains('Label is required.').should('not.exist');
+        cy.contains('Bucket name is required.').should('not.exist');
 
         // confirms (mock) API error appears
         ui.buttonGroup
@@ -774,7 +774,7 @@ describe('Object Storage Gen2 create bucket modal has disabled fields for restri
         cy.findByText(/You don't have permissions to create a Bucket./).should(
           'be.visible'
         );
-        cy.findByLabelText(/Label.*/)
+        cy.findByLabelText('Bucket Name (required)')
           .should('be.visible')
           .should('be.disabled');
         ui.regionSelect.find().should('be.visible').should('be.disabled');

@@ -40,7 +40,7 @@ export const RegionOption = ({
         {item.id === 'global' ? (
           <PublicIcon
             sx={(theme) => ({
-              color: `${theme.tokens.content.Icon.Primary.Active}`,
+              color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
             })}
             className="public-icon"
           />
