@@ -343,7 +343,7 @@ export const TextField = (props: TextFieldProps) => {
               disableUnderline: true,
               endAdornment: loading && (
                 <InputAdornment position="end">
-                  <CircleProgress size="sm" />
+                  <CircleProgress noPadding size="xs" />
                 </InputAdornment>
               ),
               sx: {
