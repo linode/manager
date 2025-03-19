@@ -1,17 +1,21 @@
-import { Divider, Typography } from '@linode/ui';
-import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
+import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
+import { Divider, Drawer, Typography } from '@linode/ui';
+import {
+  isFeatureEnabledV2,
+  pluralize,
+  readableBytes,
+  truncateMiddle,
+} from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
@@ -81,6 +85,7 @@ export const BucketDetailsDrawer = React.memo(
 
     return (
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(label ?? 'Bucket Detail')}
