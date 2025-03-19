@@ -1,16 +1,18 @@
 import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
-import { useLinodeTransfer } from 'src/queries/linodes/stats';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useAccountNetworkTransfer,
+  useLinodeTransfer,
+  useRegionsQuery,
+} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import {
   getDynamicDCNetworkTransferData,
   isLinodeInDynamicPricingDC,
 } from 'src/utilities/pricing/linodes';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { TransferContent } from './TransferContent';
 

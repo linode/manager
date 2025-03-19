@@ -1,14 +1,14 @@
+import {
+  useAllLinodeDisksQuery,
+  useLinodeKernelQuery,
+  useLinodeQuery,
+} from '@linode/queries';
+import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeKernelQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { InterfaceListItem } from './InterfaceListItem';

@@ -1,3 +1,4 @@
+import { usePreferences, useProfile } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
@@ -15,12 +16,10 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useProfile } from 'src/queries/profile/profile';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -31,7 +30,6 @@ import {
   StyledIPv4Label,
   StyledLabelBox,
   StyledListItem,
-  StyledSummaryGrid,
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
@@ -174,7 +172,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           >
             Summary
           </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
+          <Grid container spacing={1}>
             <Grid
               size={{
                 lg: 6,
@@ -257,7 +255,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Box>
                 </Grid>
               )}
-          </StyledSummaryGrid>
+          </Grid>
         </Grid>
 
         <Grid

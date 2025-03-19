@@ -1,5 +1,7 @@
 import { isEmpty } from '@linode/api-v4';
+import { usePreferences, useRebuildLinodeMutation } from '@linode/queries';
 import { Divider, Notice, Stack, Typography } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,10 +10,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { utoa } from 'src/utilities/metadata';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
 import { LinodePermissionsError } from '../LinodePermissionsError';

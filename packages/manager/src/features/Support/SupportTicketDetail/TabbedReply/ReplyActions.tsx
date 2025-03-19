@@ -1,7 +1,6 @@
-import { makeStyles } from 'tss-react/mui';
+import { ActionsPanel } from '@linode/ui';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { makeStyles } from 'tss-react/mui';
 
 import { CloseTicketLink } from '../CloseTicketLink';
 

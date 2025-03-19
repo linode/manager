@@ -3,7 +3,7 @@
 exports[`Markdown component > should highlight text consistently 1`] = `
 <DocumentFragment>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-rhmp6-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-1ewp9t3-MuiTypography-root"
   />
   <h1>
     Some markdown

@@ -2474,6 +2474,7 @@ export const handlers = [
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
       const serviceType = params.serviceType;
+      alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
           ...alertFactory.buildList(20, {
@@ -2567,7 +2568,7 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
+      makeResourcePage(notificationChannelFactory.buildList(7))
     );
   }),
   http.get('*/monitor/services', () => {

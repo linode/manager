@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 
 import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { CPUGauge } from './Gauges/CPU';

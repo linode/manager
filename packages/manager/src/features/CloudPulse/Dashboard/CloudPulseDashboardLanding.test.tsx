@@ -50,6 +50,8 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if dashboard not selected', () => {
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
 
+    expect(screen.getByText('metrics')).toBeInTheDocument();
+
     expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       'value',
       ''

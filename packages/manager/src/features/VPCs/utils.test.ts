@@ -1,7 +1,8 @@
 import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-} from 'src/factories/linodeConfigInterfaceFactory';
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import {
   subnetAssignedLinodeDataFactory,
@@ -57,7 +58,7 @@ describe('getUniqueLinodesFromSubnets', () => {
 
 describe('getSubnetInterfaceFromConfigs', () => {
   it('returns the interface associated with the given subnet id', () => {
-    const interfaces = LinodeConfigInterfaceFactoryWithVPC.buildList(5);
+    const interfaces = linodeConfigInterfaceFactoryWithVPC.buildList(5);
     const singleConfig = linodeConfigFactory.build({ interfaces });
     const configs = [linodeConfigFactory.build(), singleConfig];
 
@@ -83,12 +84,12 @@ describe('getSubnetInterfaceFromConfigs', () => {
 
 describe('hasUnrecommendedConfiguration function', () => {
   it('returns true when a config has an active VPC interface and a non-VPC primary interface', () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({
+    const publicInterface = linodeConfigInterfaceFactory.build({
       id: 10,
       primary: true,
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       id: 20,
       subnet_id: 1,
@@ -125,8 +126,8 @@ describe('hasUnrecommendedConfiguration function', () => {
   });
 
   it('returns false when a config has an active VPC interface that is the primary interface', () => {
-    const publicInterface = LinodeConfigInterfaceFactory.build({ id: 10 });
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
+    const publicInterface = linodeConfigInterfaceFactory.build({ id: 10 });
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       id: 20,
       primary: true,
