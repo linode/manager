@@ -10,8 +10,19 @@ interface Props
     EnhancedAutocompleteProps<Firewall, false>,
     'label' | 'options' | 'value'
   > {
+  /**
+   * The label applied to the Autocomplete's TextField.
+   * @default Firewall
+   */
   label?: string;
+  /**
+   * Optionally pass your own array of Firewalls.
+   * All Firewall will show if this is omitted.
+   */
   options?: Firewall[];
+  /**
+   * The ID of the selected Firewall
+   */
   value: null | number | undefined;
 }
 
