@@ -175,7 +175,7 @@ export const TextField = (props: TextFieldProps) => {
     errorTextId,
     helperTextId,
     validInputId,
-  } = useFieldIds(label, inputId, errorGroup, Boolean(errorText));
+  } = useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
 
   React.useEffect(() => {
     setValue(value);
@@ -201,7 +201,12 @@ export const TextField = (props: TextFieldProps) => {
        * input doesn't go outside of those bounds ONLY if the input
        * type matches a number type.
        */
-      const cleanedValue = getClampedValue(e.target.value, type, min, max);
+      const cleanedValue = getClampedValue({
+        max,
+        min,
+        type,
+        value: e.target.value,
+      });
 
       /**
        * If the cleanedValue is undefined, set the value to an empty
