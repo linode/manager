@@ -43,7 +43,10 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
           Add Network Interface
         </Button>
       </Paper>
-      <LinodeInterfacesTable handlers={{ onDelete, onShowDetails }} linodeId={linodeId} />
+      <LinodeInterfacesTable
+        handlers={{ onDelete, onShowDetails }}
+        linodeId={linodeId}
+      />
       <AddInterfaceDrawer
         linodeId={linodeId}
         onClose={() => setIsAddDrawerOpen(false)}
@@ -52,7 +55,7 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
       <DeleteInterfaceDialog
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
-        onClose={() => setIsDetailsDrawerOpen(false)}
+        onClose={() => setIsDeleteDialogOpen(false)}
         open={isDeleteDialogOpen}
       />
       <InterfaceDetailsDrawer
