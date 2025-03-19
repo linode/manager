@@ -221,16 +221,12 @@ export const UpdateNodeBalancerConfigSchema = object({
     is: 'https',
     then: (schema) => schema.required(),
   }),
+  udp_check_port: number().min(1).max(65535),
   stickiness: string().when('protocol', {
     is: 'udp',
     then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
     otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
   }),
-  udp_check_port: number().min(1).max(65535),
-  nodes: array()
-    .of(nodeBalancerConfigNodeSchema)
-    .required()
-    .min(1, 'You must provide at least one back end node.'),
 });
 
 const client_conn_throttle = number()
