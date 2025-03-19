@@ -11,7 +11,6 @@ import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
 import { Typography } from '../Typography';
 
-import type { SxProps, Theme } from '@mui/material';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
 // simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
@@ -31,7 +30,6 @@ interface BaseProps extends _DrawerProps {
   /**
    * Title that appears at the top of the drawer
    */
-  sx?: SxProps<Theme>;
   title: string;
   /**
    * Increases the Drawers width from 480px to 700px on desktop-sized viewports
