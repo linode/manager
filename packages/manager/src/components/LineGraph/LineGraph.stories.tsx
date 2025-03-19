@@ -1,7 +1,7 @@
+import { formatPercentage, getMetrics } from '@linode/utilities';
 import * as React from 'react';
 
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { formatPercentage, getMetrics } from 'src/utilities/statMetrics';
 
 import type { DataSet, LineGraphProps } from './LineGraph';
 import type { Meta, StoryObj } from '@storybook/react';
