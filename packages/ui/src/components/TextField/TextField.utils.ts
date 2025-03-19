@@ -1,12 +1,17 @@
 import { clamp, convertToKebabCase } from '@linode/ui';
 import { useId } from 'react';
 
-export const getClampedValue = (
-  value: string,
-  type?: string,
-  min?: number,
-  max?: number
-): number | string => {
+export const getClampedValue = ({
+  max,
+  min,
+  type,
+  value,
+}: {
+  max?: number;
+  min?: number;
+  type?: string;
+  value: string;
+}): number | string => {
   const numberTypes = ['tel', 'number'];
 
   // Because !!0 is falsy :(
@@ -19,12 +24,17 @@ export const getClampedValue = (
   return value;
 };
 
-export const useFieldIds = (
-  label: string,
-  inputId?: string,
-  errorGroup?: string,
-  hasError = false
-) => {
+export const useFieldIds = ({
+  errorGroup,
+  hasError = false,
+  inputId,
+  label,
+}: {
+  errorGroup?: string;
+  hasError?: boolean;
+  inputId?: string;
+  label: string;
+}) => {
   const fallbackId = useId();
 
   const validInputId =
