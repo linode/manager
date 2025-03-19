@@ -13,7 +13,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import type { FirewallDevice } from '@linode/api-v4';
 
 export interface Props {
-  device?: FirewallDevice | undefined;
+  device: FirewallDevice | undefined;
   firewallId: number;
   firewallLabel: string;
   isFetching?: boolean;
