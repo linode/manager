@@ -1,5 +1,5 @@
 import { useLinodeInterfaceQuery } from '@linode/queries';
-import { Drawer } from '@linode/ui';
+import { Box, Button, Drawer } from '@linode/ui';
 import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
@@ -23,14 +23,19 @@ export const InterfaceDetailsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      title={`Network Interface Details${
+        interfaceId ? `: #${interfaceId}` : ''
+      }`}
       NotFoundComponent={NotFound}
       error={error?.[0].reason}
       isFetching={isLoading}
       onClose={onClose}
       open={open}
-      title="Network Interface Details"
     >
       {linodeInterface && <InterfaceDetailsContent {...linodeInterface} />}
+      <Box marginTop={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button onClick={onClose}>Close</Button>
+      </Box>
     </Drawer>
   );
 };
