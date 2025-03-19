@@ -4,7 +4,6 @@ import {
 } from '@linode/queries';
 import * as React from 'react';
 
-import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -97,7 +96,6 @@ export const CloudPulseRegionSelect = React.memo(
             savePreferences
           );
         }}
-        FlagComponent={Flag}
         accountAvailabilityData={accountAvailabilityData}
         accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability={capability}

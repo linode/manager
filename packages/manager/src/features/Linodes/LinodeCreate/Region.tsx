@@ -10,7 +10,6 @@ import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
@@ -256,7 +255,6 @@ export const Region = React.memo(() => {
             ? 'core'
             : undefined
         }
-        FlagComponent={Flag}
         accountAvailabilityData={accountAvailabilityData}
         accountAvailabilityLoading={accountAvailabilityLoading}
         currentCapability="Linodes"

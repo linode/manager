@@ -4,7 +4,6 @@ import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
 import { RegionSelect } from './RegionSelect';
-import { mockFlagComponent } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -29,7 +28,6 @@ export const Default: StoryObj<RegionSelectProps> = {
 
 const meta: Meta<RegionSelectProps> = {
   args: {
-    FlagComponent: mockFlagComponent,
     currentCapability: undefined,
     disabled: false,
     errorText: '',

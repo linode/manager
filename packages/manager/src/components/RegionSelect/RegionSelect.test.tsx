@@ -5,7 +5,6 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
-import { mockFlagComponent } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
@@ -14,7 +13,6 @@ describe('RegionSelect', () => {
   const regions: Region[] = regionFactory.buildList(3);
 
   const props: RegionSelectProps = {
-    FlagComponent: mockFlagComponent,
     accountAvailabilityData: [],
     accountAvailabilityLoading: false,
     currentCapability: 'Linodes',

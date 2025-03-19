@@ -29,7 +29,6 @@ import { useLocation } from 'react-router-dom';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
-import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -269,7 +268,6 @@ export const PlacementGroupsCreateDrawer = (
                   Boolean(selectedRegionId) ||
                   disabledPlacementGroupCreateButton
                 }
-                FlagComponent={Flag}
                 accountAvailabilityData={accountAvailabilityData}
                 accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability="Placement Group"

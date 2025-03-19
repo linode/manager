@@ -5,7 +5,6 @@ import { checkComponentA11y } from 'support/util/accessibility';
 import { componentTests, visualTests } from 'support/util/components';
 import { createSpy } from 'support/util/components';
 
-import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 
 componentTests('RegionSelect', (mount) => {
@@ -21,7 +20,6 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability="Object Storage"
@@ -53,7 +51,6 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability="Object Storage"
@@ -86,7 +83,6 @@ componentTests('RegionSelect', (mount) => {
 
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability="Object Storage"
@@ -119,7 +115,6 @@ componentTests('RegionSelect', (mount) => {
           <>
             <span id="other-element">Other Element</span>
             <RegionSelect
-              FlagComponent={Flag}
               accountAvailabilityData={[]}
               accountAvailabilityLoading={false}
               currentCapability="Object Storage"
@@ -156,7 +151,6 @@ componentTests('RegionSelect', (mount) => {
       it('can select a region initially', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -194,7 +188,6 @@ componentTests('RegionSelect', (mount) => {
       it('can change region selection', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -233,7 +226,6 @@ componentTests('RegionSelect', (mount) => {
       it('can clear region selection', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -263,7 +255,6 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when clearable is disabled', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -287,7 +278,6 @@ componentTests('RegionSelect', (mount) => {
       it('cannot clear region selection when no region is selected', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -308,7 +298,6 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -336,7 +325,6 @@ componentTests('RegionSelect', (mount) => {
         const spyFn = createSpy(() => {}, 'changeSpy');
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -383,7 +371,6 @@ componentTests('RegionSelect', (mount) => {
       // TODO Remove `dcGetWell` flag override when feature flag is removed from codebase.
       mount(
         <RegionSelect
-          FlagComponent={Flag}
           accountAvailabilityData={[mockAvailability]}
           accountAvailabilityLoading={false}
           currentCapability="Object Storage"
@@ -421,7 +408,6 @@ componentTests('RegionSelect', (mount) => {
     it('only lists regions with the specified capability', () => {
       mount(
         <RegionSelect
-          FlagComponent={Flag}
           accountAvailabilityData={[]}
           accountAvailabilityLoading={false}
           currentCapability="Object Storage"
@@ -454,7 +440,6 @@ componentTests('RegionSelect', (mount) => {
     it('lists all regions when no capability is specified', () => {
       mount(
         <RegionSelect
-          FlagComponent={Flag}
           accountAvailabilityData={[]}
           accountAvailabilityLoading={false}
           currentCapability={undefined}
@@ -488,7 +473,6 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed without an item selected', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -504,7 +488,6 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is closed with an item selected', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}
@@ -520,7 +503,6 @@ componentTests('RegionSelect', (mount) => {
       it('passes aXe check when menu is open', () => {
         mount(
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={[]}
             accountAvailabilityLoading={false}
             currentCapability={undefined}

@@ -6,7 +6,6 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
-import { mockFlagComponent } from './RegionSelect.utils';
 
 import type { Region } from '@linode/api-v4';
 
@@ -44,7 +43,6 @@ describe('RegionMultiSelect', () => {
   it('renders correctly with initial props', () => {
     renderWithTheme(
       <RegionMultiSelect
-        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -62,7 +60,6 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
-        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -85,7 +82,6 @@ describe('RegionMultiSelect', () => {
     const onChange = vi.fn();
     renderWithTheme(
       <RegionMultiSelect
-        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"
@@ -113,7 +109,6 @@ describe('RegionMultiSelect', () => {
             selectedRegions={selectedRegions}
           />
         )}
-        FlagComponent={mockFlagComponent}
         accountAvailabilityData={[]}
         accountAvailabilityLoading={false}
         currentCapability="Block Storage"

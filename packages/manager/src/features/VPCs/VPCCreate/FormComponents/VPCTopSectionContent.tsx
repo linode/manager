@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
-import { Flag } from 'src/components/Flag';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
@@ -64,7 +63,6 @@ export const VPCTopSectionContent = (props: Props) => {
       <Controller
         render={({ field, fieldState }) => (
           <RegionSelect
-            FlagComponent={Flag}
             accountAvailabilityData={accountAvailabilityData}
             accountAvailabilityLoading={accountAvailabilityLoading}
             aria-label="Choose a region"

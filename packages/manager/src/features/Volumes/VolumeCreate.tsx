@@ -37,7 +37,6 @@ import {
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { Flag } from 'src/components/Flag';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -418,7 +417,6 @@ export const VolumeCreate = () => {
                   setFieldValue('region', region?.id ?? null);
                   setFieldValue('linode_id', null);
                 }}
-                FlagComponent={Flag}
                 accountAvailabilityData={accountAvailabilityData}
                 accountAvailabilityLoading={accountAvailabilityLoading}
                 currentCapability="Block Storage"

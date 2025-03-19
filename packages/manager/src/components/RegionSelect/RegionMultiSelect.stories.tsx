@@ -7,7 +7,6 @@ import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding
 import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
-import { mockFlagComponent } from './RegionSelect.utils';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
@@ -45,7 +44,6 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
 
 const meta: Meta<RegionMultiSelectProps> = {
   args: {
-    FlagComponent: mockFlagComponent,
     SelectedRegionsList,
     currentCapability: 'Linodes',
     disabled: false,

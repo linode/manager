@@ -1,13 +1,10 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
-import { Box } from '@linode/ui';
-import * as React from 'react';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
-  FlagComponentProps,
   GetRegionOptionAvailability,
   RegionFilterValue,
 } from './RegionSelect.types';
@@ -185,23 +182,4 @@ export const useIsGeckoEnabled = (
   );
 
   return { isGeckoBetaEnabled, isGeckoLAEnabled };
-};
-
-/**
- * Pretend this is a Flag Component.
- * This is just to avoid importing the actual Flag component from 'manager/src/components/Flag' in RegionSelect.
- * Note: Only use in RegionSelect tests and storybook
- */
-export const mockFlagComponent = (
-  props: React.PropsWithChildren<FlagComponentProps>
-) => {
-  return (
-    <Box {...props} lineHeight="0">
-      <img
-        alt={`${props.country} Flag`}
-        src={`https://flagcdn.com/${props.country}.svg`}
-        width="32"
-      />
-    </Box>
-  );
 };

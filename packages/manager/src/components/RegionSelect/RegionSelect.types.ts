@@ -1,22 +1,13 @@
 import type {
   AccountAvailability,
   Capabilities,
-  Country,
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type {
-  BoxProps,
-  DisableItemOption,
-  EnhancedAutocompleteProps,
-} from '@linode/ui';
+import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
 // @todo: modularization - Update type FlagSet to import from `@linode/shared` package once available.
 import type { FlagSet } from 'src/featureFlags';
-
-export interface FlagComponentProps extends BoxProps {
-  country: Country;
-}
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -39,7 +30,6 @@ export interface RegionSelectProps<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
     'label' | 'options' | 'value'
   > {
-  FlagComponent: React.ComponentType<FlagComponentProps>;
   /**
    * accountAvailabilityData from useAllAccountAvailabilitiesQuery
    */
@@ -95,7 +85,6 @@ export interface RegionMultiSelectProps
     EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
-  FlagComponent: React.ComponentType<FlagComponentProps>;
   SelectedRegionsList?: React.ComponentType<{
     onRemove: (region: string) => void;
     selectedRegions: Region[];
@@ -124,7 +113,7 @@ export interface RegionMultiSelectProps
    * Ignores account availability information when rendering region options
    * @default false
    */
-  ignoreAccountAvailability?: boolean; // @todo: modularization - check if we can remove this prop
+  ignoreAccountAvailability?: boolean;
   isClearable?: boolean;
   label?: string;
   onChange: (ids: string[]) => void;

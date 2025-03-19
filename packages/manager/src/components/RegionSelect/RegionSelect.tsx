@@ -7,6 +7,8 @@ import * as React from 'react';
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -34,7 +36,6 @@ export const RegionSelect = <
   props: RegionSelectProps<DisableClearable>
 ) => {
   const {
-    FlagComponent,
     accountAvailabilityData,
     accountAvailabilityLoading,
     currentCapability,
@@ -115,7 +116,6 @@ export const RegionSelect = <
 
           return (
             <RegionOption
-              FlagComponent={FlagComponent}
               disabledOptions={disabledRegions[region.id]}
               isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
@@ -147,7 +147,7 @@ export const RegionSelect = <
                   }}
                 />
               ) : (
-                <FlagComponent country={selectedRegion?.country} mr={1} />
+                <Flag country={selectedRegion?.country} mr={1} />
               )),
           },
           tooltipText,

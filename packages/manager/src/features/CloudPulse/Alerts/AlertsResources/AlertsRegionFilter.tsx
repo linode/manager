@@ -1,7 +1,6 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import React from 'react';
 
-import { Flag } from 'src/components/Flag';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -52,7 +51,6 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       textFieldProps={{
         hideLabel: true,
       }}
-      FlagComponent={Flag}
       accountAvailabilityData={accountAvailabilityData}
       accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability={undefined} // this is a required property, no specific capability required here

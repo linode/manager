@@ -6,7 +6,6 @@ import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { Flag } from 'src/components/Flag';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -116,7 +115,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               />
             </Box>
             <RegionSelect
-              FlagComponent={Flag}
               accountAvailabilityData={accountAvailabilityData}
               accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="Linodes"
@@ -150,7 +148,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               options={GEOGRAPHICAL_AREA_OPTIONS}
             />
             <RegionSelect
-              FlagComponent={Flag}
               accountAvailabilityData={accountAvailabilityData}
               accountAvailabilityLoading={accountAvailabilityLoading}
               currentCapability="Linodes"

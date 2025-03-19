@@ -2,18 +2,17 @@ import { Box, ListItemOption, Stack } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
-import type { FlagComponentProps } from './RegionSelect.types';
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
+
 import type { Region } from '@linode/api-v4';
 import type { ListItemOptionProps } from '@linode/ui';
 
 interface RegionOptionProps extends ListItemOptionProps<Region> {
-  FlagComponent: React.ComponentType<FlagComponentProps>;
   isGeckoLAEnabled: boolean;
 }
 
 export const RegionOption = ({
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  FlagComponent,
   disabledOptions,
   isGeckoLAEnabled,
   item,
@@ -46,7 +45,7 @@ export const RegionOption = ({
             className="public-icon"
           />
         ) : (
-          <FlagComponent country={item.country} />
+          <Flag country={item.country} />
         )}
         {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
         <Box flexGrow={1} />

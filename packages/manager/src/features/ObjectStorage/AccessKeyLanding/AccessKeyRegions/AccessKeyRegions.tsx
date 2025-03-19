@@ -1,7 +1,6 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import * as React from 'react';
 
-import { Flag } from 'src/components/Flag';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
@@ -52,7 +51,6 @@ export const AccessKeyRegions = (props: Props) => {
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
-      FlagComponent={Flag}
       accountAvailabilityData={accountAvailabilityData}
       accountAvailabilityLoading={accountAvailabilityLoading}
       currentCapability="Object Storage"

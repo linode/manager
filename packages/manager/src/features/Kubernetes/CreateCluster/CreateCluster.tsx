@@ -24,7 +24,6 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { Flag } from 'src/components/Flag';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -415,7 +414,6 @@ export const CreateCluster = () => {
                     ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
-                FlagComponent={Flag}
                 accountAvailabilityData={accountAvailabilityData}
                 accountAvailabilityLoading={accountAvailabilityLoading}
                 disableClearable

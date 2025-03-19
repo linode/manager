@@ -6,6 +6,8 @@ import React from 'react';
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -14,23 +16,19 @@ import {
   useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
-import type {
-  FlagComponentProps,
-  RegionMultiSelectProps,
-} from './RegionSelect.types';
+import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
 
 interface RegionChipLabelProps {
-  FlagComponent: React.ComponentType<FlagComponentProps>;
   region: Region;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const RegionChipLabel = ({ FlagComponent, region }: RegionChipLabelProps) => {
+const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
   return (
     <Stack alignItems="center" direction="row" gap={1}>
-      <FlagComponent country={region.country} sx={{ fontSize: '1rem' }} />
+      <Flag country={region.country} sx={{ fontSize: '1rem' }} />
       {region.label} ({region.id})
     </Stack>
   );
@@ -38,7 +36,6 @@ const RegionChipLabel = ({ FlagComponent, region }: RegionChipLabelProps) => {
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
-    FlagComponent,
     SelectedRegionsList,
     accountAvailabilityData,
     accountAvailabilityLoading,
@@ -127,7 +124,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             // Render regular options
             return (
               <RegionOption
-                FlagComponent={FlagComponent}
                 disabledOptions={disabledRegions[option.id]}
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 item={option}
@@ -141,15 +137,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return tagValue.map((option, index) => (
               <Chip
                 {...getTagProps({ index })}
-                label={
-                  <RegionChipLabel
-                    FlagComponent={FlagComponent}
-                    region={option}
-                  />
-                }
                 data-testid={option.id}
                 deleteIcon={<CloseIcon />}
                 key={index}
+                label={<RegionChipLabel region={option} />}
                 onDelete={() => handleRemoveOption(option.id)}
               />
             ));
