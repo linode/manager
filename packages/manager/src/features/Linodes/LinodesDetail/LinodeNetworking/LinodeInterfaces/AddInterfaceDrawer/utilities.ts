@@ -12,7 +12,7 @@ export const CreateLinodeInterfaceFormSchema = CreateLinodeInterfaceSchema.conca
       .oneOf(['vpc', 'vlan', 'public'])
       .required('You must selected an Interface type.'),
     vpc: CreateVPCInterfaceSchema.concat(
-      object({ vpc_id: number().required() })
+      object({ vpc_id: number().required('VPC is required.') })
     )
       .optional()
       .nullable()

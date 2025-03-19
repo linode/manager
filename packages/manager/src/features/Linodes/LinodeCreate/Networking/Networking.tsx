@@ -1,13 +1,14 @@
 import {
   Button,
   Divider,
+  Notice,
   Paper,
   PlusSignIcon,
   Stack,
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { useFieldArray, useWatch } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { Firewall } from './Firewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
@@ -16,17 +17,20 @@ import { LinodeInterface } from './LinodeInterface';
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Networking = () => {
-  const { append, fields, remove } = useFieldArray<
-    LinodeCreateFormValues,
-    'linodeInterfaces'
-  >({
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<LinodeCreateFormValues>();
+
+  const { append, fields, remove } = useFieldArray({
+    control,
     name: 'linodeInterfaces',
   });
 
-  const interfaceGeneration = useWatch<
-    LinodeCreateFormValues,
-    'interface_generation'
-  >({ name: 'interface_generation' });
+  const interfaceGeneration = useWatch({
+    control,
+    name: 'interface_generation',
+  });
 
   return (
     <Paper>
@@ -54,6 +58,9 @@ export const Networking = () => {
             Add Another Interface
           </Button>
         </Stack>
+        {errors.linodeInterfaces?.message && (
+          <Notice text={errors.linodeInterfaces.message} variant="error" />
+        )}
         <InterfaceGeneration />
         {fields.map((field, index) => (
           <LinodeInterface
