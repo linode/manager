@@ -17,10 +17,10 @@ import { enableJunitReport } from './cypress/support/plugins/junit-report';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
 import cypressViteConfig from './cypress/vite.config';
-import { enableHtmlReport } from './cypress/support/plugins/html-report';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
 import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
+import { configureMultiReporters } from './cypress/support/plugins/configure-multi-reporters';
 import cypressOnFix from 'cypress-on-fix';
 /**
  * Exports a Cypress configuration object.
@@ -100,9 +100,8 @@ export default defineConfig({
         featureFlagOverrides,
         logTestTagInfo,
         splitCypressRun,
-        enableJunitReport(),
         generateTestWeights,
-        enableHtmlReport,
+        configureMultiReporters,
         postRunCleanup,
       ]);
     },

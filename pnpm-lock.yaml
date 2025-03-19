@@ -482,6 +482,9 @@ importers:
       cypress-mochawesome-reporter:
         specifier: ^3.8.2
         version: 3.8.2(cypress@14.0.1)(mocha@10.8.2)
+      cypress-multi-reporters:
+        specifier: ^2.0.5
+        version: 2.0.5(mocha@10.8.2)
       cypress-on-fix:
         specifier: ^1.1.0
         version: 1.1.0
@@ -3731,6 +3734,12 @@ packages:
     hasBin: true
     peerDependencies:
       cypress: '>=6.2.0'
+
+  cypress-multi-reporters@2.0.5:
+    resolution: {integrity: sha512-5ReXlNE7C/9/rpDI3z0tAJbPXsTHK7P3ogvUtBntQlmctRQ+sSMts7dIQY5MTb0XfBSge3CuwvNvaoqtw90KSQ==}
+    engines: {node: '>=6.0.0'}
+    peerDependencies:
+      mocha: '>=3.1.2'
 
   cypress-on-fix@1.1.0:
     resolution: {integrity: sha512-qGdbC0vZLmR3lYPpWWZvMqgDTeA2v04zu3DBdBmJHbG+BjwlFNYGnL7Y+X4LBrB+AyCCCeCuXhV80UXA90UhWg==}
@@ -10069,6 +10078,15 @@ snapshots:
       mochawesome-report-generator: 6.2.0
     transitivePeerDependencies:
       - mocha
+
+  cypress-multi-reporters@2.0.5(mocha@10.8.2):
+    dependencies:
+      debug: 4.4.0(supports-color@8.1.1)
+      lodash: 4.17.21
+      mocha: 10.8.2
+      semver: 7.6.3
+    transitivePeerDependencies:
+      - supports-color
 
   cypress-on-fix@1.1.0:
     dependencies:
