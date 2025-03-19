@@ -1,12 +1,11 @@
 import { styled } from '@mui/material';
 
 export const StyledPreContainerDiv = styled('div', { label: 'StyledDiv' })(
-  ({ theme }) => ({
+  () => ({
     alignItems: 'center',
     display: 'flex',
     flexWrap: 'wrap',
-    minHeight: 34,
-    marginBottom: theme.spacingFunction(6),
+    minHeight: 48,
   })
 );
 
