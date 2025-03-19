@@ -15,6 +15,15 @@ interface Props
   value: null | number | undefined;
 }
 
+/**
+ * A shared "Firewall Select" component intended to be used when
+ * a user needs to choose a Firewall
+ *
+ * Currently this is only a single select, but can be extended to support more
+ * Autocomplete features.
+ *
+ * @TODO Linode Interfaces - Add default chip functionality
+ */
 export const FirewallSelect = (props: Props) => {
   const { errorText, loading, value, ...rest } = props;
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
