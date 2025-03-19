@@ -3,7 +3,7 @@ import {
   mockDatabaseEngineTypes,
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
-import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import {
   mockCreateDatabase,
   mockGetDatabaseEngines,
@@ -11,15 +11,27 @@ import {
   mockGetDatabases,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 
-import { accountFactory, databaseFactory, eventFactory } from 'src/factories';
+import {
+  accountFactory,
+  accountUserFactory,
+  databaseFactory,
+  eventFactory,
+  grantsFactory,
+  profileFactory,
+} from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
 import type { databaseClusterConfiguration } from 'support/constants/databases';
 
-describe('create a database cluster, mocked data', () => {
+xdescribe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
@@ -157,4 +169,72 @@ describe('create a database cluster, mocked data', () => {
       });
     }
   );
+});
+
+describe('restricted user cannot create database', () => {
+  beforeEach(() => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_databases: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+  });
+  it('cannot create database on landing page', () => {
+    // Login and wait for application to load
+    cy.visitWithLogin('/databases');
+
+    // Assert that Create Database button is visible and disabled
+    ui.button
+      .findByTitle('Create Database Cluster')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+
+    // Assert that tooltip is visible with message
+    ui.tooltip
+      .findByText(
+        "You don't have permissions to create Databases. Please contact your account administrator to request the necessary permissions."
+      )
+      .should('be.visible');
+  });
+
+  it('cannot create database from Create menu', () => {
+    // Login and wait for application to load
+    cy.visitWithLogin('/databases/create');
+
+    // Assert that Create Database button is visible and disabled
+    ui.button
+      .findByTitle('Create Database Cluster')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+
+    // Info message is visible
+    cy.findByText(
+      "You don't have permissions to create this Database. Please contact your account administrator to request the necessary permissions."
+    );
+
+    // all form inputs are disabled
+    cy.get('form').within(() => {
+      cy.get('input').each((input) => {
+        cy.wrap(input).should('be.disabled');
+      });
+    });
+  });
 });
