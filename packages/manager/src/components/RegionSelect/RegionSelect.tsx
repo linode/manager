@@ -59,7 +59,7 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,

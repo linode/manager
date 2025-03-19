@@ -16,8 +16,8 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
 import { chooseRegion } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
 
 import {
   accountFactory,

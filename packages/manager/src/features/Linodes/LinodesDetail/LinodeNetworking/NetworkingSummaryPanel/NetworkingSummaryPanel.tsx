@@ -1,4 +1,4 @@
-import { useLinodeQuery, useRegionsQuery } from '@linode/queries';
+import { useLinodeQuery } from '@linode/queries';
 import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
@@ -20,8 +20,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   const theme = useTheme();
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeId);
-  const { data: regions } = useRegionsQuery();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   if (!linode) {
     return null;

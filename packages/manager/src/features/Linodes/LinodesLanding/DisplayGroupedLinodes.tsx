@@ -1,4 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { IconButton } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
@@ -97,9 +96,8 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   }, 0);
 
   const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   if (display === 'grid') {
     return (

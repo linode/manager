@@ -83,7 +83,7 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 

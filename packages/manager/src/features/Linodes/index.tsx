@@ -1,7 +1,6 @@
 import {
   useAllAccountMaintenanceQuery,
   useAllLinodesQuery,
-  useRegionsQuery,
 } from '@linode/queries';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
@@ -57,9 +56,8 @@ export const LinodesLandingWrapper = React.memo(() => {
     PENDING_MAINTENANCE_FILTER
   );
   const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   const [regionFilter, setRegionFilter] = React.useState<
     RegionFilter | undefined

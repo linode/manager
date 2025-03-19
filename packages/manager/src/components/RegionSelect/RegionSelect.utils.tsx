@@ -1,4 +1,5 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
+import { useRegionsQuery } from '@linode/queries';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
@@ -166,10 +167,9 @@ export const getIsDistributedRegion = (
   return region?.site_type === 'distributed';
 };
 
-export const useIsGeckoEnabled = (
-  flags: FlagSet,
-  regions: Region[] | undefined
-) => {
+export const useIsGeckoEnabled = (flags: FlagSet) => {
+  const { data: regions } = useRegionsQuery();
+
   const isGeckoLA = flags?.gecko2?.enabled && flags.gecko2.la;
   const isGeckoBeta = flags?.gecko2?.enabled && !flags.gecko2?.la;
 

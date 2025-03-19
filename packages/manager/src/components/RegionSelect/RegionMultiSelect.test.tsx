@@ -124,14 +124,14 @@ describe('RegionMultiSelect', () => {
     // Newark is selected
     expect(
       screen.getByRole('option', {
-        name: /Newark, NJ \(us-east\)/i,
+        name: 'Newark, NJ (us-east)',
       })
     ).toHaveAttribute('aria-selected', 'true');
 
     // Atlanta is not selected
     expect(
       screen.getByRole('option', {
-        name: /Atlanta, GA \(us-southeast\)/i,
+        name: 'Atlanta, GA (us-southeast)',
       })
     ).toHaveAttribute('aria-selected', 'false');
   });

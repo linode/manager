@@ -3,8 +3,8 @@ import * as React from 'react';
 import { mockGetAccountAvailability } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { checkComponentA11y } from 'support/util/accessibility';
-import { componentTests, visualTests } from 'support/util/components';
 import { createSpy } from 'support/util/components';
+import { componentTests, visualTests } from 'support/util/components';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 

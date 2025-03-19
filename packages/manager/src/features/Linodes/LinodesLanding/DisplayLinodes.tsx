@@ -1,4 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
@@ -84,7 +83,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const groupByDescriptionId = React.useId();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
   const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
 
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
     return data.reduce((acc, thisLinode) => {
@@ -107,7 +105,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   return (
     <Paginate

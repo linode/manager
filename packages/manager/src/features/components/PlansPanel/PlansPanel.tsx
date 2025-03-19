@@ -88,7 +88,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regionsData);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search

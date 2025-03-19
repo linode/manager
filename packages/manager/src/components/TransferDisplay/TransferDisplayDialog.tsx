@@ -1,4 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
 import { Box, Dialog, Divider, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
@@ -39,8 +38,7 @@ export const TransferDisplayDialog = React.memo(
     } = props;
     const theme = useTheme();
     const flags = useFlags();
-    const { data: regions } = useRegionsQuery();
-    const { isGeckoLAEnabled } = useIsGeckoEnabled(flags, regions);
+    const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =
