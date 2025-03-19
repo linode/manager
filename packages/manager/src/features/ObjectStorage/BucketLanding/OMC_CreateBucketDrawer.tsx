@@ -313,7 +313,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}
-              label="Label"
+              label="Bucket Name"
               onBlur={field.onBlur}
               onChange={field.onChange}
               required
