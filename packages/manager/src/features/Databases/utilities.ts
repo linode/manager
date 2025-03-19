@@ -1,20 +1,20 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from '@linode/queries';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 import type {
   ConfigurationItem,
   DatabaseEngine,
+  DatabaseFork,
   DatabaseEngineConfig,
   DatabaseInstance,
   DatabaseInstanceAdvancedConfig,
   Engine,
   PendingUpdates,
-  DatabaseFork,
 } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {

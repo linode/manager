@@ -241,7 +241,6 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-createLinode': 'off',
-    '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -323,6 +322,12 @@ module.exports = {
         message:
           'Please use Typography component from @linode/ui instead of @mui/material',
         name: '@mui/material',
+      },
+      {
+        importNames: ['Link'],
+        message:
+          'Please use the Link component from src/components/Link instead of react-router-dom',
+        name: 'react-router-dom',
       },
     ],
     'no-restricted-syntax': [

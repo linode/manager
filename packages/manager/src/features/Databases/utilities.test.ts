@@ -54,9 +54,13 @@ const queryMocks = vi.hoisted(() => ({
   useDatabaseTypesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/databases/databases', () => ({
-  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
-}));
+vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+  };
+});
 
 describe('useIsDatabasesEnabled', () => {
   it('should return correctly for non V1/V2 user', async () => {

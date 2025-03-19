@@ -1,7 +1,6 @@
+import { useInfiniteVolumesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   disabled?: boolean;

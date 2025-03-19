@@ -1,10 +1,17 @@
-import { ActionsPanel, Button, Divider, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Button,
+  Divider,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -114,12 +121,17 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
       {formState.errors.root?.message ? (
-        <Notice text={formState.errors.root.message} variant="error" />
+        <Notice
+          spacingBottom={16}
+          text={formState.errors.root.message}
+          variant="error"
+        />
       ) : null}
       <FormProvider
         control={control}
@@ -130,7 +142,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Typography
-            marginBottom={(theme) => theme.spacing(4)}
+            marginBottom={(theme) => theme.spacing(3)}
             marginTop={(theme) => theme.spacing()}
           >
             Manage custom labels and taints directly through LKE. Changes are

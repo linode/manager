@@ -1,11 +1,18 @@
-import { ActionsPanel, Button, Divider, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Button,
+  Divider,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import {
   useDatabaseEngineConfig,
   useDatabaseMutation,
@@ -91,7 +98,12 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     });
   };
   return (
-    <Drawer onClose={onClose} open={open} title="Advanced Configuration">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Advanced Configuration"
+    >
       {Boolean(updateDatabaseError) && (
         <Notice spacingBottom={16} spacingTop={16} variant="error">
           {updateDatabaseError?.[0].reason}

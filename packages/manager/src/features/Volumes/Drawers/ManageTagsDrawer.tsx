@@ -1,11 +1,10 @@
-import { ActionsPanel, Notice } from '@linode/ui';
+import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { useGrants } from '@linode/queries';
-import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 
 import type { APIError, Volume } from '@linode/api-v4';
 
@@ -70,6 +69,7 @@ export const ManageTagsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

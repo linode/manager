@@ -1,16 +1,22 @@
+import { array, object, string } from 'yup';
+
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
+import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   Alert,
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
+  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
   /**
@@ -53,6 +59,24 @@ export interface ProcessedCriteria {
    * Unit for the threshold value
    */
   unit: string;
+}
+
+export interface AlertValidationSchemaProps {
+  /**
+   * The config that holds the maxResourceSelection count per service type like linode, dbaas etc.,
+   */
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  /**
+   * The base schema which needs to be enhanced with the entity_ids validation
+   */
+  baseSchema: ObjectSchema<
+    CreateAlertDefinitionForm | EditAlertDefinitionPayload
+  >;
+
+  /**
+   * The service type that is linked with alert and for which the validation schema needs to be built
+   */
+  serviceTypeObj: null | string;
 }
 
 /**
@@ -250,4 +274,37 @@ export const processMetricCriteria = (
       };
     }
   );
+};
+
+/**
+ * @param props The props required to enhance the validation schema
+ * @returns The validation schema updated with max selection count for entity_ids based on service type
+ */
+export const enhanceValidationSchemaWithEntityIdValidation = (
+  props: AlertValidationSchemaProps
+): ObjectSchema<CreateAlertDefinitionForm | EditAlertDefinitionPayload> => {
+  const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
+
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig.length) {
+    return baseSchema;
+  }
+
+  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
+    ({ serviceType }) => serviceTypeObj === serviceType
+  )?.maxResourceSelectionCount;
+
+  return maxSelectionCount === undefined
+    ? baseSchema
+    : baseSchema.concat(
+        object({
+          entity_ids: array()
+            .of(string())
+            .max(
+              maxSelectionCount,
+              `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+            ),
+        }) as ObjectSchema<
+          CreateAlertDefinitionForm | EditAlertDefinitionPayload
+        >
+      );
 };

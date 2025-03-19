@@ -42,6 +42,10 @@ export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterfac
             address: '10.0.0.0',
             primary: true,
           },
+          {
+            address: '10.0.1.0',
+            primary: false,
+          },
         ],
         ranges: [],
       },
