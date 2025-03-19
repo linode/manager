@@ -79,11 +79,11 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
-  padding: 0,
+  padding: theme.tokens.spacing.S8,
   transition: theme.transitions.create(['color']),
   // Unchecked & Readonly
   ...(props.readOnly && {
-    color: theme.tokens.checkbox.Empty.ReadOnly.Border,
+    color: theme.tokens.component.Checkbox.Empty.ReadOnly.Border,
     pointerEvents: 'none',
   }),
   // Checked & Readonly
@@ -91,11 +91,11 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
     props.readOnly && {
       svg: {
         '#Check': {
-          fill: theme.tokens.checkbox.Checked.ReadOnly.Icon,
+          fill: theme.tokens.component.Checkbox.Checked.ReadOnly.Icon,
         },
-        border: `1px solid ${theme.tokens.checkbox.Checked.ReadOnly.Border}`,
+        border: `1px solid ${theme.tokens.component.Checkbox.Checked.ReadOnly.Border}`,
       },
-      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
+      color: `${theme.tokens.component.Checkbox.Checked.ReadOnly.Background} !important`,
       pointerEvents: 'none',
     }),
   // Indeterminate & Readonly
@@ -103,11 +103,11 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
     props.readOnly && {
       svg: {
         'g rect:nth-of-type(2)': {
-          fill: theme.tokens.checkbox.Indeterminated.ReadOnly.Icon,
+          fill: theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Icon,
         },
-        border: `1px solid ${theme.tokens.checkbox.Indeterminated.ReadOnly.Border}`,
+        border: `1px solid ${theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Border}`,
       },
-      color: `${theme.tokens.checkbox.Checked.ReadOnly.Background} !important`,
+      color: `${theme.tokens.component.Checkbox.Checked.ReadOnly.Background} !important`,
       pointerEvents: 'none',
     }),
 }));
@@ -116,6 +116,6 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   '& .MuiFormControlLabel-label': {
     paddingTop: theme.tokens.spacing.S2,
   },
-  gap: theme.tokens.spacing.S8,
+  // gap: theme.tokens.spacing.S8,
   marginRight: 0,
 }));

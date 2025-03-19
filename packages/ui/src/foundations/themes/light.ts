@@ -590,34 +590,38 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '&:active': {
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
           '&:hover': {
-            color: `${Checkbox.Empty.Hover.Border} !important`,
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+            // backgroundColor: 'transparent',
           },
           // Checked
           '&.Mui-checked': {
-            color: Checkbox.Checked.Default.Background,
+            color: Component.Checkbox.Checked.Default.Background,
           },
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
-            color: Checkbox.Indeterminated.Default.Background,
+            color: Component.Checkbox.Indeterminated.Default.Background,
           },
           // Unchecked & Disabled
           '&.Mui-disabled': {
             '& svg': {
-              backgroundColor: Checkbox.Empty.Disabled.Background,
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
             },
-            color: Checkbox.Empty.Disabled.Border,
+            color: Component.Checkbox.Empty.Disabled.Border,
             pointerEvents: 'none',
           },
           // Checked & Disabled
           '&.Mui-checked.Mui-disabled': {
-            color: Checkbox.Checked.Disabled.Background,
+            color: Component.Checkbox.Checked.Disabled.Background,
           },
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
-            color: Checkbox.Indeterminated.Disabled.Background,
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
           },
-          color: Checkbox.Empty.Default.Border,
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },
