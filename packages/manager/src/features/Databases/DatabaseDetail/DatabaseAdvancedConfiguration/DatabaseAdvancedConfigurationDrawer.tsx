@@ -25,8 +25,7 @@ import {
   convertExistingConfigsToArray,
   findConfigItem,
   formatConfigPayload,
-  isConfigBoolean,
-  isConfigStringWithEnum,
+  getDefaultConfigValue,
 } from '../../utilities';
 import { DatabaseConfigurationItem } from './DatabaseConfigurationItem';
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
@@ -126,11 +125,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       category: config?.category ?? '',
       isNew: true,
       label: config?.label ?? '',
-      value: isConfigBoolean(config)
-        ? false
-        : isConfigStringWithEnum(config)
-        ? config.enum?.[0] ?? ''
-        : '',
+      value: getDefaultConfigValue(config),
     });
 
     setSelectedConfig(null);

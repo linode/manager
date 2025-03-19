@@ -28,7 +28,10 @@ export const StyledGridContainer = styled(Grid2, {
 export const StyledLabelTypography = styled(Typography, {
   label: 'StyledLabelTypography',
 })(({ theme }) => ({
-  background: theme.tokens.color.Neutrals[5],
+  background:
+    theme.palette.mode === 'dark'
+      ? theme.tokens.color.Neutrals[100]
+      : theme.tokens.color.Neutrals[10],
   color: theme.palette.mode === 'dark' ? theme.color.grey6 : 'inherit',
   font: theme.font.bold,
   height: '100%',

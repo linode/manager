@@ -394,6 +394,7 @@ export const convertExistingConfigsToArray = (
   }
   return options;
 };
+
 /**
  * Formats the configuration payload by organizing form data into categorized fields.
  *
@@ -441,4 +442,20 @@ export const isConfigStringWithEnum = (config: ConfigurationOption) => {
       config?.type.includes('string') &&
       config.enum)
   );
+};
+
+/**
+ * Determines the default value for a configuration item based on its type.
+ *
+ * @param config - The configuration object
+ * @returns - The default value for the given configuration
+ */
+export const getDefaultConfigValue = (config: ConfigurationOption) => {
+  return isConfigBoolean(config)
+    ? false
+    : isConfigStringWithEnum(config)
+    ? config.enum?.[0] ?? ''
+    : config?.type === 'number' || config?.type === 'integer'
+    ? 0
+    : '';
 };

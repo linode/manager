@@ -14,6 +14,7 @@ import {
   formatConfigPayload,
   formatConfigValue,
   getDatabasesDescription,
+  getDefaultConfigValue,
   hasPendingUpdates,
   isDateOutsideBackup,
   isDefaultDatabase,
@@ -769,5 +770,44 @@ describe('formatConfigPayload', () => {
         default_time_zone: '+03:00',
       },
     });
+  });
+});
+
+describe('getDefaultConfigValue', () => {
+  it('should return false for boolean type', () => {
+    const config: ConfigurationOption = {
+      category: '',
+      label: '',
+      type: 'boolean',
+    };
+    expect(getDefaultConfigValue(config)).toBe(false);
+  });
+
+  it('should return first enum value for string with enum', () => {
+    const config: ConfigurationOption = {
+      category: '',
+      enum: ['option1', 'option2'],
+      label: '',
+      type: 'string',
+    };
+    expect(getDefaultConfigValue(config)).toBe('option1');
+  });
+
+  it('should return 0 for number type', () => {
+    const config: ConfigurationOption = {
+      category: '',
+      label: '',
+      type: 'number',
+    };
+    expect(getDefaultConfigValue(config)).toBe(0);
+  });
+
+  it('should return 0 for integer type', () => {
+    const config: ConfigurationOption = {
+      category: '',
+      label: '',
+      type: 'integer',
+    };
+    expect(getDefaultConfigValue(config)).toBe(0);
   });
 });
