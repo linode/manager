@@ -134,7 +134,7 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
-        InputProps={
+        inputSlotProps={
           searchParseError
             ? {
                 endAdornment: (

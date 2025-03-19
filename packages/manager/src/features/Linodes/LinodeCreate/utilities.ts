@@ -211,7 +211,7 @@ export const getLinodeCreatePayload = (
  */
 export const getInterfacesPayload = (
   interfaces: InterfacePayload[] | undefined,
-  hasPrivateIP: boolean | undefined
+  hasPrivateIP: LinodeCreateFormValues['backups_enabled']
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
@@ -306,7 +306,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: Linode | null;
+  linode?: {
+    id: number;
+    label: string;
+    region: string;
+    type: string | null;
+  } | null;
   /**
    * Form state for the new Linode interface
    */

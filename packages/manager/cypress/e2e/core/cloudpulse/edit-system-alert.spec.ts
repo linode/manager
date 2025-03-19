@@ -127,7 +127,7 @@ describe('Integration Tests for Edit Alert', () => {
         ui.button.findByTitle('Select All').should('be.visible').click();
 
         ui.button
-          .findByTitle('Unselect All')
+          .findByTitle('Deselect All')
           .should('be.visible')
           .should('be.enabled');
       });

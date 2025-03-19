@@ -1,10 +1,9 @@
 import { Box } from '@linode/ui';
-import { regions } from '@linode/utilities';
+import { regions, sortByString } from '@linode/utilities';
 import React, { useState } from 'react';
 
 // @todo: modularization - Move `SelectedRegionsList` to the `/data` directory in the `@linode/shared` package.
 import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
-import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
 

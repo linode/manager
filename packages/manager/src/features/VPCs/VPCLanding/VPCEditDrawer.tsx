@@ -6,12 +6,12 @@ import {
   useRegionsQuery,
   useUpdateVPCMutation,
 } from '@linode/queries';
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -86,7 +86,12 @@ export const VPCEditDrawer = (props: Props) => {
   const { data: regionsData, error: regionsError } = useRegionsQuery();
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit VPC">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit VPC"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
