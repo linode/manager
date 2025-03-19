@@ -16,7 +16,7 @@ export const PublicTemplateRules = () => {
       </Typography>
       <Box
         sx={(theme) => ({
-          backgroundColor: theme.tokens.background.Neutral,
+          backgroundColor: theme.tokens.alias.Background.Neutral,
           marginTop: theme.spacing(2),
           padding: theme.spacing(2),
         })}
@@ -30,7 +30,7 @@ export const PublicTemplateRules = () => {
 };
 
 const templateRuleStyling = (theme: Theme) => ({
-  backgroundColor: theme.tokens.background.Neutral,
+  backgroundColor: theme.tokens.alias.Background.Neutral,
   marginTop: theme.spacing(1),
   padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
 });

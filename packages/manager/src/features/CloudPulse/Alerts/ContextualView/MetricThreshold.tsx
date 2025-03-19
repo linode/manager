@@ -16,7 +16,7 @@ export const MetricThreshold = (props: MetricThresholdProps) => {
     return (
       <Typography
         sx={(theme) => ({
-          font: theme.tokens.typography.Label.Regular.S,
+          font: theme.tokens.alias.Typography.Label.Regular.S,
         })}
       >
         -
@@ -31,7 +31,7 @@ export const MetricThreshold = (props: MetricThresholdProps) => {
     return (
       <Typography
         sx={(theme) => ({
-          font: theme.tokens.typography.Label.Regular.S,
+          font: theme.tokens.alias.Typography.Label.Regular.S,
         })}
       >
         {metric}
@@ -48,7 +48,7 @@ export const MetricThreshold = (props: MetricThresholdProps) => {
     <Box alignItems="center" display="flex" gap={1.75}>
       <Typography
         sx={(theme) => ({
-          font: theme.tokens.typography.Label.Regular.S,
+          font: theme.tokens.alias.Typography.Label.Regular.S,
         })}
       >
         {metric}

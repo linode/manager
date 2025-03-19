@@ -64,7 +64,7 @@ export const PaginationFooter = (props: Props) => {
     <Box
       sx={{
         background: theme.bg.bgPaper,
-        border: `1px solid ${theme.tokens.table.Row.Border}`,
+        border: `1px solid ${theme.tokens.component.Table.Row.Border}`,
         borderTop: 0,
         ...sx,
       }}

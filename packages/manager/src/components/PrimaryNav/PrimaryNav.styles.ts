@@ -16,7 +16,7 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
 export const StyledDivider = styled(Divider, {
   label: 'StyledDivider',
 })(({ theme }) => ({
-  borderColor: theme.tokens.border.Normal,
+  borderColor: theme.tokens.alias.Border.Normal,
   margin: 0,
 }));
 
@@ -38,7 +38,7 @@ export const StyledActiveLink = styled(Link, {
   alignItems: 'center',
   cursor: 'pointer',
   display: 'flex',
-  font: theme.tokens.typography.Body.Semibold,
+  font: theme.tokens.alias.Typography.Body.Semibold,
   height: 32,
   minWidth: SIDEBAR_WIDTH,
   padding: `8px 8px 8px 48px`,
@@ -57,11 +57,11 @@ export const StyledPrimaryLinkBox = styled(Box, {
     ? theme.tokens.color.Brand[60]
     : theme.tokens.color.Neutrals['White'],
   display: 'flex',
-  font: theme.tokens.typography.Label.Semibold.S,
+  font: theme.tokens.alias.Typography.Label.Semibold.S,
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
   ...(props.isActiveLink && {
-    font: theme.tokens.typography.Body.Bold,
+    font: theme.tokens.alias.Typography.Body.Bold,
   }),
   ...(props.isCollapsed && {
     opacity: 0,
@@ -80,7 +80,8 @@ export const StyledAccordion = styled(Accordion, {
         fontSize: theme.tokens.font.FontSize.Xxxs,
         // eslint-disable-next-line
         fontWeight: theme.tokens.font.FontWeight.Extrabold,
-        letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
+        letterSpacing:
+          theme.tokens.alias.Typography.Heading.OverlineLetterSpacing,
         lineHeight: theme.tokens.font.LineHeight.Xxxs,
         paddingLeft: theme.tokens.spacing.S12,
         paddingRight: theme.tokens.spacing.S12,
@@ -101,7 +102,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       alignItems: 'center',
       display: 'flex',
-      font: theme.tokens.typography.Label.Bold.S,
+      font: theme.tokens.alias.Typography.Label.Bold.S,
     },
     '.MuiAccordionDetails-root': {
       padding: 0,
@@ -150,15 +151,15 @@ export const StyledChip = styled(Chip, {
   shouldForwardProp: omittedProps(['isActiveLink']),
 })<{ isActiveLink: boolean }>(({ theme, ...props }) => ({
   backgroundColor: props.isActiveLink
-    ? theme.tokens.sideNavigation.SelectedMenuItem.Label.Background
-    : theme.tokens.sideNavigation.DefaultMenuItem.Label.Background,
+    ? theme.tokens.component.SideNavigation.SelectedMenuItem.Label.Background
+    : theme.tokens.component.SideNavigation.DefaultMenuItem.Label.Background,
   border: !props.isActiveLink
-    ? `1px solid ${theme.tokens.sideNavigation.DefaultMenuItem.Label.Border}`
+    ? `1px solid ${theme.tokens.component.SideNavigation.DefaultMenuItem.Label.Border}`
     : 'none',
   borderRadius: '2px',
   color: props.isActiveLink
-    ? theme.tokens.sideNavigation.SelectedMenuItem.Label.Text
-    : theme.tokens.sideNavigation.DefaultMenuItem.Label.Text,
+    ? theme.tokens.component.SideNavigation.SelectedMenuItem.Label.Text
+    : theme.tokens.component.SideNavigation.DefaultMenuItem.Label.Text,
   marginRight: '12px',
   overflow: 'hidden',
   whiteSpace: 'nowrap',

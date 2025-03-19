@@ -82,7 +82,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         type: 'AccountSetting',
       }}
       typographyStyleSx={(theme) => ({
-        borderTop: `1px solid ${theme.tokens.border.Normal}`,
+        borderTop: `1px solid ${theme.tokens.alias.Border.Normal}`,
         marginBottom: theme.tokens.spacing.S8,
         marginTop: theme.tokens.spacing.S16,
         paddingTop: theme.tokens.spacing.S16,
@@ -104,7 +104,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       <StyledNoticeWrapper>
         <Notice
           sx={(theme) => ({
-            border: `1px solid ${theme.tokens.action.Negative.Default}`,
+            border: `1px solid ${theme.tokens.alias.Action.Negative.Default}`,
           })}
           important
           spacingBottom={12}

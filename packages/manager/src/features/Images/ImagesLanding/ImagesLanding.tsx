@@ -80,7 +80,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    border: `1px solid ${theme.tokens.border.Normal}`,
+    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
     borderBottom: 0,
     padding: theme.spacing(),
     paddingLeft: theme.spacing(1.5),

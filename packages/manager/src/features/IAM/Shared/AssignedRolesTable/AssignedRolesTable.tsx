@@ -190,7 +190,7 @@ export const AssignedRolesTable = () => {
         >
           <Typography
             sx={{
-              font: theme.tokens.typography.Label.Bold.S,
+              font: theme.tokens.alias.Typography.Label.Bold.S,
             }}
           >
             Description
@@ -203,7 +203,7 @@ export const AssignedRolesTable = () => {
             {description.length > 150 && (
               <StyledLinkButton
                 sx={{
-                  font: theme.tokens.typography.Label.Semibold.Xs,
+                  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
                   width: 'max-content',
                 }}
                 onClick={() => setShowFullDescription((show) => !show)}

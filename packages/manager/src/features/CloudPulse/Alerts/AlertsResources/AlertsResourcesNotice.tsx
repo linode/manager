@@ -31,7 +31,7 @@ export const AlertsResourcesNotice = React.memo(
       <StyledNotice gap={1} variant="info">
         <Typography
           sx={(theme) => ({
-            fontFamily: theme.tokens.typography.Body.Bold,
+            fontFamily: theme.tokens.alias.Typography.Body.Bold,
           })}
           data-testid="selection_notice"
         >
@@ -54,7 +54,7 @@ export const AlertsResourcesNotice = React.memo(
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
   ({ theme }) => ({
     alignItems: 'center',
-    background: theme.tokens.background.Normal,
+    background: theme.tokens.alias.Background.Normal,
     borderRadius: 1,
     display: 'flex',
     flexWrap: 'nowrap',

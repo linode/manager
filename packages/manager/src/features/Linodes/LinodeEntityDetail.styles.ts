@@ -113,7 +113,7 @@ export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
 export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
   ({ theme }) => ({
     alignItems: 'center',
-    backgroundColor: theme.tokens.interaction.Background.Secondary,
+    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
     display: 'flex',
     font: FontTypography.Code,
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
@@ -191,7 +191,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
       fontSize: 15,
     },
     alignItems: 'center',
-    backgroundColor: theme.tokens.interaction.Background.Secondary,
+    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
     font: FontTypography.Code,
@@ -214,7 +214,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
     '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.interaction.Background.Secondary});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.alias.Interaction.Background.Secondary});`,
       bottom: 0,
       content: '""',
       height: '100%',

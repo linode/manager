@@ -57,7 +57,7 @@ export const AlertInformationActionRow = (
       <TableCell>
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Label.Regular.S,
+            font: theme.tokens.alias.Typography.Label.Regular.S,
           })}
         >
           {capitalize(type)}
