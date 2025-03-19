@@ -17,6 +17,7 @@ import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -82,6 +83,11 @@ export const firewallQueries = createQueryKeys('firewalls', {
         queryFn: getAllFirewallsRequest,
         queryKey: null,
       },
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) =>
+          getFirewalls({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getFirewalls(params, filter),
         queryKey: [params, filter],
@@ -107,6 +113,21 @@ export const useAllFirewallDevicesQuery = (id: number) =>
   useQuery<FirewallDevice[], APIError[]>(
     firewallQueries.firewall(id)._ctx.devices
   );
+
+export const useFirewallsInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Firewall>, APIError[]>({
+    ...firewallQueries.firewalls._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useAddFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();

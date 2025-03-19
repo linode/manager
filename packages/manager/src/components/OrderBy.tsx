@@ -2,6 +2,9 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 import {
   getQueryParamsFromQueryString,
   pathOr,
+  sortByArrayLength,
+  sortByNumber,
+  sortByString,
   splitAt,
   usePrevious,
 } from '@linode/utilities';
@@ -11,12 +14,7 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import {
-  sortByArrayLength,
-  sortByNumber,
-  sortByString,
-  sortByUTFDate,
-} from 'src/utilities/sort-by';
+import { sortByUTFDate } from 'src/utilities/sortByUTFDate';
 
 import type { ManagerPreferences, Order } from '@linode/utilities';
 

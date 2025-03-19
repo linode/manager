@@ -10,3 +10,4 @@ export * from './profile';
 export * from './regions';
 export * from './vlans';
 export * from './vpcs';
+export * from './volumes';
