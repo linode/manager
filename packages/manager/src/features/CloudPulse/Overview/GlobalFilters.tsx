@@ -161,10 +161,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 });
 
 const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
-  '&:active': {
-    color: `${theme.palette.success}`,
-  },
   '&:hover': {
+    '& path': {
+      fill: theme.color.blue,
+    },
     cursor: 'pointer',
   },
   height: '24px',

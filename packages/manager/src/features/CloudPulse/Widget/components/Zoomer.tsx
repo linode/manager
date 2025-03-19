@@ -1,10 +1,12 @@
-import { IconButton } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
 import ZoomOutMap from 'src/assets/icons/zoomout.svg';
 
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+
+import type { Theme } from '@mui/material';
 
 export interface ZoomIconProperties {
   className?: string;
@@ -30,7 +32,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
             data-testid="zoom-out"
             onClick={() => handleClick(false)}
           >
-            <ZoomOutMap />
+            <StyledZoomOut />
           </IconButton>
         </CloudPulseTooltip>
       );
@@ -47,11 +49,28 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
           data-testid="zoom-in"
           onClick={() => handleClick(true)}
         >
-          <ZoomInMap />
+          <StyledZoomIn />
         </IconButton>
       </CloudPulseTooltip>
     );
   };
 
   return <ToggleZoomer />;
+});
+
+const StyledZoomIn = styled(ZoomInMap, { label: 'StyledZoomIn' })(({ theme }) =>
+  getHoverStyles(theme, true)
+);
+const StyledZoomOut = styled(ZoomOutMap, {
+  label: 'StyledZoomOut',
+})(({ theme }) => getHoverStyles(theme, false));
+
+const getHoverStyles = (theme: Theme, isZoomIn: boolean) => ({
+  '&:hover': {
+    '& path': {
+      fill: theme.color.blue,
+      stroke: isZoomIn ? theme.color.blue : 'none',
+    },
+    cursor: 'pointer',
+  },
 });
