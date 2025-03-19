@@ -1,3 +1,8 @@
+import {
+  useCreateVolumeMutation,
+  useRegionsQuery,
+  useVolumeTypesQuery,
+} from '@linode/queries';
 import { ActionsPanel, Box, Notice, TextField, Typography } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
@@ -16,11 +21,6 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRegionsQuery } from '@linode/queries';
-import {
-  useCreateVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

@@ -1,8 +1,8 @@
-import { ActionsPanel, ListItem, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 
 interface MutateInfo {
   disk: null | number;
@@ -102,7 +102,12 @@ export class MutateDrawer extends React.Component<Props, State> {
     const { extendedUpgradeInfo } = this.state;
 
     return (
-      <Drawer onClose={handleClose} open={open} title="Free Upgrade Available">
+      <Drawer
+        NotFoundComponent={NotFound}
+        onClose={handleClose}
+        open={open}
+        title="Free Upgrade Available"
+      >
         {error && <Notice text={error} variant="error" />}
         <Typography>
           This Linode has pending upgrades. The resources that are affected
