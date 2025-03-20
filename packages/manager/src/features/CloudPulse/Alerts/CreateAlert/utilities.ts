@@ -7,8 +7,11 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type {
+  AlertServiceType,
+  AlertSeverityType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
+  EditAlertPayloadWithService,
   MetricCriteria,
   TriggerCondition,
 } from '@linode/api-v4';
@@ -19,8 +22,6 @@ export const filterFormValues = (
 ): CreateAlertDefinitionPayload => {
   const values = omitProps(formValues, [
     'serviceType',
-    'region',
-    'engineType',
     'severity',
     'rule_criteria',
     'trigger_conditions',
@@ -33,6 +34,32 @@ export const filterFormValues = (
     ...values,
     entity_ids: entityIds,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
+    severity,
+    trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
+  };
+};
+
+export const filterEditFormValues = (
+  formValues: CreateAlertDefinitionForm,
+  serviceType: AlertServiceType,
+  severity: AlertSeverityType,
+  alertId: number
+): EditAlertPayloadWithService => {
+  const values = omitProps(formValues, [
+    'serviceType',
+    'severity',
+    'rule_criteria',
+    'trigger_conditions',
+  ]);
+  const entityIds = formValues.entity_ids;
+  const rules = formValues.rule_criteria.rules;
+  const triggerConditions = formValues.trigger_conditions;
+  return {
+    ...values,
+    alertId,
+    entity_ids: entityIds,
+    rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
+    serviceType,
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
   };
