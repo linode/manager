@@ -204,3 +204,5 @@ export const EDIT_ALERT_ERROR_FIELD_MAP: Record<
 
 export const MULTILINE_ERROR_SEPARATOR = '|';
 export const SINGLELINE_ERROR_SEPARATOR = ' ';
+export const OPTIMISTIC_SUCCESS_MESSAGE =
+  'It can take a few minutes to apply the changes';
