@@ -190,6 +190,25 @@ export const interceptRebuildLinode = (
 };
 
 /**
+ * Intercepts POST request to rebuild a Linode and mocks the response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param linode - Linode for the mocked response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRebuildLinode = (
+  linodeId: number,
+  linode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rebuild`),
+    makeResponse(linode)
+  );
+};
+
+/**
  * Intercepts POST request to rebuild a Linode and mocks an error response.
  *
  * @param linodeId - ID of Linode for intercepted request.
