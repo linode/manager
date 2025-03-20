@@ -8,6 +8,7 @@ export * from './nodebalancers';
 export * from './placementGroups';
 export * from './profile';
 export * from './regions';
+export * from './tags';
 export * from './vlans';
 export * from './vpcs';
 export * from './volumes';
