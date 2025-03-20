@@ -13,7 +13,10 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory } from 'src/factories';
-import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import {
+  OPTIMISTIC_SUCCESS_MESSAGE,
+  alertStatuses,
+} from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Alert } from '@linode/api-v4';
@@ -334,7 +337,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       'Alert-1',
       'Disable',
       '@getFirstAlertDefinitions',
-      'Alert disabled'
+      OPTIMISTIC_SUCCESS_MESSAGE
     );
 
     // Enable "Alert-2"
@@ -343,7 +346,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       'Alert-2',
       'Enable',
       '@getSecondAlertDefinitions',
-      'Alert enabled'
+      OPTIMISTIC_SUCCESS_MESSAGE
     );
   });
 });
