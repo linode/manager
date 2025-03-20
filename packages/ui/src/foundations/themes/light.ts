@@ -1125,12 +1125,12 @@ export const lightTheme: ThemeOptions = {
         },
         root: ({ theme }) => ({
           '&:active': {
-            color: theme.tokens.radio.Active.Active.Border,
+            color: theme.tokens.component.RadioButton.Active.Active.Border,
           },
           '&.Mui-checked': {
-            color: theme.tokens.radio.Active.Default.Border,
+            color: theme.tokens.component.RadioButton.Active.Default.Border,
             '&:active': {
-              color: theme.tokens.radio.Active.Active.Border,
+              color: theme.tokens.component.RadioButton.Active.Active.Border,
             },
           },
           '& .defaultFill': {
@@ -1148,9 +1148,10 @@ export const lightTheme: ThemeOptions = {
               fill: Color.Neutrals[20],
             },
             '&:not(.Mui-checked)': {
-              color: theme.tokens.radio.Inactive.Disabled.Border,
+              color:
+                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
             },
-            color: theme.tokens.radio.Active.Disabled.Border,
+            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
             pointerEvents: 'none',
           },
           '&.MuiRadio-root': {
@@ -1167,10 +1168,10 @@ export const lightTheme: ThemeOptions = {
             '& .defaultFill': {
               fill: theme.color.white,
             },
-            color: theme.tokens.radio.Active.Hover.Border,
-            fill: theme.tokens.radio.Active.Hover.Background,
+            color: theme.tokens.component.RadioButton.Active.Hover.Border,
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
           },
-          color: theme.tokens.action.Neutral,
+          color: theme.tokens.alias.Action.Neutral,
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
