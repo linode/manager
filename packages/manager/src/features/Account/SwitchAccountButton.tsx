@@ -9,6 +9,9 @@ export const SwitchAccountButton = (props: ButtonProps) => {
   return (
     <Button
       sx={(theme) => ({
+        '& .MuiButton-startIcon svg path': {
+          fill: theme.tokens.alias.Content.Text.Link.Default,
+        },
         font: theme.tokens.alias.Typography.Label.Semibold.S,
         marginTop: theme.tokens.spacing.S4,
       })}
