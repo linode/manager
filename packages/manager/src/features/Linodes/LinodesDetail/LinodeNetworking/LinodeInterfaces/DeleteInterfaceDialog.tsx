@@ -26,11 +26,7 @@ export const DeleteInterfaceDialog = (props: Props) => {
     data: linodeInterface,
     error: interfaceError,
     isLoading,
-  } = useLinodeInterfaceQuery(
-    linodeId,
-    interfaceId ?? -1,
-    open && Boolean(interfaceId)
-  );
+  } = useLinodeInterfaceQuery(linodeId, interfaceId, open);
 
   const { error, isPending, mutate } = useDeleteLinodeInterfaceMutation(
     linodeId,
