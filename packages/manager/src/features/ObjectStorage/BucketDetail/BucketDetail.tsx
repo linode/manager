@@ -3,6 +3,7 @@ import { useAccount } from '@linode/queries';
 import { ActionsPanel, Box } from '@linode/ui';
 import {
   getQueryParamFromQueryString,
+  isFeatureEnabledV2,
   truncateMiddle,
 } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -31,7 +32,6 @@ import {
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { deleteObject as _deleteObject } from '../requests';
