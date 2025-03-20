@@ -64,7 +64,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
 
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 &&
-    type === getIPType.ipv4Public(isLinodeInterfacesEnabled);
+    type === getIPType['IPv4 – Public'](isLinodeInterfacesEnabled);
 
   return (
     <StyledTableRow

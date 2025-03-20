@@ -42,20 +42,20 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const showEdit = ![
     // @TODO Linode Interfaces - when linode interfaces feature flag is removed, we can update IP types and update this array to just be something like
     // ['Private – IPv4', 'Reserved IPv4 (private)', 'Reserved IPv4 (public)', 'VPC – IPv4', 'Link Local – IPv6', 'VPC NAT – IPv4',]
-    getIPType.ipv4Private(isLinodeInterfacesEnabled),
-    getIPType.ipv4ReservedPrivate(isLinodeInterfacesEnabled),
-    getIPType.ipv4ReservedPublic(isLinodeInterfacesEnabled),
-    getIPType.ipv4VPC(isLinodeInterfacesEnabled),
-    getIPType.ipv6LinkLocal(isLinodeInterfacesEnabled),
-    getIPType.vpcIPv4Nat(isLinodeInterfacesEnabled),
+    getIPType['IPv4 – Private'](isLinodeInterfacesEnabled),
+    getIPType['IPv4 – Reserved (private)'](isLinodeInterfacesEnabled),
+    getIPType['IPv4 – Reserved (public)'](isLinodeInterfacesEnabled),
+    getIPType['IPv4 – VPC'](isLinodeInterfacesEnabled),
+    getIPType['IPv6 – Link Local'](isLinodeInterfacesEnabled),
+    getIPType['VPC IPv4 – NAT'](isLinodeInterfacesEnabled),
   ].includes(ipType);
 
   const deletableIPTypes = [
     // @TODO Linode Interfaces - when linode interfaces feature flag is removed, we can update IP types
     // and update this array to be ['Private – IPv4', 'Public – IPv4', 'Range – IPv6']
-    getIPType.ipv4Private(isLinodeInterfacesEnabled),
-    getIPType.ipv4Public(isLinodeInterfacesEnabled),
-    getIPType.ipv6Range(isLinodeInterfacesEnabled),
+    getIPType['IPv4 – Private'](isLinodeInterfacesEnabled),
+    getIPType['IPv4 – Public'](isLinodeInterfacesEnabled),
+    getIPType['IPv6 – Range'](isLinodeInterfacesEnabled),
   ];
 
   // if we have a 116 we don't want to give the option to remove it

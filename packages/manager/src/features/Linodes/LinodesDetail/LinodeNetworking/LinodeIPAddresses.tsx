@@ -29,7 +29,7 @@ import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
-import { getIPType, ipTypeMap } from './constants';
+import { getIPType } from './constants';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
@@ -352,7 +352,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.vpc) {
     ipDisplay.push({
       address: ipv4.vpc,
-      type: getIPType.ipv4VPC(displayIPKeyFirst),
+      type: getIPType['IPv4 – VPC'](displayIPKeyFirst),
       ...emptyProps,
     });
   }
@@ -360,7 +360,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.nat_1_1) {
     ipDisplay.push({
       address: ipv4.nat_1_1,
-      type: getIPType.vpcIPv4Nat(displayIPKeyFirst),
+      type: getIPType['VPC IPv4 – NAT'](displayIPKeyFirst),
       ...emptyProps,
     });
   }
@@ -369,7 +369,7 @@ export const vpcConfigInterfaceToDisplayRows = (
     ip_ranges.forEach((ip_range) => {
       ipDisplay.push({
         address: ip_range,
-        type: getIPType.ipv4VPCRange(displayIPKeyFirst),
+        type: getIPType['IPv4 – VPC – Range'](displayIPKeyFirst),
         ...emptyProps,
       });
     });
@@ -474,7 +474,7 @@ export const ipResponseToDisplayRows = ({
         gateway: '',
         rdns: '',
         subnetMask: '',
-        type: getIPType.ipv6Range(displayIPKeyFirst) as IPDisplay['type'],
+        type: getIPType['IPv6 – Range'](displayIPKeyFirst) as IPDisplay['type'],
       };
     })
   );
@@ -546,5 +546,5 @@ export const createType = ({
     type += key;
   }
 
-  return displayIPKeyFirst ? ipTypeMap[type as IPTypes] : type;
+  return getIPType[type as IPTypes](displayIPKeyFirst);
 };
