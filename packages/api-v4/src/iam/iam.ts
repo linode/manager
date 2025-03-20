@@ -31,7 +31,7 @@ export const getUserPermissions = (username: string) =>
  */
 export const updateUserPermissions = (
   username: string,
-  data: Partial<IamUserPermissions>
+  data: IamUserPermissions
 ) =>
   Request<IamUserPermissions>(
     setURL(
