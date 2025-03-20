@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
   Incident,
@@ -22,7 +22,7 @@ export const pageFactory = Factory.Sync.makeFactory<IncidentPage>({
 export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   affected_components: [
     {
-      code: crypto.randomUUID(),
+      code: crypto.randomUUID && crypto.randomUUID(),
       name:
         'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
       new_status: 'major_outage',
@@ -36,7 +36,7 @@ export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   deliver_notifications: true,
   display_at: DATE,
   id: Factory.each((i) => String(i)),
-  incident_id: crypto.randomUUID(),
+  incident_id: crypto.randomUUID && crypto.randomUUID(),
   status: 'investigating',
   tweet_id: Math.floor(Math.random() * 1000000),
   updated_at: DATE,
@@ -49,7 +49,7 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   incident_updates: incidentUpdateFactory.buildList(5),
   monitoring_at: DATE,
   name: 'Service Issue - Linode Kubernetes Engine',
-  page_id: crypto.randomUUID(),
+  page_id: crypto.randomUUID && crypto.randomUUID(),
   resolved_at: DATE,
   shortlink: 'https://stspg.io/gm27wxnn653m',
   started_at: DATE,

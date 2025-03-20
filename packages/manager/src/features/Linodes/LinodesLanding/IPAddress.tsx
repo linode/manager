@@ -1,11 +1,11 @@
+import { tail } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { tail } from 'src/utilities/tail';
 
 import {
   StyledCopyTooltip,

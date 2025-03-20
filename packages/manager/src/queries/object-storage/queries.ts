@@ -14,6 +14,14 @@ import {
   updateObjectACL,
   uploadSSLCert,
 } from '@linode/api-v4';
+import {
+  accountQueries,
+  queryPresets,
+  updateAccountSettingsData,
+  useAccount,
+  useRegionsQuery,
+} from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -26,13 +34,7 @@ import {
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { useAccount } from '../account/account';
-import { accountQueries } from '../account/queries';
-import { updateAccountSettingsData } from '../account/settings';
-import { queryPresets } from '../base';
-import { useRegionsQuery } from '../regions/regions';
 import {
   getAllBucketsFromClusters,
   getAllBucketsFromEndpoints,
@@ -186,10 +188,7 @@ export const useObjectStorageBuckets = (enabled = true) => {
     ? () => getAllBucketsFromRegions(regions)
     : () => getAllBucketsFromClusters(clusters);
 
-  return useQuery<
-    BucketsResponseType<typeof isObjectStorageGen2Enabled>,
-    APIError[]
-  >({
+  return useQuery<BucketsResponseType<typeof isObjectStorageGen2Enabled>>({
     enabled: queryEnabled,
     queryFn,
     queryKey: objectStorageQueries.buckets.queryKey,

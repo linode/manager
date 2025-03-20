@@ -1,5 +1,11 @@
 import {
+  useCreatePersonalAccessTokenMutation,
+  useProfile,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Autocomplete,
+  Drawer,
   FormControl,
   FormHelperText,
   Notice,
@@ -10,8 +16,7 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -20,8 +25,6 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile/profile';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -204,7 +207,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add Personal Access Token"
+    >
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}

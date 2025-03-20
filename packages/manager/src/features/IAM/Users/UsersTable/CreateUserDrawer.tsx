@@ -1,13 +1,9 @@
-import { Box, FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
+import { useCreateUserMutation } from '@linode/queries';
+import { ActionsPanel, Box, Drawer, Notice, TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { useCreateUserMutation } from 'src/queries/account/users';
-
-import type { User } from '@linode/api-v4/lib/account';
+import { NotFound } from 'src/components/NotFound';
 
 interface Props {
   onClose: () => void;
@@ -16,7 +12,6 @@ interface Props {
 
 export const CreateUserDrawer = (props: Props) => {
   const { onClose, open } = props;
-  const history = useHistory();
   const { mutateAsync: createUserMutation } = useCreateUserMutation();
 
   const {
@@ -28,7 +23,7 @@ export const CreateUserDrawer = (props: Props) => {
   } = useForm({
     defaultValues: {
       email: '',
-      restricted: false,
+      restricted: true,
       username: '',
     },
   });
@@ -39,14 +34,8 @@ export const CreateUserDrawer = (props: Props) => {
     username: string;
   }) => {
     try {
-      const user: User = await createUserMutation(data);
+      await createUserMutation(data);
       handleClose();
-
-      if (user.restricted) {
-        history.push(`/account/users/${data.username}/permissions`, {
-          newUsername: user.username,
-        });
-      }
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -60,7 +49,12 @@ export const CreateUserDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Add a User">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title="Add a User"
+    >
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
@@ -101,28 +95,9 @@ export const CreateUserDrawer = (props: Props) => {
           rules={{ required: 'Email is required' }}
         />
 
-        <Controller
-          render={({ field }) => (
-            <FormControlLabel
-              label={`This user will have ${
-                field.value ? 'limited' : 'full'
-              } access to account features.
-                    This can be changed later.`}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                field.onChange(!e.target.checked);
-              }}
-              checked={!field.value}
-              control={<Toggle data-qa-create-restricted />}
-              sx={{ marginTop: 1 }}
-            />
-          )}
-          control={control}
-          name="restricted"
-        />
-
-        <Box sx={{ marginTop: 1 }}>
+        <Box sx={{ marginTop: 2 }}>
           <Notice
-            text="The user will be sent an email to set their password"
+            text="The user will be sent an email to set their password."
             variant="warning"
           />
         </Box>

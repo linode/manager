@@ -1,7 +1,6 @@
+import { getDisplayName } from '@linode/utilities';
 import { equals } from 'ramda';
 import * as React from 'react';
-
-import { getDisplayName } from 'src/utilities/getDisplayName';
 
 export interface RenderGuardProps {
   updateFor?: any[];

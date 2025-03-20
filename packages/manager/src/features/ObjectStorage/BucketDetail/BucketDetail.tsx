@@ -1,5 +1,11 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { Box } from '@linode/ui';
+import { useAccount } from '@linode/queries';
+import { ActionsPanel, Box } from '@linode/ui';
+import {
+  getQueryParamFromQueryString,
+  isFeatureEnabledV2,
+  truncateMiddle,
+} from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
@@ -8,7 +14,6 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
@@ -20,7 +25,6 @@ import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import {
   getObjectBucketObjectsQueryKey,
   objectStorageQueries,
@@ -28,10 +32,7 @@ import {
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { truncateMiddle } from 'src/utilities/truncate';
 
 import { deleteObject as _deleteObject } from '../requests';
 import {

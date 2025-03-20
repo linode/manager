@@ -1,13 +1,14 @@
+import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import {
   StyledAccessCell,
@@ -40,7 +41,12 @@ export const ViewAPITokenDrawer = (props: Props) => {
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
-    <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={token?.label ?? 'Token'}
+    >
       <StyledPermsTable
         aria-label="Personal Access Token Permissions"
         spacingBottom={16}

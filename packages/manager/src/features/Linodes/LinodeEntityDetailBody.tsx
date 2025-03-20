@@ -1,8 +1,11 @@
-import { Box, Typography } from '@linode/ui';
+import { usePreferences, useProfile } from '@linode/queries';
+import { Box, Chip, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -14,10 +17,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { useProfile } from 'src/queries/profile/profile';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -31,7 +31,6 @@ import {
   StyledIPv4Label,
   StyledLabelBox,
   StyledListItem,
-  StyledSummaryGrid,
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
@@ -110,6 +109,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
+  const location = useLocation();
+  const history = useHistory();
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -138,6 +140,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
+
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -173,7 +179,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           >
             Summary
           </StyledColumnLabelGrid>
-          <StyledSummaryGrid container spacing={1}>
+          <Grid container spacing={1}>
             <Grid
               size={{
                 lg: 6,
@@ -236,27 +242,37 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 )}
               </Box>
             </Grid>
-            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
-              <Grid>
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                >
-                  <EncryptedStatus
-                    tooltipText={
-                      isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                    }
-                    encryptionStatus={encryptionStatus}
-                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-                  />
-                </Box>
-              </Grid>
-            )}
-          </StyledSummaryGrid>
+            {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
+              encryptionStatus && (
+                <Grid>
+                  <Box
+                    alignItems="center"
+                    data-testid={encryptionStatusTestId}
+                    display="flex"
+                    flexDirection="row"
+                  >
+                    <EncryptedStatus
+                      regionSupportsDiskEncryption={
+                        regionSupportsDiskEncryption
+                      }
+                      /**
+                       * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
+                       * explaining how LDE can be enabled on LKE-E node pools.
+                       * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
+                       */
+                      tooltipText={
+                        isLKELinode && cluster?.tier === 'enterprise'
+                          ? undefined
+                          : isLKELinode
+                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                      }
+                      encryptionStatus={encryptionStatus}
+                    />
+                  </Box>
+                </Grid>
+              )}
+          </Grid>
         </Grid>
 
         <Grid
@@ -447,7 +463,27 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {isLinodeInterfacesEnabled && (
             <StyledListItem sx={{ borderRight: 'unset' }}>
               <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-              {isLinodeInterface ? 'Linode' : 'Configuration Profile'}
+              {isLinodeInterface ? (
+                'Linode'
+              ) : (
+                <Box
+                  component="span"
+                  sx={{ alignItems: 'center', display: 'flex' }}
+                >
+                  Configuration Profile
+                  <Chip
+                    sx={(theme) => ({
+                      backgroundColor: theme.color.tagButtonBg,
+                      color: theme.tokens.color.Neutrals[80],
+                      marginLeft: theme.spacing(0.5),
+                    })}
+                    component="span"
+                    label="UPGRADE"
+                    onClick={openUpgradeInterfacesDialog}
+                    size="small"
+                  />
+                </Box>
+              )}
             </StyledListItem>
           )}
         </Grid>

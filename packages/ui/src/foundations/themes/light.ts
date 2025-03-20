@@ -1,31 +1,27 @@
 import {
-  Accent,
   Action,
+  Alias,
   Background,
   Border,
-  BorderRadius,
   Button,
-  Calendar,
-  Chart,
   Color,
+  Component,
   Content,
   Dropdown,
-  Elevation,
   Font,
-  GlobalFooter,
   GlobalHeader,
   Interaction,
   NotificationToast,
-  Radius,
   Search,
   Select,
-  SideNavigation,
   Spacing,
   Table,
+  TextField,
   Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
+import { spacingFunction } from '../utils';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -54,7 +50,7 @@ const primaryColors = {
   headline: Color.Neutrals[100],
   light: Color.Brand[60],
   main: Color.Brand[80],
-  text: Color.Neutrals[70],
+  text: Content.Text.Primary.Default,
   white: Color.Neutrals.White,
 };
 
@@ -80,7 +76,7 @@ export const color = {
   grey8: Color.Neutrals[30],
   grey9: Color.Neutrals[5],
   grey10: Color.Neutrals[10],
-  headline: primaryColors.headline,
+  headline: Content.Text.Primary.Default,
   label: Color.Neutrals[70],
   offBlack: Color.Neutrals[90],
   orange: Color.Amber[70],
@@ -351,50 +347,32 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
-        endAdornment: {
-          '.MuiAutocomplete-clearIndicator': {
-            visibility: 'visible !important',
-          },
-          '.MuiAutocomplete-popupIndicator': {
-            svg: {
-              fontSize: '28px',
-            },
-          },
-          paddingRight: 4,
+        clearIndicator: {
+          color: Select.Default.Icon,
+          padding: 0,
           svg: {
-            ':hover': {
-              color: `${Color.Brand[70]} !important`,
-            },
-            color: `${Search.Default.Icon} !important`,
+            height: '16px',
+            width: '16px',
           },
+          visibility: 'visible',
+        },
+        endAdornment: {
+          display: 'flex',
+          gap: Spacing.S4,
+          marginRight: Spacing.S8,
         },
         groupLabel: {
-          font: Typography.Body.Bold,
-          fontSize: '1rem',
-          lineHeight: 'unset',
+          font: Typography.Label.Bold.L,
           padding: '8px',
         },
-        hasPopupIcon: {
-          '&.MuiAutocomplete-root': {
-            '& .MuiAutocomplete-inputRoot': {
-              paddingRight: '34px',
-            },
-          },
-        },
         input: {
-          '&::placeholder': {
-            opacity: 1,
-          },
-          '&::selection': {
-            backgroundColor: color.grey10,
+          '&.MuiInputBase-input.MuiInput-input': {
+            padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
           },
         },
         inputRoot: {
-          '& .MuiInput-input': {
-            position: 'relative',
-            top: 1,
-          },
-          paddingLeft: 8,
+          height: 'inherit',
+          paddingBottom: 0,
         },
         listbox: {
           backgroundColor: bg.white,
@@ -413,8 +391,8 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
           },
           '&:hover': {
-            backgroundColor: `${primaryColors.main} !important`,
-            color: primaryColors.white,
+            backgroundColor: `${Dropdown.Background.Hover}`,
+            color: Dropdown.Text.Default,
             transition: 'background-color 0.2s',
           },
           fontSize: '0.9rem',
@@ -435,7 +413,15 @@ export const lightTheme: ThemeOptions = {
             },
           },
         },
+        popupIndicator: {
+          color: Select.Default.Icon,
+          padding: 0,
+        },
         root: {
+          // Spacing for clear and popup icons (circular loading)
+          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot': {
+            paddingRight: Spacing.S48,
+          },
           maxWidth: inputMaxWidth,
         },
         tag: {
@@ -449,7 +435,7 @@ export const lightTheme: ThemeOptions = {
               color: primaryColors.white,
             },
             borderRadius: '50%',
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             fontSize: '16px',
             margin: '0 4px',
           },
@@ -646,7 +632,7 @@ export const lightTheme: ThemeOptions = {
           color: color.white,
         },
         deleteIcon: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           margin: 0,
           padding: 2,
         },
@@ -676,7 +662,7 @@ export const lightTheme: ThemeOptions = {
           },
           alignItems: 'center',
           borderRadius: 4,
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
           display: 'inline-flex',
           fontSize: '.8rem',
           height: 20,
@@ -751,7 +737,7 @@ export const lightTheme: ThemeOptions = {
             lineHeight: 1.2,
           },
           borderBottom: `1px solid ${Color.Neutrals[20]}`,
-          color: primaryColors.headline,
+          color: Content.Text.Primary.Default,
           marginBottom: 20,
           padding: '16px 24px',
         },
@@ -796,7 +782,7 @@ export const lightTheme: ThemeOptions = {
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
         root: {
           marginLeft: -11,
@@ -857,13 +843,13 @@ export const lightTheme: ThemeOptions = {
           '&.MuiIconButton-isActive': {
             svg: {
               path: {
-                fill: Color.Brand[60],
+                fill: Content.Icon.Primary.Active,
               },
             },
           },
           '&:hover': {
             backgroundColor: 'transparent',
-            color: primaryColors.main,
+            color: Content.Icon.Primary.Hover,
           },
         },
       },
@@ -872,106 +858,94 @@ export const lightTheme: ThemeOptions = {
       defaultProps: {
         disableUnderline: true,
       },
-      styleOverrides: {
-        disabled: {},
-        error: {},
-        focused: {},
-        formControl: {
-          'label + &': {
-            marginTop: 0,
-          },
-        },
-        input: {
-          '&::placeholder': {
-            color: Color.Neutrals[50],
-          },
-          boxSizing: 'border-box',
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          fontSize: Typography.Body.Regular,
-          padding: `0 ${spacing}px`,
-        },
-        inputMultiline: {
-          lineHeight: 1.4,
-          minHeight: 125,
-          padding: '9px 12px',
-        },
-        root: {
-          '& svg': {
-            '&:hover': {
-              color: Color.Brand[60],
-            },
-            color: primaryColors.main,
-            fontSize: 18,
-          },
-          '&.Mui-disabled': {
-            backgroundColor: Color.Neutrals[5],
-            borderColor: Color.Neutrals[40],
-            color: 'rgba(0, 0, 0, 0.75)',
-            input: {
-              cursor: 'not-allowed',
-            },
-            opacity: 0.5,
-          },
-          '&.Mui-error': {
-            borderColor: Interaction.Border.Error,
-          },
-          '&.Mui-focused': {
-            '& .select-option-icon': {
-              paddingLeft: `30px !important`,
-            },
-            borderColor: primaryColors.main,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.affirmative': {
-            borderColor: Color.Green[70],
-          },
-          alignItems: 'center',
-          backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Color.Neutrals[40]}`,
-          boxSizing: 'border-box',
-          [breakpoints.down('xs')]: {
-            maxWidth: '100%',
-            width: '100%',
-          },
-          color: primaryColors.text,
-          lineHeight: 1,
-          maxWidth: inputMaxWidth,
-          minHeight: 34,
-          transition: 'border-color 225ms ease-in-out',
-        },
-      },
     },
     MuiInputAdornment: {
       styleOverrides: {
         positionEnd: {
-          marginRight: 10,
+          display: 'flex',
+          gap: Spacing.S4,
+          marginLeft: Spacing.S8,
+          svg: {
+            fontSize: Font.FontSize.L,
+          },
+        },
+        positionStart: {
+          marginRight: Spacing.S8,
+          svg: {
+            fontSize: Font.FontSize.L,
+          },
         },
         root: {
-          '& p': {
-            [breakpoints.only('xs')]: {
-              fontSize: '1rem',
-            },
-            color: Color.Neutrals[70],
-            fontSize: '0.9rem',
-          },
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          color: Color.Neutrals[70],
-          fontSize: '0.9rem',
-          whiteSpace: 'nowrap',
+          color: Search.Filled.Icon,
         },
       },
     },
     MuiInputBase: {
       styleOverrides: {
+        adornedEnd: {
+          // Similar to `clearIndicator` in `MuiAutocomplete`
+          // Assuming this is for the clear/close icon in `DebouncedSearchTextField`. Update if this changes.
+          '.MuiInputAdornment-positionEnd': {
+            svg: {
+              height: '16px',
+              width: '16px',
+            },
+          },
+        },
         input: {
           '&::placeholder': {
-            opacity: 1,
+            color: TextField.Placeholder.Text,
+            font: Typography.Label.Regular.Placeholder,
+            fontStyle: 'italic',
           },
+          '&:disabled, &.Mui-disabled': {
+            cursor: 'not-allowed',
+          },
+          height: Spacing.S16,
+          padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        },
+        inputMultiline: {
+          minHeight: '100px',
+        },
+        multiline: {
           height: 'auto',
+        },
+        root: {
+          '&.Mui-error': {
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
+            backgroundColor: TextField.Focus.Background,
+            border: `1px solid ${TextField.Focus.Border}`,
+            color: TextField.Focus.Text,
+          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
+            '& .MuiInputAdornment-root': {
+              cursor: 'not-allowed',
+            },
+            backgroundColor: TextField.Disabled.Background,
+            border: `1px solid ${TextField.Disabled.Border}`,
+            color: TextField.Disabled.Text,
+            cursor: 'not-allowed',
+          },
+          '&:hover': {
+            backgroundColor: TextField.Hover.Background,
+            border: `1px solid ${TextField.Hover.Border}`,
+            color: TextField.Hover.Text,
+          },
+          background: TextField.Default.Background,
+          border: `1px solid ${TextField.Default.Border}`,
+          color: TextField.Filled.Text,
+          font: Typography.Label.Regular.S,
+          height: '34px',
+          maxWidth: inputMaxWidth,
+          paddingLeft: Spacing.S8,
+          paddingRight: Spacing.S8,
+          transition: 'border-color 225ms ease-in-out',
         },
       },
     },
@@ -1023,11 +997,11 @@ export const lightTheme: ThemeOptions = {
             color: primaryColors.main,
           },
           '&.selectHeader': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
             opacity: 1,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -1080,7 +1054,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.loading': {
-            backgroundColor: primaryColors.text,
+            backgroundColor: Content.Text.Primary.Default,
           },
           '&:active': {
             backgroundColor: Dropdown.Background.Default,
@@ -1106,69 +1080,6 @@ export const lightTheme: ThemeOptions = {
           padding: '10px 10px 10px 16px',
         },
         selected: {},
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        input: {
-          '&::placeholder': {
-            color: Color.Neutrals[50],
-          },
-          boxSizing: 'border-box',
-          [breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
-          fontSize: '0.9rem',
-          padding: 8,
-        },
-        root: {
-          '& .MuiInputAdornment-root': {
-            margin: 0,
-          },
-          '& fieldset': {
-            border: 'none',
-          },
-          '& svg': {
-            '&:hover': {
-              color: Color.Brand[60],
-            },
-            color: primaryColors.main,
-            fontSize: 18,
-          },
-          '&.Mui-error': {
-            borderColor: Interaction.Border.Error,
-          },
-          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
-            borderColor: Interaction.Border.Error,
-          },
-          '&.Mui-focused': {
-            '& .select-option-icon': {
-              paddingLeft: `30px !important`,
-            },
-            borderColor: primaryColors.main,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '1px',
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[30]}`,
-          },
-          '&.affirmative': {
-            borderColor: Color.Green[70],
-          },
-          alignItems: 'center',
-          backgroundColor: Color.Neutrals.White,
-          border: `1px solid ${Color.Neutrals[40]}`,
-          borderRadius: 0,
-          boxSizing: 'border-box',
-          [breakpoints.down('xs')]: {
-            maxWidth: '100%',
-            width: '100%',
-          },
-          color: primaryColors.text,
-          lineHeight: 1,
-          maxWidth: inputMaxWidth,
-          transition: 'border-color 225ms ease-in-out',
-        },
       },
     },
     MuiPaper: {
@@ -1388,7 +1299,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$selected, &$selected:hover': {
-            color: primaryColors.headline,
+            color: Content.Text.Primary.Default,
             font: Typography.Body.Bold,
           },
           '&:hover': {
@@ -1843,7 +1754,7 @@ export const lightTheme: ThemeOptions = {
       main: Color.Green[40],
     },
     text: {
-      primary: primaryColors.text,
+      primary: Content.Text.Primary.Default,
     },
     warning: {
       dark: Color.Amber[70],
@@ -1878,40 +1789,25 @@ export const lightTheme: ThemeOptions = {
     'none',
     'none',
   ],
-  spacing,
+  spacing: 8,
+  spacingFunction,
   textColors,
   tokens: {
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    borderRadius: BorderRadius,
-    calendar: Calendar,
-    chart: Chart,
+    alias: Alias,
     color: Color,
-    content: Content,
-    dropdown: Dropdown,
-    elevation: Elevation,
+    component: Component,
     font: Font,
-    footer: GlobalFooter,
-    header: GlobalHeader,
-    interaction: Interaction,
-    radius: Radius,
-    search: Search,
-    sideNavigation: SideNavigation,
     spacing: Spacing,
-    table: Table,
-    typography: Typography,
   },
   typography: {
     body1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Body.Regular,
     },
     caption: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Overline,
       letterSpacing: Typography.Heading.OverlineLetterSpacing,
       textTransform: Typography.Heading.OverlineTextCase,
@@ -1923,23 +1819,23 @@ export const lightTheme: ThemeOptions = {
       [breakpoints.up('lg')]: {
         font: Typography.Heading.Xl,
       },
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.L,
     },
     h2: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.M,
     },
     h3: {
       ...typographyPropertiesReset,
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.S,
     },
     htmlFontSize: undefined,
     subtitle1: {
       ...typographyPropertiesReset,
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
       font: Typography.Heading.Xs,
     },
   },

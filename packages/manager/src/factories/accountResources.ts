@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { IamAccountResource } from '@linode/api-v4';
 
@@ -15,6 +15,38 @@ export const accountResourcesFactory = Factory.Sync.makeFactory<
       {
         id: 23456789,
         name: 'linode-uk-123',
+      },
+      {
+        id: 1,
+        name: 'debian-us-1',
+      },
+      {
+        id: 2,
+        name: 'linode-uk-1',
+      },
+      {
+        id: 3,
+        name: 'debian-us-2',
+      },
+      {
+        id: 4,
+        name: 'linode-uk-2',
+      },
+      {
+        id: 5,
+        name: 'debian-us-3',
+      },
+      {
+        id: 6,
+        name: 'linode-uk-3',
+      },
+      {
+        id: 7,
+        name: 'debian-us-4',
+      },
+      {
+        id: 8,
+        name: 'linode-uk-4',
       },
     ],
   },

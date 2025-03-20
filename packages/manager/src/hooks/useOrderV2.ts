@@ -1,14 +1,11 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
 
+import type { OrderSetWithPrefix } from '@linode/utilities';
 import type { LinkProps, RegisteredRouter } from '@tanstack/react-router';
-import type { OrderSetWithPrefix } from 'src/types/ManagerPreferences';
 
 export type Order = 'asc' | 'desc';
 

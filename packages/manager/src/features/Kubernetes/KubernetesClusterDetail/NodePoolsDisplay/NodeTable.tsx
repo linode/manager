@@ -1,3 +1,4 @@
+import { useAllLinodesQuery, useProfile } from '@linode/queries';
 import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
 import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
@@ -20,8 +21,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -273,8 +272,17 @@ export const NodeTable = React.memo((props: Props) => {
                         regionSupportsDiskEncryption={
                           regionSupportsDiskEncryption
                         }
+                        /**
+                         * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
+                         * explaining how LDE can be enabled on LKE-E node pools.
+                         * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
+                         */
+                        tooltipText={
+                          clusterTier === 'enterprise'
+                            ? undefined
+                            : DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
+                        }
                         encryptionStatus={encryptionStatus}
-                        tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
                       />
                     </Box>
                   ) : (

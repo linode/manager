@@ -14,14 +14,14 @@ export const VPCTemplateRules = () => {
     <>
       <Typography sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         Allows for login with SSH, regular networking control data, and inbound
-        traffice from the VPC address space.
+        traffic from the VPC address space.
       </Typography>
       <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
         {STRENGTHEN_TEMPLATE_RULES}
       </Typography>
       <Box
         sx={(theme) => ({
-          backgroundColor: theme.tokens.background.Neutral,
+          backgroundColor: theme.tokens.alias.Background.Neutral,
           marginTop: theme.spacing(2),
           padding: theme.spacing(2),
         })}

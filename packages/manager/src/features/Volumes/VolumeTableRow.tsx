@@ -9,9 +9,8 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
 import {

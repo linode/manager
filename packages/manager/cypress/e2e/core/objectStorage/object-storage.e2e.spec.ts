@@ -3,26 +3,27 @@
  */
 
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import {
-  accountFactory,
-  createObjectStorageBucketFactoryLegacy,
-} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptGetNetworkUtilization,
   mockGetAccount,
 } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
-  interceptGetBuckets,
   interceptGetBucketAccess,
+  interceptGetBuckets,
   interceptUpdateBucketAccess,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { randomLabel } from 'support/util/random';
+
+import {
+  accountFactory,
+  createObjectStorageBucketFactoryLegacy,
+} from 'src/factories';
 
 /**
  * Create a bucket with the given label and cluster.
@@ -43,9 +44,9 @@ const setUpBucket = (
 ) => {
   return createBucket(
     createObjectStorageBucketFactoryLegacy.build({
-      label,
       cluster,
       cors_enabled,
+      label,
 
       // API accepts either `cluster` or `region`, but not both. Our factory
       // populates both fields, so we have to manually set `region` to `undefined`
@@ -95,7 +96,7 @@ describe('object storage end-to-end tests', () => {
 
     // Wait for loader to disappear, indicating that all buckets have been loaded.
     // Mitigates test failures stemming from M3-7833.
-    cy.findByLabelText('Buckets').within(() => {
+    cy.findByTestId('Buckets').within(() => {
       cy.findByLabelText('Content is loading').should('not.exist');
     });
 
@@ -107,7 +108,7 @@ describe('object storage end-to-end tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${bucketRegion}{enter}`);

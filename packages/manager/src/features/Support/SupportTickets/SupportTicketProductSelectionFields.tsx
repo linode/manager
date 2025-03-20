@@ -1,16 +1,18 @@
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVPCsQuery,
+  useAllVolumesQuery,
+} from '@linode/queries';
 import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -169,7 +171,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
-    bucket: bucketsError,
+    bucket: bucketsError ? [{ reason: bucketsError.message }] : null,
     database_id: databasesError,
     domain_id: domainsError,
     firewall_id: firewallsError,

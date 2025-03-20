@@ -47,7 +47,7 @@ export const AlertInformationActionRow = (
         />
       </TableCell>
       <TableCell>
-        <Link to={`/monitor/alerts/definitions/detail/${service_type}/${id}`}>
+        <Link to={`/alerts/definitions/detail/${service_type}/${id}`}>
           {label}
         </Link>
       </TableCell>
@@ -57,7 +57,7 @@ export const AlertInformationActionRow = (
       <TableCell>
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Label.Regular.S,
+            font: theme.tokens.alias.Typography.Label.Regular.S,
           })}
         >
           {capitalize(type)}

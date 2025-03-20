@@ -1,15 +1,17 @@
+import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION,
 } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
@@ -107,15 +109,20 @@ const Panel = (props: NodePoolPanelProps) => {
       'LA Disk Encryption'
     );
 
+  const getPlansPanelCopy = () => {
+    // TODO - LKE-E: Remove the 'ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION' copy once LDE is enabled on LKE-E.
+    if (selectedTier === 'enterprise') {
+      return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
+    }
+    return regionSupportsDiskEncryption
+      ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
+
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
-          copy={
-            regionSupportsDiskEncryption
-              ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
-              : ADD_NODE_POOLS_DESCRIPTION
-          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
@@ -128,6 +135,7 @@ const Panel = (props: NodePoolPanelProps) => {
             // No Nanodes in Kubernetes clusters
             return t.class !== 'nanode';
           })}
+          copy={getPlansPanelCopy()}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

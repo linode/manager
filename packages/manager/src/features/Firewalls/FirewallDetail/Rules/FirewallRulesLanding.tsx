@@ -1,20 +1,19 @@
-import { Notice, Typography } from '@linode/ui';
+import {
+  linodeQueries,
+  nodebalancerQueries,
+  useAllFirewallDevicesQuery,
+  useUpdateFirewallRulesMutation,
+} from '@linode/queries';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { useBlocker, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 // eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
-import {
-  useAllFirewallDevicesQuery,
-  useUpdateFirewallRulesMutation,
-} from 'src/queries/firewalls';
-import { linodeQueries } from 'src/queries/linodes/linodes';
-import { nodebalancerQueries } from 'src/queries/nodebalancers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';

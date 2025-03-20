@@ -9,19 +9,37 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 const queryMocks = vi.hoisted(() => ({
+  useIsDiskEncryptionFeatureEnabled: vi.fn().mockReturnValue({
+    isDiskEncryptionFeatureEnabled: undefined,
+  }),
   useLinodeQuery: vi.fn().mockReturnValue({
     data: undefined,
+  }),
+  useRegionsQuery: vi.fn().mockReturnValue({
+    data: [],
   }),
   useTypeQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('src/components/Encryption/utils.ts', async () => {
+  const actual = await vi.importActual<any>(
+    'src/components/Encryption/utils.ts'
+  );
+  return {
+    ...actual,
+    useIsDiskEncryptionFeatureEnabled:
+      queryMocks.useIsDiskEncryptionFeatureEnabled,
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 

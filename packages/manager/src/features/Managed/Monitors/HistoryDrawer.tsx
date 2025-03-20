@@ -1,7 +1,7 @@
+import { ActionsPanel, Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import { IssueCalendar } from './IssueCalendar';
 
@@ -21,6 +21,7 @@ export const HistoryDrawer = (props: HistoryDrawerProps) => {
   const { error, isFetching, issues, monitorLabel, onClose, open } = props;
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       error={error}
       isFetching={isFetching}
       onClose={onClose}

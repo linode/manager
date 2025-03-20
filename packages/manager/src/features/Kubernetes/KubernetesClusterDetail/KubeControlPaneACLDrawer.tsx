@@ -1,12 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  ActionsPanel,
   Box,
+  Checkbox,
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
   Typography,
   omittedProps,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {
   kubernetesControlPlaneACLPayloadSchema,
   kubernetesEnterpriseControlPlaneACLPayloadSchema,
@@ -16,14 +20,12 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
+import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
 } from 'src/queries/kubernetes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
@@ -66,6 +68,11 @@ export const KubeControlPlaneACLDrawer = (
 
   const isEnterpriseCluster = clusterTier === 'enterprise';
 
+  const [
+    isACLAcknowledgementChecked,
+    setIsACLAcknowledgementChecked,
+  ] = React.useState(false);
+
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
   } = useKubernetesControlPlaneACLMutation(clusterId);
@@ -85,7 +92,7 @@ export const KubeControlPlaneACLDrawer = (
     defaultValues: aclData,
     mode: 'onBlur',
     resolver: yupResolver(
-      isEnterpriseCluster
+      isEnterpriseCluster && !isACLAcknowledgementChecked
         ? kubernetesEnterpriseControlPlaneACLPayloadSchema
         : kubernetesControlPlaneACLPayloadSchema
     ),
@@ -102,6 +109,11 @@ export const KubeControlPlaneACLDrawer = (
   });
 
   const { acl } = watch();
+
+  const shouldShowAclAcknowledgementCheck =
+    isEnterpriseCluster &&
+    (acl?.addresses?.ipv4?.length === 0 || acl?.addresses?.ipv4?.[0] === '') &&
+    (acl?.addresses?.ipv6?.length === 0 || acl?.addresses?.ipv6?.[0] === '');
 
   const updateCluster = async () => {
     // A quick note on the following code:
@@ -162,6 +174,8 @@ export const KubeControlPlaneACLDrawer = (
       }
       scrollErrorIntoViewV2(formContainerRef);
     }
+
+    setIsACLAcknowledgementChecked(false);
   };
 
   const handleClose = () => {
@@ -171,6 +185,7 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}
@@ -304,6 +319,21 @@ export const KubeControlPlaneACLDrawer = (
               />
             </Box>
           </Box>
+          {shouldShowAclAcknowledgementCheck && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={() =>
+                    setIsACLAcknowledgementChecked(!isACLAcknowledgementChecked)
+                  }
+                  name="acl-acknowledgement"
+                />
+              }
+              data-qa-checkbox="acl-acknowledgement"
+              label="Provide an ACL later. The control plane will be unreachable until an ACL is defined."
+              sx={{ marginY: 1 }}
+            />
+          )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',

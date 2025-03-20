@@ -6,14 +6,13 @@
  * if the user was navigated from Login. Further, we are doing no nonce checking here
  */
 
-import { capitalize } from '@linode/utilities';
+import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { setAuthToken } from 'src/utilities/authentication';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { BaseQueryParams } from 'src/utilities/queryParams';
+import type { BaseQueryParams } from '@linode/utilities';
 
 interface QueryParams extends BaseQueryParams {
   access_token: string;

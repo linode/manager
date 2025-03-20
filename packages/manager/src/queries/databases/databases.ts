@@ -16,13 +16,13 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
-import { profileQueries } from '../profile/profile';
+import { queryPresets, profileQueries } from '@linode/queries';
 import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,
@@ -66,6 +66,11 @@ export const databaseQueries = createQueryKeys('databases', {
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllDatabases(params, filter),
         queryKey: [params, filter],
+      }),
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDatabases({ page: pageParam as number }, filter),
+        queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
@@ -111,6 +116,21 @@ export const useDatabasesQuery = (
     // @TODO Consider removing polling
     refetchInterval: 20000,
   });
+
+export const useDatabasesInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<DatabaseInstance>, APIError[]>({
+    ...databaseQueries.databases._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useAllDatabasesQuery = (
   enabled: boolean = true,

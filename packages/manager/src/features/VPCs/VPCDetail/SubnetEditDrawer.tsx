@@ -1,13 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, TextField } from '@linode/ui';
+import {
+  useGrants,
+  useProfile,
+  useUpdateSubnetMutation,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
+import { NotFound } from 'src/components/NotFound';
 
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
@@ -73,7 +75,12 @@ export const SubnetEditDrawer = (props: Props) => {
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit Subnet">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit Subnet"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
