@@ -9,7 +9,7 @@ export const SwitchAccountButton = (props: ButtonProps) => {
   return (
     <Button
       sx={(theme) => ({
-        font: theme.tokens.typography.Label.Semibold.S,
+        font: theme.tokens.alias.Typography.Label.Semibold.S,
         marginTop: theme.tokens.spacing.S4,
       })}
       startIcon={<SwapIcon data-testid="swap-icon" />}

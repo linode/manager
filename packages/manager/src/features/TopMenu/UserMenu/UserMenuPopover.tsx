@@ -129,8 +129,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       <Grid key={link.display} size={12}>
         <Link
           style={{
-            color: theme.tokens.content.Text.Link.Default,
-            font: theme.tokens.typography.Body.Semibold,
+            color: theme.tokens.alias.Content.Text.Link.Default,
+            font: theme.tokens.alias.Typography.Body.Semibold,
           }}
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
@@ -161,7 +161,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
-            backgroundColor: theme.tokens.background.Normal,
+            backgroundColor: theme.tokens.alias.Background.Normal,
             paddingX: theme.tokens.spacing.S24,
             paddingY: theme.tokens.spacing.S16,
           }),
@@ -185,8 +185,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography
               sx={(theme) => ({
-                color: theme.tokens.content.Text.Primary.Default,
-                font: theme.tokens.typography.Label.Semibold.S,
+                color: theme.tokens.alias.Content.Text.Primary.Default,
+                font: theme.tokens.alias.Typography.Label.Semibold.S,
               })}
             >
               Current account:
@@ -194,8 +194,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           )}
           <Typography
             sx={(theme) => ({
-              color: theme.tokens.content.Text.Primary.Default,
-              font: theme.tokens.typography.Label.Bold.L,
+              color: theme.tokens.alias.Content.Text.Primary.Default,
+              font: theme.tokens.alias.Typography.Label.Bold.L,
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
@@ -237,8 +237,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                 menuLink.hide ? null : (
                   <Link
                     style={{
-                      color: theme.tokens.content.Text.Link.Default,
-                      font: theme.tokens.typography.Body.Semibold,
+                      color: theme.tokens.alias.Content.Text.Link.Default,
+                      font: theme.tokens.alias.Typography.Body.Semibold,
                     }}
                     data-testid={`menu-item-${menuLink.display}`}
                     key={menuLink.display}
@@ -258,8 +258,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 };
 
 const Heading = styled(Typography)(({ theme }) => ({
-  color: theme.tokens.content.Text.Primary.Default,
-  font: theme.tokens.typography.Heading.Overline,
-  letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
-  textTransform: theme.tokens.typography.Heading.OverlineTextCase,
+  color: theme.tokens.alias.Content.Text.Primary.Default,
+  font: theme.tokens.alias.Typography.Heading.Overline,
+  letterSpacing: theme.tokens.alias.Typography.Heading.OverlineLetterSpacing,
+  textTransform: theme.tokens.alias.Typography.Heading.OverlineTextCase,
 }));

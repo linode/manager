@@ -9,33 +9,22 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
-import { useAllFirewallDevicesQuery } from '@linode/queries';
 
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface Props {
+  devices: FirewallDevice[] | undefined;
   firewall: Firewall;
-  nodeBalancerID: number;
-  onClickUnassign: (
-    device: FirewallDevice | undefined,
-    firewall: Firewall
-  ) => void;
+  nodeBalancerId: number;
+  onClickUnassign: () => void;
 }
 
 export const NodeBalancerFirewallsRow = (props: Props) => {
-  const { firewall, nodeBalancerID, onClickUnassign } = props;
+  const { firewall, onClickUnassign } = props;
 
   const { id: firewallID, label, rules, status } = firewall;
-
-  const { data: devices } = useAllFirewallDevicesQuery(firewallID);
-
-  const firewallDevice = devices?.find(
-    (device) =>
-      device.entity.type === 'nodebalancer' &&
-      device.entity.id === nodeBalancerID
-  );
 
   const count = getCountOfRules(rules);
 
@@ -54,7 +43,7 @@ export const NodeBalancerFirewallsRow = (props: Props) => {
       <TableCell actionCell>
         <NodeBalancerFirewallsActionMenu
           firewallID={firewallID}
-          onUnassign={() => onClickUnassign(firewallDevice, firewall)}
+          onUnassign={onClickUnassign}
         />
       </TableCell>
     </TableRow>
