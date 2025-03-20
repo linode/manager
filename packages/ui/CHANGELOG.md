@@ -3,18 +3,18 @@
 
 ### Added:
 
-- Implemented V2 of the custom Date Range Picker leveraging Luxon. ([#11540](https://github.com/linode/manager/pull/11540))
+- Date Range Picker v2 leveraging Luxon ([#11540](https://github.com/linode/manager/pull/11540))
 - New indeterminate state icon for checkbox component ([#11693](https://github.com/linode/manager/pull/11693))
 - Time and Timezone selection field to the DatePickerV2 ([#11694](https://github.com/linode/manager/pull/11694))
-- Migrate ErrorState to ui package ([#11718](https://github.com/linode/manager/pull/11718))
-- Migrate Drawer to ui package ([#11789](https://github.com/linode/manager/pull/11789))
-- Migrate ActionsPanel to ui package ([#11810](https://github.com/linode/manager/pull/11810))
+- Migrate ErrorState to `ui` package ([#11718](https://github.com/linode/manager/pull/11718))
+- Migrate Drawer to `ui` package ([#11789](https://github.com/linode/manager/pull/11789))
+- Migrate ActionsPanel to `ui` package ([#11810](https://github.com/linode/manager/pull/11810))
 
 ### Changed:
 
 - Temporarily extend ESLint rules from `@linode/manager` to `@linode/ui` package ([#11666](https://github.com/linode/manager/pull/11666))
 - `Notice`'s default `marginBottom` from `24px` to `8px` ([#11724](https://github.com/linode/manager/pull/11724))
-- Move @vitest/ui to monorepo root dependency ([#11755](https://github.com/linode/manager/pull/11755))
+- Move `@vitest/ui` to monorepo root dependency ([#11755](https://github.com/linode/manager/pull/11755))
 - Implement Akamai Design System: Apply consistent styling to MuiInputBase, MuiInputAdornment, and MuiAutocomplete components, creating a unified foundation for Autocomplete and TextField elements ([#11807](https://github.com/linode/manager/pull/11807))
 - Update body text color to use proper color token ([#11820](https://github.com/linode/manager/pull/11820))
 
@@ -22,6 +22,7 @@
 
 - Upgrade to MUI v6 ([#11688](https://github.com/linode/manager/pull/11688))
 - 4.0.0 Design Tokens - New Spacing & Badge Tokens ([#11757](https://github.com/linode/manager/pull/11757))
+
 
 ## [2025-02-25] - v0.7.0
 
