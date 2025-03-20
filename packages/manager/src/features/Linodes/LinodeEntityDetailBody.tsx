@@ -134,8 +134,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
-    (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
-    Boolean(encryptionStatus);
+    isDiskEncryptionFeatureEnabled && Boolean(encryptionStatus);
 
   // Filter and retrieve subnets associated with a specific Linode ID
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
@@ -253,6 +252,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     flexDirection="row"
                   >
                     <EncryptedStatus
+                      regionSupportsDiskEncryption={
+                        regionSupportsDiskEncryption
+                      }
                       /**
                        * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
                        * explaining how LDE can be enabled on LKE-E node pools.
