@@ -29,20 +29,36 @@ export const wrapInQuotes = (s: string) => '"' + s + '"';
 
 export const isNumeric = (s: string) => /^\d+$/.test(s);
 
+const getNumberMatch = (str: string) => {
+  let match = '';
+
+  // Start from the end of string and work backwards
+  for (let i = str.length - 1; i >= 0; i--) {
+    const char = str[i];
+    // Check if character is a digit
+    if (char >= '0' && char <= '9') {
+      match = char + match;
+    } else {
+      // Stop when we hit a non-digit
+      break;
+    }
+  }
+
+  return match;
+};
+
 export function getNumberAtEnd(str: string) {
-  // Use a regular expression to match one or more digits at the end of the string
-  const match = str.match(/\d+$/);
+  const match = getNumberMatch(str);
 
   // If there is a match, return the matched number; otherwise, return null
-  return match ? parseInt(match[0], 10) : null;
+  return match ? parseInt(match, 10) : null;
 }
 
 export function removeNumberAtEnd(str: string) {
-  // Use a regular expression to match one or more digits at the end of the string
-  const regex = /\d+$/;
+  const match = getNumberMatch(str);
 
   // Use the replace() method to remove the matched portion
-  return str.replace(regex, '');
+  return str.replace(match, '');
 }
 
 /**
