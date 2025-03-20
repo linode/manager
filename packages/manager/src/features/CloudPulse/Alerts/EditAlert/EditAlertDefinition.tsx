@@ -11,6 +11,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import { OPTIMISTIC_SUCCESS_MESSAGE } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -73,8 +74,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar('Alert successfully updated.', {
-        variant: 'success',
+      enqueueSnackbar(OPTIMISTIC_SUCCESS_MESSAGE, {
+        variant: 'info',
       });
       history.push(definitionLanding);
     } catch (errors) {

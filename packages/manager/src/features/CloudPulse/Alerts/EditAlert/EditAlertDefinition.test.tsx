@@ -7,6 +7,7 @@ import { Router } from 'react-router-dom';
 import { alertFactory, notificationChannelFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { OPTIMISTIC_SUCCESS_MESSAGE } from '../constants';
 import { EditAlertDefinition } from './EditAlertDefinition';
 
 const queryMocks = vi.hoisted(() => ({
@@ -104,7 +105,7 @@ describe('EditAlertDefinition component', () => {
       expect(push).toHaveBeenLastCalledWith('/alerts/definitions');
       await waitFor(() => {
         expect(
-          getByText('Alert successfully updated.') // validate whether snackbar is displayed properly
+          getByText(OPTIMISTIC_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly
         ).toBeInTheDocument();
       });
     },

@@ -181,3 +181,6 @@ export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
 };
+
+export const OPTIMISTIC_SUCCESS_MESSAGE =
+  'It can take a few minutes to apply the changes';
