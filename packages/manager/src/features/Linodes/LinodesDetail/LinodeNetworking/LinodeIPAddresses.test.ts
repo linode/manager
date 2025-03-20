@@ -64,12 +64,18 @@ describe('ipResponseToDisplayRows utility function', () => {
   };
 
   it('returns a display row for each IP/range', () => {
-    const result = ipResponseToDisplayRows(false, response);
+    const result = ipResponseToDisplayRows({
+      displayIPKeyFirst: false,
+      ipResponse: response,
+    });
     expect(result).toHaveLength(7);
   });
 
   it('includes the meta _ip field for IP addresses', () => {
-    const result = ipResponseToDisplayRows(false, response);
+    const result = ipResponseToDisplayRows({
+      displayIPKeyFirst: false,
+      ipResponse: response,
+    });
     // Check the first six rows (the IPs)
     for (let i = 0; i < 5; i++) {
       expect(result[i]._ip).toBeDefined();
@@ -77,7 +83,10 @@ describe('ipResponseToDisplayRows utility function', () => {
   });
 
   it('includes the meta _range field for IP ranges', () => {
-    const result = ipResponseToDisplayRows(false, response);
+    const result = ipResponseToDisplayRows({
+      displayIPKeyFirst: false,
+      ipResponse: response,
+    });
     // Check the last row (the IPv6 range)
     expect(result[6]._range).toBeDefined();
   });
@@ -88,40 +97,60 @@ describe('createType utility function', () => {
     const publicIPv4 = ipAddressFactory.build({ public: true, type: 'ipv4' });
     const privateIPv4 = ipAddressFactory.build({ public: false, type: 'ipv4' });
 
-    expect(createType(publicIPv4, 'Public', false)).toBe('IPv4 – Public');
-    expect(createType(privateIPv4, 'Private', false)).toBe('IPv4 – Private');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: publicIPv4, key: 'Public' })
+    ).toBe('IPv4 – Public');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: privateIPv4, key: 'Private' })
+    ).toBe('IPv4 – Private');
 
-    expect(createType(publicIPv4, 'Reserved', false)).toBe(
-      'IPv4 – Reserved (public)'
-    );
-    expect(createType(privateIPv4, 'Reserved', false)).toBe(
-      'IPv4 – Reserved (private)'
-    );
+    expect(
+      createType({ displayIPKeyFirst: false, ip: publicIPv4, key: 'Reserved' })
+    ).toBe('IPv4 – Reserved (public)');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: privateIPv4, key: 'Reserved' })
+    ).toBe('IPv4 – Reserved (private)');
 
-    expect(createType(publicIPv4, 'Shared', false)).toBe('IPv4 – Shared');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: publicIPv4, key: 'Shared' })
+    ).toBe('IPv4 – Shared');
 
     // Linode Interface changes to IP types
-    expect(createType(publicIPv4, 'Public', true)).toBe('Public – IPv4');
-    expect(createType(privateIPv4, 'Private', true)).toBe('Private – IPv4');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: publicIPv4, key: 'Public' })
+    ).toBe('Public – IPv4');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: privateIPv4, key: 'Private' })
+    ).toBe('Private – IPv4');
 
-    expect(createType(publicIPv4, 'Reserved', true)).toBe(
-      'Reserved IPv4 (public)'
-    );
-    expect(createType(privateIPv4, 'Reserved', true)).toBe(
-      'Reserved IPv4 (private)'
-    );
+    expect(
+      createType({ displayIPKeyFirst: true, ip: publicIPv4, key: 'Reserved' })
+    ).toBe('Reserved IPv4 (public)');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: privateIPv4, key: 'Reserved' })
+    ).toBe('Reserved IPv4 (private)');
 
-    expect(createType(publicIPv4, 'Shared', true)).toBe('Shared – IPv4');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: publicIPv4, key: 'Shared' })
+    ).toBe('Shared – IPv4');
   });
 
   it('creates the correct type for ipv6', () => {
     const ipv6 = ipAddressFactory.build({ type: 'ipv6' });
 
-    expect(createType(ipv6, 'SLAAC', false)).toBe('IPv6 – SLAAC');
-    expect(createType(ipv6, 'Link Local', false)).toBe('IPv6 – Link Local');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: ipv6, key: 'SLAAC' })
+    ).toBe('IPv6 – SLAAC');
+    expect(
+      createType({ displayIPKeyFirst: false, ip: ipv6, key: 'Link Local' })
+    ).toBe('IPv6 – Link Local');
 
     // Linode Interfaces related - test cases:
-    expect(createType(ipv6, 'SLAAC', true)).toBe('Public – SLAAC – IPv6');
-    expect(createType(ipv6, 'Link Local', true)).toBe('Link Local – IPv6');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: ipv6, key: 'SLAAC' })
+    ).toBe('Public – SLAAC – IPv6');
+    expect(
+      createType({ displayIPKeyFirst: true, ip: ipv6, key: 'Link Local' })
+    ).toBe('Link Local – IPv6');
   });
 });

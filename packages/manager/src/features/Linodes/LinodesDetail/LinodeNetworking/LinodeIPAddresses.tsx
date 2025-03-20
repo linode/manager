@@ -146,11 +146,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
-  const ipDisplay = ipResponseToDisplayRows(
-    isLinodeInterfacesEnabled,
-    ips,
-    configInterfaceWithVPC
-  );
+  const ipDisplay = ipResponseToDisplayRows({
+    configInterfaceWithVPC,
+    displayIPKeyFirst: isLinodeInterfacesEnabled,
+    ipResponse: ips,
+  });
 
   return (
     <Box>
@@ -333,7 +333,7 @@ export interface IPDisplay {
 
 export const vpcConfigInterfaceToDisplayRows = (
   configInterfaceWithVPC: Interface,
-  isLinodeInterfacesEnabled: boolean
+  displayIPKeyFirst: boolean
 ) => {
   const ipDisplay: IPDisplay[] = [];
 
@@ -347,7 +347,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.vpc) {
     ipDisplay.push({
       address: ipv4.vpc,
-      type: isLinodeInterfacesEnabled ? 'VPC – IPv4' : 'IPv4 – VPC',
+      type: displayIPKeyFirst ? 'VPC – IPv4' : 'IPv4 – VPC',
       ...emptyProps,
     });
   }
@@ -355,7 +355,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.nat_1_1) {
     ipDisplay.push({
       address: ipv4.nat_1_1,
-      type: isLinodeInterfacesEnabled ? 'VPC NAT – IPv4' : 'VPC IPv4 – NAT',
+      type: displayIPKeyFirst ? 'VPC NAT – IPv4' : 'VPC IPv4 – NAT',
       ...emptyProps,
     });
   }
@@ -364,9 +364,7 @@ export const vpcConfigInterfaceToDisplayRows = (
     ip_ranges.forEach((ip_range) => {
       ipDisplay.push({
         address: ip_range,
-        type: isLinodeInterfacesEnabled
-          ? 'VPC – Range – IPv4'
-          : 'IPv4 – VPC – Range',
+        type: displayIPKeyFirst ? 'VPC – Range – IPv4' : 'IPv4 – VPC – Range',
         ...emptyProps,
       });
     });
@@ -376,11 +374,15 @@ export const vpcConfigInterfaceToDisplayRows = (
 };
 
 // Takes an IP Response object and returns high-level IP display rows.
-export const ipResponseToDisplayRows = (
-  isLinodeInterfacesEnabled: boolean,
-  ipResponse?: LinodeIPsResponse,
-  configInterfaceWithVPC?: Interface
-): IPDisplay[] => {
+export const ipResponseToDisplayRows = ({
+  configInterfaceWithVPC,
+  displayIPKeyFirst,
+  ipResponse,
+}: {
+  configInterfaceWithVPC?: Interface;
+  displayIPKeyFirst: boolean;
+  ipResponse?: LinodeIPsResponse;
+}): IPDisplay[] => {
   if (!ipResponse) {
     return [];
   }
@@ -388,19 +390,45 @@ export const ipResponseToDisplayRows = (
   const { ipv4, ipv6 } = ipResponse;
 
   const ipDisplay = [
-    ...mapIPv4Display(ipv4.public, 'Public', isLinodeInterfacesEnabled),
-    ...mapIPv4Display(ipv4.private, 'Private', isLinodeInterfacesEnabled),
-    ...mapIPv4Display(ipv4.reserved, 'Reserved', isLinodeInterfacesEnabled),
-    ...mapIPv4Display(ipv4.shared, 'Shared', isLinodeInterfacesEnabled),
+    ...mapIPv4Display({
+      displayIPKeyFirst,
+      ips: ipv4.public,
+      key: 'Public',
+    }),
+    ...mapIPv4Display({
+      displayIPKeyFirst,
+      ips: ipv4.private,
+      key: 'Private',
+    }),
+    ...mapIPv4Display({
+      displayIPKeyFirst,
+      ips: ipv4.reserved,
+      key: 'Reserved',
+    }),
+    ...mapIPv4Display({
+      displayIPKeyFirst,
+      ips: ipv4.shared,
+      key: 'Shared',
+    }),
   ];
 
   if (ipv6?.slaac) {
-    ipDisplay.push(ipToDisplay(ipv6.slaac, 'SLAAC', isLinodeInterfacesEnabled));
+    ipDisplay.push(
+      ipToDisplay({
+        displayIPKeyFirst,
+        ip: ipv6.slaac,
+        key: 'SLAAC',
+      })
+    );
   }
 
   if (ipv6?.link_local) {
     ipDisplay.push(
-      ipToDisplay(ipv6?.link_local, 'Link Local', isLinodeInterfacesEnabled)
+      ipToDisplay({
+        displayIPKeyFirst,
+        ip: ipv6?.link_local,
+        key: 'Link Local',
+      })
     );
   }
 
@@ -412,7 +440,7 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(
       ...vpcConfigInterfaceToDisplayRows(
         configInterfaceWithVPC,
-        isLinodeInterfacesEnabled
+        displayIPKeyFirst
       )
     );
   }
@@ -441,7 +469,7 @@ export const ipResponseToDisplayRows = (
         gateway: '',
         rdns: '',
         subnetMask: '',
-        type: (isLinodeInterfacesEnabled
+        type: (displayIPKeyFirst
           ? 'Range – IPv6'
           : 'IPv6 – Range') as IPDisplay['type'],
       };
@@ -459,34 +487,51 @@ type ipKey =
   | 'SLAAC'
   | 'Shared';
 
-const mapIPv4Display = (
-  ips: IPAddress[],
-  key: ipKey,
-  isLinodeInterfacesEnabled: boolean
-): IPDisplay[] => {
-  return ips.map((ip) => ipToDisplay(ip, key, isLinodeInterfacesEnabled));
+interface IPsToDisplayInputs {
+  displayIPKeyFirst: boolean;
+  ips: IPAddress[];
+  key: ipKey;
+}
+interface IPToDisplayInputs {
+  displayIPKeyFirst: boolean;
+  ip: IPAddress;
+  key: ipKey;
+}
+
+const mapIPv4Display = ({
+  displayIPKeyFirst,
+  ips,
+  key,
+}: IPsToDisplayInputs): IPDisplay[] => {
+  return ips.map((ip) =>
+    ipToDisplay({
+      displayIPKeyFirst,
+      ip,
+      key,
+    })
+  );
 };
 
-const ipToDisplay = (
-  ip: IPAddress,
-  key: ipKey,
-  isLinodeInterfacesEnabled: boolean
-): IPDisplay => {
+const ipToDisplay = ({
+  displayIPKeyFirst,
+  ip,
+  key,
+}: IPToDisplayInputs): IPDisplay => {
   return {
     _ip: ip,
     address: ip.address,
     gateway: ip.gateway ?? '',
     rdns: ip.rdns ?? '',
     subnetMask: ip.subnet_mask ?? '',
-    type: createType(ip, key, isLinodeInterfacesEnabled) as IPTypes,
+    type: createType({ displayIPKeyFirst, ip, key }) as IPTypes,
   };
 };
 
-export const createType = (
-  ip: IPAddress,
-  key: ipKey,
-  isLinodeInterfacesEnabled: boolean
-) => {
+export const createType = ({
+  displayIPKeyFirst,
+  ip,
+  key,
+}: IPToDisplayInputs) => {
   let type = '';
   type += ip.type === 'ipv4' ? 'IPv4' : 'IPv6';
 
@@ -498,5 +543,5 @@ export const createType = (
     type += key;
   }
 
-  return isLinodeInterfacesEnabled ? ipTypeMap[type as IPTypes] : type;
+  return displayIPKeyFirst ? ipTypeMap[type as IPTypes] : type;
 };

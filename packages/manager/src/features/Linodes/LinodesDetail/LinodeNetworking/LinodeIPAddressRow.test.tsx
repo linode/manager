@@ -15,7 +15,10 @@ import { LinodeIPAddressRow } from './LinodeIPAddressRow';
 import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
-const ipDisplay = ipResponseToDisplayRows(false, ips)[0];
+const ipDisplay = ipResponseToDisplayRows({
+  displayIPKeyFirst: false,
+  ipResponse: ips,
+})[0];
 const ipDisplayVPC = vpcConfigInterfaceToDisplayRows(
   linodeConfigInterfaceFactoryWithVPC.build(),
   false
@@ -128,11 +131,11 @@ describe('LinodeIPAddressRow', () => {
 
 describe('ipResponseToDisplayRows', () => {
   it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
-    const ipDisplays = ipResponseToDisplayRows(
-      false,
-      ips,
-      linodeConfigInterfaceFactoryWithVPC.build()
-    );
+    const ipDisplays = ipResponseToDisplayRows({
+      configInterfaceWithVPC: linodeConfigInterfaceFactoryWithVPC.build(),
+      displayIPKeyFirst: false,
+      ipResponse: ips,
+    });
 
     expect(
       ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
