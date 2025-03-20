@@ -1,14 +1,21 @@
+import { object } from 'yup';
+
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  enhanceValidationSchemaWithEntityIdValidation,
   filterAlertsByStatusAndType,
   getServiceTypeLabel,
 } from './utils';
 
+import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
+import type { AlertValidationSchemaProps } from './utils';
 import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
+import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type { ObjectSchema } from 'yup';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -78,4 +85,50 @@ it('should correctly convert an alert definition values to the required format',
   };
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
+});
+
+describe('getValidationSchema', () => {
+  const baseSchema = object({}) as ObjectSchema<CreateAlertDefinitionForm>;
+  const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
+    { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
+    { maxResourceSelectionCount: 5, serviceType: 'linode' },
+  ];
+  const props: AlertValidationSchemaProps = {
+    aclpAlertServiceTypeConfig,
+    baseSchema,
+    serviceTypeObj: 'dbaas',
+  };
+
+  it('should return baseSchema if maxSelectionCount is undefined', () => {
+    const schema = enhanceValidationSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'unknown',
+    });
+    expect(schema).toBe(baseSchema);
+  });
+
+  it("should return schema with maxSelectionCount for 'dbaas'", async () => {
+    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props });
+
+    await expect(
+      schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
+    ).rejects.toThrow(
+      "The overall number of resources assigned to an alert can't exceed 3."
+    );
+  });
+
+  it("should return schema with correct maxSelectionCount for 'linode'", async () => {
+    const schema = enhanceValidationSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'linode',
+    });
+
+    await expect(
+      schema.validate({
+        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
+      })
+    ).rejects.toThrow(
+      "The overall number of resources assigned to an alert can't exceed 5."
+    );
+  });
 });

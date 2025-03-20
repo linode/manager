@@ -1,8 +1,8 @@
+import { splitAt } from '@linode/utilities';
 import * as React from 'react';
 
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { Tag } from 'src/components/Tag/Tag';
-import { splitAt } from 'src/utilities/splitAt';
 
 export interface TagsProps {
   /**

@@ -48,7 +48,7 @@ export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
     value: 'lte',
   },
   {
-    label: '==',
+    label: '=',
     value: 'eq',
   },
 ];
@@ -128,6 +128,8 @@ export const severityMap: Record<AlertSeverityType, string> = {
 export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
+  failed: 'error',
+  'in progress': 'other',
 };
 
 export const channelTypeOptions: Item<string, ChannelType>[] = [
@@ -163,6 +165,8 @@ export const dimensionOperatorTypeMap: Record<
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
+  failed: 'Failed',
+  'in progress': 'In Progress',
 };
 
 export const alertStatusOptions: Item<

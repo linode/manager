@@ -1,11 +1,12 @@
-import { kubernetesClusterFactory } from 'src/factories';
 import {
+  mockDeleteCluster,
   mockGetCluster,
   mockGetClusters,
-  mockDeleteCluster,
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+
+import { kubernetesClusterFactory } from 'src/factories';
 
 /*
  * Fills out and submits Type to Confirm deletion dialog for cluster with the given label.

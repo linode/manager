@@ -1,7 +1,8 @@
 import { Button } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+
+import { Link } from 'src/components/Link';
 
 import type { Theme } from '@mui/material/styles';
 import type { SvgIcon } from 'src/components/SvgIcon';
@@ -30,7 +31,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   root: {
     alignItems: 'center',
-    borderRadius: theme.tokens.borderRadius.None,
+    borderRadius: theme.tokens.alias.Radius.Default,
     display: 'flex',
     gap: theme.spacing(2),
     padding: theme.spacing(0.5),

@@ -1,4 +1,7 @@
+import { useGrants, useProfile } from '@linode/queries';
 import {
+  ActionsPanel,
+  Drawer,
   FormControlLabel,
   Notice,
   Radio,
@@ -9,10 +12,8 @@ import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useCloneDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { Domain } from '@linode/api-v4';
 
@@ -57,6 +58,7 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

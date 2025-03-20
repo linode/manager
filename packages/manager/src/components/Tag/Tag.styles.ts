@@ -68,7 +68,7 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   label: 'StyledDeleteButton',
 })(({ theme }) => ({
   '& svg': {
-    borderRadius: theme.tokens.borderRadius.None,
+    borderRadius: theme.tokens.alias.Radius.Default,
     color: theme.color.tagIcon,
     height: 15,
     width: 15,
@@ -85,7 +85,7 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
       ? theme.tokens.color.Neutrals.White
       : theme.tokens.color.Neutrals[100]
   }`,
-  borderRadius: theme.tokens.borderRadius.None,
+  borderRadius: theme.tokens.alias.Radius.Default,
   borderTopRightRadius: 3,
   height: 30,
   margin: 0,

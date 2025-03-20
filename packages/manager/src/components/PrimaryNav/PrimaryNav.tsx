@@ -18,11 +18,11 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountSettings } from 'src/queries/account/settings';
 import {
+  useAccountSettings,
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+} from '@linode/queries';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';
@@ -33,6 +33,7 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
+  | 'Alerts'
   | 'Betas'
   | 'Cloud Load Balancers'
   | 'Dashboard'
@@ -47,6 +48,7 @@ export type NavEntity =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
+  | 'Metrics'
   | 'Monitor'
   | 'NodeBalancers'
   | 'Object Storage'
@@ -88,6 +90,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
+
+  const isAlertsEnabled =
+    isACLPEnabled &&
+    (flags.aclpAlerting?.alertDefinitions ||
+      flags.aclpAlerting?.recentActivity ||
+      flags.aclpAlerting?.notificationChannels);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
@@ -217,14 +225,20 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         icon: <Monitor />,
         links: [
           {
-            display: 'Longview',
-            href: '/longview',
+            display: 'Metrics',
+            hide: !isACLPEnabled,
+            href: '/metrics',
+            isBeta: flags.aclp?.beta,
           },
           {
-            display: 'Monitor',
-            hide: !isACLPEnabled,
-            href: '/monitor',
+            display: 'Alerts',
+            hide: !isAlertsEnabled,
+            href: '/alerts',
             isBeta: flags.aclp?.beta,
+          },
+          {
+            display: 'Longview',
+            href: '/longview',
           },
         ],
         name: 'Monitor',

@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControl,
   FormHelperText,
@@ -11,12 +12,11 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 

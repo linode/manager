@@ -1,7 +1,7 @@
+import { ActionsPanel } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 import type { Meta, StoryObj } from '@storybook/react';

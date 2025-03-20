@@ -1,3 +1,4 @@
+import { queryClientFactory } from '@linode/queries';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import {
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';

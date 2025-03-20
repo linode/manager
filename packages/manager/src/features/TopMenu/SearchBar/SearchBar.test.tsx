@@ -7,7 +7,8 @@ const createMockItems = (numberOfItemsToCreate: number) => {
   for (let i = 0; i < numberOfItemsToCreate; i++) {
     mockItems.push({
       data: {
-        searchText: `test-search-text-${i}`,
+        description: '',
+        path: '',
       },
       label: `test-label-${i}`,
       value: `test-value-${i}`,

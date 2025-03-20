@@ -1,3 +1,4 @@
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -8,7 +9,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
 import { AccessKeyTableBody } from './AccessKeyTableBody';

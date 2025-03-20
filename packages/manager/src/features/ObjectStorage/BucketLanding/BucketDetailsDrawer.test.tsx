@@ -1,3 +1,4 @@
+import { readableBytes, truncateMiddle } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
@@ -10,15 +11,19 @@ import {
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 
 // Mock utility functions
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    readableBytes: vi.fn(),
+    truncateMiddle: vi.fn(),
+  };
+});
 vi.mock('src/utilities/formatDate');
-vi.mock('src/utilities/truncate');
-vi.mock('src/utilities/unitConversions');
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
@@ -29,8 +34,8 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 // Mock the queries
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

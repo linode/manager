@@ -1,8 +1,7 @@
+import { useVLANsInfiniteQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import React, { useEffect, useState } from 'react';
-
-import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
-import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
 import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';
@@ -21,6 +20,10 @@ interface Props {
    * Default API filter
    */
   filter?: Filter;
+  /**
+   * Helper text that will show below the select
+   */
+  helperText?: string;
   /**
    * Called when the field is blurred
    */
@@ -46,7 +49,16 @@ interface Props {
  * - Allows VLAN creation
  */
 export const VLANSelect = (props: Props) => {
-  const { disabled, errorText, filter, onBlur, onChange, sx, value } = props;
+  const {
+    disabled,
+    errorText,
+    filter,
+    helperText,
+    onBlur,
+    onChange,
+    sx,
+    value,
+  } = props;
 
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = useState<string>('');
@@ -134,6 +146,7 @@ export const VLANSelect = (props: Props) => {
       }}
       disabled={disabled}
       errorText={errorText ?? error?.[0].reason}
+      helperText={helperText}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       label="VLAN"
       loading={isFetching}

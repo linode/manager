@@ -1,6 +1,10 @@
-import { linodeInterfaceFactoryPublic } from 'src/factories/linodeInterface';
+import { linodeInterfaceFactoryPublic } from '@linode/utilities';
 
-import { getLinodeInterfacePayload } from './utilities';
+import {
+  transformLegacyInterfaceErrorsToLinodeInterfaceErrors,
+  getLinodeInterfacePayload,
+} from './utilities';
+import { APIError } from '@linode/api-v4';
 
 describe('Linode Create Networking Utilities', () => {
   describe('getLinodeInterfacesPayload', () => {
@@ -46,6 +50,20 @@ describe('Linode Create Networking Utilities', () => {
         vlan: null,
         vpc: null,
       });
+    });
+  });
+
+  describe('getLinodeInterfaceErrorsFromLegacyInterfaceErrors', () => {
+    it('transforms a legacy error into a linodeInterface error', () => {
+      const error: APIError[] = [
+        { field: 'interfaces[1].subnet_id', reason: 'Fake message' },
+      ];
+
+      expect(
+        transformLegacyInterfaceErrorsToLinodeInterfaceErrors(error)
+      ).toStrictEqual([
+        { field: 'linodeInterfaces[1].vpc.subnet_id', reason: 'Fake message' },
+      ]);
     });
   });
 });

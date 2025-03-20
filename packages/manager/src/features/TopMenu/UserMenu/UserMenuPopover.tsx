@@ -11,7 +11,7 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -130,7 +130,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
-          style={{ font: theme.tokens.typography.Body.Regular }}
+          style={{ font: theme.tokens.alias.Typography.Body.Regular }}
           to={link.href}
         >
           {link.display}
@@ -183,7 +183,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           )}
           <Typography
             sx={(theme) => ({
-              font: theme.tokens.typography.Heading.M,
+              font: theme.tokens.alias.Typography.Heading.M,
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
@@ -227,7 +227,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                     data-testid={`menu-item-${menuLink.display}`}
                     key={menuLink.display}
                     onClick={onClose}
-                    style={{ font: theme.tokens.typography.Body.Regular }}
+                    style={{ font: theme.tokens.alias.Typography.Body.Regular }}
                     to={menuLink.href}
                   >
                     {menuLink.display}
@@ -243,7 +243,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 };
 
 const Heading = styled(Typography)(({ theme }) => ({
-  font: theme.tokens.typography.Heading.Overline,
-  letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
-  textTransform: theme.tokens.typography.Heading.OverlineTextCase,
+  font: theme.tokens.alias.Typography.Heading.Overline,
+  letterSpacing: theme.tokens.alias.Typography.Heading.OverlineLetterSpacing,
+  textTransform: theme.tokens.alias.Typography.Heading.OverlineTextCase,
 }));

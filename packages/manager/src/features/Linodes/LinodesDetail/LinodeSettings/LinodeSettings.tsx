@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 
 import { LinodeSettingsAlertsPanel } from './LinodeSettingsAlertsPanel';
 import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';

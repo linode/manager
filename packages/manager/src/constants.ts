@@ -15,6 +15,15 @@ export const ENABLE_DEV_TOOLS = getBooleanEnv(
 export const ENABLE_MAINTENANCE_MODE =
   import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE === 'true';
 
+/**
+ * Because Cloud Manager uses two different search implementations depending on the account's
+ * size, we have this environment variable which allows us to force Cloud Manager to use
+ * a desired implementation.
+ *
+ * @example REACT_APP_FORCE_SEARCH_TYPE=api
+ */
+export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
+
 /** required for the app to function */
 export const APP_ROOT =
   import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
@@ -41,11 +50,6 @@ export const LAUNCH_DARKLY_API_KEY =
 export const LINODE_STATUS_PAGE_URL =
   import.meta.env.REACT_APP_STATUS_PAGE_URL ||
   'https://status.linode.com/api/v2';
-
-// Maximum page size allowed by the API. Used in the `getAll()` helper function
-// to request as many items at once as possible.
-export const API_MAX_PAGE_SIZE =
-  Number(import.meta.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
 
 // Having more of a single entity than this number classifies you as having
 // a "large account".

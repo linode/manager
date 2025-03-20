@@ -88,7 +88,7 @@ describe('Integration Tests for Edit Alert', () => {
 
   it('should navigate from the Alert Definitions List page to the Edit Alert page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -113,7 +113,7 @@ describe('Integration Tests for Edit Alert', () => {
 
   it('should correctly display and update the details of the alert in the edit alert page', () => {
     // Navigate to the Edit Alert page
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
 
     cy.wait(['@getAlertDefinitions', '@getDatabases']);
 
@@ -131,7 +131,7 @@ describe('Integration Tests for Edit Alert', () => {
         ui.button.findByTitle('Select All').should('be.visible').click();
 
         ui.button
-          .findByTitle('Unselect All')
+          .findByTitle('Deselect All')
           .should('be.visible')
           .should('be.enabled');
       });
@@ -272,7 +272,7 @@ describe('Integration Tests for Edit Alert', () => {
       expect(tags).to.include('tag2');
 
       // Validate navigation
-      cy.url().should('endWith', '/monitor/alerts/definitions');
+      cy.url().should('endWith', '/alerts/definitions');
 
       // Confirm toast notification appears
       ui.toast.assertMessage('Alert resources successfully updated.');

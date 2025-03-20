@@ -1,9 +1,9 @@
 import { Box } from '@linode/ui';
+import { sortByString } from '@linode/utilities';
 import React, { useState } from 'react';
 
 import { regions } from 'src/__data__/regionsData';
 import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
-import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
 

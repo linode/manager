@@ -1,5 +1,13 @@
-import { Box, CircleProgress, ErrorState, StyledLinkButton } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { useRegionsQuery, useVPCQuery } from '@linode/queries';
+import {
+  Box,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  StyledLinkButton,
+  Typography,
+} from '@linode/ui';
+import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -8,12 +16,13 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useVPCQuery } from 'src/queries/vpcs/vpcs';
-import { truncate } from 'src/utilities/truncate';
 
-import { getUniqueLinodesFromSubnets } from '../utils';
+import {
+  getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
+} from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import {
@@ -50,6 +59,8 @@ const VPCDetail = () => {
     vpc.description.length < 150 || showFullDescription
       ? vpc.description
       : truncate(vpc.description, 150);
+
+  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
 
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
@@ -121,10 +132,16 @@ const VPCDetail = () => {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="end">
-          <StyledActionButton onClick={() => setEditVPCDrawerOpen(true)}>
+          <StyledActionButton
+            disabled={isVPCLKEEnterpriseCluster}
+            onClick={() => setEditVPCDrawerOpen(true)}
+          >
             Edit
           </StyledActionButton>
-          <StyledActionButton onClick={() => setDeleteVPCDialogOpen(true)}>
+          <StyledActionButton
+            disabled={isVPCLKEEnterpriseCluster}
+            onClick={() => setDeleteVPCDialogOpen(true)}
+          >
             Delete
           </StyledActionButton>
         </Box>
@@ -178,6 +195,16 @@ const VPCDetail = () => {
         open={editVPCDrawerOpen}
         vpc={vpc}
       />
+      {isVPCLKEEnterpriseCluster && (
+        <Notice
+          bgcolor={theme.palette.background.paper}
+          spacingTop={24}
+          style={{ padding: '8px 16px' }}
+          variant="warning"
+        >
+          <Typography>{LKE_ENTERPRISE_VPC_WARNING}</Typography>
+        </Notice>
+      )}
       <Box
         sx={(theme) => ({
           [theme.breakpoints.up('lg')]: {
@@ -190,7 +217,11 @@ const VPCDetail = () => {
           Subnets ({vpc.subnets.length})
         </Typography>
       </Box>
-      <VPCSubnetsTable vpcId={vpc.id} vpcRegion={vpc.region} />
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+        vpcId={vpc.id}
+        vpcRegion={vpc.region}
+      />
     </>
   );
 };

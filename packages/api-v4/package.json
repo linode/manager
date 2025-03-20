@@ -41,7 +41,7 @@
   "unpkg": "./lib/index.global.js",
   "dependencies": {
     "@linode/validation": "workspace:*",
-    "axios": "~1.7.4",
+    "axios": "~1.8.3",
     "ipaddr.js": "^2.0.0",
     "yup": "^1.4.0"
   },
@@ -61,7 +61,7 @@
     "eslint": "^6.8.0",
     "eslint-plugin-sonarjs": "^0.5.0",
     "prettier": "~2.2.1",
-    "tsup": "^8.2.4"
+    "tsup": "^8.4.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

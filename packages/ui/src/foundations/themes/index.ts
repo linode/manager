@@ -5,6 +5,7 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
+import type { SpacingFunction } from '../utils';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
@@ -18,62 +19,19 @@ import type {
   textColors,
 } from './light';
 import type {
-  AccentTypes as AccentTypesLight,
-  ActionTypes as ActionTypesLight,
-  BackgroundTypes as BackgroundTypesLight,
-  BorderRadiusTypes,
-  BorderTypes as BorderTypesLight,
-  CalendarTypes as CalendarTypesLight,
-  ChartTypes,
+  AliasTypes as AliasTypesLight,
   ColorTypes,
-  ContentTypes as ContentTypesLight,
-  DropdownTypes as DropdownTypesLight,
-  ElevationTypes as ElevationTypesLight,
+  ComponentTypes as ComponentTypesLight,
   FontTypes,
-  GlobalFooterTypes as GlobalFooterTypesLight,
-  GlobalHeaderTypes,
-  InteractionTypes as InteractionTypesLight,
-  RadiusTypes,
-  SearchTypes as SearchTypesLight,
-  SideNavigationTypes as SideNavigationTypesLight,
   SpacingTypes,
-  TableTypes as TableTypesLight,
   TypographyTypes,
 } from '@linode/design-language-system';
 import type {
-  AccentTypes as AccentTypesDark,
-  ActionTypes as ActionTypesDark,
-  BackgroundTypes as BackgroundTypesDark,
-  BorderTypes as BorderTypesDark,
-  CalendarTypes as CalendarTypesDark,
-  ContentTypes as ContentTypesDark,
-  DropdownTypes as DropdownTypesDark,
-  ElevationTypes as ElevationTypesDark,
-  GlobalFooterTypes as GlobalFooterTypesDark,
-  InteractionTypes as InteractionTypesDark,
-  SearchTypes as SearchTypesDark,
-  SideNavigationTypes as SideNavigationTypesDark,
-  TableTypes as TableTypesDark,
+  AliasTypes as AliasTypesDark,
+  ComponentTypes as ComponentTypesDark,
 } from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
-
-type FooterTypes = MergeTypes<GlobalFooterTypesLight, GlobalFooterTypesDark>;
-type SearchTypes = MergeTypes<SearchTypesLight, SearchTypesDark>;
-type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
-type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
-type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
-type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
-type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
-type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
-type CalendarTypes = MergeTypes<CalendarTypesLight, CalendarTypesDark>;
-type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
-type SideNavigationTypes = MergeTypes<
-  SideNavigationTypesLight,
-  SideNavigationTypesDark
->;
-type DropdownTypes = MergeTypes<DropdownTypesLight, DropdownTypesDark>;
-type TableTypes = MergeTypes<TableTypesLight, TableTypesDark>;
 
 type Fonts = {
   bold: TypographyTypes['Body']['Bold'];
@@ -113,6 +71,9 @@ type NotificationToast = MergeTypes<
   DarkNotificationToast
 >;
 
+type AliasTypes = MergeTypes<AliasTypesDark, AliasTypesLight>;
+type ComponentTypes = MergeTypes<ComponentTypesDark, ComponentTypesLight>;
+
 /**
  * Augmenting the Theme and ThemeOptions.
  * This allows us to add custom fields to the theme.
@@ -134,31 +95,14 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles: any;
     name: ThemeName;
     notificationToast: NotificationToast;
+    spacingFunction: SpacingFunction;
     textColors: TextColors;
     tokens: {
-      // ----------------------------------------
-      accent: AccentTypes;
-      action: ActionTypes;
-      background: BackgroundTypes;
-      //  ---- Global tokens: theme agnostic ----
-      border: BorderTypes;
-      borderRadius: BorderRadiusTypes;
-      calendar: CalendarTypes;
-      chart: ChartTypes;
+      alias: AliasTypes;
       color: ColorTypes;
-      content: ContentTypes;
-      dropdown: DropdownTypes;
-      elevation: ElevationTypes;
+      component: ComponentTypes;
       font: FontTypes;
-      footer: FooterTypes;
-      header: GlobalHeaderTypes;
-      interaction: InteractionTypes;
-      radius: RadiusTypes;
-      search: SearchTypes;
-      sideNavigation: SideNavigationTypes;
       spacing: SpacingTypes;
-      table: TableTypes;
-      typography: TypographyTypes;
     };
     visually: any;
   }
@@ -178,31 +122,14 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles?: any;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    spacingFunction?: SpacingFunction;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
-      // ----------------------------------------
-      accent?: AccentTypes;
-      action?: ActionTypes;
-      background?: BackgroundTypes;
-      border?: BorderTypes;
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius?: BorderRadiusTypes;
-      calendar?: CalendarTypes;
-      chart?: ChartTypes;
-      color?: ColorTypes;
-      content?: ContentTypes;
-      dropdown?: DropdownTypes;
-      elevation?: ElevationTypes;
-      font?: FontTypes;
-      footer?: FooterTypes;
-      header?: GlobalHeaderTypes;
-      interaction?: InteractionTypes;
-      radius?: RadiusTypes;
-      search?: SearchTypes;
-      sideNavigation?: SideNavigationTypes;
-      spacing?: SpacingTypes;
-      table?: TableTypes;
-      typography?: TypographyTypes;
+      alias: AliasTypes;
+      color: ColorTypes;
+      component: ComponentTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
     };
     visually?: any;
   }

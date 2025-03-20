@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { Kernel } from '@linode/api-v4/lib/linodes/types';
 

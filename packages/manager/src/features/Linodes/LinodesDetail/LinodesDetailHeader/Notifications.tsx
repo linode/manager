@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
-import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useAllAccountMaintenanceQuery,
+  useNotificationsQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 
 import { MigrationNotification } from './MigrationNotification';
 

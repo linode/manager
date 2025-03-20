@@ -11,8 +11,7 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountUsers, useProfile } from '@linode/queries';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';

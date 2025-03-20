@@ -1,6 +1,6 @@
 import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
 import { Checkbox, CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { capitalize, pluralize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -11,12 +11,11 @@ import {
   queryKey,
   useTransferQuery,
 } from 'src/queries/entityTransfers';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { countByEntity } from '../utilities';
 import {

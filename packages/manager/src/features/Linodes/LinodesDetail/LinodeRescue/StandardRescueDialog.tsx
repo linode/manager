@@ -1,18 +1,26 @@
-import { Button, Dialog, ErrorState, Notice, Paper, clamp } from '@linode/ui';
+import {
+  useAllLinodeDisksQuery,
+  useAllVolumesQuery,
+  useGrants,
+  useLinodeQuery,
+  useLinodeRescueMutation,
+  useProfile,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Button,
+  Dialog,
+  ErrorState,
+  Notice,
+  Paper,
+  clamp,
+} from '@linode/ui';
+import { usePrevious } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeQuery,
-  useLinodeRescueMutation,
-} from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';

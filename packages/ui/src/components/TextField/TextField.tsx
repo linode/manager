@@ -114,7 +114,7 @@ interface InputToolTipProps {
 }
 
 interface TextFieldPropsOverrides
-  extends Omit<StandardTextFieldProps, 'label'> {
+  extends Omit<StandardTextFieldProps, 'label' | 'select'> {
   // We override this prop to make it required
   label: string;
 }
@@ -352,7 +352,7 @@ export const TextField = (props: TextFieldProps) => {
             disableUnderline: true,
             endAdornment: loading && (
               <InputAdornment position="end">
-                <CircleProgress size="sm" />
+                <CircleProgress noPadding size="xs" />
               </InputAdornment>
             ),
             sx: {

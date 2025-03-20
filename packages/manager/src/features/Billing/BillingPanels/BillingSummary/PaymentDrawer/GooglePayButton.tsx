@@ -1,4 +1,6 @@
+import { useAccount, useClientToken } from '@linode/queries';
 import { CircleProgress, Tooltip } from '@linode/ui';
+import { useScript } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
@@ -10,9 +12,6 @@ import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
-import { useScript } from 'src/hooks/useScript';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
 
 import type { SetSuccess } from './types';
 import type { APIWarning } from '@linode/api-v4/lib/types';
@@ -146,12 +145,12 @@ export const GooglePayButton = (props: Props) => {
   if (isLoading) {
     return (
       <Grid
-        className={classes.loading}
-        container
         sx={{
           alignContent: 'center',
           justifyContent: 'center',
         }}
+        className={classes.loading}
+        container
       >
         <CircleProgress size="sm" />
       </Grid>

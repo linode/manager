@@ -34,7 +34,7 @@ describe('OMC_CreateBucketDrawer', () => {
     });
 
     expect(getByTestId('drawer-title')).toBeVisible();
-    expect(getByText('Label')).toBeVisible();
+    expect(getByText('Bucket Name')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
     expect(getByText('Cancel')).toBeVisible();
     expect(getByTestId('create-bucket-button')).toBeVisible();

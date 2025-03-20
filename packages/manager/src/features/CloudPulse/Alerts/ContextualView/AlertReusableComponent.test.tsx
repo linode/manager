@@ -80,9 +80,7 @@ describe('Alert Resuable Component for contextual view', () => {
     const { getByTestId } = renderWithTheme(component);
     await userEvent.click(getByTestId('manage-alerts'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      '/monitor/alerts/definitions'
-    );
+    expect(mockHistory.push).toHaveBeenCalledWith('/alerts/definitions');
   });
 
   it('Should filter alerts based on search text', async () => {

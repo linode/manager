@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import {
   BetaChip,
   CircleProgress,
@@ -6,7 +7,7 @@ import {
   Notice,
   Paper,
 } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
+import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -37,10 +38,8 @@ import {
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,

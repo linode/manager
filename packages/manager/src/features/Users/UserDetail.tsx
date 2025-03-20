@@ -9,8 +9,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useAccountUser } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountUser, useProfile } from '@linode/queries';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';

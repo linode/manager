@@ -1,5 +1,4 @@
 import { Box } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -9,11 +8,12 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 
+import { alertStatusToIconStatusMap, alertStatuses } from '../constants';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Item } from '../constants';
 import type { ActionHandlers } from './AlertActionMenu';
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import type { Alert, AlertServiceType } from '@linode/api-v4';
 
 interface Props {
   /**
@@ -30,15 +30,6 @@ interface Props {
   services: Item<string, AlertServiceType>[];
 }
 
-const getStatus = (status: AlertStatusType) => {
-  if (status === 'enabled') {
-    return 'active';
-  } else if (status === 'disabled') {
-    return 'inactive';
-  }
-  return 'other';
-};
-
 export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
@@ -53,8 +44,11 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>
         <Box alignItems="center" display="flex">
-          <StatusIcon data-testid="status-icon" status={getStatus(status)} />
-          {capitalize(status)}
+          <StatusIcon
+            data-testid="status-icon"
+            status={alertStatusToIconStatusMap[status]}
+          />
+          {alertStatuses[status]}
         </Box>
       </TableCell>
       <TableCell>
