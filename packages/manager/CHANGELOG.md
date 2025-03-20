@@ -26,6 +26,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update main search to use new API search implementation for large accounts ([#11819](https://github.com/linode/manager/pull/11819))
 - Update styles to CSD for create menu ([#11821](https://github.com/linode/manager/pull/11821))
 - Bucket create `Label` to `Bucket Name` ([#11877](https://github.com/linode/manager/pull/11877))
+- Account for `LA Disk Encryption` region capability when checking if region supports Disk Encryption ([#11833](https://github.com/linode/manager/pull/11833))
+- Account for whether region supports LDE when determining tooltip display for unencrypted linodes & node pools ([#11833](https://github.com/linode/manager/pull/11833))
 
 ### Fixed:
 
@@ -54,6 +56,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed:
 
+- Rate limits table from Object Storage details drawer ([#11848](https://github.com/linode/manager/pull/11848))
 - Move `capitalize` utility and `useInterval` hook to `@linode/utilities` package ([#11666](https://github.com/linode/manager/pull/11666))
 - Migrate utilities from `manager` to `utilities` package ([#11711](https://github.com/linode/manager/pull/11711))
 - Migrate ErrorState to ui package ([#11718](https://github.com/linode/manager/pull/11718))
