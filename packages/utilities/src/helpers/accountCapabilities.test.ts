@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { isFeatureEnabled, isFeatureEnabledV2 } from './accountCapabilities';
 
 describe('isFeatureEnabledV2', () => {
