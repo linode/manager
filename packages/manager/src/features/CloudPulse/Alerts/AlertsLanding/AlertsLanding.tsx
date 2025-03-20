@@ -69,7 +69,7 @@ export const AlertsLanding = React.memo(() => {
       <Tabs
         index={activeTabIndex}
         onChange={handleChange}
-        sx={{ width: '100%' }}
+        style={{ width: '100%' }}
       >
         <TabLinkList tabs={accessibleTabs} />
         <React.Fragment>
