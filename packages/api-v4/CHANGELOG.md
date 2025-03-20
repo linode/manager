@@ -1,14 +1,14 @@
 ## [2025-03-25] - v0.136.0
 
 
-### :
+### Added:
 
 - Add and update `/v4beta/nodebalancers` endpoints for NB-VPC Integration ([#11811](https://github.com/linode/manager/pull/11811))
 
 ### Changed:
 
-- Added `type` and `lke_cluster` to Nodebalancer interface and `getNodeBalancerBeta` function ([#11653](https://github.com/linode/manager/pull/11653))
-- Made `interface_generation` on `Linode` optional ([#11655](https://github.com/linode/manager/pull/11655))
+- Add `type` and `lke_cluster` to Nodebalancer interface and `getNodeBalancerBeta` function ([#11653](https://github.com/linode/manager/pull/11653))
+- Make `interface_generation` on `Linode` optional ([#11655](https://github.com/linode/manager/pull/11655))
 - Make `label` field in `CreateFirewallPayload` required ([#11677](https://github.com/linode/manager/pull/11677))
 - Region `Capabilities` type to temporarily include LA Disk Encryption ([#11783](https://github.com/linode/manager/pull/11783))
 
@@ -19,16 +19,17 @@
 ### Upcoming Features:
 
 - Update region capability and Public Interface object for Linode Interfaces ([#11621](https://github.com/linode/manager/pull/11621))
-- Added the payload type for EditAlertDefinition, API request changes for the user edit functionality ([#11669](https://github.com/linode/manager/pull/11669))
-- add `getAlertDefinitionByServiceType` in alerts.ts ([#11685](https://github.com/linode/manager/pull/11685))
+- Add the payload type for EditAlertDefinition, API request changes for the user edit functionality ([#11669](https://github.com/linode/manager/pull/11669))
+- Add `getAlertDefinitionByServiceType` in alerts.ts ([#11685](https://github.com/linode/manager/pull/11685))
 - Update Linode Config types for Linode Interfaces ([#11727](https://github.com/linode/manager/pull/11727))
-- DBaaS Advanced Configurations: added `engine_config` to the Database Instance ([#11735](https://github.com/linode/manager/pull/11735))
+- DBaaS Advanced Configurations: add `engine_config` to the Database Instance ([#11735](https://github.com/linode/manager/pull/11735))
 - Use different validation schema for creating enterprise LKE cluster ([#11746](https://github.com/linode/manager/pull/11746))
 - Add the 'account_viewer' type to the IAM types. ([#11762](https://github.com/linode/manager/pull/11762))
-- add `EntityAlertUpdatePayload` cloudpulse types.ts ([#11785](https://github.com/linode/manager/pull/11785))
+- Add `EntityAlertUpdatePayload` cloudpulse types.ts ([#11785](https://github.com/linode/manager/pull/11785))
 - Switch Quota endpoints to use beta API ([#11818](https://github.com/linode/manager/pull/11818))
 - Fix the type of parameter in api in IAM ([#11840](https://github.com/linode/manager/pull/11840))
-- Added optional ipv6 property to VPC entity ([#11852](https://github.com/linode/manager/pull/11852))
+- Add optional ipv6 property to VPC entity ([#11852](https://github.com/linode/manager/pull/11852))
+
 
 ## [2025-02-25] - v0.135.0
 

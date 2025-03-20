@@ -4,16 +4,18 @@
 ### Added:
 
 - Validation messages for required Autoscale min and max values ([#11664](https://github.com/linode/manager/pull/11664))
+- Optional IPv6 to `createVPCIPv6Schema` ([#11852](https://github.com/linode/manager/pull/11852))
+
 
 ### Changed:
 
 - Update CreateFirewallSchema to match API types ([#11677](https://github.com/linode/manager/pull/11677))
-- Improved accuracy of schemas related to Linode creation ([#11847](https://github.com/linode/manager/pull/11847))
+- Improve accuracy of schemas related to Linode creation ([#11847](https://github.com/linode/manager/pull/11847))
 - Bucket create schema `Label` to `Bucket name` ([#11877](https://github.com/linode/manager/pull/11877))
 
 ### Fixed:
 
-- improve clarity for OBJ bucket creation validation message ([#11712](https://github.com/linode/manager/pull/11712))
+- Improve clarity for Object Storage bucket creation validation message ([#11712](https://github.com/linode/manager/pull/11712))
 
 ### Tech Stories:
 
@@ -22,8 +24,8 @@
 ### Upcoming Features:
 
 - Validation for required ACL enablement on LKE-E clusters ([#11746](https://github.com/linode/manager/pull/11746))
-- Add new rule for Name and Description of Create Alert form ([#11773](https://github.com/linode/manager/pull/11773))
-- Added optional ipv6 to `createVPCIPv6Schema` ([#11852](https://github.com/linode/manager/pull/11852))
+- New rule for Name and Description of Create Alert form ([#11773](https://github.com/linode/manager/pull/11773))
+
 
 ## [2025-02-25] - v0.61.0
 
