@@ -34,7 +34,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
@@ -289,7 +289,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     variant="body1"
                   >
                     <HashLink
-                      to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                      to={`/linodes/${linodeId}/networking#${ipTableId}`}
                     >
                       View all IP Addresses
                     </HashLink>

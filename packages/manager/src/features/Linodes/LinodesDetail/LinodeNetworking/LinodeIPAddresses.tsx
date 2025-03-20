@@ -50,7 +50,7 @@ import type {
   LinodeIPsResponse,
 } from '@linode/api-v4';
 
-export const ipv4TableID = 'ips';
+export const ipTableId = 'ips';
 
 interface LinodeIPAddressesProps {
   linodeID: number;
@@ -214,10 +214,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <OrderBy data={ipDisplay} order="asc" orderBy="type">
+      <OrderBy
+        data={ipDisplay}
+        order="asc"
+        orderBy="type"
+        preferenceKey={'linode-network-ip-table'}
+      >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
-            <Table aria-label="Linode IP Addresses" id={ipv4TableID}>
+            <Table aria-label="Linode IP Addresses" id={ipTableId}>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: '15%' }}>Address</TableCell>
