@@ -54,7 +54,7 @@ export interface RegionSelectProps<
    * Ignores account availability information when rendering region options
    * @default false
    */
-  ignoreAccountAvailability?: boolean; // @todo: modularization - check if we can remove this prop
+  ignoreAccountAvailability?: boolean;
   label?: string;
   regionFilter?: RegionFilterValue;
   /**
