@@ -87,4 +87,5 @@ export const editAlertDefinitionSchema = object({
   trigger_conditions: triggerConditionValidation.optional(),
   severity: number().oneOf([0, 1, 2, 3])
     .optional(),
+  status: string().oneOf(['enabled', 'disabled', 'in progress', 'failed']).optional(),
 })
