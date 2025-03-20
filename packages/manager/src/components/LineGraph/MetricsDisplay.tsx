@@ -9,7 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { StyledLegend } from './MetricsDisplay.styles';
 
-import type { Metrics } from 'src/utilities/statMetrics';
+import type { Metrics } from '@linode/utilities';
 
 const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
 

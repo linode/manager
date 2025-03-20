@@ -34,7 +34,7 @@ export const SuccessDialogContent = (
       {!isDryRun && linodeInterfaces.length > 0 && (
         <Box
           sx={(theme) => ({
-            backgroundColor: theme.tokens.background.Neutral,
+            backgroundColor: theme.tokens.alias.Background.Neutral,
             marginTop: theme.spacing(1),
             padding: theme.spacing(2),
           })}

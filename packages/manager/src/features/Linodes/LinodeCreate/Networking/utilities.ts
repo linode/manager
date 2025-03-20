@@ -1,4 +1,5 @@
 import type {
+  APIError,
   CreateLinodeInterfacePayload,
   InterfacePayload,
   InterfacePurpose,
@@ -52,19 +53,57 @@ export const getLegacyInterfaceFromLinodeInterface = (
 ): InterfacePayload => {
   const purpose = linodeInterface.purpose;
 
-  return {
-    ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
-    ipam_address: linodeInterface.vlan?.ipam_address ?? null,
-    ipv4:
-      purpose === 'vpc'
-        ? {
-            nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
-            vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
-          }
-        : undefined,
-    label: linodeInterface.vlan?.vlan_label ?? null,
-    purpose,
-    subnet_id: linodeInterface.vpc?.subnet_id,
-    vpc_id: linodeInterface.vpc?.vpc_id,
-  };
+  if (purpose === 'vlan') {
+    return {
+      ipam_address: linodeInterface.vlan?.ipam_address,
+      label: linodeInterface.vlan?.vlan_label,
+      purpose,
+    };
+  }
+
+  if (purpose === 'vpc') {
+    return {
+      ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
+      ipv4: {
+        nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
+        vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
+      },
+      purpose,
+      subnet_id: linodeInterface.vpc?.subnet_id,
+      vpc_id: linodeInterface.vpc?.vpc_id,
+    };
+  }
+
+  return { purpose: 'public' };
+};
+
+const legacyFieldToNewFieldMap = {
+  '].label': '].vlan.vlan_lanel',
+  '].subnet_id': '].vpc.subnet_id',
+};
+
+/**
+ * Our form's state stores interfaces in the new "Linode Interfaces" shape.
+ * If the user selects legacy interfaces, we tranform the new interface into legacy interfaces.
+ *
+ * If the user selects legacy interfaces and the API returns API errors in the shape of legacy interface,
+ * we need to map the errors to the new Linode Interfaces shape so they surface correctly in the UI.
+ */
+export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
+  errors: APIError[]
+) => {
+  for (const error of errors) {
+    for (const key in legacyFieldToNewFieldMap) {
+      if (error.field && error.field.includes(key)) {
+        error.field = error.field.replace(
+          key,
+          legacyFieldToNewFieldMap[key as keyof typeof legacyFieldToNewFieldMap]
+        );
+      }
+      if (error.field && error.field.startsWith('interfaces')) {
+        error.field = error.field.replace('interfaces', 'linodeInterfaces');
+      }
+    }
+  }
+  return errors;
 };

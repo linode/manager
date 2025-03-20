@@ -145,11 +145,12 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           <Box
             sx={{
               alignItems: 'center',
+              backgroundColor:
+                theme.tokens.component.Table.HeaderNested.Background,
               display: 'flex',
               gap: 3,
               justifyContent: 'flex-end',
               paddingRight: 1.5,
-              backgroundColor: theme.tokens.table.HeaderNested.Background,
             }}
           >
             <div className="visually-hidden" id={displayViewDescriptionId}>

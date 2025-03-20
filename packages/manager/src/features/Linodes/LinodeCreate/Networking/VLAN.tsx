@@ -1,4 +1,5 @@
-import { Stack, TextField } from '@linode/ui';
+import { useRegionQuery } from '@linode/queries';
+import { Notice, Stack, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -20,44 +21,63 @@ export const VLAN = ({ index }: Props) => {
 
   const regionId = useWatch({ control, name: 'region' });
 
+  const { data: selectedRegion } = useRegionQuery(regionId);
+
+  const regionSupportsVLANs =
+    selectedRegion?.capabilities.includes('Vlans') ?? false;
+
   return (
-    <Stack columnGap={2} direction="row" flexWrap="wrap">
-      <Controller
-        render={({ field, fieldState }) => (
-          <VLANSelect
-            disabled={isLinodeCreateRestricted}
-            errorText={fieldState.error?.message}
-            filter={{ region: regionId }}
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            sx={{ width: 300 }}
-            value={field.value ?? null}
-          />
-        )}
-        control={control}
-        name={`linodeInterfaces.${index}.vlan.vlan_label`}
-      />
-      <Controller
-        render={({ field, fieldState }) => (
-          <TextField
-            tooltipText={
-              'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
-            }
-            containerProps={{ maxWidth: 335 }}
-            disabled={isLinodeCreateRestricted}
-            errorText={fieldState.error?.message}
-            label="IPAM Address"
-            noMarginTop
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            optional
-            placeholder="192.0.2.0/24"
-            value={field.value ?? ''}
-          />
-        )}
-        control={control}
-        name={`linodeInterfaces.${index}.vlan.ipam_address`}
-      />
+    <Stack spacing={1.5}>
+      {!regionId && (
+        <Notice
+          text="Select a region to see available VLANs."
+          variant="warning"
+        />
+      )}
+      {selectedRegion && !regionSupportsVLANs && (
+        <Notice
+          text="VLAN is not available in the selected region."
+          variant="warning"
+        />
+      )}
+      <Stack alignItems="flex-start" direction="row" flexWrap="wrap" gap={2}>
+        <Controller
+          render={({ field, fieldState }) => (
+            <VLANSelect
+              disabled={isLinodeCreateRestricted || !regionSupportsVLANs}
+              errorText={fieldState.error?.message}
+              filter={{ region: regionId }}
+              onBlur={field.onBlur}
+              onChange={field.onChange}
+              sx={{ width: 300 }}
+              value={field.value ?? null}
+            />
+          )}
+          control={control}
+          name={`linodeInterfaces.${index}.vlan.vlan_label`}
+        />
+        <Controller
+          render={({ field, fieldState }) => (
+            <TextField
+              tooltipText={
+                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+              }
+              containerProps={{ maxWidth: 335 }}
+              disabled={isLinodeCreateRestricted || !regionSupportsVLANs}
+              errorText={fieldState.error?.message}
+              label="IPAM Address"
+              noMarginTop
+              onBlur={field.onBlur}
+              onChange={field.onChange}
+              optional
+              placeholder="192.0.2.0/24"
+              value={field.value ?? ''}
+            />
+          )}
+          control={control}
+          name={`linodeInterfaces.${index}.vlan.ipam_address`}
+        />
+      </Stack>
     </Stack>
   );
 };

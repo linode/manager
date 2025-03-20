@@ -20,10 +20,9 @@ import {
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -98,6 +97,7 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
+  const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -108,8 +108,6 @@ const NodeBalancerCreate = () => {
     isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
-
-  const history = useHistory();
 
   const [
     nodeBalancerFields,
@@ -303,7 +301,10 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
+        navigate({
+          params: { id: String(nodeBalancer.id) },
+          to: '/nodebalancers/$id/summary',
+        });
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
@@ -806,11 +807,5 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     ];
   }, []);
 };
-
-export const nodeBalancerCreateLazyRoute = createLazyRoute(
-  '/nodebalancers/create'
-)({
-  component: NodeBalancerCreate,
-});
 
 export default NodeBalancerCreate;

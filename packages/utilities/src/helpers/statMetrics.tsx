@@ -1,4 +1,4 @@
-import { StatsData } from '@linode/api-v4/lib/linodes';
+import type { StatsData } from '@linode/api-v4/lib/linodes';
 
 export interface Metrics {
   average: number;

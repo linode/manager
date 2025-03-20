@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 
 import { nodeBalancerFactory } from 'src/factories';
@@ -6,11 +5,19 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TablesPanel } from './TablesPanel';
 
-// Set up various mocks for tests
 const queryMocks = vi.hoisted(() => ({
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancerStatsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useParams: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
@@ -35,6 +42,7 @@ describe('TablesPanel', () => {
     queryMocks.useNodeBalancerQuery.mockReturnValue({
       data: nodeBalancerFactory.build(),
     });
+    queryMocks.useParams.mockReturnValue({ id: 1 });
   });
 
   afterEach(() => {

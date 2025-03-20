@@ -9,7 +9,7 @@ Our design system provides tokens via the `theme.tokens` object, which contains 
 theme.tokens.spacing.S16  // "1rem"
 
 // Accessing typography tokens
-theme.tokens.typography.Heading.Xxl  // "800 1.625rem/2rem 'Nunito Sans'"
+theme.tokens.alias.Typography.Heading.Xxl  // "800 1.625rem/2rem 'Nunito Sans'"
 ```
 
 ### ⚠️ Warning: Global vs. Theme-Sensitive Tokens
@@ -21,9 +21,9 @@ theme.tokens.typography.Heading.Xxl  // "800 1.625rem/2rem 'Nunito Sans'"
 <Paper sx={(theme) => ({ backgroundColor: theme.tokens.color.Neutral[5] })}>
 
 // ✅ Correct: Using alias (semantic) color tokens
-<Paper sx={(theme) => ({ backgroundColor: theme.tokens.content.Background.Normal })}>
+<Paper sx={(theme) => ({ backgroundColor: theme.tokens.alias.Content.Background.Normal })}>
 
-<Paper sx={(theme) => ({ backgroundColor: theme.semanticTokens.textColors.primary })}>
+<Paper sx={(theme) => ({ backgroundColor: theme.tokens.alias.Content.Text.Primary })}>
 ```
 
 ### Best Practices for Token Usage

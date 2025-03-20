@@ -3,6 +3,7 @@ import { omitProps } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isNotNullOrUndefined,
+  utoa,
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
@@ -13,7 +14,6 @@ import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { utoa } from 'src/utilities/metadata';
 
 import {
   getLegacyInterfaceFromLinodeInterface,
@@ -211,7 +211,7 @@ export const getLinodeCreatePayload = (
  */
 export const getInterfacesPayload = (
   interfaces: InterfacePayload[] | undefined,
-  hasPrivateIP: boolean | undefined
+  hasPrivateIP: LinodeCreateFormValues['backups_enabled']
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
@@ -306,7 +306,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: Linode | null;
+  linode?: {
+    id: number;
+    label: string;
+    region: string;
+    type: string | null;
+  } | null;
   /**
    * Form state for the new Linode interface
    */

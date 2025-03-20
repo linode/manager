@@ -26,9 +26,9 @@ export const ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY =
 export const ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY =
   'An access control list (ACL) is enabled by default on LKE Enterprise clusters.';
 
-export const CREATE_CLUSTER_STANDARD_TIER_ACL_COPY =
-  'An access control list (ACL) is enabled by default on LKE Enterprise clusters. All traffic to the control plane is restricted except from IP addresses listed in the ACL. Add at least one IP address or CIDR range.';
 export const CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY =
+  'An access control list (ACL) is enabled by default on LKE Enterprise clusters. All traffic to the control plane is restricted except from IP addresses listed in the ACL. Add at least one IP address or CIDR range.';
+export const CREATE_CLUSTER_STANDARD_TIER_ACL_COPY =
   'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. Only the IP addresses and ranges specified in the ACL can connect to the control plane.';
 
 export const LKE_ENTERPRISE_VPC_WARNING =

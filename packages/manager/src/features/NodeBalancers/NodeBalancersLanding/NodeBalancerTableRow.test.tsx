@@ -8,6 +8,19 @@ import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 vi.mock('src/hooks/useIsResourceRestricted');
 
 const props = {
@@ -47,7 +60,7 @@ describe('NodeBalancerTableRow', () => {
 
     const deleteButton = getByText('Delete');
     await userEvent.click(deleteButton);
-    expect(props.onDelete).toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalled();
   });
 
   it('does not delete the NodeBalancer if the delete button is disabled', async () => {
@@ -55,7 +68,9 @@ describe('NodeBalancerTableRow', () => {
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     const deleteButton = getByText('Delete');
+    expect(deleteButton).toBeDisabled(); // Add this assertion
+
     await userEvent.click(deleteButton);
-    expect(props.onDelete).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
   });
 });

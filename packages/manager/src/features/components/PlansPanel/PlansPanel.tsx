@@ -1,6 +1,9 @@
 import { useRegionAvailabilityQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamsFromQueryString,
+  plansNoticesUtils,
+} from '@linode/utilities';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -11,7 +14,6 @@ import {
 } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
