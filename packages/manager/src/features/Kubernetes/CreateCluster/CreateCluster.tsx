@@ -46,8 +46,8 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -55,6 +55,7 @@ import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterTierPanel } from './ClusterTierPanel';
+import { ClusterVPCFirewallPanel } from './ClusterVPCFirewallPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
@@ -463,7 +464,7 @@ export const CreateCluster = () => {
               </StyledStackWithTabletBreakpoint>
             </>
           )}
-          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+          <Divider sx={{ marginBottom: 3, marginTop: showAPL ? 1 : 4 }} />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
@@ -480,9 +481,12 @@ export const CreateCluster = () => {
               />
             </Box>
           )}
+          {selectedTier === 'enterprise' && <ClusterVPCFirewallPanel />}
           {showControlPlaneACL && (
             <>
-              {selectedTier !== 'enterprise' && <Divider />}
+              <Divider
+                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+              />
               <ControlPlaneACLPane
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
