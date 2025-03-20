@@ -1,7 +1,6 @@
 import { Box, Divider } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import { Grid } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
@@ -125,12 +124,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                   marginTop: { md: theme.spacing(3.5) },
                 })}
                 aria-label="Refresh Dashboard Metrics"
+                color="inherit"
                 data-testid="global-refresh"
                 disabled={!selectedDashboard}
                 onClick={handleGlobalRefresh}
                 size="small"
               >
-                <StyledReload />
+                <Reload height="24px" width="24px" />
               </IconButton>
             </CloudPulseTooltip>
           </Box>
@@ -159,14 +159,3 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     </Grid>
   );
 });
-
-const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
-  '&:active': {
-    color: `${theme.palette.success}`,
-  },
-  '&:hover': {
-    cursor: 'pointer',
-  },
-  height: '24px',
-  width: '24px',
-}));
