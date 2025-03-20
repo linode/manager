@@ -48,6 +48,14 @@ export const enableJunitReport = (
   };
 };
 
+/**
+ * Used to get config options for E2E test suite
+ * @param config - Cypress ConfigOptions object
+ * @param suiteName - Optional suite name in the JUnit output.
+ * @param jenkinsMode - If test is execute in Jenkins env
+ *
+ * @returns object.
+ */
 export const jUnitReportOptions = (
   config: Cypress.PluginConfigOptions,
   suiteName?: string,

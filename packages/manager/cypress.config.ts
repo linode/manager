@@ -21,7 +21,6 @@ import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-ove
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
 import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
 import { configureMultiReporters } from './cypress/support/plugins/configure-multi-reporters';
-// TODO: fix ts types
 import cypressOnFix from 'cypress-on-fix';
 /**
  * Exports a Cypress configuration object.

@@ -14,7 +14,9 @@ export const configureMultiReporters: CypressPlugin = (on, config) => {
     reporterEnabled: 'mocha-junit-reporter, cypress-mochawesome-reporter',
     mochaJunitReporterReporterOptions: jUnitReportOptions(config),
     cypressMochawesomeReporterReporterOptions: {
+      reportPageTitle: 'Cloud Manager E2e Test Results',
       embeddedScreenshots: true,
+      videoOnFailOnly: true,
       charts: true,
       quiet: true,
     },
