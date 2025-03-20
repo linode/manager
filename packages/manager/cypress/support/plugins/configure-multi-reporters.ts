@@ -1,7 +1,7 @@
 import { CypressPlugin } from './plugin';
 import cypressReporterLib from 'cypress-mochawesome-reporter/lib';
 const { beforeRunHook, afterRunHook } = cypressReporterLib;
-import { jUnitReportOptions } from './junit-report';
+import { jUnitE2EReportOptions } from './junit-report';
 
 /**
  * Configure multiple reporters to be used by Cypress
@@ -12,7 +12,11 @@ export const configureMultiReporters: CypressPlugin = (on, config) => {
   config.reporter = 'cypress-multi-reporters';
   config.reporterOptions = {
     reporterEnabled: 'mocha-junit-reporter, cypress-mochawesome-reporter',
-    mochaJunitReporterReporterOptions: jUnitReportOptions(config),
+    //config.env['cypress_test_suite'] = 'core'
+    mochaJunitReporterReporterOptions: jUnitE2EReportOptions(
+      config.env['cypress_test_suite'],
+      false
+    ),
     cypressMochawesomeReporterReporterOptions: {
       reportPageTitle: 'Cloud Manager E2e Test Results',
       embeddedScreenshots: true,

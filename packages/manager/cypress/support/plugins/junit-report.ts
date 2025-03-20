@@ -50,19 +50,16 @@ export const enableJunitReport = (
 
 /**
  * Used to get config options for E2E test suite
- * @param config - Cypress ConfigOptions object
  * @param suiteName - Optional suite name in the JUnit output.
  * @param jenkinsMode - If test is execute in Jenkins env
  *
  * @returns object.
  */
-export const jUnitReportOptions = (
-  config: Cypress.PluginConfigOptions,
-  suiteName?: string,
+export const jUnitE2EReportOptions = (
+  testSuite?: string,
   jenkinsMode: boolean = false
 ) => {
-  if (!!config.env[envVarName]) {
-    const testSuite = suiteName || config.env['cypress_test_suite'] || 'core';
+  if (testSuite) {
     const testSuiteName = `${capitalize(testSuite)} Test Suite`;
     return {
       mochaFile: 'cypress/results/test-results-[hash].xml',
@@ -71,6 +68,7 @@ export const jUnitReportOptions = (
       jenkinsMode,
       suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
     };
+  } else {
+    return {};
   }
-  return {};
 };

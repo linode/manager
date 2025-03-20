@@ -108,7 +108,6 @@ localStorage.json
 **/storybook-test-results/*.xml
 .tmp*.status
 **/e2e/creds.js
-packages/manager/test-results.xml
 
 # storybook static files
 .out
