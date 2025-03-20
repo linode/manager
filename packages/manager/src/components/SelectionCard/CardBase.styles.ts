@@ -90,7 +90,7 @@ export const CardBaseSubheading = styled('div', {
   label: 'CardBaseSubheading',
 })<Partial<CardBaseProps>>(({ theme, ...props }) => ({
   color: props.checked
-    ? theme.tokens.content.Text.Primary.Default
+    ? theme.tokens.alias.Content.Text.Primary.Default
     : theme.palette.text.primary,
   fontSize: '0.875rem',
 }));
