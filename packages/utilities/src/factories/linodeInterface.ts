@@ -2,7 +2,19 @@
 
 import { Factory } from './factoryProxy';
 
-import type { LinodeInterface } from '@linode/api-v4';
+import type { LinodeInterface, LinodeInterfaceSettings } from '@linode/api-v4';
+
+export const linodeInterfaceSettingsFactory = Factory.Sync.makeFactory<LinodeInterfaceSettings>(
+  {
+    network_helper: false,
+    default_route: {
+      ipv4_interface_id: 1,
+      ipv4_eligible_interface_ids: [],
+      ipv6_interface_id: 1,
+      ipv6_eligible_interface_ids: [],
+    },
+  }
+);
 
 export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterface>(
   {
