@@ -13,7 +13,9 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { getIPType } from './constants';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
 import type { IPAddress, IPRange } from '@linode/api-v4';
@@ -58,9 +60,11 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 &&
-    (type === 'IPv4 – Public' || type === 'Public – IPv4');
+    type === getIPType.ipv4Public(isLinodeInterfacesEnabled);
 
   return (
     <StyledTableRow
