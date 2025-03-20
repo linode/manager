@@ -435,3 +435,45 @@ export interface AssignNewRoleFormValues {
     role: RolesType | null;
   }[];
 }
+interface DeleteUserRolesProps {
+  access?: 'account_access' | 'resource_access';
+  assignedRoles?: IamUserPermissions;
+  initialRole?: string;
+}
+
+export const deleteUserRole = ({
+  access,
+  assignedRoles,
+  initialRole,
+}: DeleteUserRolesProps): IamUserPermissions => {
+  if (access === 'account_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      account_access: assignedRoles.account_access.filter(
+        (role: AccountAccessType) => role !== initialRole
+      ),
+    };
+  }
+
+  if (access === 'resource_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      resource_access: assignedRoles.resource_access
+        .map((resource: ResourceAccess) => ({
+          ...resource,
+          roles: resource.roles.filter(
+            (role: RoleType) => role !== initialRole
+          ),
+        }))
+        .filter((resource: ResourceAccess) => resource.roles.length > 0),
+    };
+  }
+
+  // If access type is invalid, return unchanged object
+  return (
+    assignedRoles ?? {
+      account_access: [],
+      resource_access: [],
+    }
+  );
+};
