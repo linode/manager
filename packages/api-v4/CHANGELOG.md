@@ -30,7 +30,6 @@
 - Fix the type of parameter in api in IAM ([#11840](https://github.com/linode/manager/pull/11840))
 - Add optional ipv6 property to VPC entity ([#11852](https://github.com/linode/manager/pull/11852))
 
-
 ## [2025-02-25] - v0.135.0
 
 ### Changed:

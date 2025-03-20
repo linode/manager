@@ -163,7 +163,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Disk Encryption logic preventing Linode deployment in distributed regions ([#11760](https://github.com/linode/manager/pull/11760)
+- Disk Encryption logic preventing Linode deployment in distributed regions ([#11760](https://github.com/linode/manager/pull/11760))
 
 ## [2025-02-25] - v1.137.1
 
