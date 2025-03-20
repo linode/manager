@@ -246,7 +246,7 @@ export interface CreateNodeBalancerPayload {
   configs: CreateNodeBalancerConfig[];
   firewall_id?: number;
   tags?: string[];
-  vpc?: {
+  vpcs?: {
     subnet_id: number;
     ipv4_range: string;
     ipv6_range?: string;
