@@ -1154,11 +1154,6 @@ export const lightTheme: ThemeOptions = {
             color: theme.tokens.component.RadioButton.Active.Disabled.Border,
             pointerEvents: 'none',
           },
-          '&.MuiRadio-root': {
-            '.MuiSvgIcon-fontSizeMedium': {
-              fontSize: '20px',
-            },
-          },
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
               fontSize: '16px',
@@ -1223,7 +1218,7 @@ export const lightTheme: ThemeOptions = {
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          fontSize: 24,
+          fontSize: 20,
         },
       },
     },
