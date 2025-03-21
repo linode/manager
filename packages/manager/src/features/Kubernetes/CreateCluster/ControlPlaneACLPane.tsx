@@ -1,5 +1,6 @@
 import {
   Box,
+  Checkbox,
   FormControl,
   FormControlLabel,
   Notice,
@@ -26,8 +27,10 @@ export interface ControlPlaneACLProps {
   errorText: string | undefined;
   handleIPv4Change: (ips: ExtendedIP[]) => void;
   handleIPv6Change: (ips: ExtendedIP[]) => void;
+  handleIsAcknowledgementChecked: (isChecked: boolean) => void;
   ipV4Addr: ExtendedIP[];
   ipV6Addr: ExtendedIP[];
+  isAcknowledgementChecked: boolean;
   selectedTier: KubernetesTier;
   setControlPlaneACL: (enabled: boolean) => void;
 }
@@ -38,8 +41,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     errorText,
     handleIPv4Change,
     handleIPv6Change,
+    handleIsAcknowledgementChecked,
     ipV4Addr,
     ipV6Addr,
+    isAcknowledgementChecked,
     selectedTier,
     setControlPlaneACL,
   } = props;
@@ -59,8 +64,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         )}
         <Typography mb={1} sx={{ width: '85%' }}>
           {isEnterpriseCluster
-            ? CREATE_CLUSTER_STANDARD_TIER_ACL_COPY
-            : CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY}
+            ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY
+            : CREATE_CLUSTER_STANDARD_TIER_ACL_COPY}
         </Typography>
         <FormControlLabel
           control={
@@ -75,37 +80,53 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         />
       </FormControl>
       {enableControlPlaneACL && (
-        <Box sx={{ marginBottom: 3, maxWidth: 450 }}>
-          <MultipleIPInput
-            onBlur={(_ips: ExtendedIP[]) => {
-              const validatedIPs = validateIPs(_ips, {
-                allowEmptyAddress: true,
-                errorMessage: 'Must be a valid IPv4 address.',
-              });
-              handleIPv4Change(validatedIPs);
-            }}
-            buttonText="Add IPv4 Address"
-            ips={ipV4Addr}
-            isLinkStyled
-            onChange={handleIPv4Change}
-            title="IPv4 Addresses or CIDRs"
-          />
-          <Box marginTop={2}>
+        <Box marginBottom={2}>
+          <Box sx={{ marginBottom: 1, maxWidth: 450 }}>
             <MultipleIPInput
               onBlur={(_ips: ExtendedIP[]) => {
                 const validatedIPs = validateIPs(_ips, {
                   allowEmptyAddress: true,
-                  errorMessage: 'Must be a valid IPv6 address.',
+                  errorMessage: 'Must be a valid IPv4 address.',
                 });
-                handleIPv6Change(validatedIPs);
+                handleIPv4Change(validatedIPs);
               }}
-              buttonText="Add IPv6 Address"
-              ips={ipV6Addr}
+              buttonText="Add IPv4 Address"
+              ips={ipV4Addr}
               isLinkStyled
-              onChange={handleIPv6Change}
-              title="IPv6 Addresses or CIDRs"
+              onChange={handleIPv4Change}
+              title="IPv4 Addresses or CIDRs"
             />
+            <Box marginTop={2}>
+              <MultipleIPInput
+                onBlur={(_ips: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(_ips, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv6 address.',
+                  });
+                  handleIPv6Change(validatedIPs);
+                }}
+                buttonText="Add IPv6 Address"
+                ips={ipV6Addr}
+                isLinkStyled
+                onChange={handleIPv6Change}
+                title="IPv6 Addresses or CIDRs"
+              />
+            </Box>
           </Box>
+          {isEnterpriseCluster && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={() =>
+                    handleIsAcknowledgementChecked(!isAcknowledgementChecked)
+                  }
+                  name="acl-acknowledgement"
+                />
+              }
+              data-qa-checkbox="acl-acknowledgement"
+              label="Provide an ACL later. The control plane will be unreachable until an ACL is defined."
+            />
+          )}
         </Box>
       )}
     </>

@@ -119,7 +119,7 @@ export const AddNotificationChannelDrawer = (
           >
             <Typography
               sx={(theme) => ({
-                color: theme.tokens.content.Text,
+                color: theme.tokens.alias.Content.Text,
               })}
               gutterBottom
               variant="h3"
