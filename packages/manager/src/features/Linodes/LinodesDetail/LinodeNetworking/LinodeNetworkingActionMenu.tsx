@@ -50,7 +50,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const ipv6LinkLocal = isLinodeInterfacesEnabled
     ? 'Link Local – IPv6'
     : 'IPv6 – Link Local';
-  const ipv4Nat = isLinodeInterfacesEnabled
+  const ipv4VPCNat = isLinodeInterfacesEnabled
     ? 'VPC NAT – IPv4'
     : 'VPC IPv4 – NAT';
   const ipv4Public = isLinodeInterfacesEnabled
@@ -60,12 +60,12 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
 
   const showEdit = ![
     // @TODO Linode Interfaces - when linode interfaces feature flag is removed, we can update IP types and update this array to just be something like
-    ipv4Nat,
     // ['Private – IPv4', 'Reserved IPv4 (private)', 'Reserved IPv4 (public)', 'VPC – IPv4', 'Link Local – IPv6', 'VPC NAT – IPv4',]
     ipv4Private,
     ipv4ReservedPrivate,
     ipv4ReservedPublic,
     ipv4VPC,
+    ipv4VPCNat,
     ipv6LinkLocal,
   ].includes(ipType);
 
