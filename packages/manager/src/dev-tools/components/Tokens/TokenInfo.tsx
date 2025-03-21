@@ -30,6 +30,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
   const cssPath =
     path.length > 0
       ? path
+          .flatMap((segment) => segment.split('.')) // Split any dotted segments
           .map((segment) => camelToKebabCase(segment))
           .join('-')
           .toLowerCase()
@@ -37,8 +38,6 @@ export const TokenInfo = (props: TokenInfoProps) => {
   const isGlobalToken =
     category === 'color' || category === 'font' || category === 'spacing';
   const globalCSS = isGlobalToken ? 'global-' : '';
-
-  // console.log('PROPS', props);
 
   return (
     <Stack direction="row" flexWrap="nowrap" width="100%">
