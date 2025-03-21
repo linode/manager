@@ -1,7 +1,5 @@
 import type { IPTypes, UpdatedIPTypes } from './types';
 
-/** Keeping this as comments for an easier overview of which IPType maps to which UpdatedIPType
-
 export const ipTypeMap: Record<IPTypes, UpdatedIPTypes> = {
   'IPv4 – Private': 'Private – IPv4',
   'IPv4 – Public': 'Public – IPv4',
@@ -15,8 +13,6 @@ export const ipTypeMap: Record<IPTypes, UpdatedIPTypes> = {
   'IPv6 – SLAAC': 'Public – SLAAC – IPv6',
   'VPC IPv4 – NAT': 'VPC NAT – IPv4',
 };
-
- */
 
 type GetIpDisplayFunction = (
   displayIPKeyFirst: boolean

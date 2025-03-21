@@ -29,7 +29,7 @@ import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
-import { getIPType } from './constants';
+import { ipTypeMap } from './constants';
 import { DeleteIPDialog } from './DeleteIPDialog';
 import { DeleteRangeDialog } from './DeleteRangeDialog';
 import { EditIPRDNSDrawer } from './EditIPRDNSDrawer';
@@ -349,10 +349,18 @@ export const vpcConfigInterfaceToDisplayRows = (
     subnetMask: '',
   };
 
+  const ipv4VPCType = displayIPKeyFirst ? 'VPC – IPv4' : 'IPv4 – VPC';
+  const ipv4VPCNatType = displayIPKeyFirst
+    ? 'VPC NAT – IPv4'
+    : 'VPC IPv4 – NAT';
+  const ipv4VPCRangeType = displayIPKeyFirst
+    ? 'VPC – Range – IPv4'
+    : 'IPv4 – VPC – Range';
+
   if (ipv4?.vpc) {
     ipDisplay.push({
       address: ipv4.vpc,
-      type: getIPType['IPv4 – VPC'](displayIPKeyFirst),
+      type: ipv4VPCType,
       ...emptyProps,
     });
   }
@@ -360,7 +368,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.nat_1_1) {
     ipDisplay.push({
       address: ipv4.nat_1_1,
-      type: getIPType['VPC IPv4 – NAT'](displayIPKeyFirst),
+      type: ipv4VPCNatType,
       ...emptyProps,
     });
   }
@@ -369,7 +377,7 @@ export const vpcConfigInterfaceToDisplayRows = (
     ip_ranges.forEach((ip_range) => {
       ipDisplay.push({
         address: ip_range,
-        type: getIPType['IPv4 – VPC – Range'](displayIPKeyFirst),
+        type: ipv4VPCRangeType,
         ...emptyProps,
       });
     });
@@ -451,6 +459,7 @@ export const ipResponseToDisplayRows = ({
   }
 
   // IPv6 ranges and pools to display in the networking table
+  const ipv6RangeType = displayIPKeyFirst ? 'Range – IPv6' : 'IPv6 – Range';
   ipDisplay.push(
     ...[...(ipv6 ? ipv6.global : [])].map((thisIP) => {
       /* If you want to surface rdns info in the future you have two options:
@@ -474,7 +483,7 @@ export const ipResponseToDisplayRows = ({
         gateway: '',
         rdns: '',
         subnetMask: '',
-        type: getIPType['IPv6 – Range'](displayIPKeyFirst) as IPDisplay['type'],
+        type: ipv6RangeType as IPDisplay['type'],
       };
     })
   );
@@ -546,5 +555,5 @@ export const createType = ({
     type += key;
   }
 
-  return getIPType[type as IPTypes](displayIPKeyFirst);
+  return displayIPKeyFirst ? ipTypeMap[type as IPTypes] : type;
 };

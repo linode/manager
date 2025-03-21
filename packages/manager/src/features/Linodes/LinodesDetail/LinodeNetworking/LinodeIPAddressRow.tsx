@@ -15,7 +15,6 @@ import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { getIPType } from './constants';
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
 import type { IPAddress, IPRange } from '@linode/api-v4';
@@ -61,10 +60,12 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   );
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const publicIPv4Type = isLinodeInterfacesEnabled
+    ? 'Public – IPv4'
+    : 'IPv4 – Public';
 
   const isOnlyPublicIP =
-    ips?.ipv4.public.length === 1 &&
-    type === getIPType['IPv4 – Public'](isLinodeInterfacesEnabled);
+    ips?.ipv4.public.length === 1 && type === publicIPv4Type;
 
   return (
     <StyledTableRow
