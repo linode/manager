@@ -1,6 +1,5 @@
 import { ThemeProvider } from '@emotion/react';
-import { light } from '@linode/ui';
-import { Box, Stack } from '@linode/ui';
+import { Box, CircleProgress, Stack, light } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -16,6 +15,52 @@ import { TokenSection } from './components/Tokens/TokenSection';
 const tokens = Object.entries(light.tokens ?? {});
 
 export type TokenCategory = keyof NonNullable<typeof light.tokens>;
+
+const TokenPanelContent = ({
+  tokenCategory,
+  tokenObject,
+}: {
+  tokenCategory: TokenCategory;
+  tokenObject: any;
+}) => {
+  const [
+    renderedContent,
+    setRenderedContent,
+  ] = React.useState<React.ReactNode | null>(null);
+
+  React.useEffect(() => {
+    const computeTokens = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const content = (
+        <Stack direction="row" flexWrap="wrap" width="100%">
+          {Object.entries(tokenObject).map(([key, value], index) => (
+            <TokenSection
+              category={tokenCategory}
+              key={`${key}-${index}`}
+              title={key}
+              value={value}
+              variant={key}
+            />
+          ))}
+        </Stack>
+      );
+      setRenderedContent(content);
+    };
+
+    computeTokens();
+  }, [tokenCategory, tokenObject]);
+
+  if (!renderedContent) {
+    return (
+      <Stack height={100} justifyContent="center" mt={8} width="100%">
+        <CircleProgress />
+      </Stack>
+    );
+  }
+
+  return renderedContent;
+};
 
 export const DesignTokensTool = () => {
   return (
@@ -40,26 +85,12 @@ export const DesignTokensTool = () => {
 
           <TabPanels>
             {tokens.map(([tokenCategory, tokenObject], index) => (
-              <React.Suspense
-                fallback={<div>Loading...</div>}
-                key={tokenCategory}
-              >
-                <SafeTabPanel index={index} key={tokenCategory}>
-                  <Stack direction="row" flexWrap="wrap" width="100%">
-                    {Object.entries(tokenObject).map(([key, value], index) => {
-                      return (
-                        <TokenSection
-                          category={tokenCategory as TokenCategory}
-                          key={`${key}-${index}`}
-                          title={key}
-                          value={value}
-                          variant={key}
-                        />
-                      );
-                    })}
-                  </Stack>
-                </SafeTabPanel>
-              </React.Suspense>
+              <SafeTabPanel index={index} key={tokenCategory}>
+                <TokenPanelContent
+                  tokenCategory={tokenCategory as TokenCategory}
+                  tokenObject={tokenObject}
+                />
+              </SafeTabPanel>
             ))}
           </TabPanels>
         </Tabs>

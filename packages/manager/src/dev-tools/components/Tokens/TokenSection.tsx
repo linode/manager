@@ -25,8 +25,8 @@ export const TokenSection = ({
       return (
         <TokenInfo
           category={category}
-          color={groupValue}
           path={[title, ...parentPath]}
+          value={groupValue}
           variant={variant}
         />
       );
@@ -54,15 +54,21 @@ export const TokenSection = ({
         {typeof value === 'object' ? (
           <Stack spacing={1}>
             {parentPath.length > 0 && (
-              <Typography variant="h5">{key}</Typography>
+              <Typography
+                sx={(theme) => ({
+                  font: theme.font.semibold,
+                })}
+              >
+                {key}
+              </Typography>
             )}
             {renderTokenGroup(value, [...parentPath, key])}
           </Stack>
         ) : typeof value === 'string' ? (
           <TokenInfo
             category={category}
-            color={value}
             path={[title, ...parentPath, key]}
+            value={value}
             variant={variant}
           />
         ) : null}
@@ -74,8 +80,8 @@ export const TokenSection = ({
     return (
       <TokenInfo
         category={category}
-        color={value as string}
         path={[title]}
+        value={value as string}
         variant={variant}
       />
     );
@@ -84,7 +90,12 @@ export const TokenSection = ({
   return (
     <Stack sx={{ p: 2 }}>
       <Typography
-        sx={{ position: 'sticky', top: 0, backgroundColor: 'white' }}
+        sx={{
+          backgroundColor: 'white',
+          position: 'sticky',
+          top: 0,
+          zIndex: 2,
+        }}
         variant="h3"
       >
         {title}

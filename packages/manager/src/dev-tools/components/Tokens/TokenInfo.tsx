@@ -15,13 +15,13 @@ const camelToKebabCase = (str: string) => {
 
 interface TokenInfoProps {
   category: TokenCategory;
-  color: string;
   path: string[];
+  value: string;
   variant: string;
 }
 
 export const TokenInfo = (props: TokenInfoProps) => {
-  const { category, color, path = [], variant } = props;
+  const { category, path = [], value, variant } = props;
 
   const jsPath =
     path.length > 0
@@ -44,9 +44,9 @@ export const TokenInfo = (props: TokenInfoProps) => {
 
   return (
     <Stack direction="row" flexWrap="nowrap">
-      <ColorSwatch color={color} />
+      {value.startsWith('#') && <ColorSwatch color={value} />}
       <Stack direction="column" flexWrap="wrap">
-        <TokenCopy format={'Hex'} value={color} />
+        <TokenCopy format={'Hex'} value={value} />
         <TokenCopy format={'JS'} value={`tokens.${category}.${jsPath}`} />
         <TokenCopy
           format={'CSS'}
