@@ -1,6 +1,15 @@
-import { useAllFirewallsQuery } from '@linode/queries';
+import {
+  useAllFirewallsQuery,
+  useFirewallSettingsQuery,
+} from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
-import React from 'react';
+import React, { useMemo } from 'react';
+
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+
+import { DefaultFirewallChip } from './DefaultFirewallChip';
+import { FirewallSelectOption } from './FirewallSelectOption';
+import { getDefaultFirewallDescription } from './FirewallSelectOption.utils';
 
 import type { Firewall } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from '@linode/ui';
@@ -10,6 +19,11 @@ interface Props
     EnhancedAutocompleteProps<Firewall, false>,
     'label' | 'options' | 'value'
   > {
+  /**
+   * Hide "Default" chips showing which firewalls are defaults
+   * @default false
+   */
+  hideDefaultChips?: boolean;
   /**
    * The label applied to the Autocomplete's TextField.
    * @default Firewall
@@ -32,18 +46,47 @@ interface Props
  *
  * Currently this is only a single select, but can be extended to support more
  * Autocomplete features.
- *
- * @TODO Linode Interfaces - Add default chip functionality
  */
 export const FirewallSelect = (props: Props) => {
-  const { errorText, loading, value, ...rest } = props;
-  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
+  const { errorText, hideDefaultChips, loading, value, ...rest } = props;
 
-  const selectedFirewall =
-    firewalls?.find((firewall) => firewall.id === value) ?? null;
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
+  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
+  const { data: firewallSettings } = useFirewallSettingsQuery({
+    enabled: isLinodeInterfacesEnabled && !hideDefaultChips,
+  });
+
+  const defaultDescription =
+    firewallSettings &&
+    value &&
+    getDefaultFirewallDescription(value, firewallSettings);
+
+  const isDefault = !!defaultDescription;
+
+  const selectedFirewall = useMemo(
+    () => firewalls?.find((firewall) => firewall.id === value) ?? null,
+    [firewalls, value]
+  );
 
   return (
     <Autocomplete
+      renderOption={({ key, ...props }, option, state) => (
+        <FirewallSelectOption
+          hideDefaultChip={hideDefaultChips}
+          key={key}
+          listItemProps={props}
+          option={option}
+          state={state}
+        />
+      )}
+      textFieldProps={{
+        InputProps: {
+          endAdornment: isDefault && !hideDefaultChips && (
+            <DefaultFirewallChip tooltipText={defaultDescription} />
+          ),
+        },
+      }}
       errorText={errorText ?? error?.[0].reason}
       label="Firewall"
       loading={isLoading || loading}
