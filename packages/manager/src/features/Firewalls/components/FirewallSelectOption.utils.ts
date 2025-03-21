@@ -2,7 +2,7 @@ import { arrayToList } from '@linode/utilities';
 
 import type { FirewallSettings } from '@linode/api-v4';
 
-type FirewallDefaultEntity = keyof FirewallSettings['default_firewall_ids'];
+export type FirewallDefaultEntity = keyof FirewallSettings['default_firewall_ids'];
 
 /**
  * Maps an entity that supports default firewalls to a readable name.
