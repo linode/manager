@@ -24,7 +24,6 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { skip } from 'support/util/skip';
 
 import {
   accountFactory,
@@ -35,8 +34,6 @@ import {
   profileFactory,
   regionFactory,
 } from 'src/factories';
-
-import type { Capabilities } from '@linode/api-v4';
 
 let username: string;
 
@@ -74,11 +71,6 @@ describe('Create Linode', () => {
           planLabel: 'Linode 24 GB',
           planType: 'High Memory',
         },
-        {
-          planId: 'g7-premium-2',
-          planLabel: 'Premium 4 GB',
-          planType: 'Premium CPU',
-        },
         // TODO Include GPU plan types.
         // TODO Include Accelerated plan types (when they're no longer as restricted)
       ].forEach((planConfig) => {
@@ -87,25 +79,9 @@ describe('Create Linode', () => {
          * - Confirms that a Linode of the given plan type can be deployed.
          */
         it(`creates a ${planConfig.planType} Linode`, () => {
-          if (planConfig.planType === 'Premium CPU') {
-            cy.tag('env:premiumPlans');
-          }
-
-          const regionCapabilities: Capabilities[] =
-            planConfig.planType === 'Premium CPU'
-              ? ['Linodes', 'Premium Plans', 'Vlans']
-              : ['Linodes', 'Vlans'];
-
-          const linodeRegion = (() => {
-            try {
-              return chooseRegion({
-                capabilities: regionCapabilities,
-              });
-            } catch {
-              skip();
-            }
-            return;
-          })()!;
+          const linodeRegion = chooseRegion({
+            capabilities: ['Linodes', 'Vlans'],
+          });
 
           const linodeLabel = randomLabel();
 
@@ -178,6 +154,75 @@ describe('Create Linode', () => {
               ).should('be.visible');
             });
         });
+      });
+
+      /*
+       * - Confirms Premium Plan Linode can be created end-to-end.
+       * - Confirms creation flow, that Linode boots, and that UI reflects status.
+       */
+      it(`creates a Premium CPU Linode`, () => {
+        cy.tag('env:premiumPlans');
+        const linodeRegion = chooseRegion({
+          capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
+        });
+        const linodeLabel = randomLabel();
+        const planId = 'g7-premium-2';
+        const planLabel = 'Premium 4 GB';
+        const planType = 'Premium CPU';
+
+        interceptGetProfile().as('getProfile');
+
+        interceptCreateLinode().as('createLinode');
+        cy.visitWithLogin('/linodes/create');
+
+        // Set Linode label, OS, plan type, password, etc.
+        linodeCreatePage.setLabel(linodeLabel);
+        linodeCreatePage.selectImage('Debian 12');
+        linodeCreatePage.selectRegionById(linodeRegion.id);
+        linodeCreatePage.selectPlan(planType, planLabel);
+        linodeCreatePage.setRootPassword(randomString(32));
+
+        // Confirm information in summary is shown as expected.
+        cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+        cy.get('[data-qa-linode-create-summary]').within(() => {
+          cy.findByText('Debian 12').should('be.visible');
+          cy.findByText(linodeRegion.label).should('be.visible');
+          cy.findByText(planLabel).should('be.visible');
+        });
+
+        // Create Linode and confirm it's provisioned as expected.
+        ui.button
+          .findByTitle('Create Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.wait('@createLinode').then((xhr) => {
+          const requestPayload = xhr.request.body;
+          const responsePayload = xhr.response?.body;
+
+          // Confirm that API request and response contain expected data
+          expect(requestPayload['label']).to.equal(linodeLabel);
+          expect(requestPayload['region']).to.equal(linodeRegion.id);
+          expect(requestPayload['type']).to.equal(planId);
+
+          expect(responsePayload['label']).to.equal(linodeLabel);
+          expect(responsePayload['region']).to.equal(linodeRegion.id);
+          expect(responsePayload['type']).to.equal(planId);
+
+          // Confirm that Cloud redirects to details page
+          cy.url().should('endWith', `/linodes/${responsePayload['id']}`);
+        });
+
+        cy.wait('@getProfile').then((xhr) => {
+          username = xhr.response?.body.username;
+        });
+
+        // Confirm toast notification should appear on Linode create.
+        ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
+        cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+          'be.visible'
+        );
       });
     });
   });
