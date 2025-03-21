@@ -118,7 +118,7 @@ export const ExtraPresetAccount = ({
         {isEnabled && (
           <div>
             <button
-              className="small"
+              className="dev-tools-button small"
               onClick={() => setIsEditingCustomAccount(true)}
             >
               edit
@@ -355,7 +355,7 @@ export const ExtraPresetAccount = ({
                 />
               </label>
             </FieldWrapper>
-            <button className="button" type="submit">
+            <button className="dev-tools-button" type="submit">
               Save
             </button>
           </form>

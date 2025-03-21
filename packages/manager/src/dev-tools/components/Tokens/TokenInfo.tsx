@@ -4,51 +4,57 @@ import React from 'react';
 import { ColorSwatch } from './ColorSwatch';
 import { TokenCopy } from './TokenCopy';
 
+import type { TokenCategory } from '../../DesignTokensTool';
+
 export const formatValue = (value: any) =>
-  isNaN(Number(value)) ? `.${value}` : `[${value}]`;
+  isNaN(Number(value)) ? `${value}` : `[${value}]`;
+
+const camelToKebabCase = (str: string) => {
+  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+};
 
 interface TokenInfoProps {
-  category: string;
+  category: TokenCategory;
   color: string;
-  value?: string;
+  path: string[];
   variant: string;
 }
 
-export const TokenInfo = ({
-  category,
-  color,
-  value,
-  variant,
-}: TokenInfoProps) => {
-  const jsConcept = category ? `${category}.` : '';
-  const cssConcept = category ? `${category}-` : '';
+export const TokenInfo = (props: TokenInfoProps) => {
+  const { category, color, path = [], variant } = props;
+
+  const jsPath =
+    path.length > 0
+      ? path.map((segment) => formatValue(segment)).join('')
+      : formatValue(variant);
+  const cssPath =
+    path.length > 0
+      ? path
+          .map((segment) => camelToKebabCase(segment))
+          .join('-')
+          .toLowerCase()
+      : camelToKebabCase(variant);
+  const isGlobalToken =
+    category === 'color' || category === 'font' || category === 'spacing';
+  const globalCSS = isGlobalToken ? 'global-' : '';
+
+  // console.log('PROPS', props);
 
   return (
     <Stack direction="row" flexWrap="nowrap" width="100%">
       <ColorSwatch color={color} />
       <Stack direction="column" flexWrap="wrap" width="100%">
         <TokenCopy format={'Hex'} value={color} />
+        <TokenCopy format={'JS'} value={`tokens.${category}.${jsPath}`} />
         <TokenCopy
-          format={'JS'}
-          value={`tokens.${category}.${variant}.${formatValue(value)}`}
-        />
-        <TokenCopy
-          value={
-            category
-              ? `--token-${category}-${cssConcept}${category}-${value}`
-              : `--token-${category}-color-${category}-${value}`
-          }
           format={'CSS'}
           isLowerCase
+          value={`--token-${globalCSS}${category}-${cssPath}`}
         />
         <TokenCopy
-          value={
-            category
-              ? `$token-${category}-${cssConcept}${category}-${value}`
-              : `$token-${category}-color-${category}-${value}`
-          }
           format={'SCSS'}
           isLowerCase
+          value={`$token-${globalCSS}${category}-${cssPath}`}
         />
       </Stack>
     </Stack>

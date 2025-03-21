@@ -1,11 +1,7 @@
 import { ThemeProvider } from '@emotion/react';
-import {
-  Content,
-  Border,
-  Elevation,
-  Typography,
-} from '@linode/design-language-system';
+import { light } from '@linode/ui';
 import { Box, Stack } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -17,12 +13,9 @@ import { themes } from 'src/utilities/theme';
 
 import { TokenSection } from './components/Tokens/TokenSection';
 
-const tokens = [
-  [Content, 'Content'],
-  [Border, 'Border'],
-  [Elevation, 'Elevation'],
-  [Typography, 'Typography'],
-] as const;
+const tokens = Object.entries(light.tokens ?? {});
+
+export type TokenCategory = keyof NonNullable<typeof light.tokens>;
 
 export const DesignTokensTool = () => {
   return (
@@ -37,30 +30,37 @@ export const DesignTokensTool = () => {
           position: 'absolute',
           width: '100%',
         }}
+        className="dev-tools__design-tokens"
       >
         <Tabs>
           <TabList>
-            {tokens.map(([_tokenObject, tokenCategory]) => (
-              <Tab key={tokenCategory}>{tokenCategory}</Tab>
+            {tokens.map(([tokenCategory, _tokenObject]) => (
+              <Tab key={tokenCategory}>{capitalize(tokenCategory)}</Tab>
             ))}
           </TabList>
+
           <TabPanels>
-            {tokens.map(([tokenObject, tokenCategory], index) => (
-              <SafeTabPanel index={index} key={tokenCategory}>
-                <Stack direction="row" flexWrap="wrap" width="100%">
-                  {Object.entries(tokenObject).map(
-                    ([key, colorObject], index) => (
-                      <TokenSection
-                        category={tokenCategory}
-                        key={`${key}-${index}`}
-                        title={key}
-                        value={colorObject}
-                        variant={key}
-                      />
-                    )
-                  )}
-                </Stack>
-              </SafeTabPanel>
+            {tokens.map(([tokenCategory, tokenObject], index) => (
+              <React.Suspense
+                fallback={<div>Loading...</div>}
+                key={tokenCategory}
+              >
+                <SafeTabPanel index={index} key={tokenCategory}>
+                  <Stack direction="row" flexWrap="wrap" width="100%">
+                    {Object.entries(tokenObject).map(([key, value], index) => {
+                      return (
+                        <TokenSection
+                          category={tokenCategory as TokenCategory}
+                          key={`${key}-${index}`}
+                          title={key}
+                          value={value}
+                          variant={key}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </SafeTabPanel>
+              </React.Suspense>
             ))}
           </TabPanels>
         </Tabs>

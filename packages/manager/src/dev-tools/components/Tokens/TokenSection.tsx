@@ -3,8 +3,10 @@ import React from 'react';
 
 import { TokenInfo } from './TokenInfo';
 
-interface TokenSectionProps {
-  category: string;
+import type { TokenCategory } from '../../DesignTokensTool';
+
+export interface TokenSectionProps {
+  category: TokenCategory;
   title: string;
   value: any;
   variant: string;
@@ -18,42 +20,35 @@ export const TokenSection = ({
 }: TokenSectionProps) => {
   const isColorValueString = typeof value === 'string';
 
-  console.log({
-    category,
-    title,
-    value,
-    variant,
-  });
-
   const renderValue = (
     <TokenInfo
       category={category}
       color={value}
-      value={value}
+      path={[variant]}
       variant={variant}
     />
   );
 
   const renderInfo = isColorValueString
     ? renderValue
-    : Object.entries(value).map(([key, value], index) => {
-        if (value instanceof Object) {
+    : Object.entries(value).map(([key, nestedValue], index) => {
+        if (nestedValue instanceof Object) {
           return (
             <TokenSection
               category={category}
               key={`${key}-${index}`}
               title={key}
-              value={value}
-              variant={variant}
+              value={nestedValue}
+              variant={`${variant}.${key}`}
             />
           );
         }
         return (
           <TokenInfo
             category={category}
-            color={value as string}
+            color={nestedValue as string}
             key={`${key}-${index}`}
-            value={key}
+            path={[variant, key]}
             variant={variant}
           />
         );
@@ -61,7 +56,7 @@ export const TokenSection = ({
 
   return (
     <Stack key={variant}>
-      <Typography>{title}</Typography>
+      <Typography variant="h3">{title}</Typography>
       <Stack direction="column" flexWrap="wrap" width="100%">
         {renderInfo}
       </Stack>

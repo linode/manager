@@ -10,15 +10,15 @@ interface CopyToClipboardProps {
   text: string;
 }
 
-export const CopyToClipboardIcon = ({ text }: CopyToClipboardProps) => {
-  const [isCopied, setIsCopied] = React.useState(false);
+export const CopyToClipboardIcon = ({}: CopyToClipboardProps) => {
+  // const [isCopied, setIsCopied] = React.useState(false);
 
-  const onCopy = () => {
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
-  };
+  // const onCopy = () => {
+  //   setIsCopied(true);
+  //   setTimeout(() => {
+  //     setIsCopied(false);
+  //   }, 2000);
+  // };
 
   return (
     // <CopyToClipboard text={text} onCopy={onCopy}>
@@ -36,7 +36,7 @@ export const CopyToClipboardIcon = ({ text }: CopyToClipboardProps) => {
           </g>
         </g>
       </svg>
-      {isCopied && <span className="copied">Copied to clipboard</span>}
+      {/* {isCopied && <span className="copied">Copied to clipboard</span>} */}
     </span>
     // </CopyToClipboard>
   );
