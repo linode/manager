@@ -14,16 +14,16 @@ export const StyledEditableText = styled(EditableText, {
   '& > div': {
     width: 250,
   },
-  marginLeft: `-${theme.spacing()}`,
 }));
 
 export const StyledH1Header = styled(H1Header, { label: 'StyledH1Header' })(
   ({ theme }) => ({
-    color: theme.textColors.tableStatic,
-    fontSize: '1.125rem',
+    color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
+    fontSize: '1rem',
+    paddingLeft: 0,
     textTransform: 'capitalize',
     [theme.breakpoints.up('lg')]: {
-      fontSize: '1.125rem',
+      fontSize: '1rem',
     },
   })
 );

@@ -50,7 +50,8 @@ export const imageQueries = createQueryKeys('images', {
     queryKey: [imageId],
   }),
   infinite: (filters: Filter) => ({
-    queryFn: ({ pageParam }) => getImages({ page: pageParam as number }, filters),
+    queryFn: ({ pageParam }) =>
+      getImages({ page: pageParam as number }, filters),
     queryKey: [filters],
   }),
   paginated: (params: Params, filters: Filter) => ({
