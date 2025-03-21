@@ -13,7 +13,7 @@ const labelTestDetails = {
 
 const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
-// @TODO VPC - remove below constant when IPv6 is in GA
+// @TODO VPC IPv6 - remove below constant when IPv6 is in GA
 const TEMPORARY_IPV4_REQUIRED_MESSAGE = 'A subnet must have an IPv4 range.';
 
 export const determineIPType = (ip: string) => {
@@ -161,7 +161,7 @@ const VPCIPv6SubnetSchema = object({
     .required()
     .test({
       name: 'IPv6 prefix length',
-      message: 'Must be the prefix length (52-62) the IP, e.g. /52',
+      message: 'Must be the prefix length (52-62) of the IP, e.g. /52',
       test: (value) => {
         if (value && value !== 'auto' && value.length > 0) {
           vpcsValidateIP({
@@ -175,7 +175,7 @@ const VPCIPv6SubnetSchema = object({
     }),
 });
 
-// @TODO VPC: Delete this when IPv6 is in GA
+// @TODO VPC IPv6: Delete this when IPv6 is in GA
 export const createSubnetSchemaIPv4 = object({
   label: labelValidation.required(LABEL_REQUIRED),
   ipv4: string().when('ipv6', {
