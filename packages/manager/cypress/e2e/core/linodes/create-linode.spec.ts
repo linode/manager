@@ -24,6 +24,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { skip } from 'support/util/skip';
 
 import {
   accountFactory,
@@ -162,16 +163,25 @@ describe('Create Linode', () => {
        */
       it(`creates a Premium CPU Linode`, () => {
         cy.tag('env:premiumPlans');
-        const linodeRegion = chooseRegion({
-          capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
-        });
+
+        // TODO Allow `chooseRegion` to be configured not to throw.
+        const linodeRegion = (() => {
+          try {
+            return chooseRegion({
+              capabilities: ['Linodes', 'Premium Plans', 'Vlans'],
+            });
+          } catch {
+            skip();
+          }
+          return;
+        })()!;
+
         const linodeLabel = randomLabel();
         const planId = 'g7-premium-2';
         const planLabel = 'Premium 4 GB';
         const planType = 'Premium CPU';
 
         interceptGetProfile().as('getProfile');
-
         interceptCreateLinode().as('createLinode');
         cy.visitWithLogin('/linodes/create');
 
