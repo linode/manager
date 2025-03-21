@@ -400,7 +400,7 @@ export const CreateCluster = () => {
           />
           {isLkeEnterpriseLAFlagEnabled && (
             <>
-              <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
+              <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
               <ClusterTierPanel
                 handleClusterTierSelection={handleClusterTierSelection}
                 isUserRestricted={isCreateClusterRestricted}
@@ -486,7 +486,12 @@ export const CreateCluster = () => {
               </StyledStackWithTabletBreakpoint>
             </>
           )}
-          <Divider sx={{ marginBottom: 3, marginTop: showAPL ? 1 : 4 }} />
+          <Divider
+            sx={{
+              marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+              marginTop: showAPL ? 1 : 4,
+            }}
+          />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
