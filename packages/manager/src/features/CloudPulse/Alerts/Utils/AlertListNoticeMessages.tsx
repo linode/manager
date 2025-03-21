@@ -1,7 +1,10 @@
-import { List, ListItem, Notice, Typography } from '@linode/ui';
+import { List, ListItem, Typography } from '@linode/ui';
 import React from 'react';
 
+import { AlertNoticeWrapper } from './AlertsNoticeMessage';
+
 import type { NoticeVariant } from '@linode/ui';
+import { SxProps } from '@mui/material';
 
 interface AlertListNoticeMessagesProps {
   /**
@@ -13,6 +16,10 @@ interface AlertListNoticeMessagesProps {
    */
   separator: string;
   /**
+   * Additional styles to apply for the Notice component
+   */
+  sx?: SxProps;
+  /**
    * The visual variant of the notice (e.g., 'error', 'warning', 'success')
    */
   variant: NoticeVariant;
@@ -21,12 +28,12 @@ interface AlertListNoticeMessagesProps {
 export const AlertListNoticeMessages = (
   props: AlertListNoticeMessagesProps
 ) => {
-  const { errorMessage, separator, variant } = props;
+  const { errorMessage, separator, sx, variant } = props;
   const errorList = errorMessage.split(separator);
 
   if (errorList.length > 1) {
     return (
-      <AlertNoticeErrorState variant={variant}>
+      <AlertNoticeWrapper sx={sx} variant={variant}>
         <List sx={{ listStyleType: 'disc', pl: 1.5 }}>
           {errorList.map((error, index) => (
             <ListItem
@@ -38,38 +45,20 @@ export const AlertListNoticeMessages = (
             </ListItem>
           ))}
         </List>
-      </AlertNoticeErrorState>
-    );
-  } else {
-    return (
-      <AlertNoticeErrorState variant={variant}>
-        <Typography
-          sx={(theme) => ({
-            fontFamily: theme.tokens.typography.Body.Bold,
-          })}
-          data-testid="alert_message_notice"
-          variant="body2"
-        >
-          {errorList[0]}
-        </Typography>
-      </AlertNoticeErrorState>
+      </AlertNoticeWrapper>
     );
   }
-};
 
-/**
- * Wrapper component for displaying error messages within a Notice component
- */
-const AlertNoticeErrorState = ({
-  children,
-  variant
-}: {
-  children: React.ReactNode;
-  variant: NoticeVariant;
-}): JSX.Element => {
   return (
-    <Notice variant={variant}>
-      {children}
-    </Notice>
+    <AlertNoticeWrapper sx={sx} variant={variant}>
+      <Typography
+        sx={(theme) => ({
+          fontFamily: theme.tokens.typography.Body.Bold,
+        })}
+        data-testid="alert_message_notice"
+      >
+        {errorList[0]}
+      </Typography>
+    </AlertNoticeWrapper>
   );
 };

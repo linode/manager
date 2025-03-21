@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
@@ -6,9 +7,10 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
+import { MULTILINE_ERROR_SEPARATOR } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
   getAlertResourceFilterProps,
   getFilteredResources,
@@ -17,7 +19,6 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -36,6 +37,7 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 
 export interface AlertResourcesProp {
   /**
@@ -338,6 +340,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
 
+  const noticeStyles = (theme: Theme) => ({
+    alignItems: 'center',
+    background: theme.tokens.background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacing(2),
+  });
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -415,15 +426,34 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        <AlertsNoticeMessage text={errorText} variant="error" />
-        <AlertsNoticeMessage
-          text={
-            maxSelectionCount !== undefined
-              ? `You can select up to ${maxSelectionCount} resources.`
-              : undefined
-          }
-          variant="warning"
-        />
+        {errorText?.length && (
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              sx={(theme: Theme) => ({
+                alignItems: 'center',
+                background: theme.tokens.background.Normal,
+                borderRadius: 1,
+                display: 'flex',
+                flexWrap: 'nowrap',
+                marginBottom: 0,
+                padding: theme.tokens.spacing.S16,
+              })}
+              errorMessage={errorText}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              variant="error"
+            />
+          </Grid>
+        )}
+        {maxSelectionCount !== undefined && (
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              errorMessage={`You can select up to ${maxSelectionCount} resources.`}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              sx={noticeStyles}
+              variant="warning"
+            />
+          </Grid>
+        )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
