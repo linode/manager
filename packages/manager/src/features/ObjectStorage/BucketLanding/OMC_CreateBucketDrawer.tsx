@@ -8,6 +8,7 @@ import {
 import {
   ActionsPanel,
   Autocomplete,
+  Drawer,
   Notice,
   TextField,
   Typography,
@@ -16,8 +17,8 @@ import { CreateBucketSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -288,7 +289,12 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={isOpen}
+      title="Create Bucket"
+    >
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -307,7 +313,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}
-              label="Label"
+              label="Bucket Name"
               onBlur={field.onBlur}
               onChange={field.onChange}
               required
