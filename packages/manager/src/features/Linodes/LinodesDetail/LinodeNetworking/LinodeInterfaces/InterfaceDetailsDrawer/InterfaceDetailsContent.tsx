@@ -1,6 +1,8 @@
 import { Box, Chip, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+
 import { getLinodeInterfaceType } from '../utilities';
 import { PublicInterfaceDetailsContent } from './PublicInterfaceDetailsContent';
 import { VlanInterfaceDetailsContent } from './VlanInterfaceDetailsContent';
@@ -49,18 +51,18 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>MAC Address</strong>
       </Typography>
-      <Typography>{mac_address}</Typography>
+      <MaskableText isToggleable text={mac_address} />
       {props.public && <PublicInterfaceDetailsContent {...props.public} />}
       {props.vpc && <VPCInterfaceDetailsContent {...props.vpc} />}
       {props.vlan && <VlanInterfaceDetailsContent {...props.vlan} />}
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Created</strong>
       </Typography>
-      <Typography>{created}</Typography>
+      <Typography>{new Date(created).toUTCString()}</Typography>
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Modified</strong>
       </Typography>
-      <Typography>{updated}</Typography>
+      <Typography>{new Date(updated).toUTCString()}</Typography>
     </Stack>
   );
 };

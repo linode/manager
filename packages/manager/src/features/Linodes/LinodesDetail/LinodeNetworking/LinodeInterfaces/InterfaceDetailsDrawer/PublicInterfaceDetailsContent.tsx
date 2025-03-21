@@ -1,6 +1,8 @@
 import { Typography } from '@linode/ui';
 import React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+
 import type { PublicInterfaceData } from '@linode/api-v4';
 
 export const PublicInterfaceDetailsContent = (props: PublicInterfaceData) => {
@@ -9,12 +11,18 @@ export const PublicInterfaceDetailsContent = (props: PublicInterfaceData) => {
   const ipv4ToTypography = (
     <>
       {ipv4.addresses.map((address) => (
-        <Typography key={address.address}>
-          {address.address} {address.primary && '(Primary)'}
-        </Typography>
+        <MaskableText
+          isToggleable
+          key={address.address}
+          text={`${address.address} ${address.primary && '(Primary)'}`}
+        />
       ))}
       {ipv4.shared.map((shared) => (
-        <Typography key={shared.address}>{shared.address} (Shared)</Typography>
+        <MaskableText
+          isToggleable
+          key={shared.address}
+          text={`${shared.address} (Shared)`}
+        />
       ))}
     </>
   );
@@ -22,13 +30,25 @@ export const PublicInterfaceDetailsContent = (props: PublicInterfaceData) => {
   const ipv6ToTypography = (
     <>
       {ipv6.slaac.map((slaac) => (
-        <Typography key={slaac.address}>{slaac.address} (SLAAC)</Typography>
+        <MaskableText
+          isToggleable
+          key={slaac.address}
+          text={`${slaac.address} (SLAAC)`}
+        />
       ))}
       {ipv6.shared.map((shared) => (
-        <Typography key={shared.range}>{shared.range} (Shared)</Typography>
+        <MaskableText
+          isToggleable
+          key={shared.range}
+          text={`${shared.range} (Shared)`}
+        />
       ))}
-      {ipv6.shared.map((ranges) => (
-        <Typography key={ranges.range}>{ranges.range} (Range)</Typography>
+      {ipv6.ranges.map((range) => (
+        <MaskableText
+          isToggleable
+          key={range.range}
+          text={`${range.range} (Range)`}
+        />
       ))}
     </>
   );

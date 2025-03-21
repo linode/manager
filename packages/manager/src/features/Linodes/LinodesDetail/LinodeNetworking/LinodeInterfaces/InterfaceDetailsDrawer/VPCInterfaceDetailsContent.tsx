@@ -3,6 +3,7 @@ import { CircleProgress, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 import type { VPCInterfaceData } from '@linode/api-v4';
 
@@ -17,19 +18,31 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
       {ipv4.addresses.map((address) =>
         address.nat_1_1_address ? (
           <>
-            <Typography key={address.address}>
-              {address.address} {address.primary && '(Primary)'}
-            </Typography>
-            <Typography>{address.nat_1_1_address} (VPC NAT)</Typography>
+            <MaskableText
+              isToggleable
+              key={address.address}
+              text={`${address.address} ${address.primary && '(Primary)'}`}
+            />
+            <MaskableText
+              isToggleable
+              key={address.address}
+              text={`${address.nat_1_1_address} (VPC NAT)`}
+            />
           </>
         ) : (
-          <Typography key={address.address}>
-            {address.address} {address.primary && '(Primary)'}
-          </Typography>
+          <MaskableText
+            isToggleable
+            key={address.address}
+            text={`${address.address} ${address.primary && '(Primary)'}`}
+          />
         )
       )}
       {ipv4.ranges.map((range) => (
-        <Typography key={range.range}>{range.range} (Range)</Typography>
+        <MaskableText
+          isToggleable
+          key={range.range}
+          text={`${range.range} (Range)'}`}
+        />
       ))}
     </>
   );
