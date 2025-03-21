@@ -83,8 +83,11 @@ export const usePendo = () => {
   // This URL uses a Pendo-configured CNAME (M3-8742).
   // const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
+  // eslint-disable-next-line no-console
+  console.log({ ADOBE_ANALYTICS_URL }, { PENDO_API_KEY });
+
   React.useEffect(() => {
-    if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
+    if (ADOBE_ANALYTICS_URL /*&& PENDO_API_KEY*/) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
@@ -164,5 +167,5 @@ export const usePendo = () => {
         });
       });
     }
-  }, [ADOBE_ANALYTICS_URL, accountId, visitorId]);
+  }, [accountId, visitorId]);
 };
