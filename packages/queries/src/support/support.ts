@@ -20,7 +20,7 @@ import type {
   SupportReply,
   SupportTicket,
   TicketRequest,
-} from '@linode/api-v4/lib/support';
+} from '@linode/api-v4';
 import type {
   APIError,
   Filter,
