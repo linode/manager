@@ -12,23 +12,23 @@ import {
 export const VPCTemplateRules = () => {
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(24) })}>
         Allows for login with SSH, regular networking control data, and inbound
         traffic from the VPC address space.
       </Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         {STRENGTHEN_TEMPLATE_RULES}
       </Typography>
       <Box
         sx={(theme) => ({
           backgroundColor: theme.tokens.alias.Background.Neutral,
-          marginTop: theme.spacing(2),
-          padding: theme.spacing(2),
+          marginTop: theme.spacingFunction(16),
+          padding: theme.spacingFunction(16),
         })}
         data-testid="vpc-template-info"
       >
         {sharedTemplateRules}
-        <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+        <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
           Allow traffic for{' '}
           <TextTooltip
             displayText="RFC1918"

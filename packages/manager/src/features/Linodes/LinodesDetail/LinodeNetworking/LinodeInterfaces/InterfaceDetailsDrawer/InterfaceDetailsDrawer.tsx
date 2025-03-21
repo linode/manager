@@ -18,8 +18,9 @@ export const InterfaceDetailsDrawer = (props: Props) => {
 
   const { data: linodeInterface, error, isLoading } = useLinodeInterfaceQuery(
     linodeId,
-    interfaceId ?? -1
-  ); // todo: fix the query thing
+    interfaceId,
+    open
+  );
 
   return (
     <Drawer

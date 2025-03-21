@@ -35,13 +35,13 @@ export const SuccessDialogContent = (
         <Box
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
-            marginTop: theme.spacing(1),
-            padding: theme.spacing(2),
+            marginTop: theme.spacingFunction(8),
+            padding: theme.spacingFunction(16),
           })}
         >
           <Typography
             sx={(theme) => ({
-              marginTop: theme.spacing(1),
+              marginTop: theme.spacingFunction(8),
             })}
             variant="h3"
           >
@@ -89,8 +89,8 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
     <>
       <Typography
         sx={(theme) => ({
-          marginBottom: theme.spacing(2),
-          marginTop: theme.spacing(2),
+          marginBottom: theme.spacingFunction(16),
+          marginTop: theme.spacingFunction(16),
         })}
       >
         <strong>Interface Meta Info: Interface #{id}</strong>
@@ -103,8 +103,8 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
       {publicInterface && (
         <Typography
           sx={(theme) => ({
-            marginBottom: theme.spacing(2),
-            marginTop: theme.spacing(2),
+            marginBottom: theme.spacingFunction(16),
+            marginTop: theme.spacingFunction(16),
           })}
         >
           Public Interface successfully upgraded
@@ -129,8 +129,8 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
     <>
       <Typography
         sx={(theme) => ({
-          marginBottom: theme.spacing(2),
-          marginTop: theme.spacing(2),
+          marginBottom: theme.spacingFunction(16),
+          marginTop: theme.spacingFunction(16),
         })}
       >
         <strong>VPC Interface Details</strong>
@@ -165,8 +165,8 @@ const VlanInterfaceInfo = (props: Pick<LinodeInterface, 'vlan'>) => {
     <>
       <Typography
         sx={(theme) => ({
-          marginBottom: theme.spacing(2),
-          marginTop: theme.spacing(2),
+          marginBottom: theme.spacingFunction(16),
+          marginTop: theme.spacingFunction(16),
         })}
       >
         <strong>VLAN Interface Details</strong>

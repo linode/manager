@@ -8,17 +8,17 @@ import type { Theme } from '@mui/material';
 export const PublicTemplateRules = () => {
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(24) })}>
         Allows for login with SSH, and regular networking control data.
       </Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         {STRENGTHEN_TEMPLATE_RULES}
       </Typography>
       <Box
         sx={(theme) => ({
           backgroundColor: theme.tokens.alias.Background.Neutral,
-          marginTop: theme.spacing(2),
-          padding: theme.spacing(2),
+          marginTop: theme.spacingFunction(16),
+          padding: theme.spacingFunction(16),
         })}
         data-testid="public-template-info"
       >
@@ -31,14 +31,14 @@ export const PublicTemplateRules = () => {
 
 const templateRuleStyling = (theme: Theme) => ({
   backgroundColor: theme.tokens.alias.Background.Neutral,
-  marginTop: theme.spacing(1),
-  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+  marginTop: theme.spacingFunction(8),
+  padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(8)}`,
 });
 
 export const sharedTemplateRules = (
   <>
     <Typography variant="h3">Rules</Typography>
-    <Typography sx={(theme) => ({ marginTop: theme.spacing(1) })}>
+    <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(8) })}>
       Allow Inbound SSH
     </Typography>
     <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
@@ -52,7 +52,7 @@ export const sharedTemplateRules = (
         Sources: All IPv4, IPv6
       </ListItem>
     </List>
-    <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+    <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
       Allow Inbound ICMP
     </Typography>
     <List dense sx={{ listStyleType: 'disc', pl: 3 }}>

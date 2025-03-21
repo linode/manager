@@ -42,22 +42,22 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
         <strong>Type</strong>
       </Typography>
       <Typography>{type}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>ID</strong>
       </Typography>
       <Typography>{id}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>MAC Address</strong>
       </Typography>
       <Typography>{mac_address}</Typography>
       {props.public && <PublicInterfaceDetailsContent {...props.public} />}
       {props.vpc && <VPCInterfaceDetailsContent {...props.vpc} />}
       {props.vlan && <VlanInterfaceDetailsContent {...props.vlan} />}
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Created</strong>
       </Typography>
       <Typography>{created}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Modified</strong>
       </Typography>
       <Typography>{updated}</Typography>
