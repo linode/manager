@@ -14,11 +14,12 @@ import { getDefaultFirewallDescription } from './FirewallSelectOption.utils';
 import type { Firewall } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from '@linode/ui';
 
-interface Props
+interface Props<DisableClearable extends boolean>
   extends Omit<
-    EnhancedAutocompleteProps<Firewall, false>,
+    EnhancedAutocompleteProps<Firewall, false, DisableClearable>,
     'label' | 'options' | 'value'
   > {
+  disableClearable?: DisableClearable;
   /**
    * Hide "Default" chips showing which firewalls are defaults
    * @default false
@@ -47,7 +48,9 @@ interface Props
  * Currently this is only a single select, but can be extended to support more
  * Autocomplete features.
  */
-export const FirewallSelect = (props: Props) => {
+export const FirewallSelect = <DisableClearable extends boolean>(
+  props: Props<DisableClearable>
+) => {
   const { errorText, hideDefaultChips, loading, value, ...rest } = props;
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -70,7 +73,7 @@ export const FirewallSelect = (props: Props) => {
   );
 
   return (
-    <Autocomplete
+    <Autocomplete<Firewall, false, DisableClearable>
       renderOption={({ key, ...props }, option, state) => (
         <FirewallSelectOption
           hideDefaultChip={hideDefaultChips}
@@ -93,7 +96,7 @@ export const FirewallSelect = (props: Props) => {
       noMarginTop
       options={firewalls ?? []}
       placeholder="None"
-      value={selectedFirewall}
+      value={selectedFirewall!}
       {...rest}
     />
   );

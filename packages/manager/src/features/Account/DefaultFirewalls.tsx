@@ -96,12 +96,11 @@ export const DefaultFirewalls = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <FirewallSelect
-                  onChange={(_, item) => {
-                    field.onChange(item?.id);
-                  }}
+                  disableClearable
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Configuration Profile Interfaces Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
                   value={field.value}
                 />
@@ -112,12 +111,11 @@ export const DefaultFirewalls = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <FirewallSelect
-                  onChange={(_, item) => {
-                    field.onChange(item?.id);
-                  }}
+                  disableClearable
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - Public Interface Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
                   value={field.value}
                 />
@@ -128,12 +126,11 @@ export const DefaultFirewalls = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <FirewallSelect
-                  onChange={(_, item) => {
-                    field.onChange(item?.id);
-                  }}
+                  disableClearable
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="Linode Interfaces - VPC Interface Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
                   value={field.value}
                 />
@@ -147,12 +144,11 @@ export const DefaultFirewalls = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <FirewallSelect
-                  onChange={(_, item) => {
-                    field.onChange(item?.id);
-                  }}
+                  disableClearable
                   errorText={fieldState.error?.message}
                   hideDefaultChips
                   label="NodeBalancers Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
                   placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
                   value={field.value}
                 />
