@@ -1,8 +1,8 @@
 import { Border, Color, Font } from '@linode/design-language-system';
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
-import { CopyToClipboardIcon } from './CopyToClipboard';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface TokenCopyProps {
   format: string;
@@ -20,33 +20,48 @@ export const TokenCopy = ({
   }
 
   return (
-    <Box>
-      <span
-        style={{
+    <Box
+      sx={{
+        '.copy-tooltip svg': {
+          height: 12,
+          top: 1,
+          width: 12,
+        },
+      }}
+    >
+      <Box
+        sx={{
           display: 'inline-block',
-          fontFamily: Font.FontFamily.Code,
-          fontSize: Font.FontSize.Xxxs,
-          fontWeight: Font.FontWeight.Semibold,
+          mr: 1,
           textAlign: 'right',
-          width: 10,
+          width: 40,
         }}
+        component="span"
       >
-        {format}:
-      </span>{' '}
-      <span
-        style={{
+        <Typography
+          sx={{
+            color: Color.Neutrals[60],
+          }}
+        >
+          {format}:
+        </Typography>
+      </Box>{' '}
+      <Box
+        sx={{
           background: Color.Neutrals[5],
           border: `1px solid ${Border.Normal}`,
           borderRadius: '0.2rem',
           color: Color.Neutrals[90],
           fontFamily: Font.FontFamily.Code,
           fontSize: Font.FontSize.Xxxs,
+          px: 0.5,
           whiteSpace: 'nowrap',
         }}
+        component="span"
       >
         {value}
-      </span>
-      <CopyToClipboardIcon text={value} />
+      </Box>
+      <CopyTooltip copyableText={false} placement="right" text={value} />
     </Box>
   );
 };

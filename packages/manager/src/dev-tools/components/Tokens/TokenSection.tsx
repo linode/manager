@@ -20,46 +20,76 @@ export const TokenSection = ({
 }: TokenSectionProps) => {
   const isColorValueString = typeof value === 'string';
 
-  const renderValue = (
-    <TokenInfo
-      category={category}
-      color={value}
-      path={[variant]}
-      variant={variant}
-    />
-  );
+  const renderTokenGroup = (groupValue: any, parentPath: string[] = []) => {
+    if (typeof groupValue === 'string') {
+      return (
+        <TokenInfo
+          category={category}
+          color={groupValue}
+          path={[title, ...parentPath]}
+          variant={variant}
+        />
+      );
+    }
 
-  const renderInfo = isColorValueString
-    ? renderValue
-    : Object.entries(value).map(([key, nestedValue], index) => {
-        if (nestedValue instanceof Object) {
-          return (
-            <TokenSection
-              category={category}
-              key={`${key}-${index}`}
-              title={key}
-              value={nestedValue}
-              variant={`${variant}.${key}`}
-            />
-          );
-        }
-        return (
+    return Object.entries(groupValue).map(([key, value]) => (
+      <Stack
+        sx={{
+          mb: 2,
+        }}
+        key={key}
+        spacing={2}
+      >
+        {parentPath.length === 0 && (
+          <Typography
+            sx={(theme) => ({
+              borderBottom: `1px solid ${theme.tokens.alias.Border.Normal}`,
+              font: theme.font.bold,
+              py: 1,
+            })}
+          >
+            {key}
+          </Typography>
+        )}
+        {typeof value === 'object' ? (
+          <Stack spacing={1}>
+            {parentPath.length > 0 && (
+              <Typography variant="h5">{key}</Typography>
+            )}
+            {renderTokenGroup(value, [...parentPath, key])}
+          </Stack>
+        ) : typeof value === 'string' ? (
           <TokenInfo
             category={category}
-            color={nestedValue as string}
-            key={`${key}-${index}`}
-            path={[variant, key]}
+            color={value}
+            path={[title, ...parentPath, key]}
             variant={variant}
           />
-        );
-      });
+        ) : null}
+      </Stack>
+    ));
+  };
+
+  if (isColorValueString) {
+    return (
+      <TokenInfo
+        category={category}
+        color={value as string}
+        path={[title]}
+        variant={variant}
+      />
+    );
+  }
 
   return (
-    <Stack key={variant}>
-      <Typography variant="h3">{title}</Typography>
-      <Stack direction="column" flexWrap="wrap" width="100%">
-        {renderInfo}
-      </Stack>
+    <Stack sx={{ p: 2 }}>
+      <Typography
+        sx={{ position: 'sticky', top: 0, backgroundColor: 'white' }}
+        variant="h3"
+      >
+        {title}
+      </Typography>
+      {renderTokenGroup(value)}
     </Stack>
   );
 };

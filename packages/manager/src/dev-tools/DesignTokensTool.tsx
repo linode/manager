@@ -26,7 +26,6 @@ export const DesignTokensTool = () => {
           flex: 1,
           height: '100%',
           overflow: 'auto',
-          padding: 2,
           position: 'absolute',
           width: '100%',
         }}

@@ -25,7 +25,10 @@ export const TokenInfo = (props: TokenInfoProps) => {
 
   const jsPath =
     path.length > 0
-      ? path.map((segment) => formatValue(segment)).join('')
+      ? path
+          .flatMap((segment) => segment.split('.'))
+          .map((segment) => formatValue(segment))
+          .join('.')
       : formatValue(variant);
   const cssPath =
     path.length > 0
@@ -40,9 +43,9 @@ export const TokenInfo = (props: TokenInfoProps) => {
   const globalCSS = isGlobalToken ? 'global-' : '';
 
   return (
-    <Stack direction="row" flexWrap="nowrap" width="100%">
+    <Stack direction="row" flexWrap="nowrap">
       <ColorSwatch color={color} />
-      <Stack direction="column" flexWrap="wrap" width="100%">
+      <Stack direction="column" flexWrap="wrap">
         <TokenCopy format={'Hex'} value={color} />
         <TokenCopy format={'JS'} value={`tokens.${category}.${jsPath}`} />
         <TokenCopy

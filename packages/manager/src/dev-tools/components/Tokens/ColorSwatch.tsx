@@ -16,7 +16,6 @@ export const ColorSwatch = ({ color }: ColorSwatchProps) => {
         backgroundColor: color,
         border: `1px solid ${Border.Normal}`,
         borderRadius: '50%',
-        flexShrink: 0,
         height: '30px',
         width: '30px',
       }}
