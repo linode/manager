@@ -754,6 +754,11 @@ export const darkTheme: ThemeOptions = {
               opacity: 0.15,
             },
           },
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
+            },
+          },
           '&:hover': {
             color: theme.palette.primary.main,
           },
