@@ -762,6 +762,7 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: theme.palette.primary.main,
           },
+          padding: '10px 10px',
         }),
       },
     },
