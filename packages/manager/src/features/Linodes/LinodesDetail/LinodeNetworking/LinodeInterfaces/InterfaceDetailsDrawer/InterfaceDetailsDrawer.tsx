@@ -1,6 +1,7 @@
 import { useLinodeInterfaceQuery } from '@linode/queries';
 import { Box, Button, Drawer } from '@linode/ui';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { NotFound } from 'src/components/NotFound';
 
@@ -14,7 +15,11 @@ interface Props {
 }
 
 export const InterfaceDetailsDrawer = (props: Props) => {
-  const { interfaceId, linodeId, onClose, open } = props;
+  const location = useLocation();
+  const interfaceIdFromLocation = +location.pathname.split('/').slice(-1);
+
+  const { interfaceId: id, linodeId, onClose, open } = props;
+  const interfaceId = id ?? interfaceIdFromLocation;
 
   const { data: linodeInterface, error, isLoading } = useLinodeInterfaceQuery(
     linodeId,

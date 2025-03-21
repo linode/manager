@@ -39,23 +39,19 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>VPC Label</strong>
       </Typography>
-      <Typography>
-        {vpc ? (
-          <Link to={`/vpcs/${vpc_id}`}>{vpc.label}</Link>
-        ) : (
-          <CircleProgress noPadding size="xs" />
-        )}
-      </Typography>
+      {vpc ? (
+        <Link to={`/vpcs/${vpc_id}`}>{vpc.label}</Link>
+      ) : (
+        <CircleProgress noPadding size="xs" />
+      )}
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Subnet Label</strong>
       </Typography>
-      <Typography>
-        {subnet ? (
-          <Typography>{subnet.label}</Typography>
-        ) : (
-          <CircleProgress noPadding size="xs" />
-        )}
-      </Typography>
+      {subnet ? (
+        <Typography>{subnet.label}</Typography>
+      ) : (
+        <CircleProgress noPadding size="xs" />
+      )}
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>IPv4 Addresses</strong>
       </Typography>
