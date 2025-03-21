@@ -68,5 +68,5 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
 const chipStyles = (theme: Theme) => ({
   backgroundColor: theme.color.tagButtonBg,
   color: theme.tokens.color.Neutrals[80],
-  marginLeft: theme.spacing(0.5),
+  marginLeft: theme.spacingFunction(4),
 });
