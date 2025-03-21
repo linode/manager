@@ -90,7 +90,7 @@ export const DefaultFirewalls = () => {
           type when creating a Linode. The same firewall (new or existing) can
           be assigned to each type of interface/connection.
         </Typography>
-        <Stack divider={<Divider />} spacing={3}>
+        <Stack divider={<Divider />} spacing={2}>
           <Stack spacing={2}>
             <Typography variant="h3">Linodes</Typography>
             <Controller
