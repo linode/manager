@@ -175,16 +175,56 @@ const VPCIPv6SubnetSchema = object({
     }),
 });
 
-export const createSubnetSchemaIPv4 = object().shape(
+// @TODO VPC: Delete this when IPv6 is in GA
+export const createSubnetSchemaIPv4 = object({
+  label: labelValidation.required(LABEL_REQUIRED),
+  ipv4: string().when('ipv6', {
+    is: (value: unknown) =>
+      value === '' || value === null || value === undefined,
+    then: (schema) =>
+      schema.required(TEMPORARY_IPV4_REQUIRED_MESSAGE).test({
+        name: 'IPv4 CIDR format',
+        message: 'The IPv4 range must be in CIDR format.',
+        test: (value) =>
+          vpcsValidateIP({
+            value,
+            shouldHaveIPMask: true,
+            mustBeIPMask: false,
+          }),
+      }),
+    otherwise: (schema) =>
+      lazy((value: string | undefined) => {
+        switch (typeof value) {
+          case 'undefined':
+            return schema.notRequired().nullable();
+
+          case 'string':
+            return schema.notRequired().test({
+              name: 'IPv4 CIDR format',
+              message: 'The IPv4 range must be in CIDR format.',
+              test: (value) =>
+                vpcsValidateIP({
+                  value,
+                  shouldHaveIPMask: true,
+                  mustBeIPMask: false,
+                }),
+            });
+
+          default:
+            return schema.notRequired().nullable();
+        }
+      }),
+  }),
+});
+
+export const createSubnetSchemaWithIPv6 = object().shape(
   {
     label: labelValidation.required(LABEL_REQUIRED),
     ipv4: string().when('ipv6', {
       is: (value: unknown) =>
         value === '' || value === null || value === undefined,
       then: (schema) =>
-        // @TODO VPC - change required message back to IP_EITHER_BOTH_NOT_NEITHER when IPv6 is in GA
-        // Since only IPv4 is currently supported, subnets must have an IPv4
-        schema.required(TEMPORARY_IPV4_REQUIRED_MESSAGE).test({
+        schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
           name: 'IPv4 CIDR format',
           message: 'The IPv4 range must be in CIDR format.',
           test: (value) =>
@@ -217,15 +257,6 @@ export const createSubnetSchemaIPv4 = object().shape(
           }
         }),
     }),
-  },
-  [
-    ['ipv6', 'ipv4'],
-    ['ipv4', 'ipv6'],
-  ]
-);
-
-export const createSubnetSchemaWithIPv6 = createSubnetSchemaIPv4.concat(
-  object({
     ipv6: array()
       .of(VPCIPv6SubnetSchema)
       .when('ipv4', {
@@ -233,7 +264,11 @@ export const createSubnetSchemaWithIPv6 = createSubnetSchemaIPv4.concat(
           value === '' || value === null || value === undefined,
         then: (schema) => schema.required(IP_EITHER_BOTH_NOT_NEITHER),
       }),
-  })
+  },
+  [
+    ['ipv6', 'ipv4'],
+    ['ipv4', 'ipv6'],
+  ]
 );
 
 const createVPCIPv6Schema = VPCIPv6Schema.concat(
