@@ -5,12 +5,12 @@ import React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface TokenCopyProps {
-  format: string;
+  format: 'CSS' | 'JS' | 'SCSS' | 'Val';
   isLowerCase?: boolean;
   value: string;
 }
 
-export const TokenCopy = ({
+export const TokenValue = ({
   format,
   isLowerCase = false,
   value,

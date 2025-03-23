@@ -112,7 +112,7 @@
   transform: rotate(135deg);
 }
 
-.dev-tools__select select {
+.dev-tools__select select.dt-select {
   background: transparent;
   border: none;
   color: white;
@@ -327,7 +327,7 @@
 }
 
 .dev-tools__body input[type="number"],
-.dev-tools__body input[type="text"],
+.dev-tools__body input[type="text"]:not(.MuiInput-input),
 .dev-tools__body textarea {
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);

@@ -3,12 +3,15 @@ import React from 'react';
 
 import { TokenInfo } from './TokenInfo';
 
-import type { TokenCategory } from '../../DesignTokensTool';
+import type {
+  RecursiveTokenObject,
+  TokenCategory,
+} from '../../DesignTokensTool';
 
 export interface TokenSectionProps {
   category: TokenCategory;
   title: string;
-  value: any;
+  value: RecursiveTokenObject | string;
   variant: string;
 }
 
@@ -20,7 +23,10 @@ export const TokenSection = ({
 }: TokenSectionProps) => {
   const isColorValueString = typeof value === 'string';
 
-  const renderTokenGroup = (groupValue: any, parentPath: string[] = []) => {
+  const renderTokenGroup = (
+    groupValue: RecursiveTokenObject | string,
+    parentPath: string[] = []
+  ) => {
     if (typeof groupValue === 'string') {
       return (
         <TokenInfo
@@ -81,7 +87,7 @@ export const TokenSection = ({
       <TokenInfo
         category={category}
         path={[title]}
-        value={value as string}
+        value={value}
         variant={variant}
       />
     );
@@ -90,12 +96,12 @@ export const TokenSection = ({
   return (
     <Stack sx={{ p: 2 }}>
       <Typography
-        sx={{
-          backgroundColor: 'white',
+        sx={(theme) => ({
+          backgroundColor: theme.tokens.alias.Background.Normal,
           position: 'sticky',
           top: 0,
           zIndex: 2,
-        }}
+        })}
         variant="h3"
       >
         {title}

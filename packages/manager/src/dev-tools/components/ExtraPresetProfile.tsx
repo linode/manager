@@ -191,6 +191,7 @@ export const ExtraPresetProfile = ({
               <label>
                 User Type
                 <select
+                  className="dt-select"
                   name="user_type"
                   onChange={handleInputChange}
                   value={formData.user_type}
@@ -242,6 +243,7 @@ export const ExtraPresetProfile = ({
               <label>
                 Authentication Type
                 <select
+                  className="dt-select"
                   name="authentication_type"
                   onChange={handleInputChange}
                   value={formData.authentication_type}

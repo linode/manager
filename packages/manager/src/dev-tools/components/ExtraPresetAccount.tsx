@@ -176,6 +176,7 @@ export const ExtraPresetAccount = ({
               <label>
                 Capabilities
                 <select
+                  className="dt-select"
                   multiple
                   name="capabilities"
                   onChange={handleInputChange}
@@ -324,6 +325,7 @@ export const ExtraPresetAccount = ({
               <label>
                 Billing Source
                 <select
+                  className="dt-select"
                   name="billing_source"
                   onChange={handleInputChange}
                   value={formData.billing_source}

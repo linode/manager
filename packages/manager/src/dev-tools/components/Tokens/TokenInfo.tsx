@@ -2,7 +2,7 @@ import { Stack } from '@linode/ui';
 import React from 'react';
 
 import { ColorSwatch } from './ColorSwatch';
-import { TokenCopy } from './TokenCopy';
+import { TokenValue } from './TokenCopy';
 
 import type { TokenCategory } from '../../DesignTokensTool';
 
@@ -46,14 +46,14 @@ export const TokenInfo = (props: TokenInfoProps) => {
     <Stack direction="row" flexWrap="nowrap">
       {value.startsWith('#') && <ColorSwatch color={value} />}
       <Stack direction="column" flexWrap="wrap">
-        <TokenCopy format={'Hex'} value={value} />
-        <TokenCopy format={'JS'} value={`tokens.${category}.${jsPath}`} />
-        <TokenCopy
+        <TokenValue format={'Val'} value={value} />
+        <TokenValue format={'JS'} value={`tokens.${category}.${jsPath}`} />
+        <TokenValue
           format={'CSS'}
           isLowerCase
           value={`--token-${globalCSS}${category}-${cssPath}`}
         />
-        <TokenCopy
+        <TokenValue
           format={'SCSS'}
           isLowerCase
           value={`$token-${globalCSS}${category}-${cssPath}`}
