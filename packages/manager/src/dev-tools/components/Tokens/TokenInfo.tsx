@@ -3,15 +3,9 @@ import React from 'react';
 
 import { ColorSwatch } from './ColorSwatch';
 import { TokenValue } from './TokenCopy';
+import { camelToKebabCase, formatValue } from './utils';
 
 import type { TokenCategory } from '../../DesignTokensTool';
-
-export const formatValue = (value: any) =>
-  isNaN(Number(value)) ? `${value}` : `[${value}]`;
-
-const camelToKebabCase = (str: string) => {
-  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-};
 
 interface TokenInfoProps {
   category: TokenCategory;

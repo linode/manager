@@ -3,9 +3,6 @@ import { Box } from '@linode/ui';
 import React from 'react';
 
 interface ColorSwatchProps {
-  /**
-   * The color to display
-   */
   color: string;
 }
 
