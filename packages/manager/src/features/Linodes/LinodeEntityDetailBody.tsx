@@ -348,7 +348,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           }}
           container
           direction="column"
-          spacing={2}
+          spacing={1}
         >
           <StyledColumnLabelGrid data-testid="vpc-section-title">
             VPC
@@ -358,20 +358,18 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               alignItems: 'center',
               margin: 0,
               padding: '0 0 8px 0',
-
               [theme.breakpoints.down('md')]: {
                 alignItems: 'start',
                 display: 'flex',
                 flexDirection: 'column',
-                paddingLeft: '8px',
               },
             }}
             container
             direction="row"
-            spacing={2}
+            spacing={0}
           >
             <StyledVPCBox>
-              <StyledListItem>
+              <StyledListItem sx={{ paddingLeft: 0 }}>
                 <StyledLabelBox component="span">Label:</StyledLabelBox>{' '}
                 <Link
                   data-testid="assigned-vpc-label"
@@ -418,7 +416,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               1
             )} ${theme.spacing(2)}`,
             [theme.breakpoints.down('md')]: {
-              paddingLeft: 3,
+              paddingLeft: 2,
             },
           }}
           container
@@ -430,6 +428,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 ...(!attachedFirewall && !isLinodeInterfacesEnabled
                   ? { borderRight: 'unset' }
                   : {}),
+                paddingLeft: 0,
               }}
             >
               <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
@@ -447,6 +446,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             <StyledListItem
               sx={{
                 ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
+                ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
               }}
             >
               <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
@@ -461,7 +461,14 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             </StyledListItem>
           )}
           {isLinodeInterfacesEnabled && (
-            <StyledListItem sx={{ borderRight: 'unset' }}>
+            <StyledListItem
+              sx={{
+                ...(!linodeLkeClusterId && !attachedFirewall
+                  ? { paddingLeft: 0 }
+                  : {}),
+                borderRight: 'unset',
+              }}
+            >
               <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
               {isLinodeInterface ? (
                 'Linode'
