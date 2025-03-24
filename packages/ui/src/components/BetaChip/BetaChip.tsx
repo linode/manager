@@ -23,7 +23,7 @@ export interface BetaChipProps
    * The color of the chip.
    * default renders a gray chip, primary renders a blue chip.
    */
-  color?: 'default' | 'primary';
+  color?: 'primary' | 'secondary';
 }
 
 /**
@@ -36,7 +36,7 @@ export interface BetaChipProps
  *
  */
 export const BetaChip = (props: BetaChipProps) => {
-  const { color } = props;
+  const { color = 'primary' } = props;
 
   return (
     <StyledBetaChip
@@ -50,12 +50,20 @@ export const BetaChip = (props: BetaChipProps) => {
 
 const StyledBetaChip = styled(Chip, {
   label: 'StyledBetaChip',
-})<BetaChipProps>(({ theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'color',
+})<BetaChipProps>(({ color, theme }) => ({
   '& .MuiChip-label': {
     padding: 0,
   },
-  background: 'lch(77.7 28.7 275 / 0.12)',
-  color: theme.tokens.color.Ultramarine[50],
+  background:
+    color === 'primary'
+      ? 'lch(77.7 28.7 275 / 0.12)'
+      : theme.tokens.color.Neutrals[60],
+  color:
+    color === 'primary'
+      ? theme.tokens.color.Ultramarine[50]
+      : theme.tokens.color.Neutrals.White,
+
   font: theme.font.bold,
   fontSize: '0.625rem',
   height: 16,

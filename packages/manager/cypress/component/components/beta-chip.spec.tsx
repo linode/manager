@@ -1,8 +1,7 @@
+import { BetaChip } from '@linode/ui';
 import * as React from 'react';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { componentTests, visualTests } from 'support/util/components';
-
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 
 componentTests('BetaChip', () => {
   visualTests((mount) => {
@@ -12,7 +11,7 @@ componentTests('BetaChip', () => {
     });
 
     it('renders "BETA" text indicator with default color', () => {
-      mount(<BetaChip color="default" />);
+      mount(<BetaChip color="secondary" />);
       cy.findByText('beta').should('be.visible');
     });
 
@@ -22,7 +21,7 @@ componentTests('BetaChip', () => {
     });
 
     it('passes aXe check with default color', () => {
-      mount(<BetaChip color="default" />);
+      mount(<BetaChip color="secondary" />);
       checkComponentA11y();
     });
   });
