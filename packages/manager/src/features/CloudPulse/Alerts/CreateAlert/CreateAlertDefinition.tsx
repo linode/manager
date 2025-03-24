@@ -124,13 +124,13 @@ export const CreateAlertDefinition = () => {
       });
       alertCreateExit();
     } catch (errors) {
-      handleMultipleError<CreateAlertDefinitionForm>(
+      handleMultipleError<CreateAlertDefinitionForm>({
+        errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
         errors,
-        CREATE_ALERT_ERROR_FIELD_MAP,
-        MULTILINE_ERROR_SEPARATOR,
-        SINGLELINE_ERROR_SEPARATOR,
-        setError
-      );
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {

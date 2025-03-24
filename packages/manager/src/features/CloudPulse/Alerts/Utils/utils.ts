@@ -80,6 +80,30 @@ export interface AlertValidationSchemaProps {
    */
   serviceTypeObj: null | string;
 }
+interface HandleMultipleErrorProps<T extends FieldValues> {
+  /**
+   *  A mapping of API error field names to form field paths. Use this to redirect API errors
+   *  to specific form fields. For example, if the API returns an error for "user.name" but
+   *  your form field is called "fullName", you would map "user" to "fullName".
+   */
+  errorFieldMap: Record<string, FieldPath<T>>;
+  /**
+   * List of errors returned from the API
+   */
+  errors: APIError[];
+  /**
+   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
+   */
+  multiLineErrorSeparator: string;
+  /**
+   * React Hook Form's setError function to register errors with the form
+   */
+  setError: UseFormSetError<T>;
+  /**
+   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+   */
+  singleLineErrorSeparator: string;
+}
 
 /**
  * @param serviceType Service type for which the label needs to be displayed
@@ -314,13 +338,7 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
 /**
  * Handles multiple API errors and maps them to form fields, setting form errors appropriately.
  *
- * @param errors - List of errors returned from the API
- * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors
- *                        to specific form fields. For example, if the API returns an error for "user.name" but
- *                        your form field is called "fullName", you would map "user" to "fullName".
- * @param multiLineErrorSeparator - Separator for multiple errors on fields that are rendered explicitly. Ex: @AlertListNoticeMessages component
- * @param singleLineErrorSeparator - Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
- * @param setError - React Hook Form's setError function to register errors with the form
+ * @param props @interface HandleMultipleErrorProps - Props required for the HandleMultiplError component
  *
  * @example
  * // Example usage:
@@ -344,20 +362,24 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
  * );
  */
 export const handleMultipleError = <T extends FieldValues>(
-  errors: APIError[],
-  errorFieldMap: Record<string, FieldPath<T>>,
-  multiLineErrorSeparator: string,
-  singleLineErrorSeparator: string,
-  setError: UseFormSetError<T>
+  props: HandleMultipleErrorProps<T>
 ) => {
+  const {
+    errorFieldMap,
+    errors,
+    multiLineErrorSeparator,
+    setError,
+    singleLineErrorSeparator,
+  } = props;
   const errorMap: Map<FieldPath<T>, string> = new Map();
 
   for (const error of errors) {
     if (!error.field) {
       continue;
     }
-
+    // Extract the root field name
     const errorField = error.field.split('.')[0];
+
     const errorFieldToSet: FieldPath<T> =
       errorFieldMap[errorField] ?? error.field;
 
@@ -365,10 +387,12 @@ export const handleMultipleError = <T extends FieldValues>(
       ? error.reason
       : `${error.reason}.`;
 
+    // Use different separators for multiline vs singleline error message fields
     const separator = errorFieldMap[errorField]
       ? multiLineErrorSeparator
       : singleLineErrorSeparator;
 
+    // Avoid duplicate error messages and append new error with appropriate separator if field already has errors
     if (errorMap.has(errorFieldToSet)) {
       const existingMessage = errorMap.get(errorFieldToSet)!;
       if (!existingMessage.includes(formattedReason)) {
@@ -380,6 +404,7 @@ export const handleMultipleError = <T extends FieldValues>(
     } else {
       errorMap.set(errorFieldToSet, formattedReason);
     }
+
     setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
   }
 };

@@ -9,6 +9,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
+import { MULTILINE_ERROR_SEPARATOR } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
   getAlertResourceFilterProps,
   getFilteredResources,
@@ -17,7 +19,6 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -336,6 +337,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+  const noticeStyles = (theme: Theme) => ({
+    alignItems: 'center',
+    background: theme.tokens.background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacing(2),
+  });
 
   return (
     <Stack gap={2}>
@@ -415,13 +425,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
         )}
         {errorText?.length && (
-          <AlertsNoticeMessage text={errorText} variant="error" />
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              errorMessage={errorText}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              sx={noticeStyles}
+              variant="error"
+            />
+          </Grid>
         )}
         {maxSelectionCount !== undefined && (
-          <AlertsNoticeMessage
-            text={`You can select up to ${maxSelectionCount} resources.`}
-            variant="warning"
-          />
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              errorMessage={`You can select up to ${maxSelectionCount} resources.`}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              sx={noticeStyles}
+              variant="warning"
+            />
+          </Grid>
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&

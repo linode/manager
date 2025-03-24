@@ -85,13 +85,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       });
       history.push(definitionLanding);
     } catch (errors) {
-      handleMultipleError<EditAlertDefinitionPayload>(
+      handleMultipleError<EditAlertDefinitionPayload>({
+        errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
         errors,
-        EDIT_ALERT_ERROR_FIELD_MAP,
-        MULTILINE_ERROR_SEPARATOR,
-        SINGLELINE_ERROR_SEPARATOR,
-        setError
-      );
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {

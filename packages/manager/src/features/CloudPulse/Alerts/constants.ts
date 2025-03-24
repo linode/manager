@@ -190,6 +190,7 @@ export const CREATE_ALERT_ERROR_FIELD_MAP: Record<
   FieldPath<CreateAlertDefinitionForm>
 > = {
   channel_ids: 'channel_ids',
+  entity_ids: 'entity_ids',
   rule_criteria: 'rule_criteria.rules',
 };
 
@@ -198,6 +199,7 @@ export const EDIT_ALERT_ERROR_FIELD_MAP: Record<
   FieldPath<EditAlertDefinitionPayload>
 > = {
   channel_ids: 'channel_ids',
+  entity_ids: 'entity_ids',
   rule_criteria: 'rule_criteria.rules',
 };
 

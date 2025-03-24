@@ -178,13 +178,13 @@ describe('getValidationSchema', () => {
 
     const setError = vi.fn();
 
-    handleMultipleError(
+    handleMultipleError({
       errors,
-      CREATE_ALERT_ERROR_FIELD_MAP,
-      MULTILINE_ERROR_SEPARATOR,
-      SINGLELINE_ERROR_SEPARATOR,
-      setError
-    );
+      errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+      multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      setError,
+    });
 
     // Check that setError was called for each field correctly
     expect(setError).toHaveBeenCalledWith('label', {
