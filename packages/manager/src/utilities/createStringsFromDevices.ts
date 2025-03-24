@@ -1,7 +1,7 @@
 import { DiskDevice, VolumeDevice } from '@linode/api-v4/lib/linodes';
 import { compose, reduce, toPairs } from 'ramda';
 
-import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import { DevicesAsStrings } from '@linode/utilities';
 
 const rdx = (
   result: DevicesAsStrings,
