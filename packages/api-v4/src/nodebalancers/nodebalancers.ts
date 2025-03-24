@@ -180,13 +180,13 @@ export const getNodeBalancerTypes = (params?: Params) =>
   );
 
 /**
- * getNodeBalancerVPCsBeta
+ * getNodeBalancerVPCConfigsBeta
  *
  * View all VPC Config information for this NodeBalancer
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
  */
-export const getNodeBalancerVPCsBeta = (
+export const getNodeBalancerVPCConfigsBeta = (
   nodeBalancerId: number,
   params?: Params,
   filter?: Filter
@@ -202,13 +202,13 @@ export const getNodeBalancerVPCsBeta = (
     setParams(params)
   );
 /**
- * getNodeBalancerVPCBeta
+ * getNodeBalancerVPCConfigBeta
  *
  * View VPC Config information for this NodeBalancer and VPC Config id
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
  */
-export const getNodeBalancerVPCBeta = (
+export const getNodeBalancerVPCConfigBeta = (
   nodeBalancerId: number,
   nbVpcConfigId: number
 ) =>
