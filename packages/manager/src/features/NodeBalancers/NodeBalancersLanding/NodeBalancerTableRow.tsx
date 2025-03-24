@@ -14,12 +14,8 @@ import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
-interface Props extends NodeBalancer {
-  onDelete: () => void;
-}
-
-export const NodeBalancerTableRow = (props: Props) => {
-  const { id, ipv4, label, onDelete, region, transfer } = props;
+export const NodeBalancerTableRow = (props: NodeBalancer) => {
+  const { id, ipv4, label, region, transfer } = props;
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
@@ -73,11 +69,7 @@ export const NodeBalancerTableRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        <NodeBalancerActionMenu
-          label={label}
-          nodeBalancerId={id}
-          toggleDialog={onDelete}
-        />
+        <NodeBalancerActionMenu nodeBalancerId={id} />
       </TableCell>
     </TableRow>
   );
