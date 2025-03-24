@@ -231,7 +231,7 @@ describe('restricted user cannot create database', () => {
     );
 
     // all form inputs are disabled
-    cy.get('form').within(() => {
+    cy.get('[data-testid="db-create-form"]').within(() => {
       cy.get('input').each((input) => {
         cy.wrap(input).should('be.disabled');
       });
