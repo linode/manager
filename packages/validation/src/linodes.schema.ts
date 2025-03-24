@@ -532,7 +532,7 @@ const BaseInterfaceIPv4AddressSchema = object({
 });
 
 const VPCInterfaceIPv4RangeSchema = object({
-  range: string().required(),
+  range: string().required("Range is required."),
 });
 
 const PublicInterfaceRangeSchema = object({
@@ -540,7 +540,7 @@ const PublicInterfaceRangeSchema = object({
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
-  address: string().required(),
+  address: string().required("VPC IPv4 is required."),
   primary: boolean(),
   nat_1_1_address: string().nullable(),
 });
