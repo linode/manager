@@ -1,0 +1,1 @@
+{"meta":{"datetime":"2025-03-20T15:07:30.110-04:00","totalWeight":100,"totalDuration":29250},"weights":[{"filepath":"cypress/e2e/core/account/account-logout.spec.ts","duration":29250,"weight":100}]}
