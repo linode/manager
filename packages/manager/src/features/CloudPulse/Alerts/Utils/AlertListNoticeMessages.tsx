@@ -1,7 +1,5 @@
-import { List, ListItem, Typography } from '@linode/ui';
+import { List, ListItem, Notice, Typography } from '@linode/ui';
 import React from 'react';
-
-import { AlertNoticeWrapper } from './AlertsNoticeMessage';
 
 import type { NoticeVariant } from '@linode/ui';
 import { SxProps } from '@mui/material';
@@ -60,5 +58,24 @@ export const AlertListNoticeMessages = (
         {errorList[0]}
       </Typography>
     </AlertNoticeWrapper>
+  );
+};
+
+/**
+ * Wrapper component for displaying error messages within a Notice component
+ */
+export const AlertNoticeWrapper = ({
+  children,
+  sx,
+  variant,
+}: {
+  children: React.ReactNode;
+  sx?: SxProps;
+  variant: NoticeVariant;
+}) => {
+  return (
+    <Notice sx={sx} variant={variant}>
+      {children}
+    </Notice>
   );
 };
