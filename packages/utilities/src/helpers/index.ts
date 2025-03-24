@@ -6,6 +6,7 @@ export * from './arrayToList';
 export * from './breakpoints';
 export * from './capitalize';
 export * from './createDevicesFromStrings';
+export * from './createStringsFromDevices';
 export * from './deepStringTransform';
 export * from './downloadFile';
 export * from './env';

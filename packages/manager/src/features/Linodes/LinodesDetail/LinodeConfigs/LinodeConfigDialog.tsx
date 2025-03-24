@@ -32,6 +32,7 @@ import {
 import {
   scrollErrorIntoViewV2,
   createDevicesFromStrings,
+  createStringsFromDevices,
 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -52,7 +53,6 @@ import {
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
   handleFieldErrors,
   handleGeneralErrors,
