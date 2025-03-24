@@ -7,9 +7,13 @@ export * from './breakpoints';
 export * from './capitalize';
 export * from './createDevicesFromStrings';
 <<<<<<< HEAD
+<<<<<<< HEAD
 export * from './createStringsFromDevices';
 =======
 >>>>>>> 963b157abb (Move createDevicesFromStrings)
+=======
+export * from './createStringsFromDevices';
+>>>>>>> 984cfd933b (Move createStringsFromDevices)
 export * from './deepStringTransform';
 export * from './doesRegionSupportFeature';
 export * from './downloadFile';
