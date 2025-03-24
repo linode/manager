@@ -118,7 +118,7 @@ export const DatabaseActionMenu = (props: Props) => {
 
   if (isDatabasesV2GA) {
     actions.unshift({
-      disabled: databaseStatus !== 'active',
+      disabled: databaseStatus !== 'active' || isDatabaseReadOnly,
       onClick: () => {
         handlers.handleSuspend();
       },
@@ -127,7 +127,7 @@ export const DatabaseActionMenu = (props: Props) => {
     });
 
     actions.splice(4, 0, {
-      disabled: !isDatabaseSuspended,
+      disabled: !isDatabaseSuspended || isDatabaseReadOnly,
       onClick: () => {
         handleResume();
       },
