@@ -390,7 +390,10 @@ export const RebuildLinodeSchema = object({
   stackscript_id: number().optional(),
   stackscript_data: stackscript_data.notRequired(),
   booted: boolean().optional(),
-  metadata: MetadataSchema.optional(),
+  /**
+   * `metadata` is an optional object with required properties (see https://github.com/jquense/yup/issues/772)
+   */
+  metadata: MetadataSchema.optional().default(undefined),
   disk_encryption: string().oneOf(['enabled', 'disabled']).optional(),
 });
 
