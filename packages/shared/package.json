@@ -66,6 +66,7 @@
     "eslint-plugin-testing-library": "^3.1.2",
     "eslint-plugin-xss": "^0.1.10",
     "lint-staged": "^15.2.9",
-    "prettier": "~2.2.1"
+    "prettier": "~2.2.1",
+    "vite-plugin-svgr": "^3.2.0"
   }
 }

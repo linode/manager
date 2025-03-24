@@ -787,6 +787,9 @@ importers:
       prettier:
         specifier: ~2.2.1
         version: 2.2.1
+      vite-plugin-svgr:
+        specifier: ^3.2.0
+        version: 3.3.0(rollup@4.34.8)(typescript@5.7.3)(vite@6.2.3(@types/node@20.17.6)(jiti@1.21.6)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
 
   packages/ui:
     dependencies:
