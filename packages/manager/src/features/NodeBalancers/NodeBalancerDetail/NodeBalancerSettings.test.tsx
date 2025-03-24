@@ -11,8 +11,11 @@ import { NodeBalancerSettings } from './NodeBalancerSettings';
 vi.mock('src/hooks/useIsResourceRestricted');
 
 const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn(() => ({})),
+  useNavigate: vi.fn(() => vi.fn()),
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useParams: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -21,6 +24,16 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useMatch: queryMocks.useMatch,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -34,6 +47,7 @@ describe('NodeBalancerSettings', () => {
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewallFactory.build({ label: 'mock-firewall-1' })] },
     });
+    queryMocks.useParams.mockReturnValue({ id: 1 });
   });
 
   afterEach(() => {

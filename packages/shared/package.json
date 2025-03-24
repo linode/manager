@@ -34,14 +34,13 @@
     "@linode/queries": "workspace:*",
     "@linode/ui": "workspace:*",
     "@linode/utilities": "workspace:*",
-    "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "@tanstack/react-query": "5.51.24",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/react": "^8.6.7",
     "@testing-library/dom": "^10.1.0",

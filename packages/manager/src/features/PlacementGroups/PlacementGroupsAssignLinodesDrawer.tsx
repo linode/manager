@@ -12,6 +12,7 @@ import {
   ActionsPanel,
   Box,
   Divider,
+  Drawer,
   Notice,
   Stack,
   TooltipIcon,
@@ -21,7 +22,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -142,6 +143,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title={`Assign Linodes to Placement Group ${label}`}

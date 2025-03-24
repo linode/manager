@@ -37,12 +37,24 @@ import type { AccountAccessType, RoleType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { capitalize, truncate } from '@linode/utilities';
+import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
   const history = useHistory();
   const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
+
+  const [
+    isChangeRoleDrawerOpen,
+    setIsChangeRoleDrawerOpen,
+  ] = React.useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+
+  const handleChangeRole = (role: ExtendedRoleMap) => {
+    setIsChangeRoleDrawerOpen(true);
+    setSelectedRole(role);
+  };
 
   const {
     data: accountPermissions,
@@ -100,7 +112,7 @@ export const AssignedRolesTable = () => {
       const accountMenu: Action[] = [
         {
           onClick: () => {
-            // mock
+            handleChangeRole(role);
           },
           title: 'Change Role',
         },
@@ -125,7 +137,7 @@ export const AssignedRolesTable = () => {
         },
         {
           onClick: () => {
-            // mock
+            handleChangeRole(role);
           },
           title: 'Change Role',
         },
@@ -137,11 +149,12 @@ export const AssignedRolesTable = () => {
         },
       ];
 
-      const actions = role.access === 'account' ? accountMenu : entitiesMenu;
+      const actions =
+        role.access === 'account_access' ? accountMenu : entitiesMenu;
 
       const OuterTableCells = (
         <>
-          {role.access === 'account' ? (
+          {role.access === 'account_access' ? (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <Typography>
                 {role.resource_type === 'account'
@@ -177,7 +190,7 @@ export const AssignedRolesTable = () => {
         >
           <Typography
             sx={{
-              font: theme.tokens.typography.Label.Bold.S,
+              font: theme.tokens.alias.Typography.Label.Bold.S,
             }}
           >
             Description
@@ -190,7 +203,7 @@ export const AssignedRolesTable = () => {
             {description.length > 150 && (
               <StyledLinkButton
                 sx={{
-                  font: theme.tokens.typography.Label.Semibold.Xs,
+                  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
                   width: 'max-content',
                 }}
                 onClick={() => setShowFullDescription((show) => !show)}
@@ -288,6 +301,11 @@ export const AssignedRolesTable = () => {
         }
         TableItems={memoizedTableItems}
         TableRowHead={RoleTableRowHead}
+      />
+      <ChangeRoleDrawer
+        onClose={() => setIsChangeRoleDrawerOpen(false)}
+        open={isChangeRoleDrawerOpen}
+        role={selectedRole}
       />
     </Grid>
   );

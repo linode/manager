@@ -15,7 +15,7 @@ export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(() => ({
 export const StyledPermissionItem = styled(Typography, {
   label: 'StyledPermissionItem',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.tokens.border.Normal}`,
+  borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
   display: 'inline-block',
   padding: `0px ${theme.spacing(0.75)} ${theme.spacing(0.25)}`,
 }));
@@ -42,6 +42,6 @@ export const StyledClampedContent = styled('div', {
 export const StyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
-  font: theme.tokens.typography.Label.Semibold.Xs,
+  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
   paddingLeft: theme.tokens.spacing.S6,
 }));

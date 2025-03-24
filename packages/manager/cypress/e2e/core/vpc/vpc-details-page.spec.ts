@@ -35,6 +35,7 @@ describe('VPC details page', () => {
     const mockVPC: VPC = vpcFactory.build({
       id: randomNumber(),
       label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     const mockVPCUpdated = {
@@ -132,6 +133,7 @@ describe('VPC details page', () => {
     const mockVPC = vpcFactory.build({
       id: randomNumber(),
       label: randomLabel(),
+      region: chooseRegion().id,
     });
 
     const mockVPCAfterSubnetCreation = vpcFactory.build({

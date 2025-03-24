@@ -217,7 +217,8 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                             ':hover': {
                               color: theme.tokens.color.Brand[60],
                             },
-                            color: theme.tokens.table.HeaderNested.Icon,
+                            color:
+                              theme.tokens.component.Table.HeaderNested.Icon,
                           })}
                           aria-describedby={groupByDescriptionId}
                           aria-label="Toggle group by tag"

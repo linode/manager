@@ -35,7 +35,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",

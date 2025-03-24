@@ -5,14 +5,14 @@ import {
   useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
-import { ActionsPanel, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
@@ -176,6 +176,7 @@ export const AddLinodeDrawer = (props: Props) => {
         setLocalError(undefined);
         onClose();
       }}
+      NotFoundComponent={NotFound}
       open={open}
       title={`Add Linode to Firewall: ${firewall?.label}`}
     >

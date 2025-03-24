@@ -1,9 +1,9 @@
-import { Notice, Typography } from '@linode/ui';
+import { Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { NotFound } from 'src/components/NotFound';
 
 import { LinodeVolumeAttachForm } from './LinodeVolumeAttachForm';
 import { LinodeVolumeCreateForm } from './LinodeVolumeCreateForm';
@@ -47,6 +47,7 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
           ? `Attach Volume to ${linode.label}`
           : `Create Volume for ${linode.label}`
       }
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
     >
