@@ -126,7 +126,7 @@ export interface MockState {
   firewalls: Firewall[];
   ipAddresses: IPAddress[];
   linodeConfigs: [number, Config][];
-  linodeInterfaces: [number, LinodeInterface][],
+  linodeInterfaces: [number, LinodeInterface][];
   linodes: Linode[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];
