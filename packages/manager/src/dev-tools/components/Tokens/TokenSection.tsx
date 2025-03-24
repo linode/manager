@@ -84,7 +84,7 @@ export const TokenSection = ({
 
   if (isColorValueString) {
     return (
-      <Stack sx={{ p: 2 }}>
+      <Stack sx={{ height: '100%', p: 2 }}>
         <Typography
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Normal,
@@ -107,7 +107,7 @@ export const TokenSection = ({
   }
 
   return (
-    <Stack sx={{ p: 2 }}>
+    <Stack sx={{ height: '100%', p: 2 }}>
       <Typography
         sx={(theme) => ({
           backgroundColor: theme.tokens.alias.Background.Normal,

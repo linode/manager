@@ -66,7 +66,11 @@ export const countTokens = (
   }, 0);
 };
 
-export const formatValue = (value: string) => {
+export const formatValue = (value: string, category: TokenCategory) => {
+  if (category === 'spacing') {
+    return value;
+  }
+
   // If it's a pure number, wrap in brackets
   if (!isNaN(Number(value))) {
     return `[${value}]`;
@@ -80,12 +84,4 @@ export const formatValue = (value: string) => {
   }
 
   return value;
-};
-
-export const camelToKebabCase = (str: string) => {
-  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-};
-
-export const isGlobalTokenCategory = (category: TokenCategory) => {
-  return category === 'color' || category === 'font' || category === 'spacing';
 };

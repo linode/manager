@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ColorSwatch } from './ColorSwatch';
 import { TokenValue } from './TokenCopy';
-import { camelToKebabCase, formatValue, isGlobalTokenCategory } from './utils';
+import { formatValue } from './utils';
 
 import type { TokenCategory } from '../../DesignTokensTool';
 
@@ -21,7 +21,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
     path.length > 0
       ? path
           .flatMap((segment) => segment.split('.'))
-          .map((segment) => formatValue(segment))
+          .map((segment) => formatValue(segment, category))
           .reduce((result, segment, index) => {
             // First segment never gets a dot
             if (index === 0) {
@@ -36,16 +36,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
             // Otherwise add a dot
             return result + '.' + segment;
           }, '')
-      : formatValue(variant);
-  const cssPath =
-    path.length > 0
-      ? path
-          .flatMap((segment) => segment.split('.'))
-          .map((segment) => camelToKebabCase(segment))
-          .join('-')
-          .toLowerCase()
-      : camelToKebabCase(variant);
-  const globalCSS = isGlobalTokenCategory(category) ? 'global-' : '';
+      : formatValue(variant, category);
 
   return (
     <Stack direction="row" flexWrap="nowrap" minWidth={275}>
@@ -55,16 +46,6 @@ export const TokenInfo = (props: TokenInfoProps) => {
       <Stack direction="column" flexWrap="wrap">
         <TokenValue format={'Val'} value={value} />
         <TokenValue format={'JS'} value={`tokens.${category}.${jsPath}`} />
-        <TokenValue
-          format={'CSS'}
-          isLowerCase
-          value={`--token-${globalCSS}${category}-${cssPath}`}
-        />
-        <TokenValue
-          format={'SCSS'}
-          isLowerCase
-          value={`$token-${globalCSS}${category}-${cssPath}`}
-        />
       </Stack>
     </Stack>
   );
