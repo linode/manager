@@ -89,8 +89,8 @@ export const NotificationMenu = () => {
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
             color: notificationContext.menuOpen
-              ? theme.tokens.header.Icon.Active
-              : theme.tokens.header.Icon.Default,
+              ? theme.tokens.component.GlobalHeader.Icon.Active
+              : theme.tokens.component.GlobalHeader.Icon.Default,
           })}
           aria-describedby={id}
           aria-haspopup="true"
@@ -191,11 +191,11 @@ const StyledChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  backgroundColor: theme.tokens.header.Badge.Background,
+  backgroundColor: theme.tokens.component.GlobalHeader.Badge.Background,
   borderRadius: props.adjustBorderRadius ? theme.tokens.spacing.S12 : '50%',
-  color: theme.tokens.header.Badge.Text,
+  color: theme.tokens.component.GlobalHeader.Badge.Text,
   flexDirection: 'row-reverse',
-  font: theme.tokens.typography.Label.Bold.Xs,
+  font: theme.tokens.alias.Typography.Label.Bold.Xs,
   justifyContent: 'center',
   left: 20,
   padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S6}`,
@@ -205,7 +205,7 @@ const StyledChip = styled(Chip, {
 
 export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
-  fill: theme.tokens.header.Badge.Icon,
+  fill: theme.tokens.component.GlobalHeader.Badge.Icon,
   height: '12px',
   width: '12px',
 }));

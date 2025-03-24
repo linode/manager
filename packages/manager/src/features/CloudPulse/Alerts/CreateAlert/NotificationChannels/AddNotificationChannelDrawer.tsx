@@ -1,10 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ActionsPanel, Autocomplete, Box, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Drawer,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
@@ -95,7 +101,12 @@ export const AddNotificationChannelDrawer = (
   };
 
   return (
-    <Drawer onClose={resetDrawer} open={open} title="Add Notification Channel">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={resetDrawer}
+      open={open}
+      title="Add Notification Channel"
+    >
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Box
@@ -108,7 +119,7 @@ export const AddNotificationChannelDrawer = (
           >
             <Typography
               sx={(theme) => ({
-                color: theme.tokens.content.Text,
+                color: theme.tokens.alias.Content.Text,
               })}
               gutterBottom
               variant="h3"

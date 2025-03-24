@@ -1,5 +1,10 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
+import {
+  getRegionsByRegionId,
+  isFeatureEnabledV2,
+  readableBytes,
+} from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -11,9 +16,6 @@ import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-import { useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { BucketActionMenu } from './BucketActionMenu';
 import {

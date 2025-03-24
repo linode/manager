@@ -212,9 +212,9 @@ export const FirewallDeviceSchema = object({
 
 export const UpdateFirewallSettingsSchema = object({
   default_firewall_ids: object({
-    interface_public: number(),
-    interface_vpc: number(),
-    linode: number(),
-    nodebalancer: number(),
+    interface_public: number().nullable(),
+    interface_vpc: number().nullable(),
+    linode: number().nullable(),
+    nodebalancer: number().nullable(),
   }),
 });
