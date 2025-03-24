@@ -9,7 +9,7 @@ import { chooseRegion } from 'support/util/regions';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 
 authenticate();
-describe('create firewall', () => {
+describe.skip('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);
   });

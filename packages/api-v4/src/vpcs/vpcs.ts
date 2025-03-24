@@ -1,5 +1,5 @@
 import {
-  createSubnetSchema,
+  createSubnetSchemaIPv4,
   createVPCSchema,
   modifySubnetSchema,
   updateVPCSchema,
@@ -129,7 +129,7 @@ export const createSubnet = (vpcID: number, data: CreateSubnetPayload) =>
   Request<Subnet>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
     setMethod('POST'),
-    setData(data, createSubnetSchema)
+    setData(data, createSubnetSchemaIPv4)
   );
 
 /**
