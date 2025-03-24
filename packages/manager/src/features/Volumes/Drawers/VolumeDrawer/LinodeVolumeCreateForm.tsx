@@ -28,7 +28,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { maybeCastToNumber } from '@linode/utilities';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import { ConfigSelect } from './ConfigSelect';
