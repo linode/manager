@@ -23,6 +23,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
 
@@ -48,6 +49,8 @@ export const FirewallDetail = () => {
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
@@ -67,11 +70,27 @@ export const FirewallDetail = () => {
         acc.linodeCount += 1;
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
+      } else if (
+        isLinodeInterfacesEnabled &&
+        device.entity.type === 'interface'
+      ) {
+        const linodeId = device.entity.url.split('/')[4];
+        if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {
+          acc.linodeCount += 1;
+        }
+        acc.seenLinodeIdsForInterfaces.add(linodeId);
       }
       return acc;
     },
-    { linodeCount: 0, nodebalancerCount: 0 }
-  ) || { linodeCount: 0, nodebalancerCount: 0 };
+    {
+      linodeCount: 0,
+      nodebalancerCount: 0,
+      seenLinodeIdsForInterfaces: new Set<string>(),
+    }
+  ) || {
+    linodeCount: 0,
+    nodebalancerCount: 0,
+  };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
