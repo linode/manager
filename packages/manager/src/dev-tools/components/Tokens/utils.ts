@@ -1,5 +1,6 @@
 import type {
   RecursiveTokenObject,
+  TokenCategory,
   TokenObject,
 } from 'src/dev-tools/DesignTokensTool';
 
@@ -83,4 +84,8 @@ export const formatValue = (value: string) => {
 
 export const camelToKebabCase = (str: string) => {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+};
+
+export const isGlobalTokenCategory = (category: TokenCategory) => {
+  return category === 'color' || category === 'font' || category === 'spacing';
 };

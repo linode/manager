@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ColorSwatch } from './ColorSwatch';
 import { TokenValue } from './TokenCopy';
-import { camelToKebabCase, formatValue } from './utils';
+import { camelToKebabCase, formatValue, isGlobalTokenCategory } from './utils';
 
 import type { TokenCategory } from '../../DesignTokensTool';
 
@@ -45,9 +45,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
           .join('-')
           .toLowerCase()
       : camelToKebabCase(variant);
-  const isGlobalToken =
-    category === 'color' || category === 'font' || category === 'spacing';
-  const globalCSS = isGlobalToken ? 'global-' : '';
+  const globalCSS = isGlobalTokenCategory(category) ? 'global-' : '';
 
   return (
     <Stack direction="row" flexWrap="nowrap" minWidth={275}>

@@ -2,6 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import {
   Box,
   CircleProgress,
+  Notice,
   Select,
   Stack,
   Typography,
@@ -11,6 +12,7 @@ import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
@@ -195,6 +197,35 @@ export const DesignTokensTool = () => {
               <Stack sx={{ pb: 8 }}>
                 {filteredTokens.map(([tokenCategory, tokenObject], index) => (
                   <SafeTabPanel index={index} key={tokenCategory}>
+                    {tokenCategory === 'color' && (
+                      <Notice sx={{ ml: 2, mt: 1 }} variant="warning">
+                        <Typography>
+                          Do not use <code>theme.tokens.color</code> directly in
+                          application code. <br />
+                          These are global tokens which are not theme-sensitive
+                          and will not respond to theme changes (light/dark
+                          mode).
+                          <br />
+                          See our{' '}
+                          <Link to="https://linode.github.io/manager/development-guide/16-design-tokens.html#%E2%9A%A0%EF%B8%8F-warning-global-vs-theme-sensitive-tokens">
+                            Design Tokens
+                          </Link>{' '}
+                          usage guide for more information.
+                        </Typography>
+                      </Notice>
+                    )}
+                    {tokenCategory === 'spacing' && (
+                      <Notice sx={{ ml: 2, mt: 1 }} variant="warning">
+                        <Typography>
+                          See our{' '}
+                          <Link to="https://linode.github.io/manager/development-guide/16-design-tokens.html#spacing">
+                            Spacing Tokens
+                          </Link>{' '}
+                          usage guide to use the new spacing function replacing
+                          the deprecated MUI <code>theme.spacing</code>.
+                        </Typography>
+                      </Notice>
+                    )}
                     <TokenPanelContent
                       searchValue={searchValue}
                       tokenCategory={tokenCategory as TokenCategory}
