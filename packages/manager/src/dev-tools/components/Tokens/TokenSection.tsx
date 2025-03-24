@@ -84,12 +84,25 @@ export const TokenSection = ({
 
   if (isColorValueString) {
     return (
-      <TokenInfo
-        category={category}
-        path={[title]}
-        value={value}
-        variant={variant}
-      />
+      <Stack sx={{ p: 2 }}>
+        <Typography
+          sx={(theme) => ({
+            backgroundColor: theme.tokens.alias.Background.Normal,
+            position: 'sticky',
+            top: 0,
+            zIndex: 2,
+          })}
+          variant="h3"
+        >
+          {title}
+        </Typography>
+        <TokenInfo
+          category={category}
+          path={[title]}
+          value={value}
+          variant={variant}
+        />
+      </Stack>
     );
   }
 

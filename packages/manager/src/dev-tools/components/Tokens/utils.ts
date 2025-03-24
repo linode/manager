@@ -8,6 +8,10 @@ export const filterTokenObject = (
   searchTerm: string,
   path: string[] = []
 ): RecursiveTokenObject | string => {
+  if (searchTerm.length < 3) {
+    return {};
+  }
+
   if (typeof obj === 'string') {
     // If it's a color value, check if it matches
     return obj.toLowerCase().includes(searchTerm) ? obj : {};
@@ -46,8 +50,36 @@ export const filterTokenObject = (
   return Object.keys(filtered).length > 0 ? filtered : {};
 };
 
-export const formatValue = (value: any) =>
-  isNaN(Number(value)) ? `${value}` : `[${value}]`;
+export const countTokens = (
+  obj: RecursiveTokenObject | TokenObject | string
+): number => {
+  if (typeof obj === 'string') {
+    return 1;
+  }
+
+  return Object.values(obj).reduce((count, value) => {
+    if (typeof value === 'object') {
+      return count + countTokens(value);
+    }
+    return count + 1;
+  }, 0);
+};
+
+export const formatValue = (value: string) => {
+  // If it's a pure number, wrap in brackets
+  if (!isNaN(Number(value))) {
+    return `[${value}]`;
+  }
+
+  // For any string containing a number
+  const match = value.match(/(\d+)/);
+  if (match) {
+    const parts = value.split(match[0]);
+    return `${parts[0]}[${match[0]}]${parts[1]}`;
+  }
+
+  return value;
+};
 
 export const camelToKebabCase = (str: string) => {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();

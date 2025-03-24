@@ -1,5 +1,12 @@
 import { ThemeProvider } from '@emotion/react';
-import { Box, CircleProgress, Select, Stack, light } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  Select,
+  Stack,
+  Typography,
+  light,
+} from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -12,7 +19,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { themes } from 'src/utilities/theme';
 
 import { TokenSection } from './components/Tokens/TokenSection';
-import { filterTokenObject } from './components/Tokens/utils';
+import { countTokens, filterTokenObject } from './components/Tokens/utils';
 
 import type { ThemeName } from '@linode/ui';
 
@@ -38,35 +45,47 @@ const TokenPanelContent = ({
     renderedContent,
     setRenderedContent,
   ] = React.useState<React.ReactNode | null>(null);
+  const [isSearching, setIsSearching] = React.useState(false);
 
   React.useEffect(() => {
     const computeTokens = async () => {
+      setIsSearching(true);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const filteredObject = searchValue
         ? filterTokenObject(tokenObject, searchValue.toLowerCase())
         : tokenObject;
 
-      const content = (
-        <Stack direction="row" flexWrap="wrap" width="100%">
-          {Object.entries(filteredObject).map(([key, value], index) => (
-            <TokenSection
-              category={tokenCategory}
-              key={`${key}-${index}`}
-              title={key}
-              value={value}
-              variant={key}
-            />
-          ))}
-        </Stack>
-      );
+      const totalResults = filteredObject ? countTokens(filteredObject) : 0;
+
+      const content =
+        totalResults > 0 ? (
+          <Stack direction="row" flexWrap="wrap" width="100%">
+            {Object.entries(filteredObject).map(([key, value], index) => (
+              <TokenSection
+                category={tokenCategory}
+                key={`${key}-${index}`}
+                title={key}
+                value={value}
+                variant={key}
+              />
+            ))}
+          </Stack>
+        ) : (
+          <Stack sx={{ m: 2 }}>
+            <Typography>
+              No matching tokens found for &quot;{searchValue}&quot;
+            </Typography>
+          </Stack>
+        );
       setRenderedContent(content);
+      setIsSearching(false);
     };
 
     computeTokens();
   }, [tokenCategory, tokenObject, searchValue]);
 
-  if (!renderedContent) {
+  if (!renderedContent || isSearching) {
     return (
       <Stack height={100} justifyContent="center" mt={8} width="100%">
         <CircleProgress />
@@ -123,24 +142,13 @@ export const DesignTokensTool = () => {
           </Stack>
         ) : (
           <Tabs index={selectedTab} onChange={setSelectedTab}>
-            <Stack direction="row" sx={{ pr: 2 }}>
-              <DebouncedSearchTextField
-                sx={{
-                  minWidth: 275,
-                  position: 'relative',
-                  top: '4px',
-                }}
-                clearable
-                hideLabel={true}
-                label="Search"
-                onSearch={setSearchValue}
-                placeholder="Search tokens"
-                value={searchValue}
-              />
-              <Stack sx={{ flex: 1, mx: 2 }}>
+            <Stack direction="row" sx={{ overflowX: 'auto', pr: 2 }}>
+              <Stack sx={{ mx: 2 }}>
                 <TabList>
                   {computedTokens.map(([tokenCategory, _tokenObject]) => (
-                    <Tab key={tokenCategory}>{capitalize(tokenCategory)}</Tab>
+                    <Tab disabled={searchValue !== ''} key={tokenCategory}>
+                      {capitalize(tokenCategory)}
+                    </Tab>
                   ))}
                 </TabList>
               </Stack>
@@ -153,6 +161,7 @@ export const DesignTokensTool = () => {
                   value: themeName as ThemeName,
                 }))}
                 sx={{
+                  mr: 1,
                   position: 'relative',
                   top: '2px',
                 }}
@@ -163,17 +172,37 @@ export const DesignTokensTool = () => {
                 hideLabel={true}
                 label="Theme"
               />
+              <DebouncedSearchTextField
+                errorText={
+                  searchValue !== '' && searchValue.length < 3
+                    ? 'Search must be at least 3 characters'
+                    : ''
+                }
+                sx={{
+                  minWidth: 275,
+                  position: 'relative',
+                  top: '4px',
+                }}
+                clearable
+                hideLabel={true}
+                label="Search"
+                onSearch={setSearchValue}
+                placeholder="Search tokens"
+                value={searchValue}
+              />
             </Stack>
             <TabPanels>
-              {filteredTokens.map(([tokenCategory, tokenObject], index) => (
-                <SafeTabPanel index={index} key={tokenCategory}>
-                  <TokenPanelContent
-                    searchValue={searchValue}
-                    tokenCategory={tokenCategory as TokenCategory}
-                    tokenObject={tokenObject}
-                  />
-                </SafeTabPanel>
-              ))}
+              <Stack sx={{ pb: 8 }}>
+                {filteredTokens.map(([tokenCategory, tokenObject], index) => (
+                  <SafeTabPanel index={index} key={tokenCategory}>
+                    <TokenPanelContent
+                      searchValue={searchValue}
+                      tokenCategory={tokenCategory as TokenCategory}
+                      tokenObject={tokenObject}
+                    />
+                  </SafeTabPanel>
+                ))}
+              </Stack>
             </TabPanels>
           </Tabs>
         )}
