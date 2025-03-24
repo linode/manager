@@ -209,7 +209,7 @@ export const VPC = ({ index }: Props) => {
             name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
           />
         </Stack>
-        <VPCRanges interfaceIndex={index} />
+        <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
       </Stack>
       <VPCCreateDrawer
         onSuccess={(vpc) => {

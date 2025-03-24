@@ -1,4 +1,10 @@
-import { Box, IconButton, Stack, TextField, Typography } from '@linode/ui';
+import {
+  IconButton,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
@@ -9,10 +15,11 @@ import { LinkButton } from 'src/components/LinkButton';
 import type { LinodeCreateFormValues } from '../utilities';
 
 interface Props {
+  disabled: boolean;
   interfaceIndex: number;
 }
 
-export const VPCRanges = ({ interfaceIndex }: Props) => {
+export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
   const { control } = useFormContext<LinodeCreateFormValues>();
 
   const { append, fields, remove } = useFieldArray({
@@ -21,20 +28,7 @@ export const VPCRanges = ({ interfaceIndex }: Props) => {
   });
 
   return (
-    <Stack spacing={1}>
-      <Stack spacing={0.75}>
-        <Typography sx={(theme) => ({ font: theme.font.bold })}>
-          Assign additional IPv4 ranges
-        </Typography>
-        <Typography>
-          Assign additional IPv4 address ranges that the VPC can use to reach
-          services running on this Linode.{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-            Learn more
-          </Link>
-          .
-        </Typography>
-      </Stack>
+    <Stack>
       <Stack spacing={1}>
         {fields.map((field, index) => (
           <Stack
@@ -69,11 +63,25 @@ export const VPCRanges = ({ interfaceIndex }: Props) => {
           </Stack>
         ))}
       </Stack>
-      <Box>
-        <LinkButton onClick={() => append({ range: '' })}>
+      <Stack alignItems="center" direction="row" spacing={1}>
+        <LinkButton isDisabled={disabled} onClick={() => append({ range: '' })}>
           Add IPv4 Range
         </LinkButton>
-      </Box>
+        <TooltipIcon
+          text={
+            <Typography>
+              Assign additional IPv4 address ranges that the VPC can use to
+              reach services running on this Linode.{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
+                Learn more
+              </Link>
+              .
+            </Typography>
+          }
+          status="help"
+          sxTooltipIcon={{ p: 0.5 }}
+        />
+      </Stack>
     </Stack>
   );
 };
