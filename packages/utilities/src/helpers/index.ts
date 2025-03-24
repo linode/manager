@@ -16,6 +16,7 @@ export * from './getIsLegacyInterfaceArray';
 export * from './getNewRegionLabel';
 export * from './groupByTags';
 export * from './getDisplayName';
+export * from './isNilOrEmpty';
 export * from './isNumber';
 export * from './link';
 export * from './manuallySetVPCConfigInterfacesToActive';
