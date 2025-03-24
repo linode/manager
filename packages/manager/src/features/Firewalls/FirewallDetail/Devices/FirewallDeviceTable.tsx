@@ -20,11 +20,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
-import type {
-  Filter,
-  FirewallDevice,
-  FirewallDeviceEntityType,
-} from '@linode/api-v4';
+import type { FirewallDevice, FirewallDeviceEntityType } from '@linode/api-v4';
 
 export interface FirewallDeviceTableProps {
   deviceType: FirewallDeviceEntityType;
@@ -58,21 +54,17 @@ export const FirewallDeviceTable = React.memo(
 
     const linodeInterfaceDevices =
       type === 'linode'
-        ? allDevices?.filter((device) => device.entity.type === 'interface') ??
-          []
+        ? allDevices?.filter((device) => device.entity.type === 'interface')
         : [];
-    const filterForInterfaceDeviceLinodes: Filter = {
-      ['+or']: linodeInterfaceDevices.map((device) => {
-        return { id: Number(device.entity.url.split('/')[4]) };
-      }),
-    };
 
     // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
     // so that we can add a label to the devices for sorting and display purposes
     const { data: linodesWithInterfaces } = useAllLinodesQuery(
       {},
-      filterForInterfaceDeviceLinodes,
-      isLinodeInterfacesEnabled && linodeInterfaceDevices.length > 0
+      {},
+      isLinodeInterfacesEnabled &&
+        linodeInterfaceDevices &&
+        linodeInterfaceDevices.length > 0
     );
 
     const updatedDevices = devices.map((device) => {
@@ -143,6 +135,7 @@ export const FirewallDeviceTable = React.memo(
                 direction={order}
                 handleClick={handleOrderChange}
                 label={'entity:label'}
+                sx={{ width: '30%' }}
               >
                 {formattedTypes[deviceType]}
               </TableSortCell>

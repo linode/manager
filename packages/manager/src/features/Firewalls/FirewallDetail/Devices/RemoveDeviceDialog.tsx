@@ -38,6 +38,11 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
 
+  const entityLabelToUse =
+    deviceType === 'interface'
+      ? `(ID: ${device?.entity.id})`
+      : device?.entity.label;
+
   const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
@@ -56,9 +61,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
     const toastMessage = onService
       ? `Firewall ${firewallLabel} successfully unassigned`
-      : `${deviceDialog} ${
-          device.entity.label ?? device.entity.id
-        } successfully removed`;
+      : `${deviceDialog} ${entityLabelToUse} successfully removed`;
 
     enqueueSnackbar(toastMessage, {
       variant: 'success',
@@ -88,16 +91,14 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const dialogTitle = onService
     ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${deviceDialog} ${device?.entity.label ?? device?.entity.id}?`;
+    : `Remove ${deviceDialog} ${entityLabelToUse}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
       {onService
         ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
-        : `remove ${deviceDialog} ${
-            device?.entity.label ?? device?.entity.id
-          } from Firewall ${firewallLabel}?`}
+        : `remove ${deviceDialog} ${entityLabelToUse} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 

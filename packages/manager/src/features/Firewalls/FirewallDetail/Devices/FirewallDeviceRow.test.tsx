@@ -8,18 +8,6 @@ import { FirewallDeviceRow } from './FirewallDeviceRow';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
-const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
-  return {
-    ...actual,
-    useFlags: queryMocks.useFlags,
-  };
-});
-
 const props = {
   device: firewallDeviceFactory.build(),
   disabled: false,
@@ -35,13 +23,9 @@ describe('FirewallDeviceRow', () => {
   });
 
   it('shows the network interface type if the linodeInterfaces feature flag is enabled for Linode related devices', () => {
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: {
-        enabled: true,
-      },
-    });
     const { getAllByRole, getByText } = renderWithTheme(
-      <FirewallDeviceRow {...props} />
+      <FirewallDeviceRow {...props} />,
+      { flags: { linodeInterfaces: { enabled: true } } }
     );
 
     expect(getByText('entity')).toBeVisible();
@@ -51,13 +35,11 @@ describe('FirewallDeviceRow', () => {
   });
 
   it('does not show the network interface type if the linodeInterfaces feature flag is not enabled for Linode related devices', () => {
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: {
-        enabled: false,
-      },
-    });
     const { getAllByRole, getByText, queryByText } = renderWithTheme(
-      <FirewallDeviceRow {...props} />
+      <FirewallDeviceRow {...props} />,
+      {
+        flags: { linodeInterfaces: { enabled: false } },
+      }
     );
 
     expect(getByText('entity')).toBeVisible();
@@ -67,11 +49,6 @@ describe('FirewallDeviceRow', () => {
   });
 
   it('does not show the network interface type for nodebalancer devices', () => {
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: {
-        enabled: true,
-      },
-    });
     const nodeBalancerEntity = firewallDeviceFactory.build({
       entity: {
         id: 10,
@@ -81,12 +58,17 @@ describe('FirewallDeviceRow', () => {
       },
     });
 
-    const { getAllByRole, getByText, queryByText } = renderWithTheme(
+    const {
+      getAllByRole,
+      getByText,
+      queryByText,
+    } = renderWithTheme(
       <FirewallDeviceRow
         {...props}
         device={nodeBalancerEntity}
         isLinodeRelatedDevice={false}
-      />
+      />,
+      { flags: { linodeInterfaces: { enabled: true } } }
     );
 
     expect(getByText('entity')).toBeVisible();
@@ -96,12 +78,9 @@ describe('FirewallDeviceRow', () => {
   });
 
   it('can remove a device with an enabled Remove button', async () => {
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: {
-        enabled: true,
-      },
+    const { getByText } = renderWithTheme(<FirewallDeviceRow {...props} />, {
+      flags: { linodeInterfaces: { enabled: true } },
     });
-    const { getByText } = renderWithTheme(<FirewallDeviceRow {...props} />);
 
     const removeButton = getByText('Remove');
     await userEvent.click(removeButton);
@@ -109,13 +88,9 @@ describe('FirewallDeviceRow', () => {
   });
 
   it('cannot remove a device with a disabled Remove button', async () => {
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: {
-        enabled: true,
-      },
-    });
     const { getByText } = renderWithTheme(
-      <FirewallDeviceRow {...props} disabled={true} />
+      <FirewallDeviceRow {...props} disabled={true} />,
+      { flags: { linodeInterfaces: { enabled: true } } }
     );
 
     const removeButton = getByText('Remove');
