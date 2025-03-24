@@ -31,7 +31,7 @@ import {
 import type { Database } from '@linode/api-v4';
 import type { databaseClusterConfiguration } from 'support/constants/databases';
 
-xdescribe('create a database cluster, mocked data', () => {
+describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
