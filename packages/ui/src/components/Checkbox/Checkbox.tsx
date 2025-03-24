@@ -116,6 +116,5 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   '& .MuiFormControlLabel-label': {
     paddingTop: theme.tokens.spacing.S2,
   },
-  // gap: theme.tokens.spacing.S8,
   marginRight: 0,
 }));

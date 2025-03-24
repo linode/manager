@@ -595,7 +595,6 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             color: `${Component.Checkbox.Empty.Hover.Border} !important`,
-            // backgroundColor: 'transparent',
           },
           // Checked
           '&.Mui-checked': {
