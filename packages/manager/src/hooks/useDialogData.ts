@@ -67,7 +67,7 @@ interface Props<TEntity> {
  * It will return the data for the entity that the dialog is going to target, including its loading state.
  * It is usually used on a feature landing page, where the dialog is triggered by a route change.
  *
- * It should be instantiated as follow:
+ * It should be instantiated as follow (single id):
  *
  * const {
  *  data: {entity},
@@ -77,6 +77,19 @@ interface Props<TEntity> {
  *   paramKey: 'entityId',
  *   queryHook: useEntityQuery, // ex: useVolumeQuery
  *   redirectToOnNotFound: '/entities', // ex: '/volumes'
+ * });
+ *
+ * It should be instantiated as follow (dual id):
+ *
+ * const {
+ *  data: {entity},
+ *  isFetching: isFetchingEntity,
+ * } = useDialogRouteGuard({
+ *   enabled: !!params.entityId && !!params.secondaryEntityId,
+ *   paramKey: 'entityId', // ex: 'vpcId'
+ *   queryHook: useEntityQuery, // ex: useSubnetQuery
+ *   redirectToOnNotFound: '/entities', // ex: '/vpcs/$vpcId/subnets'
+ *   secondaryParamKey: 'secondaryEntityId', // ex: 'subnetId'
  * });
  */
 export const useDialogData = <TEntity>({
