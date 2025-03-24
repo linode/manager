@@ -31,4 +31,8 @@ const isVolume = (
   return typeof (device as VolumeDevice).volume_id === 'number';
 };
 
-export const createStringsFromDevices = compose(reduce(rdx, {}), toPairs);
+export const createStringsFromDevices = compose(
+  reduce(rdx, {}),
+  (obj: { [key: string]: any }) =>
+    toPairs(obj) as Array<[string, DiskDevice | VolumeDevice | null]>
+);
