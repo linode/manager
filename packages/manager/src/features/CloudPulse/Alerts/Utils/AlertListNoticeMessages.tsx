@@ -51,7 +51,7 @@ export const AlertListNoticeMessages = (
     <AlertNoticeWrapper sx={sx} variant={variant}>
       <Typography
         sx={(theme) => ({
-          fontFamily: theme.tokens.typography.Body.Bold,
+          fontFamily: theme.tokens.font.FontWeight.Bold,
         })}
         data-testid="alert_message_notice"
       >
@@ -74,7 +74,7 @@ export const AlertNoticeWrapper = ({
   variant: NoticeVariant;
 }) => {
   return (
-    <Notice sx={sx} variant={variant}>
+    <Notice data-alert-notice sx={sx} variant={variant}>
       {children}
     </Notice>
   );

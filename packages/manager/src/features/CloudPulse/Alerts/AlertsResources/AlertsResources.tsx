@@ -37,6 +37,7 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 
 export interface AlertResourcesProp {
   /**
@@ -339,7 +340,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
   const noticeStyles = (theme: Theme) => ({
     alignItems: 'center',
-    background: theme.tokens.background.Normal,
+    background: theme.tokens.alias.Background.Normal,
     borderRadius: 1,
     display: 'flex',
     flexWrap: 'nowrap',
