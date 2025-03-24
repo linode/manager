@@ -4,7 +4,7 @@ import {
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
 import { useAccountSettings } from '@linode/queries';
-import { useErrors, useOpenClose } from '@linode/utilities';
+import { isFeatureEnabledV2, useErrors, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -14,7 +14,6 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePagination } from 'src/hooks/usePagination';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,

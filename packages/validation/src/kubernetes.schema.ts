@@ -92,31 +92,29 @@ export const createKubeClusterSchema = object({
     .min(1, 'Please add at least one node pool.'),
 });
 
-export const createKubeEnterpriseClusterSchema = createKubeClusterSchema.concat(
-  object({
-    control_plane: object({
-      high_availability: boolean(),
-      acl: object({
-        enabled: boolean(),
-        'revision-id': string(),
-        addresses: object({
-          ipv4: array().of(ipv4Address),
-          ipv6: array().of(ipv6Address),
-        }),
+export const createKubeClusterWithRequiredACLSchema = object({
+  control_plane: object({
+    high_availability: boolean(),
+    acl: object({
+      enabled: boolean(),
+      'revision-id': string(),
+      addresses: object({
+        ipv4: array().of(ipv4Address),
+        ipv6: array().of(ipv6Address),
       }),
-    })
-      .test(
-        'validateIPForEnterprise',
-        'At least one IP address or CIDR range is required for LKE Enterprise.',
-        function (controlPlane) {
-          const { ipv4, ipv6 } = controlPlane.acl.addresses;
-          // Pass validation if either IP address has a value.
-          return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
-        }
-      )
-      .required(),
+    }),
   })
-);
+    .test(
+      'validateIPForEnterprise',
+      'At least one IP address or CIDR range is required for LKE Enterprise.',
+      function (controlPlane) {
+        const { ipv4, ipv6 } = controlPlane.acl.addresses;
+        // Pass validation if either IP address has a value.
+        return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
+      }
+    )
+    .required(),
+});
 
 export const kubernetesControlPlaneACLPayloadSchema = object({
   acl: controlPlaneACLOptionsSchema,

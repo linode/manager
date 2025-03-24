@@ -172,13 +172,13 @@ export const CreateBucketDrawer = (props: Props) => {
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={fieldState.error?.message}
-              label="Label"
+              label="Bucket Name"
               required
             />
           )}
           control={control}
           name="label"
-          rules={{ required: 'Label is required' }}
+          rules={{ required: 'Bucket name is required' }}
         />
         <Controller
           render={({ field, fieldState }) => (

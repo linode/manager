@@ -84,7 +84,7 @@ const StyledDrawer = styled(Drawer, {
     overflow: 'hidden',
     position: 'absolute',
     [theme.breakpoints.up('md')]: {
-      borderRight: `1px solid ${theme.tokens.sideNavigation.Border}`,
+      borderRight: `1px solid ${theme.tokens.component.SideNavigation.Border}`,
     },
     transform: 'none',
     transition: 'width linear 100ms, height linear 250ms',

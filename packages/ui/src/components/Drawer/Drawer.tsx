@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { convertForAria } from '../../utilities/stringUtils';
@@ -65,11 +66,44 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       isFetching,
       onClose,
       open,
+      sx,
       title,
       wide,
       ...rest
     } = props;
     const titleID = convertForAria(title);
+
+    const theme = useTheme();
+
+    const sxDrawer = {
+      '& .MuiDrawer-paper': {
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('sm')]: {
+          padding: theme.spacing(2),
+        },
+        ...(wide
+          ? {
+              maxWidth: 700,
+              width: '100%',
+            }
+          : {
+              [theme.breakpoints.down('sm')]: {
+                maxWidth: 445,
+                width: '100%',
+              },
+              width: 480,
+            }),
+      },
+      '& .actionPanel': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(1),
+      },
+      '& .selectionCard': {
+        flexBasis: '100%',
+        maxWidth: '100%',
+      },
+    };
 
     // Store the last valid children and title in refs
     // This is to prevent flashes of content during the drawer's closing transition,
@@ -89,35 +123,10 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             onClose({}, 'escapeKeyDown');
           }
         }}
-        sx={(theme) => ({
-          '& .MuiDrawer-paper': {
-            padding: (theme) => theme.spacing(4),
-            [theme.breakpoints.down('sm')]: {
-              padding: theme.spacing(2),
-            },
-            ...(wide
-              ? {
-                  maxWidth: 700,
-                  width: '100%',
-                }
-              : {
-                  [theme.breakpoints.down('sm')]: {
-                    maxWidth: 445,
-                    width: '100%',
-                  },
-                  width: 480,
-                }),
-          },
-          '& .actionPanel': {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: (theme) => theme.spacing(1),
-          },
-          '& .selectionCard': {
-            flexBasis: '100%',
-            maxWidth: '100%',
-          },
-        })}
+        sx={{
+          ...sxDrawer,
+          ...sx,
+        }}
         anchor="right"
         open={open}
         ref={ref}

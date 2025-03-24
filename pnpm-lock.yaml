@@ -309,8 +309,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(cypress@14.0.1)
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.7
-        version: 0.0.7(eslint@7.32.0)
+        specifier: ^0.0.10
+        version: 0.0.10(eslint@7.32.0)
       '@storybook/addon-a11y':
         specifier: ^8.6.7
         version: 8.6.7(storybook@8.6.7(prettier@2.2.1))
@@ -592,8 +592,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.7
-        version: 0.0.7(eslint@7.32.0)
+        specifier: ^0.0.10
+        version: 0.0.10(eslint@7.32.0)
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0
@@ -713,8 +713,8 @@ importers:
         version: 4.9.13(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@mui/material@6.4.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.7
-        version: 0.0.7(eslint@7.32.0)
+        specifier: ^0.0.10
+        version: 0.0.10(eslint@7.32.0)
       '@storybook/addon-actions':
         specifier: ^8.6.7
         version: 8.6.7(storybook@8.6.7(prettier@2.2.1))
@@ -786,8 +786,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@linode/eslint-plugin-cloud-manager':
-        specifier: ^0.0.7
-        version: 0.0.7(eslint@7.32.0)
+        specifier: ^0.0.10
+        version: 0.0.10(eslint@7.32.0)
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0
@@ -1640,8 +1640,8 @@ packages:
   '@linode/design-language-system@4.0.0':
     resolution: {integrity: sha512-SKM4AG0GpFjgirKI+7bG3RT6ai3VU7MJJLUvaZsHf0OgmEJ25qWH7DqGOx5FWSTtzX0YemJSrwnKMpL+3CLawg==}
 
-  '@linode/eslint-plugin-cloud-manager@0.0.7':
-    resolution: {integrity: sha512-83ZDbDQGsXCKxagX6CWszFZbsuX/fHSFn/i+P1FGYDm/0qnIo2XypB/lTdJhHJwvq1j2z+0VDZIMP7YLF5U6Sg==}
+  '@linode/eslint-plugin-cloud-manager@0.0.10':
+    resolution: {integrity: sha512-zaZZ8QHd89e3lSr6ZwKhqwKEzOASiJJksPdbyti68W2M3iC76CBuG6akAmC1/e/Z6KUNq1mHKNAxTUCBgkOmCg==}
     peerDependencies:
       eslint: ^6.8.0
 
@@ -7541,7 +7541,7 @@ snapshots:
 
   '@linode/design-language-system@4.0.0': {}
 
-  '@linode/eslint-plugin-cloud-manager@0.0.7(eslint@7.32.0)':
+  '@linode/eslint-plugin-cloud-manager@0.0.10(eslint@7.32.0)':
     dependencies:
       eslint: 7.32.0
 

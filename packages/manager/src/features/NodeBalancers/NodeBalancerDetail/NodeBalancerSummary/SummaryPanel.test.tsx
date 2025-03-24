@@ -11,12 +11,20 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SummaryPanel } from './SummaryPanel';
 
-// Set up various mocks for tests
 const queryMocks = vi.hoisted(() => ({
   useAllNodeBalancerConfigsQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useParams: vi.fn().mockReturnValue({}),
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
@@ -41,6 +49,7 @@ describe('SummaryPanel', () => {
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewallFactory.build({ label: 'mock-firewall-1' })] },
     });
+    queryMocks.useParams.mockReturnValue({ id: 1 });
   });
 
   afterEach(() => {

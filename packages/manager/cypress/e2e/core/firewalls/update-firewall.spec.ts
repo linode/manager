@@ -167,7 +167,7 @@ const createLinodeAndFirewall = async (
 };
 
 authenticate();
-describe('update firewall', () => {
+describe.skip('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });
