@@ -89,10 +89,6 @@ export const getLegacyInterfaceFromLinodeInterface = (
   return { purpose: 'public' };
 };
 
-/**
- * For example:
- * `interfaces[0].ip_ranges[1]` should map to `linodeInterfaces.0.vpc.ipv4.ranges.1.range`
- */
 const legacyFieldToNewFieldMap = {
   '].ipv4.nat_1_1': '].vpc.ipv4.addresses.0.nat_1_1_address',
   '].ipv4.vpc': '].vpc.ipv4.addresses.0.address',
@@ -116,6 +112,14 @@ export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
         error.field = error.field.replace(
           key,
           legacyFieldToNewFieldMap[key as keyof typeof legacyFieldToNewFieldMap]
+        );
+      }
+      if (error.field && error.field.includes('ip_ranges')) {
+        // Handle the more complex case where:
+        // `interfaces[0].ip_ranges[1]` should map to `linodeInterfaces.0.vpc.ipv4.ranges.1.range`
+        error.field = error.field.replace(
+          /ip_ranges\[(\d+)\]/,
+          'vpc.ipv4.ranges.$1.range'
         );
       }
       if (error.field && error.field.startsWith('interfaces')) {
