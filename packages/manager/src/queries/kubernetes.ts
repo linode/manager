@@ -152,7 +152,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
       infinite: (filter: Filter = {}) => ({
-        queryFn: ({ pageParam }) => getKubernetesClusters({ page: pageParam as number }, filter),
+        queryFn: ({ pageParam }) =>
+          getKubernetesClusters({ page: pageParam as number }, filter),
         queryKey: [filter],
       }),
       paginated: (
@@ -165,7 +166,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             ? getKubernetesClustersBeta(params, filter)
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
-      })
+      }),
     },
     queryKey: null,
   },
