@@ -32,7 +32,6 @@ import {
 import {
   createDevicesFromStrings,
   createStringsFromDevices,
-  DevicesAsStrings,
   scrollErrorIntoViewV2,
 } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
@@ -79,6 +78,7 @@ import type {
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4';
+import type { DevicesAsStrings } from '@linode/utilities';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
