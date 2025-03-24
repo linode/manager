@@ -26,6 +26,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -172,33 +173,35 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={handleTabChange}>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <FirewallRulesLanding
-              disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
-              rules={firewall.rules}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="linode"
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="nodebalancer"
-            />
-          </SafeTabPanel>
-        </TabPanels>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <FirewallRulesLanding
+                disabled={!userCanModifyFirewall}
+                firewallID={firewallId}
+                rules={firewall.rules}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <FirewallDeviceLanding
+                disabled={!userCanModifyFirewall}
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="linode"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <FirewallDeviceLanding
+                disabled={!userCanModifyFirewall}
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="nodebalancer"
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
       <GenerateFirewallDialog
         onClose={() => setIsGenerateDialogOpen(false)}
