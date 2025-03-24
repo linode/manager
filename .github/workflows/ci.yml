@@ -251,6 +251,10 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-validation-lib
+          path: packages/validation/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/shared test
 
@@ -327,6 +331,10 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-validation-lib
+          path: packages/validation/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/shared typecheck
     
