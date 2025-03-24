@@ -14,7 +14,7 @@ import type { EditableProps, LabelProps } from './types';
 import type { LinkProps } from 'react-router-dom';
 
 export interface CrumbOverridesProps {
-  label?: string;
+  label?: string | React.ReactNode;
   linkTo?: LinkProps['to'];
   noCap?: boolean;
   position: number;
