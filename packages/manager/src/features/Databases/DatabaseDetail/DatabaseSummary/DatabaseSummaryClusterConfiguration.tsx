@@ -130,7 +130,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         >
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid sx={{ lg: 2, md: 4, xs: 8 }}>
+        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -188,7 +188,6 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             convertMegabytesTo(type.disk, true)
           )}
         </StyledValueGrid>
-        s
       </StyledGridContainer>
     </>
   );

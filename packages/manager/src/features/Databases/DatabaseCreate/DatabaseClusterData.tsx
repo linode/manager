@@ -15,10 +15,7 @@ import type {
   ClusterSize,
   DatabaseEngine,
   Engine,
-  MySQLReplicationType,
-  PostgresReplicationType,
   Region,
-  ReplicationCommitTypes,
 } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
 export interface DatabaseCreateValues {
@@ -30,12 +27,6 @@ export interface DatabaseCreateValues {
   engine: Engine;
   label: string;
   region: string;
-  /** @Deprecated used by rdbms-legacy PostgreSQL only */
-  replication_commit_type?: ReplicationCommitTypes;
-  /** @Deprecated used by rdbms-legacy only */
-  replication_type?: MySQLReplicationType | PostgresReplicationType;
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
-  ssl_connection?: boolean;
   type: string;
 }
 

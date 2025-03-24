@@ -54,18 +54,6 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
   );
 
 /**
- * getDatabaseType
- *
- * Return information for a single database type
- *
- */
-export const getDatabaseType = (typeSlug: string) =>
-  Request<DatabaseType>(
-    setURL(`${API_ROOT}/databases/types/${encodeURIComponent(typeSlug)}`),
-    setMethod('GET')
-  );
-
-/**
  * getVersions
  *
  * Return information on available versions per engine that we offer
@@ -105,24 +93,6 @@ export const createDatabase = (
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
-  );
-
-/**
- * getEngineDatabases
- *
- * Return a paginated list of active engine-specific (e.g. MySQL) databases belonging to user
- *
- */
-export const getEngineDatabases = (
-  engine: Engine,
-  params?: Params,
-  filter?: Filter
-) =>
-  Request<Page<Database>>(
-    setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filter)
   );
 
 /**
@@ -214,28 +184,6 @@ export const getDatabaseBackups = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
-  );
-
-/**
- * getDatabaseBackups
- *
- * Return details for a specific database backup
- *
- */
-export const getDatabaseBackup = (
-  engine: Engine,
-  databaseID: number,
-  backupID: number
-) =>
-  Request<DatabaseBackup>(
-    setURL(
-      `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(
-        databaseID
-      )}/backups/${encodeURIComponent(backupID)}`
-    ),
-    setMethod('GET')
   );
 
 /**
