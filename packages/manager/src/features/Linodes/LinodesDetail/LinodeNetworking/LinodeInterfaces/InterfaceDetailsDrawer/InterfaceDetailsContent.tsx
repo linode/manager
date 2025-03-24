@@ -1,6 +1,7 @@
 import { Box, Chip, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 import { getLinodeInterfaceType } from '../utilities';
@@ -9,7 +10,6 @@ import { VlanInterfaceDetailsContent } from './VlanInterfaceDetailsContent';
 import { VPCInterfaceDetailsContent } from './VPCInterfaceDetailsContent';
 
 import type { LinodeInterface } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 export const InterfaceDetailsContent = (props: LinodeInterface) => {
   const { created, default_route, id, mac_address, updated } = props;
@@ -20,23 +20,10 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       {(default_route.ipv4 || default_route.ipv6) && (
         <Box marginBottom={2}>
           {default_route.ipv4 && (
-            <Chip
-              sx={(theme) => ({
-                ...chipStyles(theme),
-                marginLeft: 0,
-              })}
-              component="span"
-              label="IPv4 Default Route"
-            />
+            <Chip color="info" component="span" label="IPv4 Default Route" />
           )}
           {default_route.ipv6 && (
-            <Chip
-              sx={(theme) => ({
-                ...chipStyles(theme),
-              })}
-              component="span"
-              label="IPv6 Default Route"
-            />
+            <Chip color="info" component="span" label="IPv6 Default Route" />
           )}
         </Box>
       )}
@@ -58,17 +45,15 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Created</strong>
       </Typography>
-      <Typography>{new Date(created).toUTCString()}</Typography>
+      <Typography>
+        <DateTimeDisplay value={created} />
+      </Typography>
       <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
         <strong>Modified</strong>
       </Typography>
-      <Typography>{new Date(updated).toUTCString()}</Typography>
+      <Typography>
+        <DateTimeDisplay value={updated} />
+      </Typography>
     </Stack>
   );
 };
-
-const chipStyles = (theme: Theme) => ({
-  backgroundColor: theme.color.tagButtonBg,
-  color: theme.tokens.color.Neutrals[80],
-  marginLeft: theme.spacingFunction(4),
-});

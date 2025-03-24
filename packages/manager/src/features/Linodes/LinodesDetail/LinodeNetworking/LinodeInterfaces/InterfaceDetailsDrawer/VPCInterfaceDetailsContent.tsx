@@ -25,7 +25,7 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
             />
             <MaskableText
               isToggleable
-              key={address.address}
+              key={address.nat_1_1_address}
               text={`${address.nat_1_1_address} (VPC NAT)`}
             />
           </>
