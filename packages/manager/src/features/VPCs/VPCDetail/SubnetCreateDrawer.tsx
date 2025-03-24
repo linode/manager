@@ -13,7 +13,7 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
-import { createSubnetSchema } from '@linode/validation';
+import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -25,7 +25,7 @@ import {
   getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
-import type { CreateSubnetPayload } from '@linode/api-v4';
+import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -44,7 +44,7 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
-    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+    vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
   );
 
   const {
@@ -62,7 +62,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     watch,
   } = useForm<CreateSubnetPayload>({
     mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchema),
+    resolver: yupResolver(createSubnetSchemaIPv4),
     values: {
       ipv4: recommendedIPv4,
       label: '',

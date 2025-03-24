@@ -2,7 +2,7 @@ interface VPCIPv6 {
   range?: string;
 }
 
-interface CreateVPCIPV6 extends VPCIPv6 {
+interface CreateVPCIPv6 extends VPCIPv6 {
   allocation_class?: string;
 }
 
@@ -21,7 +21,7 @@ export interface CreateVPCPayload {
   label: string;
   description?: string;
   region: string;
-  ipv6?: CreateVPCIPV6[];
+  ipv6?: CreateVPCIPv6[];
   subnets?: CreateSubnetPayload[];
 }
 
@@ -30,10 +30,14 @@ export interface UpdateVPCPayload {
   description?: string;
 }
 
+interface VPCIPv6Subnet {
+  range: string;
+}
+
 export interface CreateSubnetPayload {
   label: string;
   ipv4?: string;
-  ipv6?: string;
+  ipv6?: VPCIPv6Subnet[];
 }
 
 export interface Subnet extends CreateSubnetPayload {
