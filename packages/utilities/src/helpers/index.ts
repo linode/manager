@@ -6,7 +6,10 @@ export * from './arrayToList';
 export * from './breakpoints';
 export * from './capitalize';
 export * from './createDevicesFromStrings';
+<<<<<<< HEAD
 export * from './createStringsFromDevices';
+=======
+>>>>>>> 963b157abb (Move createDevicesFromStrings)
 export * from './deepStringTransform';
 export * from './doesRegionSupportFeature';
 export * from './downloadFile';

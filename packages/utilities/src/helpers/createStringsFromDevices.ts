@@ -3,7 +3,11 @@ import type {
   DiskDevice,
   VolumeDevice,
 } from '@linode/api-v4/lib/linodes';
+<<<<<<< HEAD
 import type { DevicesAsStrings } from './createDevicesFromStrings';
+=======
+import { DevicesAsStrings } from './createDevicesFromStrings';
+>>>>>>> 963b157abb (Move createDevicesFromStrings)
 
 const rdx = (
   result: DevicesAsStrings,
