@@ -38,6 +38,7 @@ export const FinalCrumb = React.memo((props: Props) => {
         disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         errorText={onEditHandlers.errorText}
         handleAnalyticsEvent={onEditHandlers.handleAnalyticsEvent}
+        isBreadcrumb
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
         text={onEditHandlers.editableTextTitle}
