@@ -2,12 +2,15 @@ import { Chip, Tooltip } from '@linode/ui';
 import React from 'react';
 
 interface Props {
-  tooltipText: string;
+  tooltipText: React.ReactNode;
 }
 
 export const DefaultFirewallChip = (props: Props) => {
   return (
-    <Tooltip title={props.tooltipText}>
+    <Tooltip
+      slotProps={{ tooltip: { sx: { minWidth: 245 } } }}
+      title={props.tooltipText}
+    >
       <Chip label="Default" />
     </Tooltip>
   );

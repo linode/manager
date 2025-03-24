@@ -1,4 +1,5 @@
-import { arrayToList } from '@linode/utilities';
+import { List, ListItem, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
 import type { FirewallSettings } from '@linode/api-v4';
 
@@ -13,8 +14,8 @@ const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
 > = {
   linode: 'Configuration Profile Interfaces',
   nodebalancer: 'NodeBalancers',
-  public_interface: 'Public Linode Interfaces',
-  vpc_interface: 'VPC Linode Interfaces',
+  public_interface: 'Public (Linode Interfaces)',
+  vpc_interface: 'VPC (Linode Interfaces)',
 };
 
 /**
@@ -69,5 +70,16 @@ export function getDefaultFirewallDescription(
     (entity) => FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[entity]
   );
 
-  return `This is your default Firewall for ${arrayToList(readableEntities)}.`;
+  return (
+    <Stack>
+      <Typography>Default Firewall for:</Typography>
+      <List sx={{ listStyleType: 'disc', pl: 3 }}>
+        {readableEntities.map((entity) => (
+          <ListItem disablePadding key={entity} sx={{ display: 'list-item' }}>
+            {entity}
+          </ListItem>
+        ))}
+      </List>
+    </Stack>
+  );
 }
