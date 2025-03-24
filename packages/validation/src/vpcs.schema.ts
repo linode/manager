@@ -94,6 +94,7 @@ export const vpcsValidateIP = ({
     }
 
     if (isIPv6) {
+      // @todo update the IPv6 prefix if required for NB-VPC integration
       // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
       if (!['52', '48', '44'].includes(mask)) {
         return false;
