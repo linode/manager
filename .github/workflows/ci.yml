@@ -252,7 +252,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/queries test
+      - run: pnpm run --filter @linode/shared test
 
   typecheck-ui:
     runs-on: ubuntu-latest
@@ -328,7 +328,7 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/queries typecheck
+      - run: pnpm run --filter @linode/shared typecheck
     
   typecheck-manager:
     runs-on: ubuntu-latest
