@@ -1,3 +1,4 @@
+import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -21,7 +22,6 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
-import { useRegionsQuery, useAllVPCsQuery } from '@linode/queries';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 

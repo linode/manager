@@ -62,11 +62,23 @@ export const getLegacyInterfaceFromLinodeInterface = (
   }
 
   if (purpose === 'vpc') {
+    // New interfaces use "auto" to auto-assign a 1:1 NAT address, but legacy uses "any".
+    const nat =
+      linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address === 'auto'
+        ? 'any'
+        : linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address;
+
+    // New interfaces use "auto" to auto-assign a VPC IP, but legacy will auto-assign with `null`.
+    const vpcIp =
+      linodeInterface.vpc?.ipv4?.addresses?.[0].address === 'auto'
+        ? null
+        : linodeInterface.vpc?.ipv4?.addresses?.[0].address;
+
     return {
       ip_ranges: linodeInterface.vpc?.ipv4?.ranges?.map(({ range }) => range),
       ipv4: {
-        nat_1_1: linodeInterface.vpc?.ipv4?.addresses?.[0].nat_1_1_address,
-        vpc: linodeInterface.vpc?.ipv4?.addresses?.[0].address,
+        nat_1_1: nat,
+        vpc: vpcIp,
       },
       purpose,
       subnet_id: linodeInterface.vpc?.subnet_id,
@@ -77,7 +89,13 @@ export const getLegacyInterfaceFromLinodeInterface = (
   return { purpose: 'public' };
 };
 
+/**
+ * For example:
+ * `interfaces[0].ip_ranges[1]` should map to `linodeInterfaces.0.vpc.ipv4.ranges.1.range`
+ */
 const legacyFieldToNewFieldMap = {
+  '].ipv4.nat_1_1': '].vpc.ipv4.addresses.0.nat_1_1_address',
+  '].ipv4.vpc': '].vpc.ipv4.addresses.0.address',
   '].label': '].vlan.vlan_lanel',
   '].subnet_id': '].vpc.subnet_id',
 };

@@ -276,7 +276,11 @@ const defaultLinodeInterfaces: LinodeCreateInterface[] = [
     public: {},
     purpose: 'public',
     vlan: null,
-    vpc: null,
+    vpc: {
+      ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }]},
+      vpc_id: null,
+      subnet_id: null,
+    },
   },
 ];
 

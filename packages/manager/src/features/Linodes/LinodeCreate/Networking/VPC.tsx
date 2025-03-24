@@ -1,13 +1,27 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import { Autocomplete, Box, Notice, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Notice,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
-import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
+import {
+  REGION_CAVEAT_HELPER_TEXT,
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+} from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
 import type { LinodeCreateFormValues } from '../utilities';
+import { VPCRanges } from './VPCRanges';
 
 interface Props {
   index: number;
@@ -16,8 +30,9 @@ interface Props {
 export const VPC = ({ index }: Props) => {
   const {
     control,
-    setValue,
     resetField,
+    setValue,
+    formState
   } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -37,6 +52,8 @@ export const VPC = ({ index }: Props) => {
   });
 
   const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+
+  console.log(formState.errors)
 
   return (
     <Box>
@@ -118,6 +135,68 @@ export const VPC = ({ index }: Props) => {
           control={control}
           name={`linodeInterfaces.${index}.vpc.subnet_id`}
         />
+        <Controller
+          render={({ field, fieldState }) => (
+            <>
+              <FormControlLabel
+                label={
+                  <Stack alignItems="center" direction="row">
+                    <Typography>
+                      Auto-assign a VPC IPv4 address for this Linode in the VPC
+                    </Typography>
+                    <TooltipIcon
+                      status="help"
+                      text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
+                    />
+                  </Stack>
+                }
+                checked={field.value === 'auto'}
+                control={<Checkbox sx={{ ml: -1 }} />}
+                disabled={!regionSupportsVPCs}
+                onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
+              />
+              {field.value !== 'auto' && (
+                <TextField
+                  errorText={fieldState.error?.message}
+                  label="VPC IPv4"
+                  noMarginTop
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  required
+                  value={field.value}
+                />
+              )}
+            </>
+          )}
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
+        />
+        <Controller
+          render={({ field }) => (
+            <FormControlLabel
+              label={
+                <Stack alignItems="center" direction="row">
+                  <Typography>
+                    Assign a public IPv4 address for this Linode
+                  </Typography>
+                  <TooltipIcon
+                    text={
+                      'Access the internet through the public IPv4 address using static 1:1 NAT.'
+                    }
+                    status="help"
+                  />
+                </Stack>
+              }
+              checked={field.value === 'auto'}
+              control={<Checkbox sx={{ ml: -1 }} />}
+              disabled={!regionSupportsVPCs}
+              onChange={(e, checked) => field.onChange(checked ? 'auto' : null)}
+            />
+          )}
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
+        />
+        <VPCRanges interfaceIndex={index} />
       </Stack>
       <VPCCreateDrawer
         onSuccess={(vpc) => {
