@@ -22,7 +22,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useDialogSecondaryData } from 'src/hooks/useDialogSecondaryData';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -119,15 +119,12 @@ export const VPCSubnetsTable = (props: Props) => {
     generateSubnetsXFilter(query ?? '')
   );
 
-  const {
-    data: selectedSubnet,
-    isFetching: isFetchingSubnet,
-  } = useDialogSecondaryData({
-    childParamKey: 'subnetId',
-    childQueryHook: useSubnetQuery,
+  const { data: selectedSubnet, isFetching: isFetchingSubnet } = useDialogData({
     enabled: !!params.vpcId && !!params.subnetId,
     paramKey: 'vpcId',
+    queryHook: useSubnetQuery,
     redirectToOnNotFound: '/vpcs/$vpcId',
+    secondaryParamKey: 'subnetId',
   });
 
   const handleSearch = (searchText: string) => {

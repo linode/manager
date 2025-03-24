@@ -12,6 +12,26 @@ import type { MigrationRouteTree } from 'src/routes';
 
 type ExtractKeys<T> = T extends object ? keyof T : never;
 type ParamsTypeKeys = ExtractKeys<ValidateUseParamsResult<MigrationRouteTree>>;
+type SingleIdQueryHook<TEntity> = (
+  id: number | string,
+  enabled?: boolean
+) => UseQueryResult<TEntity, APIError[]>;
+
+type DualIdQueryHook<TEntity> = (
+  primaryId: number | string,
+  secondaryId: number | string,
+  enabled?: boolean
+) => UseQueryResult<TEntity, APIError[]>;
+
+type QueryHook<TEntity> = DualIdQueryHook<TEntity> | SingleIdQueryHook<TEntity>;
+
+interface Props<TEntity> {
+  enabled?: boolean;
+  paramKey: ParamsTypeKeys;
+  queryHook: QueryHook<TEntity>;
+  redirectToOnNotFound: LinkProps['to'];
+  secondaryParamKey?: ParamsTypeKeys;
+}
 
 interface Props<TEntity> {
   /**
@@ -28,14 +48,16 @@ interface Props<TEntity> {
   /**
    * The query hook to fetch the entity.
    */
-  queryHook: (
-    id: number | string | undefined,
-    enabled?: boolean
-  ) => UseQueryResult<TEntity, APIError[]>;
+  queryHook: QueryHook<TEntity>;
   /**
    * The route to redirect to if the entity is not found.
    */
   redirectToOnNotFound: LinkProps['to'];
+  /**
+   * The key of the secondary parameter in the URL that will be used to fetch the entity.
+   * ex: 'subnetId' for `/vpcs/$vpcId/subnets/$subnetId`
+   */
+  secondaryParamKey?: ParamsTypeKeys;
 }
 
 /**
@@ -62,11 +84,35 @@ export const useDialogData = <TEntity>({
   paramKey,
   queryHook,
   redirectToOnNotFound,
+  secondaryParamKey,
 }: Props<TEntity>) => {
   const params = useParams({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const query = queryHook(params[paramKey as keyof typeof params], enabled);
+
+  const primaryId = params[paramKey as keyof typeof params];
+  const secondaryId = secondaryParamKey
+    ? params[secondaryParamKey as keyof typeof params]
+    : undefined;
+
+  // Ensure IDs are actually valid values, not just truthy
+  const isValidPrimaryId =
+    typeof primaryId === 'string' || typeof primaryId === 'number';
+  const isValidSecondaryId =
+    typeof secondaryId === 'string' || typeof secondaryId === 'number';
+  const shouldRunQuery =
+    enabled && isValidPrimaryId && (!secondaryParamKey || isValidSecondaryId);
+
+  const query = secondaryParamKey
+    ? (queryHook as DualIdQueryHook<TEntity>)(
+        primaryId as number | string,
+        secondaryId as number | string,
+        shouldRunQuery
+      )
+    : (queryHook as SingleIdQueryHook<TEntity>)(
+        primaryId as number | string,
+        shouldRunQuery
+      );
 
   React.useEffect(() => {
     if (enabled && !query.isLoading && !query.data) {
