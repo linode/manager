@@ -5,7 +5,10 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 
+import { getDefaultFirewallForInterfacePurpose } from './utilities';
+
 import type { LinodeCreateFormValues } from '../utilities';
+import type { InterfacePurpose } from '@linode/api-v4';
 
 interface Props {
   index: number;
@@ -28,31 +31,17 @@ export const InterfaceType = ({ index }: Props) => {
       </FormLabel>
       <RadioGroup
         onChange={(e, value) => {
+          // Change the interface purpose (Public, VPC, VLAN)
           field.onChange(value);
 
-          if (
-            value === 'vpc' &&
-            firewallSettings?.default_firewall_ids.vpc_interface
-          ) {
-            setValue(
-              `linodeInterfaces.${index}.firewall_id`,
-              firewallSettings?.default_firewall_ids.vpc_interface
-            );
-          }
-
-          if (
-            value === 'public' &&
-            firewallSettings?.default_firewall_ids.public_interface
-          ) {
-            setValue(
-              `linodeInterfaces.${index}.firewall_id`,
-              firewallSettings?.default_firewall_ids.public_interface
-            );
-          }
-
-          if (value === 'vlan') {
-            setValue(`linodeInterfaces.${index}.firewall_id`, null);
-          }
+          // Set the Firewall based on defaults
+          setValue(
+            `linodeInterfaces.${index}.firewall_id`,
+            getDefaultFirewallForInterfacePurpose(
+              value as InterfacePurpose,
+              firewallSettings
+            )
+          );
         }}
         aria-labelledby="network-interface"
         row
@@ -60,9 +49,9 @@ export const InterfaceType = ({ index }: Props) => {
         value={field.value}
       >
         <FormControlLabel
-          control={<Radio />}
-          label="Public Internet"
-          value="public"
+        control={<Radio />}
+        label="Public Internet"
+        value="public"
         />
         <FormControlLabel control={<Radio />} label="VPC" value="vpc" />
         <FormControlLabel control={<Radio />} label="VLAN" value="vlan" />

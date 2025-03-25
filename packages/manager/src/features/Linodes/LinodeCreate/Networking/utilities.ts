@@ -135,24 +135,12 @@ export const getDefaultInterfacePayload = (
   purpose: InterfacePurpose,
   firewallSettings: FirewallSettings | null | undefined
 ): LinodeCreateInterface => {
-  let firewallId: null | number = null;
-
-  if (
-    purpose === 'public' &&
-    firewallSettings?.default_firewall_ids.public_interface
-  ) {
-    firewallId = firewallSettings.default_firewall_ids.public_interface;
-  }
-  if (
-    purpose === 'vpc' &&
-    firewallSettings?.default_firewall_ids.vpc_interface
-  ) {
-    firewallId = firewallSettings.default_firewall_ids.vpc_interface;
-  }
-
   return {
     default_route: null,
-    firewall_id: firewallId,
+    firewall_id: getDefaultFirewallForInterfacePurpose(
+      purpose,
+      firewallSettings
+    ),
     public: {},
     purpose: 'public',
     vlan: null,
@@ -164,4 +152,23 @@ export const getDefaultInterfacePayload = (
       vpc_id: null,
     },
   };
+};
+
+export const getDefaultFirewallForInterfacePurpose = (
+  purpose: InterfacePurpose,
+  firewallSettings: FirewallSettings | null | undefined
+) => {
+  if (!firewallSettings) {
+    return null;
+  }
+
+  if (purpose === 'public') {
+    return firewallSettings.default_firewall_ids.public_interface;
+  }
+
+  if (purpose === 'vpc') {
+    return firewallSettings.default_firewall_ids.vpc_interface;
+  }
+
+  return null;
 };
