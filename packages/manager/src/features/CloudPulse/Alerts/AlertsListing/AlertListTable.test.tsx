@@ -5,7 +5,7 @@ import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ALERT_UPDATE_PENDING_MESSAGE } from '../constants';
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
@@ -98,7 +98,7 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable')); // click the enable button to enable alert
-    expect(getByText(ALERT_UPDATE_PENDING_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
+    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show success snackbar when disabling alert succeeds', async () => {
@@ -115,7 +115,7 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable')); // click the enable button to enable alert
-    expect(getByText(ALERT_UPDATE_PENDING_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
+    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show error snackbar when enabling alert fails', async () => {

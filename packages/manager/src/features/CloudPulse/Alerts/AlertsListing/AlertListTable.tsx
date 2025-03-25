@@ -14,7 +14,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { ALERT_UPDATE_PENDING_MESSAGE } from '../constants';
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertTableRow } from './AlertTableRow';
 import { AlertListingTableLabelMap } from './constants';
 
@@ -72,8 +72,8 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(ALERT_UPDATE_PENDING_MESSAGE, {
-            variant: 'info',
+          enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
+            variant: 'success',
           });
         })
         .catch((updateError: APIError[]) => {

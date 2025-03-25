@@ -182,5 +182,8 @@ export const engineTypeMap: Record<string, string> = {
   postgresql: 'PostgreSQL',
 };
 
-export const ALERT_UPDATE_PENDING_MESSAGE =
-  'It can take a few minutes to apply the changes.';
+export const CREATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+
+export const UPDATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully updated. It may take a few minutes for your changes to take effect.';
