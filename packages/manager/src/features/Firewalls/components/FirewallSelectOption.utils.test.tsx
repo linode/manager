@@ -1,4 +1,5 @@
 import { firewallSettingsFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getDefaultFirewallDescription,
@@ -78,9 +79,11 @@ describe('getDefaultFirewallDescription', () => {
       },
     });
 
-    expect(getDefaultFirewallDescription(1, firewallSettings)).toEqual(
-      'This is your default Firewall for VPC Linode Interfaces.'
+    const { getByText } = renderWithTheme(
+      getDefaultFirewallDescription(1, firewallSettings)
     );
+
+    expect(getByText('VPC (Linode Interfaces)')).toBeVisible();
   });
 
   it('returns human readable text when the firewall is a default for three types of entities', () => {
@@ -93,8 +96,13 @@ describe('getDefaultFirewallDescription', () => {
       },
     });
 
-    expect(getDefaultFirewallDescription(4, firewallSettings)).toEqual(
-      'This is your default Firewall for Configuration Profile Interfaces, NodeBalancers, and Public Linode Interfaces.'
+    const { getByText, queryByText } = renderWithTheme(
+      getDefaultFirewallDescription(4, firewallSettings)
     );
+
+    expect(getByText('NodeBalancers')).toBeVisible();
+    expect(getByText('Public (Linode Interfaces)')).toBeVisible();
+    expect(getByText('Configuration Profile Interfaces')).toBeVisible();
+    expect(queryByText('VPC (Linode Interfaces)')).toBeNull();
   });
 });
