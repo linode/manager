@@ -1,4 +1,4 @@
-import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
+import { linodeFactory, nodeBalancerFactory } from '../factories';
 import { describe, it, expect } from 'vitest';
 
 import { mapIdsToDevices } from './mapIdsToDevices';
