@@ -8,67 +8,37 @@ const capitalize = (str: string): string => {
 };
 
 /**
- * Returns a plugin to enable JUnit reporting when `CY_TEST_JUNIT_REPORT` is defined.
- *
- * If no suite name is specified, this function will attempt to determine the
- * suite name using the Cypress configuration object.
- *
- * @param suiteName - Optional suite name in the JUnit output.
- *
  * @returns Cypress configuration object.
  */
-export const enableJunitReport = (
-  suiteName?: string,
-  jenkinsMode: boolean = false
-): CypressPlugin => {
-  return (_on, config) => {
-    if (!!config.env[envVarName]) {
-      // Use `suiteName` if it is specified.
-      // Otherwise, attempt to determine the test suite name using
-      // our Cypress configuration.
-      const testSuite = suiteName || config.env['cypress_test_suite'] || 'core';
-
-      const testSuiteName = `${capitalize(testSuite)} Test Suite`;
-
-      // Cypress doesn't know to look for modules in the root `node_modules`
-      // directory, so we have to pass a relative path.
-      // See also: https://github.com/cypress-io/cypress/issues/6406
-      config.reporter = 'node_modules/mocha-junit-reporter';
-
-      // See also: https://www.npmjs.com/package/mocha-junit-reporter#full-configuration-options
-      config.reporterOptions = {
-        mochaFile: 'cypress/results/test-results-[hash].xml',
-        rootSuiteTitle: 'Cloud Manager Cypress Tests',
-        testsuitesTitle: testSuiteName,
-        jenkinsMode,
-        suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
-      };
-    }
-    return config;
-  };
+export const enableJunitE2eReport: CypressPlugin = (_on, config) => {
+  const testSuiteName = 'core';
+  return getCommonJunitConfig(testSuiteName, config);
 };
 
 /**
- * Used to get config options for E2E test suite
- * @param suiteName - Optional suite name in the JUnit output.
- * @param jenkinsMode - If test is execute in Jenkins env
- *
- * @returns object.
+ * @returns Cypress configuration object.
  */
-export const jUnitE2EReportOptions = (
-  testSuite?: string,
-  jenkinsMode: boolean = false
+export const enableJunitComponentReport: CypressPlugin = (_on, config) => {
+  const testSuiteName = 'component';
+  return getCommonJunitConfig(testSuiteName, config);
+};
+
+const getCommonJunitConfig = (
+  testSuite: string,
+  config: Cypress.PluginConfigOptions
 ) => {
-  if (testSuite) {
+  if (!!config.env[envVarName]) {
+    if (!config.reporterOptions) {
+      config.reporterOptions = {};
+    }
     const testSuiteName = `${capitalize(testSuite)} Test Suite`;
-    return {
+    config.reporterOptions.mochaJunitReporterReporterOptions = {
       mochaFile: 'cypress/results/test-results-[hash].xml',
       rootSuiteTitle: 'Cloud Manager Cypress Tests',
       testsuitesTitle: testSuiteName,
-      jenkinsMode,
-      suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
+      jenkinsMode: true,
+      suiteTitleSeparatedBy: '→',
     };
-  } else {
-    return {};
   }
+  return config;
 };
