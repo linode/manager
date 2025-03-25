@@ -2,7 +2,6 @@
  * @file Integration tests for Managed credentials.
  */
 
-import { credentialFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateCredential,
@@ -13,6 +12,8 @@ import {
 } from 'support/intercepts/managed';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
+
+import { credentialFactory } from 'src/factories/managed';
 
 // Message that's shown when there are no Managed credentials.
 const noCredentialsMessage = "You don't have any Credentials on your account.";
@@ -76,20 +77,16 @@ describe('Managed Credentials tab', () => {
       .findByTitle('Add Credential')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .type(credentialLabel);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.focused().type(credentialLabel);
 
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
-          .click()
-          .type(credentialUsername);
+          .click();
+        cy.focused().type(credentialUsername);
 
-        cy.findByLabelText('Password')
-          .should('be.visible')
-          .click()
-          .type(credentialPassword);
+        cy.findByLabelText('Password').should('be.visible').click();
+        cy.focused().type(credentialPassword);
 
         ui.buttonGroup
           .findButtonByTitle('Add Credential')
@@ -150,11 +147,9 @@ describe('Managed Credentials tab', () => {
       .should('be.visible')
       .within(() => {
         // Update label.
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(credentialNewLabel);
+        cy.findByLabelText('Label').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(credentialNewLabel);
 
         ui.button
           .findByTitle('Update label')
@@ -168,13 +163,11 @@ describe('Managed Credentials tab', () => {
         // Update credentials.
         cy.findByLabelText('Username', { exact: false })
           .should('be.visible')
-          .click()
-          .type(randomString());
+          .click();
+        cy.focused().type(randomString());
 
-        cy.findByLabelText('Password')
-          .should('be.visible')
-          .click()
-          .type(randomString());
+        cy.findByLabelText('Password').should('be.visible').click();
+        cy.focused().type(randomString());
 
         ui.button
           .findByTitle('Update credentials')
@@ -232,10 +225,8 @@ describe('Managed Credentials tab', () => {
       .findByTitle(`Delete Credential ${credentialLabel}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Credential Name:')
-          .should('be.visible')
-          .click()
-          .type(credentialLabel);
+        cy.findByLabelText('Credential Name:').should('be.visible').click();
+        cy.focused().type(credentialLabel);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Credential')

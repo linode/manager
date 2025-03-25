@@ -1,20 +1,21 @@
-import { ui } from 'support/ui';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
   interceptGetStackScripts,
   mockGetStackScript,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
 import { getRandomOCAId } from 'support/util/one-click-apps';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { imageFactory, linodeFactory } from 'src/factories';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 
 import type { StackScript } from '@linode/api-v4';
-import { imageFactory, linodeFactory } from 'src/factories';
-import { mockGetAllImages } from 'support/intercepts/images';
 
 describe('OneClick Apps (OCA)', () => {
   it('Lists all the OneClick Apps', () => {
@@ -85,11 +86,10 @@ describe('OneClick Apps (OCA)', () => {
         cy.findAllByLabelText(
           `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
         )
+          .as('qaInfoFor')
           .first()
-          .scrollIntoView()
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+          .scrollIntoView();
+        cy.get('@qaInfoFor').should('be.visible').should('be.enabled').click();
       });
 
       ui.drawer
@@ -118,39 +118,39 @@ describe('OneClick Apps (OCA)', () => {
       }),
     ];
     const stackscript = stackScriptFactory.build({
-      id: getRandomOCAId(),
-      username: 'linode',
-      user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
-      label: 'E2E Test App',
-      description: 'Minecraft OCA',
-      ordinal: 10,
-      logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu24.04'],
-      deployments_total: 18854,
-      deployments_active: 412,
-      is_public: true,
-      mine: false,
       created: '2019-03-08T21:13:32',
-      updated: '2023-09-26T15:00:45',
+      deployments_active: 412,
+      deployments_total: 18854,
+      description: 'Minecraft OCA',
+      id: getRandomOCAId(),
+      images: ['linode/debian11', 'linode/ubuntu24.04'],
+      is_public: true,
+      label: 'E2E Test App',
+      logo_url: 'assets/Minecraft.svg',
+      mine: false,
+      ordinal: 10,
       rev_note: 'remove maxplayers hard coded options [oca-707]',
       script: '#!/usr/bin/env bash\n',
+      updated: '2023-09-26T15:00:45',
       user_defined_fields: [
         {
-          name: 'username',
+          example: 'lgsmuser',
           label:
             "The username for the Linode's non-root admin/SSH user(must be lowercase)",
-          example: 'lgsmuser',
+          name: 'username',
         },
         {
-          name: 'password',
-          label: "The password for the Linode's non-root admin/SSH user",
           example: 'S3cuReP@s$w0rd',
+          label: "The password for the Linode's non-root admin/SSH user",
+          name: 'password',
         },
         {
-          name: 'levelname',
           label: 'World Name',
+          name: 'levelname',
         },
       ],
+      user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
+      username: 'linode',
     });
 
     const rootPassword = randomString(16);
@@ -187,20 +187,18 @@ describe('OneClick Apps (OCA)', () => {
       "The username for the Linode's non-root admin/SSH user(must be lowercase) (required)"
     )
       .should('be.visible')
-      .click()
-      .type(firstName);
+      .click();
+    cy.focused().type(firstName);
 
     cy.findByLabelText(
       "The password for the Linode's non-root admin/SSH user (required)"
     )
       .should('be.visible')
-      .click()
-      .type(password);
+      .click();
+    cy.focused().type(password);
 
-    cy.findByLabelText('World Name (required)')
-      .should('be.visible')
-      .click()
-      .type(levelName);
+    cy.findByLabelText('World Name (required)').should('be.visible').click();
+    cy.focused().type(levelName);
 
     // Check each field should persist when moving onto another field
     cy.findByLabelText(
@@ -214,12 +212,12 @@ describe('OneClick Apps (OCA)', () => {
     cy.findByLabelText('World Name (required)').should('have.value', levelName);
 
     // Choose an image
-    cy.findByPlaceholderText('Choose an image')
-      .click()
-      .type('{downArrow}{enter}');
+    cy.findByPlaceholderText('Choose an image').click();
+    cy.focused().type('{downArrow}{enter}');
 
     // Choose a region
-    ui.regionSelect.find().click().type(`${region.id}{enter}`);
+    ui.regionSelect.find().click();
+    cy.focused().type(`${region.id}{enter}`);
 
     // Choose a Linode plan
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
@@ -229,10 +227,8 @@ describe('OneClick Apps (OCA)', () => {
       });
 
     // Enter a label.
-    cy.findByText('Linode Label')
-      .should('be.visible')
-      .click()
-      .type(linodeLabel);
+    cy.findByText('Linode Label').should('be.visible').click();
+    cy.focused().type(linodeLabel);
 
     // Choose a Root Password
     cy.get('[id="root-password"]').type(rootPassword);
@@ -282,8 +278,10 @@ describe('OneClick Apps (OCA)', () => {
             cy.findAllByLabelText(
               `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
             )
+              .as('qaInfoFor')
               .first()
-              .scrollIntoView()
+              .scrollIntoView();
+            cy.get('@qaInfoFor')
               .should('be.visible')
               .should('be.enabled')
               .click();

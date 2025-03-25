@@ -1,5 +1,5 @@
 import { Box, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useState } from 'react';
@@ -10,8 +10,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { useNotificationsQuery, usePreferences } from '@linode/queries';
 
 import {
   BillingActionButton,
@@ -153,7 +152,12 @@ export const ContactInformation = React.memo((props: Props) => {
   };
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>

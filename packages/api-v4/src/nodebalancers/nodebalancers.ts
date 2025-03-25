@@ -2,7 +2,7 @@ import {
   NodeBalancerSchema,
   UpdateNodeBalancerSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -46,6 +46,21 @@ export const getNodeBalancer = (nodeBalancerId: number) =>
   );
 
 /**
+ * getNodeBalancerBeta
+ *
+ * Returns detailed information about a single NodeBalancer including type (only available for LKE-E).
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to retrieve.
+ */
+export const getNodeBalancerBeta = (nodeBalancerId: number) =>
+  Request<NodeBalancer>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`
+    ),
+    setMethod('GET')
+  );
+
+/**
  * updateNodeBalancer
  *
  * Update an existing NodeBalancer on your account.
@@ -73,6 +88,22 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
   Request<NodeBalancer>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers`),
+    setData(
+      data,
+      NodeBalancerSchema,
+      combineNodeBalancerConfigNodeAddressAndPort
+    )
+  );
+
+/**
+ * createNodeBalancerBeta
+ *
+ * Add a NodeBalancer to your account using the beta API
+ */
+export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
+  Request<NodeBalancer>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/nodebalancers`),
     setData(
       data,
       NodeBalancerSchema,

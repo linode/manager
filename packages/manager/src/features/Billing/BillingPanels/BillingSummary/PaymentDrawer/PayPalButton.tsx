@@ -1,6 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
 import { CircleProgress, Tooltip } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import {
   BraintreePayPalButtons,
   FUNDING,
@@ -12,9 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useAccount } from 'src/queries/account/account';
-import { useClientToken } from 'src/queries/account/payment';
-import { accountQueries } from 'src/queries/account/queries';
+import { useAccount, useClientToken, accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { SetSuccess } from './types';
@@ -220,10 +218,12 @@ export const PayPalButton = (props: Props) => {
   if (clientTokenLoading || isPending || !options['data-client-token']) {
     return (
       <Grid
-        alignContent="center"
         className={classes.loading}
         container
-        justifyContent="center"
+        sx={{
+          alignContent: 'center',
+          justifyContent: 'center',
+        }}
       >
         <CircleProgress size="sm" />
       </Grid>

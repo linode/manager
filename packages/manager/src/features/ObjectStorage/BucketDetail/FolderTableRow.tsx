@@ -1,10 +1,10 @@
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import FolderIcon from 'src/assets/icons/objectStorage/folder.svg';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -29,7 +29,14 @@ export const FolderTableRow = (props: FolderTableRowProps) => {
   return (
     <TableRow key={folderName} {...tableRowProps}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+        <Grid
+          sx={{
+            alignItems: 'center',
+          }}
+          container
+          spacing={2}
+          wrap="nowrap"
+        >
           <StyledIconWrapper>
             <FolderIcon size={22} />
           </StyledIconWrapper>

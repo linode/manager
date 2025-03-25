@@ -1,11 +1,12 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
@@ -13,11 +14,13 @@ import {
   getFilteredResources,
   getRegionOptions,
   getRegionsIdRegionMap,
+  getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
-import { serviceToFiltersMap } from './constants';
+import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { AlertInstance } from './DisplayAlertResources';
@@ -55,6 +58,11 @@ export interface AlertResourcesProp {
   alertType: AlertDefinitionType;
 
   /**
+   * The error text that needs to displayed incase needed
+   */
+  errorText?: string;
+
+  /**
    * Callback for publishing the selected resources
    */
   handleResourcesSelection?: (resources: string[]) => void;
@@ -70,6 +78,11 @@ export interface AlertResourcesProp {
   isSelectionsNeeded?: boolean;
 
   /**
+   * The maximum number of elements that can be selected
+   */
+  maxSelectionCount?: number;
+
+  /**
    * The element until which we need to scroll on pagination and order change
    */
   scrollElement?: HTMLDivElement | null;
@@ -80,7 +93,7 @@ export interface AlertResourcesProp {
   serviceType?: AlertServiceType;
 }
 
-export type SelectUnselectAll = 'Select All' | 'Unselect All';
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -88,9 +101,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     alertLabel,
     alertResourceIds,
     alertType,
+    errorText,
     handleResourcesSelection,
     hideLabel,
     isSelectionsNeeded,
+    maxSelectionCount,
     scrollElement,
     serviceType,
   } = props;
@@ -102,11 +117,33 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
-  >({ engineType: undefined });
+  >({ engineType: undefined, tags: undefined });
 
+  const {
+    data: regions,
+    isError: isRegionsError,
+    isLoading: isRegionsLoading,
+  } = useRegionsQuery();
+
+  const flags = useFlags();
+
+  // Validate launchDarkly region ids with the ids from regionOptions prop
+  const supportedRegionIds = getSupportedRegionIds(
+    flags.aclpResourceTypeMap,
+    serviceType
+  );
   const xFilterToBeApplied: Filter | undefined = React.useMemo(() => {
+    const regionFilter: Filter = supportedRegionIds
+      ? {
+          '+or': supportedRegionIds.map((regionId) => ({
+            region: regionId,
+          })),
+        }
+      : {};
+
+    // if service type is other than dbaas, return only region filter
     if (serviceType !== 'dbaas') {
-      return undefined; // No x-filters needed for other serviceTypes
+      return regionFilter;
     }
 
     // Always include platform filter for 'dbaas'
@@ -117,22 +154,26 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       return platformFilter;
     }
 
-    // Apply type filter only for system alerts with a valid alertClass
+    // Dynamically exclude 'dedicated' if alertClass is 'shared'
+    const filteredTypes =
+      alertClass === 'shared'
+        ? Object.keys(databaseTypeClassMap).filter(
+            (type) => type !== 'dedicated'
+          )
+        : [alertClass];
+
+    // Apply type filter only for DBaaS user alerts with a valid alertClass based on above filtered types
     const typeFilter: Filter = {
-      type: {
-        '+contains': alertClass,
-      },
+      '+or': filteredTypes.map((dbType) => ({
+        type: {
+          '+contains': dbType,
+        },
+      })),
     };
 
-    // Combine both filters
-    return { ...platformFilter, ...typeFilter };
-  }, [alertClass, alertType, serviceType]);
-
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isLoading: isRegionsLoading,
-  } = useRegionsQuery();
+    // Combine all the filters
+    return { ...platformFilter, '+and': [typeFilter, regionFilter] };
+  }, [alertClass, alertType, serviceType, supportedRegionIds]);
 
   const {
     data: resources,
@@ -239,15 +280,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: SelectUnselectAll) => {
+    (action: SelectDeselectAll) => {
       if (!resources) {
         return;
       }
 
       let currentSelections: string[] = [];
 
-      if (action === 'Unselect All') {
-        // Unselect all
+      if (action === 'Deselect All') {
+        // Deselect all
         setSelectedResources([]);
       } else {
         // Select all
@@ -281,9 +322,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
+          sx={{
+            h2: {
+              fontSize: '16px',
+            },
+          }}
           icon={EntityIcon}
-          subtitle="You can assign alerts during the resource creation process."
-          title="No resources are currently assigned to this alert definition."
+          subtitle="Once you assign the resources, they will show up here."
+          title="No resources associated with this alert definition."
         />
       </Stack>
     );
@@ -306,9 +352,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid
-          alignItems="center"
+          sx={{
+            alignItems: 'center',
+          }}
           columnSpacing={2}
           container
           item
@@ -337,6 +385,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   handleFilterChange,
                   handleFilteredRegionsChange,
                   regionOptions,
+                  tagOptions: Array.from(
+                    new Set(
+                      resources
+                        ? resources.flatMap(({ tags }) => tags ?? [])
+                        : []
+                    )
+                  ),
                 })}
                 component={component}
               />
@@ -359,15 +414,27 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        {isSelectionsNeeded && !isDataLoadingError && resources?.length && (
-          <Grid item xs={12}>
-            <AlertsResourcesNotice
-              handleSelectionChange={handleAllSelection}
-              selectedResources={selectedResources.length}
-              totalResources={resources?.length ?? 0}
-            />
-          </Grid>
+        {errorText?.length && (
+          <AlertsNoticeMessage text={errorText} variant="error" />
         )}
+        {maxSelectionCount !== undefined && (
+          <AlertsNoticeMessage
+            text={`You can select up to ${maxSelectionCount} resources.`}
+            variant="warning"
+          />
+        )}
+        {isSelectionsNeeded &&
+          !isDataLoadingError &&
+          resources &&
+          resources.length > 0 && (
+            <Grid item xs={12}>
+              <AlertsResourcesNotice
+                handleSelectionChange={handleAllSelection}
+                selectedResources={selectedResources.length}
+                totalResources={resources?.length ?? 0}
+              />
+            </Grid>
+          )}
         <Grid item xs={12}>
           <DisplayAlertResources
             scrollToElement={() =>

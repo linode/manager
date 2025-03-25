@@ -28,7 +28,7 @@ export const Encryption = (props: EncryptionProps) => {
   } = props;
 
   return (
-    <>
+    <Box>
       <Typography data-testid={headerTestId} variant="h3">
         {`${entityType ?? 'Disk'} Encryption`}
       </Typography>
@@ -80,6 +80,6 @@ export const Encryption = (props: EncryptionProps) => {
           toolTipText={disabled ? disabledReason : ''}
         />
       </Box>
-    </>
+    </Box>
   );
 };

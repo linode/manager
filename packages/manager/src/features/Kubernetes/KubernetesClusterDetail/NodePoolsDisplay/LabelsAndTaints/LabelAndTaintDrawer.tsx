@@ -1,13 +1,19 @@
-import { Button, Divider, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Button,
+  Divider,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { capitalize } from 'src/utilities/capitalize';
 import { extendType } from 'src/utilities/extendType';
 
 import { LabelInput } from './LabelInput';
@@ -115,12 +121,17 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
       {formState.errors.root?.message ? (
-        <Notice text={formState.errors.root.message} variant="error" />
+        <Notice
+          spacingBottom={16}
+          text={formState.errors.root.message}
+          variant="error"
+        />
       ) : null}
       <FormProvider
         control={control}
@@ -131,7 +142,7 @@ export const LabelAndTaintDrawer = (props: Props) => {
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Typography
-            marginBottom={(theme) => theme.spacing(4)}
+            marginBottom={(theme) => theme.spacing(3)}
             marginTop={(theme) => theme.spacing()}
           >
             Manage custom labels and taints directly through LKE. Changes are
@@ -146,10 +157,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
           <Typography>
             Labels are key-value pairs that are used as identifiers. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <LabelTable />
           <Button
@@ -178,10 +191,12 @@ export const LabelAndTaintDrawer = (props: Props) => {
             Taints are used to control which pods can be placed on nodes in this
             node pool. They consist of a key, value, and effect. Review the
             guidelines in the{' '}
-            <Link to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">
-              Kubernetes documentation
+            <Link
+              external
+              to="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/"
+            >
+              Kubernetes documentation.
             </Link>
-            .
           </Typography>
           <TaintTable />
           <Button

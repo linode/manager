@@ -1,6 +1,6 @@
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { CircleProgress } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import {
   BraintreePayPalButtons,
   FUNDING,
@@ -12,8 +12,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
-import { useClientToken } from 'src/queries/account/payment';
-import { accountQueries } from 'src/queries/account/queries';
+import { useClientToken, accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';

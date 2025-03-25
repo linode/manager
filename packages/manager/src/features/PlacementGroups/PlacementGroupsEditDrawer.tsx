@@ -2,20 +2,27 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
-import { Divider, Notice, Stack, TextField } from '@linode/ui';
+import { useMutatePlacementGroup } from '@linode/queries';
+import {
+  ActionsPanel,
+  Divider,
+  Drawer,
+  Notice,
+  Stack,
+  TextField,
+} from '@linode/ui';
+import {
+  scrollErrorIntoView,
+  useFormValidateOnChange,
+} from '@linode/utilities';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
-import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
-import { useMutatePlacementGroup } from 'src/queries/placementGroups';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
 import type { UpdatePlacementGroupPayload } from '@linode/api-v4';
@@ -106,6 +113,7 @@ export const PlacementGroupsEditDrawer = (
           ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

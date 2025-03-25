@@ -1,10 +1,9 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
-import { CircleProgress, Notice } from '@linode/ui';
+import { CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -12,8 +11,8 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import {
   useMutatePlacementGroup,
   usePlacementGroupQuery,
-} from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+  useRegionsQuery,
+} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';

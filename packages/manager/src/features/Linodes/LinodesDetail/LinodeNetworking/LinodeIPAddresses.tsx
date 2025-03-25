@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircleProgress,
+  ErrorState,
   Paper,
   Stack,
   Typography,
@@ -10,7 +11,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
@@ -21,9 +21,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useLinodeQuery,
+  useLinodeIPsQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';

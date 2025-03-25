@@ -2,13 +2,14 @@
  * @file Smoke tests for Linode Create flow across common mobile viewport sizes.
  */
 
-import { linodeFactory } from 'src/factories';
 import { MOBILE_VIEWPORTS } from 'support/constants/environment';
+import { mockCreateLinode } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { ui } from 'support/ui';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+
+import { linodeFactory } from 'src/factories';
 
 describe('Linode create mobile smoke', () => {
   MOBILE_VIEWPORTS.forEach((viewport) => {
@@ -35,13 +36,12 @@ describe('Linode create mobile smoke', () => {
       linodeCreatePage.setLabel(mockLinode.label);
       linodeCreatePage.setRootPassword(randomString(32));
 
-      cy.get('[data-qa-linode-create-summary]')
-        .scrollIntoView()
-        .within(() => {
-          cy.findByText('Nanode 1 GB').should('be.visible');
-          cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
-          cy.findByText(mockLinodeRegion.label).should('be.visible');
-        });
+      cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+      cy.get('[data-qa-linode-create-summary]').within(() => {
+        cy.findByText('Nanode 1 GB').should('be.visible');
+        cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
+        cy.findByText(mockLinodeRegion.label).should('be.visible');
+      });
 
       ui.button
         .findByTitle('Create Linode')

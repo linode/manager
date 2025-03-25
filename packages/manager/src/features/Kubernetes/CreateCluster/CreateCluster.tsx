@@ -1,6 +1,21 @@
-import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import {
+  useAccount,
+  useMutateAccountAgreements,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
+  Autocomplete,
+  Box,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+} from '@linode/ui';
+import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
@@ -9,10 +24,10 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
@@ -21,35 +36,32 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account/account';
-import {
-  reportAgreementSigningError,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
+import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
-import { ClusterTypePanel } from './ClusterTypePanel';
+import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
-  StyledFieldWithDocsStack,
+  StyledStackWithTabletBreakpoint,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -98,6 +110,10 @@ export const CreateCluster = () => {
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
+  const [
+    isACLAcknowledgementChecked,
+    setIsACLAcknowledgementChecked,
+  ] = React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -105,12 +121,16 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
-  const handleClusterTypeSelection = (tier: KubernetesTier) => {
+  // LKE-E does not support APL at this time.
+  const isAPLSupported = showAPL && selectedTier === 'standard';
+
+  const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
 
-    // HA is enabled by default for enterprise clusters
+    // HA and ACL are enabled by default for enterprise clusters
     if (tier === 'enterprise') {
       setHighAvailability(true);
+      setControlPlaneACL(true);
 
       // When changing the tier to enterprise, we want to check if the pre-selected region has the capability
       if (!selectedRegion?.capabilities.includes('Kubernetes Enterprise')) {
@@ -118,6 +138,10 @@ export const CreateCluster = () => {
       }
     } else {
       setHighAvailability(undefined);
+      setControlPlaneACL(false);
+
+      // Clear the ACL error if the tier is switched, since standard tier doesn't require it
+      setErrors(undefined);
     }
   };
 
@@ -128,6 +152,10 @@ export const CreateCluster = () => {
   const lkeEnterpriseType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-e'
   );
+
+  const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_kubernetes',
+  });
 
   const {
     data: allTypes,
@@ -168,7 +196,7 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-  const createCluster = () => {
+  const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
       scrollErrorIntoViewV2(formContainerRef);
       return;
@@ -223,7 +251,7 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (showAPL) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -232,9 +260,24 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
+
+    // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
+    if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
+      try {
+        await createKubeClusterWithRequiredACLSchema.validate(payload, {
+          abortEarly: false,
+        });
+      } catch ({ errors }) {
+        setErrors([{ field: 'control_plane', reason: errors[0] }]);
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+
+        return;
+      }
+    }
 
     createClusterFn(payload)
       .then((cluster) => {
@@ -304,7 +347,11 @@ export const CreateCluster = () => {
     selectedRegionID: selectedRegion?.id,
   });
 
-  if (typesError || regionsError || versionsError) {
+  if (
+    typesError ||
+    regionsError ||
+    (versionsError && versionsError[0].reason !== 'Unauthorized')
+  ) {
     // This information is necessary to create a Cluster. Otherwise, show an error state.
     return <ErrorState errorText="An unexpected error occurred." />;
   }
@@ -327,12 +374,25 @@ export const CreateCluster = () => {
             />
           </Notice>
         )}
+        {isCreateClusterRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'LKE Clusters',
+            })}
+            important
+            sx={{ marginBottom: 2 }}
+            variant="error"
+          />
+        )}
         <Paper data-qa-label-header>
           <TextField
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               updateLabel(e.target.value)
             }
             data-qa-label-input
+            disabled={isCreateClusterRestricted}
             errorText={errorMap.label}
             label="Cluster Label"
             value={label || ''}
@@ -340,14 +400,15 @@ export const CreateCluster = () => {
           {isLkeEnterpriseLAFlagEnabled && (
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
-              <ClusterTypePanel
-                handleClusterTypeSelection={handleClusterTypeSelection}
+              <ClusterTierPanel
+                handleClusterTierSelection={handleClusterTierSelection}
+                isUserRestricted={isCreateClusterRestricted}
                 selectedTier={selectedTier}
               />
             </>
           )}
           <Divider sx={{ marginTop: 4 }} />
-          <StyledFieldWithDocsStack>
+          <StyledStackWithTabletBreakpoint>
             <Stack>
               <RegionSelect
                 currentCapability={
@@ -363,10 +424,11 @@ export const CreateCluster = () => {
                 tooltipText={
                   isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
-                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
                 disableClearable
+                disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
@@ -381,31 +443,46 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledFieldWithDocsStack>
+          </StyledStackWithTabletBreakpoint>
           <Divider sx={{ marginTop: 4 }} />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setVersion(selected?.value);
-            }}
-            disableClearable={!!version}
-            errorText={errorMap.k8s_version}
-            label="Kubernetes Version"
-            loading={isLoadingVersions}
-            options={versions}
-            placeholder={' '}
-            value={versions.find((v) => v.value === version) ?? null}
-          />
+          <StyledStackWithTabletBreakpoint>
+            <Stack>
+              <Autocomplete
+                onChange={(_, selected) => {
+                  setVersion(selected?.value);
+                }}
+                disableClearable={!!version}
+                disabled={isCreateClusterRestricted}
+                errorText={errorMap.k8s_version}
+                label="Kubernetes Version"
+                loading={isLoadingVersions}
+                options={versions}
+                placeholder={' '}
+                sx={{ minWidth: 416 }}
+                value={versions.find((v) => v.value === version) ?? null}
+              />
+            </Stack>
+            <StyledDocsLinkContainer
+              sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
+              <DocsLink
+                href={CLUSTER_VERSIONS_DOCS_LINK}
+                label="Kubernetes Versions"
+              />
+            </StyledDocsLinkContainer>
+          </StyledStackWithTabletBreakpoint>
           {showAPL && (
             <>
               <Divider sx={{ marginTop: 4 }} />
-              <StyledFieldWithDocsStack>
+              <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <ApplicationPlatform
+                    isSectionDisabled={!isAPLSupported}
                     setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
                 </Stack>
-              </StyledFieldWithDocsStack>
+              </StyledStackWithTabletBreakpoint>
             </>
           )}
           <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
@@ -435,10 +512,15 @@ export const CreateCluster = () => {
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
+                handleIsAcknowledgementChecked={(isChecked: boolean) =>
+                  setIsACLAcknowledgementChecked(isChecked)
+                }
                 enableControlPlaneACL={controlPlaneACL}
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
+                selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
             </>
@@ -461,6 +543,7 @@ export const CreateCluster = () => {
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
             selectedRegionId={selectedRegion?.id}
+            selectedTier={selectedTier}
             types={typesData || []}
             typesLoading={typesLoading}
           />

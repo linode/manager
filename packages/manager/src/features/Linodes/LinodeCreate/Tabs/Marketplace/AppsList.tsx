@@ -1,10 +1,8 @@
-import { Box, CircleProgress, Stack } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import { getGeneratedLinodeLabel } from '../../utilities';
 import { getDefaultUDFData } from '../StackScripts/UserDefinedFields/utilities';

@@ -1,14 +1,13 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   useAccountSettings,
   useMutateAccountSettings,
-} from 'src/queries/account/settings';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+  useAllLinodesQuery,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -31,7 +30,7 @@ const GlobalSettings = () => {
     isLoading: accountSettingsLoading,
   } = useAccountSettings();
 
-  const linodeInterfacesFlag = useIsLinodeInterfacesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: linodes } = useAllLinodesQuery();
 
   const hasLinodesWithoutBackups =
@@ -84,7 +83,7 @@ const GlobalSettings = () => {
   return (
     <div>
       <DocumentTitleSegment segment="Settings" />
-      {linodeInterfacesFlag?.enabled && <NetworkInterfaceType />}
+      {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
       <AutoBackups
         backups_enabled={backups_enabled}
         hasLinodesWithoutBackups={hasLinodesWithoutBackups}

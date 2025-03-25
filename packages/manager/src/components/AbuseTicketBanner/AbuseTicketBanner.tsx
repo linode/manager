@@ -1,11 +1,12 @@
+import { useNotificationsQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { Link } from 'src/components/Link';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';
@@ -36,7 +37,7 @@ export const AbuseTicketBanner = () => {
   const isViewingTicket = location.pathname.match(href);
 
   return (
-    <Grid xs={12}>
+    <Grid size={12}>
       <DismissibleBanner
         options={{
           expiry: DateTime.utc().plus({ days: 7 }).toISO(),

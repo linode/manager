@@ -1,4 +1,5 @@
 import { FormControlLabel, Radio } from '@linode/ui';
+import { capitalize, formatStorageUnits } from '@linode/utilities';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -7,10 +8,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalize } from 'src/utilities/capitalize';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import type { Linode } from '@linode/api-v4';
 

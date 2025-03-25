@@ -23,7 +23,12 @@ export const CollapsibleRow = (props: Props) => {
     <>
       <TableRow>
         <TableCell scope="row">
-          <Box alignItems="center" display="flex">
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
             <IconButton
               aria-label={`expand ${label} row`}
               onClick={() => setOpen(!open)}

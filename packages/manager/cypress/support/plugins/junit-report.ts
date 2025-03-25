@@ -33,7 +33,7 @@ export const enableJunitReport = (
       // Cypress doesn't know to look for modules in the root `node_modules`
       // directory, so we have to pass a relative path.
       // See also: https://github.com/cypress-io/cypress/issues/6406
-      config.reporter = '../../node_modules/mocha-junit-reporter';
+      config.reporter = 'node_modules/mocha-junit-reporter';
 
       // See also: https://www.npmjs.com/package/mocha-junit-reporter#full-configuration-options
       config.reporterOptions = {

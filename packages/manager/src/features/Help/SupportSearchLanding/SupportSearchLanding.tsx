@@ -1,13 +1,13 @@
 import { Box, H1Header, InputAdornment, Notice, TextField } from '@linode/ui';
+import { getQueryParamFromQueryString } from '@linode/utilities';
 import Search from '@mui/icons-material/Search';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
-import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import withSearch from '../SearchHOC';
 import { DocumentationResults } from './DocumentationResults';

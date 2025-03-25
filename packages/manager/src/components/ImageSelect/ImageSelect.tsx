@@ -1,4 +1,11 @@
-import { Autocomplete, Box, Notice, Stack, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  InputAdornment,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { DateTime } from 'luxon';
 import React, { useMemo } from 'react';
 
@@ -178,15 +185,15 @@ export const ImageSelect = (props: Props) => {
           InputProps: {
             startAdornment:
               !multiple && value && !Array.isArray(value) ? (
-                <OSIcon
-                  fontSize="24px"
-                  height="24px"
-                  os={value.vendor ?? ''}
-                  pl={1}
-                  position="relative"
-                  pr={2}
-                  top={1}
-                />
+                <InputAdornment position="start">
+                  <OSIcon
+                    fontSize="20px"
+                    height="20px"
+                    os={value.vendor ?? ''}
+                    position="relative"
+                    top={1}
+                  />
+                </InputAdornment>
               ) : null,
           },
         }}

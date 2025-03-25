@@ -1,12 +1,17 @@
+import { capitalize } from '@linode/utilities';
+import React from 'react';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { capitalize } from 'src/utilities/capitalize';
 
 import type {
   AccountAccessType,
   IamAccess,
   IamAccessType,
   IamAccountPermissions,
+  IamAccountResource,
+  IamUserPermissions,
   PermissionType,
+  ResourceAccess,
   ResourceType,
   ResourceTypePermissions,
   RoleType,
@@ -45,7 +50,7 @@ export const placeholderMap: Record<string, string> = {
 };
 
 export interface RoleMap {
-  access: 'account' | 'resource';
+  access: 'account_access' | 'resource_access';
   description: string;
   id: AccountAccessType | RoleType;
   name: AccountAccessType | RoleType;
@@ -124,7 +129,9 @@ const getDoesRolesMatchQuery = (
 };
 
 export interface RolesType {
+  access: IamAccessType;
   label: string;
+  resource_type: ResourceTypePermissions;
   value: string;
 }
 
@@ -141,7 +148,9 @@ export const getAllRoles = (
   return accessTypes.flatMap((accessType: IamAccessType) =>
     permissions[accessType].flatMap((resource: IamAccess) =>
       resource.roles.map((role: Roles) => ({
+        access: accessType,
         label: role.name,
+        resource_type: resource.resource_type,
         value: role.name,
       }))
     )
@@ -195,4 +204,228 @@ export const mapEntityTypes = (
     rawValue: resource,
     value: capitalize(resource) + suffix,
   }));
+};
+
+export interface CombinedRoles {
+  id: null | number[];
+  name: AccountAccessType | RoleType;
+}
+
+/**
+ * Group account_access and resource_access roles of the user
+ *
+ */
+export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
+  const combinedRoles: CombinedRoles[] = [];
+  const roleMap: Map<AccountAccessType | RoleType, null | number[]> = new Map();
+
+  // Add account access roles with resource_id set to null
+  data.account_access.forEach((role: AccountAccessType) => {
+    if (!roleMap.has(role)) {
+      roleMap.set(role, null);
+    }
+  });
+
+  // Add resource access roles with their respective resource_id
+  data.resource_access.forEach(
+    (resource: { resource_id: number; roles: RoleType[] }) => {
+      resource.roles?.forEach((role: RoleType) => {
+        if (roleMap.has(role)) {
+          const existingResourceIds = roleMap.get(role);
+          if (existingResourceIds && existingResourceIds !== null) {
+            existingResourceIds.push(resource.resource_id);
+          }
+        } else {
+          roleMap.set(role, [resource.resource_id]);
+        }
+      });
+    }
+  );
+
+  // Convert the Map into the final combinedRoles array
+  roleMap.forEach((id, name) => {
+    combinedRoles.push({ id, name });
+  });
+
+  return combinedRoles;
+};
+
+interface AllResources {
+  resource: IamAccess;
+  type: 'account_access' | 'resource_access';
+}
+
+/**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapRolesToPermissions = (
+  accountPermissions: IamAccountPermissions,
+  userRoles: CombinedRoles[]
+): RoleMap[] => {
+  const roleMap = new Map<string, RoleMap>();
+
+  // Flatten resources and map roles for quick lookup
+  const allResources: AllResources[] = [
+    ...accountPermissions.account_access.map((resource) => ({
+      resource,
+      type: 'account_access' as const,
+    })),
+    ...accountPermissions.resource_access.map((resource) => ({
+      resource,
+      type: 'resource_access' as const,
+    })),
+  ];
+
+  const roleLookup = new Map<string, AllResources>();
+  allResources.forEach(({ resource, type }) => {
+    resource.roles.forEach((role: Roles) => {
+      roleLookup.set(role.name, { resource, type });
+    });
+  });
+
+  // Map userRoles to permissions
+  userRoles.forEach(({ id, name }) => {
+    const match = roleLookup.get(name);
+    if (match) {
+      const { resource, type } = match;
+      const role = resource.roles.find((role: Roles) => role.name === name)!;
+      roleMap.set(name, {
+        access: type,
+        description: role.description,
+        id: name,
+        name,
+        permissions: role.permissions,
+        resource_ids: id,
+        resource_type: resource.resource_type,
+      });
+    }
+  });
+
+  return Array.from(roleMap.values());
+};
+
+/**
+ * Add assigned entities to role
+ */
+export const addResourceNamesToRoles = (
+  roles: ExtendedRoleMap[],
+  resources: IamAccountResource
+): ExtendedRoleMap[] => {
+  const resourcesArray: IamAccountResource[] = Object.values(resources);
+
+  return roles.map((role) => {
+    // Find the resource group by resource_type
+    const resourceGroup = resourcesArray.find(
+      (res) => res.resource_type === role.resource_type
+    );
+
+    if (resourceGroup && role.resource_ids) {
+      // Map resource_ids to their names
+      const resourceNames = role.resource_ids
+        .map(
+          (id) =>
+            resourceGroup.resources.find((resource) => resource.id === id)?.name
+        )
+        .filter((name): name is string => name !== undefined); // Remove undefined values
+
+      return { ...role, resource_names: resourceNames };
+    }
+
+    // If no matching resource_type, return the role unchanged
+    return { ...role, resource_names: [] };
+  });
+};
+
+/**
+ * Custom hook to calculate hidden items
+ */
+export const useCalculateHiddenItems = (
+  items: PermissionType[] | string[],
+  showAll?: boolean
+) => {
+  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
+
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
+
+  const calculateHiddenItems = React.useCallback(() => {
+    if (showAll || !containerRef.current) {
+      setNumHiddenItems(0);
+      return;
+    }
+
+    if (!itemRefs.current) {
+      return;
+    }
+
+    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
+
+    const itemsArray = Array.from(itemRefs.current);
+
+    const firstHiddenIndex = itemsArray.findIndex(
+      (item: HTMLDivElement | HTMLSpanElement) => {
+        const rect = item.getBoundingClientRect();
+        return rect.top >= containerBottom;
+      }
+    );
+
+    const numHiddenItems =
+      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
+
+    setNumHiddenItems(numHiddenItems);
+  }, [items, showAll]);
+
+  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
+};
+
+export interface EntitiesOption {
+  label: string;
+  value: number;
+}
+
+interface UpdateUserRolesProps {
+  access: 'account_access' | 'resource_access';
+  assignedRoles?: IamUserPermissions;
+  initialRole?: string;
+  newRole: string;
+}
+
+export const updateUserRoles = ({
+  access,
+  assignedRoles,
+  initialRole,
+  newRole,
+}: UpdateUserRolesProps): IamUserPermissions => {
+  if (access === 'account_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      account_access: assignedRoles.account_access.map(
+        (role: AccountAccessType) =>
+          role === initialRole ? (newRole as AccountAccessType) : role
+      ),
+    };
+  }
+
+  if (access === 'resource_access' && assignedRoles) {
+    return {
+      ...assignedRoles,
+      resource_access: assignedRoles.resource_access.map(
+        (resource: ResourceAccess) => ({
+          ...resource,
+          roles: resource.roles.map((role: RoleType) =>
+            role === initialRole ? (newRole as RoleType) : role
+          ),
+        })
+      ),
+    };
+  }
+
+  // If access type is invalid, return unchanged object
+  return (
+    assignedRoles ?? {
+      account_access: [],
+      resource_access: [],
+    }
+  );
 };

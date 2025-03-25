@@ -3,32 +3,37 @@
  */
 
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { EntityTransfer, Linode, Profile } from '@linode/api-v4';
-import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { linodeFactory } from 'src/factories';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
+import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   interceptInitiateEntityTransfer,
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
-  mockReceiveEntityTransfer,
+  mockGetEntityTransfersError,
   mockInitiateEntityTransferError,
+  mockReceiveEntityTransfer,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
-import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
+
+import { linodeFactory } from 'src/factories';
+import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { formatDate } from 'src/utilities/formatDate';
 
 import type { EntityTransferStatus } from '@linode/api-v4';
+import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';
+
+// Service transfer error message.
+export const serviceTransferErrorMessage = 'An unknown error has occurred';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -79,10 +84,8 @@ const initiateLinodeTransfer = (linodeLabel: string) => {
  * @param token - Token to attempt to redeem.
  */
 const redeemToken = (token: string) => {
-  cy.findByLabelText('Receive a Service Transfer')
-    .should('be.visible')
-    .click()
-    .type(token);
+  cy.findByLabelText('Receive a Service Transfer').should('be.visible').click();
+  cy.focused().type(token);
 
   ui.button
     .findByTitle('Review Details')
@@ -163,20 +166,20 @@ describe('Account service transfers', () => {
     cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
 
     // Confirm that text "No data to display" is in "Received Service Transfers" panel.
-    cy.get('[data-qa-panel="Received Service Transfers"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[role="button"]').click();
-        cy.findByText(serviceTransferEmptyState, { exact: false }).should(
-          'be.visible'
-        );
-      });
+    cy.findByText('Received Service Transfers').should('be.visible').click();
+
+    cy.get('[data-qa-panel="Received Service Transfers"]').within(() => {
+      cy.findByText(serviceTransferEmptyState, { exact: false }).should(
+        'be.visible'
+      );
+    });
 
     // Confirm that text "No data to display" is in "Sent Service Transfers" panel.
+    cy.findByText('Sent Service Transfers').should('be.visible').click();
+
     cy.get('[data-qa-panel="Sent Service Transfers"]')
       .should('be.visible')
       .within(() => {
-        cy.get('[role="button"]').click();
         cy.findByText(serviceTransferEmptyState, { exact: false }).should(
           'be.visible'
         );
@@ -188,25 +191,25 @@ describe('Account service transfers', () => {
    */
   it('lists service transfers on landing page', () => {
     const pendingTransfers = entityTransferFactory.buildList(3, {
-      status: 'pending',
       entities: {
         linodes: [0, 1, 2, 3, 4],
       },
+      status: 'pending',
     });
 
     const receivedTransfers = entityTransferFactory.buildList(4, {
-      is_sender: false,
       entities: {
         linodes: [0],
       },
+      is_sender: false,
     });
 
     const sentTransfers = serviceTransferStatuses.map((status) => {
       return entityTransferFactory.build({
-        is_sender: true,
         entities: {
           linodes: [0, 1],
         },
+        is_sender: true,
         status,
       });
     });
@@ -432,12 +435,12 @@ describe('Account service transfers', () => {
   it('can receive a service transfer', () => {
     const token = randomUuid();
     const transfer = entityTransferFactory.build({
-      token,
       entities: {
         linodes: [0],
       },
-      status: 'pending',
       is_sender: false,
+      status: 'pending',
+      token,
     });
 
     mockGetEntityTransfers([], [], []).as('getTransfers');
@@ -483,10 +486,8 @@ describe('Account service transfers', () => {
     ui.toast.assertMessage('Transfer accepted successfully.');
     cy.get('[data-qa-panel="Received Service Transfers"]')
       .should('be.visible')
-      .click()
-      .within(() => {
-        cy.findByText(token).should('be.visible');
-      });
+      .click();
+    cy.findByText(token).should('be.visible');
   });
 
   /*
@@ -521,5 +522,34 @@ describe('Account service transfers', () => {
     cy.url().should('endWith', serviceTransferCreateUrl);
     initiateLinodeTransfer(mockLinodes[0].label);
     cy.findByText(errorMessage).should('be.visible');
+  });
+
+  /*
+   * - Confirms that an error message is displayed in both the Received and Sent tables when the requests to fetch service transfers fail.
+   */
+  it('should display an error message when the request fails to fetch service transfer', () => {
+    mockGetEntityTransfersError().as('getTransfersError');
+
+    cy.visitWithLogin(serviceTransferLandingUrl);
+    cy.wait('@getTransfersError');
+
+    cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
+
+    // Confirm that an error message is displayed in both "Received Service Transfers" and "Sent Service Transfers" panels.
+    ['Received Service Transfers', 'Sent Service Transfers'].forEach(
+      (transfer) => {
+        cy.get(`[data-qa-panel="${transfer}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
+            // Error Icon should shows up.
+            cy.findByTestId('ErrorOutlineIcon').should('be.visible');
+            // Error message should be visible.
+            cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
+              'be.visible'
+            );
+          });
+      }
+    );
   });
 });

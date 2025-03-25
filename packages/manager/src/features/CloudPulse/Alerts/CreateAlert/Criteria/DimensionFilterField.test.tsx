@@ -1,8 +1,8 @@
+import { capitalize } from '@linode/utilities';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { capitalize } from 'src/utilities/capitalize';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { dimensionOperatorOptions } from '../../constants';

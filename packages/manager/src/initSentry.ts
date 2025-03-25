@@ -1,10 +1,11 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/react';
+import { deepStringTransform, redactAccessToken } from '@linode/utilities';
+import { init } from '@sentry/react';
 
 import { APP_ROOT, SENTRY_URL } from 'src/constants';
-import { deepStringTransform } from 'src/utilities/deepStringTransform';
-import { redactAccessToken } from 'src/utilities/redactAccessToken';
 
 import packageJson from '../package.json';
+
+import type { BrowserOptions, Event as SentryEvent } from '@sentry/react';
 
 export const initSentry = () => {
   const environment = getSentryEnvironment();

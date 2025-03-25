@@ -1,17 +1,17 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type {
   DatabaseEngine,
+  DatabaseFork,
   DatabaseInstance,
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
-import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
@@ -245,3 +245,22 @@ export const upgradableVersions = (
   version: string,
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
+
+/**
+ * Formats the provided config value into a more user-friendly representation.
+ * - If the value is 'true', it will be displayed as 'Enabled'.
+ * - If the value is 'false', it will be displayed as 'Disabled'.
+ * - If the value is 'undefined', it will be displayed as ' - '.
+ * - Otherwise, the original value will be returned as-is.
+ *
+ * @param {string} configValue - The configuration value to be formatted.
+ * @returns {string} - The formatted string based on the configValue.
+ */
+export const formatConfigValue = (configValue: string) =>
+  configValue === 'true'
+    ? 'Enabled'
+    : configValue === 'false'
+    ? 'Disabled'
+    : configValue === 'undefined'
+    ? ' - '
+    : configValue;

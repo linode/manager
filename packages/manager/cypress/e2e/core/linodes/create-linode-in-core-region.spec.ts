@@ -1,4 +1,3 @@
-import { linodeFactory, regionFactory } from 'src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
@@ -8,6 +7,8 @@ import {
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
+
+import { linodeFactory, regionFactory } from 'src/factories';
 
 describe('Create Linode in a Core Region', () => {
   /*

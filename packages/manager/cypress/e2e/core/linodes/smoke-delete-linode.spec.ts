@@ -1,13 +1,14 @@
-import { authenticate } from 'support/api/authentication';
-import { createTestLinode } from 'support/util/linodes';
+import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { createLinodeRequestFactory } from '@src/factories/linodes';
+import { authenticate } from 'support/api/authentication';
+import { mockGetAccountSettings } from 'support/intercepts/account';
+import { interceptDeleteLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { Linode } from '@linode/api-v4';
-import { accountSettingsFactory } from '@src/factories/accountSettings';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
-import { interceptDeleteLinode } from 'support/intercepts/linodes';
-import { mockGetAccountSettings } from 'support/intercepts/account';
+
+import type { Linode } from '@linode/api-v4';
 
 const confirmDeletion = (linodeLabel: string) => {
   cy.url().should('endWith', '/linodes');
@@ -31,10 +32,8 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     .findByTitle(`Delete ${linodeLabel}?`)
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.focused().type(linodeLabel);
 
       ui.buttonGroup
         .findButtonByTitle('Delete')
@@ -48,14 +47,14 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
 };
 
 const preferenceOverrides = {
-  linodes_view_style: 'list',
-  linodes_group_by_tag: false,
-  volumes_group_by_tag: false,
   desktop_sidebar_open: false,
+  linodes_group_by_tag: false,
+  linodes_view_style: 'list',
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'asc', orderBy: 'label' },
   },
+  volumes_group_by_tag: false,
 };
 
 authenticate();
@@ -96,10 +95,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -147,10 +144,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -192,10 +187,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')

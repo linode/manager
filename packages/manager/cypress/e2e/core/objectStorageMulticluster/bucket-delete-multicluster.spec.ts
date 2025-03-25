@@ -1,12 +1,13 @@
-import { randomLabel } from 'support/util/random';
-import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetBuckets,
   mockDeleteBucket,
+  mockGetBuckets,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 
 describe('Object Storage Multicluster Bucket delete', () => {
   /*
@@ -18,9 +19,9 @@ describe('Object Storage Multicluster Bucket delete', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({
-      label: bucketLabel,
       cluster: bucketCluster,
       hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      label: bucketLabel,
       objects: 0,
     });
 
@@ -51,7 +52,8 @@ describe('Object Storage Multicluster Bucket delete', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.enabled')

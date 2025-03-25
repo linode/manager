@@ -4,19 +4,21 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
+import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { alertStatusOptions } from '../constants';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 
 const searchAndSelectSx = {
+  lg: '250px',
   md: '300px',
-  sm: '500px',
+  sm: '400px',
   xs: '300px',
 };
 
@@ -30,6 +32,7 @@ export const AlertListing = () => {
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
 
+  const topRef = React.useRef<HTMLButtonElement>(null);
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -117,9 +120,9 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  if (alerts && alerts.length == 0) {
+  if (alerts && alerts.length === 0) {
     return (
-      <StyledPlaceholder
+      <Placeholder
         buttonProps={[
           {
             children: 'Create Alerts',
@@ -143,8 +146,10 @@ export const AlertListing = () => {
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
         flexDirection={{ lg: 'row', md: 'column', sm: 'column', xs: 'column' }}
+        flexWrap="wrap"
         gap={3}
         justifyContent="space-between"
+        ref={topRef}
       >
         <Box
           flexDirection={{
@@ -183,7 +188,7 @@ export const AlertListing = () => {
             data-qa-filter="alert-service-filter"
             data-testid="alert-service-filter"
             label=""
-            limitTags={2}
+            limitTags={1}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
@@ -202,6 +207,7 @@ export const AlertListing = () => {
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
             label=""
+            limitTags={1}
             multiple
             noMarginTop
             options={alertStatusOptions}
@@ -218,7 +224,7 @@ export const AlertListing = () => {
             paddingBottom: 0,
             paddingTop: 0,
             whiteSpace: 'noWrap',
-            width: { md: '150px', xs: '200px' },
+            width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
           buttonType="primary"
           data-qa-button="create-alert"
@@ -232,6 +238,7 @@ export const AlertListing = () => {
         alerts={getAlertsList}
         error={error ?? undefined}
         isLoading={isLoading}
+        scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
       />
     </Stack>

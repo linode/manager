@@ -1,4 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -15,7 +17,6 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
   sendLinodeCreateFormInputEvent,
@@ -29,7 +30,6 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
-import { getIsLegacyInterfaceArray } from './utilities';
 import {
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
@@ -144,11 +144,11 @@ export const Region = React.memo(() => {
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
-        const defaultDiskEncryptionValue = region.capabilities.includes(
-          'Disk Encryption'
-        )
-          ? 'enabled'
-          : undefined;
+        const defaultDiskEncryptionValue =
+          region.capabilities.includes('Disk Encryption') ||
+          region.capabilities.includes('LA Disk Encryption')
+            ? 'enabled'
+            : undefined;
 
         setValue('disk_encryption', defaultDiskEncryptionValue);
       }

@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -5,6 +6,7 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerFactory,
 } from 'src/factories';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SummaryPanel } from './SummaryPanel';
@@ -16,8 +18,8 @@ const queryMocks = vi.hoisted(() => ({
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
 }));
 
-vi.mock('src/queries/nodebalancers', async () => {
-  const actual = await vi.importActual('src/queries/nodebalancers');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllNodeBalancerConfigsQuery: queryMocks.useAllNodeBalancerConfigsQuery,
@@ -64,7 +66,7 @@ describe('SummaryPanel', () => {
   });
 
   it('renders the panel if there is data to render', () => {
-    const { getByText } = renderWithTheme(<SummaryPanel />);
+    const { getByText, queryByText } = renderWithTheme(<SummaryPanel />);
 
     // Main summary panel
     expect(getByText(nodeBalancerDetails)).toBeVisible();
@@ -76,6 +78,10 @@ describe('SummaryPanel', () => {
     expect(getByText('Host Name:')).toBeVisible();
     expect(getByText('example.com')).toBeVisible();
     expect(getByText('Region:')).toBeVisible();
+    // Type should not display for non-premium NBs
+    expect(queryByText('Type:')).not.toBeInTheDocument();
+    // Cluster should not display for if the NB is not associated with LKE or LKE-E
+    expect(queryByText('Cluster:')).not.toBeInTheDocument();
 
     // Firewall panel
     expect(getByText('Firewall')).toBeVisible();
@@ -88,5 +94,70 @@ describe('SummaryPanel', () => {
     // Tags panel
     expect(getByText('Tags')).toBeVisible();
     expect(getByText('Add a tag')).toBeVisible();
+  });
+
+  it('displays type: premium if the nodebalancer is premium', () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodeBalancerFactory.build({ type: 'premium' }),
+    });
+
+    const { container } = renderWithTheme(<SummaryPanel />);
+
+    expect(container.querySelector('[data-qa-type]')).toHaveTextContent(
+      'Type: Premium'
+    );
+  });
+
+  it('displays link to cluster if it exists', () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodeBalancerFactory.build({
+        lke_cluster: {
+          id: 1,
+          label: 'lke-123',
+          type: 'lkecluster',
+          url: 'v4/lke/clusters/1',
+        },
+      }),
+    });
+
+    const { container, getByText } = renderWithTheme(<SummaryPanel />);
+
+    expect(getByText('Cluster:')).toBeVisible();
+    const clusterLink = container.querySelector('[data-qa-cluster] a');
+    expect(clusterLink).toHaveTextContent('lke-123');
+    expect(clusterLink).toHaveAttribute(
+      'href',
+      '/kubernetes/clusters/1/summary'
+    );
+  });
+
+  it('displays cluster name as deleted text if the cluster was deleted', async () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodeBalancerFactory.build({
+        lke_cluster: {
+          id: 1,
+          label: 'lke-123',
+          type: 'lkecluster',
+          url: 'v4/lke/clusters/1',
+        },
+      }),
+    });
+
+    server.use(
+      http.get('*/lke/clusters/:clusterId', () => {
+        return HttpResponse.json({}, { status: 404 });
+      })
+    );
+
+    const { container } = renderWithTheme(<SummaryPanel />);
+
+    await waitFor(() => {
+      const clusterLink = container.querySelector('[data-qa-cluster]');
+      expect(clusterLink).toHaveTextContent('Cluster: lke-123 (deleted)');
+      expect(clusterLink).not.toHaveAttribute(
+        'href',
+        '/kubernetes/clusters/1/summary'
+      );
+    });
   });
 });

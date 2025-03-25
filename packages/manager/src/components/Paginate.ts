@@ -1,8 +1,8 @@
 import { clamp } from '@linode/ui';
+import { scrollTo } from '@linode/utilities';
 import { slice } from 'ramda';
 import * as React from 'react';
 
-import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
 export const createDisplayPage = <T>(page: number, pageSize: number) => (
@@ -49,29 +49,6 @@ interface Props<T> {
 }
 
 export default class Paginate<T> extends React.Component<Props<T>, State> {
-  render() {
-    let view: (data: T[]) => T[];
-    // update view based on page url
-    if (this.props.updatePageUrl) {
-      view = createDisplayPage(this.props.page || 1, this.state.pageSize);
-    }
-    // update view based on state
-    else {
-      view = createDisplayPage(this.state.page, this.state.pageSize);
-    }
-
-    const props = {
-      ...this.props,
-      ...this.state,
-      count: this.props.data.length,
-      data: view(this.props.data),
-      handlePageChange: this.handlePageChange,
-      handlePageSizeChange: this.handlePageSizeChange,
-    };
-
-    return this.props.children(props);
-  }
-
   handlePageChange = (page: number) => {
     if (this.props.shouldScroll ?? true) {
       const { scrollToRef } = this.props;
@@ -97,4 +74,27 @@ export default class Paginate<T> extends React.Component<Props<T>, State> {
     page: this.props.page || 1,
     pageSize: this.props.pageSize || storage.pageSize.get() || 25,
   };
+
+  render() {
+    let view: (data: T[]) => T[];
+    // update view based on page url
+    if (this.props.updatePageUrl) {
+      view = createDisplayPage(this.props.page || 1, this.state.pageSize);
+    }
+    // update view based on state
+    else {
+      view = createDisplayPage(this.state.page, this.state.pageSize);
+    }
+
+    const props = {
+      ...this.props,
+      ...this.state,
+      count: this.props.data.length,
+      data: view(this.props.data),
+      handlePageChange: this.handlePageChange,
+      handlePageSizeChange: this.handlePageSizeChange,
+    };
+
+    return this.props.children(props);
+  }
 }

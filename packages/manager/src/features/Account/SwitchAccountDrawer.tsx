@@ -1,20 +1,19 @@
-import { Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { Drawer, Notice, StyledLinkButton, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { getAuthToken } from 'src/utilities/authentication';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
 
 import type { APIError, UserType } from '@linode/api-v4';
-import type { State as AuthState } from 'src/store/authentication';
 
 interface Props {
   onClose: () => void;
@@ -23,7 +22,7 @@ interface Props {
 }
 
 interface HandleSwitchToChildAccountProps {
-  currentTokenWithBearer?: AuthState['token'];
+  currentTokenWithBearer?: string;
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
@@ -39,9 +38,9 @@ export const SwitchAccountDrawer = (props: Props) => {
   const [query, setQuery] = React.useState<string>('');
 
   const isProxyUser = userType === 'proxy';
-  const currentParentTokenWithBearer =
+  const currentParentTokenWithBearer: string =
     getStorage('authentication/parent_token/token') ?? '';
-  const currentTokenWithBearer = useCurrentToken() ?? '';
+  const currentTokenWithBearer = getAuthToken().token;
 
   const {
     createToken,
@@ -124,7 +123,12 @@ export const SwitchAccountDrawer = (props: Props) => {
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Switch Account">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Switch Account"
+    >
       {createTokenErrorReason && (
         <Notice text={createTokenErrorReason} variant="error" />
       )}

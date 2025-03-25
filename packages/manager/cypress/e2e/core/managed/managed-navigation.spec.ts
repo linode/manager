@@ -3,12 +3,11 @@
  */
 
 import {
-  contactFactory,
-  credentialFactory,
-  managedIssueFactory,
-  monitorFactory,
-} from 'src/factories/managed';
-import { userPreferencesFactory } from 'src/factories/profile';
+  managedAccount,
+  nonManagedAccount,
+  visitUrlWithManagedDisabled,
+  visitUrlWithManagedEnabled,
+} from 'support/api/managed';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import {
   mockGetContacts,
@@ -20,12 +19,15 @@ import {
 } from 'support/intercepts/managed';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+
 import {
-  managedAccount,
-  nonManagedAccount,
-  visitUrlWithManagedDisabled,
-  visitUrlWithManagedEnabled,
-} from 'support/api/managed';
+  contactFactory,
+  credentialFactory,
+  managedIssueFactory,
+  monitorFactory,
+} from 'src/factories/managed';
+import { userPreferencesFactory } from 'src/factories/profile';
+
 import type { UserPreferences } from '@linode/api-v4';
 
 // Array of URLs to all Managed-related pages.

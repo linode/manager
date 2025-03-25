@@ -1,9 +1,6 @@
-import { Box, Chip } from '@linode/ui';
+import { Box, Chip, SvgIcon } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { linodeInTransition } from 'src/features/Linodes/transitions';
 
 import {
   StyledSearchSuggestion,
@@ -14,23 +11,11 @@ import {
   StyledTagContainer,
 } from './SearchSuggestion.styles';
 
-import type { LinodeStatus } from '@linode/api-v4/lib/linodes';
-import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
-
-export interface SearchSuggestionT {
-  description: string;
-  icon: EntityVariants;
-  path: string;
-  searchText: string;
-  status?: LinodeStatus;
-  tags?: string[];
-}
+import type { SearchableItem } from 'src/features/Search/search.interfaces';
+import { searchableEntityIconMap } from 'src/features/Search/utils';
 
 export interface SearchSuggestionProps {
-  data: {
-    data: SearchSuggestionT;
-    label: string;
-  };
+  data: SearchableItem;
   searchText: string;
   selectOption: (option: unknown) => void;
   selectProps: {
@@ -41,9 +26,8 @@ export interface SearchSuggestionProps {
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
   const { data, searchText, selectOption, selectProps, ...rest } = props;
   const history = useHistory();
-  const { data: suggestionData, label } = data;
-  const { description, icon, status, tags } = suggestionData;
-  const searchResultIcon = icon || 'default';
+
+  const Icon = searchableEntityIconMap[data.entityType];
 
   const handleClick = () => {
     selectOption(data);
@@ -116,12 +100,9 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
         width="100%"
       >
         <StyledSuggestionIcon>
-          <EntityIcon
-            loading={status && linodeInTransition(status)}
-            size={20}
-            status={status}
-            variant={searchResultIcon}
-          />
+          <SvgIcon>
+            <Icon />
+          </SvgIcon>
         </StyledSuggestionIcon>
         <Box
           display="flex"
@@ -132,14 +113,14 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
         >
           <Box display="flex" flexDirection="column" marginRight={1}>
             <StyledSuggestionTitle data-qa-suggestion-title>
-              {maybeStyleSegment(label, searchText)}
+              {maybeStyleSegment(data.label, searchText)}
             </StyledSuggestionTitle>
             <StyledSuggestionDescription data-qa-suggestion-desc>
-              {description}
+              {data.data.description}
             </StyledSuggestionDescription>
           </Box>
           <StyledTagContainer className="tag-container">
-            {tags && renderTags(tags)}
+            {data.data.tags && renderTags(data.data.tags)}
           </StyledTagContainer>
         </Box>
       </Box>

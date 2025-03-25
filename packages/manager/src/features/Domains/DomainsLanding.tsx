@@ -1,4 +1,4 @@
-import { Button, CircleProgress, Notice } from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -25,8 +24,7 @@ import {
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useLinodesQuery, useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';

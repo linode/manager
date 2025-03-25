@@ -1,5 +1,7 @@
+import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
 import {
   CircleProgress,
+  ErrorState,
   IconButton,
   InputAdornment,
   TextField,
@@ -11,7 +13,6 @@ import { debounce } from 'throttle-debounce';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -26,7 +27,6 @@ import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVolumeQuery, useVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,

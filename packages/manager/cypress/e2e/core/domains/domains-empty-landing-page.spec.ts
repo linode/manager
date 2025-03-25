@@ -1,5 +1,5 @@
-import { ui } from 'support/ui';
 import { mockGetDomains } from 'support/intercepts/domains';
+import { ui } from 'support/ui';
 
 describe('Domains empty landing page', () => {
   /**

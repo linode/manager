@@ -1,29 +1,31 @@
-import type { LongviewClient } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-import {
-  longviewResponseFactory,
-  longviewClientFactory,
-  longviewAppsFactory,
-  longviewLatestStatsFactory,
-  longviewPackageFactory,
-} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
-  longviewStatusTimeout,
-  longviewEmptyStateMessage,
   longviewAddClientButtonText,
+  longviewEmptyStateMessage,
+  longviewStatusTimeout,
 } from 'support/constants/longview';
 import {
   interceptFetchLongviewStatus,
-  mockGetLongviewClients,
-  mockFetchLongviewStatus,
   mockCreateLongviewClient,
   mockDeleteLongviewClient,
+  mockFetchLongviewStatus,
+  mockGetLongviewClients,
   mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
+
+import {
+  longviewAppsFactory,
+  longviewClientFactory,
+  longviewLatestStatsFactory,
+  longviewPackageFactory,
+  longviewResponseFactory,
+} from 'src/factories';
+
+import type { LongviewClient } from '@linode/api-v4';
 
 /**
  * Returns the command used to install Longview which is shown in Cloud's UI.
@@ -321,7 +323,8 @@ describe('longview', () => {
       .click();
 
     cy.get(`[data-qa-longview-client="${client.id}"]`).within(() => {
-      cy.get(`[data-testid="textfield-input"]`).clear().type(newClient.label);
+      cy.get(`[data-testid="textfield-input"]`).clear();
+      cy.focused().type(newClient.label);
       cy.get(`[aria-label="Save new label"]`).should('be.visible').click();
     });
 

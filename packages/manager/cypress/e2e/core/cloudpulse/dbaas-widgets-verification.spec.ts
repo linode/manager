@@ -1,17 +1,24 @@
 /**
  * @file Integration Tests for CloudPulse Dbass Dashboard.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateCloudPulseJWEToken,
-  mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
+  mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
+
 import {
   accountFactory,
   cloudPulseMetricsResponseFactory,
@@ -23,16 +30,11 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
-import type { Flags } from 'src/featureFlags';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
+
+import type { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
 /**
@@ -49,7 +51,7 @@ const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -67,29 +69,29 @@ const flags: Partial<Flags> = {
 };
 
 const {
-  metrics,
-  id,
-  serviceType,
+  clusterName,
   dashboardName,
   engine,
-  clusterName,
+  id,
+  metrics,
   nodeType,
+  serviceType,
 } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
 
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
+const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
@@ -98,8 +100,8 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
 );
 
 const mockLinode = linodeFactory.build({
-  label: clusterName,
   id: kubeLinodeFactory.build().instance_id ?? undefined,
+  label: clusterName,
 });
 
 const mockAccount = accountFactory.build();
@@ -141,7 +143,7 @@ const getWidgetLegendRowValuesFromResponse = (
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
     flags,
-    label: label,
+    label,
     metricsList: responsePayload,
     resources: [
       {
@@ -150,9 +152,9 @@ const getWidgetLegendRowValuesFromResponse = (
         region: 'us-ord',
       },
     ],
-    serviceType: serviceType,
+    serviceType,
     status: 'success',
-    unit: unit,
+    unit,
   });
 
   // Destructure metrics data from the first legend row
@@ -167,17 +169,17 @@ const getWidgetLegendRowValuesFromResponse = (
 };
 
 const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  type: engine,
-  region: mockRegion.label,
-  version: '1',
-  status: 'provisioning',
   cluster_size: 2,
   engine: 'mysql',
   hosts: {
     primary: undefined,
     secondary: undefined,
   },
+  label: clusterName,
+  region: mockRegion.label,
+  status: 'provisioning',
+  type: engine,
+  version: '1',
 });
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
@@ -197,8 +199,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
 
-    // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor');
+    // navigate to the metrics page
+    cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -225,7 +227,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .should('be.visible')
       .click();
 
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
@@ -246,7 +248,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       ).should('not.exist');
     });
 
-    ui.regionSelect.find().click().clear();
+    ui.regionSelect.find().click();
+    ui.regionSelect.find().clear();
     ui.regionSelect
       .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
@@ -301,13 +304,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             metricsAPIResponsePayload
           ).as('getGranularityMetrics');
 
-          //find the interval component and select the expected granularity
+          // find the interval component and select the expected granularity
           ui.autocomplete
             .findByLabel('Select an Interval')
             .should('be.visible')
-            .type(`${testData.expectedGranularity}{enter}`); //type expected granularity
+            .type(`${testData.expectedGranularity}{enter}`); // type expected granularity
 
-          //check if the API call is made correctly with time granularity value selected
+          // check if the API call is made correctly with time granularity value selected
           cy.wait('@getGranularityMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
@@ -317,7 +320,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             );
           });
 
-          //validate the widget areachart is present
+          // validate the widget areachart is present
           cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
@@ -355,13 +358,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             metricsAPIResponsePayload
           ).as('getAggregationMetrics');
 
-          //find the interval component and select the expected granularity
+          // find the interval component and select the expected granularity
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`${testData.expectedAggregation}{enter}`); //type expected granularity
+            .type(`${testData.expectedAggregation}{enter}`); // type expected granularity
 
-          //check if the API call is made correctly with time granularity value selected
+          // check if the API call is made correctly with time granularity value selected
           cy.wait('@getAggregationMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
@@ -371,7 +374,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             );
           });
 
-          //validate the widget areachart is present
+          // validate the widget areachart is present
           cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,

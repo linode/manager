@@ -1,17 +1,27 @@
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { DateTime } from 'luxon';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateCloudPulseJWEToken,
-  mockGetCloudPulseDashboard,
   mockCreateCloudPulseMetrics,
+  mockGetCloudPulseDashboard,
   mockGetCloudPulseDashboards,
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockGetProfile,
+  mockGetUserPreferences,
+} from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
+import { generateRandomMetricsData } from 'support/util/cloudpulse';
+
 import {
   accountFactory,
   cloudPulseMetricsResponseFactory,
@@ -22,23 +32,14 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockGetProfile,
-  mockGetUserPreferences,
-} from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { Database, DateTimeWithPreset } from '@linode/api-v4';
-import { generateRandomMetricsData } from 'support/util/cloudpulse';
-import { mockGetDatabases } from 'support/intercepts/databases';
-import type { Flags } from 'src/featureFlags';
-import type { Interception } from 'support/cypress-exports';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { DateTime } from 'luxon';
+
+import type { Database, DateTimeWithPreset } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+import type { Interception } from 'support/cypress-exports';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-const currentDate = new Date();
 
 const cleanText = (string: string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
@@ -59,7 +60,7 @@ const mockRegion = regionFactory.build({
 });
 
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'cluster_id',
@@ -70,23 +71,23 @@ const flags: Partial<Flags> = {
   ],
 };
 
-const { metrics, id, serviceType, dashboardName, engine } = widgetDetails.dbaas;
+const { dashboardName, engine, id, metrics, serviceType } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
 
 const metricDefinitions = {
-  data: metrics.map(({ title, name, unit }) =>
+  data: metrics.map(({ name, title, unit }) =>
     dashboardMetricFactory.build({
       label: title,
       metric: name,
@@ -102,8 +103,8 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 });
 
 const databaseMock: Database = databaseFactory.build({
-  type: engine,
   region: mockRegion.label,
+  type: engine,
 });
 const mockProfile = profileFactory.build({
   timezone: 'Etc/GMT',
@@ -126,16 +127,14 @@ const mockProfile = profileFactory.build({
  *   - `month`: The month of the year as a number.
  */
 const getDateRangeInGMT = (
-  daysOffset: number,
   hour: number,
-  minute: number = 0
+  minute: number = 0,
+  isStart: boolean = false
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
-  const targetDate = now
-    .startOf('month')
-    .plus({ days: daysOffset })
-    .set({ hour, minute });
-
+  const targetDate = isStart
+    ? now.startOf('month').set({ hour, minute })
+    : now.set({ hour, minute });
   const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
   return {
     actualDate,
@@ -235,13 +234,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       aclpPreference: {
         dashboardId: id,
         engine: engine.toLowerCase(),
-        resources: ['1'],
         region: mockRegion.id,
+        resources: ['1'],
       },
     }).as('fetchPreferences');
     mockGetDatabases([databaseMock]);
 
-    cy.visitWithLogin('monitor');
+    cy.visitWithLogin('/metrics');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
@@ -252,13 +251,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       day: startDay,
       hour: startHour,
       minute: startMinute,
-    } = getDateRangeInGMT(0, 12, 15);
+    } = getDateRangeInGMT(12, 15, true);
     const {
       actualDate: endActualDate,
       day: endDay,
       hour: endHour,
       minute: endMinute,
-    } = getDateRangeInGMT(currentDate.getDate(), 12, 15);
+    } = getDateRangeInGMT(12, 30);
 
     // Select "Custom" from the "Time Range" dropdown
     ui.autocomplete
@@ -284,24 +283,26 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-
     cy.findByLabelText('Select hours')
-      .scrollIntoView({ easing: 'linear' })
-      .within(() => {
-        cy.get(`[aria-label="${startHour} hours"]`).click();
-      });
+      .as('selectHours')
+      .scrollIntoView({ easing: 'linear' });
+    cy.get('@selectHours').within(() => {
+      cy.get(`[aria-label="${startHour} hours"]`).click();
+    });
 
     cy.findByLabelText('Select minutes')
-      .scrollIntoView({ easing: 'linear', duration: 500 })
-      .within(() => {
-        cy.get(`[aria-label="${startMinute} minutes"]`).click();
-      });
+      .as('selectMinutes')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('@selectMinutes').within(() => {
+      cy.get(`[aria-label="${startMinute} minutes"]`).click();
+    });
 
     cy.findByLabelText('Select meridiem')
-      .scrollIntoView({ easing: 'linear', duration: 500 })
-      .within(() => {
-        cy.get(`[aria-label="PM"]`).click();
-      });
+      .as('selectMeridiem')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('@selectMeridiem').within(() => {
+      cy.get(`[aria-label="PM"]`).click();
+    });
 
     // Click the "Apply" button to confirm the start date and time
     ui.button
@@ -312,7 +313,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // Assert that the start date and time is correctly displayed
     cy.findByPlaceholderText('Select Start Date')
-      .scrollIntoView({ easing: 'linear' })
+      .as('selectStartDate')
+      .scrollIntoView({ easing: 'linear' });
+    cy.get('@selectStartDate')
       .should('be.visible')
       .should('have.value', `${cleanText(startActualDate)} PM`);
 
@@ -329,23 +332,29 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours')
-      .scrollIntoView({ easing: 'linear', duration: 500 })
-      .within(() => {
-        cy.get(`[aria-label="${endHour} hours"]`).click();
-      });
+    cy.findByLabelText('Select hours').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@selectHours').within(() => {
+      cy.get(`[aria-label="${endHour} hours"]`).click();
+    });
 
-    cy.findByLabelText('Select minutes')
-      .scrollIntoView({ easing: 'linear', duration: 500 })
-      .within(() => {
-        cy.get(`[aria-label="${endMinute} minutes"]`).click();
-      });
+    cy.findByLabelText('Select minutes').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@selectMinutes').within(() => {
+      cy.get(`[aria-label="${endMinute} minutes"]`).click();
+    });
 
-    cy.findByLabelText('Select meridiem')
-      .scrollIntoView({ easing: 'linear', duration: 500 })
-      .within(() => {
-        cy.get(`[aria-label="PM"]`).click();
-      });
+    cy.findByLabelText('Select meridiem').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@selectMeridiem').within(() => {
+      cy.get(`[aria-label="PM"]`).click();
+    });
 
     // Click the "Apply" button to confirm the end date and time
     ui.button
@@ -355,8 +364,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .click();
 
     // Assert that the end date and time is correctly displayed
+    cy.findByPlaceholderText('Select End Date').scrollIntoView({
+      easing: 'linear',
+    });
     cy.findByPlaceholderText('Select End Date')
-      .scrollIntoView({ easing: 'linear' })
       .should('be.visible')
       .should('have.value', `${cleanText(endActualDate)} PM`);
 
@@ -380,7 +391,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
           convertToGmt(endActualDate.replace(' ', 'T'))
         );
       });
-
     // Click on the "Presets" button
     ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 
@@ -455,7 +465,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { start, end } = getLastMonthRange();
+    const { end, start } = getLastMonthRange();
 
     ui.autocomplete
       .findByLabel('Time Range')
@@ -486,7 +496,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   });
 
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
-    const { start, end } = getThisMonthRange();
+    const { end, start } = getThisMonthRange();
 
     ui.autocomplete
       .findByLabel('Time Range')

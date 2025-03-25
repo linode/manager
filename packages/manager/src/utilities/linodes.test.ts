@@ -4,6 +4,7 @@ import { accountMaintenanceFactory, linodeFactory } from 'src/factories';
 
 import {
   addMaintenanceToLinodes,
+  useIsLinodeCloneFirewallEnabled,
   useIsLinodeInterfacesEnabled,
 } from './linodes';
 import { wrapWithTheme } from './testHelpers';
@@ -22,23 +23,45 @@ describe('addMaintenanceToLinodes', () => {
 });
 
 describe('useIsLinodeInterfacesEnabled', () => {
-  it('returns enabled: true if the feature is enabled', () => {
+  it('returns isLinodeInterfacesEnabled: true if the feature is enabled', () => {
     const options = { flags: { linodeInterfaces: { enabled: true } } };
 
     const { result } = renderHook(() => useIsLinodeInterfacesEnabled(), {
       wrapper: (ui) => wrapWithTheme(ui, options),
     });
 
-    expect(result.current?.enabled).toBe(true);
+    expect(result.current?.isLinodeInterfacesEnabled).toBe(true);
   });
 
-  it('returns enabled: false if the feature is NOT enabled', () => {
+  it('returns isLinodeInterfacesEnabled: false if the feature is NOT enabled', () => {
     const options = { flags: { linodeInterfaces: { enabled: false } } };
 
     const { result } = renderHook(() => useIsLinodeInterfacesEnabled(), {
       wrapper: (ui) => wrapWithTheme(ui, options),
     });
 
-    expect(result.current?.enabled).toBe(false);
+    expect(result.current?.isLinodeInterfacesEnabled).toBe(false);
+  });
+});
+
+describe('useIsLinodeCloneFirewallEnabled', () => {
+  it('returns isLinodeCloneFirewallEnabled: true if the feature is enabled', () => {
+    const options = { flags: { linodeCloneFirewall: true } };
+
+    const { result } = renderHook(() => useIsLinodeCloneFirewallEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isLinodeCloneFirewallEnabled).toBe(true);
+  });
+
+  it('returns isLinodeCloneFirewallEnabled: false if the feature is NOT enabled', () => {
+    const options = { flags: { linodeCloneFirewall: false } };
+
+    const { result } = renderHook(() => useIsLinodeCloneFirewallEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, options),
+    });
+
+    expect(result.current?.isLinodeCloneFirewallEnabled).toBe(false);
   });
 });

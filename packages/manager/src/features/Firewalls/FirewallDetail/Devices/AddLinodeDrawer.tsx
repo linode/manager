@@ -1,19 +1,19 @@
-import { Notice } from '@linode/ui';
-import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Link } from 'src/components/Link';
-import { SupportLink } from 'src/components/SupportLink';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-} from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
+import { SupportLink } from 'src/components/SupportLink';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
@@ -29,7 +29,7 @@ interface Props {
 export const AddLinodeDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
 
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -176,6 +176,7 @@ export const AddLinodeDrawer = (props: Props) => {
         setLocalError(undefined);
         onClose();
       }}
+      NotFoundComponent={NotFound}
       open={open}
       title={`Add Linode to Firewall: ${firewall?.label}`}
     >

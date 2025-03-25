@@ -1,5 +1,5 @@
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -9,7 +9,7 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -72,7 +72,7 @@ export const Referrals = () => {
           </Typography>
         </Grid>
         <>
-          <Grid xs={12}>
+          <Grid size={12}>
             {allowReferral ? (
               <CopyableTextField
                 expand

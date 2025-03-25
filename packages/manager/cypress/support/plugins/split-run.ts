@@ -86,7 +86,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
           'You can optimize your CI run performance by generating a valid weights file'
         );
         console.info(
-          `Example: CY_TEST_GENWEIGHTS='${splitRunWeightsPath}' yarn cy:run`
+          `Example: CY_TEST_GENWEIGHTS='${splitRunWeightsPath}' pnpm cy:run`
         );
       })();
     }

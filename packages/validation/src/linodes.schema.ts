@@ -133,10 +133,13 @@ const ipv6ConfigInterface = object().when('purpose', {
 // This is the validation schema for legacy interfaces attached to configuration profiles
 // For new interfaces, denoted as Linode Interfaces, see CreateLinodeInterfaceSchema or ModifyLinodeInterfaceSchema
 export const ConfigProfileInterfaceSchema = object().shape({
-  purpose: mixed().oneOf(
-    ['public', 'vlan', 'vpc'],
-    'Purpose must be public, vlan, or vpc.'
-  ),
+  purpose: string()
+    .oneOf(
+      ['public', 'vlan', 'vpc'] as const,
+      'Purpose must be public, vlan, or vpc.'
+    )
+    .defined()
+    .required(),
   label: string().when('purpose', {
     is: 'vlan',
     then: (schema) =>
@@ -193,7 +196,7 @@ export const ConfigProfileInterfaceSchema = object().shape({
         return !isVLANandIsSetToPrimary;
       }
     )
-    .notRequired(),
+    .optional(),
   subnet_id: number().when('purpose', {
     is: 'vpc',
     then: (schema) =>
@@ -226,7 +229,7 @@ export const ConfigProfileInterfaceSchema = object().shape({
   ipv4: ipv4ConfigInterface,
   ipv6: ipv6ConfigInterface,
   ip_ranges: array()
-    .of(string())
+    .of(string().defined())
     .notRequired()
     .nullable()
     .when('purpose', {
@@ -307,17 +310,16 @@ export const UpdateLinodePasswordSchema = object({
 });
 
 const MetadataSchema = object({
-  user_data: string().notRequired().nullable(),
+  user_data: string().nullable().defined(),
 });
 
 const PlacementGroupPayloadSchema = object({
-  id: number().notRequired().nullable(),
+  id: number().required(),
 });
 
 const DiskEncryptionSchema = string()
   .oneOf(['enabled', 'disabled'])
-  .notRequired()
-  .nullable();
+  .notRequired();
 
 const alerts = object({
   cpu: number()
@@ -380,24 +382,19 @@ export const UpdateLinodeSchema = object({
   backups,
 });
 
-const SSHKeySchema = object({
-  id: number(),
-  label: string(),
-  ssh_key: string(),
-  created: string(),
-});
-
-// Include `shape()` here so that the schema can be extended without TS complaining.
-export const RebuildLinodeSchema = object().shape({
+export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
   root_pass: string().required('Password is required.'),
-  authorized_keys: array().of(SSHKeySchema),
-  authorized_users: array().of(string()),
-  stackscript_id: number().notRequired(),
-  stackscript_data,
-  booted: boolean().notRequired(),
-  metadata: MetadataSchema,
-  disk_encryption: DiskEncryptionSchema,
+  authorized_keys: array().of(string().required()),
+  authorized_users: array().of(string().required()),
+  stackscript_id: number().optional(),
+  stackscript_data: stackscript_data.notRequired(),
+  booted: boolean().optional(),
+  /**
+   * `metadata` is an optional object with required properties (see https://github.com/jquense/yup/issues/772)
+   */
+  metadata: MetadataSchema.optional().default(undefined),
+  disk_encryption: string().oneOf(['enabled', 'disabled']).optional(),
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({
@@ -553,30 +550,30 @@ const CreateVPCInterfaceIpv4AddressSchema = object({
 
 const CreateVlanInterfaceSchema = object({
   vlan_label: string()
-    .required()
     .min(1, LABEL_LENGTH_MESSAGE)
     .max(64, LABEL_LENGTH_MESSAGE)
-    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES),
+    .matches(/[a-zA-Z0-9-]+/, LABEL_CHARACTER_TYPES)
+    .required('VLAN label is required.'),
   ipam_address: string().nullable(),
-})
-  .notRequired()
-  .nullable();
+});
+
+export const CreateVPCInterfaceSchema = object({
+  subnet_id: number().required('Subnet is required.'),
+  ipv4: object({
+    addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
+    ranges: array().of(VPCInterfaceIPv4RangeSchema),
+  }).notRequired(),
+});
 
 export const CreateLinodeInterfaceSchema = object({
   firewall_id: number().nullable(),
   default_route: object({
     ipv4: boolean(),
     ipv6: boolean(),
-  }).notRequired(),
-  vpc: object({
-    subnet_id: number().required(),
-    ipv4: object({
-      addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
-      ranges: array().of(VPCInterfaceIPv4RangeSchema),
-    }).notRequired(),
   })
     .notRequired()
-    .nullable(),
+    .default(null),
+  vpc: CreateVPCInterfaceSchema.notRequired().default(null),
   public: object({
     ipv4: object({
       addresses: array().of(BaseInterfaceIPv4AddressSchema),
@@ -586,8 +583,8 @@ export const CreateLinodeInterfaceSchema = object({
     }).notRequired(),
   })
     .notRequired()
-    .nullable(),
-  vlan: CreateVlanInterfaceSchema,
+    .default(null),
+  vlan: CreateVlanInterfaceSchema.notRequired().default(null),
 });
 
 const ModifyVPCInterfaceIpv4AddressSchema = object({
@@ -657,7 +654,7 @@ export const CreateLinodeSchema = object({
     then: (schema) => schema.ensure().required('Image is required.'),
     otherwise: (schema) => schema.nullable().notRequired(),
   }),
-  authorized_keys: array().of(string()).notRequired(),
+  authorized_keys: array().of(string().defined()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
@@ -666,9 +663,9 @@ export const CreateLinodeSchema = object({
     .notRequired()
     .min(3, LINODE_LABEL_CHAR_REQUIREMENT)
     .max(64, LINODE_LABEL_CHAR_REQUIREMENT),
-  tags: array().of(string()).notRequired(),
+  tags: array().of(string().defined()).notRequired(),
   private_ip: boolean().notRequired(),
-  authorized_users: array().of(string()).notRequired(),
+  authorized_users: array().of(string().defined()).notRequired(),
   root_pass: string().when('image', {
     is: (value: any) => Boolean(value),
     then: (schema) =>
@@ -687,10 +684,12 @@ export const CreateLinodeSchema = object({
       return ConfigProfileInterfacesSchema;
     }
   ),
-  interface_generation: string().oneOf(['legacy_config', 'linode']),
+  interface_generation: string()
+    .oneOf(['legacy_config', 'linode'])
+    .notRequired(),
   network_helper: boolean(),
   ipv4: array()
-    .of(string())
+    .of(string().defined())
     .when('interface_generation', {
       is: 'linode',
       then: (schema) =>
@@ -704,8 +703,8 @@ export const CreateLinodeSchema = object({
             test: (value) => !value || value.length === 0,
           }),
     }),
-  metadata: MetadataSchema,
+  metadata: MetadataSchema.notRequired().default(undefined),
   firewall_id: number().nullable().notRequired(),
-  placement_group: PlacementGroupPayloadSchema,
+  placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
 });

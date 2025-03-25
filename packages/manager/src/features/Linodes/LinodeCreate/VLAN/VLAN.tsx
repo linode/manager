@@ -11,7 +11,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { useLinodeCreateQueryParams } from '../utilities';
@@ -81,7 +81,7 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Stack columnGap={2} direction="row" flexWrap="wrap">
+      <Stack columnGap={2} direction="row" flexWrap="wrap" mt={2}>
         <Controller
           render={({ field, fieldState }) => (
             <VLANSelect
@@ -107,6 +107,7 @@ export const VLAN = () => {
               disabled={disabled}
               errorText={fieldState.error?.message}
               label="IPAM Address"
+              noMarginTop
               onBlur={field.onBlur}
               onChange={field.onChange}
               optional

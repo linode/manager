@@ -1,22 +1,22 @@
-import { Config } from '@linode/api-v4/lib/linodes/types';
-import Factory from 'src/factories/factoryProxy';
-
 import {
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-} from 'src/factories/linodeConfigInterfaceFactory';
+  Factory,
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
+
+import type { Config } from '@linode/api-v4';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
-const publicInterface = LinodeConfigInterfaceFactory.build({
+const publicInterface = linodeConfigInterfaceFactory.build({
   ipam_address: null,
   purpose: 'public',
 });
-const [vlanInterface1, vlanInterface2] = LinodeConfigInterfaceFactory.buildList(
+const [vlanInterface1, vlanInterface2] = linodeConfigInterfaceFactory.buildList(
   2
 );
 
-const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build();
+const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build();
 
 export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   comments: '',

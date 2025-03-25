@@ -1,5 +1,5 @@
 import { Grant, Grants } from '@linode/api-v4/lib/account';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 export const grantFactory = Factory.Sync.makeFactory<Grant>({
   id: Factory.each((i) => i),
@@ -31,10 +31,12 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
   ],
   global: {
     account_access: 'read_write',
+    add_buckets: true,
     add_databases: true,
     add_domains: true,
     add_firewalls: true,
     add_images: true,
+    add_kubernetes: true,
     add_linodes: true,
     add_longview: true,
     add_nodebalancers: true,

@@ -1,15 +1,15 @@
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import NodeActionMenu from './NodeActionMenu';
 
@@ -77,7 +77,13 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   return (
     <TableRow data-qa-node-row={nodeId}>
       <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
+        <Grid
+          sx={{
+            alignItems: 'center',
+          }}
+          container
+          wrap="nowrap"
+        >
           <Grid>
             <Typography>
               {linodeLink ? (

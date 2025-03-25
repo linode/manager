@@ -12,9 +12,9 @@ describe('Button', () => {
   });
 
   it('should render the loading state', () => {
-    const { getByTestId } = renderWithTheme(<Button loading>Test</Button>);
+    const { getByRole } = renderWithTheme(<Button loading>Test</Button>);
 
-    const loadingIcon = getByTestId('loadingIcon');
+    const loadingIcon = getByRole('progressbar');
     expect(loadingIcon).toBeInTheDocument();
   });
 

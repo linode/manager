@@ -1,10 +1,19 @@
-import { Button, CircleProgress, Select, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  ErrorState,
+  Select,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Hidden } from '@mui/material';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
@@ -134,6 +143,15 @@ export const NodePoolsDisplay = (props: Props) => {
     setExpandedAccordions,
   } = useDefaultExpandedNodePools(clusterID, _pools);
 
+  const regionSupportsDiskEncryption =
+    (regionsData
+      .find((regionDatum) => regionDatum.id === clusterRegionId)
+      ?.capabilities.includes('Disk Encryption') ||
+      regionsData
+        .find((regionDatum) => regionDatum.id === clusterRegionId)
+        ?.capabilities.includes('LA Disk Encryption')) ??
+    false;
+
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -150,13 +168,22 @@ export const NodePoolsDisplay = (props: Props) => {
         direction="row"
         flexWrap="wrap"
         justifyContent="space-between"
-        spacing={2}
       >
-        <Stack alignItems="center" direction="row" spacing={2}>
+        <Stack alignItems="center" direction="row">
           <Typography variant="h2">Node Pools</Typography>
         </Stack>
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <FormLabel htmlFor={ariaIdentifier}>
+        <Stack
+          sx={(theme) => ({
+            [theme.breakpoints.down('md')]: {
+              paddingTop: theme.spacing(1),
+              width: '100%',
+            },
+          })}
+          alignItems="center"
+          direction="row"
+          gap={1}
+        >
+          <FormLabel htmlFor={ariaIdentifier} sx={{ mb: 0 }}>
             <Typography ml={1} mr={1}>
               Status
             </Typography>
@@ -207,15 +234,34 @@ export const NodePoolsDisplay = (props: Props) => {
               Expand All Pools
             </Button>
           )}
-          <Button
-            buttonType="outlined"
-            onClick={() => setIsRecycleClusterOpen(true)}
-          >
-            Recycle All Nodes
-          </Button>
-          <Button buttonType="primary" onClick={handleOpenAddDrawer}>
-            Add a Node Pool
-          </Button>
+          <Hidden mdUp>
+            <Box sx={{ ml: 'auto' }}>
+              <ActionMenu
+                actionsList={[
+                  {
+                    onClick: () => setIsRecycleClusterOpen(true),
+                    title: 'Recycle All Nodes',
+                  },
+                  {
+                    onClick: handleOpenAddDrawer,
+                    title: 'Add a Node Pool',
+                  },
+                ]}
+                ariaLabel={`Action menu for Node Pools header`}
+              />
+            </Box>
+          </Hidden>
+          <Hidden mdDown>
+            <Button
+              buttonType="outlined"
+              onClick={() => setIsRecycleClusterOpen(true)}
+            >
+              Recycle All Nodes
+            </Button>
+            <Button buttonType="primary" onClick={handleOpenAddDrawer}>
+              Add a Node Pool
+            </Button>
+          </Hidden>
         </Stack>
       </Stack>
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
@@ -265,6 +311,7 @@ export const NodePoolsDisplay = (props: Props) => {
               key={id}
               nodes={nodes ?? []}
               poolId={thisPool.id}
+              regionSupportsDiskEncryption={regionSupportsDiskEncryption}
               statusFilter={statusFilter}
               tags={tags}
               typeLabel={typeLabel}
@@ -281,6 +328,7 @@ export const NodePoolsDisplay = (props: Props) => {
         clusterId={clusterID}
         clusterLabel={clusterLabel}
         clusterRegionId={clusterRegionId}
+        clusterTier={clusterTier}
         onClose={() => setAddDrawerOpen(false)}
         open={addDrawerOpen}
         regionsData={regionsData}

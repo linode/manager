@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientStats from 'src/containers/longview.stats.container';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { sumStorage } from '../../shared/utilities';
 import { baseGaugeProps } from './common';

@@ -1,11 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 export const MOCK_THEME_STORAGE_KEY = 'devTools/theme';
 
-import type { ThemeChoice } from 'src/utilities/theme';
+import type { ThemeChoice } from '@linode/utilities';
 
 export const ThemeSelector = () => {
   const [mockTheme, setMockTheme] = React.useState<ThemeChoice>('system');
@@ -27,13 +27,13 @@ export const ThemeSelector = () => {
 
   return (
     <Grid container>
-      <Grid xs={12}>
+      <Grid size={12}>
         <h4 style={{ marginBottom: 0 }}>MSW Theme Selector</h4>
         <p style={{ marginBottom: 8, marginTop: 0 }}>
           (only when MSW is enabled)
         </p>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <select onChange={handleSetTheme} value={mockTheme}>
           <option value="system">System</option>
           <option value="light">Light</option>

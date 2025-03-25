@@ -2,44 +2,56 @@
  * @file Linode Create end-to-end tests.
  */
 
-import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
-import { randomLabel, randomString, randomNumber } from 'support/util/random';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import { cleanUp } from 'support/util/cleanup';
-import { linodeCreatePage } from 'support/ui/pages';
+import {
+  linodeConfigInterfaceFactory,
+  linodeConfigInterfaceFactoryWithVPC,
+} from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetUser } from 'support/intercepts/account';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateLinode,
-  mockCreateLinodeError,
   mockCreateLinode,
+  mockCreateLinodeError,
   mockGetLinodeDisks,
   mockGetLinodeType,
   mockGetLinodeTypes,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import { Region, VLAN, Config, Disk } from '@linode/api-v4';
-import { getRegionById } from 'support/util/regions';
 import {
-  accountFactory,
-  linodeFactory,
-  linodeConfigFactory,
-  linodeTypeFactory,
-  VLANFactory,
-  vpcFactory,
-  subnetFactory,
-  regionFactory,
-  LinodeConfigInterfaceFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-} from 'src/factories';
-import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
+import { cleanUp } from 'support/util/cleanup';
+import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { getRegionById } from 'support/util/regions';
+
+import {
+  VLANFactory,
+  accountFactory,
+  accountUserFactory,
+  grantsFactory,
+  linodeConfigFactory,
+  linodeFactory,
+  linodeTypeFactory,
+  profileFactory,
+  regionFactory,
+  subnetFactory,
+  vpcFactory,
+} from 'src/factories';
+
+import type { Config, Disk, Region, VLAN } from '@linode/api-v4';
 
 let username: string;
 
@@ -48,6 +60,11 @@ describe('Create Linode', () => {
   before(() => {
     cleanUp('linodes');
     cleanUp('ssh-keys');
+  });
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
   });
 
   /*
@@ -58,24 +75,24 @@ describe('Create Linode', () => {
     describe('By plan type', () => {
       [
         {
-          planType: 'Shared CPU',
-          planLabel: 'Nanode 1 GB',
           planId: 'g6-nanode-1',
+          planLabel: 'Nanode 1 GB',
+          planType: 'Shared CPU',
         },
         {
-          planType: 'Dedicated CPU',
-          planLabel: 'Dedicated 4 GB',
           planId: 'g6-dedicated-2',
+          planLabel: 'Dedicated 4 GB',
+          planType: 'Dedicated CPU',
         },
         {
-          planType: 'High Memory',
-          planLabel: 'Linode 24 GB',
           planId: 'g7-highmem-1',
+          planLabel: 'Linode 24 GB',
+          planType: 'High Memory',
         },
         {
-          planType: 'Premium CPU',
-          planLabel: 'Premium 4 GB',
           planId: 'g7-premium-2',
+          planLabel: 'Premium 4 GB',
+          planType: 'Premium CPU',
         },
         // TODO Include GPU plan types.
         // TODO Include Accelerated plan types (when they're no longer as restricted)
@@ -106,13 +123,12 @@ describe('Create Linode', () => {
           linodeCreatePage.setRootPassword(randomString(32));
 
           // Confirm information in summary is shown as expected.
-          cy.get('[data-qa-linode-create-summary]')
-            .scrollIntoView()
-            .within(() => {
-              cy.findByText('Debian 12').should('be.visible');
-              cy.findByText(linodeRegion.label).should('be.visible');
-              cy.findByText(planConfig.planLabel).should('be.visible');
-            });
+          cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+          cy.get('[data-qa-linode-create-summary]').within(() => {
+            cy.findByText('Debian 12').should('be.visible');
+            cy.findByText(linodeRegion.label).should('be.visible');
+            cy.findByText(planConfig.planLabel).should('be.visible');
+          });
 
           // Create Linode and confirm it's provisioned as expected.
           ui.button
@@ -183,9 +199,9 @@ describe('Create Linode', () => {
     });
     const mockAcceleratedType = [
       linodeTypeFactory.build({
+        class: 'accelerated',
         id: 'accelerated-1',
         label: 'accelerated-1',
-        class: 'accelerated',
       }),
     ];
     const mockRegions = [
@@ -229,13 +245,12 @@ describe('Create Linode', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm information in summary is shown as expected.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Debian 12').should('be.visible');
-        cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
-        cy.findByText(mockAcceleratedType[0].label).should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Debian 12').should('be.visible');
+      cy.findByText(`US, ${linodeRegion.label}`).should('be.visible');
+      cy.findByText(mockAcceleratedType[0].label).should('be.visible');
+    });
 
     // Create Linode and confirm it's provisioned as expected.
     ui.button
@@ -269,11 +284,11 @@ describe('Create Linode', () => {
     const rootpass = randomString(32);
     const sshPublicKeyLabel = randomLabel();
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const sshPublicKey = `ssh-rsa e2etestkey${randomKey} e2etest@linode`;
     const linodeLabel = randomLabel();
@@ -295,19 +310,19 @@ describe('Create Linode', () => {
       subnets: [mockSubnet],
     });
     const mockVPCRegion = regionFactory.build({
+      capabilities: ['Linodes', 'VPCs', 'Vlans'],
       id: region.id,
       label: region.label,
-      capabilities: ['Linodes', 'VPCs', 'Vlans'],
     });
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
-    const mockVlanConfigInterface = LinodeConfigInterfaceFactory.build();
-    const mockVpcConfigInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
-      purpose: 'vpc',
+    const mockVlanConfigInterface = linodeConfigInterfaceFactory.build();
+    const mockVpcConfigInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      purpose: 'vpc',
+      vpc_id: mockVPC.id,
     });
     const mockConfig: Config = linodeConfigFactory.build({
       id: randomNumber(),
@@ -320,22 +335,22 @@ describe('Create Linode', () => {
     });
     const mockDisks: Disk[] = [
       {
-        id: 44311273,
-        status: 'ready',
-        label: diskLabel,
         created: '2020-08-21T17:26:14',
-        updated: '2020-08-21T17:26:30',
         filesystem: 'ext4',
+        id: 44311273,
+        label: diskLabel,
         size: 81408,
+        status: 'ready',
+        updated: '2020-08-21T17:26:30',
       },
       {
-        id: 44311274,
-        status: 'ready',
-        label: '512 MB Swap Image',
         created: '2020-08-21T17:26:14',
-        updated: '2020-08-21T17:26:31',
         filesystem: 'swap',
+        id: 44311274,
+        label: '512 MB Swap Image',
         size: 512,
+        status: 'ready',
+        updated: '2020-08-21T17:26:31',
       },
     ];
 
@@ -379,10 +394,8 @@ describe('Create Linode', () => {
           'be.visible'
         );
         // select VPC
-        cy.findByLabelText('Assign VPC')
-          .should('be.visible')
-          .focus()
-          .type(`${mockVPC.label}{downArrow}{enter}`);
+        cy.findByLabelText('Assign VPC').should('be.visible').focus();
+        cy.focused().type(`${mockVPC.label}{downArrow}{enter}`);
         // select subnet
         cy.findByPlaceholderText('Select Subnet')
           .should('be.visible')
@@ -399,10 +412,12 @@ describe('Create Linode', () => {
       .findByTitle('Add SSH Key')
       .should('be.visible')
       .within(() => {
-        cy.get('[id="label"]').clear().type(sshPublicKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(sshPublicKeyLabel);
 
         // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -413,7 +428,8 @@ describe('Create Linode', () => {
         ).should('be.visible');
 
         // Create a new ssh key
-        cy.get('[id="ssh-public-key"]').clear().type(sshPublicKey);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -427,7 +443,9 @@ describe('Create Linode', () => {
     // When a user creates an SSH key, the list of SSH keys for each user updates to show the new key for the signed in user
     cy.findByText(sshPublicKeyLabel, { exact: false }).should('be.visible');
 
-    cy.get('#linode-label').clear().type(linodeLabel).click();
+    cy.get('#linode-label').clear();
+    cy.focused().type(linodeLabel);
+    cy.focused().click();
     cy.get('#root-password').type(rootpass);
 
     ui.button.findByTitle('Create Linode').click();
@@ -508,5 +526,63 @@ describe('Create Linode', () => {
     // Confirm the correct validation errors show up on the page.
     cy.findByText('You must select a Backup.').should('be.visible');
     cy.findByText('Plan is required.').should('be.visible');
+  });
+
+  /*
+   * - Confirms UI flow when creating a Linode with a restricted user.
+   * - Confirms that a notice is shown informing the user they do not have permission to create a Linode.
+   * - Confirms that "Regions" field is disabled.
+   * - Confirms that "Linux Distribution" field is disabled.
+   * - Confirms that "Create Linode" button is disabled.
+   */
+  it('should not allow restricted users to create linodes', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    // Login and wait for application to load
+    cy.visitWithLogin('/linodes/create');
+
+    // Confirm that a notice should be shown informing the user they do not have permission to create a Linode.
+    cy.findByText(
+      "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+    ).should('be.visible');
+
+    // Confirm that "Region" select dropdown is disabled
+    ui.regionSelect.find().should('be.visible').should('be.disabled');
+
+    // Confirm that "Linux Distribution" select dropdown is disabled
+    cy.get('[data-qa-autocomplete="Linux Distribution"]').within(() => {
+      cy.get('[placeholder="Choose a Linux distribution"]')
+        .should('be.visible')
+        .should('be.disabled');
+
+      cy.get('[aria-label="Open"]').should('be.visible').should('be.disabled');
+    });
+
+    // Confirm that "Create Linode" button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled');
   });
 });

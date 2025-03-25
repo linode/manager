@@ -2,12 +2,12 @@ import { Box, Stack } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { AppBar } from 'src/components/AppBar';
+import { Link } from 'src/components/Link';
 import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
-import { useAuthentication } from 'src/hooks/useAuthentication';
+import { isLoggedInAsCustomer } from 'src/utilities/authentication';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
@@ -36,8 +36,6 @@ export interface TopMenuProps {
 export const TopMenu = React.memo((props: TopMenuProps) => {
   const { openSideMenu, username } = props;
 
-  const { loggedInAsCustomer } = useAuthentication();
-
   const isNarrowViewport = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(960)
   );
@@ -47,14 +45,14 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
 
   return (
     <>
-      {loggedInAsCustomer && <InternalAdminBanner username={username} />}
+      {isLoggedInAsCustomer() && <InternalAdminBanner username={username} />}
       <AppBar data-qa-appbar>
         <Toolbar variant="dense">
           {isNarrowViewport && (
             <TopMenuTooltip title="Expand side menu">
               <IconButton
                 sx={(theme) => ({
-                  padding: theme.tokens.spacing[60],
+                  padding: theme.tokens.spacing.S16,
                 })}
                 aria-label="open menu"
                 color="inherit"
@@ -67,13 +65,13 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           )}
           <Box
             gap={(theme) => ({
-              md: theme.tokens.spacing[80],
-              xs: theme.tokens.spacing[50],
+              md: theme.tokens.spacing.S32,
+              xs: theme.tokens.spacing.S12,
             })}
             sx={(theme) => ({
               paddingLeft: {
                 md: 0,
-                sm: theme.tokens.spacing[60],
+                sm: theme.tokens.spacing.S16,
               },
             })}
             alignItems="center"
@@ -83,7 +81,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           >
             {!isNarrowViewport && (
               <Link
-                aria-label="Akamai - Dashboard"
+                accessibleAriaLabel="Akamai - Dashboard"
                 style={{ lineHeight: 0 }}
                 title="Akamai - Dashboard"
                 to={`/dashboard`}
@@ -106,17 +104,17 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           <Stack
             sx={(theme) => ({
               gap: {
-                sm: theme.tokens.spacing[70],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S24,
+                xs: theme.tokens.spacing.S8,
               },
               paddingLeft: {
-                sm: theme.tokens.spacing[80],
-                xs: theme.tokens.spacing[60],
+                sm: theme.tokens.spacing.S32,
+                xs: theme.tokens.spacing.S16,
               },
               paddingRight: {
                 md: 0,
-                sm: theme.tokens.spacing[60],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
               },
             })}
             alignItems="center"
@@ -127,8 +125,8 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             <Box
               gap={{
                 md: 0,
-                sm: theme.tokens.spacing[60],
-                xs: theme.tokens.spacing[40],
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
               }}
               display="flex"
             >

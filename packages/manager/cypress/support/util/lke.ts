@@ -1,4 +1,4 @@
-import { sortByVersion } from 'src/utilities/sort-by';
+import { sortByVersion } from '@linode/utilities';
 
 /**
  * Returns the string of the highest semantic version.

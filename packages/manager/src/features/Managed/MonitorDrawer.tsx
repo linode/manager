@@ -1,17 +1,18 @@
 import {
+  ActionsPanel,
   Autocomplete,
+  Drawer,
   InputAdornment,
   Notice,
   Select,
   TextField,
 } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import type {
   ManagedCredential,
@@ -124,7 +125,12 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={titleMap[mode]}
+    >
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -190,7 +196,12 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Grid container spacing={2}>
-                <Grid sm={6} xs={12}>
+                <Grid
+                  size={{
+                    sm: 6,
+                    xs: 12,
+                  }}
+                >
                   <Select
                     onChange={(_, item: SelectOption<ServiceType>) =>
                       setFieldValue('service_type', item.value)
@@ -206,7 +217,12 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     value={getValueFromItem(values.service_type, typeOptions)}
                   />
                 </Grid>
-                <Grid sm={6} xs={12}>
+                <Grid
+                  size={{
+                    sm: 6,
+                    xs: 12,
+                  }}
+                >
                   <TextField
                     InputProps={{
                       endAdornment: (

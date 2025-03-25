@@ -9,7 +9,8 @@ export type Capabilities =
   | 'Cloud Firewall'
   | 'Disk Encryption'
   | 'Distributed Plans'
-  | 'Enhanced Interfaces'
+  | 'LA Disk Encryption' // @TODO LDE: Remove once LDE is fully rolled out in every DC
+  | 'Linode Interfaces'
   | 'GPU Linodes'
   | 'Kubernetes'
   | 'Kubernetes Enterprise'

@@ -1,6 +1,7 @@
 import { Paper } from '@linode/ui';
+import { getMetrics } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -9,15 +10,14 @@ import {
   formatBitsPerSecond,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { getMetrics } from 'src/utilities/statMetrics';
 
 import { StatsPanel } from './StatsPanel';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
+import type { Metrics } from '@linode/utilities';
 import type { Theme } from '@mui/material/styles';
 import type { NetworkTimeData } from 'src/components/AreaChart/types';
 import type { NetworkUnit } from 'src/features/Longview/shared/utilities';
-import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface TotalTrafficProps {
   combinedTraffic: string;
@@ -112,7 +112,12 @@ export const NetworkGraphs = (props: Props) => {
 
   return (
     <>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (
@@ -129,7 +134,12 @@ export const NetworkGraphs = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (

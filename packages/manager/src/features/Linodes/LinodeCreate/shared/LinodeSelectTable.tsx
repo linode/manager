@@ -1,5 +1,6 @@
+import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -19,10 +20,9 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { useLinodesQuery } from '@linode/queries';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
   getGeneratedLinodeLabel,
@@ -34,6 +34,7 @@ import { SelectLinodeCard } from './SelectLinodeCard';
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { UseOrder } from 'src/hooks/useOrder';
 
 interface Props {
   /**
@@ -79,17 +80,11 @@ export const LinodeSelectTable = (props: Props) => {
   const pagination = usePagination();
   const order = useOrder();
 
-  const filter = preselectedLinodeId
-    ? { id: preselectedLinodeId }
-    : {
-        '+or': [
-          { label: { '+contains': query } },
-          ...(isNumeric(query) ? [{ id: Number(query) }] : []), // let users filter by Linode id
-        ],
-        '+order': order.order,
-        '+order_by': order.orderBy,
-        // backups: { enabled: true }, womp womp! We can't filter on values within objects
-      };
+  const { filter, filterError } = getLinodeXFilter(
+    preselectedLinodeId,
+    query,
+    order
+  );
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -146,6 +141,7 @@ export const LinodeSelectTable = (props: Props) => {
         }}
         clearable
         debounceTime={250}
+        errorText={filterError?.message}
         hideLabel
         isSearching={isFetching}
         label="Search"
@@ -239,4 +235,38 @@ export const LinodeSelectTable = (props: Props) => {
       )}
     </Stack>
   );
+};
+
+export const getLinodeXFilter = (
+  preselectedLinodeId: number | undefined,
+  query: string,
+  order?: UseOrder
+) => {
+  if (preselectedLinodeId) {
+    return {
+      id: preselectedLinodeId,
+    };
+  }
+
+  const { error: filterError, filter: apiFilter } = getAPIFilterFromQuery(
+    query,
+    {
+      searchableFieldsWithoutOperator: ['label', 'id', 'ipv4', 'tags'],
+    }
+  );
+
+  const filter = {
+    ...apiFilter,
+    site_type: 'core', // backups and cloning are not supported for distributed regions
+    // backups: { enabled: true }, womp womp! We can't filter on values within objects
+  };
+
+  if (order) {
+    return {
+      filter: { ...filter, '+order': order.order, '+order_by': order.orderBy },
+      filterError,
+    };
+  }
+
+  return { filter, filterError };
 };

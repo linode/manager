@@ -1,13 +1,13 @@
 import { Paper, Stack, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
+import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
@@ -51,7 +51,14 @@ export const TicketStatus = (props: Props) => {
       sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
     >
       <Stack direction="row">
-        <Grid alignItems="center" container direction="row" xs>
+        <Grid
+          container
+          direction="row"
+          size="grow"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledStatusIcon
             ariaLabel={`Ticket status is ${status}`}
             status={status === 'closed' ? 'inactive' : 'active'}

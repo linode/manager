@@ -4,7 +4,7 @@ import {
   getDatabases,
 } from '@linode/api-v4';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
 import type {
   DatabaseEngine,

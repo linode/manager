@@ -1,6 +1,6 @@
-import { CircleProgress, Stack } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -8,9 +8,8 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import {
   useInfiniteSupportTicketRepliesQuery,
   useSupportTicketQuery,
@@ -94,7 +93,6 @@ export const SupportTicketDetail = () => {
         title={ticketTitle}
       />
       <TicketStatus {...ticket} />
-
       {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
       {attachmentErrors !== undefined &&
         !isEmpty(attachmentErrors) &&
@@ -105,9 +103,8 @@ export const SupportTicketDetail = () => {
             reason={error.error}
           />
         ))}
-
       <Grid container spacing={2}>
-        <Grid style={{ padding: 0 }} xs={12}>
+        <Grid style={{ padding: 0 }} size={12}>
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description && (
             <ExpandableTicketPanel

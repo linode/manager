@@ -1,28 +1,30 @@
-import { ui } from 'support/ui';
 import {
-  linodeFactory,
   accountFactory,
+  linodeFactory,
   linodeTypeFactory,
   regionFactory,
 } from '@src/factories';
-import {
-  mockGetRegionAvailability,
-  mockGetRegions,
-} from 'support/intercepts/regions';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
-  checkboxTestId,
-  headerTestId,
-} from 'src/components/Encryption/constants';
-import { extendRegion } from 'support/util/regions';
-import { linodeCreatePage } from 'support/ui/pages';
 import {
   mockCreateLinode,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomString } from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
+
+import {
+  checkboxTestId,
+  headerTestId,
+} from 'src/components/Encryption/constants';
+
 import type { Region } from '@linode/api-v4';
 
 describe('Create Linode with Disk Encryption', () => {
@@ -126,9 +128,9 @@ describe('Create Linode with Disk Encryption', () => {
     ];
 
     const mockLinodeType = linodeTypeFactory.build({
+      class: 'nanode',
       id: 'nanode-edge-1',
       label: 'Nanode 1GB',
-      class: 'nanode',
     });
 
     /*

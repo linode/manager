@@ -1,6 +1,7 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
@@ -84,6 +85,11 @@ export const createTestLinode = async (
     ...(options || {}),
   };
 
+  let regionId = createRequestPayload?.region;
+  if (!regionId) {
+    regionId = chooseRegion().id;
+  }
+
   const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
     switch (resolvedOptions.securityMethod) {
       case 'firewall':
@@ -94,8 +100,11 @@ export const createTestLinode = async (
         };
 
       case 'vlan_no_internet':
+        const vlanConfig = linodeVlanNoInternetConfig;
+        const vlanLabel = await findOrCreateDependencyVlan(regionId);
+        vlanConfig[0].label = vlanLabel;
         return {
-          interfaces: linodeVlanNoInternetConfig,
+          interfaces: vlanConfig,
         };
 
       case 'powered_off':
@@ -110,7 +119,7 @@ export const createTestLinode = async (
       booted: false,
       image: 'linode/ubuntu24.04',
       label: randomLabel(),
-      region: chooseRegion().id,
+      region: regionId,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
@@ -138,6 +147,7 @@ export const createTestLinode = async (
     );
   }
 
+  // eslint-disable-next-line
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.

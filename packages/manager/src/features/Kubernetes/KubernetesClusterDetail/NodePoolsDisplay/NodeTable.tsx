@@ -1,4 +1,5 @@
-import { Box, TooltipIcon, Typography } from '@linode/ui';
+import { useAllLinodesQuery, useProfile } from '@linode/queries';
+import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
 import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
 import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -21,8 +21,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -52,6 +50,7 @@ export interface Props {
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
   statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
@@ -68,6 +67,7 @@ export const NodeTable = React.memo((props: Props) => {
     nodes,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
     statusFilter,
     tags,
     typeLabel,
@@ -189,32 +189,33 @@ export const NodeTable = React.memo((props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {count === 0 && isEnterpriseClusterWithin10MinsOfCreation() && (
-                    <TableRow>
-                      <TableCell colSpan={4}>
-                        <ErrorState
-                          errorText={
-                            <Box>
-                              <Typography
-                                data-qa-error-msg
-                                style={{ textAlign: 'center' }}
-                                variant="h3"
-                              >
-                                Nodes will appear once cluster provisioning is
-                                complete.
-                              </Typography>
-                              <Typography>
-                                Provisioning can take up to 10 minutes.
-                              </Typography>
-                            </Box>
-                          }
-                          CustomIcon={EmptyStateCloud}
-                          compact
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                  {(count > 0 ||
+                  {rowData.length === 0 &&
+                    isEnterpriseClusterWithin10MinsOfCreation() && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <ErrorState
+                            errorText={
+                              <Box>
+                                <Typography
+                                  data-qa-error-msg
+                                  style={{ textAlign: 'center' }}
+                                  variant="h3"
+                                >
+                                  Worker nodes will appear once cluster
+                                  provisioning is complete.
+                                </Typography>
+                                <Typography>
+                                  Provisioning can take up to 10 minutes.
+                                </Typography>
+                              </Box>
+                            }
+                            CustomIcon={EmptyStateCloud}
+                            compact
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  {(rowData.length > 0 ||
                     !isEnterpriseClusterWithin10MinsOfCreation()) && (
                     <TableContentWrapper
                       length={paginatedAndOrderedData.length}
@@ -268,8 +269,20 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        regionSupportsDiskEncryption={
+                          regionSupportsDiskEncryption
+                        }
+                        /**
+                         * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
+                         * explaining how LDE can be enabled on LKE-E node pools.
+                         * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
+                         */
+                        tooltipText={
+                          clusterTier === 'enterprise'
+                            ? undefined
+                            : DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
+                        }
                         encryptionStatus={encryptionStatus}
-                        tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
                       />
                     </Box>
                   ) : (
@@ -309,9 +322,11 @@ export const nodeToRow = (
 
 export const EncryptedStatus = ({
   encryptionStatus,
+  regionSupportsDiskEncryption,
   tooltipText,
 }: {
   encryptionStatus: EncryptionStatus;
+  regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
   return encryptionStatus === 'enabled' ? (
@@ -324,7 +339,9 @@ export const EncryptedStatus = ({
       <Unlock />
       <StyledNotEncryptedBox>
         <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+        {regionSupportsDiskEncryption && tooltipText ? (
+          <TooltipIcon status="help" text={tooltipText} />
+        ) : null}
       </StyledNotEncryptedBox>
     </>
   ) : null;

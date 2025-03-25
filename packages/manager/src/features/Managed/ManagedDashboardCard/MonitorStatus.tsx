@@ -1,10 +1,10 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
+import { Link } from 'src/components/Link';
 
 import {
   StyledIconGrid,

@@ -8,7 +8,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import UserSSHKeyPanel from './UserSSHKeyPanel';
+import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
 describe('UserSSHKeyPanel', () => {
   describe('restricted user', () => {
@@ -22,7 +22,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage([]));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]), { status: 401 });
+          return HttpResponse.json(makeResourcePage([]));
         })
       );
       const { queryByTestId } = renderWithTheme(
@@ -46,7 +46,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage(sshKeys));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]), { status: 401 });
+          return HttpResponse.json(makeResourcePage([]));
         })
       );
       const { getByText } = renderWithTheme(

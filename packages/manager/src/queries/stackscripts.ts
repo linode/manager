@@ -15,9 +15,9 @@ import {
 } from '@tanstack/react-query';
 
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { queryPresets } from './base';
+import { queryPresets } from '@linode/queries';
 
 import type {
   APIError,
@@ -28,14 +28,23 @@ import type {
   StackScriptPayload,
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>
     getOneClickApps({ ...params, ...passedParams })
   )().then((data) => data.data);
 
+export const getAllAccountStackScripts = () =>
+  getAll<StackScript>((params) =>
+    getStackScripts(params, { mine: true })
+  )().then((data) => data.data);
+
 export const stackscriptQueries = createQueryKeys('stackscripts', {
+  all: {
+    queryFn: () => getAllAccountStackScripts(),
+    queryKey: null,
+  },
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
       getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
@@ -65,6 +74,16 @@ export const useStackScriptQuery = (id: number, enabled = true) =>
     enabled,
   });
 
+/**
+ * Don't use this! It only exists so users can search for their StackScripts
+ * in the legacy main search.
+ */
+export const useAllAccountStackScriptsQuery = (enabled: boolean) =>
+  useQuery<StackScript[], APIError[]>({
+    ...stackscriptQueries.all,
+    enabled,
+  });
+
 export const useCreateStackScriptMutation = () => {
   const queryClient = useQueryClient();
 
@@ -77,6 +96,9 @@ export const useCreateStackScriptMutation = () => {
       );
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
       });
     },
   });
@@ -97,6 +119,7 @@ export const useStackScriptsInfiniteQuery = (
     },
     initialPageParam: 1,
     placeholderData: keepPreviousData,
+    retry: false,
   });
 
 export const useUpdateStackScriptMutation = (
@@ -115,6 +138,9 @@ export const useUpdateStackScriptMutation = (
     onSuccess(stackscript, vars, ctx) {
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
       });
       queryClient.setQueryData<StackScript>(
         stackscriptQueries.stackscript(id).queryKey,
@@ -140,6 +166,9 @@ export const useDeleteStackScriptMutation = (
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: stackscriptQueries.all.queryKey,
+      });
       queryClient.removeQueries({
         queryKey: stackscriptQueries.stackscript(id).queryKey,
       });
@@ -157,6 +186,9 @@ export const stackScriptEventHandler = ({
   // Keep the infinite store up to date
   invalidateQueries({
     queryKey: stackscriptQueries.infinite._def,
+  });
+  invalidateQueries({
+    queryKey: stackscriptQueries.all.queryKey,
   });
 
   // If the event has a StackScript entity attached, invalidate it

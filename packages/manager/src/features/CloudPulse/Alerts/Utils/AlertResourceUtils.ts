@@ -4,15 +4,15 @@ import {
 } from '../AlertsResources/constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
-import type { AlertsEngineOptionProps } from '../AlertsResources/AlertsEngineTypeFilter';
-import type { AlertsRegionProps } from '../AlertsResources/AlertsRegionFilter';
 import type { AlertInstance } from '../AlertsResources/DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
   AlertFilterKey,
   AlertFilterType,
+  AlertResourceFiltersProps,
 } from '../AlertsResources/types';
-import type { Region } from '@linode/api-v4';
+import type { AlertServiceType, Region } from '@linode/api-v4';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 interface FilterResourceProps {
   /**
@@ -83,6 +83,11 @@ interface FilterRendererProps {
    * The regions to be displayed according to the resources associated with alerts
    */
   regionOptions: Region[];
+
+  /**
+   * The tags to be displayed according to the resources associated with alerts
+   */
+  tagOptions: string[];
 }
 
 /**
@@ -130,6 +135,31 @@ export const getRegionOptions = (
     }
   });
   return Array.from(uniqueRegions);
+};
+
+/**
+ * @param aclpResourceTypeMap The launch darkly flag where supported region ids are listed
+ * @param serviceType The service type associated with the alerts
+ * @returns Array of supported regions associated with the resource ids of the alert
+ */
+export const getSupportedRegionIds = (
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[] | undefined,
+  serviceType: AlertServiceType | undefined
+): string[] | undefined => {
+  const resourceTypeFlag = aclpResourceTypeMap?.find(
+    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  );
+
+  if (
+    resourceTypeFlag?.supportedRegionIds === null ||
+    resourceTypeFlag?.supportedRegionIds === undefined
+  ) {
+    return undefined;
+  }
+
+  return resourceTypeFlag.supportedRegionIds
+    .split(',')
+    .map((regionId: string) => regionId.trim());
 };
 
 /**
@@ -184,9 +214,10 @@ export const getFilteredResources = (
         (region.length && filteredRegions.includes(region)); // check with filtered region
 
       return (
+        // if selected only, show only checked, else everything
         matchesSearchText &&
         matchesFilteredRegions &&
-        (!selectedOnly || checked) // if selected only, show only checked, else everything
+        (!selectedOnly || checked)
       ); // match the search text and match the region selected
     })
     .filter((resource) => applyAdditionalFilter(resource, additionalFilters));
@@ -228,7 +259,9 @@ const applyAdditionalFilter = (
  * This methods scrolls to the given HTML Element
  * @param scrollToElement The HTML Element to which we need to scroll
  */
-export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
+export const scrollToElement = (
+  scrollToElement: HTMLButtonElement | HTMLDivElement | null
+) => {
   if (scrollToElement) {
     window.scrollTo({
       behavior: 'smooth',
@@ -296,13 +329,15 @@ export const getAlertResourceFilterProps = ({
   handleFilterChange,
   handleFilteredRegionsChange: handleSelectionChange,
   regionOptions,
-}: FilterRendererProps): AlertsEngineOptionProps | AlertsRegionProps => {
+  tagOptions,
+}: FilterRendererProps): AlertResourceFiltersProps => {
   switch (filterKey) {
     case 'engineType':
       return { handleFilterChange };
     case 'region':
       return { handleSelectionChange, regionOptions };
-
+    case 'tags':
+      return { handleFilterChange, tagOptions };
     default:
       return { handleFilterChange };
   }

@@ -1,9 +1,9 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
-import { intersection } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -19,14 +19,13 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
@@ -272,11 +271,18 @@ export const CloneLanding = () => {
       <LinodesDetailHeader />
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
+          sx={{
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1),
+          }}
           container
-          justifyContent="space-between"
-          sx={{ marginTop: theme.spacing(1) }}
         >
-          <Grid md={7} xs={12}>
+          <Grid
+            size={{
+              md: 7,
+              xs: 12,
+            }}
+          >
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -331,7 +337,12 @@ export const CloneLanding = () => {
               </Tabs>
             </Paper>
           </Grid>
-          <Grid md={4} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              xs: 12,
+            }}
+          >
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -341,11 +352,12 @@ export const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
-                  intersection(
-                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? [],
-                    selectedConfigIds
-                  ).length === 0
+                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected &&
+                  (
+                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                  ).filter((num) => selectedConfigIds.includes(num)).length ===
+                    0
                 );
               })}
               // If a selected disk is associated with a selected config, we

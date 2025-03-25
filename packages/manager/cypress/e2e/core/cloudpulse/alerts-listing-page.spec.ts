@@ -2,60 +2,62 @@
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
  * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { accountFactory, alertFactory } from 'src/factories';
+import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
 import {
   mockGetAllAlertDefinitions,
   mockGetCloudPulseServices,
   mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
-import { formatDate } from 'src/utilities/formatDate';
-import { Alert } from '@linode/api-v4';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
-import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 
-const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
+import { accountFactory, alertFactory } from 'src/factories';
+import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import { formatDate } from 'src/utilities/formatDate';
+
+import type { Alert } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
+
+const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
   alertFactory.build({
+    created_by: 'user1',
+    label: 'Alert-1',
     service_type: 'dbaas',
     severity: 1,
     status: 'enabled',
     type: 'user',
-    created_by: 'user1',
     updated: new Date(now.getTime() - 86400).toISOString(),
-    label: 'Alert-1',
   }),
   alertFactory.build({
-    service_type: 'dbaas',
-    type: 'user',
-    severity: 0,
-    status: 'disabled',
-    updated: new Date(now.getTime() - 10 * 86400).toISOString(),
     created_by: 'user4',
     label: 'Alert-2',
+    service_type: 'dbaas',
+    severity: 0,
+    status: 'disabled',
+    type: 'user',
+    updated: new Date(now.getTime() - 10 * 86400).toISOString(),
   }),
   alertFactory.build({
-    service_type: 'linode',
-    type: 'user',
-    severity: 2,
-    status: 'enabled',
-    updated: new Date(now.getTime() - 6 * 86400).toISOString(),
     created_by: 'user2',
     label: 'Alert-3',
+    service_type: 'linode',
+    severity: 2,
+    status: 'enabled',
+    type: 'user',
+    updated: new Date(now.getTime() - 6 * 86400).toISOString(),
   }),
   alertFactory.build({
+    created_by: 'user3',
+    label: 'Alert-4',
     service_type: 'linode',
     severity: 3,
     status: 'disabled',
     type: 'user',
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
-    created_by: 'user3',
-    label: 'Alert-4',
   }),
 ];
 
@@ -93,10 +95,8 @@ const verifyTableSorting = (
   sortOrder: 'ascending' | 'descending',
   expectedValues: number[]
 ) => {
-  ui.heading
-    .findByText(header)
-    .click()
-    .should('have.attr', 'aria-sort', sortOrder);
+  ui.heading.findByText(header).click();
+  ui.heading.findByText(header).should('have.attr', 'aria-sort', sortOrder);
 
   cy.get('[data-qa="alert-table"]').within(() => {
     cy.get('[data-qa-alert-cell]').should(($cells) => {
@@ -116,7 +116,7 @@ const verifyTableSorting = (
  * @param {Alert} alert - The alert object to validate.
  */
 const validateAlertDetails = (alert: Alert) => {
-  const { id, service_type, status, label, updated, created_by } = alert;
+  const { created_by, id, label, service_type, status, updated } = alert;
 
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
     cy.findByText(cloudPulseServiceMap[service_type])
@@ -132,7 +132,7 @@ const validateAlertDetails = (alert: Alert) => {
       .and(
         'have.attr',
         'href',
-        `/monitor/alerts/definitions/detail/${service_type}/${id}`
+        `/alerts/definitions/detail/${service_type}/${id}`
       );
     cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
       .should('be.visible')
@@ -164,28 +164,28 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
   it('should verify sorting functionality for multiple columns in ascending and descending order', () => {
     const sortCases = [
-      { column: 'label', descending: [4, 3, 2, 1], ascending: [1, 2, 3, 4] },
-      { column: 'status', descending: [1, 3, 2, 4], ascending: [2, 4, 1, 3] },
+      { ascending: [1, 2, 3, 4], column: 'label', descending: [4, 3, 2, 1] },
+      { ascending: [2, 4, 1, 3], column: 'status', descending: [1, 3, 2, 4] },
       {
+        ascending: [2, 1, 4, 3],
         column: 'service_type',
         descending: [4, 3, 2, 1],
-        ascending: [2, 1, 4, 3],
       },
       {
+        ascending: [1, 3, 4, 2],
         column: 'created_by',
         descending: [2, 4, 3, 1],
-        ascending: [1, 3, 4, 2],
       },
-      { column: 'updated', descending: [1, 4, 3, 2], ascending: [2, 3, 4, 1] },
+      { ascending: [2, 3, 4, 1], column: 'updated', descending: [1, 4, 3, 2] },
     ];
 
-    sortCases.forEach(({ column, descending, ascending }) => {
+    sortCases.forEach(({ ascending, column, descending }) => {
       // Verify descending order
       verifyTableSorting(column, 'descending', descending);
 
@@ -196,12 +196,11 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
   it('should validate UI elements and alert details', () => {
     // Validate navigation links and buttons
-    cy.findByText('Alerts')
-      .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts');
+    cy.findByText('Alerts').should('be.visible');
+
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts/definitions');
+      .and('have.attr', 'href', '/alerts/definitions');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers
@@ -263,8 +262,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.button
         .findByAttribute('aria-label', 'Clear')
         .should('be.visible')
-        .scrollIntoView()
-        .click();
+        .scrollIntoView();
+      ui.button.findByAttribute('aria-label', 'Clear').click();
     });
 
     // Filter by alert status and validate the results
@@ -296,8 +295,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       cy.findByPlaceholderText('Search for Alerts')
         .should('be.visible')
         .and('not.be.disabled')
-        .clear()
-        .type(alertName);
+        .clear();
+      cy.findByPlaceholderText('Search for Alerts').type(alertName);
 
       cy.focused().click();
     };
@@ -305,7 +304,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     // Function to toggle an alert's status
     const toggleAlertStatus = (
       alertName: string,
-      action: 'Enable' | 'Disable',
+      action: 'Disable' | 'Enable',
       alias: string,
       successMessage: string
     ) => {

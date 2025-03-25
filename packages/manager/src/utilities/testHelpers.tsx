@@ -21,7 +21,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
+import { queryClientFactory } from '@linode/queries';
 import { setupInterceptors } from 'src/request';
 import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
@@ -32,7 +32,7 @@ import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
-import type { MemoryRouterProps } from 'react-router';
+import type { MemoryRouterProps } from 'react-router-dom';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
 import type { ApplicationState, ApplicationStore } from 'src/store';
@@ -40,10 +40,12 @@ import type { ApplicationState, ApplicationStore } from 'src/store';
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
+      addEventListener: () => vi.fn(),
       addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
+      removeEventListener: () => vi.fn(),
       removeListener: vi.fn(),
     };
   });
