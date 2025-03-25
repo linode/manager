@@ -187,25 +187,49 @@ export const DisplayAlertResources = React.memo(
               <TableHead>
                 <TableRow>
                   {isSelectionsNeeded && (
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={
-                          isSomeSelected(paginatedData) &&
-                          !isAllPageSelected(paginatedData)
+                    <TableCell
+                      sx={{
+                        cursor: disableRootCheckBox(paginatedData)
+                          ? 'not-allowed'
+                          : 'auto',
+                      }}
+                      padding="checkbox"
+                    >
+                      <Tooltip
+                        title={
+                          disableRootCheckBox(paginatedData) ? (
+                            <Typography
+                              sx={{
+                                fontSize: '12px',
+                              }}
+                            >
+                              {`You can select upto ${maxSelectionCount} resources.`}
+                            </Typography>
+                          ) : undefined
                         }
-                        onClick={() =>
-                          handleSelectionChange(
-                            paginatedData.map(({ id }) => id),
-                            !isAllPageSelected(paginatedData)
-                          )
-                        }
-                        sx={{
-                          p: 0,
-                        }}
-                        checked={isAllPageSelected(paginatedData)}
-                        data-testid={`select_all_in_page_${page}`}
-                        disabled={disableRootCheckBox(paginatedData)}
-                      />
+                        placement="right"
+                      >
+                        <Box>
+                          <Checkbox
+                            indeterminate={
+                              isSomeSelected(paginatedData) &&
+                              !isAllPageSelected(paginatedData)
+                            }
+                            onClick={() =>
+                              handleSelectionChange(
+                                paginatedData.map(({ id }) => id),
+                                !isAllPageSelected(paginatedData)
+                              )
+                            }
+                            sx={{
+                              p: 0,
+                            }}
+                            checked={isAllPageSelected(paginatedData)}
+                            data-testid={`select_all_in_page_${page}`}
+                            disabled={disableRootCheckBox(paginatedData)}
+                          />
+                        </Box>
+                      </Tooltip>
                     </TableCell>
                   )}
                   {columns.map(({ label, sortingKey }) => (
