@@ -465,7 +465,7 @@ export const createType = (ip: IPAddress, key: ipKey) => {
   }
 
   if (key === 'SLAAC') {
-    return 'Public – IPv6 (SLAAC)';
+    return 'Public – IPv6 – SLAAC';
   }
 
   return `${key} – ${ip.type === 'ipv4' ? 'IPv4' : 'IPv6'}`;

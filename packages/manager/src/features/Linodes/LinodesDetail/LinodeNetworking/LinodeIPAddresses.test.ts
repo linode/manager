@@ -98,7 +98,7 @@ describe('createType utility function', () => {
   it('creates the correct type for ipv6', () => {
     const ipv6 = ipAddressFactory.build({ type: 'ipv6' });
 
-    expect(createType(ipv6, 'SLAAC')).toBe('Public – IPv6 (SLAAC)');
+    expect(createType(ipv6, 'SLAAC')).toBe('Public – IPv6 – SLAAC');
     expect(createType(ipv6, 'Link Local')).toBe('Link Local – IPv6');
   });
 });
