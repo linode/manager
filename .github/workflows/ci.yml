@@ -391,7 +391,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - run: pnpm publish -r --filter @linode/api-v4 --filter @linode/validation --no-git-checks --access public
       - name: slack-notify
         uses: rtCamp/action-slack-notify@master
