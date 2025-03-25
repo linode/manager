@@ -1,6 +1,7 @@
 import type {
   APIError,
   CreateLinodeInterfacePayload,
+  FirewallSettings,
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4';
@@ -128,4 +129,39 @@ export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
     }
   }
   return errors;
+};
+
+export const getDefaultInterfacePayload = (
+  purpose: InterfacePurpose,
+  firewallSettings: FirewallSettings | null | undefined
+): LinodeCreateInterface => {
+  let firewallId: null | number = null;
+
+  if (
+    purpose === 'public' &&
+    firewallSettings?.default_firewall_ids.public_interface
+  ) {
+    firewallId = firewallSettings.default_firewall_ids.public_interface;
+  }
+  if (
+    purpose === 'vpc' &&
+    firewallSettings?.default_firewall_ids.vpc_interface
+  ) {
+    firewallId = firewallSettings.default_firewall_ids.vpc_interface;
+  }
+
+  return {
+    default_route: null,
+    firewall_id: firewallId,
+    public: {},
+    purpose: 'public',
+    vlan: null,
+    vpc: {
+      ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
+      // @ts-expect-error the user must select this
+      subnet_id: null,
+      // @ts-expect-error the user must select this
+      vpc_id: null,
+    },
+  };
 };

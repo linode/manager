@@ -3,7 +3,6 @@ import {
   Autocomplete,
   Box,
   Checkbox,
-  Divider,
   FormControlLabel,
   Notice,
   Stack,
@@ -14,7 +13,6 @@ import {
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import {
   REGION_CAVEAT_HELPER_TEXT,
@@ -161,7 +159,7 @@ export const VPC = ({ index }: Props) => {
                 />
                 {field.value !== 'auto' && (
                   <TextField
-                    containerProps={{ sx: { my: 1 }}}
+                    containerProps={{ sx: { my: 1 } }}
                     errorText={fieldState.error?.message}
                     label="VPC IPv4"
                     noMarginTop
