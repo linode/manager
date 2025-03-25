@@ -39,14 +39,7 @@ export const SuccessDialogContent = (
             padding: theme.spacingFunction(16),
           })}
         >
-          <Typography
-            sx={(theme) => ({
-              marginTop: theme.spacingFunction(8),
-            })}
-            variant="h3"
-          >
-            Upgrade Summary
-          </Typography>
+          <Typography variant="h3">Upgrade Summary</Typography>
           {linodeInterfaces.map((linodeInterface) => (
             <LinodeInterfaceInfo
               key={linodeInterface.id}
@@ -86,33 +79,27 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
   } = props;
 
   return (
-    <>
-      <Typography
-        sx={(theme) => ({
-          marginBottom: theme.spacingFunction(16),
-          marginTop: theme.spacingFunction(16),
-        })}
-      >
-        <strong>Interface Meta Info: Interface #{id}</strong>
-      </Typography>
-      <Typography>ID: {id}</Typography>
-      <Typography>MAC Address: {mac_address}</Typography>
-      <Typography>Created: {created}</Typography>
-      <Typography>Updated: {updated}</Typography>
-      <Typography>Version: {version}</Typography>
-      {publicInterface && (
+    <Stack gap={2} marginTop={2}>
+      <Stack>
         <Typography
           sx={(theme) => ({
             marginBottom: theme.spacingFunction(16),
-            marginTop: theme.spacingFunction(16),
           })}
         >
-          Public Interface successfully upgraded
+          <strong>Interface Meta Info: Interface #{id}</strong>
         </Typography>
+        <Typography>ID: {id}</Typography>
+        <Typography>MAC Address: {mac_address}</Typography>
+        <Typography>Created: {created}</Typography>
+        <Typography>Updated: {updated}</Typography>
+        <Typography>Version: {version}</Typography>
+      </Stack>
+      {publicInterface && (
+        <Typography>Public Interface successfully upgraded</Typography>
       )}
       {vpc && <VPCInterfaceInfo {...vpc} default_route={props.default_route} />}
       {vlan && <VlanInterfaceInfo vlan={vlan} />}
-    </>
+    </Stack>
   );
 };
 
@@ -127,31 +114,28 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
 
   return (
     <>
-      <Typography
-        sx={(theme) => ({
-          marginBottom: theme.spacingFunction(16),
-          marginTop: theme.spacingFunction(16),
-        })}
-      >
+      <Typography>
         <strong>VPC Interface Details</strong>
       </Typography>
-      {default_route && (
+      <Stack>
+        {default_route && (
+          <Typography>
+            Default Route:{' '}
+            {default_route.ipv4 ? 'IPv4' : default_route.ipv6 ? 'IPv6' : 'None'}
+          </Typography>
+        )}
+        <Typography>VPC ID: {vpc_id}</Typography>
+        <Typography>Subnet ID: {subnet_id}</Typography>
         <Typography>
-          Default Route:{' '}
-          {default_route.ipv4 ? 'IPv4' : default_route.ipv6 ? 'IPv6' : 'None'}
+          Addresses: {addresses.map((address) => address.address).join(', ')}
         </Typography>
-      )}
-      <Typography>VPC ID: {vpc_id}</Typography>
-      <Typography>Subnet ID: {subnet_id}</Typography>
-      <Typography>
-        Addresses: {addresses.map((address) => address.address).join(', ')}
-      </Typography>
-      {primaryAddress && (
-        <Typography>Primary Address: {primaryAddress.address}</Typography>
-      )}
-      {ranges.length > 0 && (
-        <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
-      )}
+        {primaryAddress && (
+          <Typography>Primary Address: {primaryAddress.address}</Typography>
+        )}
+        {ranges.length > 0 && (
+          <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
+        )}
+      </Stack>
     </>
   );
 };
@@ -163,16 +147,13 @@ const VlanInterfaceInfo = (props: Pick<LinodeInterface, 'vlan'>) => {
 
   return (
     <>
-      <Typography
-        sx={(theme) => ({
-          marginBottom: theme.spacingFunction(16),
-          marginTop: theme.spacingFunction(16),
-        })}
-      >
+      <Typography>
         <strong>VLAN Interface Details</strong>
       </Typography>
-      <Typography>Label: {vlan_label}</Typography>
-      <Typography>IPAM Address: {ipam_address}</Typography>
+      <Stack>
+        <Typography>Label: {vlan_label}</Typography>
+        <Typography>IPAM Address: {ipam_address}</Typography>
+      </Stack>
     </>
   );
 };

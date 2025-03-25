@@ -67,7 +67,7 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
         }}
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
-        open={location.pathname.includes('interfaces')}
+        open={location.pathname.includes('networking/interfaces')}
       />
     </Box>
   );

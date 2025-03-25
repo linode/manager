@@ -30,7 +30,7 @@ export const PublicTemplateRules = () => {
 
 const templateRuleStyling = (theme: Theme) => ({
   backgroundColor: theme.tokens.alias.Background.Neutral,
-  padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(8)}`,
+  padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
 });
 
 export const sharedTemplateRules = (
