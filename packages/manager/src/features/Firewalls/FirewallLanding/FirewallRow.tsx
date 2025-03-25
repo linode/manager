@@ -1,4 +1,4 @@
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery, useFirewallSettingsQuery } from '@linode/queries';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 
@@ -19,30 +19,23 @@ import type {
   Filter,
   Firewall,
   FirewallDeviceEntity,
-  FirewallSettings,
   Linode,
 } from '@linode/api-v4';
 
-export interface FirewallRowProps extends Firewall, ActionHandlers {
-  firewallSettings: FirewallSettings | undefined;
-}
+export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
 export const FirewallRow = React.memo((props: FirewallRowProps) => {
-  const {
-    entities,
-    firewallSettings,
-    id,
-    label,
-    rules,
-    status,
-    ...actionHandlers
-  } = props;
+  const { entities, id, label, rules, status, ...actionHandlers } = props;
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
+  const { data: firewallSettings } = useFirewallSettingsQuery({
+    enabled: isLinodeInterfacesEnabled,
+  });
 
   const tooltipText =
     firewallSettings && getDefaultFirewallDescription(id, firewallSettings);
   const isDefaultFirewall = !!tooltipText;
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const neededLinodeIdsForInterfaceDevices = entities
     .slice(0, 3) // only take the first three entities since we only show those entity links

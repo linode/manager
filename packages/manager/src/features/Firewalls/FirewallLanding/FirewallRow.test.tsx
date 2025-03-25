@@ -20,6 +20,18 @@ import {
   getRuleString,
 } from './FirewallRow';
 
+const queryMocks = vi.hoisted(() => ({
+  useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+  };
+});
+
 beforeAll(() => mockMatchMedia());
 
 describe('FirewallRow', () => {
@@ -49,28 +61,26 @@ describe('FirewallRow', () => {
 
     const baseProps = {
       ...firewall,
-      firewallSettings: undefined,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall,
     };
 
-    it('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
+    it.only('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
+      queryMocks.useFirewallSettingsQuery.mockReturnValue({
+        data: {
+          default_firewall_ids: {
+            linode: null,
+            nodebalancer: null,
+            public_interface: 1,
+            vpc_interface: null,
+          },
+        },
+      });
       const { getByTestId, getByText } = render(
-        wrapWithTableBody(
-          <FirewallRow
-            {...baseProps}
-            firewallSettings={{
-              default_firewall_ids: {
-                linode: 1,
-                nodebalancer: null,
-                public_interface: null,
-                vpc_interface: null,
-              },
-            }}
-          />,
-          { flags: { linodeInterfaces: { enabled: true } } }
-        )
+        wrapWithTableBody(<FirewallRow {...baseProps} />, {
+          flags: { linodeInterfaces: { enabled: true } },
+        })
       );
       getByTestId('firewall-row-1');
       getByText(firewall.label);

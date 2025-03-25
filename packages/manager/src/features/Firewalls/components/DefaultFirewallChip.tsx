@@ -1,7 +1,7 @@
 import { Chip, Tooltip } from '@linode/ui';
 import React from 'react';
 
-import type { SxProps } from '@mui/material';
+import type { ChipProps } from '@linode/ui';
 
 interface Props {
   chipProps?: Partial<ChipProps>;
