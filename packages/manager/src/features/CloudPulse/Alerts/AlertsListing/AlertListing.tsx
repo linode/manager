@@ -120,9 +120,10 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
-    'alerts_group_by_tag', ['false', 'true']
-  );
+  const {
+    preference,
+    toggle: toggleAlertsGroupedByTag,
+  } = usePreferencesToggle('alerts_group_by_tag', ['false', 'true']);
 
   if (alerts && alerts.length === 0) {
     return (

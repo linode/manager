@@ -46,74 +46,78 @@ export const AlertsGroupedByTag = ({
   services,
 }: GroupedAlertsProps) => {
   const theme = useTheme();
+  // Create a Map to store refs for each tag
+  const tagRefs = React.useRef<
+    Map<string, React.RefObject<HTMLTableRowElement>>
+  >(new Map(groupedAlerts.map(([tag]) => [tag, React.createRef()])));
 
   return (
     <React.Fragment>
       {groupedAlerts.map(([tag, alertsForTag]) => {
-        const tagRef = React.useRef<HTMLTableRowElement>(null); // Used for scrolling to the tag header when the tag specific table page number changes.
+        const tagRef = tagRefs.current.get(tag);
 
         return (
-            <Paginate data={alertsForTag}>
-              {({
-                count,
-                data: paginatedTagAlerts,
-                handlePageChange: handleTagPageChange,
-                handlePageSizeChange: handleTagPageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <React.Fragment>
-                  <StyledTagHeaderRow 
-                    sx={{ backgroundColor: theme.bg.app }}
-                  >
-                    <TableCell colSpan={7}>
-                      <StyledTagHeader variant="h2" ref={tagRef}>{tag}</StyledTagHeader>
+          <Paginate data={alertsForTag} key={tag}>
+            {({
+              count,
+              data: paginatedTagAlerts,
+              handlePageChange: handleTagPageChange,
+              handlePageSizeChange: handleTagPageSizeChange,
+              page,
+              pageSize,
+            }) => (
+              <React.Fragment>
+                <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
+                  <TableCell colSpan={7}>
+                    <StyledTagHeader ref={tagRef} variant="h2">
+                      {tag}
+                    </StyledTagHeader>
+                  </TableCell>
+                </StyledTagHeaderRow>
+                {paginatedTagAlerts.map((alert: Alert) => (
+                  <AlertTableRow
+                    handlers={{
+                      handleDetails: () => handleDetails(alert),
+                      handleEdit: () => handleEdit(alert),
+                      handleEnableDisable: () => handleEnableDisable(alert),
+                    }}
+                    alert={alert}
+                    key={alert.id}
+                    services={services}
+                  />
+                ))}
+                {count > MIN_PAGE_SIZE && (
+                  <TableRow>
+                    <TableCell colSpan={7} sx={{ padding: 0 }}>
+                      <PaginationFooter
+                        handlePageChange={(newPage) => {
+                          handleTagPageChange(newPage);
+                          // Ensure consistent scroll behavior with a small delay
+                          setTimeout(() => {
+                            tagRef?.current?.scrollIntoView({
+                              behavior: 'smooth',
+                              block: 'start',
+                              inline: 'nearest',
+                            });
+                          }, 100);
+                        }}
+                        sx={{
+                          border: 0,
+                          marginBottom: theme.spacing(2),
+                          marginTop: theme.spacing(2),
+                        }}
+                        count={count}
+                        eventCategory={`Alert Definitions Table ${tag}`}
+                        handleSizeChange={handleTagPageSizeChange}
+                        page={page}
+                        pageSize={pageSize}
+                      />
                     </TableCell>
-                  </StyledTagHeaderRow>
-                  {paginatedTagAlerts.map((alert: Alert) => (
-                    <AlertTableRow
-                      handlers={{
-                        handleDetails: () => handleDetails(alert),
-                        handleEdit: () => handleEdit(alert),
-                        handleEnableDisable: () => handleEnableDisable(alert),
-                      }}
-                      alert={alert}
-                      key={alert.id}
-                      services={services}
-                    />
-                  ))}
-                  {count > MIN_PAGE_SIZE && (
-                    <TableRow>
-                      <TableCell colSpan={7} sx={{ padding: 0 }}>
-                        <PaginationFooter
-                          sx={{
-                            border: 0,
-                            marginBottom: theme.spacing(2),
-                            marginTop: theme.spacing(2),
-                          }}
-                          count={count}
-                          eventCategory={`Alert Definitions Table ${tag}`}
-                          handlePageChange={(newPage) => {
-                            handleTagPageChange(newPage);
-                            // Ensure consistent scroll behavior with a small delay
-                            setTimeout(() => {
-                              tagRef.current?.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start',
-                                inline: 'nearest'
-                              });
-                            }, 100);
-                          }}
-                          handleSizeChange={handleTagPageSizeChange}
-                          page={page}
-                          pageSize={pageSize}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </React.Fragment>
-              )}
-            </Paginate>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            )}
+          </Paginate>
         );
       })}
     </React.Fragment>
