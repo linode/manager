@@ -13,6 +13,7 @@ import {
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -31,7 +32,6 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 
 export interface MetricDetails {
   aggregationType: string;
@@ -40,9 +40,7 @@ export interface MetricDetails {
   ruleIndex: number;
   threshold: string;
 }
-
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
-
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegion = regionFactory.build({
@@ -50,13 +48,13 @@ const mockRegion = regionFactory.build({
   id: 'us-ord',
   label: 'Chicago, IL',
 });
-const { metrics, serviceType, resource } = widgetDetails.linode;
+const { metrics, resource, serviceType } = widgetDetails.linode;
 
 const mockLinode = linodeFactory.buildList(10).map((linode, index) => ({
   ...linode,
   label: `${resource}-${index + 1}`,
-  tags: ['tag-2', 'tag-3'],
   region: 'us-ord',
+  tags: ['tag-2', 'tag-3'],
 }));
 
 const notificationChannels = notificationChannelFactory.build({
@@ -203,7 +201,7 @@ describe('Create Alert', () => {
       .find('[type="checkbox"]')
       .check();
 
-    //Verify that all available headers are displayed in the resource table.
+    // Verify that all available headers are displayed in the resource table.
 
     ui.heading.findByText('resource').should('be.visible');
     ui.heading
