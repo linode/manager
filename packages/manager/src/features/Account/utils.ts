@@ -18,6 +18,8 @@ export type ActionType =
   | 'rebuild'
   | 'rescue'
   | 'resize'
+  | 'resume'
+  | 'suspend'
   | 'view';
 
 interface GetRestrictedResourceText {
