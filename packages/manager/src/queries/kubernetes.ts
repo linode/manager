@@ -36,10 +36,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import {
-  useAPLAvailability,
-  useIsLkeEnterpriseEnabled,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 
 import type {
   CreateKubeClusterPayload,
@@ -99,8 +96,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             return decodedKubeConfig;
           } catch (error) {
             const err = error as {
-              response?: { status?: number };
               reason?: string;
+              response?: { status?: number };
             };
             const serviceUnavailableStatus = 503;
             if (
@@ -186,18 +183,15 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (
-  id: number,
+export const useKubernetesClusterQuery = ({
   enabled = true,
-  options = {}
-) => {
-  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
-
+  id = -1,
+  options = {},
+  useBetaEndpoint = false,
+}) => {
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
-    enabled: enabled && !isAPLAvailabilityLoading,
+    enabled,
     ...options,
   });
 };

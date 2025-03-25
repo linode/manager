@@ -13,6 +13,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
@@ -41,17 +42,20 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
+  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
-  const { status: clusterStatus } = useKubernetesClusterQuery(
-    nodebalancer?.lke_cluster?.id ?? -1,
-    nodebalancer && Boolean(nodebalancer.lke_cluster),
-    {
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: nodebalancer && Boolean(nodebalancer.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    options: {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       retry: false,
-    }
-  );
+    },
+    useBetaEndpoint,
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];
