@@ -3,6 +3,10 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { ObjectStorageRoute } from './ObjectStorageRoute';
 
+export interface ObjectStorageDetailSearchParams {
+  prefix?: string;
+}
+
 export const objectStorageRoute = createRoute({
   component: ObjectStorageRoute,
   getParentRoute: () => rootRoute,
@@ -18,7 +22,7 @@ const objectStorageIndexRoute = createRoute({
   )
 );
 
-const objectStorageBucketsRoute = createRoute({
+const objectStorageBucketsLandingRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'buckets',
 }).lazy(() =>
@@ -27,7 +31,7 @@ const objectStorageBucketsRoute = createRoute({
   )
 );
 
-const objectStorageAccessKeysRoute = createRoute({
+const objectStorageAccessKeysLandingRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'access-keys',
 }).lazy(() =>
@@ -37,8 +41,8 @@ const objectStorageAccessKeysRoute = createRoute({
 );
 
 const objectStorageBucketCreateRoute = createRoute({
-  getParentRoute: () => objectStorageBucketsRoute,
-  path: 'create',
+  getParentRoute: () => objectStorageRoute,
+  path: 'buckets/create',
 }).lazy(() =>
   import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -46,8 +50,8 @@ const objectStorageBucketCreateRoute = createRoute({
 );
 
 const objectStorageAccessKeyCreateRoute = createRoute({
-  getParentRoute: () => objectStorageAccessKeysRoute,
-  path: 'create',
+  getParentRoute: () => objectStorageRoute,
+  path: 'access-keys/create',
 }).lazy(() =>
   import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -55,8 +59,9 @@ const objectStorageAccessKeyCreateRoute = createRoute({
 );
 
 const objectStorageBucketDetailRoute = createRoute({
-  getParentRoute: () => objectStorageBucketsRoute,
-  path: '$clusterId/$bucketName',
+  getParentRoute: () => objectStorageRoute,
+  path: 'buckets/$clusterId/$bucketName',
+  validateSearch: (search: ObjectStorageDetailSearchParams) => search,
 }).lazy(() =>
   import('./objectStorageLazyRoutes').then(
     (m) => m.bucketDetailLandingLazyRoute
@@ -90,15 +95,15 @@ const objectStorageBucketSSLRoute = createRoute({
   )
 );
 export const objectStorageRouteTree = objectStorageRoute.addChildren([
-  objectStorageIndexRoute,
-  objectStorageBucketsRoute.addChildren([
-    objectStorageBucketDetailRoute.addChildren([
-      objectStorageBucketDetailObjectsRoute,
-      objectStorageBucketDetailAccessRoute,
-      objectStorageBucketSSLRoute,
-    ]),
+  objectStorageIndexRoute.addChildren([
     objectStorageBucketCreateRoute,
     objectStorageAccessKeyCreateRoute,
+    objectStorageBucketsLandingRoute,
+    objectStorageAccessKeysLandingRoute
   ]),
-  objectStorageAccessKeysRoute,
+  objectStorageBucketDetailRoute.addChildren([
+    objectStorageBucketDetailObjectsRoute,
+    objectStorageBucketDetailAccessRoute,
+    objectStorageBucketSSLRoute,
+  ]),
 ]);

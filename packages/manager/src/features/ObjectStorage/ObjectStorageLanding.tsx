@@ -1,5 +1,5 @@
 import { StyledLinkButton, Typography } from '@linode/ui';
-import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -41,7 +41,7 @@ const AccessKeyLanding = React.lazy(() =>
 
 export const ObjectStorageLanding = () => {
   const navigate = useNavigate();
-  const match = useMatch({ from: '/object-storage' });
+  const match = useMatch({ strict: false });
   const [mode, setMode] = React.useState<MODE>('creating');
 
   const {
@@ -66,17 +66,10 @@ export const ObjectStorageLanding = () => {
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
 
-  const openDrawer = useOpenClose();
-
   const { handleTabChange, tabIndex, tabs } = useTabs([
     { title: 'Buckets', to: `/object-storage/buckets` },
     { title: 'Access Keys', to: `/object-storage/access-keys` },
   ]);
-
-  const handleOpenAccessDrawer = (mode: MODE) => {
-    setMode(mode);
-    openDrawer.open();
-  };
 
   const objPromotionalOffers =
     flags.promotionalOffers?.filter((offer) =>
@@ -99,7 +92,6 @@ export const ObjectStorageLanding = () => {
     !areBucketsLoading && tabIndex === 0 && userHasNoBucketCreated;
 
   const isAccessKeysTab = tabIndex === 1;
-  const isCreateAction = match?.routeId.includes('create');
 
   const createButtonText = isAccessKeysTab
     ? 'Create Access Key'
@@ -107,16 +99,15 @@ export const ObjectStorageLanding = () => {
 
   const createButtonAction = () => {
     if (isAccessKeysTab) {
-      setMode('creating');
       navigate({ to: '/object-storage/access-keys/create' });
-      openDrawer.open();
     } else {
       navigate({ to: '/object-storage/buckets/create' });
     }
   };
 
-  const isCreateBucketOpen = !isAccessKeysTab && isCreateAction;
-  const isCreateAccessKeyOpen = isAccessKeysTab && isCreateAction;
+  const isCreateBucketOpen = match.routeId === '/object-storage/buckets/create';
+  const isCreateAccessKeyOpen =
+    match.routeId === '/object-storage/access-keys/create';
 
   return (
     <React.Fragment>
@@ -169,14 +160,9 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                closeAccessDrawer={() => {
-                  openDrawer.close();
-                  navigate({ to: '/object-storage/access-keys' });
-                }}
-                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
+                accessDrawerOpen={isCreateAccessKeyOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
-                openAccessDrawer={handleOpenAccessDrawer}
               />
             </SafeTabPanel>
           </TabPanels>
