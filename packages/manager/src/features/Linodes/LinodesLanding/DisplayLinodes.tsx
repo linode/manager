@@ -1,5 +1,4 @@
-import { Box, CircleProgress, Paper, Tooltip } from '@linode/ui';
-import { IconButton } from '@linode/ui';
+import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -13,6 +12,7 @@ import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFoo
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 
 import { StyledControlHeader } from './DisplayLinodes.styles';
@@ -82,6 +82,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const displayViewDescriptionId = React.useId();
   const groupByDescriptionId = React.useId();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+  const flags = useFlags();
 
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
     return data.reduce((acc, thisLinode) => {
@@ -104,7 +105,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   return (
     <Paginate

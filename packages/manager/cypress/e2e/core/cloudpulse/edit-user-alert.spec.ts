@@ -5,6 +5,7 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import { regionFactory } from '@linode/utilities';
 import {
   EVALUATION_PERIOD_DESCRIPTION,
   METRIC_DESCRIPTION_DATA_FIELD,
@@ -36,7 +37,6 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';

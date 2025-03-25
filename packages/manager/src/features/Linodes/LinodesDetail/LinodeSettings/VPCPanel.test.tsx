@@ -1,7 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory, regionFactory } from 'src/factories';
+import { accountFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';

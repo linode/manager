@@ -1,4 +1,4 @@
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
+import { accountAvailabilityFactory, regionFactory } from '@linode/utilities';
 
 import {
   getRegionOptions,

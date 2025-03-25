@@ -1,12 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  imageFactory,
-  linodeFactory,
-  regionFactory,
-  typeFactory,
-} from 'src/factories';
+import { imageFactory, linodeFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {

@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -7,7 +8,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
@@ -179,6 +179,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}
+            flags={flags}
             label="New Region"
             onChange={(e, region) => handleSelectRegion(region.id)}
             value={selectedRegion}

@@ -257,8 +257,7 @@ export const NodeTable = React.memo((props: Props) => {
               />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
-                  {(isDiskEncryptionFeatureEnabled ||
-                    regionSupportsDiskEncryption) &&
+                  {isDiskEncryptionFeatureEnabled &&
                   encryptionStatus !== undefined ? (
                     <Box
                       alignItems="center"
@@ -270,6 +269,9 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        regionSupportsDiskEncryption={
+                          regionSupportsDiskEncryption
+                        }
                         /**
                          * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
                          * explaining how LDE can be enabled on LKE-E node pools.
@@ -320,9 +322,11 @@ export const nodeToRow = (
 
 export const EncryptedStatus = ({
   encryptionStatus,
+  regionSupportsDiskEncryption,
   tooltipText,
 }: {
   encryptionStatus: EncryptionStatus;
+  regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
   return encryptionStatus === 'enabled' ? (
@@ -335,7 +339,9 @@ export const EncryptedStatus = ({
       <Unlock />
       <StyledNotEncryptedBox>
         <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+        {regionSupportsDiskEncryption && tooltipText ? (
+          <TooltipIcon status="help" text={tooltipText} />
+        ) : null}
       </StyledNotEncryptedBox>
     </>
   ) : null;

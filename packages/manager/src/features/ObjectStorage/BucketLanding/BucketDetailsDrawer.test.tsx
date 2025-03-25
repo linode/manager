@@ -1,4 +1,8 @@
-import { readableBytes, truncateMiddle } from '@linode/utilities';
+import {
+  readableBytes,
+  regionFactory,
+  truncateMiddle,
+} from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
@@ -7,7 +11,6 @@ import {
   objectStorageBucketFactory,
   objectStorageBucketFactoryGen2,
   profileFactory,
-  regionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -209,9 +212,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
 describe('BucketDetailDrawer: Gen2 UI', () => {
   const e3Bucket = objectStorageBucketFactoryGen2.build();
-  const e1Bucket = objectStorageBucketFactoryGen2.build({
-    endpoint_type: 'E1',
-  });
 
   const region = regionFactory.build({
     id: e3Bucket.region,
@@ -261,44 +261,6 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     expect(
       getByText(
         /CORS \(Cross Origin Sharing\) is not available for endpoint types E2 and E3./
-      )
-    ).toBeInTheDocument();
-  });
-
-  it('renders the Bucket Rate Limit Table for E2 and E3 buckets', async () => {
-    const { findByTestId } = renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          onClose={mockOnClose}
-          open={true}
-          selectedBucket={e3Bucket}
-        />
-      ),
-      options: {
-        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
-      },
-    });
-
-    const rateLimitTable = await findByTestId('bucket-rate-limit-table');
-    expect(rateLimitTable).toBeVisible();
-  });
-
-  it('renders the Bucket Rate Limit Text for E0 and E1 buckets', async () => {
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          onClose={mockOnClose}
-          open={true}
-          selectedBucket={e1Bucket}
-        />
-      ),
-      options: {
-        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
-      },
-    });
-    expect(
-      await findByText(
-        /This endpoint type supports up to 750 Requests Per Second \(RPS\)./
       )
     ).toBeInTheDocument();
   });

@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetLinodeDetails,
@@ -21,7 +22,6 @@ import {
   accountFactory,
   linodeFactory,
   placementGroupFactory,
-  regionFactory,
 } from 'src/factories';
 
 import type { Linode } from '@linode/api-v4';
