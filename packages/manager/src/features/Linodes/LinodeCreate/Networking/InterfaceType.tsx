@@ -49,9 +49,9 @@ export const InterfaceType = ({ index }: Props) => {
         value={field.value}
       >
         <FormControlLabel
-        control={<Radio />}
-        label="Public Internet"
-        value="public"
+          control={<Radio />}
+          label="Public Internet"
+          value="public"
         />
         <FormControlLabel control={<Radio />} label="VPC" value="vpc" />
         <FormControlLabel control={<Radio />} label="VLAN" value="vlan" />
