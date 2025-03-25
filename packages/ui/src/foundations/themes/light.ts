@@ -1124,25 +1124,35 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '& $checked': {
-            color: primaryColors.main,
+          '&:active': {
+            color: theme.tokens.component.RadioButton.Active.Active.Border,
+          },
+          '&.Mui-checked': {
+            color: theme.tokens.component.RadioButton.Active.Default.Border,
+            '&:active': {
+              color: theme.tokens.component.RadioButton.Active.Active.Border,
+            },
           },
           '& .defaultFill': {
             fill: theme.color.white,
             transition: theme.transitions.create(['fill']),
           },
+          '& svg circle': {
+            fill: Color.Neutrals.White,
+          },
           '&.Mui-disabled': {
             '& .defaultFill': {
               fill: Color.Neutrals[5],
             },
-            color: `${Color.Neutrals[40]} !important`,
-            fill: `${Color.Neutrals[5]} !important`,
-            pointerEvents: 'none',
-          },
-          '&.MuiRadio-root': {
-            '.MuiSvgIcon-fontSizeMedium': {
-              fontSize: '20px',
+            '&:not(.Mui-checked) svg circle': {
+              fill: Color.Neutrals[20],
             },
+            '&:not(.Mui-checked)': {
+              color:
+                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+            },
+            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
+            pointerEvents: 'none',
           },
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
@@ -1153,10 +1163,10 @@ export const lightTheme: ThemeOptions = {
             '& .defaultFill': {
               fill: theme.color.white,
             },
-            color: theme.palette.primary.main,
-            fill: theme.color.white,
+            color: theme.tokens.component.RadioButton.Active.Hover.Border,
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
           },
-          color: Color.Neutrals[40],
+          color: theme.tokens.alias.Action.Neutral,
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
@@ -1208,7 +1218,7 @@ export const lightTheme: ThemeOptions = {
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          fontSize: 24,
+          fontSize: 20,
         },
       },
     },
