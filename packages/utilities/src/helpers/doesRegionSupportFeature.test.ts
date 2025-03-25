@@ -1,6 +1,4 @@
-// @todo: modularization - Update this import (to import from `utilities` package)
-// once the "Make RegionSelect pure" PR is merged.
-import { regions } from '../../../manager/src/__data__/regionsData';
+import { regions } from '../__data__';
 
 import { describe, expect, it } from 'vitest';
 

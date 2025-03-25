@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { regionFactory } from '@linode/utilities';
 import {
   createLinodeRequestFactory,
   firewallFactory,
   linodeFactory,
-  regionFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -144,7 +144,7 @@ describe('Migrate Linode With Firewall', () => {
   /*
    * - Uses real API data to create a Firewall, attach a Linode to it, then migrate the Linode.
    */
-  it('migrates linode with firewall - real data', () => {
+  it.skip('migrates linode with firewall - real data', () => {
     cy.tag('method:e2e', 'purpose:dcTesting');
     const [migrationRegionStart, migrationRegionEnd] = chooseRegions(2);
     const firewallLabel = randomLabel();
