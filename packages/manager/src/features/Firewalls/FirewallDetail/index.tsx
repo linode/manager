@@ -196,7 +196,7 @@ export const FirewallDetail = () => {
               display: 'flex',
               flexWrap: 'wrap',
               gap: 2,
-              margin: `${theme.spacingFunction(16)} 0`,
+              margin: `${theme.spacingFunction(8)} 0`,
               padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(
                 16
               )}`,
