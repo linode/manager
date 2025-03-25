@@ -71,7 +71,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
         </Link>
-        {isDefaultFirewall && (
+        {isLinodeInterfacesEnabled && isDefaultFirewall && (
           <DefaultFirewallChip
             chipProps={{ sx: { marginLeft: 1 } }}
             tooltipText={tooltipText}
@@ -87,6 +87,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
         <TableCell>
           {getDevicesCellString({
             entities,
+            isLinodeInterfacesEnabled,
             isLoading,
             linodesWithInterfaceDevices,
           })}
@@ -138,19 +139,35 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 
 interface DeviceLinkInputs {
   entities: FirewallDeviceEntity[];
+  isLinodeInterfacesEnabled: boolean;
   isLoading: boolean;
   linodesWithInterfaceDevices: Linode[] | undefined;
 }
 const getDevicesCellString = (inputs: DeviceLinkInputs) => {
-  const { entities, isLoading, linodesWithInterfaceDevices } = inputs;
-  if (entities.length === 0) {
+  const {
+    entities,
+    isLinodeInterfacesEnabled,
+    isLoading,
+    linodesWithInterfaceDevices,
+  } = inputs;
+  const filteredEntities = isLinodeInterfacesEnabled
+    ? entities
+    : entities.filter((entity) => entity.type !== 'interface');
+
+  if (filteredEntities.length === 0) {
     return 'None assigned';
   }
 
-  return getDeviceLinks({ entities, isLoading, linodesWithInterfaceDevices });
+  return getDeviceLinks({
+    entities: filteredEntities,
+    isLoading,
+    linodesWithInterfaceDevices,
+  });
 };
 
-export const getDeviceLinks = (inputs: DeviceLinkInputs) => {
+export const getDeviceLinks = (
+  inputs: Omit<DeviceLinkInputs, 'isLinodeInterfacesEnabled'>
+) => {
   const { entities, isLoading, linodesWithInterfaceDevices } = inputs;
   const firstThree = entities.slice(0, 3);
 

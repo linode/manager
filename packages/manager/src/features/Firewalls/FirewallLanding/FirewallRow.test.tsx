@@ -68,7 +68,8 @@ describe('FirewallRow', () => {
                 vpc_interface: null,
               },
             }}
-          />
+          />,
+          { flags: { linodeInterfaces: { enabled: true } } }
         )
       );
       getByTestId('firewall-row-1');

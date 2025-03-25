@@ -15,6 +15,7 @@ import {
 import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 export interface ActionHandlers {
   [index: string]: any;
@@ -35,6 +36,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     firewallID,
@@ -53,7 +55,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
   );
 
   const disabledProps =
-    !userCanModifyFirewall || isDefaultFirewall
+    !userCanModifyFirewall || (isLinodeInterfacesEnabled && isDefaultFirewall)
       ? {
           disabled: true,
           tooltip: isDefaultFirewall
