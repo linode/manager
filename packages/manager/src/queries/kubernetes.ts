@@ -214,14 +214,19 @@ export const useKubernetesClustersInfiniteQuery = (
   });
 };
 
-export const useKubernetesClustersQuery = (
-  params: Params,
-  filter: Filter,
-  enabled = true
-) => {
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
+interface KubernetesClustersQueryOptions {
+  enabled: boolean;
+  filter: Filter;
+  params: Params;
+  useBetaEndpoint: boolean;
+}
 
+export const useKubernetesClustersQuery = ({
+  enabled = true,
+  filter,
+  params,
+  useBetaEndpoint = false,
+}: KubernetesClustersQueryOptions) => {
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter, useBetaEndpoint),
     enabled,

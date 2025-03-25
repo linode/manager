@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -23,11 +24,11 @@ import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay'
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useProfile } from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
+import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
@@ -98,14 +99,16 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { data, error, isLoading } = useKubernetesClustersQuery(
-    {
+  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { data, error, isLoading } = useKubernetesClustersQuery({
+    enabled: !isRestricted,
+    filter,
+    params: {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter,
-    !isRestricted
-  );
+    useBetaEndpoint,
+  });
 
   const {
     isDiskEncryptionFeatureEnabled,
