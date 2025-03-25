@@ -193,7 +193,7 @@ export const FirewallDetail = () => {
           <Paper
             sx={(theme) => ({
               alignItems: 'center',
-              columnGap: 2,
+              columnGap: 1,
               display: 'flex',
               flexWrap: 'wrap',
               margin: `${theme.spacingFunction(8)} 0`,
