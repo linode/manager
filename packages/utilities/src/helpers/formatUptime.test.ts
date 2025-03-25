@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Duration } from 'luxon';
 
 import { formatUptime } from './formatUptime';
