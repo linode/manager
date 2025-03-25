@@ -1,3 +1,4 @@
+import { useFirewallSettingsQuery, useFirewallsQuery } from '@linode/queries';
 import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -19,8 +20,8 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useFirewallsQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { FirewallDialog } from './FirewallDialog';
@@ -35,6 +36,7 @@ const preferenceKey = 'firewalls';
 const FirewallLanding = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const pagination = usePagination(1, preferenceKey);
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -53,6 +55,10 @@ const FirewallLanding = () => {
     page: pagination.page,
     page_size: pagination.pageSize,
   };
+
+  const { data: firewallSettings } = useFirewallSettingsQuery({
+    enabled: isLinodeInterfacesEnabled,
+  });
 
   const { data, error, isLoading } = useFirewallsQuery(params, filter);
 
@@ -189,14 +195,19 @@ const FirewallLanding = () => {
             </TableSortCell>
             <Hidden smDown>
               <TableCell>Rules</TableCell>
-              <TableCell>Services</TableCell>
+              <TableCell sx={{ width: '40%' }}>Services</TableCell>
             </Hidden>
             <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.data.map((firewall) => (
-            <FirewallRow key={firewall.id} {...firewall} {...handlers} />
+            <FirewallRow
+              key={firewall.id}
+              {...firewall}
+              {...handlers}
+              firewallSettings={firewallSettings}
+            />
           ))}
         </TableBody>
       </Table>

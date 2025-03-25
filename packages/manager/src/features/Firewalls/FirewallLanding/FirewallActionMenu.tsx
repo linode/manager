@@ -1,13 +1,20 @@
-import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useGrants, useProfile } from '@linode/queries';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useGrants, useProfile } from '@linode/queries';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
+import {
+  DEFAULT_FIREWALL_TOOLTIP_TEXT,
+  NO_PERMISSIONS_TOOLTIP_TEXT,
+} from './constants';
+
+import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
   [index: string]: any;
@@ -20,10 +27,8 @@ interface Props extends ActionHandlers {
   firewallID: number;
   firewallLabel: string;
   firewallStatus: FirewallStatus;
+  isDefaultFirewall: boolean;
 }
-
-export const noPermissionTooltipText =
-  "You don't have permissions to modify this Firewall.";
 
 export const FirewallActionMenu = React.memo((props: Props) => {
   const theme = useTheme<Theme>();
@@ -35,6 +40,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     firewallID,
     firewallLabel,
     firewallStatus,
+    isDefaultFirewall,
     triggerDeleteFirewall,
     triggerDisableFirewall,
     triggerEnableFirewall,
@@ -46,12 +52,15 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     grants
   );
 
-  const disabledProps = !userCanModifyFirewall
-    ? {
-        disabled: true,
-        tooltip: noPermissionTooltipText,
-      }
-    : {};
+  const disabledProps =
+    !userCanModifyFirewall || isDefaultFirewall
+      ? {
+          disabled: true,
+          tooltip: isDefaultFirewall
+            ? DEFAULT_FIREWALL_TOOLTIP_TEXT
+            : NO_PERMISSIONS_TOOLTIP_TEXT,
+        }
+      : {};
 
   const actions: Action[] = [
     {

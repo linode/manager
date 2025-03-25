@@ -49,10 +49,32 @@ describe('FirewallRow', () => {
 
     const baseProps = {
       ...firewall,
+      firewallSettings: undefined,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall,
     };
+
+    it('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
+      const { getByTestId, getByText } = render(
+        wrapWithTableBody(
+          <FirewallRow
+            {...baseProps}
+            firewallSettings={{
+              default_firewall_ids: {
+                linode: 1,
+                nodebalancer: null,
+                public_interface: null,
+                vpc_interface: null,
+              },
+            }}
+          />
+        )
+      );
+      getByTestId('firewall-row-1');
+      getByText(firewall.label);
+      getByText('DEFAULT');
+    });
 
     it('renders a TableRow with label, status, rules, and Linodes', () => {
       const { getByTestId, getByText } = render(
@@ -68,21 +90,33 @@ describe('FirewallRow', () => {
   describe('getDeviceLinks', () => {
     it('should return a single Link if one Device is attached', () => {
       const device = firewallDeviceFactory.build();
-      const links = getDeviceLinks([device.entity]);
+      const links = getDeviceLinks({
+        entities: [device.entity],
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { getByText } = renderWithTheme(links);
       expect(getByText(device.entity.label ?? ''));
     });
 
     it('should render up to three comma-separated links', () => {
       const devices = firewallDeviceFactory.buildList(3);
-      const links = getDeviceLinks(devices.map((device) => device.entity));
+      const links = getDeviceLinks({
+        entities: devices.map((device) => device.entity),
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
     });
 
     it('should render "plus N more" text for any devices over three', () => {
       const devices = firewallDeviceFactory.buildList(13);
-      const links = getDeviceLinks(devices.map((device) => device.entity));
+      const links = getDeviceLinks({
+        entities: devices.map((device) => device.entity),
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { getByText, queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
       expect(getByText(/10 more/));
