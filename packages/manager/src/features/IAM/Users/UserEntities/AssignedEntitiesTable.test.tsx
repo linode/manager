@@ -54,7 +54,7 @@ describe('AssignedEntitiesTable', () => {
 
     expect(getByText('no_devices')).toBeInTheDocument();
     expect(getByText('Firewall')).toBeInTheDocument();
-    expect(getByText('firewall_creator')).toBeInTheDocument();
+    expect(getByText('firewall_admin')).toBeInTheDocument();
 
     const actionMenuButton = getAllByLabelText('action menu')[0];
     expect(actionMenuButton).toBeInTheDocument();
