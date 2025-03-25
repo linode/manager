@@ -53,7 +53,7 @@ export const AlertsGroupedByTag = ({
         const tagRef = React.useRef<HTMLTableRowElement>(null); // Used for scrolling to the tag header when the tag specific table page number changes.
 
         return (
-            <Paginate data={alertsForTag} scrollToRef={tagRef}>
+            <Paginate data={alertsForTag}>
               {({
                 count,
                 data: paginatedTagAlerts,
