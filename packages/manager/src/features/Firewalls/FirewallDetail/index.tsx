@@ -23,8 +23,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -48,6 +50,8 @@ export const FirewallDetail = () => {
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
@@ -67,11 +71,27 @@ export const FirewallDetail = () => {
         acc.linodeCount += 1;
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
+      } else if (
+        isLinodeInterfacesEnabled &&
+        device.entity.type === 'interface'
+      ) {
+        const linodeId = device.entity.url.split('/')[4];
+        if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {
+          acc.linodeCount += 1;
+        }
+        acc.seenLinodeIdsForInterfaces.add(linodeId);
       }
       return acc;
     },
-    { linodeCount: 0, nodebalancerCount: 0 }
-  ) || { linodeCount: 0, nodebalancerCount: 0 };
+    {
+      linodeCount: 0,
+      nodebalancerCount: 0,
+      seenLinodeIdsForInterfaces: new Set<string>(),
+    }
+  ) || {
+    linodeCount: 0,
+    nodebalancerCount: 0,
+  };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -153,33 +173,35 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={handleTabChange}>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <FirewallRulesLanding
-              disabled={!userCanModifyFirewall}
-              firewallID={firewallId}
-              rules={firewall.rules}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="linode"
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <FirewallDeviceLanding
-              disabled={!userCanModifyFirewall}
-              firewallId={firewallId}
-              firewallLabel={firewall.label}
-              type="nodebalancer"
-            />
-          </SafeTabPanel>
-        </TabPanels>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <FirewallRulesLanding
+                disabled={!userCanModifyFirewall}
+                firewallID={firewallId}
+                rules={firewall.rules}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <FirewallDeviceLanding
+                disabled={!userCanModifyFirewall}
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="linode"
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <FirewallDeviceLanding
+                disabled={!userCanModifyFirewall}
+                firewallId={firewallId}
+                firewallLabel={firewall.label}
+                type="nodebalancer"
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
       <GenerateFirewallDialog
         onClose={() => setIsGenerateDialogOpen(false)}

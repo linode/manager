@@ -9,6 +9,7 @@ import {
   StyledTextField,
 } from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
 import { DatabaseEngineSelect } from 'src/features/Databases/DatabaseCreate/DatabaseEngineSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type {
@@ -42,6 +43,7 @@ export const DatabaseClusterData = (props: Props) => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
+  const flags = useFlags();
 
   const labelToolTip = (
     <StyledLabelTooltip>
@@ -84,6 +86,7 @@ export const DatabaseClusterData = (props: Props) => {
           disableClearable
           disabled={isRestricted}
           errorText={errors.region}
+          flags={flags}
           onChange={(e, region) => onChange('region', region.id)}
           regions={regionsData}
           value={values.region}

@@ -17,7 +17,7 @@ import type { Capabilities, Region } from '@linode/api-v4';
  * the `apiLabel` property.
  *
  * @see {@link https://github.com/linode/manager/pull/10740|Cloud Manager PR #10740}
- * @see {@link src/queries/regions/regions.ts}
+ * @see {@link packages/queries/src/regions/regions.ts (@linode/queries)}
  */
 export interface ExtendedRegion extends Region {
   /** Region label as defined by API v4. */
@@ -100,6 +100,36 @@ const disallowedRegionIds = [
 
   // Washington, DC
   'us-iad',
+
+  // Atlanta, GA
+  'us-southeast',
+
+  // Dallas, TX
+  'us-central',
+
+  // Frankfurt, DE
+  'eu-central',
+
+  // Fremont, CA
+  'us-west',
+
+  // London, GB
+  'eu-west',
+
+  // Mumbai, IN
+  'ap-west',
+
+  // Newark, NJ
+  'us-east',
+
+  // Singapore, SG
+  'ap-south',
+
+  // Sydney, AU
+  'ap-southeast',
+
+  // Toronto, CA
+  'ca-central',
 ];
 
 /**
