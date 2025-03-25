@@ -45,6 +45,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -126,6 +127,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const VolumeCreate = () => {
+  const flags = useFlags();
   const theme = useTheme();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -410,6 +412,7 @@ export const VolumeCreate = () => {
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
+                flags={flags}
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}

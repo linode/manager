@@ -1,7 +1,7 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetail } from './PlacementGroupsDetail';

@@ -4,9 +4,10 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from '@linode/ui';
+import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+// @todo: modularization - Update type FlagSet to import from `@linode/shared` package once available.
+import type { FlagSet } from 'src/featureFlags';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -39,6 +40,10 @@ export interface RegionSelectProps<
    * A key/value object for disabling regions by their ID.
    */
   disabledRegions?: Record<string, DisableItemOption>;
+  /**
+   * Feature Flags
+   */
+  flags: FlagSet;
   /**
    * Used to override filtering done by the `currentCapability` prop
    * @todo Remove this after Object Storage Gen2.
@@ -78,6 +83,10 @@ export interface RegionMultiSelectProps
   }>;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
+  /**
+   * Feature Flags
+   */
+  flags: FlagSet;
   /**
    * Used to override filtering done by the `currentCapability` prop
    * @todo Remove this after Object Storage Gen2.

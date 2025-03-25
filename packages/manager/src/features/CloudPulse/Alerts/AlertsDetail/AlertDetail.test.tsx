@@ -1,10 +1,9 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import React from 'react';
 
 import {
   alertFactory,
   notificationChannelFactory,
-  regionFactory,
   serviceTypesFactory,
 } from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';

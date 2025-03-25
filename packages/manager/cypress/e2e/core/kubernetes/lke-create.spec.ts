@@ -5,6 +5,7 @@ import {
   dedicatedTypeFactory,
   linodeTypeFactory,
   pluralize,
+  regionFactory,
 } from '@linode/utilities';
 import {
   dcPricingDocsLabel,
@@ -54,7 +55,6 @@ import {
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
-  regionFactory,
 } from 'src/factories';
 import {
   CLUSTER_TIER_DOCS_LINK,
