@@ -1,11 +1,11 @@
 import { Box, Notice, Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
-import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
