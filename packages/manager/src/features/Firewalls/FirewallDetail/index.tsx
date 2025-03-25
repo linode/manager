@@ -1,11 +1,13 @@
 import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
+  useFirewallSettingsQuery,
   useGrants,
   useMutateFirewall,
   useProfile,
 } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { Box, Chip, CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { Typography } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -15,6 +17,7 @@ import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/Ge
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
@@ -25,8 +28,11 @@ import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import {
+  FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
+  getEntitiesThatFirewallIsDefaultFor,
+} from '../components/FirewallSelectOption.utils';
 import { checkIfUserCanModifyFirewall } from '../shared';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -56,6 +62,14 @@ export const FirewallDetail = () => {
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const firewallId = Number(id);
+
+  const { data: firewallSettings } = useFirewallSettingsQuery({
+    enabled: isLinodeInterfacesEnabled,
+  });
+
+  const defaultForEntities =
+    firewallSettings &&
+    getEntitiesThatFirewallIsDefaultFor(firewallId, firewallSettings);
 
   const userCanModifyFirewall = checkIfUserCanModifyFirewall(
     firewallId,
@@ -172,6 +186,31 @@ export const FirewallDetail = () => {
           margin={3}
           {...secureVMFirewallBanner.firewallDetails}
         />
+      )}
+      {isLinodeInterfacesEnabled && defaultForEntities && (
+        <Paper
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 2,
+            margin: '16px 0px',
+            padding: 2,
+          }}
+        >
+          <Typography>
+            <strong>Default</strong>
+          </Typography>
+          <Box>
+            {defaultForEntities.map((defaultEntity) => (
+              <Chip
+                key={defaultEntity}
+                label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
+                size="small"
+              />
+            ))}
+          </Box>
+        </Paper>
       )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />

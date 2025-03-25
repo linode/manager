@@ -195,7 +195,7 @@ const FirewallLanding = () => {
             </TableSortCell>
             <Hidden smDown>
               <TableCell>Rules</TableCell>
-              <TableCell sx={{ width: '40%' }}>Services</TableCell>
+              <TableCell>Services</TableCell>
             </Hidden>
             <TableCell />
           </TableRow>

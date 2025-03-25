@@ -8,7 +8,7 @@ export type FirewallDefaultEntity = keyof FirewallSettings['default_firewall_ids
 /**
  * Maps an entity that supports default firewalls to a readable name.
  */
-const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
+export const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
   FirewallDefaultEntity,
   string
 > = {
