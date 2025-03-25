@@ -110,6 +110,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
+  maintenance_policy_id: number;
 }
 
 export interface ActivePromotion {
@@ -277,6 +278,8 @@ export type NotificationType =
   | 'outage'
   | 'maintenance'
   | 'maintenance_scheduled'
+  | 'maintenance_pending'
+  | 'maintenance_in_progress'
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
