@@ -91,6 +91,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isACLPEnabled } = useIsACLPEnabled();
 
+  const isAlertsEnabled =
+    isACLPEnabled &&
+    (flags.aclpAlerting?.alertDefinitions ||
+      flags.aclpAlerting?.recentActivity ||
+      flags.aclpAlerting?.notificationChannels);
+
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
@@ -226,13 +232,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           },
           {
             display: 'Alerts',
-            hide:
-              !isACLPEnabled ||
-              !(
-                flags.aclpAlerting?.alertDefinitions ||
-                flags.aclpAlerting?.recentActivity ||
-                flags.aclpAlerting?.notificationChannels
-              ),
+            hide: !isAlertsEnabled,
             href: '/alerts',
             isBeta: flags.aclp?.beta,
           },

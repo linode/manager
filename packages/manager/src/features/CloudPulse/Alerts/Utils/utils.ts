@@ -1,7 +1,5 @@
 import { array, object, string } from 'yup';
 
-import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
-
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
@@ -19,6 +17,7 @@ import type { Theme } from '@mui/material';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 interface AlertChipBorderProps {
   /**
@@ -123,7 +122,7 @@ export const getServiceTypeLabel = (
  * @returns The style object for the box used in alert details page
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
-  backgroundColor: theme.tokens.background.Neutral,
+  backgroundColor: theme.tokens.alias.Background.Neutral,
   padding: theme.spacing(3),
 });
 /**
@@ -352,13 +351,13 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
  *   { field: "email", reason: "Email already exists" },
  *   { field: "password.length", reason: "Password is too short" }
  * ];
- * 
+ *
  * // Map API field names to form field paths
  * const errorFieldMap = {
  *   "email": "userEmail" as FieldPath<RegisterForm>,
  *   "password": "userPassword" as FieldPath<RegisterForm>
  * };
- * 
+ *
  * handleMultipleError(
  *   errors,
  *   errorFieldMap,

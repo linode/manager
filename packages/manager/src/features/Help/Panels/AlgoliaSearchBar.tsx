@@ -1,8 +1,9 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
-import Search from '@mui/icons-material/Search';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
+
+import Search from 'src/assets/icons/search.svg';
 
 import withSearch from '../SearchHOC';
 import { SearchItem } from './SearchItem';
@@ -82,8 +83,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
         <Notice
           sx={(theme) => ({
             '& p': {
-              color: theme.color.white,
-              fontFamily: 'LatoWeb',
+              color: theme.tokens.color.Neutrals.White,
             },
           })}
           spacingTop={8}
@@ -102,32 +102,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
             />
           );
         }}
-        slotProps={{
-          paper: {
-            sx: (theme) => ({
-              '& .MuiAutocomplete-listbox': {
-                '&::-webkit-scrollbar': {
-                  display: 'none',
-                },
-                border: 'none !important',
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
-              },
-              '& .MuiAutocomplete-option': {
-                ':hover': {
-                  backgroundColor:
-                    theme.name == 'light'
-                      ? `${theme.tokens.color.Brand[10]} !important`
-                      : `${theme.tokens.color.Neutrals[80]} !important`,
-                  color: theme.color.black,
-                  transition: 'background-color 0.2s',
-                },
-              },
-              boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
-              marginTop: 0.5,
-            }),
-          },
-        }}
         sx={(theme) => ({
           maxHeight: 500,
           [theme.breakpoints.up('md')]: {
@@ -139,23 +113,9 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           InputProps: {
             startAdornment: (
               <InputAdornment position="start">
-                <Search
-                  sx={(theme) => ({
-                    color: `${theme.tokens.search.Default.SearchIcon} !important`,
-                  })}
-                  data-qa-search-icon
-                />
+                <Search data-qa-search-icon />
               </InputAdornment>
             ),
-            sx: (theme) => ({
-              '&.Mui-focused': {
-                borderColor: `${theme.tokens.color.Brand[70]} !important`,
-                boxShadow: 'none',
-              },
-              ':hover': {
-                borderColor: theme.tokens.search.Hover.Border,
-              },
-            }),
           },
           hideLabel: true,
         }}

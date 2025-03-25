@@ -95,7 +95,7 @@ export interface AlertResourcesProp {
   serviceType?: AlertServiceType;
 }
 
-export type SelectUnselectAll = 'Select All' | 'Unselect All';
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -283,15 +283,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: SelectUnselectAll) => {
+    (action: SelectDeselectAll) => {
       if (!resources) {
         return;
       }
 
       let currentSelections: string[] = [];
 
-      if (action === 'Unselect All') {
-        // Unselect all
+      if (action === 'Deselect All') {
+        // Deselect all
         setSelectedResources([]);
       } else {
         // Select all
@@ -342,7 +342,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   const noticeStyles = (theme: Theme) => ({
     alignItems: 'center',
-    background: theme.tokens.background.Normal,
+    background: theme.tokens.alias.Background.Normal,
     borderRadius: 1,
     display: 'flex',
     flexWrap: 'nowrap',

@@ -229,15 +229,97 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
+    const { findAllByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
     const monitorMetricsDisplayItem = await findByText('Metrics');
     const monitorAlertsDisplayItem = await findByText('Alerts');
+    const betaChip = await findAllByTestId('betaChip');
 
     expect(monitorMetricsDisplayItem).toBeVisible();
     expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(betaChip).toHaveLength(2);
+  });
+
+  it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: false,
+      },
+      aclpAlerting: {
+        alertDefinitions: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { queryByTestId, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = queryByText('Metrics');
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+
+    expect(monitorMetricsDisplayItem).toBeNull();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
+  });
+
+  it('should not show Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag does not have any of the properties true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      aclp: {
+        beta: true,
+        enabled: true,
+      },
+      aclpAlerting: {
+        alertDefinitions: false,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
+
+    const { findByTestId, findByText, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics'); // Metrics should be visible
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+    const betaChip = await findByTestId('betaChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(betaChip).toBeVisible();
   });
 
   it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
