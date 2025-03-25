@@ -13,13 +13,12 @@ import {
   handleMultipleError,
 } from './utils';
 
+import type { AlertValidationSchemaProps } from './utils';
 import type {
   APIError,
   Alert,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
-
-import type { AlertValidationSchemaProps } from './utils';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 
 it('test getServiceTypeLabel method', () => {
@@ -234,35 +233,37 @@ describe('getEditSchemaWithEntityIdValidation', () => {
         reason: 'Invalid value.',
       },
     ];
-    
+
     const CREATE_ALERT_ERROR_FIELD_MAP = {
       rule_criteria: 'rule_criteria.rules',
     };
-    
+
     const MULTILINE_ERROR_SEPARATOR = '|';
     const SINGLELINE_ERROR_SEPARATOR = ' ';
-    
+
     const setError = vi.fn();
-    
+
     handleMultipleError(
       errors,
       CREATE_ALERT_ERROR_FIELD_MAP,
       MULTILINE_ERROR_SEPARATOR,
       SINGLELINE_ERROR_SEPARATOR,
-      setError,
+      setError
     );
-    
+
     // Check that setError was called for each field correctly
     expect(setError).toHaveBeenCalledWith('label', {
-      message: 'Label already exists. Label should have less than 100 character. Label should not start with special characters.'
+      message:
+        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
     });
-    
+
     expect(setError).toHaveBeenCalledWith('severity', {
-      message: 'Wrong field.'
+      message: 'Wrong field.',
     });
-    
+
     expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
-      message: 'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.'
+      message:
+        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
     });
-  }); 
+  });
 });

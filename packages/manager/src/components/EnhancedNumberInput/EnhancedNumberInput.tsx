@@ -142,7 +142,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     border: 'none',
   },
   border: 'none',
-  borderRadius: theme.tokens.borderRadius.None,
+  borderRadius: theme.tokens.alias.Radius.Default,
   height: 34,
   minHeight: 'fit-content',
   minWidth: 30,

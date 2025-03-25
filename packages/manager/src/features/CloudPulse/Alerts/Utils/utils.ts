@@ -1,13 +1,10 @@
 import { array, object, string } from 'yup';
 
-import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
-
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   APIError,
   Alert,
-  AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
   EditAlertDefinitionPayload,
@@ -99,7 +96,7 @@ export const getServiceTypeLabel = (
  * @returns The style object for the box used in alert details page
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
-  backgroundColor: theme.tokens.background.Neutral,
+  backgroundColor: theme.tokens.alias.Background.Neutral,
   padding: theme.spacing(3),
 });
 /**
@@ -250,33 +247,6 @@ export const convertAlertDefinitionValues = (
   };
 };
 
-/**
- *
- * @param criterias list of metric criterias to be processed
- * @returns list of metric criterias in processed form
- */
-export const processMetricCriteria = (
-  criterias: AlertDefinitionMetricCriteria[]
-): ProcessedCriteria[] => {
-  return criterias.map(
-    ({
-      aggregate_function: aggregateFunction,
-      label,
-      operator,
-      threshold,
-      unit,
-    }) => {
-      return {
-        label,
-        metricAggregationType: aggregationTypeMap[aggregateFunction],
-        metricOperator: metricOperatorTypeMap[operator],
-        threshold,
-        unit,
-      };
-    }
-  );
-};
-
 export const getCreateSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   createSchema: ObjectSchema<CreateAlertDefinitionForm>
@@ -319,28 +289,28 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
 
 /**
  * Handles multiple API errors and maps them to form fields, setting form errors appropriately.
- * 
+ *
  * @param errors - List of errors returned from the API
- * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors 
- *                        to specific form fields. For example, if the API returns an error for "user.name" but 
+ * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors
+ *                        to specific form fields. For example, if the API returns an error for "user.name" but
  *                        your form field is called "fullName", you would map "user" to "fullName".
  * @param multiLineErrorSeparator - Separator for multiple errors on fields that are rendered explicitly. Ex: @AlertListNoticeMessages component
  * @param singleLineErrorSeparator - Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
  * @param setError - React Hook Form's setError function to register errors with the form
- * 
+ *
  * @example
  * // Example usage:
  * const errors = [
  *   { field: "email", reason: "Email already exists" },
  *   { field: "password.length", reason: "Password is too short" }
  * ];
- * 
+ *
  * // Map API field names to form field paths
  * const errorFieldMap = {
  *   "email": "userEmail" as FieldPath<RegisterForm>,
  *   "password": "userPassword" as FieldPath<RegisterForm>
  * };
- * 
+ *
  * handleMultipleError(
  *   errors,
  *   errorFieldMap,

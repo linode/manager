@@ -1,12 +1,12 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, Theme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import {
@@ -17,7 +17,6 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -36,6 +35,8 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
+import { MULTILINE_ERROR_SEPARATOR } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 
 export interface AlertResourcesProp {
   /**
@@ -93,7 +94,7 @@ export interface AlertResourcesProp {
   serviceType?: AlertServiceType;
 }
 
-export type SelectUnselectAll = 'Select All' | 'Unselect All';
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -281,15 +282,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: SelectUnselectAll) => {
+    (action: SelectDeselectAll) => {
       if (!resources) {
         return;
       }
 
       let currentSelections: string[] = [];
 
-      if (action === 'Unselect All') {
-        // Unselect all
+      if (action === 'Deselect All') {
+        // Deselect all
         setSelectedResources([]);
       } else {
         // Select all
@@ -415,15 +416,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        <AlertsNoticeMessage text={errorText} variant="error" />
-        <AlertsNoticeMessage
-          text={
-            maxSelectionCount !== undefined
-              ? `You can select up to ${maxSelectionCount} resources.`
-              : undefined
-          }
-          variant="warning"
-        />
+        {errorText?.length && (
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              errorMessage={errorText}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              variant="error"
+            />
+          </Grid>
+        )}
+        {maxSelectionCount !== undefined && (
+          <Grid item md={12}>
+            <AlertListNoticeMessages
+              errorMessage={`You can select up to ${maxSelectionCount} resources.`}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              variant="warning"
+            />
+          </Grid>
+        )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&

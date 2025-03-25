@@ -1,25 +1,26 @@
 import {
-  useCreateIPv6RangeMutation,
   useAllocateIPMutation,
+  useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
   Divider,
+  Drawer,
+  FormControlLabel,
   Notice,
   Radio,
   RadioGroup,
   Stack,
   Tooltip,
-  FormControlLabel,
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 
 import { ExplainerCopy } from './ExplainerCopy';
 
@@ -159,7 +160,12 @@ export const AddIPDrawer = (props: Props) => {
       : null;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add an IP Address">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add an IP Address"
+    >
       <Stack spacing={2}>
         <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
