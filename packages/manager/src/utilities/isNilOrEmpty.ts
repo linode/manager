@@ -1,4 +1,8 @@
 export const isNilOrEmpty = (v: null | number | object | string | undefined) =>
-  v == null || // covers for null and undefined
+  v === null ||
+  v === undefined ||
   v === '' ||
-  (typeof v === 'object' && Object.keys(v || {}).length === 0);
+  (typeof v === 'object' &&
+    (v instanceof Set || v instanceof Map
+      ? v.size === 0
+      : Object.keys(v || {}).length === 0));
