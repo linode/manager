@@ -5,6 +5,7 @@ import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
   APIError,
   Alert,
+  AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
   EditAlertDefinitionPayload,
@@ -16,6 +17,7 @@ import type { Theme } from '@mui/material';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 interface AlertChipBorderProps {
   /**
@@ -269,6 +271,33 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions: triggerConditions,
   };
+};
+
+/**
+ *
+ * @param criterias list of metric criterias to be processed
+ * @returns list of metric criterias in processed form
+ */
+export const processMetricCriteria = (
+  criterias: AlertDefinitionMetricCriteria[]
+): ProcessedCriteria[] => {
+  return criterias.map(
+    ({
+      aggregate_function: aggregateFunction,
+      label,
+      operator,
+      threshold,
+      unit,
+    }) => {
+      return {
+        label,
+        metricAggregationType: aggregationTypeMap[aggregateFunction],
+        metricOperator: metricOperatorTypeMap[operator],
+        threshold,
+        unit,
+      };
+    }
+  );
 };
 
 export const getCreateSchemaWithEntityIdValidation = (

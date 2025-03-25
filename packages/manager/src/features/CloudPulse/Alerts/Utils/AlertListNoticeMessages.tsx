@@ -51,7 +51,7 @@ export const AlertListNoticeMessages = (
     <Notice data-alert-notice sx={sx} variant={variant}>
       <Typography
         sx={(theme) => ({
-          fontFamily: theme.tokens.typography.Body.Bold,
+          fontFamily: theme.tokens.alias.Typography.Body.Bold,
         })}
         data-testid="alert_message_notice"
       >

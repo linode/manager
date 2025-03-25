@@ -25,12 +25,7 @@ interface AlertResourceNoticeProps {
 
 export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
-    const {
-      handleSelectionChange,
-      maxSelectionCount,
-      selectedResources,
-      totalResources,
-    } = props;
+    const { handleSelectionChange, selectedResources, totalResources } = props;
     const isSelectAll = selectedResources !== totalResources;
     const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
 
