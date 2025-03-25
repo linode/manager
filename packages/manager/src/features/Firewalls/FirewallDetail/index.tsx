@@ -6,7 +6,7 @@ import {
   useMutateFirewall,
   useProfile,
 } from '@linode/queries';
-import { Box, Chip, CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { Chip, CircleProgress, ErrorState, Paper } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -193,29 +193,26 @@ export const FirewallDetail = () => {
           <Paper
             sx={(theme) => ({
               alignItems: 'center',
+              columnGap: 2,
               display: 'flex',
               flexWrap: 'wrap',
-              gap: 2,
               margin: `${theme.spacingFunction(8)} 0`,
               padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(
                 16
               )}`,
+              rowGap: 1,
             })}
           >
             <Typography>
               <strong>Default</strong>
             </Typography>
-            <Box>
-              {defaultForEntities.map((defaultEntity) => (
-                <Chip
-                  label={
-                    FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]
-                  }
-                  key={defaultEntity}
-                  size="small"
-                />
-              ))}
-            </Box>
+            {defaultForEntities.map((defaultEntity) => (
+              <Chip
+                key={defaultEntity}
+                label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
+                size="small"
+              />
+            ))}
           </Paper>
         )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
