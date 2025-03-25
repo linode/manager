@@ -62,7 +62,7 @@ export default defineConfig({
     },
     indexHtmlFile: './cypress/support/component/index.html',
     supportFile: './cypress/support/component/setup.tsx',
-    specPattern: './cypress/component/components/beta-chip.spec.tsx',
+    specPattern: './cypress/component/**/*.spec.tsx',
     viewportWidth: 500,
     viewportHeight: 500,
 
@@ -83,7 +83,7 @@ export default defineConfig({
 
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/core/longview/longview.spec.{ts,tsx}',
+    specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
 
     setupNodeEvents(cypressOn, config) {
       const on = cypressOnFix(cypressOn);
