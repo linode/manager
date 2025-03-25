@@ -13,7 +13,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
@@ -59,13 +58,8 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const publicIPv4Type = isLinodeInterfacesEnabled
-    ? 'Public – IPv4'
-    : 'IPv4 – Public';
-
   const isOnlyPublicIP =
-    ips?.ipv4.public.length === 1 && type === publicIPv4Type;
+    ips?.ipv4.public.length === 1 && type === 'Public – IPv4';
 
   return (
     <StyledTableRow
