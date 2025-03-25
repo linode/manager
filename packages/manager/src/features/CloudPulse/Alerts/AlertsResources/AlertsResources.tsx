@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -37,7 +37,6 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 export interface AlertResourcesProp {
   /**
@@ -128,6 +127,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = useRegionsQuery();
 
   const flags = useFlags();
+  const theme = useTheme();
 
   // Validate launchDarkly region ids with the ids from regionOptions prop
   const supportedRegionIds = getSupportedRegionIds(
@@ -338,16 +338,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
-  const noticeStyles = (theme: Theme) => ({
-    alignItems: 'center',
-    background: theme.tokens.alias.Background.Normal,
-    borderRadius: 1,
-    display: 'flex',
-    flexWrap: 'nowrap',
-    marginBottom: 0,
-    padding: theme.spacing(2),
-  });
-
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -428,9 +418,17 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {errorText?.length && (
           <Grid item md={12}>
             <AlertListNoticeMessages
+              style={{
+                alignItems: 'center',
+                background: theme.tokens.alias.Background.Normal,
+                borderRadius: 1,
+                display: 'flex',
+                flexWrap: 'nowrap',
+                marginBottom: 0,
+                padding: theme.tokens.spacing.S16,
+              }}
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
-              sx={noticeStyles}
               variant="error"
             />
           </Grid>
@@ -438,9 +436,17 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {maxSelectionCount !== undefined && (
           <Grid item md={12}>
             <AlertListNoticeMessages
+              style={{
+                alignItems: 'center',
+                background: theme.tokens.alias.Background.Normal,
+                borderRadius: 1,
+                display: 'flex',
+                flexWrap: 'nowrap',
+                marginBottom: 0,
+                padding: theme.tokens.spacing.S16,
+              }}
               errorMessage={`You can select up to ${maxSelectionCount} resources.`}
               separator={MULTILINE_ERROR_SEPARATOR}
-              sx={noticeStyles}
               variant="warning"
             />
           </Grid>

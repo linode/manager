@@ -1,10 +1,9 @@
 import { List, ListItem, Notice, Typography } from '@linode/ui';
 import React from 'react';
 
-import type { NoticeVariant } from '@linode/ui';
-import type { SxProps } from '@mui/material';
+import type { NoticeProps } from '@linode/ui';
 
-interface AlertListNoticeMessagesProps {
+interface AlertListNoticeMessagesProps extends NoticeProps {
   /**
    * The error message to display, potentially containing multiple errors
    */
@@ -13,25 +12,17 @@ interface AlertListNoticeMessagesProps {
    * The separator used to split the error message into individual errors
    */
   separator: string;
-  /**
-   * Additional styles to apply for the Notice component
-   */
-  sx?: SxProps;
-  /**
-   * The visual variant of the notice (e.g., 'error', 'warning', 'success')
-   */
-  variant: NoticeVariant;
 }
 
 export const AlertListNoticeMessages = (
   props: AlertListNoticeMessagesProps
 ) => {
-  const { errorMessage, separator, sx, variant } = props;
+  const { errorMessage, separator, style, variant } = props;
   const errorList = errorMessage.split(separator);
 
   if (errorList.length > 1) {
     return (
-      <Notice data-alert-notice sx={sx} variant={variant}>
+      <Notice data-alert-notice style={style} variant={variant}>
         <List sx={{ listStyleType: 'disc', pl: 1.5 }}>
           {errorList.map((error, index) => (
             <ListItem
@@ -48,7 +39,7 @@ export const AlertListNoticeMessages = (
   }
 
   return (
-    <Notice data-alert-notice sx={sx} variant={variant}>
+    <Notice data-alert-notice style={style} variant={variant}>
       <Typography
         sx={(theme) => ({
           fontFamily: theme.tokens.font.FontWeight.Bold,
