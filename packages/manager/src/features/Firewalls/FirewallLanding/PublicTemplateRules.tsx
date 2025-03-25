@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Typography } from '@linode/ui';
+import { Box, List, ListItem, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { STRENGTHEN_TEMPLATE_RULES } from './constants';
@@ -8,22 +8,21 @@ import type { Theme } from '@mui/material';
 export const PublicTemplateRules = () => {
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(24) })}>
-        Allows for login with SSH, and regular networking control data.
-      </Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        {STRENGTHEN_TEMPLATE_RULES}
-      </Typography>
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.tokens.alias.Background.Neutral,
-          marginTop: theme.spacingFunction(16),
-          padding: theme.spacingFunction(16),
-        })}
-        data-testid="public-template-info"
-      >
-        {sharedTemplateRules}
-      </Box>
+      <Stack marginTop={3} spacing={2}>
+        <Typography>
+          Allows for login with SSH, and regular networking control data.
+        </Typography>
+        <Typography>{STRENGTHEN_TEMPLATE_RULES}</Typography>
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.tokens.alias.Background.Neutral,
+            padding: theme.spacingFunction(16),
+          })}
+          data-testid="public-template-info"
+        >
+          {sharedTemplateRules}
+        </Box>
+      </Stack>
       {sharedTemplatePolicies}
     </>
   );
@@ -31,7 +30,6 @@ export const PublicTemplateRules = () => {
 
 const templateRuleStyling = (theme: Theme) => ({
   backgroundColor: theme.tokens.alias.Background.Neutral,
-  marginTop: theme.spacingFunction(8),
   padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(8)}`,
 });
 
@@ -67,7 +65,7 @@ export const sharedTemplateRules = (
 );
 
 export const sharedTemplatePolicies = (
-  <>
+  <Stack marginTop={1} spacing={1}>
     <Box
       sx={(theme) => ({
         ...templateRuleStyling(theme),
@@ -84,5 +82,5 @@ export const sharedTemplatePolicies = (
         Default Outbound Policy: ACCEPT
       </Typography>
     </Box>
-  </>
+  </Stack>
 );
