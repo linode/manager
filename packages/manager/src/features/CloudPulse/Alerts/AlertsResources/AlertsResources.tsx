@@ -429,17 +429,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {errorText?.length && (
           <Grid item md={12}>
             <AlertListNoticeMessages
-              sx={(theme: Theme) => ({
-                alignItems: 'center',
-                background: theme.tokens.background.Normal,
-                borderRadius: 1,
-                display: 'flex',
-                flexWrap: 'nowrap',
-                marginBottom: 0,
-                padding: theme.tokens.spacing.S16,
-              })}
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
+              sx={noticeStyles}
               variant="error"
             />
           </Grid>

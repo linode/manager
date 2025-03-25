@@ -2,7 +2,7 @@ import { List, ListItem, Notice, Typography } from '@linode/ui';
 import React from 'react';
 
 import type { NoticeVariant } from '@linode/ui';
-import { SxProps } from '@mui/material';
+import type { SxProps } from '@mui/material';
 
 interface AlertListNoticeMessagesProps {
   /**
@@ -31,7 +31,7 @@ export const AlertListNoticeMessages = (
 
   if (errorList.length > 1) {
     return (
-      <AlertNoticeWrapper sx={sx} variant={variant}>
+      <Notice data-alert-notice sx={sx} variant={variant}>
         <List sx={{ listStyleType: 'disc', pl: 1.5 }}>
           {errorList.map((error, index) => (
             <ListItem
@@ -43,12 +43,12 @@ export const AlertListNoticeMessages = (
             </ListItem>
           ))}
         </List>
-      </AlertNoticeWrapper>
+      </Notice>
     );
   }
 
   return (
-    <AlertNoticeWrapper sx={sx} variant={variant}>
+    <Notice data-alert-notice sx={sx} variant={variant}>
       <Typography
         sx={(theme) => ({
           fontFamily: theme.tokens.typography.Body.Bold,
@@ -57,25 +57,6 @@ export const AlertListNoticeMessages = (
       >
         {errorList[0]}
       </Typography>
-    </AlertNoticeWrapper>
-  );
-};
-
-/**
- * Wrapper component for displaying error messages within a Notice component
- */
-export const AlertNoticeWrapper = ({
-  children,
-  sx,
-  variant,
-}: {
-  children: React.ReactNode;
-  sx?: SxProps;
-  variant: NoticeVariant;
-}) => {
-  return (
-    <Notice sx={sx} variant={variant}>
-      {children}
     </Notice>
   );
 };
