@@ -23,7 +23,6 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import type { LinodeCreateType } from './types';
 import type {
   AccountSettings,
   CreateLinodeRequest,
@@ -33,6 +32,7 @@ import type {
   Profile,
   StackScript,
 } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
 

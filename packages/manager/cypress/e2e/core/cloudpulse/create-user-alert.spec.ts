@@ -2,6 +2,7 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -26,7 +27,6 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';

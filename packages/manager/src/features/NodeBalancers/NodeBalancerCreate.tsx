@@ -37,6 +37,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -97,6 +98,7 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
+  const flags = useFlags();
   const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
@@ -543,6 +545,7 @@ const NodeBalancerCreate = () => {
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}
+              flags={flags}
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}

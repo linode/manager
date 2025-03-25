@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -5,8 +6,8 @@ import { useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 
 import { ImageRegionRow } from './ImageRegionRow';
 
@@ -16,8 +17,8 @@ import type {
   Region,
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
 import type { Resolver } from 'react-hook-form';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface Props {
   image: Image | undefined;
@@ -30,6 +31,8 @@ interface Context {
 
 export const ManageImageReplicasForm = (props: Props) => {
   const { image, onClose } = props;
+
+  const flags = useFlags();
 
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
 
@@ -115,6 +118,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
+        flags={flags}
         ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         label="Add Regions"
         placeholder="Select regions or type to search"

@@ -1,11 +1,15 @@
-import { Box, ListItem, SelectedIcon, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
+import { Box } from '../Box';
+import { ListItem } from '../ListItem';
+import { SelectedIcon } from '../Autocomplete';
+import { Tooltip } from '../Tooltip';
+
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
-export interface ListItemProps<T> {
+export interface ListItemOptionProps<T> {
   children?: React.ReactNode;
   disabledOptions?: DisableItemOption;
   item: T & { id: number | string };
@@ -34,7 +38,7 @@ export const ListItemOption = <T,>({
   maxHeight,
   props,
   selected,
-}: ListItemProps<T>) => {
+}: ListItemOptionProps<T>) => {
   const { className, onClick, ...rest } = props;
   const isItemOptionDisabled = Boolean(disabledOptions);
   const itemOptionDisabledReason = disabledOptions?.reason;

@@ -83,7 +83,7 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -252,6 +252,7 @@ export const Region = React.memo(() => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
+        flags={flags}
         onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

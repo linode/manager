@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -21,7 +22,6 @@ import {
   accountFactory,
   objectStorageBucketFactory,
   objectStorageKeyFactory,
-  regionFactory,
 } from 'src/factories';
 
 import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4';

@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { regionFactory } from '@linode/utilities';
 import {
   createLinodeRequestFactory,
   firewallFactory,
   linodeFactory,
-  regionFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
