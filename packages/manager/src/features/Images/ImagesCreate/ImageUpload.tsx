@@ -267,6 +267,7 @@ export const ImageUpload = () => {
                   currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
+                  flags={flags}
                   ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}

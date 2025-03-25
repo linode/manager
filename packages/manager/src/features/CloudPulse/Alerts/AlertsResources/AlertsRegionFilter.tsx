@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { Region } from '@linode/api-v4';
 
@@ -19,6 +20,7 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
   const { handleSelectionChange, regionOptions } = props;
 
   const [selectedRegion, setSelectedRegion] = React.useState<Region[]>([]);
+  const flags = useFlags();
 
   const handleRegionChange = React.useCallback(
     (regionIds: string[]) => {
@@ -46,6 +48,7 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       }}
       currentCapability={undefined} // this is a required property, no specific capability required here
       disableSelectAll
+      flags={flags}
       isClearable
       label="Select Regions"
       limitTags={1}
