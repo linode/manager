@@ -159,7 +159,7 @@ export const LinodeSelect = (
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
-      slotProps={{ chip: { deleteIcon: CloseIcon } }}
+      slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
     />
   );
