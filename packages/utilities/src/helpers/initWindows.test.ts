@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { initWindows } from './initWindows';
 
 const timezone1 = 'America/New_York';
