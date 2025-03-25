@@ -1,4 +1,5 @@
 import { Duration } from 'luxon';
+
 export const formatUptime = (uptime: number) => {
   /**
    * We get uptime from the Longview API in

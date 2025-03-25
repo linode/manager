@@ -24,6 +24,7 @@ export * from './InputAdornment';
 export * from './InputLabel';
 export * from './List';
 export * from './ListItem';
+export * from './ListItemOption';
 export * from './Notice';
 export * from './Paper';
 export * from './Radio';
