@@ -6,7 +6,7 @@ import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
 import '@fontsource/nunito-sans/400-italic.css';
 import { Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 
@@ -26,14 +26,14 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+  useProfile,
+} from '@linode/queries';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useProfile } from './queries/profile/profile';
 import { useStyles } from './Root.styles';
 
 export const Root = () => {

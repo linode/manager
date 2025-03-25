@@ -23,8 +23,8 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/account/account', () => {
-  const actual = vi.importActual('src/queries/account/account');
+vi.mock('@linode/queries', () => {
+  const actual = vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
@@ -134,6 +134,41 @@ describe('getPlanSelectionsByPlanType', () => {
     const actualKeys = Object.keys(actual);
 
     expect(actualKeys).toEqual(expectedOrder);
+  });
+
+  it('should filter out RTX6000 plans when isLKE is true', () => {
+    const rtx6000Plan = typeFactory.build({
+      class: 'gpu',
+      id: 'g1-gpu-rtx6000-1',
+    });
+    const rtx4000Plan = typeFactory.build({
+      class: 'gpu',
+      id: 'g1-gpu-rtx4000-1',
+    });
+
+    // With isLKE: true, RTX6000 should be filtered out
+    const actualWithLKE = getPlanSelectionsByPlanType(
+      [rtx6000Plan, rtx4000Plan],
+      { isLKE: true }
+    );
+
+    // With isLKE: false or default, RTX6000 should remain
+    const actualWithoutLKE = getPlanSelectionsByPlanType(
+      [rtx6000Plan, rtx4000Plan],
+      { isLKE: false }
+    );
+
+    const actualWithDefault = getPlanSelectionsByPlanType([
+      rtx6000Plan,
+      rtx4000Plan,
+    ]);
+
+    // RTX6000 should be filtered out in LKE context
+    expect(actualWithLKE.gpu).toEqual([rtx4000Plan]);
+
+    // RTX6000 should remain in non-LKE context
+    expect(actualWithoutLKE.gpu).toEqual([rtx6000Plan, rtx4000Plan]);
+    expect(actualWithDefault.gpu).toEqual([rtx6000Plan, rtx4000Plan]);
   });
 });
 

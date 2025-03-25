@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 

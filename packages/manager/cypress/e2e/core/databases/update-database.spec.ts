@@ -2,14 +2,11 @@
  * @file DBaaS integration tests for update operations.
  */
 
+import { accountFactory } from '@src/factories';
 import {
-  randomLabel,
-  randomNumber,
-  randomIp,
-  randomString,
-} from 'support/util/random';
-import { databaseFactory } from 'src/factories/databases';
-import { ui } from 'support/ui';
+  databaseConfigurations,
+  mockDatabaseNodeTypes,
+} from 'support/constants/databases';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
@@ -20,13 +17,18 @@ import {
   mockUpdateDatabase,
   mockUpdateProvisioningDatabase,
 } from 'support/intercepts/databases';
-import {
-  databaseClusterConfiguration,
-  databaseConfigurations,
-  mockDatabaseNodeTypes,
-} from 'support/constants/databases';
-import { accountFactory } from '@src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { ui } from 'support/ui';
+import {
+  randomIp,
+  randomLabel,
+  randomNumber,
+  randomString,
+} from 'support/util/random';
+
+import { databaseFactory } from 'src/factories/databases';
+
+import type { databaseClusterConfiguration } from 'support/constants/databases';
 
 /**
  * Updates a database cluster's label.
@@ -46,11 +48,9 @@ const updateDatabaseLabel = (originalLabel: string, newLabel: string) => {
   cy.get('[data-qa-edit-field="true"]')
     .should('be.visible')
     .within(() => {
-      cy.get('[data-testid="textfield-input"]')
-        .should('be.visible')
-        .click()
-        .clear()
-        .type(newLabel);
+      cy.get('[data-testid="textfield-input"]').should('be.visible').click();
+      cy.focused().clear();
+      cy.focused().type(newLabel);
 
       cy.get('[data-qa-save-edit="true"]').should('be.visible').click();
     });
@@ -108,9 +108,8 @@ const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
         }
         cy.findByLabelText(
           `Allowed IP Addresses or Ranges ip-address-${index + existingIps}`
-        )
-          .click()
-          .type(allowedIp);
+        ).click();
+        cy.focused().type(allowedIp);
       });
 
       ui.buttonGroup
@@ -167,7 +166,7 @@ describe('Update database clusters', () => {
       ],
     });
     mockAppendFeatureFlags({
-      dbaasV2: { enabled: false, beta: false },
+      dbaasV2: { beta: false, enabled: false },
     });
     mockGetAccount(mockAccount);
   });
@@ -189,14 +188,14 @@ describe('Update database clusters', () => {
           const newAllowedIp = randomIp();
           const initialPassword = randomString(16);
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: initialLabel,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            status: 'active',
             allow_list: [allowedIp],
+            engine: configuration.dbType,
+            id: randomNumber(1, 1000),
+            label: initialLabel,
             platform: 'rdbms-legacy',
+            region: configuration.region.id,
+            status: 'active',
+            type: configuration.linodeType,
           });
 
           mockGetDatabase(database).as('getDatabase');
@@ -301,18 +300,18 @@ describe('Update database clusters', () => {
           const updateAttemptLabel = randomLabel();
           const allowedIp = randomIp();
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: initialLabel,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            status: 'provisioning',
             allow_list: [allowedIp],
+            engine: configuration.dbType,
             hosts: {
               primary: undefined,
               secondary: undefined,
             },
+            id: randomNumber(1, 1000),
+            label: initialLabel,
             platform: 'rdbms-legacy',
+            region: configuration.region.id,
+            status: 'provisioning',
+            type: configuration.linodeType,
           });
 
           const errorMessage =

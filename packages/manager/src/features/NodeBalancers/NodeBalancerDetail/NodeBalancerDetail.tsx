@@ -1,4 +1,9 @@
-import { CircleProgress, Notice } from '@linode/ui';
+import {
+  useGrants,
+  useNodeBalancerQuery,
+  useNodebalancerUpdateMutation,
+} from '@linode/queries';
+import { CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
@@ -8,7 +13,6 @@ import {
   useParams,
 } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -16,11 +20,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import {
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';

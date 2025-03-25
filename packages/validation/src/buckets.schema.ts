@@ -6,21 +6,21 @@ export const CreateBucketSchema = object()
   .shape(
     {
       label: string()
-        .required('Label is required.')
-        .min(3, 'Label must be between 3 and 63 characters.')
-        .matches(/^\S*$/, 'Label must not contain spaces.')
+        .required('Bucket name is required.')
+        .min(3, 'Bucket name must be between 3 and 63 characters.')
+        .matches(/^\S*$/, 'Bucket name must not contain spaces.')
         .matches(
           /^[a-z0-9].*[a-z0-9]$/,
-          'Label must start and end with a letter or number.'
+          'Bucket name must start and end with a lowercase letter or number.'
         )
         .matches(
           /^(?!.*[.-]{2})[a-z0-9.-]+$/,
-          'Label must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
+          'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
         )
-        .max(63, 'Label must be between 3 and 63 characters.')
+        .max(63, 'Bucket name must be between 3 and 63 characters.')
         .test(
           'unique-label',
-          'A bucket with this label already exists in your selected region',
+          'A bucket with this name already exists in your selected region',
           (value, context) => {
             const { cluster, region } = context.parent;
             const buckets = context.options.context?.buckets;

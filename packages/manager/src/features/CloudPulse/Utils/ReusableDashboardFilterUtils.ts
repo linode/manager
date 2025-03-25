@@ -110,9 +110,10 @@ export const checkIfFilterNeededInMetricsCall = (
     } = configuration;
 
     return (
+      // Indicates if this filter should be included in the metrics call
       configFilterKey === filterKey &&
       Boolean(isFilterable) &&
-      neededInServicePage // Indicates if this filter should be included in the metrics call
+      neededInServicePage
     );
   });
 };

@@ -1,9 +1,10 @@
-import type { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
+
+import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('create image (e2e)', () => {
@@ -31,8 +32,8 @@ describe('create image (e2e)', () => {
         .should('be.visible')
         .should('be.enabled')
         .should('have.attr', 'placeholder', 'Select a Linode')
-        .click()
-        .type(linode.label);
+        .click();
+      cy.focused().type(linode.label);
 
       // Select the Linode
       ui.autocompletePopper
@@ -54,8 +55,8 @@ describe('create image (e2e)', () => {
       cy.findByLabelText('Label')
         .should('be.enabled')
         .should('be.visible')
-        .clear()
-        .type(label);
+        .clear();
+      cy.focused().type(label);
 
       // Give the Image a description
       cy.findByLabelText('Description')

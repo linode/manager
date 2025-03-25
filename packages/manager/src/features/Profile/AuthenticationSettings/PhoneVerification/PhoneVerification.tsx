@@ -13,7 +13,7 @@ import {
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile/profile';
+} from '@linode/queries';
 
 import { countries } from './countries';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';

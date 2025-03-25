@@ -1,15 +1,15 @@
 import { profileFactory, securityQuestionsFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import { verificationBannerNotice } from 'support/constants/user';
 import {
   mockGetUser,
   mockGetUserGrants,
   mockGetUsers,
 } from 'support/intercepts/account';
 import { mockGetSecurityQuestions } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
 import { mockGetProfile } from 'support/intercepts/profile';
-import { verificationBannerNotice } from 'support/constants/user';
+import { ui } from 'support/ui';
 
 describe('User verification banner', () => {
   /*
@@ -18,15 +18,15 @@ describe('User verification banner', () => {
    */
   it('can show up when a child user has not associated a phone number or set up security questions for their account', () => {
     const mockChildProfile = profileFactory.build({
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: null,
     });
 
     const mockChildUser = accountUserFactory.build({
       restricted: false,
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: null,
     });
 
@@ -85,15 +85,15 @@ describe('User verification banner', () => {
    */
   it('can show up when a child user has set up security questions but not a phone number for their account', () => {
     const mockChildProfile = profileFactory.build({
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: null,
     });
 
     const mockChildUser = accountUserFactory.build({
       restricted: false,
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: null,
     });
 
@@ -162,15 +162,15 @@ describe('User verification banner', () => {
    */
   it('does not show up when a child user adds a phone number and sets up security questions', () => {
     const mockChildProfile = profileFactory.build({
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: '+15555555555',
     });
 
     const mockChildUser = accountUserFactory.build({
       restricted: false,
-      username: 'child-user',
       user_type: 'child',
+      username: 'child-user',
       verified_phone_number: '+15555555555',
     });
 

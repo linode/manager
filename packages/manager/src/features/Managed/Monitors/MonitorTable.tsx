@@ -1,5 +1,6 @@
 import { Button } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useDialog } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -14,7 +15,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialog } from 'src/hooks/useDialog';
 import {
   useAllManagedContactsQuery,
   useAllManagedCredentialsQuery,
@@ -174,9 +174,20 @@ export const MonitorTable = () => {
   return (
     <>
       <DocumentTitleSegment segment="Monitors" />
-      <Grid alignItems="flex-end" container justifyContent="flex-end">
+      <Grid
+        container
+        sx={{
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
+        }}
+      >
         <Grid>
-          <Grid alignItems="flex-end" container>
+          <Grid
+            container
+            sx={{
+              alignItems: 'flex-end',
+            }}
+          >
             <StyledGrid>
               <Button
                 buttonType="primary"

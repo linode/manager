@@ -86,6 +86,14 @@ export interface SelectProps<T extends { label: string }>
    */
   label: string;
   /**
+   * The props for the ListItem component.
+   */
+  listItemProps?: (
+    value: T
+  ) => {
+    dataAttributes?: Record<string, T | boolean | string>;
+  };
+  /**
    * The callback function that is invoked when the value changes.
    */
   onChange?: (_event: React.SyntheticEvent, _value: T) => void;
@@ -124,6 +132,7 @@ export const Select = <T extends SelectOption = SelectOption>(
     creatable = false,
     hideLabel = false,
     label,
+    listItemProps,
     loading = false,
     noOptionsText = 'No options available',
     onChange,
@@ -171,6 +180,7 @@ export const Select = <T extends SelectOption = SelectOption>(
       }}
       renderInput={(params) => (
         <TextField
+          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           {...params}
           {...textFieldProps}
@@ -181,7 +191,7 @@ export const Select = <T extends SelectOption = SelectOption>(
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress size="sm" />
+                    <CircleProgress noPadding size="xs" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}
@@ -211,6 +221,9 @@ export const Select = <T extends SelectOption = SelectOption>(
         return (
           <ListItem
             {...rest}
+            {...(option.create || option.noOptions
+              ? undefined
+              : listItemProps?.(option as T)?.dataAttributes)}
             sx={
               option.noOptions
                 ? {

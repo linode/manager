@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -11,7 +11,7 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -126,11 +126,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     }
 
     return (
-      <Grid key={link.display} xs={12}>
+      <Grid key={link.display} size={12}>
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={onClose}
-          style={{ font: theme.tokens.typography.Body.Regular }}
+          style={{ font: theme.tokens.alias.Typography.Body.Regular }}
           to={link.href}
         >
           {link.display}
@@ -158,8 +158,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       slotProps={{
         paper: {
           sx: (theme) => ({
-            paddingX: theme.tokens.spacing[70],
-            paddingY: theme.tokens.spacing[60],
+            paddingX: theme.tokens.spacing.S24,
+            paddingY: theme.tokens.spacing.S16,
           }),
         },
       }}
@@ -174,16 +174,16 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     >
       <Stack
         data-qa-user-menu
-        gap={(theme) => theme.tokens.spacing[60]}
+        gap={(theme) => theme.tokens.spacing.S16}
         minWidth={250}
       >
-        <Stack display="flex" gap={(theme) => theme.tokens.spacing[40]}>
+        <Stack display="flex" gap={(theme) => theme.tokens.spacing.S8}>
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography>Current account:</Typography>
           )}
           <Typography
             sx={(theme) => ({
-              font: theme.tokens.typography.Heading.M,
+              font: theme.tokens.alias.Typography.Heading.M,
             })}
           >
             {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
@@ -205,10 +205,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           <Heading>My Profile</Heading>
           <Divider />
           <Grid columnSpacing={2} container rowSpacing={1}>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(0, 4).map(renderLink)}
             </Grid>
-            <Grid container direction="column" wrap="nowrap" xs={6}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
               {profileLinks.slice(4).map(renderLink)}
             </Grid>
           </Grid>
@@ -218,8 +218,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             <Heading>Account</Heading>
             <Divider />
             <Stack
-              gap={(theme) => theme.tokens.spacing[40]}
-              mt={(theme) => theme.tokens.spacing[40]}
+              gap={(theme) => theme.tokens.spacing.S8}
+              mt={(theme) => theme.tokens.spacing.S8}
             >
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (
@@ -227,7 +227,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
                     data-testid={`menu-item-${menuLink.display}`}
                     key={menuLink.display}
                     onClick={onClose}
-                    style={{ font: theme.tokens.typography.Body.Regular }}
+                    style={{ font: theme.tokens.alias.Typography.Body.Regular }}
                     to={menuLink.href}
                   >
                     {menuLink.display}
@@ -243,7 +243,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 };
 
 const Heading = styled(Typography)(({ theme }) => ({
-  font: theme.tokens.typography.Heading.Overline,
-  letterSpacing: theme.tokens.typography.Heading.OverlineLetterSpacing,
-  textTransform: theme.tokens.typography.Heading.OverlineTextCase,
+  font: theme.tokens.alias.Typography.Heading.Overline,
+  letterSpacing: theme.tokens.alias.Typography.Heading.OverlineLetterSpacing,
+  textTransform: theme.tokens.alias.Typography.Heading.OverlineTextCase,
 }));

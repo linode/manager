@@ -1,5 +1,5 @@
 import { Autocomplete, Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
@@ -56,11 +56,13 @@ export const DatabaseEngineSelect = (props: Props) => {
         return (
           <li {...rest} data-testid="db-engine-option" key={key}>
             <Grid
-              alignItems="center"
               container
               direction="row"
-              justifyContent="flex-start"
               spacing={2}
+              sx={{
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}
             >
               <Grid className="py0">{option.flag}</Grid>
               <Grid>{option.label}</Grid>

@@ -1,4 +1,4 @@
-import { sshKeyFactory } from 'src/factories';
+import { sshFormatErrorMessage } from 'support/constants/account';
 import {
   mockCreateSSHKey,
   mockCreateSSHKeyError,
@@ -8,7 +8,8 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { sshFormatErrorMessage } from 'support/constants/account';
+
+import { sshKeyFactory } from 'src/factories';
 
 describe('SSH keys', () => {
   /*
@@ -21,11 +22,11 @@ describe('SSH keys', () => {
    */
   it('adds an SSH key via Profile page as expected', () => {
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const mockSSHKey = sshKeyFactory.build({
       label: randomLabel(),
@@ -57,7 +58,8 @@ describe('SSH keys', () => {
         cy.findByText('Label is required.');
 
         // When a user tries to create an SSH key without the SSH Public Key, a form validation error appears
-        cy.get('[id="label"]').clear().type(mockSSHKey.label);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(mockSSHKey.label);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -66,7 +68,8 @@ describe('SSH keys', () => {
         cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
         // An alert displays when the format of SSH key is incorrect
-        cy.get('[id="ssh-public-key"]').clear().type('WrongFormatSshKey');
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type('WrongFormatSshKey');
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -74,7 +77,8 @@ describe('SSH keys', () => {
           .click();
         cy.findAllByText(sshFormatErrorMessage).should('be.visible');
 
-        cy.get('[id="ssh-public-key"]').clear().type(mockSSHKey.ssh_key);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -101,8 +105,10 @@ describe('SSH keys', () => {
         cy.get('[id="ssh-public-key"]').should('be.empty');
 
         // Create a new ssh key
-        cy.get('[id="label"]').clear().type(mockSSHKey.label);
-        cy.get('[id="ssh-public-key"]').clear().type(mockSSHKey.ssh_key);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(mockSSHKey.label);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type(mockSSHKey.ssh_key);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -127,11 +133,11 @@ describe('SSH keys', () => {
     const errorMessage = 'failed to add an SSH key.';
     const sshKeyLabel = randomLabel();
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const sshPublicKey = `ssh-rsa e2etestkey${randomKey} e2etest@linode`;
 
@@ -157,8 +163,10 @@ describe('SSH keys', () => {
         cy.get('[id="ssh-public-key"]').should('be.empty');
 
         // Create a new ssh key
-        cy.get('[id="label"]').clear().type(sshKeyLabel);
-        cy.get('[id="ssh-public-key"]').clear().type(sshPublicKey);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(sshKeyLabel);
+        cy.get('[id="ssh-public-key"]').clear();
+        cy.focused().type(sshPublicKey);
         ui.button
           .findByTitle('Add Key')
           .should('be.visible')
@@ -180,11 +188,11 @@ describe('SSH keys', () => {
    */
   it('updates an SSH key via Profile page as expected', () => {
     const randomKey = randomString(400, {
-      uppercase: true,
       lowercase: true,
       numbers: true,
       spaces: false,
       symbols: false,
+      uppercase: true,
     });
     const mockSSHKey = sshKeyFactory.build({
       label: randomLabel(),
@@ -228,7 +236,8 @@ describe('SSH keys', () => {
         cy.findByText('Label is required.');
 
         // SSH label is not modified when the operation is cancelled
-        cy.get('[id="label"]').clear().type(newSSHKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(newSSHKeyLabel);
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -250,7 +259,8 @@ describe('SSH keys', () => {
       .should('be.visible')
       .within(() => {
         // Update a new ssh key
-        cy.get('[id="label"]').clear().type(newSSHKeyLabel);
+        cy.get('[id="label"]').clear();
+        cy.focused().type(newSSHKeyLabel);
         ui.button
           .findByTitle('Save')
           .should('be.visible')

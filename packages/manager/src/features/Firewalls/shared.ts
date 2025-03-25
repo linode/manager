@@ -1,8 +1,7 @@
-import { capitalize } from 'src/utilities/capitalize';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
+import { truncateAndJoinList } from '@linode/utilities';
+import { capitalize } from '@linode/utilities';
 
-import { PORT_PRESETS } from './FirewallDetail/Rules/shared';
-
+import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 import type { Grants, Profile } from '@linode/api-v4';
 import type {
   Firewall,

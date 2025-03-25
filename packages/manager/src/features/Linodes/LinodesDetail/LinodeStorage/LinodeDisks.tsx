@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -16,9 +16,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants } from 'src/queries/profile/profile';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+  useGrants,
+} from '@linode/queries';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';
@@ -152,7 +154,7 @@ export const LinodeDisks = () => {
             }) => {
               return (
                 <React.Fragment>
-                  <Grid xs={12}>
+                  <Grid size={12}>
                     <Table aria-label="List of Disks">
                       <TableHead>
                         <TableRow>

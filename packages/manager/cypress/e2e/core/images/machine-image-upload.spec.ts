@@ -1,15 +1,13 @@
-import { EventStatus } from '@linode/api-v4';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
-import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import {
   mockDeleteImage,
   mockGetCustomImages,
-  mockUpdateImage,
   mockGetImage,
+  mockUpdateImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
@@ -17,6 +15,9 @@ import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import type { EventStatus } from '@linode/api-v4';
+import type { RecPartial } from 'factory.ts';
 
 /**
  * Returns a numeric image ID from a string-based image ID.
@@ -57,17 +58,17 @@ const eventIntercept = (
     apiMatcher('account/events*'),
     makeResourcePage(
       eventFactory.buildList(1, {
-        created: created ? created : DateTime.local().toISO(),
         action: 'image_upload',
+        created: created ? created : DateTime.local().toISO(),
         entity: {
-          label: label,
           id: numericId,
+          label,
           type: 'image',
           url: `/v4/images/private/${numericId}`,
         },
-        status,
-        secondary_entity: null,
         message: message ? message : '',
+        secondary_entity: null,
+        status,
       })
     )
   ).as('getEvent');
@@ -116,11 +117,11 @@ const uploadImage = (label: string) => {
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
 
-  cy.findByLabelText('Label').click().type(label);
+  cy.findByLabelText('Label').click();
+  cy.focused().type(label);
 
-  cy.findByLabelText('Description')
-    .click()
-    .type('This is a machine image upload test');
+  cy.findByLabelText('Description').click();
+  cy.focused().type('This is a machine image upload test');
 
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
@@ -166,8 +167,8 @@ describe('machine image', () => {
 
     const mockImageUpdated = {
       ...mockImage,
-      label: updatedLabel,
       description: updatedDescription,
+      label: updatedLabel,
     };
 
     mockGetCustomImages([mockImage]).as('getImages');
@@ -195,15 +196,11 @@ describe('machine image', () => {
       .findByTitle('Edit Image')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .clear()
-          .type(updatedLabel);
+        cy.findByLabelText('Label').should('be.visible').clear();
+        cy.focused().type(updatedLabel);
 
-        cy.findByLabelText('Description')
-          .should('be.visible')
-          .clear()
-          .type(updatedDescription);
+        cy.findByLabelText('Description').should('be.visible').clear();
+        cy.focused().type(updatedDescription);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')
@@ -260,7 +257,7 @@ describe('machine image', () => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
       mockGetCustomImages([
-        imageFactory.build({ label, id: imageId, status: 'available' }),
+        imageFactory.build({ id: imageId, label, status: 'available' }),
       ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);

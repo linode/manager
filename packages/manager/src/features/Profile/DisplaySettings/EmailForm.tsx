@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+import { useMutateProfile, useProfile } from '@linode/queries';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
 

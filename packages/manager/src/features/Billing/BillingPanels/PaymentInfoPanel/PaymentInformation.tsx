@@ -1,6 +1,6 @@
 import { deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -100,7 +100,12 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>

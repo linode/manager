@@ -1,3 +1,5 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath } from 'react-router-dom';
@@ -10,9 +12,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { BucketAccess } from './BucketAccess';
 

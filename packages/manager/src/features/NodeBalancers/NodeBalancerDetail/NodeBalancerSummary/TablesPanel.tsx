@@ -1,21 +1,19 @@
-import { Box, CircleProgress, Paper, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import {
+  useNodeBalancerQuery,
+  useNodeBalancerStatsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
+import { formatNumber, getMetrics } from '@linode/utilities';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
-import {
-  useNodeBalancerQuery,
-  useNodeBalancerStatsQuery,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
-import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 import type { Theme } from '@mui/material/styles';
 import type {

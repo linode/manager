@@ -1,3 +1,4 @@
+import { capitalizeAllWords } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -21,8 +22,7 @@ import {
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { usePlacementGroupQuery } from 'src/queries/placementGroups';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { usePlacementGroupQuery } from '@linode/queries';
 
 import type { Linode } from '@linode/api-v4';
 

@@ -1,17 +1,15 @@
-import { IconButton } from '@linode/ui';
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
-import { compose } from 'ramda';
+import { IconButton } from '@linode/ui';
+import { groupByTags, sortGroups } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
-import {
-  MIN_PAGE_SIZE,
-  PaginationFooter,
-  getMinimumPageSizeForNumberOfItems,
-} from 'src/components/PaginationFooter/PaginationFooter';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -19,7 +17,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 
 import {
   StyledControlHeader,
@@ -80,7 +77,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
 
   const dataLength = data.length;
 
-  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
+  const orderedGroupedLinodes = sortGroups(groupByTags(data));
   const tableWrapperProps = {
     dataLength,
     handleOrderChange,
@@ -102,7 +99,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   if (display === 'grid') {
     return (
       <>
-        <Grid className={'px0'} xs={12}>
+        <Grid className={'px0'} size={12}>
           {isGeckoLAEnabled && (
             <Paper sx={{ padding: 1 }}>
               <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
@@ -136,7 +133,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     ':hover': {
                       color: theme.tokens.color.Brand[60],
                     },
-                    color: theme.tokens.table.HeaderNested.Icon,
+                    color: theme.tokens.component.Table.HeaderNested.Icon,
                   })}
                   aria-describedby={groupByDescriptionId}
                   aria-label="Toggle group by tag"
@@ -161,7 +158,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
           return (
             <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
               <Grid container>
-                <Grid xs={12}>
+                <Grid size={12}>
                   <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                 </Grid>
               </Grid>
@@ -201,7 +198,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   return (
                     <React.Fragment>
                       <Component {...finalProps} />
-                      <Grid xs={12}>
+                      <Grid size={12}>
                         <PaginationFooter
                           sx={{
                             border: 0,

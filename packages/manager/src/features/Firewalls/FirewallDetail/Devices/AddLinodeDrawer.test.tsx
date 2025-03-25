@@ -12,7 +12,24 @@ const props = {
   onClose,
   open: true,
 };
+
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('AddLinodeDrawer', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({ id: '1' });
+  });
+
   it('should contain helper text', () => {
     const { getByText } = renderWithTheme(<AddLinodeDrawer {...props} />);
     expect(getByText(helperText)).toBeInTheDocument();

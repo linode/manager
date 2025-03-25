@@ -1,6 +1,12 @@
 import { Box, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
+import { Redirect } from 'react-router-dom';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -75,30 +81,43 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Paper sx={{ padding: 0 }}>
-          <Box display="flex" flexDirection="column">
-            <GlobalFilters
-              handleAnyFilterChange={onFilterChange}
-              handleDashboardChange={onDashboardChange}
-              handleTimeDurationChange={onTimeDurationChange}
-              handleToggleAppliedFilter={toggleAppliedFilter}
-            />
-            {dashboard?.service_type && showAppliedFilters && (
-              <CloudPulseAppliedFilterRenderer
-                filters={filterData.label}
-                serviceType={dashboard.service_type}
-              />
-            )}
-          </Box>
-        </Paper>
-      </Grid>
-      <CloudPulseDashboardRenderer
-        dashboard={dashboard}
-        filterValue={filterData.id}
-        timeDuration={timeDuration}
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/metrics' }}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
-    </Grid>
+      <DocumentTitleSegment segment="Dashboards" />
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Paper sx={{ padding: 0 }}>
+            <Box display="flex" flexDirection="column">
+              <GlobalFilters
+                handleAnyFilterChange={onFilterChange}
+                handleDashboardChange={onDashboardChange}
+                handleTimeDurationChange={onTimeDurationChange}
+                handleToggleAppliedFilter={toggleAppliedFilter}
+              />
+              {dashboard?.service_type && showAppliedFilters && (
+                <CloudPulseAppliedFilterRenderer
+                  filters={filterData.label}
+                  serviceType={dashboard.service_type}
+                />
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+        <CloudPulseDashboardRenderer
+          dashboard={dashboard}
+          filterValue={filterData.id}
+          timeDuration={timeDuration}
+        />
+      </Grid>
+      <Redirect from="*" to="/metrics" />
+    </React.Suspense>
   );
 };
+
+export const cloudPulseMetricsLandingLazyRoute = createLazyRoute('/metrics')({
+  component: CloudPulseDashboardLanding,
+});

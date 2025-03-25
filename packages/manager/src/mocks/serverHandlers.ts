@@ -6,6 +6,7 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
+import { pickRandom } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
@@ -111,10 +112,10 @@ import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { pickRandom } from 'src/utilities/random';
 
 import type {
   AccountMaintenance,
@@ -763,6 +764,15 @@ export const handlers = [
         });
       }
 
+      // filter the linodes based on supported regions
+      if (orFilters?.length) {
+        filteredLinodes = linodes.filter((linode) => {
+          return orFilters.some(
+            (filter: { region: string }) => linode.region === filter.region
+          );
+        });
+      }
+
       if (regionFilter) {
         filteredLinodes = filteredLinodes.filter((linode) => {
           return linode.region === regionFilter;
@@ -861,6 +871,7 @@ export const handlers = [
     const id = Number(params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
     return HttpResponse.json(cluster);
+    // return HttpResponse.json({}, { status: 404 });
   }),
   http.put('*/lke/clusters/:clusterId', async ({ params }) => {
     const id = Number(params.clusterId);
@@ -935,6 +946,19 @@ export const handlers = [
   http.get('*/v4/nodebalancers/:nodeBalancerID', ({ params }) => {
     const nodeBalancer = nodeBalancerFactory.build({
       id: Number(params.nodeBalancerID),
+    });
+    return HttpResponse.json(nodeBalancer);
+  }),
+  http.get('*/v4beta/nodebalancers/:nodeBalancerID', ({ params }) => {
+    const nodeBalancer = nodeBalancerFactory.build({
+      id: Number(params.nodeBalancerID),
+      lke_cluster: {
+        id: 1,
+        label: 'lke-e-123',
+        type: 'lkecluster',
+        url: 'v4/lke/clusters/1',
+      },
+      type: 'premium',
     });
     return HttpResponse.json(nodeBalancer);
   }),
@@ -2446,6 +2470,27 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
+  http.get(
+    '*/monitor/services/:serviceType/alert-definitions',
+    async ({ params }) => {
+      const serviceType = params.serviceType;
+      alertFactory.resetSequenceNumber();
+      return HttpResponse.json({
+        data: [
+          ...alertFactory.buildList(20, {
+            rule_criteria: {
+              rules: alertRulesFactory.buildList(2),
+            },
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+          }),
+          ...alertFactory.buildList(5, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+          }),
+        ],
+      });
+    }
+  ),
   http.get('*/monitor/alert-definitions', async () => {
     const customAlerts = alertFactory.buildList(10, {
       created_by: 'user1',
@@ -2479,6 +2524,20 @@ export const handlers = [
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
       ...customAlertsWithServiceType,
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'in progress',
+        type: 'user',
+        updated_by: 'user1',
+      }),
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'failed',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -2498,6 +2557,7 @@ export const handlers = [
               ],
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
+            type: 'user',
           })
         );
       }
@@ -2522,7 +2582,7 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
+      makeResourcePage(notificationChannelFactory.buildList(7))
     );
   }),
   http.get('*/monitor/services', () => {

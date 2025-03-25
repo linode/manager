@@ -1,16 +1,18 @@
 import { Button, Stack } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  capitalizeAllWords,
+  formatStorageUnits,
+  isNotNullOrUndefined,
+} from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
 
@@ -58,11 +60,16 @@ export const SelectLinodeCard = ({
   const type = linodeType ? formatStorageUnits(linodeType?.label) : linode.type;
   const image = linodeImage?.label ?? linode.image;
   const region =
-    regions?.find((region) => region.id == linode.region)?.label ??
+    regions?.find((region) => region.id === linode.region)?.label ??
     linode.region;
 
   const renderVariant = () => (
-    <Grid paddingTop={0} xs={12}>
+    <Grid
+      sx={{
+        paddingTop: 0,
+      }}
+      size={12}
+    >
       <Stack direction="row" justifyContent="space-between" marginBottom={1}>
         <Stack alignItems="center" direction="row" height={34}>
           <StatusIcon

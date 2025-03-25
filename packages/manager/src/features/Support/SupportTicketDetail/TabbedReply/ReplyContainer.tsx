@@ -1,6 +1,6 @@
 import { uploadAttachment } from '@linode/api-v4';
 import { Accordion, Notice } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';

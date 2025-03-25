@@ -1,12 +1,12 @@
+import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';

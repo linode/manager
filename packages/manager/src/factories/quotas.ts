@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4/lib/quotas/types';
 

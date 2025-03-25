@@ -1,5 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -129,7 +129,7 @@ export const KubernetesPlanContainer = (
                     : plans;
                   return [
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} xs={12}>
+                      <Grid key={table.header} size={12}>
                         <Typography variant="h3">{table.header}</Typography>
                       </Grid>
                     ),
@@ -143,7 +143,12 @@ export const KubernetesPlanContainer = (
         )}
       </Hidden>
       <Hidden mdDown>
-        <Grid lg={12} xs={12}>
+        <Grid
+          size={{
+            lg: 12,
+            xs: 12,
+          }}
+        >
           {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (

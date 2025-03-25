@@ -19,18 +19,19 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { randomLabel, randomNumber } from 'support/util/random';
-import type { Linode, Region } from '@linode/api-v4';
-import { chooseRegions } from 'support/util/regions';
 import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
+import { chooseRegions } from 'support/util/regions';
+
+import type { Linode, Region } from '@linode/api-v4';
 
 const mockDallas = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     id: 'us-central',
-    status: 'ok',
     label: 'Dallas, TX',
+    status: 'ok',
   })
 );
 
@@ -39,8 +40,8 @@ const mockLondon = extendRegion(
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'uk',
     id: 'eu-west',
-    status: 'ok',
     label: 'London, UK',
+    status: 'ok',
   })
 );
 
@@ -54,8 +55,8 @@ const mockSingapore = extendRegion(
     ],
     country: 'sg',
     id: 'ap-south',
-    status: 'ok',
     label: 'Singapore, SG',
+    status: 'ok',
   })
 );
 
@@ -173,15 +174,11 @@ describe('Migrate Linode With Firewall', () => {
         .findByTitle('Create Firewall')
         .should('be.visible')
         .within(() => {
-          cy.findByText('Label')
-            .should('be.visible')
-            .click()
-            .type(firewallLabel);
+          cy.findByText('Label').should('be.visible').click();
+          cy.focused().type(firewallLabel);
 
-          cy.findByText('Linodes')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByText('Linodes').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

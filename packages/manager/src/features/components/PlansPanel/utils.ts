@@ -1,7 +1,7 @@
+import { useAccount } from '@linode/queries';
+import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { arrayToList } from 'src/utilities/arrayToList';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -21,6 +21,7 @@ import type {
 } from './types';
 import type {
   Capabilities,
+  BaseType,
   LinodeTypeClass,
   Region,
   RegionAvailability,
@@ -73,6 +74,16 @@ export const useIsAcceleratedPlansEnabled = () => {
   return { isAcceleratedLKEPlansEnabled, isAcceleratedLinodePlansEnabled };
 };
 
+const shouldExcludePlan = (
+  type: { id: string },
+  options: { isLKE?: boolean } = {}
+): boolean => {
+  const { isLKE = false } = options;
+  const excludedPlanIdSubstring = 'rtx6000';
+  // Filter out RTX6000 plans when in LKE context
+  return isLKE && type.id.includes(excludedPlanIdSubstring);
+};
+
 /**
  * getPlanSelectionsByPlanType function takes an array of types, groups
  * them based on their class property into different plan types, filters out empty
@@ -84,17 +95,22 @@ export const useIsAcceleratedPlansEnabled = () => {
  */
 
 export const getPlanSelectionsByPlanType = <
-  T extends { class: LinodeTypeClass }
+  T extends BaseType & { class: LinodeTypeClass }
 >(
-  types: T[]
+  types: T[],
+  options: { isLKE?: boolean } = {}
 ): Partial<PlansByType<T>> => {
   const plansByType: PlansByType<T> = planTypeOrder.reduce((acc, key) => {
     acc[key] = [];
     return acc;
   }, {} as PlansByType<T>);
+  const { isLKE = false } = options;
 
   // group plans by type
   for (const type of types) {
+    if (shouldExcludePlan(type, { isLKE })) {
+      continue;
+    }
     switch (type.class) {
       case 'nanode':
       case 'standard':

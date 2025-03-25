@@ -1,10 +1,10 @@
 import { Typography, clamp } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientStats from 'src/containers/longview.stats.container';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { baseGaugeProps } from './common';
 

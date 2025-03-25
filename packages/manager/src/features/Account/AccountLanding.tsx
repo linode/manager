@@ -14,8 +14,7 @@ import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/use
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccount, useProfile } from '@linode/queries';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import AccountLogins from './AccountLogins';
@@ -42,7 +41,7 @@ const Users = React.lazy(() =>
   }))
 );
 const Quotas = React.lazy(() =>
-  import('./Quotas').then((module) => ({ default: module.Quotas }))
+  import('./Quotas/Quotas').then((module) => ({ default: module.Quotas }))
 );
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const MaintenanceLanding = React.lazy(

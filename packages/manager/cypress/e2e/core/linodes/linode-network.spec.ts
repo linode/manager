@@ -1,23 +1,23 @@
 import {
-  linodeFactory,
-  ipAddressFactory,
-  firewallFactory,
   firewallDeviceFactory,
+  firewallFactory,
+  ipAddressFactory,
+  linodeFactory,
 } from '@src/factories';
-
-import type { IPRange } from '@linode/api-v4';
-
-import {
-  mockGetLinodeDetails,
-  mockGetLinodeIPAddresses,
-  mockGetLinodeFirewalls,
-} from 'support/intercepts/linodes';
-import { mockUpdateIPAddress } from 'support/intercepts/networking';
-import { ui } from 'support/ui';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockAddFirewallDevice,
   mockGetFirewalls,
 } from 'support/intercepts/firewalls';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodeFirewalls,
+  mockGetLinodeIPAddresses,
+} from 'support/intercepts/linodes';
+import { mockUpdateIPAddress } from 'support/intercepts/networking';
+import { ui } from 'support/ui';
+
+import type { IPRange } from '@linode/api-v4';
 
 describe('IP Addresses', () => {
   const mockLinode = linodeFactory.build();
@@ -45,14 +45,17 @@ describe('IP Addresses', () => {
   });
 
   beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     mockGetLinodeFirewalls(mockLinode.id, []).as('getLinodeFirewalls');
     mockGetLinodeIPAddresses(mockLinode.id, {
       ipv4: {
-        public: [ipAddress],
         private: [],
-        shared: [],
+        public: [ipAddress],
         reserved: [],
+        shared: [],
       },
       ipv6: {
         global: [_ipv6Range],
@@ -143,6 +146,12 @@ describe('IP Addresses', () => {
 });
 
 describe('Firewalls', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
+
   it('allows the user to assign a Firewall from the Linode details page', () => {
     const linode = linodeFactory.build();
     const firewalls = firewallFactory.buildList(3);
@@ -212,7 +221,7 @@ describe('Firewalls', () => {
     cy.wait('@getLinodeFirewalls');
 
     // Verify the firewall shows up in the table
-    cy.findByText(firewallToAttach.label)
+    cy.findAllByText(firewallToAttach.label)
       .should('be.visible')
       .closest('tr')
       .within(() => {

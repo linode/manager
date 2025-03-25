@@ -1,18 +1,16 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import type { OrderSet } from 'src/types/ManagerPreferences';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
+import type { BaseQueryParams, Order, OrderSet } from '@linode/utilities';
 
-export type Order = 'asc' | 'desc';
+export interface UseOrder extends OrderSet {
+  handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
+}
 
 /**
  * useOrder is a hook that allows you to handle ordering tables. It takes into account
@@ -31,7 +29,7 @@ export const useOrder = (
   initial?: OrderSet,
   preferenceKey?: string,
   prefix?: string
-) => {
+): UseOrder => {
   const { data: sortPreferences } = usePreferences(
     (preferences) => preferences?.sortKeys
   );

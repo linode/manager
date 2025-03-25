@@ -5,7 +5,6 @@
 import { paymentMethodFactory, profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
-import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 import { mockGetPaymentMethods, mockGetUser } from 'support/intercepts/account';
 import {
   mockGetProfile,
@@ -13,6 +12,8 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+
+import { ADMINISTRATOR, PARENT_USER } from 'src/features/Account/constants';
 
 // Tooltip message that appears on disabled billing action buttons for restricted
 // and child users.
@@ -234,14 +235,14 @@ describe('restricted user billing flows', () => {
    */
   it('cannot edit billing information with read-only account access', () => {
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({
@@ -273,8 +274,8 @@ describe('restricted user billing flows', () => {
    */
   it('cannot edit billing information as child account', () => {
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       user_type: 'child',
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
@@ -299,25 +300,25 @@ describe('restricted user billing flows', () => {
    */
   it('can edit billing information as a regular user and as a parent user', () => {
     const mockProfileRegular = profileFactory.build({
-      username: randomLabel(),
       restricted: false,
+      username: randomLabel(),
     });
 
     const mockUserRegular = accountUserFactory.build({
-      username: mockProfileRegular.username,
-      user_type: 'default',
       restricted: false,
+      user_type: 'default',
+      username: mockProfileRegular.username,
     });
 
     const mockProfileParent = profileFactory.build({
-      username: randomLabel(),
       restricted: false,
+      username: randomLabel(),
     });
 
     const mockUserParent = accountUserFactory.build({
-      username: mockProfileParent.username,
-      user_type: 'parent',
       restricted: false,
+      user_type: 'parent',
+      username: mockProfileParent.username,
     });
 
     // Confirm button behavior for regular users.

@@ -22,9 +22,9 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 
 #### Running Storybook Locally
 
-`yarn build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
+`pnpm run --filter linode-manager build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
 
-`yarn storybook`: starts the local dev server at `localhost:6006`
+`pnpm storybook`: starts the local dev server at `localhost:6006`
 
 #### Adding Stories
 

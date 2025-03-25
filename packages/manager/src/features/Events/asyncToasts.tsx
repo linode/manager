@@ -80,6 +80,7 @@ export const toasts: Toasts = {
   linode_clone: createToast({ failure: true, success: true }),
   linode_migrate: createToast({ failure: true, success: true }),
   linode_migrate_datacenter: createToast({ failure: true, success: true }),
+  linode_rebuild: createToast({ failure: true, success: true }),
   linode_resize: createToast({ failure: true, success: true }),
   linode_snapshot: createToast({ failure: { persist: true } }),
   longviewclient_create: createToast({ failure: true, success: true }),

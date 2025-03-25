@@ -1,7 +1,12 @@
+import {
+  useAllLinodeConfigsQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
@@ -14,9 +19,8 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
@@ -25,10 +29,18 @@ import { LinodeConfigDialog } from './LinodeConfigDialog';
 
 const LinodeConfigs = () => {
   const theme = useTheme();
+  const location = useLocation();
+  const history = useHistory();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
+
+  const { data: linode } = useLinodeQuery(id);
+
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
+  const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
 
@@ -52,6 +64,10 @@ const LinodeConfigs = () => {
   const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
     false
   );
+
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -96,6 +112,18 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
+        {isLinodeInterfacesEnabled &&
+          linode?.interface_generation !== 'linode' && (
+            <Button
+              alwaysShowTooltip
+              buttonType="outlined"
+              disabled={isReadOnly}
+              onClick={openUpgradeInterfacesDialog}
+              tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
+            >
+              Upgrade Interfaces
+            </Button>
+          )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>
@@ -131,19 +159,21 @@ const LinodeConfigs = () => {
                         <TableCell
                           sx={{
                             font: theme.font.bold,
-                            width: '25%',
+                            width: isLegacyConfigInterface ? '25%' : '55%',
                           }}
                         >
                           Disks
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            font: theme.font.bold,
-                            width: '30%',
-                          }}
-                        >
-                          Network Interfaces
-                        </TableCell>
+                        {isLegacyConfigInterface && (
+                          <TableCell
+                            sx={{
+                              font: theme.font.bold,
+                              width: '30%',
+                            }}
+                          >
+                            Network Interfaces
+                          </TableCell>
+                        )}
                         <TableCell sx={{ width: '10%' }} />
                       </TableRow>
                     </TableHead>

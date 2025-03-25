@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -252,12 +252,14 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           container
           data-testid="domain-transfer-input"
           direction="row"
-          justifyContent="center"
           key={`domain-transfer-ip-${idx}`}
-          maxWidth={forVPCIPv4Ranges ? '415px' : undefined}
           spacing={2}
+          sx={{
+            justifyContent: 'center',
+            maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
+          }}
         >
-          <Grid xs={11}>
+          <Grid size={11}>
             <TextField
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
@@ -280,7 +282,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
           {/** Don't show the button for the first input since it won't do anything, unless this component is
            * used in DBaaS or for Linode VPC interfaces
            */}
-          <Grid xs={1}>
+          <Grid size={1}>
             {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}

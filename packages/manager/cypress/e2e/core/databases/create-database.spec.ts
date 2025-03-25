@@ -1,21 +1,23 @@
-import { accountFactory, databaseFactory, eventFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
 import {
-  databaseClusterConfiguration,
   databaseConfigurations,
   mockDatabaseEngineTypes,
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateDatabase,
-  mockGetDatabases,
   mockGetDatabaseEngines,
   mockGetDatabaseTypes,
+  mockGetDatabases,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
-import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { getRegionById } from 'support/util/regions';
+
+import { accountFactory, databaseFactory, eventFactory } from 'src/factories';
+
 import type { Database } from '@linode/api-v4';
+import type { databaseClusterConfiguration } from 'support/constants/databases';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
@@ -24,17 +26,17 @@ describe('create a database cluster, mocked data', () => {
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         // Database mock immediately after instance has been created.
         const databaseMock: Database = databaseFactory.build({
-          label: configuration.label,
-          type: configuration.linodeType,
-          region: configuration.region.id,
-          version: configuration.version,
-          status: 'provisioning',
           cluster_size: configuration.clusterSize,
           engine: configuration.dbType,
           hosts: {
             primary: undefined,
             secondary: undefined,
           },
+          label: configuration.label,
+          region: configuration.region.id,
+          status: 'provisioning',
+          type: configuration.linodeType,
+          version: configuration.version,
         });
 
         // Database mock once instance has been provisioned.
@@ -47,16 +49,16 @@ describe('create a database cluster, mocked data', () => {
 
         // Event mock which will trigger Cloud to re-fetch DBaaS instance.
         const eventMock = eventFactory.build({
-          status: 'finished',
           action: 'database_create',
-          percent_complete: 100,
           entity: {
-            label: databaseMock.label,
             id: databaseMock.id,
+            label: databaseMock.label,
             type: 'database',
             url: `/v4/databases/${configuration.dbType}/instances/${databaseMock.id}`,
           },
+          percent_complete: 100,
           secondary_entity: undefined,
+          status: 'finished',
         });
 
         const clusterSizeSelection =
@@ -86,17 +88,16 @@ describe('create a database cluster, mocked data', () => {
             cy.findByText('Create').should('be.visible');
           });
 
-        cy.findByText('Cluster Label')
-          .should('be.visible')
-          .click()
-          .type(configuration.label);
+        cy.findByText('Cluster Label').should('be.visible').click();
+        cy.focused().type(configuration.label);
 
-        cy.findByText('Database Engine')
-          .should('be.visible')
-          .click()
-          .type(`${configuration.engine} v${configuration.version}{enter}`);
+        cy.findByText('Database Engine').should('be.visible').click();
+        cy.focused().type(
+          `${configuration.engine} v${configuration.version}{enter}`
+        );
 
-        ui.regionSelect.find().click().type(`${databaseRegionLabel}{enter}`);
+        ui.regionSelect.find().click();
+        cy.focused().type(`${databaseRegionLabel}{enter}`);
 
         // Click either the "Dedicated CPU" or "Shared CPU" tab, according
         // to the type of cluster being created.

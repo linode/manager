@@ -1,5 +1,12 @@
 import { isEmpty } from '@linode/api-v4';
-import { Stack } from '@linode/ui';
+import {
+  useCloneLinodeMutation,
+  useCreateLinodeMutation,
+  useMutateAccountAgreements,
+  useProfile,
+} from '@linode/queries';
+import { CircleProgress, Notice, Stack } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -14,18 +21,17 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useMutateAccountAgreements } from 'src/queries/account/agreements';
-import {
-  useCloneLinodeMutation,
-  useCreateLinodeMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import {
+  useIsLinodeCloneFirewallEnabled,
+  useIsLinodeInterfacesEnabled,
+} from 'src/utilities/linodes';
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
@@ -34,6 +40,8 @@ import { Error } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
+import { Networking } from './Networking/Networking';
+import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
@@ -67,13 +75,16 @@ import type { SubmitHandler } from 'react-hook-form';
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
+  const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
 
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
-    context: { profile, secureVMNoticesEnabled },
-    defaultValues: () => defaultValues(params, queryClient),
+    context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
+    defaultValues: () =>
+      defaultValues(params, queryClient, isLinodeInterfacesEnabled),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
@@ -92,10 +103,18 @@ export const LinodeCreate = () => {
 
   const currentTabIndex = getTabIndex(params.type);
 
+  const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+  });
+
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
-      defaultValues({ ...params, type: newTab }, queryClient).then((values) => {
+      defaultValues(
+        { ...params, type: newTab },
+        queryClient,
+        isLinodeInterfacesEnabled
+      ).then((values) => {
         // Reset the form values
         form.reset(values);
         // Update tab "type" query param. (This changes the selected tab)
@@ -105,7 +124,7 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values);
+    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
 
     try {
       const linode =
@@ -140,6 +159,9 @@ export const LinodeCreate = () => {
         });
       }
     } catch (errors) {
+      if (isLinodeInterfacesEnabled) {
+        transformLegacyInterfaceErrorsToLinodeInterfaceErrors(errors);
+      }
       for (const error of errors) {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
@@ -162,6 +184,10 @@ export const LinodeCreate = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState, handleLinodeCreateAnalyticsFormError]);
+
+  if (form.formState.isLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <FormProvider {...form}>
@@ -190,6 +216,18 @@ export const LinodeCreate = () => {
               <Tab>Backups</Tab>
               <Tab>Clone Linode</Tab>
             </TabList>
+            {isLinodeCreateRestricted && (
+              <Notice
+                text={getRestrictedResourceText({
+                  action: 'create',
+                  isSingular: false,
+                  resourceType: 'Linodes',
+                })}
+                important
+                sx={{ marginBottom: 2 }}
+                variant="error"
+              />
+            )}
             <TabPanels>
               <SafeTabPanel index={0}>
                 <OperatingSystems />
@@ -214,10 +252,17 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          <VPC />
-          <Firewall />
-          {params.type !== 'Clone Linode' && <VLAN />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VPC />
+          )}
+          {!isLinodeInterfacesEnabled &&
+            (params.type !== 'Clone Linode' ||
+              isLinodeCloneFirewallEnabled) && <Firewall />}
+          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <VLAN />
+          )}
           <UserData />
+          {isLinodeInterfacesEnabled && <Networking />}
           <Addons />
           <EUAgreement />
           <Summary />

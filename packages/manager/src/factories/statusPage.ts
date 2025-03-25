@@ -1,7 +1,6 @@
-import Factory from 'src/factories/factoryProxy';
-import { v4 } from 'uuid';
+import { Factory } from '@linode/utilities';
 
-import {
+import type {
   Incident,
   IncidentPage,
   IncidentResponse,
@@ -23,7 +22,7 @@ export const pageFactory = Factory.Sync.makeFactory<IncidentPage>({
 export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   affected_components: [
     {
-      code: v4(),
+      code: crypto.randomUUID && crypto.randomUUID(),
       name:
         'Linode Kubernetes Engine - US-East (Newark) Linode Kubernetes Engine',
       new_status: 'major_outage',
@@ -37,7 +36,7 @@ export const incidentUpdateFactory = Factory.Sync.makeFactory<IncidentUpdate>({
   deliver_notifications: true,
   display_at: DATE,
   id: Factory.each((i) => String(i)),
-  incident_id: v4(),
+  incident_id: crypto.randomUUID && crypto.randomUUID(),
   status: 'investigating',
   tweet_id: Math.floor(Math.random() * 1000000),
   updated_at: DATE,
@@ -50,7 +49,7 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   incident_updates: incidentUpdateFactory.buildList(5),
   monitoring_at: DATE,
   name: 'Service Issue - Linode Kubernetes Engine',
-  page_id: v4(),
+  page_id: crypto.randomUUID && crypto.randomUUID(),
   resolved_at: DATE,
   shortlink: 'https://stspg.io/gm27wxnn653m',
   started_at: DATE,
@@ -64,8 +63,8 @@ export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse
       incidentFactory.build({
         impact: 'major',
         incident_updates: incidentUpdateFactory.buildList(4, {
-          body: `Our team is investigating a connectivity issue in our Mumbai data center. 
-          During this time, users may experience connection timeouts and errors for all services 
+          body: `Our team is investigating a connectivity issue in our Mumbai data center.
+          During this time, users may experience connection timeouts and errors for all services
           deployed in this data center. We will share additional updates as we have more information.`,
         }),
         name: 'Connectivity Issue - AP-West (Mumbai)',

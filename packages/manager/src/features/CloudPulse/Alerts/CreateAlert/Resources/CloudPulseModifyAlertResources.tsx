@@ -2,6 +2,8 @@ import { Box, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { AlertResources } from '../../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../../Utils/utils';
 
@@ -21,6 +23,19 @@ export const CloudPulseModifyAlertResources = React.memo(
     const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
     const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
 
+    const flags = useFlags();
+
+    const maxSelectionCount = React.useMemo(() => {
+      if (!serviceTypeWatcher || !flags.aclpAlertServiceTypeConfig) {
+        return undefined;
+      }
+
+      return flags.aclpAlertServiceTypeConfig?.find(
+        (config) =>
+          config.serviceType && config.serviceType === serviceTypeWatcher
+      )?.maxResourceSelectionCount;
+    }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
+
     const handleResourcesSelection = (resourceIds: string[]) => {
       setValue(name, resourceIds, {
         shouldTouch: true,
@@ -28,15 +43,11 @@ export const CloudPulseModifyAlertResources = React.memo(
       });
     };
 
-    React.useEffect(() => {
-      setValue(name, [], { shouldValidate: true });
-    }, [name, serviceTypeWatcher, setValue]);
-
     const titleRef = React.useRef<HTMLDivElement>(null);
 
     return (
       <Controller
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
             <Typography ref={titleRef} variant="h2">
               2. Resources
@@ -50,9 +61,11 @@ export const CloudPulseModifyAlertResources = React.memo(
               <AlertResources
                 alertResourceIds={field.value}
                 alertType="user"
+                errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
                 isSelectionsNeeded
+                maxSelectionCount={maxSelectionCount}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
               />

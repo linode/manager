@@ -130,7 +130,7 @@ export const Metric = (props: MetricCriteriaProps) => {
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item md={3} sm={6} xs={12}>
+          <Grid item lg={3} md={4} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -159,6 +159,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                       (option) => option.value === field.value
                     ) ?? null
                   }
+                  data-qa-metric-threshold={`${name}-data-field`}
                   data-testid="data-field"
                   disabled={!serviceWatcher}
                   label="Data Field"
@@ -174,7 +175,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.metric`}
             />
           </Grid>
-          <Grid item md={3} sm={6} xs={12}>
+          <Grid item lg={3} md={4} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -191,6 +192,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                     aggOptions.find((option) => option.value === field.value) ??
                     null
                   }
+                  data-qa-metric-threshold={`${name}-aggregation-type`}
                   data-testid="aggregation-type"
                   disabled={aggOptions.length === 0}
                   errorText={fieldState.error?.message}
@@ -207,7 +209,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.aggregate_function`}
             />
           </Grid>
-          <Grid item lg={2} md={3} sm={6} xs={12}>
+          <Grid item lg={3} md={4} sm={6} xs={12}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -227,6 +229,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                         )
                       : null
                   }
+                  data-qa-metric-threshold={`${name}-operator`}
                   data-testid="operator"
                   disabled={!metricWatcher}
                   errorText={fieldState.error?.message}
@@ -243,14 +246,22 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.operator`}
             />
           </Grid>
-          <Grid item lg={2} md={3} sm={6} xs={12}>
+          <Grid item lg={3} md={2} sm={6} xs={12}>
             <Box display="flex" gap={1}>
               <Controller
                 render={({ field, fieldState }) => (
                   <TextField
+                    containerProps={{
+                      sx: { paddingTop: 1 },
+                    }}
                     onWheel={(event: React.SyntheticEvent<Element, Event>) =>
                       event.target instanceof HTMLElement && event.target.blur()
                     }
+                    sx={{
+                      height: '34px',
+                    }}
+                    data-qa-metric-threshold={`${name}-threshold`}
+                    data-qa-threshold="threshold"
                     data-testid="threshold"
                     errorText={fieldState.error?.message}
                     label="Threshold"
@@ -259,7 +270,6 @@ export const Metric = (props: MetricCriteriaProps) => {
                     noMarginTop
                     onBlur={field.onBlur}
                     onChange={(e) => field.onChange(e.target.value)}
-                    sx={{ height: '34px', marginTop: { sm: 1, xs: 0 } }}
                     type="number"
                     value={field.value ?? 0}
                   />
@@ -272,6 +282,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   alignItems: 'flex-end',
                   display: 'flex',
                   height: '56px',
+                  marginTop: { lg: '5px', md: '5px', sm: '5px' },
                 }}
                 variant="body1"
               >

@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
-import { usePreferences } from 'src/queries/profile/preferences';
+import { usePreferences } from '@linode/queries';
 
 import { SortableTableHead } from './SortableTableHead';
 
@@ -40,7 +40,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
 
   return (
     <Grid className="m0" container spacing={0} style={{ width: '100%' }}>
-      <Grid className="p0" xs={12}>
+      <Grid className="p0" size={12}>
         <Table
           aria-label="List of Linodes"
           colCount={5}

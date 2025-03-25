@@ -2,7 +2,7 @@ import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
@@ -14,12 +14,14 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 export const Security = () => {
@@ -34,9 +36,10 @@ export const Security = () => {
 
   const selectedRegion = regions?.find((r) => r.id === regionId);
 
-  const regionSupportsDiskEncryption = selectedRegion?.capabilities.includes(
-    'Disk Encryption'
-  );
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
+  const regionSupportsDiskEncryption =
+    selectedRegion?.capabilities.includes('Disk Encryption') ||
+    selectedRegion?.capabilities.includes('LA Disk Encryption');
 
   const isDistributedRegion = getIsDistributedRegion(
     regions ?? [],

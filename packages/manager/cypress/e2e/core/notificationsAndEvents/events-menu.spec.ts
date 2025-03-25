@@ -2,12 +2,13 @@
  * @file Integration tests for Cloud Manager's events menu.
  */
 
+import { DateTime } from 'luxon';
 import { mockGetEvents, mockMarkEventSeen } from 'support/intercepts/events';
 import { ui } from 'support/ui';
-import { eventFactory } from 'src/factories';
 import { buildArray } from 'support/util/arrays';
-import { DateTime } from 'luxon';
 import { randomLabel, randomNumber } from 'support/util/random';
+
+import { eventFactory } from 'src/factories';
 
 describe('Notifications Menu', () => {
   /*
@@ -19,17 +20,17 @@ describe('Notifications Menu', () => {
         action: 'linode_delete',
         // The response from the API will be ordered by created date, descending.
         created: DateTime.local().minus({ minutes: index }).toISO(),
-        percent_complete: null,
-        rate: null,
-        seen: false,
         duration: null,
-        status: 'scheduled',
         entity: {
           id: 1000 + index,
           label: `my-linode-${index}`,
           type: 'linode',
           url: `/v4/linode/instances/${1000 + index}`,
         },
+        percent_complete: null,
+        rate: null,
+        seen: false,
+        status: 'scheduled',
         username: randomLabel(),
       });
     });
@@ -51,8 +52,9 @@ describe('Notifications Menu', () => {
         // Confirm that all mocked events are shown in the notification menu.
         mockEvents.forEach((event) => {
           cy.get(`[data-qa-event="${event.id}"]`)
-            .scrollIntoView()
-            .should('be.visible');
+            .as('qaEventId')
+            .scrollIntoView();
+          cy.get('@qaEventId').should('be.visible');
         });
       });
   });
@@ -67,17 +69,17 @@ describe('Notifications Menu', () => {
         action: 'linode_delete',
         // The response from the API will be ordered by created date, descending.
         created: DateTime.local().minus({ minutes: index }).toISO(),
-        percent_complete: null,
-        rate: null,
-        seen: false,
         duration: null,
-        status: 'scheduled',
         entity: {
           id: 1000 + index,
           label: `my-linode-${index}`,
           type: 'linode',
           url: `/v4/linode/instances/${1000 + index}`,
         },
+        percent_complete: null,
+        rate: null,
+        seen: false,
+        status: 'scheduled',
         username: randomLabel(),
       });
     });
@@ -102,8 +104,9 @@ describe('Notifications Menu', () => {
         // Confirm that first 20 events in response are displayed.
         shownEvents.forEach((event) => {
           cy.get(`[data-qa-event="${event.id}"]`)
-            .scrollIntoView()
-            .should('be.visible');
+            .as('qaEventId')
+            .scrollIntoView();
+          cy.get('@qaEventId').should('be.visible');
         });
 
         // Confirm that last 5 events in response are not displayed.
@@ -146,22 +149,22 @@ describe('Notifications Menu', () => {
   it('Marks events in menu as seen', () => {
     const mockEvents = buildArray(10, (index) => {
       return eventFactory.build({
-        // The event with the highest ID is expected to come first in the array.
-        id: 5000 - index,
         action: 'linode_delete',
         // The response from the API will be ordered by created date, descending.
         created: DateTime.local().minus({ minutes: index }).toISO(),
-        percent_complete: null,
-        seen: false,
-        rate: null,
         duration: null,
-        status: 'scheduled',
         entity: {
           id: 1000 + index,
           label: `my-linode-${index}`,
           type: 'linode',
           url: `/v4/linode/instances/${1000 + index}`,
         },
+        // The event with the highest ID is expected to come first in the array.
+        id: 5000 - index,
+        percent_complete: null,
+        rate: null,
+        seen: false,
+        status: 'scheduled',
         username: randomLabel(),
       });
     });
@@ -245,23 +248,23 @@ describe('Notifications Menu', () => {
     const createTime = DateTime.local().minus({ minutes: 2 }).toISO();
     const mockEvents = buildArray(10, (index) => {
       return eventFactory.build({
-        // Events are not guaranteed to be ordered by ID; simulate this by using random IDs.
-        id: randomNumber(1000, 9999),
         action: 'linode_delete',
-        // To simulate multiple events occurring simultaneously, give all
         // events the same created timestamp.
         created: createTime,
-        percent_complete: null,
-        seen: false,
-        rate: null,
+        // To simulate multiple events occurring simultaneously, give all
         duration: null,
-        status: 'scheduled',
         entity: {
           id: 1000 + index,
           label: `my-linode-${index}`,
           type: 'linode',
           url: `/v4/linode/instances/${1000 + index}`,
         },
+        // Events are not guaranteed to be ordered by ID; simulate this by using random IDs.
+        id: randomNumber(1000, 9999),
+        percent_complete: null,
+        rate: null,
+        seen: false,
+        status: 'scheduled',
         username: randomLabel(),
       });
     });

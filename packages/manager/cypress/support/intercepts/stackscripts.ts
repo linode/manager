@@ -18,6 +18,17 @@ export const interceptGetStackScripts = (): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to a StackScript.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetStackScript = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/stackscripts/${id}`));
+};
+
+/**
  * Intercepts GET request to mock StackScript data.
  *
  * @param stackScripts - an array of mock StackScript objects

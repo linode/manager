@@ -1,27 +1,22 @@
-import { Autocomplete, Paper, Stack, Typography } from '@linode/ui';
+import {
+  STATS_NOT_READY_API_MESSAGE,
+  STATS_NOT_READY_MESSAGE,
+  useLinodeStats,
+  useLinodeStatsByDate,
+  useProfile,
+} from '@linode/queries';
+import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
+import { formatNumber, formatPercentage, getMetrics } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import {
-  STATS_NOT_READY_API_MESSAGE,
-  STATS_NOT_READY_MESSAGE,
-  useLinodeStats,
-  useLinodeStatsByDate,
-} from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import {
-  formatNumber,
-  formatPercentage,
-  getMetrics,
-} from 'src/utilities/statMetrics';
 
 import { getDateOptions } from './helpers';
 import { NetworkGraphs } from './NetworkGraphs';
@@ -235,7 +230,7 @@ const LinodeSummary = (props: Props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }} xs={12}>
+      <Grid size={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Autocomplete
           textFieldProps={{
             hideLabel: true,
@@ -250,7 +245,12 @@ const LinodeSummary = (props: Props) => {
           sx={{ mt: 1, width: 150 }}
         />
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderCPUChart}
@@ -259,7 +259,12 @@ const LinodeSummary = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} xs={12}>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
         <Paper sx={{ height: 370 }} variant="outlined">
           <StatsPanel
             renderBody={renderDiskIOChart}

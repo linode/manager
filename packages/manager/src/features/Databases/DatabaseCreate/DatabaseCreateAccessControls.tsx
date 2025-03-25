@@ -5,7 +5,7 @@ import {
   RadioGroup,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

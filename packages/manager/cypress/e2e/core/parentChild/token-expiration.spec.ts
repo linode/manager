@@ -1,30 +1,31 @@
+import { DateTime } from 'luxon';
+import {
+  mockGetAccount,
+  mockGetChildAccounts,
+} from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
+import { randomLabel, randomString } from 'support/util/random';
+
 import {
   accountFactory,
   accountUserFactory,
   profileFactory,
 } from 'src/factories';
-import { randomLabel, randomString } from 'support/util/random';
-import {
-  mockGetAccount,
-  mockGetChildAccounts,
-} from 'support/intercepts/account';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { DateTime } from 'luxon';
-import { ui } from 'support/ui';
 
 const mockChildAccount = accountFactory.build({
   company: 'Partner Company',
 });
 
 const mockChildAccountProxyUser = accountUserFactory.build({
-  username: randomLabel(),
   user_type: 'proxy',
+  username: randomLabel(),
 });
 
 const mockChildAccountProxyProfile = profileFactory.build({
-  username: mockChildAccountProxyUser.username,
   user_type: 'proxy',
+  username: mockChildAccountProxyUser.username,
 });
 
 describe('Parent/Child token expiration', () => {
@@ -41,12 +42,12 @@ describe('Parent/Child token expiration', () => {
     // Mock local storage parent token expiry to have already passed.
     cy.visitWithLogin('/', {
       localStorageOverrides: {
-        proxy_user: true,
-        'authentication/parent_token/token': `Bearer ${randomString(32)}`,
         'authentication/parent_token/expire': DateTime.local()
           .minus({ minutes: 30 })
           .toISO(),
         'authentication/parent_token/scopes': '*',
+        'authentication/parent_token/token': `Bearer ${randomString(32)}`,
+        proxy_user: true,
       },
     });
 
@@ -77,6 +78,6 @@ describe('Parent/Child token expiration', () => {
           .click();
       });
 
-    cy.url().should('endWith', '/logout');
+    cy.url().should('endWith', '/login');
   });
 });

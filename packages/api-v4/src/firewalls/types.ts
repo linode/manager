@@ -67,14 +67,14 @@ export interface FirewallTemplate {
 }
 
 export interface CreateFirewallPayload {
-  label?: string;
+  label: string;
   tags?: string[];
   rules: UpdateFirewallRules;
   devices?: {
     linodes?: number[];
     nodebalancers?: number[];
     interfaces?: number[];
-  };
+  } | null;
 }
 
 export interface UpdateFirewallPayload {

@@ -15,8 +15,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -128,7 +128,7 @@ describe('AlertResources component tests', () => {
     });
     // search with invalid text and a region
     await userEvent.type(searchInput, 'dummy');
-    await userEvent.click(getByRole('button', { name: 'Open' }));
+    await userEvent.click(getByPlaceholderText('Select Regions'));
     await userEvent.click(getByTestId(regions[0].id));
     await userEvent.click(getByRole('button', { name: 'Close' }));
     await waitFor(() => {
@@ -254,8 +254,8 @@ describe('AlertResources component tests', () => {
     await userEvent.click(getByText('Select All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
 
-    // click unselect all in notice and test
-    await userEvent.click(getByText('Unselect All'));
+    // click deselect all in notice and test
+    await userEvent.click(getByText('Deselect All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

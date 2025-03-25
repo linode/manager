@@ -1,19 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketActionMenu } from './BucketActionMenu';
-
-window.matchMedia = vi.fn().mockImplementation((query) => {
-  return {
-    addListener: vi.fn(),
-    matches: true,
-    media: query,
-    onchange: null,
-    removeListener: vi.fn(),
-  };
-});
 
 const mockOnRemove = vi.fn();
 
@@ -26,6 +16,7 @@ const props = {
 
 describe('BucketActionMenu', () => {
   it('includes a "Delete" option', () => {
+    mockMatchMedia();
     const { getByText } = render(
       wrapWithTheme(<BucketActionMenu {...props} />)
     );
@@ -33,6 +24,7 @@ describe('BucketActionMenu', () => {
   });
 
   it('executes the onRemove function when the "Delete" option is clicked', () => {
+    mockMatchMedia();
     const { getByText } = render(
       wrapWithTheme(<BucketActionMenu {...props} />)
     );

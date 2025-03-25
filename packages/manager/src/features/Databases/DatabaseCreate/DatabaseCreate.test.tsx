@@ -1,7 +1,5 @@
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { accountFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -16,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -68,15 +66,10 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
-
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+      MemoryRouter: { initialEntries: ['/databases/create'] },
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -101,15 +94,10 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
-
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+      MemoryRouter: { initialEntries: ['/databases/create'] },
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -135,10 +123,6 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
-
     const flags = {
       dbaasV2: {
         beta: true,
@@ -146,12 +130,11 @@ describe('Database Create', () => {
       },
     };
 
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>,
-      { flags }
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+      MemoryRouter: { initialEntries: ['/databases/create'] },
+      flags,
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

@@ -1,13 +1,14 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { useGrants, useProfile } from '@linode/queries';
+import { CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript } from 'src/components/StackScript/StackScript';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,
@@ -20,9 +21,12 @@ import {
 } from './stackScriptUtils';
 
 export const StackScriptDetail = () => {
+  const history = useHistory();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
-  const { stackScriptId } = useParams<{ stackScriptId: string }>();
+  const { id: stackScriptId } = useParams({
+    from: '/stackscripts/$id',
+  });
 
   const id = Number(stackScriptId);
 
@@ -32,10 +36,6 @@ export const StackScriptDetail = () => {
     mutateAsync: updateStackScript,
     reset,
   } = useUpdateStackScriptMutation(id);
-
-  const history = useHistory();
-  const location = useLocation();
-
   const isRestrictedUser = profile?.restricted ?? false;
   const username = profile?.username;
   const userCannotAddLinodes = isRestrictedUser && !grants?.global.add_linodes;

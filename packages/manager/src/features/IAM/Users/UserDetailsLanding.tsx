@@ -12,7 +12,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
-import { IAM_LABEL } from '../Shared/constants';
+import { IAM_DOCS_LINK, IAM_LABEL } from '../Shared/constants';
 
 const UserDetails = React.lazy(() =>
   import('./UserDetails/UserProfile').then((module) => ({
@@ -81,6 +81,7 @@ export const UserDetailsLanding = () => {
           },
           pathname: location.pathname,
         }}
+        docsLink={IAM_DOCS_LINK}
         removeCrumbX={4}
         title={username}
       />

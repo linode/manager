@@ -23,14 +23,14 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
 import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
   queryPresets,
-} from '../base';
+} from '@linode/queries';
 import { extendIssues } from './helpers';
 
 import type { ExtendedIssue } from './types';

@@ -76,5 +76,5 @@ const StyledIconButton = styled(IconButton, {
     transition: theme.transitions.create(['color']),
     width: '16px',
   },
-  padding: theme.tokens.spacing[60],
+  padding: theme.tokens.spacing.S16,
 }));

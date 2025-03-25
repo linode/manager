@@ -187,7 +187,13 @@ export const DatabaseBackups = (props: Props) => {
             />
           </RadioGroup>
         )}
-        <Grid container justifyContent="flex-start" mt={2}>
+        <Grid
+          container
+          sx={{
+            justifyContent: 'flex-start',
+            mt: 2,
+          }}
+        >
           <Grid item lg={3} md={4} xs={12}>
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>

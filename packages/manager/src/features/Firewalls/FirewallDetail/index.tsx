@@ -1,24 +1,27 @@
-import { CircleProgress } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import {
+  useAllFirewallDevicesQuery,
+  useFirewallQuery,
+  useGrants,
+  useMutateFirewall,
+  useProfile,
+} from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
-import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
@@ -36,8 +39,9 @@ const FirewallDeviceLanding = React.lazy(() =>
 );
 
 export const FirewallDetail = () => {
-  const { id, tab } = useParams<{ id: string; tab?: string }>();
-  const history = useHistory();
+  const { id } = useParams({
+    strict: false,
+  });
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
@@ -69,22 +73,20 @@ export const FirewallDetail = () => {
     { linodeCount: 0, nodebalancerCount: 0 }
   ) || { linodeCount: 0, nodebalancerCount: 0 };
 
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: `/firewalls/${id}/rules`,
       title: 'Rules',
+      to: `/firewalls/$id/rules`,
     },
     {
-      routeName: `/firewalls/${id}/linodes`,
       title: `Linodes (${linodeCount})`,
+      to: `/firewalls/$id/linodes`,
     },
     {
-      routeName: `/firewalls/${id}/nodebalancers`,
       title: `NodeBalancers (${nodebalancerCount})`,
+      to: `/firewalls/$id/nodebalancers`,
     },
-  ];
-
-  const tabIndex = tab ? tabs.findIndex((t) => t.routeName.endsWith(tab)) : -1;
+  ]);
 
   const { data: firewall, error, isLoading } = useFirewallQuery(firewallId);
 
@@ -151,12 +153,8 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(i) => history.push(tabs[i].routeName)}
-      >
-        <TabLinkList tabs={tabs} />
-
+      <Tabs index={tabIndex === -1 ? 0 : tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
             <FirewallRulesLanding
@@ -190,7 +188,3 @@ export const FirewallDetail = () => {
     </React.Fragment>
   );
 };
-
-export const firewallDetailLazyRoute = createLazyRoute('/firewalls/$id')({
-  component: FirewallDetail,
-});

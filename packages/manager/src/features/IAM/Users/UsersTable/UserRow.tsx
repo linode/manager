@@ -1,16 +1,16 @@
 import { Box, Chip, Stack, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
+import { useProfile } from '@linode/queries';
 
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -40,7 +40,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             username={user.username}
           />
-          <Typography>
+          <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
             <MaskableText isToggleable text={user.username}>
               <Link to={`/iam/users/${user.username}/details`}>
                 {user.username}
@@ -51,7 +51,12 @@ export const UserRow = ({ onDelete, user }: Props) => {
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
-      <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+      <TableCell
+        sx={{
+          '& > p': { overflow: 'hidden', textOverflow: 'ellipsis' },
+          display: { sm: 'table-cell', xs: 'none' },
+        }}
+      >
         <MaskableText isToggleable text={user.email} />
       </TableCell>
       {!isProxyUser && (

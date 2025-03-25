@@ -83,7 +83,7 @@ x-e2e-runners:
     target: e2e
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  entrypoint: 'yarn'
+  entrypoint: 'pnpm'
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
@@ -164,7 +164,7 @@ services:
     entrypoint:
       - "/bin/sh"
       - "-c"
-      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} & yarn $0 $@"
+      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} > /dev/null 2>&1 & pnpm $0 $@"
 
   # Cypress component test runner service.
   #
@@ -191,7 +191,7 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
-    entrypoint: ['yarn', 'cy:e2e']
+    entrypoint: ['pnpm', 'cy:e2e']
 
   # Component test runner.
   # Does not require any Cloud Manager environment to run.
@@ -201,7 +201,7 @@ services:
     environment:
       CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
       CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
-    entrypoint: ['yarn', 'cy:component:run']
+    entrypoint: ['pnpm', 'cy:component:run']
 
   # End-to-end test runner for Cloud's synthetic monitoring tests.
   # Configured to run against a remote Cloud instance hosted at some URL.
@@ -211,4 +211,4 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
-    entrypoint: ['yarn', 'cy:e2e']
+    entrypoint: ['pnpm', 'cy:e2e']

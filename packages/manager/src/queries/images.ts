@@ -7,17 +7,16 @@ import {
   updateImageRegions,
   uploadImage,
 } from '@linode/api-v4';
+import { profileQueries } from '@linode/queries';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-
-import { getAll } from 'src/utilities/getAll';
-
-import { profileQueries } from './profile/profile';
 
 import type {
   APIError,
@@ -30,8 +29,8 @@ import type {
   UpdateImageRegionsPayload,
   UploadImageResponse,
 } from '@linode/api-v4';
+import type { EventHandlerData } from '@linode/queries';
 import type { UseQueryOptions } from '@tanstack/react-query';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -49,6 +48,11 @@ export const imageQueries = createQueryKeys('images', {
   image: (imageId: string) => ({
     queryFn: () => getImage(imageId),
     queryKey: [imageId],
+  }),
+  infinite: (filters: Filter) => ({
+    queryFn: ({ pageParam }) =>
+      getImages({ page: pageParam as number }, filters),
+    queryKey: [filters],
   }),
   paginated: (params: Params, filters: Filter) => ({
     queryFn: () => getImages(params, filters),
@@ -72,6 +76,21 @@ export const useImageQuery = (imageId: string, enabled = true) =>
     ...imageQueries.image(imageId),
     enabled,
   });
+
+export const useImagesInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Image>, APIError[]>({
+    ...imageQueries.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useCreateImageMutation = () => {
   const queryClient = useQueryClient();

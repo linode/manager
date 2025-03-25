@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -44,7 +44,13 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
   const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
 
   return (
-    <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
+    <Grid
+      sx={sx}
+      size={{
+        lg: gridSize.lg,
+        xs: gridSize.xs,
+      }}
+    >
       <StyledColumnLabelGrid>
         {title} {isDisabled && PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>

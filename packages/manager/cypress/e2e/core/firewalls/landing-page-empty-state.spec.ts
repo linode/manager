@@ -1,5 +1,5 @@
-import { ui } from 'support/ui';
 import { mockGetFirewalls } from 'support/intercepts/firewalls';
+import { ui } from 'support/ui';
 
 describe('confirms Firewalls landing page empty state is shown when no Firewalls exist', () => {
   /*

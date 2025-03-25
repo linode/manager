@@ -1,22 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, CircleProgress, Notice, Paper, Stack } from '@linode/ui';
+import { useGrants, useProfile } from '@linode/queries';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  Stack,
+} from '@linode/ui';
+import { arrayToList } from '@linode/utilities';
 import { stackScriptSchema } from '@linode/validation';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import {
   useStackScriptQuery,
   useUpdateStackScriptMutation,
 } from 'src/queries/stackscripts';
-import { arrayToList } from 'src/utilities/arrayToList';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
@@ -26,14 +32,19 @@ import type { StackScriptPayload } from '@linode/api-v4';
 
 export const StackScriptEdit = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { stackScriptID } = useParams<{ stackScriptID: string }>();
-  const history = useHistory();
-  const id = Number(stackScriptID);
+  const { id } = useParams({
+    from: '/stackscripts/$id/edit',
+  });
+  const navigate = useNavigate();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: stackscript, error, isLoading } = useStackScriptQuery(id);
-  const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(id);
+  const { data: stackscript, error, isLoading } = useStackScriptQuery(
+    Number(id)
+  );
+  const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(
+    Number(id)
+  );
 
   const [isResetConfirmationOpen, setIsResetConfirmationOpen] = useState(false);
 
@@ -65,7 +76,7 @@ export const StackScriptEdit = () => {
       enqueueSnackbar(`Successfully updated StackScript ${stackscript.label}`, {
         variant: 'success',
       });
-      history.push(`/stackscripts/${stackscript.id}`);
+      navigate({ params: { id: stackscript.id }, to: `/stackscripts/$id` });
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });

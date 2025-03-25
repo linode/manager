@@ -9,7 +9,7 @@ import {
   CANCELLATION_DATA_LOSS_WARNING,
   CANCELLATION_DIALOG_TITLE,
 } from 'src/features/Account/constants';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -82,10 +82,10 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         type: 'AccountSetting',
       }}
       typographyStyleSx={(theme) => ({
-        borderTop: `1px solid ${theme.tokens.border.Normal}`,
-        marginBottom: theme.tokens.spacing[40],
-        marginTop: theme.tokens.spacing[60],
-        paddingTop: theme.tokens.spacing[60],
+        borderTop: `1px solid ${theme.tokens.alias.Border.Normal}`,
+        marginBottom: theme.tokens.spacing.S8,
+        marginTop: theme.tokens.spacing.S16,
+        paddingTop: theme.tokens.spacing.S16,
         width: '100%',
       })}
       expand
@@ -104,7 +104,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       <StyledNoticeWrapper>
         <Notice
           sx={(theme) => ({
-            border: `1px solid ${theme.tokens.action.Negative.Default}`,
+            border: `1px solid ${theme.tokens.alias.Action.Negative.Default}`,
           })}
           important
           spacingBottom={12}
@@ -117,7 +117,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       </StyledNoticeWrapper>
       <Typography
         sx={(theme) => ({
-          marginTop: theme.tokens.spacing[60],
+          marginTop: theme.tokens.spacing.S16,
           order: 1,
         })}
       >

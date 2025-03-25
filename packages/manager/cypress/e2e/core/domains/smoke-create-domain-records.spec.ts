@@ -1,7 +1,7 @@
 import { authenticate } from 'support/api/authentication';
 import { createDomain } from 'support/api/domains';
-import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { createDomainRecords } from 'support/constants/domains';
+import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 
@@ -42,7 +42,8 @@ const editCaaRecord = (name: string, newValue: string) => {
   ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
 
   // Edit the value field
-  cy.findByLabelText('Value').clear().type(newValue);
+  cy.findByLabelText('Value').clear();
+  cy.focused().type(newValue);
   ui.button.findByTitle('Save').click();
 };
 

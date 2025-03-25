@@ -1,5 +1,5 @@
 import { Entity, Notification } from '@linode/api-v4/lib/account';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 const generateEntity = (

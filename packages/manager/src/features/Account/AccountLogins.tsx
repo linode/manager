@@ -15,8 +15,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountLoginsQuery } from 'src/queries/account/logins';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountLoginsQuery, useProfile } from '@linode/queries';
 
 import AccountLoginsTableRow from './AccountLoginsTableRow';
 import { getRestrictedResourceText } from './utils';

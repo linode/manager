@@ -1,10 +1,10 @@
+import { arePropsEqual } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ContactsRow from './ContactsRow';

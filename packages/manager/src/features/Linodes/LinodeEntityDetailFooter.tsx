@@ -1,12 +1,11 @@
+import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -69,31 +68,34 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
   return (
     <Grid
       sx={{
+        alignItems: 'center',
         flex: 1,
-        paddingX: 1,
+        justifyContent: 'space-between',
         paddingY: 0,
       }}
-      alignItems="center"
       container
       direction="row"
-      justifyContent="space-between"
       spacing={2}
     >
       <Grid
+        size={{
+          lg: 8,
+          xs: 12,
+        }}
         sx={{
+          alignItems: 'flex-start',
           display: 'flex',
           padding: 0,
+
           [theme.breakpoints.down('lg')]: {
             padding: '8px',
           },
+
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
           },
         }}
-        alignItems="flex-start"
-        lg={8}
-        xs={12}
       >
         <StyledBox>
           {linodePlan && (
@@ -134,14 +136,16 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         </StyledBox>
       </Grid>
       <Grid
+        size={{
+          lg: 4,
+          xs: 12,
+        }}
         sx={{
           [theme.breakpoints.down('lg')]: {
             display: 'flex',
             justifyContent: 'flex-start',
           },
         }}
-        lg={4}
-        xs={12}
       >
         <TagCell
           sx={{

@@ -1,5 +1,6 @@
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from './AlertsRegionFilter';
+import type { AlertsTagFilterProps } from './AlertsTagsFilter';
 import type { AlertServiceType } from '@linode/api-v4';
 import type { MemoExoticComponent } from 'react';
 
@@ -7,9 +8,9 @@ export interface ColumnConfig<T> {
   /**
    * Function to extract the value from a data object for display in the column.
    * @param data - The data object of type T.
-   * @returns The string representation of the column value.
+   * @returns The react node representation of the column value.
    */
-  accessor: (data: T) => string;
+  accessor: (data: T) => React.ReactNode;
 
   /**
    * The label or title of the column to be displayed in the table header.
@@ -43,7 +44,7 @@ export type ServiceColumns<T> = Record<
  * Defines the available filter keys that can be used to filter alerts.
  * This type will be extended in the future to include other attributes like tags, plan, etc.
  */
-export type AlertFilterKey = 'engineType' | 'region'; // will be extended to have tags, plan etc.,
+export type AlertFilterKey = 'engineType' | 'region' | 'tags'; // will be extended to have tags, plan etc.,
 
 /**
  * Represents the possible types for alert filter values.
@@ -55,14 +56,19 @@ export type AlertFilterType = boolean | number | string | string[] | undefined;
  * Defines additional filter keys that can be used beyond the primary ones.
  * Future Extensions: Additional attributes like 'tags' and 'plan' can be added here.
  */
-export type AlertAdditionalFilterKey = 'engineType'; // will be extended to have tags, plan etc.,
+export type AlertAdditionalFilterKey = 'engineType' | 'tags'; // will be extended to have tags, plan etc.,
+
+export type AlertResourceFiltersProps =
+  | AlertsEngineOptionProps
+  | AlertsRegionProps
+  | AlertsTagFilterProps;
 
 /**
  * Configuration for dynamically rendering service-specific filters.
  */
 export interface ServiceFilterConfig {
   component: MemoExoticComponent<
-    React.ComponentType<AlertsEngineOptionProps | AlertsRegionProps>
+    React.ComponentType<AlertResourceFiltersProps>
   >;
   filterKey: AlertFilterKey;
 }

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 
-import PasswordInput from './PasswordInput';
+import { PasswordInput } from './PasswordInput';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
