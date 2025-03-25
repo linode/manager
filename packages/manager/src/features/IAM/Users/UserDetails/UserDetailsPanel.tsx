@@ -10,8 +10,8 @@ import { TextTooltip } from 'src/components/TextTooltip';
 
 import type {
   AccountAccessType,
+  EntityAccess,
   IamUserPermissions,
-  ResourceAccess,
   RoleType,
   User,
 } from '@linode/api-v4';
@@ -152,9 +152,9 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
 const getAssignRoles = (assignedRoles: IamUserPermissions): number => {
   const accountAccessRoles = assignedRoles.account_access || [];
 
-  const resourceAccessRoles = assignedRoles.resource_access
-    ? assignedRoles.resource_access
-        .map((resource: ResourceAccess) => resource.roles)
+  const resourceAccessRoles = assignedRoles.entity_access
+    ? assignedRoles.entity_access
+        .map((resource: EntityAccess) => resource.roles)
         .flat()
     : [];
 

@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountEntitiesFactory } from 'src/factories/accountEntities';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -11,7 +11,7 @@ import { UserRoles } from './UserRoles';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountResources: vi.fn().mockReturnValue({}),
+  useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -24,11 +24,11 @@ vi.mock('src/queries/iam/iam', async () => {
   };
 });
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual<any>('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual<any>('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
@@ -54,8 +54,8 @@ describe('UserRoles', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntitiesFactory.build(),
     });
 
     const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(

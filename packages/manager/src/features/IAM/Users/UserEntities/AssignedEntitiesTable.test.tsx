@@ -1,14 +1,14 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountResourcesFactory } from 'src/factories/accountResources';
+import { accountEntitiesFactory } from 'src/factories/accountEntities';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountResources: vi.fn().mockReturnValue({}),
+  useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -20,11 +20,11 @@ vi.mock('src/queries/iam/iam', async () => {
   };
 });
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual<any>('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual<any>('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
@@ -44,17 +44,17 @@ describe('AssignedEntitiesTable', () => {
       data: userPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntitiesFactory.build(),
     });
 
     const { getAllByLabelText, getByText } = renderWithTheme(
       <AssignedEntitiesTable />
     );
 
-    expect(getByText('firewall-us-123')).toBeInTheDocument();
+    expect(getByText('no_devices')).toBeInTheDocument();
     expect(getByText('Firewall')).toBeInTheDocument();
-    expect(getByText('update_firewall')).toBeInTheDocument();
+    expect(getByText('firewall_creator')).toBeInTheDocument();
 
     const actionMenuButton = getAllByLabelText('action menu')[0];
     expect(actionMenuButton).toBeInTheDocument();
@@ -69,8 +69,8 @@ describe('AssignedEntitiesTable', () => {
       data: userPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntitiesFactory.build(),
     });
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
@@ -90,8 +90,8 @@ describe('AssignedEntitiesTable', () => {
       data: userPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntitiesFactory.build(),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(
@@ -100,11 +100,11 @@ describe('AssignedEntitiesTable', () => {
 
     const searchInput = getByPlaceholderText('Search');
     fireEvent.change(searchInput, {
-      target: { value: 'firewall-us-123' },
+      target: { value: 'no_devices' },
     });
 
     await waitFor(() => {
-      expect(queryByText('firewall-us-123')).toBeInTheDocument();
+      expect(queryByText('no_devices')).toBeInTheDocument();
     });
   });
 
@@ -113,8 +113,8 @@ describe('AssignedEntitiesTable', () => {
       data: userPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntitiesFactory.build(),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(
@@ -125,7 +125,7 @@ describe('AssignedEntitiesTable', () => {
     fireEvent.change(autocomplete, { target: { value: 'Firewalls' } });
 
     await waitFor(() => {
-      expect(queryByText('firewall-us-123')).toBeInTheDocument();
+      expect(queryByText('no_devices')).toBeInTheDocument();
     });
   });
 });
