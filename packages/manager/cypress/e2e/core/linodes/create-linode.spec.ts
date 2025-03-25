@@ -2,6 +2,7 @@
  * @file Linode Create end-to-end tests.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -33,7 +34,6 @@ import {
   linodeFactory,
   linodeTypeFactory,
   profileFactory,
-  regionFactory,
 } from 'src/factories';
 
 let username: string;

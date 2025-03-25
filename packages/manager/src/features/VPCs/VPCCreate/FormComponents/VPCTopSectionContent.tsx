@@ -6,14 +6,15 @@ import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
 import { StyledBodyTypography } from './VPCCreateForm.styles';
 
-import type { Region } from '@linode/api-v4';
 import type { CreateVPCPayload } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+import type { Region } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
 export const VPCTopSectionContent = (props: Props) => {
   const { disabled, isDrawer, regions } = props;
   const location = useLocation();
+  const flags = useFlags();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
@@ -59,6 +61,7 @@ export const VPCTopSectionContent = (props: Props) => {
             currentCapability="VPCs"
             disabled={isDrawer ? true : disabled}
             errorText={fieldState.error?.message}
+            flags={flags}
             onBlur={field.onBlur}
             onChange={(_, region) => field.onChange(region?.id ?? '')}
             regions={regions}

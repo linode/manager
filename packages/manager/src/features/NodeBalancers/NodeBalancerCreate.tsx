@@ -20,10 +20,9 @@ import {
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -38,6 +37,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -98,6 +98,8 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
+  const flags = useFlags();
+  const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -108,8 +110,6 @@ const NodeBalancerCreate = () => {
     isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
-
-  const history = useHistory();
 
   const [
     nodeBalancerFields,
@@ -303,7 +303,10 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
+        navigate({
+          params: { id: String(nodeBalancer.id) },
+          to: '/nodebalancers/$id/summary',
+        });
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
@@ -542,6 +545,7 @@ const NodeBalancerCreate = () => {
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}
+              flags={flags}
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}
@@ -806,11 +810,5 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     ];
   }, []);
 };
-
-export const nodeBalancerCreateLazyRoute = createLazyRoute(
-  '/nodebalancers/create'
-)({
-  component: NodeBalancerCreate,
-});
 
 export default NodeBalancerCreate;

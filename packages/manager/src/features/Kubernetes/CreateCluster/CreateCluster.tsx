@@ -13,6 +13,7 @@ import {
   TextField,
 } from '@linode/ui';
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -35,6 +36,7 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useCreateKubernetesClusterBetaMutation,
@@ -46,8 +48,10 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -75,6 +79,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
+  const flags = useFlags();
   const { classes } = useStyles();
   const [selectedRegion, setSelectedRegion] = React.useState<
     Region | undefined
@@ -107,6 +112,10 @@ export const CreateCluster = () => {
   const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
     'standard'
   );
+  const [
+    isACLAcknowledgementChecked,
+    setIsACLAcknowledgementChecked,
+  ] = React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -189,7 +198,7 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-  const createCluster = () => {
+  const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
       scrollErrorIntoViewV2(formContainerRef);
       return;
@@ -256,6 +265,21 @@ export const CreateCluster = () => {
       isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
+
+    // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
+    if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
+      try {
+        await createKubeClusterWithRequiredACLSchema.validate(payload, {
+          abortEarly: false,
+        });
+      } catch ({ errors }) {
+        setErrors([{ field: 'control_plane', reason: errors[0] }]);
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+
+        return;
+      }
+    }
 
     createClusterFn(payload)
       .then((cluster) => {
@@ -408,6 +432,7 @@ export const CreateCluster = () => {
                 disableClearable
                 disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
+                flags={flags}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
                 value={selectedRegion?.id}
@@ -490,10 +515,14 @@ export const CreateCluster = () => {
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
+                handleIsAcknowledgementChecked={(isChecked: boolean) =>
+                  setIsACLAcknowledgementChecked(isChecked)
+                }
                 enableControlPlaneACL={controlPlaneACL}
                 errorText={errorMap.control_plane}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
                 selectedTier={selectedTier}
                 setControlPlaneACL={setControlPlaneACL}
               />
