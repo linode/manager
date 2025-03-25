@@ -191,14 +191,16 @@ export const FirewallDetail = () => {
         defaultForEntities &&
         defaultForEntities.length > 0 && (
           <Paper
-            sx={{
+            sx={(theme) => ({
               alignItems: 'center',
               display: 'flex',
               flexWrap: 'wrap',
               gap: 2,
-              margin: '16px 0px',
-              padding: 2,
-            }}
+              margin: `${theme.spacingFunction(16)} 0`,
+              padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(
+                16
+              )}`,
+            })}
           >
             <Typography>
               <strong>Default</strong>
