@@ -32,7 +32,10 @@ import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
   getEntitiesThatFirewallIsDefaultFor,
 } from '../components/FirewallSelectOption.utils';
-import { checkIfUserCanModifyFirewall } from '../shared';
+import {
+  checkIfUserCanModifyFirewall,
+  getLinodeIdFromInterfaceDevice,
+} from '../shared';
 
 const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding').then((module) => ({
@@ -89,7 +92,7 @@ export const FirewallDetail = () => {
         isLinodeInterfacesEnabled &&
         device.entity.type === 'interface'
       ) {
-        const linodeId = device.entity.url.split('/')[4];
+        const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
         if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {
           acc.linodeCount += 1;
         }
@@ -100,7 +103,7 @@ export const FirewallDetail = () => {
     {
       linodeCount: 0,
       nodebalancerCount: 0,
-      seenLinodeIdsForInterfaces: new Set<string>(),
+      seenLinodeIdsForInterfaces: new Set<number>(),
     }
   ) || {
     linodeCount: 0,

@@ -12,6 +12,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { DefaultFirewallChip } from '../components/DefaultFirewallChip';
 import { getDefaultFirewallDescription } from '../components/FirewallSelectOption.utils';
+import { getLinodeIdFromInterfaceDevice } from '../shared';
 import { FirewallActionMenu } from './FirewallActionMenu';
 
 import type { ActionHandlers } from './FirewallActionMenu';
@@ -41,7 +42,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
     .slice(0, 3) // only take the first three entities since we only show those entity links
     .filter((entity) => entity.type === 'interface')
     .map((entity) => {
-      return { id: Number(entity.url.split('/')[4]) };
+      return { id: getLinodeIdFromInterfaceDevice(entity) };
     });
 
   const filterForInterfaceDeviceLinodes: Filter = {
@@ -175,7 +176,7 @@ export const getDeviceLinks = (
         // TODO @Linode Interfaces - update interface links to interface details soon
         const entityId =
           entity.type === 'interface'
-            ? Number(entity.url.split('/')[4])
+            ? getLinodeIdFromInterfaceDevice(entity)
             : entity.id;
         const entityLabel =
           entity.type === 'interface'

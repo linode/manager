@@ -66,7 +66,7 @@ describe('FirewallRow', () => {
       triggerEnableFirewall: mockTriggerEnableFirewall,
     };
 
-    it.only('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
+    it('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
       queryMocks.useFirewallSettingsQuery.mockReturnValue({
         data: {
           default_firewall_ids: {
