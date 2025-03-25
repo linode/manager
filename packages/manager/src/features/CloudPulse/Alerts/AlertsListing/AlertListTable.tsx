@@ -64,7 +64,9 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     toggleAlertsGroupedByTag,
   } = props;
 
-  const _error = error;
+  const _error = error
+    ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
+    : undefined;
   const history = useHistory();
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
 
