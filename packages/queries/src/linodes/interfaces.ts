@@ -27,13 +27,14 @@ export const useLinodeInterfacesQuery = (linodeId: number) => {
 
 export const useLinodeInterfaceQuery = (
   linodeId: number,
-  interfaceId: number
+  interfaceId: number | undefined,
+  enabled: boolean = true
 ) => {
   return useQuery<LinodeInterface, APIError[]>({
     ...linodeQueries
       .linode(linodeId)
-      ._ctx.interfaces._ctx.interface(interfaceId),
-    enabled: Boolean(interfaceId),
+      ._ctx.interfaces._ctx.interface(interfaceId ?? -1),
+    enabled: enabled && interfaceId !== undefined,
   });
 };
 
