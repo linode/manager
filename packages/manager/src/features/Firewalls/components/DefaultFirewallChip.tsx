@@ -4,9 +4,7 @@ import React from 'react';
 import type { SxProps } from '@mui/material';
 
 interface Props {
-  chipProps?: {
-    sx?: SxProps;
-  };
+  chipProps?: Partial<ChipProps>;
   tooltipText: React.ReactNode;
 }
 
