@@ -5,7 +5,6 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import { useAccountSettings } from '@linode/queries';
 import { isFeatureEnabledV2, useErrors, useOpenClose } from '@linode/utilities';
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -38,15 +37,22 @@ import type { FormikBag, FormikHelpers } from 'formik';
 
 interface Props {
   accessDrawerOpen: boolean;
+  closeAccessDrawer: () => void;
   isRestrictedUser: boolean;
   mode: MODE;
+  openAccessDrawer: (mode: MODE) => void;
 }
 
 export type FormikProps = FormikBag<Props, CreateObjectStorageKeyPayload>;
 
 export const AccessKeyLanding = (props: Props) => {
-  const { accessDrawerOpen, isRestrictedUser, mode } = props;
-  const navigate = useNavigate();
+  const {
+    accessDrawerOpen,
+    closeAccessDrawer,
+    isRestrictedUser,
+    mode,
+    openAccessDrawer,
+  } = props;
 
   const pagination = usePagination(1);
 
@@ -110,7 +116,7 @@ export const AccessKeyLanding = (props: Props) => {
         // "Refresh" keys to include the newly created key
         refetch();
 
-        navigate({ to: '/object-storage/access-keys' });
+        props.closeAccessDrawer();
         displayKeysDialog.open();
 
         // If our Redux Store says that the user doesn't have OBJ enabled,
@@ -168,12 +174,12 @@ export const AccessKeyLanding = (props: Props) => {
     // If the new label is the same as the old one, no need to make an API
     // request. Just close the drawer and return early.
     if (values.label === keyToEdit.label) {
-      return navigate({ to: '/object-storage/access-keys' });
+      return closeAccessDrawer();
     }
 
     setSubmitting(true);
 
-    return updateObjectStorageKey(
+    updateObjectStorageKey(
       keyToEdit.id,
       isObjMultiClusterEnabled ? values : { label: values.label }
     )
@@ -183,7 +189,7 @@ export const AccessKeyLanding = (props: Props) => {
         // "Refresh" keys to display the newly updated key
         refetch();
 
-        navigate({ to: '/object-storage/access-keys' });
+        closeAccessDrawer();
 
         // @analytics
         sendEditAccessKeyEvent();
@@ -244,7 +250,7 @@ export const AccessKeyLanding = (props: Props) => {
   ) => {
     setKeyToEdit(objectStorageKey);
     if (mode !== 'creating') {
-      navigate({ to: '/object-storage/access-keys' });
+      openAccessDrawer(mode);
     }
   };
 
@@ -285,7 +291,7 @@ export const AccessKeyLanding = (props: Props) => {
           isRestrictedUser={props.isRestrictedUser}
           mode={mode}
           objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={() => navigate({ to: '/object-storage/access-keys' })}
+          onClose={closeAccessDrawer}
           onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
           open={accessDrawerOpen}
         />
@@ -294,7 +300,7 @@ export const AccessKeyLanding = (props: Props) => {
           isRestrictedUser={props.isRestrictedUser}
           mode={mode}
           objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          onClose={() => navigate({ to: '/object-storage/access-keys' })}
+          onClose={closeAccessDrawer}
           onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
           open={accessDrawerOpen}
         />
@@ -302,7 +308,7 @@ export const AccessKeyLanding = (props: Props) => {
 
       <ViewPermissionsDrawer
         objectStorageKey={keyToEdit}
-        onClose={() => navigate({ to: '/object-storage/access-keys' })}
+        onClose={closeAccessDrawer}
         open={mode === 'viewing' && accessDrawerOpen}
       />
       <SecretTokenDialog

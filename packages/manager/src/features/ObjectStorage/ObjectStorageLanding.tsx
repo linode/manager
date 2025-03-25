@@ -1,5 +1,5 @@
 import { StyledLinkButton, Typography } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
+import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -97,6 +97,13 @@ export const ObjectStorageLanding = () => {
     ? 'Create Access Key'
     : 'Create Bucket';
 
+  const openDrawer = useOpenClose();
+
+  const handleOpenAccessDrawer = (mode: MODE) => {
+    setMode(mode);
+    openDrawer.open();
+  };
+
   const createButtonAction = () => {
     if (isAccessKeysTab) {
       navigate({ to: '/object-storage/access-keys/create' });
@@ -160,9 +167,13 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
+                closeAccessDrawer={() =>
+                  navigate({ to: '/object-storage/access-keys' })
+                }
                 accessDrawerOpen={isCreateAccessKeyOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
+                openAccessDrawer={handleOpenAccessDrawer}
               />
             </SafeTabPanel>
           </TabPanels>
