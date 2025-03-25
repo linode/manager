@@ -16,6 +16,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 
 import {
@@ -94,7 +95,9 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     return acc;
   }, 0);
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const flags = useFlags();
+
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   if (display === 'grid') {
     return (
