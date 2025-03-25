@@ -11,6 +11,12 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import {
+  EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  OPTIMISTIC_SUCCESS_MESSAGE,
+  SINGLELINE_ERROR_SEPARATOR,
+} from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -20,10 +26,12 @@ import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPu
 import {
   convertAlertDefinitionValues,
   getEditSchemaWithEntityIdValidation,
+  handleMultipleError,
 } from '../Utils/utils';
 import { editAlertDefinitionFormSchema } from './schemas';
 
 import type {
+  APIError,
   Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
@@ -74,20 +82,24 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar('Alert successfully updated.', {
-        variant: 'success',
+      enqueueSnackbar(OPTIMISTIC_SUCCESS_MESSAGE, {
+        variant: 'info',
       });
       history.push(definitionLanding);
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      handleMultipleError<EditAlertDefinitionPayload>({
+        errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
+        errors,
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Editing alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });
@@ -96,17 +108,12 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const overrides = [
     {
       label: 'Definitions',
-
       linkTo: definitionLanding,
-
       position: 1,
     },
-
     {
       label: 'Edit',
-
       linkTo: `${definitionLanding}/edit/${serviceType}/${alertId}`,
-
       position: 2,
     },
   ];

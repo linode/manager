@@ -1,7 +1,6 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
-
 import {
   accountFactory,
   accountSettingsFactory,
@@ -146,7 +145,7 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label (required)')
+        cy.findByLabelText('Bucket Name (required)')
           .should('be.visible')
           .type(randomLabel());
 

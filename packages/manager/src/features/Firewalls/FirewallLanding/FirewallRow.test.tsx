@@ -70,7 +70,7 @@ describe('FirewallRow', () => {
       const device = firewallDeviceFactory.build();
       const links = getDeviceLinks([device.entity]);
       const { getByText } = renderWithTheme(links);
-      expect(getByText(device.entity.label));
+      expect(getByText(device.entity.label ?? ''));
     });
 
     it('should render up to three comma-separated links', () => {

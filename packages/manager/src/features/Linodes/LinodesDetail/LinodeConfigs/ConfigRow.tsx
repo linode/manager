@@ -2,6 +2,7 @@ import {
   useAllLinodeDisksQuery,
   useLinodeKernelQuery,
   useLinodeQuery,
+  useLinodeVolumesQuery,
 } from '@linode/queries';
 import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
@@ -9,7 +10,6 @@ import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 import { InterfaceListItem } from './InterfaceListItem';
 import { ConfigActionMenu } from './LinodeConfigActionMenu';

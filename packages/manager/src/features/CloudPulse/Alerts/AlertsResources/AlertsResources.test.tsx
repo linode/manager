@@ -254,7 +254,7 @@ describe('AlertResources component tests', () => {
     await userEvent.click(getByText('Select All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
 
-    // click unselect all in notice and test
+    // click deselect all in notice and test
     await userEvent.click(getByText('Deselect All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });

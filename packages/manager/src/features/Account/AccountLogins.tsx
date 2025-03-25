@@ -1,7 +1,9 @@
+import { useAccountLoginsQuery, useProfile } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,14 +17,12 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountLoginsQuery, useProfile } from '@linode/queries';
 
 import AccountLoginsTableRow from './AccountLoginsTableRow';
 import { getRestrictedResourceText } from './utils';
 
 import type { AccountLogin } from '@linode/api-v4/lib/account/types';
 import type { Theme } from '@mui/material/styles';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const preferenceKey = 'account-logins';
 

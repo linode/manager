@@ -128,9 +128,6 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const NodeBalancers = React.lazy(
-  () => import('src/features/NodeBalancers/NodeBalancers')
-);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -365,10 +362,6 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            <Route
-                              component={NodeBalancers}
-                              path="/nodebalancers"
-                            />
                             <Route component={Managed} path="/managed" />
                             <Route
                               component={ObjectStorage}

@@ -135,10 +135,10 @@ describe('CreateAlertResources component tests', () => {
       checkedAttribute,
       'false'
     );
-
     // no error notice should be there in happy path
     expect(queryByTestId('alert_message_notice')).not.toBeInTheDocument();
   });
+
   it('should be able to see the error notice if the forms field state has error', () => {
     const {
       getAllByTestId,
