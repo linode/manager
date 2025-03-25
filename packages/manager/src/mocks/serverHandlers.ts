@@ -116,8 +116,8 @@ import { getStorage } from 'src/utilities/storage';
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
+import { accountEntitiesFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 import type {
@@ -435,14 +435,14 @@ const iam = [
   http.get('*/iam/role-permissions', () => {
     return HttpResponse.json(accountPermissionsFactory.build());
   }),
-  http.get('*/iam/role-permissions/users/:username', () => {
+  http.get('*/iam/users/:username/role-permissions', () => {
     return HttpResponse.json(userPermissionsFactory.build());
   }),
 ];
 
-const resources = [
-  http.get('*/v4*/resources', () => {
-    return HttpResponse.json(accountResourcesFactory.build());
+const entities = [
+  http.get('*/v4*/entities', () => {
+    return HttpResponse.json(accountEntitiesFactory.build());
   }),
 ];
 
@@ -2921,5 +2921,5 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...iam,
-  ...resources,
+  ...entities,
 ];

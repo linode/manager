@@ -1,4 +1,4 @@
-export type ResourceTypePermissions =
+export type EntityTypePermissions =
   | 'linode'
   | 'firewall'
   | 'nodebalancer'
@@ -29,11 +29,11 @@ export type RoleType =
 
 export interface IamUserPermissions {
   account_access: AccountAccessType[];
-  resource_access: ResourceAccess[];
+  entity_access: EntityAccess[];
 }
-export interface ResourceAccess {
-  resource_id: number;
-  resource_type: ResourceTypePermissions;
+export interface EntityAccess {
+  id: number;
+  type: EntityTypePermissions;
   roles: RoleType[];
 }
 
@@ -196,11 +196,11 @@ export type PermissionType =
 
 export interface IamAccountPermissions {
   account_access: IamAccess[];
-  resource_access: IamAccess[];
+  entity_access: IamAccess[];
 }
 
 export interface IamAccess {
-  resource_type: ResourceTypePermissions;
+  type: EntityTypePermissions;
   roles: Roles[];
 }
 

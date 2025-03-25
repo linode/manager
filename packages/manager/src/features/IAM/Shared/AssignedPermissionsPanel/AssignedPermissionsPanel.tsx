@@ -8,14 +8,14 @@ import { Permissions } from '../Permissions/Permissions';
 
 import type { EntitiesOption } from '../utilities';
 import type {
+  EntityTypePermissions,
   IamAccessType,
-  ResourceTypePermissions,
   Roles,
 } from '@linode/api-v4/lib/iam/types';
 
 interface ExtendedRole extends Roles {
   access: IamAccessType;
-  resource_type: ResourceTypePermissions;
+  entity_type: EntityTypePermissions;
 }
 
 interface Props {
@@ -71,7 +71,7 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
       <Entities
         access={role.access}
         assignedEntities={assignedEntities ?? []}
-        type={role.resource_type}
+        type={role.entity_type}
       />
     </Paper>
   );
