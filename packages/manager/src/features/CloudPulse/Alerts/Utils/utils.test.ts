@@ -243,15 +243,15 @@ describe('getEditSchemaWithEntityIdValidation', () => {
     const SINGLELINE_ERROR_SEPARATOR = ' ';
     
     const setError = vi.fn();
-    
-    handleMultipleError(
+
+    handleMultipleError({
+      errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
       errors,
-      CREATE_ALERT_ERROR_FIELD_MAP,
-      MULTILINE_ERROR_SEPARATOR,
-      SINGLELINE_ERROR_SEPARATOR,
+      multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
       setError,
-    );
-    
+      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+    });
+
     // Check that setError was called for each field correctly
     expect(setError).toHaveBeenCalledWith('label', {
       message: 'Label already exists. Label should have less than 100 character. Label should not start with special characters.'

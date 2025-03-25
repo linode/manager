@@ -11,7 +11,7 @@ describe('AlertListNoticeMessages Component', () => {
     const { getByTestId } = renderWithTheme(
       <AlertListNoticeMessages
         errorMessage={errorMessage}
-        separator={'|'}
+        separator="|"
         variant="error"
       />
     );
@@ -28,7 +28,7 @@ describe('AlertListNoticeMessages Component', () => {
     const { getAllByTestId } = renderWithTheme(
       <AlertListNoticeMessages
         errorMessage={errorMessage}
-        separator={'|'}
+        separator="|"
         variant="error"
       />
     );
@@ -47,7 +47,7 @@ describe('AlertListNoticeMessages Component', () => {
     const { queryAllByTestId, queryByTestId } = renderWithTheme(
       <AlertListNoticeMessages
         errorMessage={errorMessage}
-        separator={''}
+        separator=" "
         variant="error"
       />
     );
