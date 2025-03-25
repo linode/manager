@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.137.2",
+  "version": "1.138.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -121,7 +121,9 @@
       "prettier --write",
       "eslint --ext .js,.ts,.tsx --quiet"
     ],
-    "*.{ts,tsx}": ["sh -c 'pnpm typecheck'"]
+    "*.{ts,tsx}": [
+      "sh -c 'pnpm typecheck'"
+    ]
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
