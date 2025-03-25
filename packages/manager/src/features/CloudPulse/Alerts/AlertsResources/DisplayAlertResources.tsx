@@ -1,4 +1,4 @@
-import { Box, Checkbox, Tooltip, Typography } from '@linode/ui';
+import { Box, Checkbox, Tooltip } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -13,6 +13,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
+import { StyledTypography } from './AlertsResources';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
@@ -172,6 +173,14 @@ export const DisplayAlertResources = React.memo(
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;
+
+    const ErrorTypoGraphy = React.memo(() => {
+      return (
+        <StyledTypography>
+          {`You can select up to ${maxSelectionCount} resources.`}
+        </StyledTypography>
+      );
+    });
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -181,174 +190,161 @@ export const DisplayAlertResources = React.memo(
           handlePageSizeChange,
           page,
           pageSize,
-        }) => (
-          <>
-            <Table data-qa-alert-table data-testid="alert_resources_region">
-              <TableHead>
-                <TableRow>
-                  {isSelectionsNeeded && (
-                    <TableCell
-                      sx={{
-                        cursor: disableRootCheckBox(paginatedData)
-                          ? 'not-allowed'
-                          : 'auto',
-                      }}
-                      padding="checkbox"
-                    >
-                      <Tooltip
-                        title={
-                          disableRootCheckBox(paginatedData) ? (
-                            <Typography
+        }) => {
+          const disableRootBox = disableRootCheckBox(paginatedData);
+          return (
+            <>
+              <Table data-qa-alert-table data-testid="alert_resources_region">
+                <TableHead>
+                  <TableRow>
+                    {isSelectionsNeeded && (
+                      <TableCell
+                        sx={{
+                          cursor: disableRootBox ? 'not-allowed' : 'auto',
+                        }}
+                        padding="checkbox"
+                      >
+                        <Tooltip
+                          title={
+                            disableRootBox ? <ErrorTypoGraphy /> : undefined
+                          }
+                          placement="right"
+                        >
+                          <Box>
+                            <Checkbox
+                              indeterminate={
+                                isSomeSelected(paginatedData) &&
+                                !isAllPageSelected(paginatedData)
+                              }
+                              onClick={() =>
+                                handleSelectionChange(
+                                  paginatedData.map(({ id }) => id),
+                                  !isAllPageSelected(paginatedData)
+                                )
+                              }
                               sx={{
-                                fontSize: '12px',
+                                p: 0,
+                              }}
+                              checked={isAllPageSelected(paginatedData)}
+                              data-testid={`select_all_in_page_${page}`}
+                              disabled={disableRootBox}
+                            />
+                          </Box>
+                        </Tooltip>
+                      </TableCell>
+                    )}
+                    {columns.map(({ label, sortingKey }) => (
+                      <TableSortCell
+                        handleClick={(orderBy, order) =>
+                          handleSort(orderBy, order, handlePageChange)
+                        }
+                        active={sorting.orderBy === sortingKey}
+                        data-qa-header={label.toLowerCase()}
+                        data-testid={label.toLowerCase()}
+                        direction={sorting.order}
+                        key={label}
+                        label={sortingKey ?? ''}
+                      >
+                        {label}
+                      </TableSortCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody
+                  data-qa-alert-table-body
+                  data-testid="alert_resources_content"
+                >
+                  {!isDataLoadingError &&
+                    paginatedData.map((resource, index) => {
+                      const { checked, id } = resource;
+                      const boxDisabled =
+                        !checked &&
+                        selectionsRemaining !== undefined &&
+                        selectionsRemaining === 0;
+                      return (
+                        <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
+                          {isSelectionsNeeded && (
+                            <TableCell
+                              sx={{
+                                cursor: boxDisabled ? 'not-allowed' : 'auto',
                               }}
                             >
-                              {`You can select upto ${maxSelectionCount} resources.`}
-                            </Typography>
-                          ) : undefined
-                        }
-                        placement="right"
-                      >
-                        <Box>
-                          <Checkbox
-                            indeterminate={
-                              isSomeSelected(paginatedData) &&
-                              !isAllPageSelected(paginatedData)
-                            }
-                            onClick={() =>
-                              handleSelectionChange(
-                                paginatedData.map(({ id }) => id),
-                                !isAllPageSelected(paginatedData)
-                              )
-                            }
-                            sx={{
-                              p: 0,
-                            }}
-                            checked={isAllPageSelected(paginatedData)}
-                            data-testid={`select_all_in_page_${page}`}
-                            disabled={disableRootCheckBox(paginatedData)}
-                          />
-                        </Box>
-                      </Tooltip>
-                    </TableCell>
-                  )}
-                  {columns.map(({ label, sortingKey }) => (
-                    <TableSortCell
-                      handleClick={(orderBy, order) =>
-                        handleSort(orderBy, order, handlePageChange)
-                      }
-                      active={sorting.orderBy === sortingKey}
-                      data-qa-header={label.toLowerCase()}
-                      data-testid={label.toLowerCase()}
-                      direction={sorting.order}
-                      key={label}
-                      label={sortingKey ?? ''}
-                    >
-                      {label}
-                    </TableSortCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody
-                data-qa-alert-table-body
-                data-testid="alert_resources_content"
-              >
-                {!isDataLoadingError &&
-                  paginatedData.map((resource, index) => {
-                    const { checked, id } = resource;
-                    const boxDisabled =
-                      !checked &&
-                      selectionsRemaining !== undefined &&
-                      selectionsRemaining === 0;
-                    return (
-                      <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
-                        {isSelectionsNeeded && (
-                          <TableCell
-                            sx={{
-                              cursor: boxDisabled ? 'not-allowed' : 'auto',
-                            }}
-                          >
-                            <Tooltip
-                              title={
-                                !checked &&
-                                selectionsRemaining !== undefined &&
-                                selectionsRemaining === 0 &&
-                                maxSelectionCount !== undefined ? (
-                                  <Typography
-                                    sx={{
-                                      fontSize: '12px',
+                              <Tooltip
+                                title={
+                                  !checked &&
+                                  selectionsRemaining !== undefined &&
+                                  selectionsRemaining === 0 &&
+                                  maxSelectionCount !== undefined ? (
+                                    <ErrorTypoGraphy />
+                                  ) : undefined
+                                }
+                                placement="right"
+                              >
+                                <Box>
+                                  <Checkbox
+                                    onClick={() => {
+                                      handleSelectionChange([id], !checked);
                                     }}
-                                  >
-                                    {`You can select upto ${maxSelectionCount} resources.`}
-                                  </Typography>
-                                ) : undefined
-                              }
-                              placement="right"
+                                    sx={{
+                                      p: 0,
+                                    }}
+                                    checked={checked}
+                                    data-testid={`select_item_${id}`}
+                                    disabled={boxDisabled}
+                                  />
+                                </Box>
+                              </Tooltip>
+                            </TableCell>
+                          )}
+                          {columns.map(({ accessor, label }) => (
+                            <TableCell
+                              data-qa-alert-cell={`${id}_${label.toLowerCase()}`}
+                              key={label}
                             >
-                              <Box>
-                                <Checkbox
-                                  onClick={() => {
-                                    handleSelectionChange([id], !checked);
-                                  }}
-                                  sx={{
-                                    p: 0,
-                                  }}
-                                  checked={checked}
-                                  data-testid={`select_item_${id}`}
-                                  disabled={boxDisabled}
-                                />
-                              </Box>
-                            </Tooltip>
-                          </TableCell>
-                        )}
-                        {columns.map(({ accessor, label }) => (
-                          <TableCell
-                            data-qa-alert-cell={`${id}_${label.toLowerCase()}`}
-                            key={label}
-                          >
-                            {accessor(resource)}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    );
-                  })}
-                {isDataLoadingError && (
-                  <TableRowError
-                    colSpan={colSpanCount}
-                    message="Table data is unavailable. Please try again later."
-                  />
-                )}
-                {paginatedData.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      align="center"
+                              {accessor(resource)}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      );
+                    })}
+                  {isDataLoadingError && (
+                    <TableRowError
                       colSpan={colSpanCount}
-                      height="40px"
-                    >
-                      No data to display.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-            {!isDataLoadingError && paginatedData.length !== 0 && (
-              <PaginationFooter
-                handlePageChange={(page) => {
-                  handlePageNumberChange(handlePageChange, page);
-                }}
-                handleSizeChange={(pageSize) => {
-                  handlePageSizeChange(pageSize);
-                  handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
-                  scrollToGivenElement();
-                }}
-                count={count}
-                eventCategory="alerts_resources"
-                page={page}
-                pageSize={pageSize}
-              />
-            )}
-          </>
-        )}
+                      message="Table data is unavailable. Please try again later."
+                    />
+                  )}
+                  {paginatedData.length === 0 && (
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        colSpan={colSpanCount}
+                        height="40px"
+                      >
+                        No data to display.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+              {!isDataLoadingError && paginatedData.length !== 0 && (
+                <PaginationFooter
+                  handlePageChange={(page) => {
+                    handlePageNumberChange(handlePageChange, page);
+                  }}
+                  handleSizeChange={(pageSize) => {
+                    handlePageSizeChange(pageSize);
+                    handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
+                    scrollToGivenElement();
+                  }}
+                  count={count}
+                  eventCategory="alerts_resources"
+                  page={page}
+                  pageSize={pageSize}
+                />
+              )}
+            </>
+          );
+        }}
       </Paginate>
     );
   }
