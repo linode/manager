@@ -7,7 +7,17 @@ import type { ButtonProps } from '@linode/ui';
 
 export const SwitchAccountButton = (props: ButtonProps) => {
   return (
-    <Button startIcon={<SwapIcon data-testid="swap-icon" />} {...props}>
+    <Button
+      sx={(theme) => ({
+        '& .MuiButton-startIcon svg path': {
+          fill: theme.tokens.alias.Content.Text.Link.Default,
+        },
+        font: theme.tokens.alias.Typography.Label.Semibold.S,
+        marginTop: theme.tokens.spacing.S4,
+      })}
+      startIcon={<SwapIcon data-testid="swap-icon" />}
+      {...props}
+    >
       Switch Account
     </Button>
   );
