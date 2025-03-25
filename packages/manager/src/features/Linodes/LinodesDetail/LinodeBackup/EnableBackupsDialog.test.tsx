@@ -1,4 +1,3 @@
-import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
