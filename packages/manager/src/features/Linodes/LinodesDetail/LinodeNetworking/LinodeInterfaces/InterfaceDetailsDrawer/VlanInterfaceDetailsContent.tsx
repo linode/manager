@@ -1,5 +1,7 @@
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
+
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 export const VlanInterfaceDetailsContent = (props: {
   ipam_address: string;
@@ -8,14 +10,20 @@ export const VlanInterfaceDetailsContent = (props: {
   const { ipam_address, vlan_label } = props;
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>VLAN Label</strong>
-      </Typography>
-      <Typography>{vlan_label}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>IPAM Address</strong>
-      </Typography>
-      <Typography>{ipam_address}</Typography>
+      <Stack>
+        <Typography>
+          <strong>VLAN Label</strong>
+        </Typography>
+        <Typography>{vlan_label}</Typography>
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>IPAM Address</strong>
+        </Typography>
+        <Typography>
+          <MaskableText isToggleable text={ipam_address} />
+        </Typography>
+      </Stack>
     </>
   );
 };

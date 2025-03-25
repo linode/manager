@@ -1,5 +1,5 @@
 import { useVPCQuery } from '@linode/queries';
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -49,26 +49,32 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
 
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>VPC Label</strong>
-      </Typography>
-      {vpc ? (
-        <Link to={`/vpcs/${vpc_id}`}>{vpc.label}</Link>
-      ) : (
-        <CircleProgress noPadding size="xs" />
-      )}
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>Subnet Label</strong>
-      </Typography>
-      {subnet ? (
-        <Typography>{subnet.label}</Typography>
-      ) : (
-        <CircleProgress noPadding size="xs" />
-      )}
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>IPv4 Addresses</strong>
-      </Typography>
-      {ipv4ToTypography}
+      <Stack>
+        <Typography>
+          <strong>VPC Label</strong>
+        </Typography>
+        {vpc ? (
+          <Link to={`/vpcs/${vpc_id}`}>{vpc.label}</Link>
+        ) : (
+          <CircleProgress noPadding size="xs" />
+        )}
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>Subnet Label</strong>
+        </Typography>
+        {subnet ? (
+          <Typography>{subnet.label}</Typography>
+        ) : (
+          <CircleProgress noPadding size="xs" />
+        )}
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>IPv4 Addresses</strong>
+        </Typography>
+        {ipv4ToTypography}
+      </Stack>
     </>
   );
 };

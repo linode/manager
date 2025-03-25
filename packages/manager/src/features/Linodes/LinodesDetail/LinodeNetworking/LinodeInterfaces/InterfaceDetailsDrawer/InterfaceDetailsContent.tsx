@@ -16,9 +16,9 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
   const type = getLinodeInterfaceType(props);
 
   return (
-    <Stack>
+    <Stack gap={2}>
       {(default_route.ipv4 || default_route.ipv6) && (
-        <Box marginBottom={2}>
+        <Box>
           {default_route.ipv4 && (
             <Chip color="info" component="span" label="IPv4 Default Route" />
           )}
@@ -27,33 +27,43 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
           )}
         </Box>
       )}
-      <Typography>
-        <strong>Type</strong>
-      </Typography>
-      <Typography>{type}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>ID</strong>
-      </Typography>
-      <Typography>{id}</Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>MAC Address</strong>
-      </Typography>
-      <MaskableText isToggleable text={mac_address} />
+      <Stack>
+        <Typography>
+          <strong>Type</strong>
+        </Typography>
+        <Typography>{type}</Typography>
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>ID</strong>
+        </Typography>
+        <Typography>{id}</Typography>
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>MAC Address</strong>
+        </Typography>
+        <MaskableText isToggleable text={mac_address} />
+      </Stack>
       {props.public && <PublicInterfaceDetailsContent {...props.public} />}
       {props.vpc && <VPCInterfaceDetailsContent {...props.vpc} />}
       {props.vlan && <VlanInterfaceDetailsContent {...props.vlan} />}
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>Created</strong>
-      </Typography>
-      <Typography>
-        <DateTimeDisplay value={created} />
-      </Typography>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>Modified</strong>
-      </Typography>
-      <Typography>
-        <DateTimeDisplay value={updated} />
-      </Typography>
+      <Stack>
+        <Typography>
+          <strong>Created</strong>
+        </Typography>
+        <Typography>
+          <DateTimeDisplay value={created} />
+        </Typography>
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>Modified</strong>
+        </Typography>
+        <Typography>
+          <DateTimeDisplay value={updated} />
+        </Typography>
+      </Stack>
     </Stack>
   );
 };

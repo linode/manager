@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
@@ -55,14 +55,18 @@ export const PublicInterfaceDetailsContent = (props: PublicInterfaceData) => {
 
   return (
     <>
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>IPv4 Addresses</strong>
-      </Typography>
-      {ipv4ToTypography}
-      <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
-        <strong>IPv6 Addresses</strong>
-      </Typography>
-      {ipv6ToTypography}
+      <Stack>
+        <Typography>
+          <strong>IPv4 Addresses</strong>
+        </Typography>
+        {ipv4ToTypography}
+      </Stack>
+      <Stack>
+        <Typography>
+          <strong>IPv6 Addresses</strong>
+        </Typography>
+        {ipv6ToTypography}
+      </Stack>
     </>
   );
 };
