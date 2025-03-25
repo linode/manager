@@ -146,7 +146,9 @@ export const getDefaultInterfacePayload = (
     vlan: null,
     vpc: {
       ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
+      // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       subnet_id: null,
+      // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       vpc_id: null,
     },
   };
