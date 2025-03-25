@@ -36,8 +36,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
-
 import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
@@ -476,10 +474,10 @@ export const useKubernetesTieredVersionsQuery = (
  * Avoiding fetching all Kubernetes Clusters if possible.
  * Before you use this, consider implementing infinite scroll instead.
  */
-export const useAllKubernetesClustersQuery = (enabled = false) => {
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
-
+export const useAllKubernetesClustersQuery = (
+  enabled = false,
+  useBetaEndpoint = false
+) => {
   return useQuery<KubernetesCluster[], APIError[]>({
     ...kubernetesQueries.lists._ctx.all(useBetaEndpoint),
     enabled,
