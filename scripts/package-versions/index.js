@@ -114,7 +114,7 @@ const jobs = [
   { name: 'validation', path: getPackagePath('validation'), desiredVersion: desiredValidationVersion },
   { name: 'ui', path: getPackagePath('ui'), desiredVersion: desiredUiVersion },
   { name: 'utilities', path: getPackagePath('utilities'), desiredVersion: desiredUtilitiesVersion },
-  { name: 'utilities', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
+  { name: 'queries', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.

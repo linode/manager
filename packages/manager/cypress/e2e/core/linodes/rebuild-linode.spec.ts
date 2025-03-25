@@ -1,12 +1,20 @@
 import { createStackScript } from '@linode/api-v4/lib';
-import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
+import {
+  createLinodeRequestFactory,
+  imageFactory,
+  linodeFactory,
+  regionFactory,
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
 import {
   interceptRebuildLinode,
   mockGetLinodeDetails,
+  mockRebuildLinode,
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptGetStackScript,
   interceptGetStackScripts,
@@ -339,5 +347,70 @@ describe('rebuild linode', () => {
       cy.wait('@rebuildLinode');
       cy.findByText(mockErrorMessage);
     });
+  });
+
+  it('can rebuild a Linode reusing existing user data', () => {
+    const region = regionFactory.build({ capabilities: ['Metadata'] });
+    const linode = linodeFactory.build({
+      region: region.id,
+      // has_user_data: true - add this when we add the type to make this test more realistic
+    });
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      is_public: true,
+    });
+
+    mockRebuildLinode(linode.id, linode).as('rebuildLinode');
+    mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetRegions([region]);
+    mockGetAllImages([image]);
+    mockGetImage(image.id, image);
+
+    cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
+
+    findRebuildDialog(linode.label).within(() => {
+      // Select an Image
+      ui.autocomplete.findByLabel('Image').should('be.visible').click();
+      ui.autocompletePopper
+        .findByTitle(image.label, { exact: false })
+        .should('be.visible')
+        .click();
+
+      // Type a root password
+      assertPasswordComplexity(rootPassword, 'Good');
+
+      // Open the User Data accordion
+      ui.accordionHeading.findByTitle('Add User Data').scrollIntoView().click();
+
+      // Verify the reuse checkbox is not checked by default and check it
+      cy.findByLabelText(
+        `Reuse user data previously provided for ${linode.label}`
+      )
+        .should('not.be.checked')
+        .click();
+
+      // Verify the checkbox becomes checked
+      cy.findByLabelText(
+        `Reuse user data previously provided for ${linode.label}`
+      ).should('be.checked');
+
+      // Type to confirm
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.focused().type(linode.label);
+
+      submitRebuild();
+    });
+
+    cy.wait('@rebuildLinode').then((xhr) => {
+      // Confirm that metadata is NOT in the payload.
+      // If we omit metadata from the payload, the API will reuse previously provided userdata.
+      expect(xhr.request.body.metadata).to.be.undefined;
+
+      // Verify other expected values are in the request
+      expect(xhr.request.body.image).to.equal(image.id);
+      expect(xhr.request.body.root_pass).to.be.a('string');
+    });
+
+    ui.toast.assertMessage('Linode rebuild started.');
   });
 });

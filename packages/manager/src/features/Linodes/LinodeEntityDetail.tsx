@@ -96,9 +96,13 @@ export const LinodeEntityDetail = (props: Props) => {
   );
 
   const regionSupportsDiskEncryption =
-    regions
+    (regions
       ?.find((r) => r.id === linode.region)
-      ?.capabilities.includes('Disk Encryption') ?? false;
+      ?.capabilities.includes('Disk Encryption') ||
+      regions
+        ?.find((r) => r.id === linode.region)
+        ?.capabilities.includes('LA Disk Encryption')) ??
+    false;
 
   let progress;
   let transitionText;
