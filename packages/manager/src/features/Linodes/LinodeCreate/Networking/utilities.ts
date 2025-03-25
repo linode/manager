@@ -146,9 +146,7 @@ export const getDefaultInterfacePayload = (
     vlan: null,
     vpc: {
       ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
-      // @ts-expect-error the user must select this
       subnet_id: null,
-      // @ts-expect-error the user must select this
       vpc_id: null,
     },
   };
