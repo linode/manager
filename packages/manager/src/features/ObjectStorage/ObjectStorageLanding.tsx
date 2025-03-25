@@ -167,10 +167,11 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                closeAccessDrawer={() =>
-                  navigate({ to: '/object-storage/access-keys' })
-                }
-                accessDrawerOpen={isCreateAccessKeyOpen}
+                closeAccessDrawer={() => {
+                  navigate({ to: '/object-storage/access-keys' });
+                  openDrawer.close();
+                }}
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
                 openAccessDrawer={handleOpenAccessDrawer}
