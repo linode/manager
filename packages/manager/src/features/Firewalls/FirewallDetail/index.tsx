@@ -187,31 +187,35 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      {isLinodeInterfacesEnabled && defaultForEntities && (
-        <Paper
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 2,
-            margin: '16px 0px',
-            padding: 2,
-          }}
-        >
-          <Typography>
-            <strong>Default</strong>
-          </Typography>
-          <Box>
-            {defaultForEntities.map((defaultEntity) => (
-              <Chip
-                key={defaultEntity}
-                label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
-                size="small"
-              />
-            ))}
-          </Box>
-        </Paper>
-      )}
+      {isLinodeInterfacesEnabled &&
+        defaultForEntities &&
+        defaultForEntities.length > 0 && (
+          <Paper
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2,
+              margin: '16px 0px',
+              padding: 2,
+            }}
+          >
+            <Typography>
+              <strong>Default</strong>
+            </Typography>
+            <Box>
+              {defaultForEntities.map((defaultEntity) => (
+                <Chip
+                  label={
+                    FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]
+                  }
+                  key={defaultEntity}
+                  size="small"
+                />
+              ))}
+            </Box>
+          </Paper>
+        )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
