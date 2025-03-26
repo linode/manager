@@ -1,7 +1,9 @@
-import { DiskDevice, VolumeDevice } from '@linode/api-v4/lib/linodes';
-import { compose, reduce, toPairs } from 'ramda';
-
-import { DevicesAsStrings } from './createDevicesFromStrings';
+import type {
+  Devices,
+  DiskDevice,
+  VolumeDevice,
+} from '@linode/api-v4/lib/linodes';
+import type { DevicesAsStrings } from './createDevicesFromStrings';
 
 const rdx = (
   result: DevicesAsStrings,
@@ -31,8 +33,5 @@ const isVolume = (
   return typeof (device as VolumeDevice).volume_id === 'number';
 };
 
-export const createStringsFromDevices = compose(
-  reduce(rdx, {}),
-  (obj: { [key: string]: any }) =>
-    toPairs(obj) as Array<[string, DiskDevice | VolumeDevice | null]>
-);
+export const createStringsFromDevices = (devices: Devices) =>
+  Object.entries(devices).reduce(rdx, {});
