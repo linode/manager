@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
 import { WHITELISTED_REGIONS } from '../../utilities';
@@ -25,6 +26,7 @@ const sortRegionOptions = (a: Region, b: Region) => {
 export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onChange, required, selectedRegion } = props;
 
+  const flags = useFlags();
   const {
     allRegionsError,
     availableStorageRegions,
@@ -46,6 +48,7 @@ export const AccessKeyRegions = (props: Props) => {
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
+      flags={flags}
       isClearable={false}
       label="Regions"
       onChange={onChange}
