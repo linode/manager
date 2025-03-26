@@ -9,9 +9,10 @@ import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
   linodeId: number;
+  regionId: string;
 }
 
-export const LinodeInterfaces = ({ linodeId }: Props) => {
+export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const location = useLocation();
   const history = useHistory();
 
@@ -54,6 +55,7 @@ export const LinodeInterfaces = ({ linodeId }: Props) => {
         linodeId={linodeId}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
+        regionId={regionId}
       />
       <DeleteInterfaceDialog
         interfaceId={selectedInterfaceId}
