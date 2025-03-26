@@ -16,7 +16,6 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
 import {
@@ -33,6 +32,7 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();

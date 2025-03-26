@@ -2,7 +2,6 @@ import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import React from 'react';
 
 import { linodeConfigFactory, linodeFactory } from 'src/factories';
-import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
@@ -11,10 +10,11 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
+import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
+import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
