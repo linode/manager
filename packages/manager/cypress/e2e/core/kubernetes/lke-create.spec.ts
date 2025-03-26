@@ -1468,7 +1468,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       // Confirm the VPC/Firewall section displays.
       cy.findByText('VPC & Firewall').should('be.visible');
       cy.findByText(
-        'A VPC and firewall are automatically generated for LKE Enterprise customers.'
+        'A VPC and Firewall are automatically generated for LKE Enterprise customers.'
       ).should('be.visible');
 
       // Confirm the expected available plans display.

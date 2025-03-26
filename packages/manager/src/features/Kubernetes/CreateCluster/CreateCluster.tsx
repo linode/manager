@@ -58,8 +58,8 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
 import { ClusterTierPanel } from './ClusterTierPanel';
-import { ClusterVPCFirewallPanel } from './ClusterVPCFirewallPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
@@ -511,7 +511,7 @@ export const CreateCluster = () => {
               />
             </Box>
           )}
-          {selectedTier === 'enterprise' && <ClusterVPCFirewallPanel />}
+          {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
           {showControlPlaneACL && (
             <>
               <Divider
