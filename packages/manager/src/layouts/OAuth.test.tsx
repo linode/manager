@@ -1,38 +1,16 @@
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import { waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 
 import { LOGIN_ROOT } from 'src/constants';
-import { getAuthToken } from 'src/utilities/authentication';
+import { OAuthCallbackPage } from 'src/layouts/OAuth';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { OAuthCallback } from './OAuthCallback';
-
-import type { OAuthQueryParams } from './OAuthCallback';
+import type { OAuthQueryParams } from './OAuth';
 import type { MemoryHistory } from 'history';
-
-const mockHistory = {
-  push: vi.fn(),
-  replace: vi.fn(),
-};
-
-const mockLocation = {
-  search:
-    '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5',
-};
-
-// Mock router
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-    useLocation: vi.fn(() => mockLocation),
-  };
-});
+import type { CombinedProps } from 'src/layouts/OAuth';
 
 describe('layouts/OAuth', () => {
   describe('parseQueryParams', () => {
@@ -40,6 +18,40 @@ describe('layouts/OAuth', () => {
     const CODE_VERIFIER_KEY = 'authentication/code-verifier';
     const history: MemoryHistory = createMemoryHistory();
     history.push = vi.fn();
+
+    const location = {
+      hash: '',
+      pathname: '/oauth/callback',
+      search:
+        '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5',
+      state: {},
+    };
+
+    const match = {
+      isExact: false,
+      params: {},
+      path: '',
+      url: '',
+    };
+
+    const mockProps: CombinedProps = {
+      dispatchStartSession: vi.fn(),
+      history: {
+        ...history,
+        location: {
+          ...location,
+          search:
+            '?code=test-code&returnTo=/&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127',
+        },
+        push: vi.fn(),
+      },
+      location: {
+        ...location,
+        search:
+          '?code=test-code&returnTo=/&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127',
+      },
+      match,
+    };
 
     const localStorageMock = (() => {
       let store: { [key: string]: string } = {};
@@ -109,15 +121,11 @@ describe('layouts/OAuth', () => {
         ok: false,
       });
 
-      renderWithTheme(<OAuthCallback />);
+      await act(async () => {
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
+      });
 
-      await waitFor(() =>
-        expect(getAuthToken()).toEqual({
-          expiration: '',
-          scopes: '',
-          token: '',
-        })
-      );
+      expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -137,10 +145,10 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallback />);
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
+      expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -160,10 +168,10 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallback />);
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
+      expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -171,10 +179,10 @@ describe('layouts/OAuth', () => {
 
     it('Should redirect to logout path when no code verifier in local storage', async () => {
       await act(async () => {
-        renderWithTheme(<OAuthCallback />);
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
+      expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -203,7 +211,7 @@ describe('layouts/OAuth', () => {
       });
 
       await act(async () => {
-        renderWithTheme(<OAuthCallback />);
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -214,27 +222,27 @@ describe('layouts/OAuth', () => {
         })
       );
 
-      expect(getAuthToken()).toEqual({
-        expiration: expect.any(String),
-        scopes: '*',
-        token:
-          'Bearer 198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
-      });
-      expect(mockHistory.push).toHaveBeenCalledWith('/');
+      expect(mockProps.dispatchStartSession).toHaveBeenCalledWith(
+        '198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
+        'bearer',
+        '*',
+        expect.any(String)
+      );
+      expect(mockProps.history.push).toHaveBeenCalledWith('/');
     });
 
     it('Should redirect to login when no code parameter in URL', async () => {
-      mockLocation.search =
+      mockProps.location.search =
         '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code1=bf952e05db75a45a51f5';
       await act(async () => {
-        renderWithTheme(<OAuthCallback />);
+        renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      expect(getAuthToken()).toEqual({ expiration: '', scopes: '', token: '' });
+      expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
-      mockLocation.search =
+      mockProps.location.search =
         '?returnTo=%2F&state=9f16ac6c-5518-4b96-b4a6-26a16f85b127&code=bf952e05db75a45a51f5';
     });
   });
