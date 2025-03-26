@@ -44,7 +44,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
         <ColorSwatch color={value} />
       )}
       <Stack direction="column" flexWrap="wrap">
-        <TokenValue format={'Val'} value={value} />
+        <TokenValue format="Val" value={value} />
         <TokenValue format={'JS'} value={`tokens.${category}.${jsPath}`} />
       </Stack>
     </Stack>
