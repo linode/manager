@@ -1,6 +1,5 @@
 export * from './account';
 export * from './accountAgreements';
-export * from './accountAvailability';
 export * from './accountLogin';
 export * from './accountMaintenance';
 export * from './accountOAuth';
@@ -39,7 +38,6 @@ export * from './placementGroups';
 export * from './preferences';
 export * from './profile';
 export * from './promotionalOffer';
-export * from './regions';
 export * from './stackscripts';
 export * from './statusPage';
 export * from './subnets';

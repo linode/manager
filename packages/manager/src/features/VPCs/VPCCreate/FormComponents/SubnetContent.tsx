@@ -16,7 +16,7 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { CreateVPCPayload } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {

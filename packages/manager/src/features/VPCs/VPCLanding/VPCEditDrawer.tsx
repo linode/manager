@@ -12,6 +12,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
@@ -27,6 +28,7 @@ const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
 export const VPCEditDrawer = (props: Props) => {
   const { isFetching, onClose, open, vpc } = props;
 
+  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
@@ -133,6 +135,7 @@ export const VPCEditDrawer = (props: Props) => {
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
             errorText={(regionsError && regionsError[0].reason) || undefined}
+            flags={flags}
             helperText={REGION_HELPER_TEXT}
             onChange={() => null}
             regions={regionsData}
