@@ -207,7 +207,7 @@ export const DisplayAlertResources = React.memo(
                         slotProps={{
                           tooltip: {
                             sx: {
-                              maxWidth: '230px',
+                              maxWidth: '250px',
                             },
                           },
                         }}
@@ -281,14 +281,12 @@ export const DisplayAlertResources = React.memo(
                               slotProps={{
                                 tooltip: {
                                   sx: {
-                                    maxWidth: '230px',
+                                    maxWidth: '250px',
                                   },
                                 },
                               }}
                               title={
-                                !checked &&
-                                selectionsRemaining !== undefined &&
-                                selectionsRemaining === 0 &&
+                                boxDisabled &&
                                 maxSelectionCount !== undefined ? (
                                   <ErrorTypoGraphy />
                                 ) : undefined

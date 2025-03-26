@@ -49,7 +49,7 @@ export const AlertsResourcesNotice = React.memo(
           slotProps={{
             tooltip: {
               sx: {
-                maxWidth: '230px',
+                maxWidth: '250px',
               },
             },
           }}

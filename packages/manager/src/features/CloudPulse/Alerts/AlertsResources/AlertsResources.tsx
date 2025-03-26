@@ -349,6 +349,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     marginBottom: 0,
     padding: theme.spacing(2),
   });
+
+  const selectionsRemaining =
+    maxSelectionCount && selectedResources
+      ? Math.max(0, maxSelectionCount - selectedResources.length)
+      : undefined;
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -465,18 +470,12 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             scrollToElement={() =>
               scrollToElement(titleRef.current ?? scrollElement ?? null)
             }
-            selectionsRemaining={
-              maxSelectionCount && selectedResources
-                ? maxSelectionCount < selectedResources.length
-                  ? 0
-                  : maxSelectionCount - selectedResources.length
-                : undefined
-            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
             maxSelectionCount={maxSelectionCount}
+            selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
         </Grid>
