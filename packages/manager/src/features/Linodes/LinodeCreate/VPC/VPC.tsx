@@ -12,6 +12,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { doesRegionSupportFeature } from '@linode/utilities';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -23,7 +24,6 @@ import {
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
