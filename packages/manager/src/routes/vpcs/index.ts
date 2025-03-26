@@ -22,7 +22,7 @@ const subnetAction = {
 } as const;
 
 const subnetLinodeAction = {
-  powerAction: 'power-action',
+  power: 'power',
   unassign: 'unassign',
 } as const;
 

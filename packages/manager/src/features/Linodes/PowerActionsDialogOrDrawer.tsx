@@ -18,6 +18,7 @@ export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
 interface Props {
   action: Action;
+  isFetching?: boolean;
   isOpen: boolean;
   linodeId: number | undefined;
   linodeLabel?: string | undefined;
@@ -36,7 +37,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, linodeLabel, onClose } = props;
+  const { action, isFetching, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
 
   const {
@@ -139,6 +140,7 @@ export const PowerActionsDialog = (props: Props) => {
         />
       }
       error={error?.[0].reason}
+      isFetching={isFetching}
       onClose={handleOnClose}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}

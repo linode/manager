@@ -33,12 +33,16 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handlePowerActionsLinode: (linode: Linode, action: Action, subnet?: Subnet) => void;
+  handlePowerActionsLinode: (
+    linode: Linode,
+    action: Action,
+    subnet?: Subnet
+  ) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
-  subnet?: Subnet;
+  subnet: Subnet;
   subnetId: number;
 }
 

@@ -1,4 +1,8 @@
-import { useSubnetQuery, useSubnetsQuery } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useSubnetQuery,
+  useSubnetsQuery,
+} from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -7,6 +11,7 @@ import {
   useParams,
   useSearch,
 } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -26,8 +31,8 @@ import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { VPC_DETAILS_ROUTE } from '../constants';
 import { SUBNET_ACTION_PATH } from '../constants';
+import { VPC_DETAILS_ROUTE } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
@@ -51,6 +56,7 @@ const preferenceKey = 'vpc-subnets';
 export const VPCSubnetsTable = (props: Props) => {
   const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
   const params = useParams({ strict: false });
@@ -58,9 +64,6 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
-  >();
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
   >();
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -127,6 +130,13 @@ export const VPCSubnetsTable = (props: Props) => {
     secondaryParamKey: 'subnetId',
   });
 
+  const { data: selectedLinode, isFetching: isFetchingLinode } = useDialogData({
+    enabled: !!params.linodeId,
+    paramKey: 'linodeId',
+    queryHook: useLinodeQuery,
+    redirectToOnNotFound: '/vpcs/$vpcId',
+  });
+
   const handleSearch = (searchText: string) => {
     navigate({
       params: { vpcId },
@@ -172,7 +182,6 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
-    setSelectedLinode(linode);
     navigate({
       params: {
         linodeAction: 'unassign',
@@ -194,15 +203,14 @@ export const VPCSubnetsTable = (props: Props) => {
   const handlePowerActionsLinode = (
     linode: Linode,
     action: Action,
-    subnet?: Subnet
+    subnet: Subnet
   ) => {
     setLinodePowerAction(action);
-    setSelectedLinode(linode);
     navigate({
       params: {
-        linodeAction: 'power-action',
+        linodeAction: 'power',
         linodeId: linode.id,
-        subnetId: subnet?.id ?? selectedSubnet?.id ?? -1,
+        subnetId: subnet.id ?? selectedSubnet?.id ?? -1,
         vpcId,
       },
       to: '/vpcs/$vpcId/subnets/$subnetId/linodes/$linodeId/$linodeAction',
@@ -210,21 +218,29 @@ export const VPCSubnetsTable = (props: Props) => {
   };
 
   // If the user initiates a history -/+ to complete a linode action and the linode
-  // is no longer assigned to a subnet, push navigation to the vpc's detail page
+  // is no longer assigned to the subnet, push navigation to the vpc's detail page
   React.useEffect(() => {
-    if (params.linodeAction && !selectedLinode) {
+    if (
+      params.linodeAction &&
+      selectedLinode &&
+      selectedSubnet &&
+      !selectedSubnet?.linodes.some((linode) => linode.id === selectedLinode.id)
+    ) {
       navigate({
         params: { vpcId },
         to: VPC_DETAILS_ROUTE,
       });
+      enqueueSnackbar('Linode not found in subnet', {
+        variant: 'error',
+      });
     }
   }, [
     selectedSubnet,
-    params.subnetAction,
     vpcId,
     navigate,
     params.linodeAction,
     selectedLinode,
+    enqueueSnackbar,
   ]);
 
   if (isLoading) {
@@ -344,7 +360,7 @@ export const VPCSubnetsTable = (props: Props) => {
       <Box display="flex" flexWrap="wrap" justifyContent="space-between">
         <DebouncedSearchTextField
           sx={{
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacingFunction(16),
             [theme.breakpoints.up('sm')]: {
               width: '416px',
             },
@@ -360,7 +376,7 @@ export const VPCSubnetsTable = (props: Props) => {
         />
         <Button
           sx={{
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacingFunction(16),
           }}
           buttonType="primary"
           disabled={isVPCLKEEnterpriseCluster}
@@ -389,15 +405,12 @@ export const VPCSubnetsTable = (props: Props) => {
         pageSize={pagination.pageSize}
       />
       <SubnetUnassignLinodesDrawer
-        onClose={() => {
-          onCloseSubnetDrawer();
-          setSelectedLinode(undefined);
-        }}
         open={
           params.subnetAction === 'unassign' ||
           params.linodeAction === 'unassign'
         }
-        isFetching={isFetchingSubnet}
+        isFetching={isFetchingSubnet || isFetchingLinode}
+        onClose={onCloseSubnetDrawer}
         singleLinodeToBeUnassigned={selectedLinode}
         subnet={selectedSubnet}
         vpcId={vpcId}
@@ -425,14 +438,12 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <PowerActionsDialog
-        onClose={() => {
-          onCloseSubnetDrawer();
-          setSelectedLinode(undefined);
-        }}
         action={linodePowerAction ?? 'Reboot'}
-        isOpen={params.linodeAction === 'power-action'}
+        isFetching={isFetchingLinode}
+        isOpen={params.linodeAction === 'power'}
         linodeId={selectedLinode?.id}
         linodeLabel={selectedLinode?.label}
+        onClose={onCloseSubnetDrawer}
       />
     </>
   );
