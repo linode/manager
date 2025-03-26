@@ -21,6 +21,7 @@ import {
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockCreateSubnet,
+  mockGetSubnet,
   mockGetSubnets,
   mockGetVPC,
   mockGetVPCs,
@@ -111,6 +112,8 @@ describe('VPC assign/unassign flows', () => {
       });
 
     cy.wait(['@createSubnet', '@getVPC', '@getSubnets', '@getLinodes']);
+
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // confirm that newly created subnet should now appear on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');
@@ -232,6 +235,8 @@ describe('VPC assign/unassign flows', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
+
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // unassign a linode to the subnet
     ui.actionMenu
