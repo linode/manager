@@ -76,24 +76,9 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     watch,
   } = useForm<{ roleName: RolesType }>({
     defaultValues: {
-      roleName: {
-        access: role?.access,
-        label: role?.name,
-        resource_type: role?.resource_type,
-        value: role?.name,
-      },
+      roleName: undefined,
     },
     mode: 'onBlur',
-    values: role
-      ? {
-          roleName: {
-            access: role.access,
-            label: role.name,
-            resource_type: role.resource_type,
-            value: role.name,
-          },
-        }
-      : undefined,
   });
 
   // Watch the selected role
@@ -157,25 +142,26 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: 2.5 }}>
-          Change from role{' '}
-          <span style={{ font: theme.font.bold }}>{role?.name}</span> to:
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+          Change from role <strong>{role?.name}</strong> to:
         </Typography>
 
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <Autocomplete
+              errorText={fieldState.error?.message}
               label="Assign New Roles"
               loading={accountPermissionsLoading}
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
-              value={field.value}
+              value={field.value || null}
             />
           )}
           control={control}
           name="roleName"
+          rules={{ required: 'Role is required.' }}
         />
 
         {selectedRole && (
