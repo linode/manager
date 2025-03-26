@@ -238,9 +238,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           scrollToElement();
                         });
                       }}
+                      handleSizeChange={(pageSize) => {
+                        handlePageSizeChange(pageSize);
+                        handlePageChange(1);
+                        requestAnimationFrame(() => {
+                          scrollToElement();
+                        });
+                      }}
                       count={count}
                       eventCategory="Alert Definitions Table"
-                      handleSizeChange={handlePageSizeChange}
                       page={page}
                       pageSize={pageSize}
                       sx={{ border: 0 }}
