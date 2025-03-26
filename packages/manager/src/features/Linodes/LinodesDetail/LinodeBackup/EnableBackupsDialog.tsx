@@ -1,7 +1,6 @@
 import {
   useLinodeBackupsEnableMutation,
   useLinodeQuery,
-  useRegionsQuery,
 } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -44,17 +43,9 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const { data: regions } = useRegionsQuery();
-
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
-
-  // If `linode` is defined, the dialog was opened from Linode Details, so we will know the capabilities of the linode's region
-  const regionSupportsDiskEncryption =
-    regions
-      ?.find((regionDatum) => regionDatum.id === linode?.region)
-      ?.capabilities.includes('Disk Encryption') ?? false;
 
   const backupsMonthlyPrice:
     | PriceObject['monthly']
@@ -111,7 +102,7 @@ export const EnableBackupsDialog = (props: Props) => {
       open={open}
       title="Enable backups?"
     >
-      {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) && ( // @TODO LDE: once LDE is GA in all DCs, remove this condition
+      {isDiskEncryptionFeatureEnabled && ( // @TODO LDE: once LDE is GA in all DCs, remove this condition
         <Notice
           spacingTop={8}
           text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}

@@ -429,3 +429,9 @@ export const updateUserRoles = ({
     }
   );
 };
+
+export interface AssignNewRoleFormValues {
+  roles: {
+    role: RolesType | null;
+  }[];
+}

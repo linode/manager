@@ -1,23 +1,26 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
+  useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableItemOption } from '@linode/ui';
 
 /**
  * A specific select for regions.
@@ -39,6 +42,7 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    flags,
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
@@ -55,8 +59,7 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
-
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
@@ -117,6 +120,7 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
               key={`${region.id}-${key}`}
               props={rest}

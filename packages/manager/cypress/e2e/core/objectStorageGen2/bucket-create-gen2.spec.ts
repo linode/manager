@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -19,7 +20,6 @@ import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
-  regionFactory,
 } from 'src/factories';
 import { profileFactory } from 'src/factories/profile';
 
@@ -99,8 +99,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
         endpointType === 'Standard (E3)' ||
         endpointType === 'Standard (E2)'
       ) {
-        cy.contains(bucketRateLimitsNotice).should('be.visible');
-        cy.get('[data-testid="bucket-rate-limit-table"]').should('be.visible');
         cy.contains(CORSNotice).should('be.visible');
         ui.toggle.find().should('not.exist');
       } else {

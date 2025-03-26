@@ -1,7 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { dashboardFactory, regionFactory } from 'src/factories';
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DBAAS_CAPABILITY, LINODE_CAPABILITY } from '../Utils/FilterConfig';

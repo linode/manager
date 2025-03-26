@@ -1,9 +1,10 @@
 import { Box, Dialog, Divider, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
 import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';
@@ -36,7 +37,8 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
-    const { isGeckoLAEnabled } = useIsGeckoEnabled();
+    const flags = useFlags();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =

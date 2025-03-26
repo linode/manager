@@ -1,8 +1,9 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory, regionFactory } from 'src/factories';
+import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
@@ -192,7 +193,7 @@ describe('AlertResources component tests', () => {
   it('should handle selection correctly and publish', async () => {
     const handleResourcesSelection = vi.fn();
 
-    const { getByTestId, queryByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText, queryByTestId } = renderWithTheme(
       <AlertResources
         {...alertResourcesProp}
         alertResourceIds={['1', '2']}

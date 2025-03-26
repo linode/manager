@@ -1,8 +1,7 @@
 import { Box } from '@linode/ui';
+import { regions } from '@linode/utilities';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
-
-import { regions } from 'src/__data__/regionsData';
 
 import { RegionSelect } from './RegionSelect';
 
@@ -32,6 +31,7 @@ const meta: Meta<RegionSelectProps> = {
     currentCapability: undefined,
     disabled: false,
     errorText: '',
+    flags: {},
     helperText: '',
     label: 'Region',
     regions,

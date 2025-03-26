@@ -1,8 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import {
   accountFactory,
   linodeFactory,
   linodeTypeFactory,
-  regionFactory,
 } from '@src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -28,7 +28,7 @@ import {
 import type { Region } from '@linode/api-v4';
 
 describe('Create Linode with Disk Encryption', () => {
-  it('should not have a "Disk Encryption" section visible if the feature flag is off, user does not have capability, and the selected region does not support LDE', () => {
+  it('should not have a "Disk Encryption" section visible if the feature flag is off and user does not have capability', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
@@ -41,23 +41,9 @@ describe('Create Linode with Disk Encryption', () => {
 
     mockGetAccount(mockAccount).as('getAccount');
 
-    // Mock regions response
-    const mockRegion = regionFactory.build({
-      capabilities: ['Linodes'],
-    });
-
-    const mockRegions = [mockRegion];
-
-    mockGetRegions(mockRegions);
-
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getFeatureFlags', '@getAccount']);
-
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(mockRegion.label, mockRegions)
-      .click();
 
     // Check if section is visible
     cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
@@ -108,54 +94,6 @@ describe('Create Linode with Disk Encryption', () => {
       .click();
 
     cy.get(`[data-testid="${checkboxTestId}"]`).should('be.enabled');
-  });
-
-  it('should have a "Disk Encryption" section visible if the feature flag is off, user does not have the capability, but the selected region has the "Disk Encryption" capability', () => {
-    // Situation where LDE is in GA in the selected region/DC
-
-    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
-    mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes'],
-    });
-
-    const mockRegion = regionFactory.build({
-      capabilities: ['Linodes', 'Disk Encryption'],
-    });
-
-    const mockRegionWithoutDiskEncryption = regionFactory.build({
-      capabilities: ['Linodes'],
-    });
-
-    const mockRegions = [mockRegion, mockRegionWithoutDiskEncryption];
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions);
-
-    // intercept request
-    cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getAccount']);
-
-    // "Disk Encryption" section should not be visible if a region that does not support LDE is selected
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(mockRegionWithoutDiskEncryption.label, mockRegions)
-      .click();
-
-    cy.get(`[data-testid="${headerTestId}"]`).should('not.exist');
-
-    // "Disk Encryption" section should be visible if a region that supports LDE is selected
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionLabel(mockRegion.label, mockRegions)
-      .click();
-
-    cy.get(`[data-testid="${headerTestId}"]`).should('exist');
-    cy.get(`[data-testid="${checkboxTestId}"]`).should('be.enabled'); // "Encrypt Disk" checkbox should be enabled
   });
 
   // Confirm Linode Disk Encryption features when using Distributed Regions.

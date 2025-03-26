@@ -1,7 +1,7 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-import { pluralize } from '@linode/utilities';
+import { pluralize, regionFactory } from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
@@ -52,7 +52,6 @@ import {
   linodeTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
-  regionFactory,
 } from 'src/factories';
 import {
   CLUSTER_TIER_DOCS_LINK,

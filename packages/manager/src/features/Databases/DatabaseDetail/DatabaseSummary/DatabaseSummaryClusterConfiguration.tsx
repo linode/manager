@@ -72,7 +72,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <StyledGridContainer container spacing={0} sx={{ md: 11 }}>
+      <StyledGridContainer container size={{ md: 11 }} spacing={0}>
         <Grid
           size={{
             lg: 1,
@@ -130,7 +130,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         >
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid sx={{ lg: 2, md: 4, xs: 8 }}>
+        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -188,7 +188,6 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             convertMegabytesTo(type.disk, true)
           )}
         </StyledValueGrid>
-        s
       </StyledGridContainer>
     </>
   );

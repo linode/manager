@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -9,7 +10,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useRegionsQuery } from '@linode/queries';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
@@ -73,9 +74,10 @@ export const TwoStepRegion = (props: CombinedProps) => {
 
   const { data: regions } = useRegionsQuery();
   const { params } = useLinodeCreateQueryParams();
+  const flags = useFlags();
 
   return (
-    <Paper data-testid="region" data-qa-linode-region>
+    <Paper data-qa-linode-region data-testid="region">
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
@@ -110,6 +112,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
+              flags={flags}
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
@@ -140,6 +143,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
+              flags={flags}
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}

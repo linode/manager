@@ -1,8 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
-import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseSummaryClusterConfiguration } from './DatabaseSummaryClusterConfiguration';
