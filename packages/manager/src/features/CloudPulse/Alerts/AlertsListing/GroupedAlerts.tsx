@@ -68,7 +68,7 @@ export const AlertsGroupedByTag = ({
             }) => (
               <React.Fragment>
                 <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
-                  <TableCell colSpan={7}>
+                  <TableCell colSpan={6}>
                     <StyledTagHeader ref={tagRef} variant="h2">
                       {tag}
                     </StyledTagHeader>
@@ -88,7 +88,7 @@ export const AlertsGroupedByTag = ({
                 ))}
                 {count > MIN_PAGE_SIZE && (
                   <TableRow>
-                    <TableCell colSpan={7} sx={{ padding: 0 }}>
+                    <TableCell colSpan={6} sx={{ padding: 0 }}>
                       <PaginationFooter
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
@@ -96,8 +96,6 @@ export const AlertsGroupedByTag = ({
                           setTimeout(() => {
                             tagRef?.current?.scrollIntoView({
                               behavior: 'smooth',
-                              block: 'start',
-                              inline: 'nearest',
                             });
                           }, 100);
                         }}
