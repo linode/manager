@@ -49,7 +49,7 @@ export function getEntitiesThatFirewallIsDefaultFor(
  * @param firewallId The ID of the Firewall
  * @param firewallSettings The account FirewallSettings from the API
  *
- * @returns A human readable string that explains what entities this Firewall is a default for.
+ * @returns A human readable list that explains what entities this Firewall is a default for.
  *          It will return `null` if this Firewall is not a default for anything.
  */
 export function getDefaultFirewallDescription(
