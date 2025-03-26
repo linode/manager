@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -18,6 +19,8 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
   const { name } = props;
   const { data: regions, isError, isLoading } = useRegionsQuery();
   const { control } = useFormContext<CreateAlertDefinitionForm>();
+  const flags = useFlags();
+
   return (
     <Controller
       render={({ field, fieldState }) => (
@@ -30,6 +33,7 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
             field.onChange(value?.id);
           }}
           currentCapability={undefined}
+          flags={flags}
           fullWidth
           label="Region"
           loading={isLoading}

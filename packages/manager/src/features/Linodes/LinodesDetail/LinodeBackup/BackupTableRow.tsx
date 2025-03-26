@@ -1,3 +1,4 @@
+import { formatDuration } from '@linode/utilities';
 import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
 
@@ -6,7 +7,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
-import { formatDuration } from 'src/utilities/formatDuration';
 
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
 

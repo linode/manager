@@ -83,7 +83,7 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -91,10 +91,6 @@ export const Region = React.memo(() => {
     const values = getValues();
 
     field.onChange(region.id);
-
-    const regionSupportsDiskEncryption = region.capabilities.includes(
-      'Disk Encryption'
-    );
 
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
@@ -142,15 +138,17 @@ export const Region = React.memo(() => {
       setValue('private_ip', false);
     }
 
-    if (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) {
+    if (isDiskEncryptionFeatureEnabled) {
       if (region.site_type === 'distributed') {
         // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
-        const defaultDiskEncryptionValue = regionSupportsDiskEncryption
-          ? 'enabled'
-          : undefined;
+        const defaultDiskEncryptionValue =
+          region.capabilities.includes('Disk Encryption') ||
+          region.capabilities.includes('LA Disk Encryption')
+            ? 'enabled'
+            : undefined;
 
         setValue('disk_encryption', defaultDiskEncryptionValue);
       }
@@ -252,6 +250,7 @@ export const Region = React.memo(() => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
+        flags={flags}
         onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

@@ -3,10 +3,13 @@ import { DateTime } from 'luxon';
 
 import {
   accountFactory,
+  databaseEngineConfigFactory,
   databaseFactory,
   databaseTypeFactory,
 } from 'src/factories';
 import {
+  convertExistingConfigsToArray,
+  findConfigItem,
   formatConfigValue,
   getDatabasesDescription,
   hasPendingUpdates,
@@ -25,10 +28,13 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import type {
   AccountCapability,
   Database,
+  DatabaseEngineConfig,
+  DatabaseInstanceAdvancedConfig,
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
 import type { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
+import { ConfigurationOption } from './DatabaseDetail/DatabaseAdvancedConfiguration/DatabaseConfigurationSelect';
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
@@ -584,5 +590,105 @@ describe('formatConfigValue', () => {
   it('should return the original configValue for other values', () => {
     const result = formatConfigValue('+03:00');
     expect(result).toBe('+03:00');
+  });
+});
+
+describe('findConfigItem', () => {
+  const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
+  const expectedConfig = {
+    description:
+      'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
+    example: 600,
+    maximum: 86400,
+    minimum: 600,
+    restart_cluster: false,
+    type: 'integer',
+  };
+
+  const expectedNestedConfig = {
+    description:
+      'Enable the pg_stat_monitor extension. Enabling this extension will cause the cluster to be restarted. When this extension is enabled, pg_stat_statements results for utility commands are unreliable',
+    restart_cluster: true,
+    type: 'boolean',
+  };
+  it('should return the correct ConfigurationItem for a given targetKey', () => {
+    const result = findConfigItem(
+      mockConfigs.engine_config,
+      'binlog_retention_period'
+    );
+    expect(result).toEqual(expectedConfig);
+  });
+
+  it('should return the correct ConfigurationItem for a nested key', () => {
+    const result = findConfigItem(
+      mockConfigs.engine_config,
+      'pg_stat_monitor_enable'
+    );
+    expect(result).toEqual(expectedNestedConfig);
+  });
+
+  it('should return undefined if the targetKey does not exist', () => {
+    const result = findConfigItem(
+      mockConfigs.engine_config,
+      'non_existing_key'
+    );
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('convertExistingConfigsToArray', () => {
+  const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
+
+  const existingConfigs: DatabaseInstanceAdvancedConfig = {
+    advanced: {
+      connect_timeout: 10,
+      default_time_zone: '+03:00',
+    },
+    binlog_retention_period: 600,
+  };
+
+  const expectedOptions: ConfigurationOption[] = [
+    {
+      category: '',
+      description:
+        'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
+      example: 10,
+      label: 'connect_timeout',
+      maximum: 3600,
+      minimum: 2,
+      restart_cluster: false,
+      type: 'integer',
+      value: 10,
+    },
+    {
+      category: '',
+      description:
+        "Default server time zone as an offset from UTC (from -12:00 to +12:00), a time zone name, or 'SYSTEM' to use the MySQL server default.",
+      example: '+03:00',
+      label: 'default_time_zone',
+      maxLength: 100,
+      minLength: 2,
+      pattern: '^([-+][\\d:]*|[\\w/]*)$',
+      restart_cluster: false,
+      type: 'string',
+      value: '+03:00',
+    },
+    {
+      category: '',
+      description:
+        'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
+      example: 600,
+      label: 'binlog_retention_period',
+      maximum: 86400,
+      minimum: 600,
+      restart_cluster: false,
+      type: 'integer',
+      value: 600,
+    },
+  ];
+
+  it('should convert configs to array of ConfigurationOptions with label and current value', () => {
+    const result = convertExistingConfigsToArray(existingConfigs, mockConfigs);
+    expect(result).toEqual(expectedOptions);
   });
 });
