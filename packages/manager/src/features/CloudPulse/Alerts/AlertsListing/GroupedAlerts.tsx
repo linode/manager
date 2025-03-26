@@ -9,11 +9,12 @@ import {
   StyledTagHeaderRow,
 } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
 
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertTableRow } from './AlertTableRow';
 
 import type { Item } from '../constants';
-import type { Alert } from '@linode/api-v4';
 import type { AlertServiceType } from '@linode/api-v4';
+import type { Alert } from '@linode/api-v4';
 
 interface GroupedAlertsProps {
   /**
@@ -56,9 +57,7 @@ export const AlertsGroupedByTag = ({
       requestAnimationFrame(() => {
         const ref = tagRefs.current.get(tag);
         if (ref?.current) {
-          ref.current.scrollIntoView({
-            behavior: 'smooth',
-          });
+          scrollToElement(ref.current);
         }
       });
     },
