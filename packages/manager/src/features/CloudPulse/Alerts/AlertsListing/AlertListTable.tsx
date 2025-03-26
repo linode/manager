@@ -207,12 +207,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         />
                         {alertsGroupedByTag ? (
                           <AlertsGroupedByTag
-                            groupedAlerts={
-                              sortGroups(groupByTags(orderedData)) as [
-                                string,
-                                Alert[]
-                              ][]
-                            }
+                            groupedAlerts={sortGroups(groupByTags(orderedData))}
                             handleDetails={handleDetails}
                             handleEdit={handleEdit}
                             handleEnableDisable={handleEnableDisable}

@@ -15,12 +15,13 @@ import { AlertTableRow } from './AlertTableRow';
 import type { Item } from '../constants';
 import type { AlertServiceType } from '@linode/api-v4';
 import type { Alert } from '@linode/api-v4';
+import type { GroupedBy } from '@linode/utilities';
 
 interface GroupedAlertsProps {
   /**
    * Array of tuples containing a tag string and its associated alerts
    */
-  groupedAlerts: [string, Alert[]][];
+  groupedAlerts: GroupedBy<Alert>;
   /**
    * Callback function to handle viewing alert details
    */
