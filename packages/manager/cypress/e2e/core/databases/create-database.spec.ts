@@ -194,11 +194,12 @@ describe('restricted user cannot create database', () => {
     mockGetProfile(mockProfile);
     mockGetProfileGrants(mockGrants);
     mockGetUser(mockUser);
+    mockGetDatabases([]).as('getDatabases');
   });
   it('cannot create database on landing page', () => {
     // Login and wait for application to load
     cy.visitWithLogin('/databases');
-
+    cy.wait('@getDatabases');
     // Assert that Create Database button is visible and disabled
     ui.button
       .findByTitle('Create Database Cluster')
@@ -212,12 +213,20 @@ describe('restricted user cannot create database', () => {
         "You don't have permissions to create Databases. Please contact your account administrator to request the necessary permissions."
       )
       .should('be.visible');
+
+    // table not present for restricted user
+    cy.get('table[aria-label="Database Clusters"]').should('not.exist');
+    // link to Docs should exist
+    cy.findByText('Getting Started Guides').should('be.visible');
+    cy.findByText('Video Playlist').should('be.visible');
   });
 
   it('cannot create database from Create menu', () => {
     // Login and wait for application to load
     cy.visitWithLogin('/databases/create');
 
+    // table present for restricted user but its inputs will be disabled
+    cy.get('table[aria-label="List of Linode Plans"]').should('exist');
     // Assert that Create Database button is visible and disabled
     ui.button
       .findByTitle('Create Database Cluster')
