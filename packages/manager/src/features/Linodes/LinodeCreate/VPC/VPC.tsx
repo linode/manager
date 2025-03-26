@@ -1,3 +1,4 @@
+import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -11,6 +12,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { doesRegionSupportFeature } from '@linode/utilities';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -21,9 +23,7 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
-import { useRegionsQuery, useAllVPCsQuery } from '@linode/queries';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
