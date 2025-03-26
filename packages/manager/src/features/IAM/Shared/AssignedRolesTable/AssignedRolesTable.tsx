@@ -4,11 +4,11 @@ import {
   StyledLinkButton,
   Typography,
 } from '@linode/ui';
+import { capitalize, truncate } from '@linode/utilities';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { TableCell } from 'src/components/TableCell';
@@ -22,6 +22,7 @@ import {
 } from 'src/queries/iam/iam';
 import { useAccountResources } from 'src/queries/resources/resources';
 
+import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
 import {
   addResourceNamesToRoles,
@@ -30,14 +31,13 @@ import {
   mapEntityTypes,
   mapRolesToPermissions,
 } from '../utilities';
-import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
+import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
+import { ChangeRoleDrawer } from './ChangeRoleDrawer';
+import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
 import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
 import type { AccountAccessType, RoleType } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
-import { capitalize, truncate } from '@linode/utilities';
-import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
@@ -50,9 +50,18 @@ export const AssignedRolesTable = () => {
     setIsChangeRoleDrawerOpen,
   ] = React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+  const [
+    isUnassignRoleDialogOpen,
+    setIsUnassignRoleDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
+    setSelectedRole(role);
+  };
+
+  const handleUnassignRole = (role: ExtendedRoleMap) => {
+    setIsUnassignRoleDialogOpen(true);
     setSelectedRole(role);
   };
 
@@ -92,7 +101,7 @@ export const AssignedRolesTable = () => {
 
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
-  const handleClick = (roleName: AccountAccessType | RoleType) => {
+  const handleViewEntities = (roleName: AccountAccessType | RoleType) => {
     const selectedRole = roleName;
     history.push({
       pathname: `/iam/users/${username}/entities`,
@@ -109,49 +118,6 @@ export const AssignedRolesTable = () => {
     });
 
     return filteredRoles.map((role: ExtendedRoleMap) => {
-      const accountMenu: Action[] = [
-        {
-          onClick: () => {
-            handleChangeRole(role);
-          },
-          title: 'Change Role',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Unassign Role',
-        },
-      ];
-
-      const entitiesMenu: Action[] = [
-        {
-          onClick: () => handleClick(role.name),
-          title: 'View Entities',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Update List of Entities',
-        },
-        {
-          onClick: () => {
-            handleChangeRole(role);
-          },
-          title: 'Change Role',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Unassign Role',
-        },
-      ];
-
-      const actions =
-        role.access === 'account_access' ? accountMenu : entitiesMenu;
-
       const OuterTableCells = (
         <>
           {role.access === 'account_access' ? (
@@ -166,13 +132,18 @@ export const AssignedRolesTable = () => {
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <AssignedEntities
                 entities={role.resource_names!}
-                onButtonClick={handleClick}
+                onButtonClick={handleViewEntities}
                 roleName={role.name}
               />
             </TableCell>
           )}
           <TableCell actionCell>
-            <ActionMenu actionsList={actions} ariaLabel="action menu" />
+            <AssignedRolesActionMenu
+              handleChangeRole={handleChangeRole}
+              handleUnassignRole={handleUnassignRole}
+              handleViewEntities={handleViewEntities}
+              role={role}
+            />
           </TableCell>
         </>
       );
@@ -305,6 +276,11 @@ export const AssignedRolesTable = () => {
       <ChangeRoleDrawer
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
+        role={selectedRole}
+      />
+      <UnassignRoleConfirmationDialog
+        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        open={isUnassignRoleDialogOpen}
         role={selectedRole}
       />
     </Grid>
