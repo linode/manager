@@ -8,6 +8,7 @@ export * from './capitalize';
 export * from './createDevicesFromStrings';
 export * from './createStringsFromDevices';
 export * from './deepStringTransform';
+export * from './doesRegionSupportFeature';
 export * from './downloadFile';
 export * from './env';
 export * from './escapeRegExp';

@@ -1,4 +1,6 @@
-import { regions } from '@linode/utilities';
+import { regions } from '../__data__';
+
+import { describe, expect, it } from 'vitest';
 
 import { doesRegionSupportFeature } from './doesRegionSupportFeature';
 
