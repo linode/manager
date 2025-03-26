@@ -102,10 +102,6 @@ export const DesignTokensTool = () => {
   const [selectedTheme, setSelectedTheme] = React.useState<ThemeName>('light');
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [computedTokens, setComputedTokens] = React.useState(
-    Object.entries(themes[selectedTheme].tokens ?? {})
-  );
-  const [filteredTokens, setFilteredTokens] = React.useState(computedTokens);
   const [searchValue, setSearchValue] = React.useState('');
 
   const handleThemeChange = React.useCallback(
@@ -117,14 +113,15 @@ export const DesignTokensTool = () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const newTokens = Object.entries(themes[value.value].tokens ?? {});
-      setComputedTokens(newTokens);
-      setFilteredTokens(newTokens);
       setSelectedTheme(value.value);
       setIsLoading(false);
+
+      return newTokens;
     },
     []
   );
 
+  const filteredTokens = Object.entries(themes[selectedTheme].tokens ?? {});
   return (
     <ThemeProvider theme={themes[selectedTheme]}>
       <Box
@@ -147,7 +144,7 @@ export const DesignTokensTool = () => {
             <Stack direction="row" sx={{ overflowX: 'auto', pr: 2 }}>
               <Stack sx={{ mx: 2 }}>
                 <TabList>
-                  {computedTokens.map(([tokenCategory, _tokenObject]) => (
+                  {filteredTokens.map(([tokenCategory, _tokenObject]) => (
                     <Tab disabled={searchValue !== ''} key={tokenCategory}>
                       {capitalize(tokenCategory)}
                     </Tab>
