@@ -22,7 +22,7 @@ const subnetAction = {
 } as const;
 
 const subnetLinodeAction = {
-  powerAction: 'powerAction',
+  powerAction: 'power-action',
   unassign: 'unassign',
 } as const;
 
@@ -57,7 +57,7 @@ const vpcActionRouteParams = {
       vpcId: String(vpcId),
     }),
   },
-}
+};
 
 const vpcActionRoute = createRoute({
   ...vpcActionRouteParams,
@@ -115,7 +115,7 @@ const vpcDetailsActionRoute = createRoute({
     }
   },
   getParentRoute: () => vpcsDetailRoute,
-  path: 'details/$action',
+  path: 'detail/$action',
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
 type SubnetActionRouteParams<P = number | string> = {

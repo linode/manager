@@ -200,7 +200,7 @@ export const VPCSubnetsTable = (props: Props) => {
     setSelectedLinode(linode);
     navigate({
       params: {
-        linodeAction: 'powerAction',
+        linodeAction: 'power-action',
         linodeId: linode.id,
         subnetId: subnet?.id ?? selectedSubnet?.id ?? -1,
         vpcId,
@@ -425,11 +425,14 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <PowerActionsDialog
+        onClose={() => {
+          onCloseSubnetDrawer();
+          setSelectedLinode(undefined);
+        }}
         action={linodePowerAction ?? 'Reboot'}
-        isOpen={params.linodeAction === 'powerAction'}
+        isOpen={params.linodeAction === 'power-action'}
         linodeId={selectedLinode?.id}
         linodeLabel={selectedLinode?.label}
-        onClose={onCloseSubnetDrawer}
       />
     </>
   );
