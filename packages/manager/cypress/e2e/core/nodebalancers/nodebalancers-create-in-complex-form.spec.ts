@@ -1,3 +1,4 @@
+import { nodeBalancerFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
 import { interceptCreateNodeBalancer } from 'support/intercepts/nodebalancers';
@@ -6,8 +7,6 @@ import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { nodeBalancerFactory } from 'src/factories';
 
 import type { Linode } from '@linode/api-v4';
 

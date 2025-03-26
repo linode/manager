@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import { Factory } from './factoryProxy';
 
 import type {
   CreateLinodeRequest,
