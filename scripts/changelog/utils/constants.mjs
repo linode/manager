@@ -10,6 +10,7 @@ export const PACKAGES = [
   "api-v4",
   "manager",
   "queries",
+  "shared",
   "ui",
   "utilities",
   "validation",

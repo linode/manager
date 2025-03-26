@@ -1,3 +1,4 @@
+import { linodeFactory } from '@linode/utilities';
 import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
@@ -6,7 +7,6 @@ import {
   firewallDeviceFactory,
   firewallFactory,
   ipAddressFactory,
-  linodeFactory,
   subnetFactory,
   vpcFactory,
 } from '@src/factories';

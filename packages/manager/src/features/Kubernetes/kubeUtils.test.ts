@@ -1,3 +1,4 @@
+import { linodeTypeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
 import {
@@ -5,7 +6,6 @@ import {
   kubeLinodeFactory,
   kubernetesEnterpriseTierVersionFactory,
   kubernetesVersionFactory,
-  linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';

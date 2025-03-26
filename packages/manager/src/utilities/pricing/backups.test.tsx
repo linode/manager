@@ -1,4 +1,4 @@
-import { linodeFactory, linodeTypeFactory } from 'src/factories';
+import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 
 import { getLinodeBackupPrice, getTotalBackupsPrice } from './backups';
 

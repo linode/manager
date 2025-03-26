@@ -27,6 +27,7 @@ export * from './isNumber';
 export * from './isToday';
 export * from './link';
 export * from './manuallySetVPCConfigInterfacesToActive';
+export * from './mapIdsToDevices';
 export * from './maybeCastToNumber';
 export * from './metadata';
 export * from './minute-conversion';

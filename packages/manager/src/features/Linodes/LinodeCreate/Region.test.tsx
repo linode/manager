@@ -1,15 +1,13 @@
-import { regionFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  linodeTypeFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  grantsFactory,
-  imageFactory,
-  linodeFactory,
-  linodeTypeFactory,
-  profileFactory,
-} from 'src/factories';
+import { grantsFactory, imageFactory, profileFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';

@@ -1,3 +1,4 @@
+import { linodeFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateFirewall,
@@ -14,11 +15,7 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import {
-  firewallFactory,
-  firewallTemplateFactory,
-  linodeFactory,
-} from 'src/factories';
+import { firewallFactory, firewallTemplateFactory } from 'src/factories';
 
 describe('Create Linode with Firewall', () => {
   beforeEach(() => {

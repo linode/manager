@@ -1,10 +1,10 @@
 import { createStackScript } from '@linode/api-v4/lib';
-import { regionFactory } from '@linode/utilities';
 import {
   createLinodeRequestFactory,
-  imageFactory,
   linodeFactory,
-} from '@src/factories';
+  regionFactory,
+} from '@linode/utilities';
+import { imageFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
