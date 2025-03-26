@@ -33,6 +33,7 @@ export const VPC = ({ index }: Props) => {
     control,
     resetField,
     setValue,
+    formState: { errors },
   } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -159,8 +160,12 @@ export const VPC = ({ index }: Props) => {
                 />
                 {field.value !== 'auto' && (
                   <TextField
+                    errorText={
+                      fieldState.error?.message ??
+                      errors.linodeInterfaces?.[index]?.vpc?.ipv4
+                        ?.addresses?.[0]?.message
+                    }
                     containerProps={{ sx: { my: 1 } }}
-                    errorText={fieldState.error?.message}
                     label="VPC IPv4"
                     noMarginTop
                     onBlur={field.onBlur}
