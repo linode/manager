@@ -11,7 +11,7 @@ const labelTestDetails = {
   testMessage: 'Label must not contain two dashes in a row.',
 };
 
-const IP_EITHER_BOTH_NOT_NEITHER =
+export const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
 // @TODO VPC IPv6 - remove below constant when IPv6 is in GA
 const TEMPORARY_IPV4_REQUIRED_MESSAGE = 'A subnet must have an IPv4 range.';
@@ -97,7 +97,7 @@ export const vpcsValidateIP = ({
     }
 
     if (isIPv6) {
-      // @todo update the IPv6 prefix if required for NB-VPC integration
+      // @TODO NB-VPC: update the IPv6 prefix if required for NB-VPC integration
       // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
       const invalidVPCIPv6Prefix = !['52', '48', '44'].includes(mask);
       if (!isIPv6Subnet && invalidVPCIPv6Prefix) {

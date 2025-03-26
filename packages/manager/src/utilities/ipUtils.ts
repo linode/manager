@@ -1,4 +1,4 @@
-import { PRIVATE_IP_REGEX } from '@linode/validation';
+import { PRIVATE_IPv4_REGEX } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 
 /**
@@ -13,7 +13,7 @@ export const removePrefixLength = (ip: string) => ip.replace(/\/\d+/, '');
  * @returns true if the given IPv4 address is private
  */
 export const isPrivateIP = (ip: string) => {
-  return PRIVATE_IP_REGEX.test(ip);
+  return PRIVATE_IPv4_REGEX.test(ip);
 };
 
 export interface ExtendedIP {
