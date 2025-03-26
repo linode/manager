@@ -2,7 +2,7 @@ import { Button, Notice, Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { StyledTypography, type SelectDeselectAll } from './AlertsResources';
+import type { SelectDeselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
   /**
@@ -46,12 +46,18 @@ export const AlertsResourcesNotice = React.memo(
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
         <Tooltip
+          slotProps={{
+            tooltip: {
+              sx: {
+                maxWidth: '230px',
+              },
+            },
+          }}
           title={
             isButtonDisabled ? (
-              <StyledTypography
-              >
+              <Typography>
                 {`You can select upto ${maxSelectionCount} resources.`}
-              </StyledTypography>
+              </Typography>
             ) : undefined
           }
         >

@@ -1,4 +1,4 @@
-import { Box, Checkbox, Tooltip } from '@linode/ui';
+import { Box, Checkbox, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -13,7 +13,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
-import { StyledTypography } from './AlertsResources';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
@@ -176,9 +175,9 @@ export const DisplayAlertResources = React.memo(
 
     const ErrorTypoGraphy = React.memo(() => {
       return (
-        <StyledTypography>
-          {`You can select up to ${maxSelectionCount} resources.`}
-        </StyledTypography>
+        <Typography>
+          {`You can select upto ${maxSelectionCount} resources.`}
+        </Typography>
       );
     });
     return (
@@ -205,6 +204,13 @@ export const DisplayAlertResources = React.memo(
                       padding="checkbox"
                     >
                       <Tooltip
+                        slotProps={{
+                          tooltip: {
+                            sx: {
+                              maxWidth: '230px',
+                            },
+                          },
+                        }}
                         title={
                           disableRootCheckBox(paginatedData) ? (
                             <ErrorTypoGraphy />
@@ -272,6 +278,13 @@ export const DisplayAlertResources = React.memo(
                             }}
                           >
                             <Tooltip
+                              slotProps={{
+                                tooltip: {
+                                  sx: {
+                                    maxWidth: '230px',
+                                  },
+                                },
+                              }}
                               title={
                                 !checked &&
                                 selectionsRemaining !== undefined &&

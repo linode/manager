@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -484,9 +484,3 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     </Stack>
   );
 });
-
-export const StyledTypography = styled(Typography, {
-  label: 'StyledTypography',
-})(() => ({
-  fontSize: '12px',
-}));
