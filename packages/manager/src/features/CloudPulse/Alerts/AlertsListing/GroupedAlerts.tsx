@@ -82,7 +82,7 @@ export const AlertsGroupedByTag = ({
             }) => (
               <React.Fragment>
                 <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
-                  <TableCell colSpan={6}>
+                  <TableCell colSpan={7}>
                     <StyledTagHeader ref={tagRef} variant="h2">
                       {tag}
                     </StyledTagHeader>
@@ -102,7 +102,7 @@ export const AlertsGroupedByTag = ({
                 ))}
                 {count > MIN_PAGE_SIZE && (
                   <TableRow>
-                    <TableCell colSpan={6} sx={{ padding: 0 }}>
+                    <TableCell colSpan={7} sx={{ padding: 0 }}>
                       <PaginationFooter
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
