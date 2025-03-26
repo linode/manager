@@ -8,6 +8,7 @@ import {
   useRegionsQuery,
   useVolumeTypesQuery,
 } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   Button,
@@ -45,7 +46,6 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -54,8 +54,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 

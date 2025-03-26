@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { isLoggedInAsCustomer } from 'src/utilities/authentication';
+import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import type { Profile } from '@linode/api-v4';
 
@@ -40,6 +40,7 @@ const timezoneOptions = getTimezoneOptions();
 type Values = Pick<Profile, 'timezone'>;
 
 export const TimezoneForm = () => {
+  const { loggedInAsCustomer } = useAuthentication();
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
@@ -67,7 +68,7 @@ export const TimezoneForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {isLoggedInAsCustomer() && (
+      {loggedInAsCustomer && (
         <Notice dataTestId="admin-notice" variant="error">
           While you are logged in as a customer, all times, dates, and graphs
           will be displayed in the user&rsquo;s timezone ({profile?.timezone}).

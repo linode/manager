@@ -1,4 +1,5 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import {
@@ -11,7 +12,6 @@ import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 
 import type { Linode, Volume } from '@linode/api-v4';

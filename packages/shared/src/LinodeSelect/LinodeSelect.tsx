@@ -1,9 +1,7 @@
-import { Autocomplete, CustomPopper } from '@linode/ui';
-import React from 'react';
-
-import Close from 'src/assets/icons/close.svg';
 import { useAllLinodesQuery } from '@linode/queries';
-import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
+import { mapIdsToDevices } from '@linode/utilities';
+import React from 'react';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -142,7 +140,6 @@ export const LinodeSelect = (
             : linodes?.find(value) ?? null
           : mapIdsToDevices<Linode>(value, linodes)
       }
-      ChipProps={{ deleteIcon: <Close /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
       data-testid="add-linode-autocomplete"
@@ -162,6 +159,7 @@ export const LinodeSelect = (
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
+      slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
     />
   );
