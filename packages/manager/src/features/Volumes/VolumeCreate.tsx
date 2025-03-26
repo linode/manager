@@ -54,8 +54,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
