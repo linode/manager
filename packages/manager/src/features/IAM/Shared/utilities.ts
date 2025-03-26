@@ -446,7 +446,14 @@ export const deleteUserRole = ({
   assignedRoles,
   initialRole,
 }: DeleteUserRolesProps): IamUserPermissions => {
-  if (access === 'account_access' && assignedRoles) {
+  if (!assignedRoles) {
+    return {
+      account_access: [],
+      resource_access: [],
+    };
+  }
+
+  if (access === 'account_access') {
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.filter(
@@ -455,7 +462,7 @@ export const deleteUserRole = ({
     };
   }
 
-  if (access === 'resource_access' && assignedRoles) {
+  if (access === 'resource_access') {
     return {
       ...assignedRoles,
       resource_access: assignedRoles.resource_access
@@ -470,10 +477,5 @@ export const deleteUserRole = ({
   }
 
   // If access type is invalid, return unchanged object
-  return (
-    assignedRoles ?? {
-      account_access: [],
-      resource_access: [],
-    }
-  );
+  return assignedRoles;
 };

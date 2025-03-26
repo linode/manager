@@ -1,5 +1,4 @@
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -24,8 +23,6 @@ interface Props {
 export const UnassignRoleConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role } = props;
   const { username } = useParams<{ username: string }>();
-
-  const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -87,10 +84,8 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     >
       <Notice variant="warning">
         <Typography>
-          You’re about to remove the{' '}
-          <span style={{ font: theme.font.bold }}>{role?.name}</span> role from{' '}
-          <span style={{ font: theme.font.bold }}>{username}</span>. The change
-          will be applied immidiately.
+          You’re about to remove the <strong>{role?.name}</strong> role from{' '}
+          <strong>{username}</strong>. The change will be applied immediately.
         </Typography>
       </Notice>
     </ConfirmationDialog>

@@ -78,7 +78,7 @@ describe('UnassignRoleConfirmationDialog', () => {
     expect(paragraph).toHaveTextContent(/account_admin/i);
     expect(paragraph).toHaveTextContent(/test_user/i);
     expect(
-      getByText(/The change will be applied immidiately./i)
+      getByText(/The change will be applied immediately./i)
     ).toBeInTheDocument();
 
     const buttons = getAllByRole('button');
