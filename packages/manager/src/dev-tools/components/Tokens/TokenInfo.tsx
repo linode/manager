@@ -45,7 +45,7 @@ export const TokenInfo = (props: TokenInfoProps) => {
       )}
       <Stack direction="column" flexWrap="wrap">
         <TokenValue format="Val" value={value} />
-        <TokenValue format={'JS'} value={`tokens.${category}.${jsPath}`} />
+        <TokenValue format="JS" value={`tokens.${category}.${jsPath}`} />
       </Stack>
     </Stack>
   );
