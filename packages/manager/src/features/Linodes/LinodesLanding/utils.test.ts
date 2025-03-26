@@ -1,8 +1,8 @@
 import {
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
   configFactory,
-  linodeConfigInterfaceFactory,
-  linodeConfigInterfaceFactoryWithVPC,
-} from '@linode/utilities';
+} from 'src/factories';
 
 import { getVPCsFromLinodeConfigs, parseMaintenanceStartTime } from './utils';
 
@@ -34,7 +34,7 @@ describe('Linode Landing Utilites', () => {
   });
 
   describe('getVPCsFromLinodeConfigs', () => {
-    const vpcInterfaceList = linodeConfigInterfaceFactoryWithVPC.buildList(2);
+    const vpcInterfaceList = LinodeConfigInterfaceFactoryWithVPC.buildList(2);
 
     it('returns an empty list if there are no vpc interfaces in the configs', () => {
       const configs = configFactory.buildList(3);
@@ -46,7 +46,7 @@ describe('Linode Landing Utilites', () => {
       const config = configFactory.build({
         interfaces: [
           ...vpcInterfaceList,
-          ...linodeConfigInterfaceFactory.buildList(4),
+          ...LinodeConfigInterfaceFactory.buildList(4),
         ],
       });
       const vpcIds = getVPCsFromLinodeConfigs([
@@ -57,7 +57,7 @@ describe('Linode Landing Utilites', () => {
     });
 
     it('returns unique vpc ids (no duplicates)', () => {
-      const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
+      const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
         vpc_id: 3,
       });
       const config = configFactory.build({

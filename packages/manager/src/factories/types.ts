@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type { LinodeType, PriceType } from '@linode/api-v4';
 import type {

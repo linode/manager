@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 

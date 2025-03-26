@@ -1,10 +1,10 @@
 import { Paper, Typography } from '@linode/ui';
 import Button from '@mui/material/Button';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import { Link } from 'src/components/Link';
 import { OFFSITE_URL_REGEX, ONSITE_URL_REGEX } from 'src/constants';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 

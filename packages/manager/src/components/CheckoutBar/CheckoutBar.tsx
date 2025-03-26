@@ -13,10 +13,6 @@ import {
 
 export interface CheckoutBarProps {
   /**
-   * Additional pricing to display after the calculated total
-   */
-  additionalPricing?: JSX.Element;
-  /**
    * JSX element to be displayed as an agreement section.
    */
   agreement?: JSX.Element;
@@ -65,7 +61,6 @@ export interface CheckoutBarProps {
 
 const CheckoutBar = (props: CheckoutBarProps) => {
   const {
-    additionalPricing,
     agreement,
     calculatedPrice,
     children,
@@ -100,10 +95,7 @@ const CheckoutBar = (props: CheckoutBarProps) => {
       {
         <StyledCheckoutSection data-qa-total-price>
           {(price >= 0 && !disabled) || price ? (
-            <>
-              <DisplayPrice interval="mo" price={price} />
-              {additionalPricing}
-            </>
+            <DisplayPrice interval="mo" price={price} />
           ) : (
             <Typography>{priceSelectionText}</Typography>
           )}

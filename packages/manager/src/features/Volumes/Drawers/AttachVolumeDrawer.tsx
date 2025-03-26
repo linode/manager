@@ -1,23 +1,18 @@
-import { useAttachVolumeMutation, useGrants } from '@linode/queries';
-import {
-  ActionsPanel,
-  Box,
-  Checkbox,
-  Drawer,
-  FormHelperText,
-  Notice,
-} from '@linode/ui';
+import { Box, Checkbox, FormHelperText, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useGrants } from 'src/queries/profile/profile';
+import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
@@ -103,7 +98,6 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

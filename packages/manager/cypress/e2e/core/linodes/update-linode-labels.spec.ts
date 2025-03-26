@@ -1,8 +1,8 @@
-import { authenticate } from 'support/api/authentication';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 
 authenticate();
@@ -21,9 +21,10 @@ describe('update linode label', () => {
       );
 
       cy.get(`[aria-label="Edit ${linode.label}"]`).click();
-      cy.get(`[id="edit-${linode.label}-label"]`).click();
-      cy.focused().clear();
-      cy.focused().type(`${newLinodeLabel}{enter}`);
+      cy.get(`[id="edit-${linode.label}-label"]`)
+        .click()
+        .clear()
+        .type(`${newLinodeLabel}{enter}`);
 
       cy.visitWithLogin('/linodes');
       cy.get(`[data-qa-linode="${newLinodeLabel}"]`).should('be.visible');
@@ -39,9 +40,7 @@ describe('update linode label', () => {
       );
 
       cy.visitWithLogin(`/linodes/${linode.id}/settings`);
-      cy.get('[id="label"]').click();
-      cy.focused().clear();
-      cy.focused().type(`${newLinodeLabel}{enter}`);
+      cy.get('[id="label"]').click().clear().type(`${newLinodeLabel}{enter}`);
       ui.buttonGroup.findButtonByTitle('Save').should('be.visible').click();
 
       cy.visitWithLogin('/linodes');

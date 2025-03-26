@@ -46,8 +46,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -132,5 +132,8 @@ describe('AlertDetail component tests', () => {
 const validateBreadcrumbs = (link: HTMLElement) => {
   expect(link).toBeInTheDocument();
   expect(link).toHaveTextContent('Definitions');
-  expect(link.closest('a')).toHaveAttribute('href', '/alerts/definitions');
+  expect(link.closest('a')).toHaveAttribute(
+    'href',
+    '/monitor/alerts/definitions'
+  );
 };

@@ -1,7 +1,6 @@
-import { getNewRegionLabel } from '@linode/utilities';
 import { randomItem } from 'support/util/random';
-
 import { buildArray, shuffleArray } from './arrays';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import type { Capabilities, Region } from '@linode/api-v4';
 
@@ -32,7 +31,7 @@ export interface ExtendedRegion extends Region {
  * @returns `true` if `region` is an `ExtendedRegion` instance, `false` otherwise.
  */
 export const isExtendedRegion = (
-  region: ExtendedRegion | Region
+  region: Region | ExtendedRegion
 ): region is ExtendedRegion => {
   if ('apiLabel' in region) {
     return true;
@@ -51,13 +50,13 @@ export const isExtendedRegion = (
  * @returns `ExtendedRegion` object for `region`.
  */
 export const extendRegion = (
-  region: ExtendedRegion | Region
+  region: Region | ExtendedRegion
 ): ExtendedRegion => {
   if (!isExtendedRegion(region)) {
     return {
       ...region,
-      apiLabel: region.label,
       label: getNewRegionLabel(region),
+      apiLabel: region.label,
     };
   }
   return region;
@@ -74,14 +73,14 @@ export const getRegionFromExtendedRegion = (
   extendedRegion: ExtendedRegion
 ): Region => {
   return {
-    capabilities: extendedRegion.capabilities,
-    country: extendedRegion.country,
     id: extendedRegion.id,
     label: extendedRegion.apiLabel,
+    country: extendedRegion.country,
+    capabilities: extendedRegion.capabilities,
     placement_group_limits: extendedRegion.placement_group_limits,
+    status: extendedRegion.status,
     resolvers: extendedRegion.resolvers,
     site_type: extendedRegion.site_type,
-    status: extendedRegion.status,
   };
 };
 

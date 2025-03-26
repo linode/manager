@@ -1,14 +1,13 @@
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useRemoveFirewallDeviceMutation,
-  linodeQueries,
-  nodebalancerQueries,
-} from '@linode/queries';
+import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
+import { linodeQueries } from 'src/queries/linodes/linodes';
+import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 import type { FirewallDevice } from '@linode/api-v4';
 

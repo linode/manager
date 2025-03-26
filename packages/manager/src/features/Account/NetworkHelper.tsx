@@ -1,5 +1,5 @@
 import { Accordion, FormControlLabel, Toggle, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 interface Props {
@@ -17,13 +17,7 @@ const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
             configuration into your Linode at boot.
           </Typography>
         </Grid>
-        <Grid
-          container
-          direction="row"
-          sx={{
-            alignItems: 'center',
-          }}
-        >
+        <Grid alignItems="center" container direction="row">
           <Grid>
             <FormControlLabel
               control={

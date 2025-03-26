@@ -2,6 +2,9 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
+import { Token } from '@linode/api-v4';
+import { appTokenFactory } from 'src/factories/oauth';
+import { profileFactory } from 'src/factories/profile';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
@@ -10,14 +13,9 @@ import {
   mockRevokePersonalAccessToken,
   mockUpdatePersonalAccessToken,
 } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-
-import { appTokenFactory } from 'src/factories/oauth';
-import { profileFactory } from 'src/factories/profile';
+import { ui } from 'support/ui';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
-
-import type { Token } from '@linode/api-v4';
 
 describe('Personal access tokens', () => {
   /*
@@ -71,8 +69,11 @@ describe('Personal access tokens', () => {
         cy.findAllByText('Child Account Access').should('not.exist');
 
         // Confirm submit button is disabled without specifying scopes.
-        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
-        ui.buttonGroup.findButtonByTitle('Create Token').should('be.disabled');
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.disabled');
 
         // Select just one scope.
         cy.get('[data-qa-row="Account"]').within(() => {
@@ -80,9 +81,9 @@ describe('Personal access tokens', () => {
         });
 
         // Confirm submit button is still disabled without specifying ALL scopes.
-        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         ui.buttonGroup
           .findButtonByTitle('Create Token')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.disabled');
 
@@ -95,32 +96,29 @@ describe('Personal access tokens', () => {
         );
 
         // Confirm submit button is enabled; attempt to submit form without specifying a label.
-        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         ui.buttonGroup
           .findButtonByTitle('Create Token')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
 
         // Confirm validation error.
-        cy.findByText(
-          'Label must be between 1 and 100 characters.'
-        ).scrollIntoView();
-        cy.findByText('Label must be between 1 and 100 characters.').should(
-          'be.visible'
-        );
+        cy.findByText('Label must be between 1 and 100 characters.')
+          .scrollIntoView()
+          .should('be.visible');
 
         // Specify a label and re-submit.
-        cy.findByLabelText('Label').scrollIntoView();
         cy.findByLabelText('Label')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
-          .click();
-        cy.findByLabelText('Label').type(token.label);
+          .click()
+          .type(token.label);
 
-        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
         ui.buttonGroup
           .findButtonByTitle('Create Token')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -221,9 +219,11 @@ describe('Personal access tokens', () => {
       .findByTitle('Edit Personal Access Token')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').as('qaLabel').should('be.visible').click();
-        cy.get('@qaLabel').clear();
-        cy.get('@qaLabel').type(newToken.label);
+        cy.findByLabelText('Label')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Save')

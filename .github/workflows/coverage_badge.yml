@@ -13,28 +13,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-          version: 10
-
       - name: Use Node.js v20.17 LTS
         uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-          cache: "pnpm"
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Build @linode/validation
-        run: pnpm build:validation
+        run: yarn build:validation
 
       - name: Build @linode/api-v4
-        run: pnpm build:sdk
+        run: yarn build:sdk
 
       - name: Run Base Branch Coverage
-        run: pnpm coverage:summary
+        run: yarn coverage:summary
 
       - name: Generate Coverage Badge
         uses: jaywcjlove/coverage-badges-cli@7f0781807ef3e7aba97a145beca881d36451b7b7 # v1.1.1

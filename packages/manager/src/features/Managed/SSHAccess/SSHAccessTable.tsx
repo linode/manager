@@ -1,4 +1,4 @@
-import { useOpenClose } from '@linode/utilities';
+import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import produce from 'immer';
 import * as React from 'react';
 
@@ -12,14 +12,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 
-import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import { StyledDiv } from './SSHAccessTable.styles';
 import SSHAccessTableContent from './SSHAccessTableContent';
-
-import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import { DEFAULTS } from './common';
 
 const SSHAccessTable = () => {
   const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();

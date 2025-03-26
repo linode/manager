@@ -1,5 +1,5 @@
-import { CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { CircleProgress } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import {
   matchPath,
@@ -10,20 +10,19 @@ import {
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { useLinodeQuery } from '@linode/queries';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(() =>
-  import('./LinodeNetworking/LinodeNetworking').then((module) => ({
-    default: module.LinodeNetworking,
-  }))
+const LinodeNetwork = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetwork')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
@@ -129,7 +128,7 @@ const LinodesDetailNavigation = () => {
               spacingTop={32}
               variant="warning"
             >
-              <Grid size={12}>{text}</Grid>
+              <Grid xs={12}>{text}</Grid>
             </DismissibleBanner>
           ) : null
         }
@@ -143,7 +142,7 @@ const LinodesDetailNavigation = () => {
                 <LinodeSummary linodeCreated={linode?.created} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
+                <LinodeNetwork />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>

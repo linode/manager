@@ -1,4 +1,3 @@
-import { useSecurityQuestions, useProfile } from '@linode/queries';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
@@ -8,6 +7,8 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
+import { useProfile } from 'src/queries/profile/profile';
+import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 
 import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpirationDialog';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';

@@ -17,3 +17,5 @@ export const SSHKeyActionMenu = (props: Props) => {
     </>
   );
 };
+
+export default SSHKeyActionMenu;

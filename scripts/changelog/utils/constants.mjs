@@ -6,15 +6,7 @@ const __dirname = path.dirname(__filename);
 
 export const BOT = 'linode-gh-bot';
 
-export const PACKAGES = [
-  "api-v4",
-  "manager",
-  "queries",
-  "ui",
-  "utilities",
-  "validation",
-];
-
+export const PACKAGES = ["api-v4", "manager", "validation", "ui"];
 export const CHANGESET_TYPES = [
   "Added",
   "Fixed",

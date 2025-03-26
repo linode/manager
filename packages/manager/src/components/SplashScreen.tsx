@@ -1,6 +1,7 @@
 import { Box, CircleProgress } from '@linode/ui';
-import { srSpeak } from '@linode/utilities';
 import * as React from 'react';
+
+import { srSpeak } from 'src/utilities/accessibility';
 
 export const SplashScreen = () => {
   React.useEffect(() => {

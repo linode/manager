@@ -1,8 +1,9 @@
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteSSHKeyMutation } from '@linode/queries';
+import { useDeleteSSHKeyMutation } from 'src/queries/profile/profile';
 
 interface Props {
   id: number;
@@ -11,7 +12,7 @@ interface Props {
   open: boolean;
 }
 
-export const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
+const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
   const { error, isPending, mutateAsync } = useDeleteSSHKeyMutation(id);
 
   const onDelete = async () => {
@@ -45,3 +46,5 @@ export const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
     </ConfirmationDialog>
   );
 };
+
+export default React.memo(DeleteSSHKeyDialog);

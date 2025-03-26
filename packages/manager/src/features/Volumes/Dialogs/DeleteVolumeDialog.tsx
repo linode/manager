@@ -1,8 +1,8 @@
-import { useDeleteVolumeMutation } from '@linode/queries';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useDeleteVolumeMutation } from 'src/queries/volumes/volumes';
 
 import type { Volume } from '@linode/api-v4';
 

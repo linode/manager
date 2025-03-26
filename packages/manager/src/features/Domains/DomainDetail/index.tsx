@@ -1,7 +1,8 @@
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { CircleProgress } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { NotFound } from 'src/components/NotFound';
 import { useDomainQuery } from 'src/queries/domains';
 

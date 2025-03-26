@@ -1,10 +1,9 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { authenticate } from 'support/api/authentication';
+import { Volume } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
+import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
-
-import type { Volume } from '@linode/api-v4';
+import { cleanUp } from 'support/util/cleanup';
 
 authenticate();
 describe('Search Volumes', () => {

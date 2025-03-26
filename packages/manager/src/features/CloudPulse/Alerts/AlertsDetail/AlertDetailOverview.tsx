@@ -43,13 +43,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
       <Typography marginBottom={2} variant="h2">
         Overview
       </Typography>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          alignItems: 'center',
-        }}
-      >
+      <Grid alignItems="center" container spacing={2}>
         <AlertDetailRow label="Name" value={label} />
         <AlertDetailRow label="Description" value={description} />
         <AlertDetailRow

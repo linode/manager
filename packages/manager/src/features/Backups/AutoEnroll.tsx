@@ -2,11 +2,11 @@ import {
   FormControlLabel,
   Notice,
   Paper,
-  Stack,
   Toggle,
   Typography,
 } from '@linode/ui';
-import React from 'react';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 
@@ -20,35 +20,58 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
   const { enabled, error, toggle } = props;
 
   return (
-    <Paper
-      sx={(theme) => ({ backgroundColor: theme.palette.background.default })}
-      variant="outlined"
-    >
+    <StyledPaper>
       {error && <Notice text={error} variant="error" />}
-      <FormControlLabel
+      <StyledFormControlLabel
         label={
-          <Stack spacing={0.5}>
-            <Typography sx={(theme) => ({ font: theme.font.bold })}>
+          <StyledDiv>
+            <StyledTypography>
               Auto Enroll All New Linodes in Backups
-            </Typography>
+            </StyledTypography>
             <Typography variant="body1">
               Enroll all future Linodes in backups. Your account will be billed
               the additional hourly rate noted on the{' '}
               <Link
                 data-qa-backups-price
-                to="https://www.linode.com/pricing/#backups"
+                to="https://www.linode.com/products/backups/"
               >
                 Backups pricing page
               </Link>
               .
             </Typography>
-          </Stack>
+          </StyledDiv>
         }
-        checked={enabled}
-        control={<Toggle />}
-        onChange={toggle}
-        sx={{ gap: 1 }}
+        control={<Toggle checked={enabled} onChange={toggle} />}
       />
-    </Paper>
+    </StyledPaper>
   );
 };
+
+const StyledPaper = styled(Paper, {
+  label: 'StyledPaper',
+})(({ theme }) => ({
+  backgroundColor: theme.bg.offWhite,
+  padding: theme.spacing(1),
+}));
+
+const StyledFormControlLabel = styled(FormControlLabel, {
+  label: 'StyledFormControlLabel',
+})(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  marginBottom: theme.spacing(1),
+  marginLeft: 0,
+}));
+
+const StyledDiv = styled('div', {
+  label: 'StyledDiv',
+})(({ theme }) => ({
+  marginTop: theme.spacing(1.5),
+}));
+
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  fontSize: 17,
+  marginBottom: theme.spacing(1),
+}));

@@ -1,7 +1,7 @@
 import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';
 

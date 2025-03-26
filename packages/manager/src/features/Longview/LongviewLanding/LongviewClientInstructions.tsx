@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -62,13 +62,8 @@ export const LongviewClientInstructions = (props: Props) => {
         container
         data-testid="installation"
       >
-        <Grid container size={11}>
-          <Grid
-            size={{
-              md: 3,
-              xs: 12,
-            }}
-          >
+        <Grid xs={11} container>
+          <Grid md={3} xs={12}>
             {userCanModifyClient ? (
               <EditableEntityLabel
                 loading={updating}
@@ -83,26 +78,15 @@ export const LongviewClientInstructions = (props: Props) => {
               />
             )}
           </Grid>
-          <Grid
-            size={{
-              md: 9,
-              xs: 12,
-            }}
-          >
+          <Grid md={9} xs={12}>
             <InstallationInstructions
               APIKey={clientAPIKey}
               installationKey={installCode}
             />
           </Grid>
         </Grid>
-        <Grid size={1}>
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              justifyContent: 'flex-end',
-            }}
-          >
+        <Grid xs={1}>
+          <Grid container justifyContent="flex-end" spacing={2}>
             <Grid>
               <LongviewActionMenu
                 longviewClientID={clientID}

@@ -113,7 +113,7 @@ const profileQueries = createQueryKeys('profile', {
     queryFn: getProfile,
     queryKey: null,
   },
-});
+})
 
 export const useProfile = () =>
   useQuery<Profile, APIError[]>({
@@ -146,7 +146,7 @@ const UsernameDisplay = () => {
 ## When to use React Query or an api-v4 method directly
 
 Because **api-v4** methods don't commit data to a cache, it is acceptable to use **api-v4** methods directly
-when performing **_one-time actions_** that do not require any immediate state change in Cloud Manager's UI.
+when performing ***one-time actions*** that do not require any immediate state change in Cloud Manager's UI.
 
 While use of **api-v4** methods directly are acceptable, use of **React Query** Queries or Mutations are **still prefered** for the benefits described above.
 
@@ -246,7 +246,7 @@ console.log(errorMap);
 
 #### Scrolling to errors
 
-For deep forms, we provide a utility that will scroll to the first error encountered within a defined container. We do this to improve error visibility, because the user can be unaware of an error that isn't in the viewport.
+For deep forms, we provide a utility that will scroll to the first error encountered within a defined container. We do this to improve error visibility, because the user can be unaware of an error that isn't in the viewport. 
 An error can be a notice (API error) or a Formik field error. In order to implement this often needed functionality, we must declare a form or form container via ref, then pass it to the `scrollErrorIntoViewV2` util (works both for class & functional components).
 
 Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorIntoViewV2`.
@@ -254,11 +254,10 @@ Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorInt
 Since Cloud Manager uses different ways of handling forms and validation, the `scrollErrorIntoViewV2` util should be implemented using the following patterns to ensure consistency.
 
 ##### Formik (deprecated)
-
 ```Typescript
 import * as React from 'react';
 
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 export const MyComponent = () => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -286,11 +285,10 @@ export const MyComponent = () => {
 ```
 
 ##### React Hook Forms
-
 ```Typescript
 import * as React from 'react';
 
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 export const MyComponent = () => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -318,11 +316,10 @@ export const MyComponent = () => {
 ```
 
 ##### Uncontrolled forms
-
 ```Typescript
 import * as React from 'react';
 
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 export const MyComponent = () => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -346,8 +343,6 @@ export const MyComponent = () => {
 ```
 
 ### Toast / Event Message Punctuation
-
 **Best practice:**
-
 - If a message is a sentence or a sentence fragment with a subject and a verb, add punctuation. Otherwise, leave punctuation off.
 - If a developer notices inconsistencies within files they are already working in, they can progressively fix them. In this case, be prepared to fix any Cypress test failures.

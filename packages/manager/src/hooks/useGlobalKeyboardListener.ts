@@ -1,8 +1,11 @@
-import { isOSMac } from '@linode/utilities';
 import React from 'react';
 
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import { getNextThemeValue } from 'src/utilities/theme';
+import { isOSMac } from 'src/utilities/userAgent';
 
 export const useGlobalKeyboardListener = () => {
   const { data: theme } = usePreferences((preferences) => preferences?.theme);

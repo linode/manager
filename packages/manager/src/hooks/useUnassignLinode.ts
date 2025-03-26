@@ -1,7 +1,9 @@
 import { deleteLinodeConfigInterface } from '@linode/api-v4';
-import { linodeQueries, vpcQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+
+import { linodeQueries } from 'src/queries/linodes/linodes';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 
 import type {
   APIError,

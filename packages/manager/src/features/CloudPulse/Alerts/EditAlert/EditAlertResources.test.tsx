@@ -34,22 +34,22 @@ const cancelEdit = 'cancel-save-resources';
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
+  useAlertDefinitionQuery: vi.fn(),
   useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
-
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
+  useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
-
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -61,6 +61,11 @@ beforeAll(() => {
 // Shared Setup
 beforeEach(() => {
   vi.clearAllMocks();
+  queryMocks.useAlertDefinitionQuery.mockReturnValue({
+    data: alertDetails,
+    isError: false,
+    isLoading: false,
+  });
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,
@@ -78,16 +83,48 @@ beforeEach(() => {
 });
 
 describe('EditAlertResources component tests', () => {
-  it('Edit alert resources happy path', () => {
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
-      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+  it('Edit alert resources happy path', async () => {
+    const { getByPlaceholderText, getByText } = renderWithTheme(
+      <EditAlertResources />
     );
-
+    // validate resources sections is rendered
     expect(
       getByPlaceholderText('Search for a Region or Resource')
     ).toBeInTheDocument();
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
-    expect(getByTestId('show_selected_only')).toBeInTheDocument();
+    expect(getByText(alertDetails.label)).toBeInTheDocument();
+  });
+
+  it('Edit alert resources alert details error and loading path', () => {
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined,
+      isError: true, // simulate error
+      isLoading: false,
+    });
+    const { getByText } = renderWithTheme(<EditAlertResources />);
+    expect(
+      getByText(
+        'An error occurred while loading the alerts definitions and resources. Please try again later.'
+      )
+    ).toBeInTheDocument();
+
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined,
+      isError: false,
+      isLoading: true, // simulate loading
+    });
+    const { getByTestId } = renderWithTheme(<EditAlertResources />);
+    expect(getByTestId('circle-progress')).toBeInTheDocument();
+  });
+
+  it('Edit alert resources alert details empty path', () => {
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: undefined, // simulate empty
+      isError: false,
+      isLoading: false,
+    });
+    const { getByText } = renderWithTheme(<EditAlertResources />);
+    expect(getByText('No Data to display.')).toBeInTheDocument();
   });
 
   it('Edit alert resources successful edit', async () => {
@@ -96,11 +133,11 @@ describe('EditAlertResources component tests', () => {
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
     history.push = push;
-    history.push('/alerts/definitions/edit/linode/1');
+    history.push('/monitor/alerts/definitions/edit/linode/1');
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+        <EditAlertResources />
       </Router>
     );
 
@@ -120,7 +157,7 @@ describe('EditAlertResources component tests', () => {
 
     expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
 
-    expect(push).toHaveBeenLastCalledWith('/alerts/definitions'); // after confirmation history updates to list page
+    expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions'); // after confirmation history updates to list page
 
     await waitFor(() => {
       expect(
@@ -133,7 +170,7 @@ describe('EditAlertResources component tests', () => {
 
     expect(push).toHaveBeenLastCalledWith(
       // after cancel click history updates to list page
-      '/alerts/definitions'
+      '/monitor/alerts/definitions'
     );
   });
 
@@ -148,11 +185,11 @@ describe('EditAlertResources component tests', () => {
     const push = vi.fn();
     const history = createMemoryHistory(); // Create a memory history for testing
     history.push = push;
-    history.push('/alerts/definitions/edit/linode/1');
+    history.push('/monitor/alerts/definitions/edit/linode/1');
 
     const { getByTestId, getByText } = renderWithTheme(
       <Router history={history}>
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+        <EditAlertResources />
       </Router>
     );
 

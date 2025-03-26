@@ -1,16 +1,9 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
-  getAllLinodeConfigs,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
-import {
   Autocomplete,
   Box,
   Button,
   Checkbox,
-  Drawer,
   FormControlLabel,
   FormHelperText,
   Notice,
@@ -23,8 +16,8 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
@@ -33,6 +26,9 @@ import {
 } from 'src/features/VPCs/constants';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
@@ -149,9 +145,9 @@ export const SubnetAssignLinodesDrawer = (
   function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
     return (
       // Use the first configuration's id or -1 if no configurations
-      // Use selected configuration's id if available
-      (linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ??
-      -1
+      (linodeConfigs.length > 1 // Use selected configuration's id if available
+        ? selectedConfig?.id
+        : linodeConfigs[0]?.id) ?? -1
     );
   }
 
@@ -412,7 +408,6 @@ export const SubnetAssignLinodesDrawer = (
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
-      NotFoundComponent={NotFound}
       onClose={handleOnClose}
       open={open}
     >

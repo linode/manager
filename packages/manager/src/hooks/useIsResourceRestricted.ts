@@ -1,4 +1,4 @@
-import { useGrants } from '@linode/queries';
+import { useGrants } from 'src/queries/profile/profile';
 
 import type { GrantLevel, GrantType } from '@linode/api-v4';
 

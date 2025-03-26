@@ -1,5 +1,4 @@
 import {
-  ActionsPanel,
   Button,
   FormControlLabel,
   Notice,
@@ -8,12 +7,13 @@ import {
   Typography,
 } from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
@@ -162,12 +162,12 @@ export const AutoscalePoolDialog = (props: Props) => {
         </Notice>
       ) : null}
       <Typography>
-        Enable the built-in autoscaler to automatically add and remove nodes
-        based on resource demand and usage.{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#autoscale-automatically-resize-node-pools">
-          Learn more
+        Set minimum and maximum node pool constraints for LKE to resize your
+        cluster automatically based on resource demand and overall usage.
+        Maximum limit is 100 nodes.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools">
+          Learn more.
         </Link>
-        .
       </Typography>
       <form onSubmit={handleSubmit}>
         <FormControlLabel
@@ -179,12 +179,9 @@ export const AutoscalePoolDialog = (props: Props) => {
               onChange={handleChange}
             />
           }
-          label="Autoscale"
+          label="Autoscaler"
           style={{ marginTop: 12 }}
         />
-        <Typography marginTop={1}>
-          Define the minimum and maximum node constraints:
-        </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
             <TextField
@@ -218,14 +215,14 @@ export const AutoscalePoolDialog = (props: Props) => {
               value={values.max}
             />
           </Grid>
-          <Grid size={12} style={{ padding: '0 8px' }}>
+          <Grid style={{ padding: '0 8px' }} xs={12}>
             {errors.min && (
-              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.min}
               </Typography>
             )}
             {errors.max && (
-              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
+              <Typography color={(theme) => theme.palette.error.dark}>
                 {errors.max}
               </Typography>
             )}

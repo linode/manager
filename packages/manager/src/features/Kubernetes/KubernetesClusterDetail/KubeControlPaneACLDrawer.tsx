@@ -1,44 +1,31 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  ActionsPanel,
   Box,
-  Checkbox,
-  Drawer,
   FormControlLabel,
   Notice,
   TextField,
+  Toggle,
   Typography,
   omittedProps,
 } from '@linode/ui';
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import {
-  kubernetesControlPlaneACLPayloadSchema,
-  kubernetesEnterpriseControlPlaneACLPayloadSchema,
-} from '@linode/validation';
+import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
 } from 'src/queries/kubernetes';
-
-import {
-  ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
-  ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
-  ACL_DRAWER_STANDARD_TIER_ACL_COPY,
-  ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
-} from '../constants';
-import { StyledACLToggle } from '../CreateCluster/ControlPlaneACLPane';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type {
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
-  KubernetesTier,
 } from '@linode/api-v4';
 
 export interface KubeControlPlaneACLDrawerProps {
@@ -47,7 +34,6 @@ export interface KubeControlPlaneACLDrawerProps {
   clusterId: KubernetesCluster['id'];
   clusterLabel: KubernetesCluster['label'];
   clusterMigrated: boolean;
-  clusterTier: KubernetesTier;
   open: boolean;
 }
 
@@ -61,17 +47,9 @@ export const KubeControlPlaneACLDrawer = (
     clusterId,
     clusterLabel,
     clusterMigrated,
-    clusterTier,
     open,
   } = props;
   const aclPayload = aclData?.acl;
-
-  const isEnterpriseCluster = clusterTier === 'enterprise';
-
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
@@ -91,11 +69,7 @@ export const KubeControlPlaneACLDrawer = (
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: aclData,
     mode: 'onBlur',
-    resolver: yupResolver(
-      isEnterpriseCluster && !isACLAcknowledgementChecked
-        ? kubernetesEnterpriseControlPlaneACLPayloadSchema
-        : kubernetesControlPlaneACLPayloadSchema
-    ),
+    resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
     values: {
       acl: {
         addresses: {
@@ -109,11 +83,6 @@ export const KubeControlPlaneACLDrawer = (
   });
 
   const { acl } = watch();
-
-  const shouldShowAclAcknowledgementCheck =
-    isEnterpriseCluster &&
-    (acl?.addresses?.ipv4?.length === 0 || acl?.addresses?.ipv4?.[0] === '') &&
-    (acl?.addresses?.ipv6?.length === 0 || acl?.addresses?.ipv6?.[0] === '');
 
   const updateCluster = async () => {
     // A quick note on the following code:
@@ -174,8 +143,6 @@ export const KubeControlPlaneACLDrawer = (
       }
       scrollErrorIntoViewV2(formContainerRef);
     }
-
-    setIsACLAcknowledgementChecked(false);
   };
 
   const handleClose = () => {
@@ -185,7 +152,6 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}
@@ -199,9 +165,10 @@ export const KubeControlPlaneACLDrawer = (
         )}
         <Stack sx={{ marginTop: 3 }}>
           <StyledTypography variant="body1">
-            {isEnterpriseCluster
-              ? ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY
-              : ACL_DRAWER_STANDARD_TIER_ACL_COPY}
+            Control Plane ACL secures network access to your LKE cluster&apos;s
+            control plane. Use this form to enable or disable the ACL on your
+            LKE cluster, update the list of allowed IP addresses, and adjust
+            other settings.
           </StyledTypography>
           {!clusterMigrated && (
             <Notice spacingBottom={0} spacingTop={16} variant="warning">
@@ -220,26 +187,24 @@ export const KubeControlPlaneACLDrawer = (
           <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
           <Typography variant="h3">Activation Status</Typography>
           <StyledTypography topMargin variant="body1">
-            {isEnterpriseCluster
-              ? ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY
-              : ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY}
+            Enable or disable the Control Plane ACL. If the ACL is not enabled,
+            any public IP address can be used to access your control plane. Once
+            enabled, all network access is denied except for the IP addresses
+            and CIDR ranges defined on the ACL.
           </StyledTypography>
           <Box sx={{ marginTop: 1 }}>
             <Controller
               render={({ field }) => (
                 <FormControlLabel
                   control={
-                    <StyledACLToggle
-                      checked={
-                        isEnterpriseCluster ? true : field.value ?? false
-                      }
-                      disabled={isEnterpriseCluster}
+                    <Toggle
+                      checked={field.value ?? false}
                       name="ipacl-checkbox"
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                     />
                   }
-                  label="Enable Control Plane ACL"
+                  label={'Enable Control Plane ACL'}
                 />
               )}
               control={control}
@@ -279,10 +244,9 @@ export const KubeControlPlaneACLDrawer = (
             cluster&apos;s control plane will only be accessible from IP
             addresses within this list.
           </StyledTypography>
-          {(errors.acl?.root || errors.acl?.message) && (
+          {errors.acl?.message && (
             <Notice spacingBottom={12} spacingTop={8} variant="error">
-              {errors.acl?.root?.message}
-              {errors.acl?.message}
+              {errors.acl.message}
             </Notice>
           )}
           <Box sx={{ maxWidth: 450 }}>
@@ -319,21 +283,6 @@ export const KubeControlPlaneACLDrawer = (
               />
             </Box>
           </Box>
-          {shouldShowAclAcknowledgementCheck && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={() =>
-                    setIsACLAcknowledgementChecked(!isACLAcknowledgementChecked)
-                  }
-                  name="acl-acknowledgement"
-                />
-              }
-              data-qa-checkbox="acl-acknowledgement"
-              label="Provide an ACL later. The control plane will be unreachable until an ACL is defined."
-              sx={{ marginY: 1 }}
-            />
-          )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',

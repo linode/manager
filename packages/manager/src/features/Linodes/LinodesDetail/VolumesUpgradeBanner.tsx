@@ -1,10 +1,11 @@
-import { useLinodeVolumesQuery, useNotificationsQuery } from '@linode/queries';
 import { Button, Notice, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   linodeId: number;

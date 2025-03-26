@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useAllPlacementGroupsQuery } from '@linode/queries';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 

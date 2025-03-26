@@ -1,9 +1,6 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
-  ActionsPanel,
   CircleProgress,
-  Drawer,
-  ErrorState,
   IconButton,
   InputAdornment,
   Notice,
@@ -21,11 +18,13 @@ import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Drawer } from 'src/components/Drawer';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -80,7 +79,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+    border: `1px solid ${theme.tokens.border.Normal}`,
     borderBottom: 0,
     padding: theme.spacing(),
     paddingLeft: theme.spacing(1.5),
@@ -453,11 +452,8 @@ export const ImagesLanding = () => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching && <CircleProgress noPadding size="xs" />}
+              {isFetching && <CircleProgress size="sm" />}
               <IconButton
-                sx={{
-                  padding: 0,
-                }}
                 aria-label="Clear"
                 data-testid="clear-images-search"
                 onClick={resetSearch}
@@ -654,7 +650,6 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
-        NotFoundComponent={NotFound}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}

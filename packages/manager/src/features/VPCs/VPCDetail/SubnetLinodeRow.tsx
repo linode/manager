@@ -1,5 +1,4 @@
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -10,11 +9,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import {
-  useAllLinodeConfigsQuery,
-  useLinodeFirewallsQuery,
-  useLinodeQuery,
-} from '@linode/queries';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
@@ -36,7 +34,6 @@ interface Props {
   handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
-  isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
   subnet?: Subnet;
   subnetId: number;
@@ -47,7 +44,6 @@ export const SubnetLinodeRow = (props: Props) => {
     handlePowerActionsLinode,
     handleUnassignLinode,
     hover = false,
-    isVPCLKEEnterpriseCluster,
     linodeId,
     subnet,
     subnetId,
@@ -109,29 +105,28 @@ export const SubnetLinodeRow = (props: Props) => {
     <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
   );
 
-  const labelCell =
-    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
-      <Box
-        data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
-        sx={{ alignItems: 'center', display: 'flex' }}
-      >
-        <TooltipIcon
-          text={
-            <Typography>
-              This Linode is using a configuration profile with a Networking
-              setting that is not recommended. To avoid potential connectivity
-              issues, edit the Linode’s configuration.
-            </Typography>
-          }
-          icon={<StyledWarningIcon />}
-          status="other"
-          sxTooltipIcon={{ paddingLeft: 0 }}
-        />
-        {linkifiedLinodeLabel}
-      </Box>
-    ) : (
-      linkifiedLinodeLabel
-    );
+  const labelCell = hasUnrecommendedConfiguration ? (
+    <Box
+      data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
+      sx={{ alignItems: 'center', display: 'flex' }}
+    >
+      <TooltipIcon
+        text={
+          <Typography>
+            This Linode is using a configuration profile with a Networking
+            setting that is not recommended. To avoid potential connectivity
+            issues, edit the Linode’s configuration.
+          </Typography>
+        }
+        icon={<StyledWarningIcon />}
+        status="other"
+        sxTooltipIcon={{ paddingLeft: 0 }}
+      />
+      {linkifiedLinodeLabel}
+    </Box>
+  ) : (
+    linkifiedLinodeLabel
+  );
 
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
@@ -200,36 +195,29 @@ export const SubnetLinodeRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell actionCell>
-        {!isVPCLKEEnterpriseCluster && (
-          <>
-            {isRebootNeeded && (
-              <InlineMenuAction
-                onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot');
-                }}
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
-              />
-            )}
-            {showPowerButton && (
-              <InlineMenuAction
-                onClick={() => {
-                  handlePowerActionsLinode(
-                    linode,
-                    isOffline ? 'Power On' : 'Power Off'
-                  );
-                }}
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
-              />
-            )}
-            <InlineMenuAction
-              actionText="Unassign Linode"
-              disabled={isVPCLKEEnterpriseCluster}
-              onClick={() => handleUnassignLinode(linode, subnet)}
-            />
-          </>
+        {isRebootNeeded && (
+          <InlineMenuAction
+            onClick={() => {
+              handlePowerActionsLinode(linode, 'Reboot');
+            }}
+            actionText="Reboot"
+          />
         )}
+        {showPowerButton && (
+          <InlineMenuAction
+            onClick={() => {
+              handlePowerActionsLinode(
+                linode,
+                isOffline ? 'Power On' : 'Power Off'
+              );
+            }}
+            actionText={isOffline ? 'Power On' : 'Power Off'}
+          />
+        )}
+        <InlineMenuAction
+          actionText="Unassign Linode"
+          onClick={() => handleUnassignLinode(linode, subnet)}
+        />
       </TableCell>
     </TableRow>
   );
@@ -279,7 +267,6 @@ const getSubnetLinodeIPv4CellString = (
 
 const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {configInterface && (
         <span key={configInterface.id}>{configInterface.ipv4?.vpc}</span>

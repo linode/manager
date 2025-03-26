@@ -7,7 +7,6 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
-  formatConfigValue,
   getDatabasesDescription,
   hasPendingUpdates,
   isDateOutsideBackup,
@@ -48,13 +47,9 @@ const queryMocks = vi.hoisted(() => ({
   useDatabaseTypesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
-  };
-});
+vi.mock('src/queries/databases/databases', () => ({
+  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+}));
 
 describe('useIsDatabasesEnabled', () => {
   it('should return correctly for non V1/V2 user', async () => {
@@ -562,27 +557,5 @@ describe('upgradableVersions', () => {
   it('should return undefined when no engines are provided', () => {
     const result = upgradableVersions('mysql', '8.0.26', undefined);
     expect(result).toBeUndefined();
-  });
-});
-
-describe('formatConfigValue', () => {
-  it('should return "Enabled" when configValue is "true"', () => {
-    const result = formatConfigValue('true');
-    expect(result).toBe('Enabled');
-  });
-
-  it('should return "Disabled" when configValue is "false"', () => {
-    const result = formatConfigValue('false');
-    expect(result).toBe('Disabled');
-  });
-
-  it('should return " -" when configValue is "undefined"', () => {
-    const result = formatConfigValue('undefined');
-    expect(result).toBe(' - ');
-  });
-
-  it('should return the original configValue for other values', () => {
-    const result = formatConfigValue('+03:00');
-    expect(result).toBe('+03:00');
   });
 });

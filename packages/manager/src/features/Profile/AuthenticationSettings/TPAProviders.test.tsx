@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -6,68 +6,64 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TPAProviders } from './TPAProviders';
 
-import type { Provider } from 'src/featureFlags';
-
-const providers: Provider[] = [
-  {
-    displayName: 'Google',
-    href: 'https://google.com',
-    icon: 'GoogleIcon',
-    name: 'google',
-  },
-  {
-    displayName: 'GitHub',
-    href: 'https://github.com',
-    icon: 'GitHubIcon',
-    name: 'github',
-  },
-];
-
-const flags = { tpaProviders: providers };
+vi.mock('src/hooks/useFlags', () => ({
+  __esModule: true,
+  useFlags: vi.fn().mockReturnValue({
+    tpaProviders: [
+      {
+        displayName: 'Google',
+        href: 'https://google.com',
+        icon: 'GoogleIcon',
+        name: 'google',
+      },
+      {
+        displayName: 'GitHub',
+        href: 'https://github.com',
+        icon: 'GitHubIcon',
+        name: 'github',
+      },
+    ],
+  }),
+}));
 
 describe('TPAProviders component', () => {
   it('Should render login method with Linode button', () => {
-    renderWithTheme(<TPAProviders authType="password" />, { flags });
-
+    const authType = 'password';
+    renderWithTheme(<TPAProviders authType={authType} />);
     const linodeButton = screen.getByTestId('Button-Cloud Manager');
+    const LinodeButtonEnabled = screen.getByTestId('Enabled-Cloud Manager');
     expect(linodeButton).toBeInTheDocument();
-    expect(linodeButton).toBeDisabled();
-
-    const enabledText = within(linodeButton).getByText('Enabled');
-    expect(enabledText).toBeVisible();
+    expect(linodeButton).toHaveAttribute('aria-disabled', 'true');
+    expect(LinodeButtonEnabled).toBeInTheDocument();
   });
   it('Should render login method with Google button', () => {
-    renderWithTheme(<TPAProviders authType="google" />, { flags });
-
+    const authType = 'google';
+    renderWithTheme(<TPAProviders authType={authType} />);
     const googleButton = screen.getByTestId('Button-Google');
-    expect(googleButton).toBeInTheDocument();
-    expect(googleButton).toBeDisabled();
-
-    const enabledText = within(googleButton).getByText('Enabled');
-    expect(enabledText).toBeVisible();
-
+    const googleButtonEnabled = screen.getByTestId('Enabled-Google');
     const noticeElement = screen.getByTestId('Notice-Google');
+    expect(googleButton).toBeInTheDocument();
+    expect(googleButton).toHaveAttribute('aria-disabled', 'true');
+    expect(googleButtonEnabled).toBeInTheDocument();
     expect(noticeElement).toBeInTheDocument();
   });
   it('Should render login method with GitHub button', () => {
-    renderWithTheme(<TPAProviders authType="github" />, { flags });
-
+    const authType = 'github';
+    renderWithTheme(<TPAProviders authType={authType} />);
     const githubButton = screen.getByTestId('Button-GitHub');
-    expect(githubButton).toBeInTheDocument();
-    expect(githubButton).toBeDisabled();
-
-    const enabledText = within(githubButton).getByText('Enabled');
-    expect(enabledText).toBeInTheDocument();
-
+    const githubButtonEnabled = screen.getByTestId('Enabled-GitHub');
     const noticeElement = screen.getByTestId('Notice-GitHub');
+    expect(githubButton).toBeInTheDocument();
+    expect(githubButton).toHaveAttribute('aria-disabled', 'true');
+    expect(githubButtonEnabled).toBeInTheDocument();
     expect(noticeElement).toBeInTheDocument();
   });
 
   test('Should open the dialog when the button is clicked', async () => {
-    const {
-      getByTestId,
-    } = renderWithTheme(<TPAProviders authType="password" />, { flags });
-
+    const authType = 'password';
+    const { getByTestId } = renderWithTheme(
+      <TPAProviders authType={authType} />
+    );
     const button = getByTestId('Button-Google');
     await userEvent.click(button);
     const dialog = getByTestId('drawer');

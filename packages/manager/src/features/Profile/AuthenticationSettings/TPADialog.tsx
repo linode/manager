@@ -1,7 +1,8 @@
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { LOGIN_ROOT } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';

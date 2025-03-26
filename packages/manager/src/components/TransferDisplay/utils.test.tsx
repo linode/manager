@@ -20,8 +20,7 @@ const mockRegions = [
   regionWithDynamicPricingFactory.build(),
 ];
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => mockRegions),
 }));
 

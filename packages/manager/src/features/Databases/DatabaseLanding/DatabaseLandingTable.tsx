@@ -21,7 +21,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
 
 import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
-import type { Order } from '@linode/utilities';
+import type { Order } from 'src/hooks/useOrder';
 
 const preferenceKey = 'databases';
 

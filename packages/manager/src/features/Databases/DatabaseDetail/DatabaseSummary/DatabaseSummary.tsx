@@ -1,5 +1,5 @@
 import { Divider, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -41,12 +41,7 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   return (
     <Paper>
       <Grid container spacing={2}>
-        <Grid
-          size={{
-            md: isDatabasesV2GA ? 12 : 4,
-            sm: 12,
-          }}
-        >
+        <Grid md={isDatabasesV2GA ? 12 : 4} sm={12}>
           {isDatabasesV2GA ? (
             <ClusterConfiguration database={database} />
           ) : (
@@ -55,12 +50,7 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
             <ClusterConfigurationLegacy database={database} />
           )}
         </Grid>
-        <Grid
-          size={{
-            md: isDatabasesV2GA ? 12 : 8,
-            sm: 12,
-          }}
-        >
+        <Grid md={isDatabasesV2GA ? 12 : 8} sm={12}>
           {isDatabasesV2GA ? (
             <ConnectionDetails database={database} />
           ) : (

@@ -1,5 +1,6 @@
 import { Alias } from '@linode/design-language-system';
-import { getMetrics } from '@linode/utilities';
+
+import { getMetrics } from 'src/utilities/statMetrics';
 
 import {
   convertValueToUnit,

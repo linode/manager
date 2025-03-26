@@ -1,10 +1,9 @@
-import { useRegionsQuery } from '@linode/queries';
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
-
-import type { Region } from '@linode/api-v4/lib/regions';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface Props {
   disabled?: boolean;

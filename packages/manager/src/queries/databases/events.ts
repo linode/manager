@@ -3,7 +3,7 @@ import { getEngineFromDatabaseEntityURL } from 'src/utilities/getEventsActionLin
 import { databaseQueries } from './databases';
 
 import type { Engine } from '@linode/api-v4';
-import type { EventHandlerData } from '@linode/queries';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const databaseEventsHandler = ({
   event,

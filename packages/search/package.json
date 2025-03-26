@@ -9,13 +9,14 @@
   "license": "Apache-2.0",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "precommit": "tsc"
   },
   "dependencies": {
-    "peggy": "^4.0.3",
-    "@linode/api-v4": "workspace:*"
+    "peggy": "^4.0.3"
   },
   "peerDependencies": {
-    "vite": "^5 || ^6"
+    "@linode/api-v4": "*",
+    "vite": "*"
   }
 }

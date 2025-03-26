@@ -1,8 +1,9 @@
 import { Autocomplete, Box } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+
+import { capitalize } from 'src/utilities/capitalize';
 
 import { dimensionOperatorOptions } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
@@ -85,13 +86,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   };
 
   return (
-    <Grid
-      sx={{
-        gap: 2,
-      }}
-      container
-      data-testid={`${name}-id`}
-    >
+    <Grid container data-testid={`${name}-id`} gap={2}>
       <Grid item md={3} xs={12}>
         <Controller
           render={({ field, fieldState }) => (
@@ -108,14 +103,13 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-qa-dimension-filter={`${name}-data-field`}
               data-testid="data-field"
               disabled={dataFieldDisabled}
               errorText={fieldState.error?.message}
               label="Data Field"
               onBlur={field.onBlur}
               options={dataFieldOptions}
-              placeholder="Select a Data Field"
+              placeholder="Select a Data field"
             />
           )}
           control={control}
@@ -140,14 +134,12 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-qa-dimension-filter={`${name}-operator`}
               data-testid="operator"
               disabled={!dimensionFieldWatcher}
               errorText={fieldState.error?.message}
               label="Operator"
               onBlur={field.onBlur}
               options={dimensionOperatorOptions}
-              placeholder="Select an Operator"
             />
           )}
           control={control}
@@ -176,7 +168,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     (option) => option.value === field.value
                   ) ?? null
                 }
-                data-qa-dimension-filter={`${name}-value`}
                 data-testid="value"
                 disabled={!dimensionFieldWatcher}
                 errorText={fieldState.error?.message}

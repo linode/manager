@@ -1,5 +1,4 @@
 import { Box, Stack } from '@linode/ui';
-import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
@@ -24,27 +23,8 @@ export const RegionOption = ({
       props={props}
       selected={selected}
     >
-      <Stack
-        sx={(theme) => ({
-          '&:hover .public-icon': {
-            color: `${theme.tokens.color.Neutrals.White}`,
-          },
-        })}
-        alignItems="center"
-        direction="row"
-        gap={1}
-        width="100%"
-      >
-        {item.id === 'global' ? (
-          <PublicIcon
-            sx={(theme) => ({
-              color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
-            })}
-            className="public-icon"
-          />
-        ) : (
-          <Flag country={item.country} />
-        )}
+      <Stack alignItems="center" direction="row" gap={1} width="100%">
+        <Flag country={item.country} />
         {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
         <Box flexGrow={1} />
         {isGeckoLAEnabled && `(${item.id})`}

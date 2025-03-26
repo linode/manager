@@ -12,8 +12,9 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useAccountSettings, useProfile } from '@linode/queries';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 export const ObjectStorageSettings = () => {
   const { data: profile } = useProfile();

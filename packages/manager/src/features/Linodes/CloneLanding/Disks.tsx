@@ -1,5 +1,6 @@
 import { Checkbox } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
+import { intersection } from 'ramda';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -37,12 +38,7 @@ export const Disks = (props: DisksProps) => {
         return (
           <React.Fragment>
             <Grid container>
-              <Grid
-                size={{
-                  md: 9,
-                  xs: 12,
-                }}
-              >
+              <Grid md={9} xs={12}>
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>
@@ -62,9 +58,11 @@ export const Disks = (props: DisksProps) => {
                         const isConfigSelected =
                           // Is there anything in common between this disk's
                           // associatedConfigIds and the selectedConfigsIds?
-                          (
-                            diskSelection?.[disk.id]?.associatedConfigIds ?? []
-                          ).some((num) => selectedConfigIds.includes(num));
+                          intersection(
+                            diskSelection?.[disk.id]?.associatedConfigIds ?? [],
+                            selectedConfigIds
+                          ).length > 0;
+
                         return (
                           <TableRow data-qa-disk={disk.label} key={disk.id}>
                             <TableCell>

@@ -1,11 +1,11 @@
-import { Box, Chip, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Box, Chip, CircleProgress, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
@@ -38,12 +38,12 @@ export const AlertDetail = () => {
     const overrides = [
       {
         label: 'Definitions',
-        linkTo: '/alerts/definitions',
+        linkTo: '/monitor/alerts/definitions',
         position: 1,
       },
       {
         label: 'Details',
-        linkTo: `/alerts/definitions/details/${serviceType}/${alertId}`,
+        linkTo: `/monitor/alerts/definitions/details/${serviceType}/${alertId}`,
         position: 2,
       },
     ];
@@ -96,10 +96,8 @@ export const AlertDetail = () => {
     service_type: alertServiceType,
     type,
   } = alertDetails;
-
   return (
     <>
-      <DocumentTitleSegment segment={`${alertDetails.label}`} />
       <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
       <Box display="flex" flexDirection="column" gap={2}>
         <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
@@ -171,10 +169,10 @@ export const StyledAlertChip = styled(Chip, {
   borderRadius?: string;
 }>(({ borderRadius, theme }) => ({
   '& .MuiChip-label': {
-    color: theme.tokens.alias.Content.Text.Primary.Default,
+    color: theme.tokens.content.Text.Primary.Default,
     marginRight: theme.spacing(1),
   },
-  backgroundColor: theme.tokens.alias.Background.Normal,
+  backgroundColor: theme.tokens.background.Normal,
   borderRadius: borderRadius || 0,
   height: theme.spacing(3),
 }));
@@ -182,6 +180,6 @@ export const StyledAlertChip = styled(Chip, {
 export const StyledAlertTypography = styled(Typography, {
   label: 'StyledAlertTypography',
 })(({ theme }) => ({
-  color: theme.tokens.alias.Content.Text.Primary.Default,
+  color: theme.tokens.content.Text.Primary.Default,
   fontSize: theme.typography.body1.fontSize,
 }));

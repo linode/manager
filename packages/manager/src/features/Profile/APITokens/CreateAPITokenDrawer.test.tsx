@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

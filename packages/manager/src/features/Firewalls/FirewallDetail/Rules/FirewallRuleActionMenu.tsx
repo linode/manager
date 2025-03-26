@@ -1,22 +1,20 @@
-import { useTheme } from '@mui/material/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-
-import type { Theme } from '@mui/material/styles';
-import type {
+import {
   Action,
+  ActionMenu,
   ActionMenuProps,
 } from 'src/components/ActionMenu/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export interface FirewallRuleActionMenuProps extends Partial<ActionMenuProps> {
   disabled: boolean;
-  handleCloneFirewallRule: (idx: number) => void;
-  handleDeleteFirewallRule: (idx: number) => void;
-  handleOpenRuleDrawerForEditing: (idx: number) => void;
   idx: number;
+  triggerCloneFirewallRule: (idx: number) => void;
+  triggerDeleteFirewallRule: (idx: number) => void;
+  triggerOpenRuleDrawerForEditing: (idx: number) => void;
 }
 
 export const FirewallRuleActionMenu = React.memo(
@@ -26,10 +24,10 @@ export const FirewallRuleActionMenu = React.memo(
 
     const {
       disabled,
-      handleCloneFirewallRule,
-      handleDeleteFirewallRule,
-      handleOpenRuleDrawerForEditing,
       idx,
+      triggerCloneFirewallRule,
+      triggerDeleteFirewallRule,
+      triggerOpenRuleDrawerForEditing,
       ...actionMenuProps
     } = props;
 
@@ -37,21 +35,21 @@ export const FirewallRuleActionMenu = React.memo(
       {
         disabled,
         onClick: () => {
-          handleOpenRuleDrawerForEditing(idx);
+          triggerOpenRuleDrawerForEditing(idx);
         },
         title: 'Edit',
       },
       {
         disabled,
         onClick: () => {
-          handleCloneFirewallRule(idx);
+          triggerCloneFirewallRule(idx);
         },
         title: 'Clone',
       },
       {
         disabled,
         onClick: () => {
-          handleDeleteFirewallRule(idx);
+          triggerDeleteFirewallRule(idx);
         },
         title: 'Delete',
       },

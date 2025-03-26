@@ -1,7 +1,7 @@
-import { getMetrics } from '@linode/utilities';
 import React from 'react';
 
 import { tooltipValueFormatter } from 'src/components/AreaChart/utils';
+import { getMetrics } from 'src/utilities/statMetrics';
 
 import { AreaChart } from './AreaChart';
 import { customLegendData, timeData } from './utils';

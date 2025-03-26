@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { useLinodeQuery } from '@linode/queries';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 interface Option {
   label: string;
@@ -56,7 +56,6 @@ export const IPSelect = (props: Props) => {
       errorText={errorText}
       label="IP Address"
       loading={isLoading}
-      noMarginTop
       onChange={(_, selected) => handleChange(selected.value)}
       options={options}
       placeholder="Select an IP Address..."

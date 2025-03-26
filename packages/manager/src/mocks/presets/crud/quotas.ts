@@ -1,10 +1,10 @@
-import { getQuotas, getS3Endpoint } from './handlers/quotas';
+import { getQuotas } from './handlers/quotas';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 
 export const quotasCrudPreset: MockPresetCrud = {
   group: { id: 'Quotas' },
-  handlers: [getQuotas, getS3Endpoint],
+  handlers: [getQuotas],
   id: 'quotas:crud',
   label: 'Quotas CRUD',
 };

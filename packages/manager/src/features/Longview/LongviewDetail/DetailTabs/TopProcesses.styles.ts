@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
-
-import { Link } from 'src/components/Link';
+import { Link } from 'react-router-dom';
 
 export const StyledLink = styled(Link, { label: 'StyledLink' })(
   ({ theme }) => ({

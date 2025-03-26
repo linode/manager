@@ -15,7 +15,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-} from '@linode/queries';
+} from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';

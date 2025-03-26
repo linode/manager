@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type {
   Account,
@@ -54,7 +54,6 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Object Storage',
     'Placement Group',
     'Vlans',
-    'Kubernetes Enterprise',
   ],
   city: 'Philadelphia',
   company: Factory.each((i) => `company-${i}`),

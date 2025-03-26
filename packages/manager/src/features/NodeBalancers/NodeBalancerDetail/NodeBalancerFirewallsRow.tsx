@@ -1,7 +1,6 @@
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -9,7 +8,8 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
-import { useAllFirewallDevicesQuery } from '@linode/queries';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
+import { capitalize } from 'src/utilities/capitalize';
 
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 

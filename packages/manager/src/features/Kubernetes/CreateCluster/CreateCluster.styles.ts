@@ -41,8 +41,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const StyledStackWithTabletBreakpoint = styled(Stack, {
-  label: 'StyledStackWithTabletBreakpoint',
+export const StyledFieldWithDocsStack = styled(Stack, {
+  label: 'StyledFieldWithDocsStack',
 })(({ theme }) => ({
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {

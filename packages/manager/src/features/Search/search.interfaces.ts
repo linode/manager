@@ -3,19 +3,11 @@ export interface SearchResults {
   searchResultsByEntity: SearchResultsByEntity;
 }
 
-interface SearchItemData extends Record<string, string | string[] | undefined> {
-  created?: string;
-  description: string;
-  path: string;
-  region?: string;
-  tags?: string[];
-}
-
-export interface SearchableItem {
-  data: SearchItemData;
+export interface SearchableItem<T = number | string> {
+  data?: any;
   entityType: SearchableEntityType;
   label: string;
-  value: number | string;
+  value: T;
 }
 
 export type SearchableEntityType =
@@ -27,21 +19,20 @@ export type SearchableEntityType =
   | 'kubernetesCluster'
   | 'linode'
   | 'nodebalancer'
-  | 'stackscript'
-  | 'volume';
+  | 'volume'
+  | null;
 
 // These are the properties on our entities we'd like to search
 export type SearchField = 'ips' | 'label' | 'tags' | 'type' | 'value';
 
 export interface SearchResultsByEntity {
-  bucket: SearchableItem[];
-  database: SearchableItem[];
-  domain: SearchableItem[];
-  firewall: SearchableItem[];
-  image: SearchableItem[];
-  kubernetesCluster: SearchableItem[];
-  linode: SearchableItem[];
-  nodebalancer: SearchableItem[];
-  stackscript: SearchableItem[];
-  volume: SearchableItem[];
+  buckets: SearchableItem[];
+  databases: SearchableItem[];
+  domains: SearchableItem[];
+  firewalls: SearchableItem[];
+  images: SearchableItem[];
+  kubernetesClusters: SearchableItem[];
+  linodes: SearchableItem[];
+  nodebalancers: SearchableItem[];
+  volumes: SearchableItem[];
 }

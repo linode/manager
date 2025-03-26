@@ -38,15 +38,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
             Trigger Alert When:
           </StyledAlertTypography>
         </Grid>
-        <Grid
-          container
-          item
-          md={8}
-          xs={12}
-          sx={{
-            alignItems: 'center',
-          }}
-        >
+        <Grid alignItems="center" container item md={8} xs={12}>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
             data-qa-chip="All"
@@ -78,13 +70,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-        }}
-      >
+      <Grid alignItems="center" container spacing={1}>
         <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
         <DisplayAlertDetailChips // label chip for polling interval
           label="Polling Interval"

@@ -53,7 +53,6 @@ const CreatedMenuItemLinkComponent = createLink(MenuItemLinkComponent);
  */
 export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
   return (
-    // @ts-expect-error need help from alban
     <CreatedLinkComponent
       {...props}
       sx={(theme) => ({

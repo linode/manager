@@ -1,18 +1,20 @@
-import { convertBytesToTarget, readableBytes } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
+import {
+  convertBytesToTarget,
+  readableBytes,
+} from 'src/utilities/unitConversions';
 
+import { LongviewProcesses } from '../../request.types';
 import { convertData, formatMemory } from '../../shared/formatters';
 import {
   statMax,
   sumRelatedProcessesAcrossAllUsers,
 } from '../../shared/utilities';
-import { StyledSmallGraphGrid } from './CommonStyles.styles';
-
-import type { LongviewProcesses } from '../../request.types';
+import { StyledItemGrid, StyledSmallGraphGrid } from './CommonStyles.styles';
 
 interface Props {
   data: LongviewProcesses;
@@ -61,9 +63,9 @@ export const ProcessGraphs = React.memo((props: Props) => {
 
   return (
     <>
-      <Grid size={{ xs: 12 }}>
+      <StyledItemGrid xs={12}>
         <Grid container direction="row" spacing={2}>
-          <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -80,7 +82,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
               {...graphProps}
             />
           </StyledSmallGraphGrid>
-          <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -101,10 +103,10 @@ export const ProcessGraphs = React.memo((props: Props) => {
             />
           </StyledSmallGraphGrid>
         </Grid>
-      </Grid>
-      <Grid size={{ xs: 12 }}>
+      </StyledItemGrid>
+      <StyledItemGrid xs={12}>
         <Grid container direction="row" spacing={2}>
-          <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -131,7 +133,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
               {...graphProps}
             />
           </StyledSmallGraphGrid>
-          <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
+          <StyledSmallGraphGrid sm={6} xs={12}>
             <LongviewLineGraph
               data={[
                 {
@@ -148,7 +150,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
             />
           </StyledSmallGraphGrid>
         </Grid>
-      </Grid>
+      </StyledItemGrid>
     </>
   );
 });

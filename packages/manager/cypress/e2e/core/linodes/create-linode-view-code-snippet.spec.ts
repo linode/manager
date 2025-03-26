@@ -2,17 +2,12 @@
  * @file Linode Create view code snippets tests.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-import { linodeCreatePage } from 'support/ui/pages';
+
 import { randomLabel, randomString } from 'support/util/random';
+import { linodeCreatePage } from 'support/ui/pages';
 
 describe('Create Linode flow to validate code snippet modal', () => {
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeInterfaces: { enabled: false },
-    });
-  });
   /*
    * tests for create Linode flow to validate code snippet modal.
    */

@@ -4,7 +4,8 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useUpdateUserMutation, useProfile } from '@linode/queries';
+import { useUpdateUserMutation } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
 

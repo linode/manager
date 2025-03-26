@@ -1,20 +1,19 @@
-import { mockGetAccount } from 'support/intercepts/account';
+import { extendRegion } from 'support/util/regions';
+import {
+  accountFactory,
+  regionFactory,
+  objectStorageBucketFactory,
+} from 'src/factories';
+import { randomLabel, randomString } from 'support/util/random';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateBucket,
   mockCreateBucketError,
   mockGetBuckets,
 } from 'support/intercepts/object-storage';
-import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { randomLabel, randomString } from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
-
-import {
-  accountFactory,
-  objectStorageBucketFactory,
-  regionFactory,
-} from 'src/factories';
 
 describe('Object Storage Multicluster Bucket create', () => {
   /*
@@ -30,9 +29,9 @@ describe('Object Storage Multicluster Bucket create', () => {
 
     const mockRegionWithObj = extendRegion(
       regionFactory.build({
-        capabilities: ['Object Storage'],
-        id: `${randomString(2)}-${randomString(3)}`,
         label: randomLabel(),
+        id: `${randomString(2)}-${randomString(3)}`,
+        capabilities: ['Object Storage'],
       })
     );
 
@@ -45,10 +44,10 @@ describe('Object Storage Multicluster Bucket create', () => {
     const mockRegions = [mockRegionWithObj, ...mockRegionsWithoutObj];
 
     const mockBucket = objectStorageBucketFactory.build({
-      cluster: undefined,
       label: randomLabel(),
-      objects: 0,
       region: mockRegionWithObj.id,
+      cluster: undefined,
+      objects: 0,
     });
 
     mockGetAccount(
@@ -77,11 +76,9 @@ describe('Object Storage Multicluster Bucket create', () => {
       .should('be.visible')
       .within(() => {
         // Enter label.
-        cy.findByLabelText('Bucket Name (required)').click();
-        cy.focused().type(mockBucket.label);
+        cy.contains('Label').click().type(mockBucket.label);
         cy.log(`${mockRegionWithObj.label}`);
-        cy.contains('Region').click();
-        cy.focused().type(mockRegionWithObj.label);
+        cy.contains('Region').click().type(mockRegionWithObj.label);
 
         ui.autocompletePopper
           .find()

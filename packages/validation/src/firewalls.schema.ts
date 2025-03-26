@@ -1,7 +1,7 @@
 // We must use a default export for ipaddr.js so our packages node compatability
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
-import { array, number, object, string } from 'yup';
+import { array, mixed, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
@@ -34,7 +34,7 @@ export const CreateFirewallDeviceSchema = object({
   nodebalancers: array().of(number()),
 });
 
-export const ipAddress = string().defined().test({
+export const ipAddress = string().test({
   name: 'validateIP',
   message: IP_ERROR_MESSAGE,
   test: validateIP,
@@ -139,12 +139,11 @@ const validateFirewallPorts = string().test({
   },
 });
 
+const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];
 export const FirewallRuleTypeSchema = object().shape({
-  action: string().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
-  description: string().nullable(),
-  label: string().nullable(),
-  protocol: string()
-    .oneOf(['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'])
+  action: mixed().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
+  protocol: mixed()
+    .oneOf(validFirewallRuleProtocol)
     .required('Protocol is required.'),
   ports: string().when('protocol', {
     is: (val: any) => val !== 'ICMP' && val !== 'IPENCAP',
@@ -163,28 +162,19 @@ export const FirewallRuleTypeSchema = object().shape({
       ipv6: array().of(ipAddress).nullable(),
     })
     .strict(true)
-    .notRequired()
     .nullable(),
 });
 
 export const FirewallRuleSchema = object().shape({
   inbound: array(FirewallRuleTypeSchema).nullable(),
   outbound: array(FirewallRuleTypeSchema).nullable(),
-  inbound_policy: string()
+  inbound_policy: mixed()
     .oneOf(['ACCEPT', 'DROP'])
     .required('Inbound policy is required.'),
-  outbound_policy: string()
+  outbound_policy: mixed()
     .oneOf(['ACCEPT', 'DROP'])
     .required('Outbound policy is required.'),
 });
-
-const CreateFirewallDevicesSchema = object()
-  .shape({
-    linodes: array().of(number().defined()),
-    nodebalancers: array().of(number().defined()),
-    interfaces: array().of(number().defined()),
-  })
-  .notRequired();
 
 export const CreateFirewallSchema = object().shape({
   label: string()
@@ -192,9 +182,8 @@ export const CreateFirewallSchema = object().shape({
     .min(3, 'Label must be between 3 and 32 characters.')
     .max(32, 'Label must be between 3 and 32 characters.'),
   // Label validation on the back end is more complicated, we only do basic checks here.
-  tags: array().of(string().defined()),
+  tags: array().of(string()),
   rules: FirewallRuleSchema,
-  devices: CreateFirewallDevicesSchema,
 });
 
 export const UpdateFirewallSchema = object().shape({

@@ -164,9 +164,7 @@ export const doesSearchTermMatchItemField = (
 ): boolean => {
   const flattenedItem = flattenSearchableItem(item);
 
-  const fieldValue = ensureValueIsString(
-    flattenedItem[field as keyof typeof flattenedItem]
-  );
+  const fieldValue = ensureValueIsString(flattenedItem[field]);
 
   // Handle numeric comparison (e.g., for the "value" field to search linode by id)
   if (typeof fieldValue === 'number') {
@@ -188,17 +186,8 @@ export const flattenSearchableItem = (item: SearchableItem) => ({
   ...item.data,
 });
 
-export const ensureValueIsString = (
-  value: any[] | number | string | undefined
-): string => {
-  if (Array.isArray(value)) {
-    return value.join(' ');
-  }
-  if (value) {
-    return String(value);
-  }
-  return '';
-};
+export const ensureValueIsString = (value: any[] | string): string =>
+  Array.isArray(value) ? value.join(' ') : value ? value : '';
 
 export const getQueryInfo = (parsedQuery: any) => {
   // getParsedQuery() always includes an object called `excluded`. If search

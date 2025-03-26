@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const preference: ManagerPreferences['type_to_confirm'] = true;
 
@@ -15,8 +15,8 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/profile/preferences', async () => {
+  const actual = await vi.importActual('src/queries/profile/preferences');
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,

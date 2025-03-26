@@ -1,5 +1,4 @@
 import { Button, Tooltip, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
@@ -11,6 +10,7 @@ import {
   sendEntityTransferCopyTokenEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
+import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledCopyDiv,

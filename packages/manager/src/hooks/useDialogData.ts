@@ -4,14 +4,10 @@ import * as React from 'react';
 
 import type { APIError } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type {
-  LinkProps,
-  ValidateUseParamsResult,
-} from '@tanstack/react-router';
+import type { AllParams, LinkProps } from '@tanstack/react-router';
 import type { MigrationRouteTree } from 'src/routes';
 
-type ExtractKeys<T> = T extends object ? keyof T : never;
-type ParamsTypeKeys = ExtractKeys<ValidateUseParamsResult<MigrationRouteTree>>;
+type ParamsType = AllParams<MigrationRouteTree>;
 
 interface Props<TEntity> {
   /**
@@ -24,7 +20,7 @@ interface Props<TEntity> {
    * The key of the parameter in the URL that will be used to fetch the entity.
    * ex: 'volumeId' for `/volumes/$volumeId`
    */
-  paramKey: ParamsTypeKeys;
+  paramKey: keyof ParamsType;
   /**
    * The query hook to fetch the entity.
    */
@@ -66,13 +62,13 @@ export const useDialogData = <TEntity>({
   const params = useParams({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const query = queryHook(params[paramKey as keyof typeof params], enabled);
+  const query = queryHook(params[paramKey], enabled);
 
   React.useEffect(() => {
     if (enabled && !query.isLoading && !query.data) {
       enqueueSnackbar('Not found!', { variant: 'error' });
       navigate({
-        params: undefined,
+        params: {},
         to: redirectToOnNotFound,
       });
     }

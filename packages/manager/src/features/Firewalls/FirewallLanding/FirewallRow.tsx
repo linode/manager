@@ -1,4 +1,3 @@
-import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -6,6 +5,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallActionMenu } from './FirewallActionMenu';
 

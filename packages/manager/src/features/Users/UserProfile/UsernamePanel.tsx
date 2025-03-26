@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useUpdateUserMutation } from '@linode/queries';
+import { useUpdateUserMutation } from 'src/queries/account/users';
 
 import type { User } from '@linode/api-v4';
 

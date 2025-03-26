@@ -1,10 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
 
@@ -63,8 +64,8 @@ export const EditImageDrawer = (props: Props) => {
         for (const error of errors) {
           if (
             error.field === 'label' ||
-            error.field === 'description' ||
-            error.field === 'tags'
+            error.field == 'description' ||
+            error.field == 'tags'
           ) {
             setError(error.field, { message: error.reason });
           } else {
@@ -81,7 +82,6 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

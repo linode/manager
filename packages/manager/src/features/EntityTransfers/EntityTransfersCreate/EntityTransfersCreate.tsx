@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { curry } from 'ramda';
@@ -101,13 +101,7 @@ export const EntityTransfersCreate = () => {
         />
       ) : null}
       <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
-        <Grid
-          size={{
-            lg: 9,
-            md: 8,
-            xs: 12,
-          }}
-        >
+        <Grid lg={9} md={8} xs={12}>
           <TransferHeader />
           <LinodeTransferTable
             handleRemove={removeEntitiesFromTransfer('linodes')}
@@ -116,7 +110,7 @@ export const EntityTransfersCreate = () => {
             selectedLinodes={state.linodes}
           />
         </Grid>
-        <StyledSidebarGrid size={{ lg: 3, md: 4, xs: 12 }}>
+        <StyledSidebarGrid lg={3} md={4} xs={12}>
           <TransferCheckoutBar
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)

@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type {
   CloudPulseMetricsResponse,
@@ -55,22 +55,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
 export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>(
   {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-    dimensions: [
-      {
-        dimension_label: 'state',
-        label: 'State of CPU',
-        values: [
-          'user',
-          'system',
-          'idle',
-          'interrupt',
-          'nice',
-          'softirq',
-          'steal',
-          'wait',
-        ],
-      },
-    ],
+    dimensions: [],
     is_alertable: true,
     label: Factory.each((i) => `widget_label_${i}`),
     metric: Factory.each((i) => `widget_metric_${i}`),

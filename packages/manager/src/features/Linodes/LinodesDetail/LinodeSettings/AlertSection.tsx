@@ -9,7 +9,7 @@ import {
   fadeIn,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 interface Props {
@@ -65,11 +65,9 @@ export const AlertSection = (props: Props) => {
             display: 'flex',
             flexDirection: 'column',
           }}
-          size={{
-            lg: 7,
-            md: 9,
-            xs: 12,
-          }}
+          lg={7}
+          md={9}
+          xs={12}
         >
           <Box>
             <FormControlLabel
@@ -111,11 +109,9 @@ export const AlertSection = (props: Props) => {
               paddingLeft: '78px',
             },
           }}
-          size={{
-            lg: 5,
-            md: 3,
-            xs: 12,
-          }}
+          lg={5}
+          md={3}
+          xs={12}
         >
           <TextField
             InputProps={{

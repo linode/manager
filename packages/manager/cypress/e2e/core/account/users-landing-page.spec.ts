@@ -1,13 +1,14 @@
 import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
+import type { Profile } from '@linode/api-v4';
 import {
   mockAddUser,
-  mockDeleteUser,
   mockGetUser,
   mockGetUserGrants,
   mockGetUserGrantsUnrestrictedAccess,
   mockGetUsers,
+  mockDeleteUser,
 } from 'support/intercepts/account';
 import {
   mockGetProfile,
@@ -15,10 +16,7 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-
 import { PARENT_USER } from 'src/features/Account/constants';
-
-import type { Profile } from '@linode/api-v4';
 
 /**
  * Initialize test users before tests
@@ -33,16 +31,16 @@ const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
 
   const mockRestrictedParentWithoutChildAccountAccess = accountUserFactory.build(
     {
+      username: 'restricted-parent-user-without-child-account-access',
       restricted: true,
       user_type: 'parent',
-      username: 'restricted-parent-user-without-child-account-access',
     }
   );
 
   const mockRestrictedParentWithChildAccountAccess = accountUserFactory.build({
+    username: 'restricted-parent-user-with-child-account-access',
     restricted: true,
     user_type: 'parent',
-    username: 'restricted-parent-user-with-child-account-access',
   });
 
   const mockUsers = [
@@ -91,9 +89,9 @@ describe('Users landing page', () => {
    */
   it('shows "Child account access" column for unrestricted parent users and shows restricted parent users who have the correct grant status', () => {
     const mockProfile = profileFactory.build({
+      username: 'unrestricted-parent-user',
       restricted: false,
       user_type: 'parent',
-      username: 'unrestricted-parent-user',
     });
 
     const mockUsers = initTestUsers(mockProfile, true);
@@ -124,9 +122,9 @@ describe('Users landing page', () => {
 
   it('shows "Child account access" column for restricted parent users with child_account_access grant set to true', () => {
     const mockProfile = profileFactory.build({
+      username: 'restricted-parent-user',
       restricted: true,
       user_type: 'parent',
-      username: 'restricted-parent-user',
     });
 
     initTestUsers(mockProfile, true);
@@ -140,9 +138,9 @@ describe('Users landing page', () => {
 
   it('hides "Child account access" column for restricted parent users with child_account_access grant set to false', () => {
     const mockProfile = profileFactory.build({
+      username: 'restricted-parent-user',
       restricted: true,
       user_type: 'parent',
-      username: 'restricted-parent-user',
     });
 
     initTestUsers(mockProfile, false);
@@ -156,8 +154,8 @@ describe('Users landing page', () => {
 
   it('hides "Child account access" column for default users', () => {
     const mockProfile = profileFactory.build({
-      restricted: false,
       username: 'default-user',
+      restricted: false,
     });
 
     initTestUsers(mockProfile, false);
@@ -172,9 +170,9 @@ describe('Users landing page', () => {
 
   it('hides "Child account access" column for proxy users', () => {
     const mockProfile = profileFactory.build({
+      username: 'proxy-user',
       restricted: false,
       user_type: 'proxy',
-      username: 'proxy-user',
     });
 
     initTestUsers(mockProfile, false);
@@ -189,9 +187,9 @@ describe('Users landing page', () => {
 
   it('hides "Child account access" column for child users', () => {
     const mockProfile = profileFactory.build({
+      username: 'child-user',
       restricted: false,
       user_type: 'child',
-      username: 'child-user',
     });
 
     initTestUsers(mockProfile, false);
@@ -209,14 +207,14 @@ describe('Users landing page', () => {
    */
   it('hides "Parent User Settings" section for parent users', () => {
     const mockProfile = profileFactory.build({
+      username: 'unrestricted-parent-user',
       restricted: false,
       user_type: 'parent',
-      username: 'unrestricted-parent-user',
     });
 
     const mockUser = accountUserFactory.build({
-      restricted: false,
       username: 'unrestricted-user',
+      restricted: false,
     });
 
     // Initially mock user with unrestricted account access.
@@ -242,8 +240,8 @@ describe('Users landing page', () => {
    */
   it('tests the users landing flow for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
-      user_type: 'child',
       username: 'child-user',
+      user_type: 'child',
     });
 
     const mockChildUser = accountUserFactory.build({
@@ -299,15 +297,15 @@ describe('Users landing page', () => {
 
   it('can add users with full access', () => {
     const mockUser = accountUserFactory.build({
-      restricted: false,
       username: randomLabel(),
+      restricted: false,
     });
 
     const username = randomLabel();
     const newUser = accountUserFactory.build({
+      username: username,
       email: `${username}@test.com`,
       restricted: false,
-      username,
     });
 
     mockGetUsers([mockUser]).as('getUsers');
@@ -335,10 +333,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click();
-        cy.focused().type(`${newUser.username}{enter}`);
-        cy.findByText('Email').click();
-        cy.focused().type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -360,10 +358,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click();
-        cy.focused().type(`${newUser.username}{enter}`);
-        cy.findByText('Email').click();
-        cy.focused().type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -396,12 +394,10 @@ describe('Users landing page', () => {
         cy.findByText('Email address is required.').should('be.visible');
 
         // type username
-        cy.findByText('Username').click();
-        cy.focused().type(`${newUser.username}{enter}`);
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click();
-        cy.focused().type(`not_valid_email_address{enter}`);
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -410,9 +406,10 @@ describe('Users landing page', () => {
         cy.findByText('Must be a valid Email address.').should('be.visible');
 
         // type email address
-        cy.get('[id="email"]').click();
-        cy.focused().clear();
-        cy.focused().type(`${newUser.username}@test.com{enter}`);
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
 
         ui.buttonGroup
           .findButtonByTitle('Add User')
@@ -435,15 +432,15 @@ describe('Users landing page', () => {
 
   it('can add users with restricted access', () => {
     const mockUser = accountUserFactory.build({
-      restricted: false,
       username: randomLabel(),
+      restricted: false,
     });
 
     const username = randomLabel();
     const newUser = accountUserFactory.build({
+      username: username,
       email: `${username}@test.com`,
       restricted: true,
-      username,
     });
 
     mockGetUsers([mockUser]).as('getUsers');
@@ -470,10 +467,10 @@ describe('Users landing page', () => {
       .findByTitle('Add a User')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Username').click();
-        cy.focused().type(`${newUser.username}{enter}`);
-        cy.findByText('Email').click();
-        cy.focused().type(`${newUser.username}@test.com{enter}`);
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
+        cy.findByText('Email')
+          .click()
+          .type(`${newUser.username}@test.com{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Cancel')
           .should('be.visible')
@@ -507,12 +504,10 @@ describe('Users landing page', () => {
         cy.findByText('Email address is required.').should('be.visible');
 
         // type username
-        cy.findByText('Username').click();
-        cy.focused().type(`${newUser.username}{enter}`);
+        cy.findByText('Username').click().type(`${newUser.username}{enter}`);
 
         // an inline error message will be displayed when the email address is invalid
-        cy.findByText('Email').click();
-        cy.focused().type(`not_valid_email_address{enter}`);
+        cy.findByText('Email').click().type(`not_valid_email_address{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Add User')
           .should('be.visible')
@@ -521,9 +516,10 @@ describe('Users landing page', () => {
         cy.findByText('Must be a valid Email address.').should('be.visible');
 
         // type email address
-        cy.get('[id="email"]').click();
-        cy.focused().clear();
-        cy.focused().type(`${newUser.username}@test.com{enter}`);
+        cy.get('[id="email"]')
+          .click()
+          .clear()
+          .type(`${newUser.username}@test.com{enter}`);
 
         // toggle to disable full access
         cy.get('[data-qa-create-restricted="true"]')
@@ -549,15 +545,15 @@ describe('Users landing page', () => {
 
   it('can delete users', () => {
     const mockUser = accountUserFactory.build({
-      restricted: false,
       username: randomLabel(),
+      restricted: false,
     });
 
     const username = randomLabel();
     const additionalUser = accountUserFactory.build({
+      username: username,
       email: `${username}@test.com`,
       restricted: false,
-      username,
     });
 
     mockGetUsers([mockUser, additionalUser]).as('getUsers');

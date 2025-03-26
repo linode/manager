@@ -25,12 +25,9 @@ import {
   updateKubernetesClusterControlPlaneACL,
   updateNodePool,
 } from '@linode/api-v4';
-import { profileQueries, queryPresets } from '@linode/queries';
-import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
-  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -40,6 +37,10 @@ import {
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
+import { getAll } from 'src/utilities/getAll';
+
+import { queryPresets } from './base';
+import { profileQueries } from './profile/profile';
 
 import type {
   CreateKubeClusterPayload,
@@ -84,53 +85,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       },
       kubeconfig: {
         queryFn: async () => {
-          try {
-            const result = await getKubeConfig(id);
-            if (!result || !result.kubeconfig) {
-              throw [{ reason: 'Invalid KubeConfig response' } as APIError];
-            }
-
-            let decodedKubeConfig;
-            try {
-              decodedKubeConfig = window.atob(result.kubeconfig);
-            } catch (decodeError) {
-              throw [{ reason: 'Failed to decode KubeConfig' } as APIError];
-            }
-            return decodedKubeConfig;
-          } catch (error) {
-            const err = error as {
-              response?: { status?: number };
-              reason?: string;
-            };
-            const serviceUnavailableStatus = 503;
-            if (
-              err?.response?.status === serviceUnavailableStatus ||
-              (Array.isArray(err) &&
-                err[0]?.reason?.includes('kubeconfig is not yet available'))
-            ) {
-              // Custom error to identify when KubeConfig is still provisioning
-              const notReadyError = [
-                {
-                  reason:
-                    'Cluster kubeconfig is not yet available. Please try again later.',
-                } as APIError & { isKubeConfigNotReady: true },
-              ];
-
-              notReadyError[0].isKubeConfigNotReady = true;
-
-              throw notReadyError;
-            }
-
-            if (Array.isArray(error)) {
-              throw error;
-            }
-
-            if (error instanceof Error) {
-              throw [{ reason: error.message } as APIError];
-            }
-
-            throw [{ reason: 'An unexpected error occurred' } as APIError];
-          }
+          const result = await getKubeConfig(id);
+          return window.atob(result.kubeconfig);
         },
         queryKey: null,
       },
@@ -151,11 +107,6 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
             : getAllKubernetesClusters(),
         queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
-      infinite: (filter: Filter = {}) => ({
-        queryFn: ({ pageParam }) =>
-          getKubernetesClusters({ page: pageParam as number }, filter),
-        queryKey: [filter],
-      }),
       paginated: (
         params: Params,
         filter: Filter,
@@ -163,7 +114,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       ) => ({
         queryFn: () =>
           useBetaEndpoint
-            ? getKubernetesClustersBeta(params, filter)
+            ? getKubernetesClustersBeta()
             : getKubernetesClusters(params, filter),
         queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
@@ -186,37 +137,14 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (
-  id: number,
-  enabled = true,
-  options = {}
-) => {
+export const useKubernetesClusterQuery = (id: number) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
   const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
-    enabled: enabled && !isAPLAvailabilityLoading,
-    ...options,
-  });
-};
-
-export const useKubernetesClustersInfiniteQuery = (
-  filter: Filter,
-  enabled: boolean
-) => {
-  return useInfiniteQuery<ResourcePage<KubernetesCluster>, APIError[]>({
-    ...kubernetesQueries.lists._ctx.infinite(filter),
-    enabled,
-    getNextPageParam: ({ page, pages }) => {
-      if (page === pages) {
-        return undefined;
-      }
-      return page + 1;
-    },
-    initialPageParam: 1,
-    retry: false,
+    enabled: !isAPLAvailabilityLoading,
   });
 };
 
@@ -278,13 +206,7 @@ export const useKubernetesKubeConfigQuery = (
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    retry: (failureCount, error: any) => {
-      // Skip retries when cluster is still provisioning
-      if (Array.isArray(error) && error[0]?.isKubeConfigNotReady) {
-        return false;
-      }
-      return failureCount < 3;
-    },
+    retry: 3,
     retryDelay: 5000,
     // Disable stale time to prevent caching of the kubeconfig
     // because it can take some time for config to get updated in the API

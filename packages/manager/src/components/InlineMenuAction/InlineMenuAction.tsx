@@ -2,8 +2,7 @@
 import { StyledActionButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Link } from 'src/components/Link';
+import { Link } from 'react-router-dom';
 
 interface InlineMenuActionProps {
   /** Required action text */

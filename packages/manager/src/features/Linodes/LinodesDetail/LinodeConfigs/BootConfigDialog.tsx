@@ -1,10 +1,11 @@
-import { useRebootLinodeMutation } from '@linode/queries';
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
 
 import type { Config } from '@linode/api-v4';
 

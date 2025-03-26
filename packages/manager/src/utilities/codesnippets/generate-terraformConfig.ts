@@ -1,4 +1,4 @@
-import { getIsLegacyInterfaceArray } from '@linode/utilities';
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 
 import { escapeStringForCLI } from '../escapeStringForCLI';
 

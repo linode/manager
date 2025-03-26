@@ -1,5 +1,4 @@
 import { Stack } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
@@ -7,6 +6,7 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type { OpenAccessDrawer } from '../types';
 import type { ObjectStorageKey } from '@linode/api-v4';

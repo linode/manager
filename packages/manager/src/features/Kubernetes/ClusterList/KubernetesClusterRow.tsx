@@ -7,7 +7,7 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 

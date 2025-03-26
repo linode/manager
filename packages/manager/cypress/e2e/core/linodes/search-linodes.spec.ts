@@ -1,8 +1,7 @@
-import { authenticate } from 'support/api/authentication';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { authenticate } from 'support/api/authentication';
 import { createTestLinode } from 'support/util/linodes';
-
 import type { Linode } from '@linode/api-v4';
 
 authenticate();

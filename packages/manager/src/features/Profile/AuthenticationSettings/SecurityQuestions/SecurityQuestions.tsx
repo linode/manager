@@ -1,7 +1,3 @@
-import {
-  useMutateSecurityQuestions,
-  useSecurityQuestions,
-} from '@linode/queries';
 import { Box, Button, CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -9,6 +5,10 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import {
+  useMutateSecurityQuestions,
+  useSecurityQuestions,
+} from 'src/queries/profile/securityQuestions';
 
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';

@@ -7,7 +7,7 @@ import {
   subnetFactory,
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
@@ -37,13 +37,7 @@ describe('VPC Subnets table', () => {
       getByPlaceholderText,
       getByTestId,
       getByText,
-    } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={1}
-        vpcRegion=""
-      />
-    );
+    } = renderWithTheme(<VPCSubnetsTable vpcId={1} vpcRegion="" />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -77,11 +71,7 @@ describe('VPC Subnets table', () => {
     );
 
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={2}
-        vpcRegion=""
-      />
+      <VPCSubnetsTable vpcId={2} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -101,11 +91,7 @@ describe('VPC Subnets table', () => {
       })
     );
     const { getAllByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={3}
-        vpcRegion=""
-      />
+      <VPCSubnetsTable vpcId={3} vpcRegion="" />
     );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -117,22 +103,5 @@ describe('VPC Subnets table', () => {
     getByText('Status');
     getByText('VPC IPv4');
     getByText('Firewalls');
-  });
-
-  it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole, getByTestId } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={true}
-        vpcId={3}
-        vpcRegion=""
-      />
-    );
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const createButton = getByRole('button', {
-      name: 'Create Subnet',
-    });
-    expect(createButton).toBeDisabled();
   });
 });

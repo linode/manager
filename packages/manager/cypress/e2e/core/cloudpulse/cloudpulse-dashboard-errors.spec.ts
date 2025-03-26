@@ -1,32 +1,21 @@
 /**
  * @file Error Handling Tests for CloudPulse Dashboard.
  */
-import { widgetDetails } from 'support/constants/widgets';
-import { mockGetAccount } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateCloudPulseJWEToken,
   mockGetCloudPulseDashboard,
-  mockGetCloudPulseDashboardByIdError,
   mockGetCloudPulseDashboards,
-  mockGetCloudPulseDashboardsError,
   mockGetCloudPulseMetricDefinitions,
-  mockGetCloudPulseMetricDefinitionsError,
   mockGetCloudPulseServices,
+  mockGetCloudPulseDashboardByIdError,
+  mockGetCloudPulseDashboardsError,
+  mockGetCloudPulseMetricDefinitionsError,
   mockGetCloudPulseServicesError,
   mockGetCloudPulseTokenError,
 } from 'support/intercepts/cloudpulse';
-import {
-  mockGetDatabases,
-  mockGetDatabasesError,
-} from 'support/intercepts/databases';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
-import {
-  mockGetRegions,
-  mockGetRegionsError,
-} from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-
+import { widgetDetails } from 'support/constants/widgets';
 import {
   accountFactory,
   dashboardFactory,
@@ -35,9 +24,18 @@ import {
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-
-import type { Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
+import {
+  mockGetRegions,
+  mockGetRegionsError,
+} from 'support/intercepts/regions';
+import {
+  mockGetDatabases,
+  mockGetDatabasesError,
+} from 'support/intercepts/databases';
+import { Database } from '@linode/api-v4';
+import { mockGetAccount } from 'support/intercepts/account';
+import { Flags } from 'src/featureFlags';
 
 /**
  * Verifies the presence and values of specific properties within the aclpPreference object
@@ -49,7 +47,7 @@ import type { Flags } from 'src/featureFlags';
  */
 
 const flags: Partial<Flags> = {
-  aclp: { beta: true, enabled: true },
+  aclp: { enabled: true, beta: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -66,29 +64,29 @@ const flags: Partial<Flags> = {
   ],
 };
 const {
-  clusterName,
+  metrics,
+  id,
+  serviceType,
   dashboardName,
   engine,
-  id,
-  metrics,
+  clusterName,
   nodeType,
-  serviceType,
 } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ name, title, unit, yLabel }) => {
+  widgets: metrics.map(({ title, yLabel, name, unit }) => {
     return widgetFactory.build({
       label: title,
+      y_label: yLabel,
       metric: name,
       unit,
-      y_label: yLabel,
     });
   }),
 });
 
-const metricDefinitions = metrics.map(({ name, title, unit }) =>
+const metricDefinitions = metrics.map(({ title, name, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
@@ -103,13 +101,13 @@ const mockRegion = regionFactory.build({
 });
 
 const databaseMock: Database = databaseFactory.build({
+  label: clusterName,
+  type: engine,
+  region: mockRegion.id,
+  version: '1',
+  status: 'provisioning',
   cluster_size: 3,
   engine: 'mysql',
-  label: clusterName,
-  region: mockRegion.id,
-  status: 'provisioning',
-  type: engine,
-  version: '1',
 });
 const mockAccount = accountFactory.build();
 
@@ -134,7 +132,7 @@ describe('Tests for API error handling', () => {
       'Internal Server Error'
     ).as('getMetricDefinitions');
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -150,7 +148,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    // Select a Database Engine from the autocomplete input.
+    //Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
@@ -196,7 +194,7 @@ describe('Tests for API error handling', () => {
     // Mocking an error response for the 'fetchServices' API request.
     mockGetCloudPulseServicesError('Internal Server Error').as('fetchServices');
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait('@fetchServices');
@@ -211,7 +209,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseTokenError'
     );
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -277,7 +275,7 @@ describe('Tests for API error handling', () => {
       'fetchDashboard'
     );
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -294,7 +292,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseDashboardError'
     );
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -358,7 +356,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseRegionsError'
     );
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -388,7 +386,7 @@ describe('Tests for API error handling', () => {
       'getDatabaseInstancesError'
     );
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -412,7 +410,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    // Select a Database Engine from the autocomplete input.
+    //Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')

@@ -1,7 +1,7 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
@@ -13,7 +13,7 @@ import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
-interface RegionSelectOptions {
+interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
   forcefullyShownRegionIds?: Set<string>;
   regionFilter?: RegionFilterValue;
@@ -25,7 +25,7 @@ export const getRegionOptions = ({
   forcefullyShownRegionIds,
   regionFilter,
   regions,
-}: RegionSelectOptions) => {
+}: RegionSelectOptionsOptions) => {
   return regions
     .filter((region) => {
       if (forcefullyShownRegionIds?.has(region.id)) {
@@ -57,14 +57,6 @@ export const getRegionOptions = ({
     .sort((region1, region2) => {
       const region1Group = getRegionCountryGroup(region1);
       const region2Group = getRegionCountryGroup(region2);
-
-      // Global group comes first
-      if (region1Group === 'global') {
-        return -1;
-      }
-      if (region2Group === 'global') {
-        return 1;
-      }
 
       // North America group comes first
       if (
@@ -162,6 +154,15 @@ export const getIsDistributedRegion = (
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
   return region?.site_type === 'distributed';
+};
+
+export const getNewRegionLabel = (region: Region) => {
+  const [city] = region.label.split(', ');
+  // Include state for the US
+  if (region.country === 'us') {
+    return `${region.country.toUpperCase()}, ${region.label}`;
+  }
+  return `${region.country.toUpperCase()}, ${city}`;
 };
 
 export const useIsGeckoEnabled = () => {

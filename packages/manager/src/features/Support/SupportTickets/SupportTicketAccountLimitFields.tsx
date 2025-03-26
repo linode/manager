@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useAccount } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
 import { useSpecificTypes, useTypeQuery } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 

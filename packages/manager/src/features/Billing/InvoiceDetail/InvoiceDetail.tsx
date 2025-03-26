@@ -2,7 +2,7 @@ import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,9 +14,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount, useRegionsQuery } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from '@linode/utilities';
+import { getAll } from 'src/utilities/getAll';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
@@ -124,21 +125,10 @@ export const InvoiceDetail = () => {
           padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
         }}
       >
-        <Grid
-          container
-          sx={{
-            rowGap: 2,
-          }}
-        >
-          <Grid size={12}>
+        <Grid container rowGap={2}>
+          <Grid xs={12}>
             <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
-              <Grid
-                sx={sxGrid}
-                size={{
-                  sm: 4,
-                  xs: 12,
-                }}
-              >
+              <Grid sm={4} sx={sxGrid} xs={12}>
                 <Link
                   accessibleAriaLabel="Back to Billing"
                   data-qa-back-to-billing
@@ -175,10 +165,8 @@ export const InvoiceDetail = () => {
               </Grid>
               <Grid
                 data-qa-printable-invoice
+                sm
                 sx={{ ...sxGrid, justifyContent: 'flex-end' }}
-                size={{
-                  sm: 'grow',
-                }}
               >
                 {account && invoice && items && (
                   <>
@@ -200,11 +188,7 @@ export const InvoiceDetail = () => {
                   </>
                 )}
               </Grid>
-              <Grid
-                size={{
-                  sm: 'auto',
-                }}
-              >
+              <Grid sm="auto">
                 {invoice && (
                   <Typography data-qa-total={invoice.total} variant="h2">
                     Total:{' '}
@@ -217,7 +201,7 @@ export const InvoiceDetail = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid size={12}>
+          <Grid xs={12}>
             {pdfGenerationError && (
               <Notice variant="error">Failed generating PDF.</Notice>
             )}
@@ -228,7 +212,7 @@ export const InvoiceDetail = () => {
               shouldShowRegion={shouldShowRegion}
             />
           </Grid>
-          <Grid size={12}>
+          <Grid xs={12}>
             {invoice && (
               <Box
                 sx={{

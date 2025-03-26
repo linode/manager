@@ -138,6 +138,3 @@ packages/manager/bundle_analyzer_report.html
 
 # vitepress
 docs/.vitepress/cache
-
-# pnpm store will be generated if you run pnpm install in docker environments
-.pnpm-store

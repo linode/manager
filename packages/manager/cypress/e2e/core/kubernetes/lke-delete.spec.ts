@@ -1,12 +1,11 @@
+import { kubernetesClusterFactory } from 'src/factories';
 import {
-  mockDeleteCluster,
   mockGetCluster,
   mockGetClusters,
+  mockDeleteCluster,
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-
-import { kubernetesClusterFactory } from 'src/factories';
 
 /*
  * Fills out and submits Type to Confirm deletion dialog for cluster with the given label.
@@ -19,8 +18,10 @@ const completeTypeToConfirmDialog = (clusterLabel: string) => {
     .should('be.visible')
     .within(() => {
       cy.findByText(deletionWarning, { exact: false }).should('be.visible');
-      cy.findByLabelText('Cluster Name').should('be.visible').click();
-      cy.focused().type(clusterLabel);
+      cy.findByLabelText('Cluster Name')
+        .should('be.visible')
+        .click()
+        .type(clusterLabel);
 
       ui.buttonGroup
         .findButtonByTitle('Delete Cluster')

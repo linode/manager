@@ -1,5 +1,5 @@
+import { LocationDescriptor } from 'history';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
 import { Link } from 'react-router-dom';
 
 import {
@@ -9,13 +9,11 @@ import {
 } from './Crumbs.styles';
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
-
-import type { EditableProps, LabelProps } from './types';
-import type { LinkProps } from 'react-router-dom';
+import { EditableProps, LabelProps } from './types';
 
 export interface CrumbOverridesProps {
   label?: string;
-  linkTo?: LinkProps['to'];
+  linkTo?: LocationDescriptor;
   noCap?: boolean;
   position: number;
 }

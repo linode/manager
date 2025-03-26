@@ -1,9 +1,9 @@
-import { pluralize } from '@linode/utilities';
-import { readableBytes } from '@linode/utilities';
-
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
+import { displayType } from 'src/features/Linodes/presentation';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
   DatabaseInstance,
@@ -14,10 +14,11 @@ import type {
   Linode,
   NodeBalancer,
   ObjectStorageBucket,
-  StackScript,
+  Region,
   Volume,
 } from '@linode/api-v4';
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
@@ -38,15 +39,25 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   return ips;
 };
 
-export const linodeToSearchableItem = (linode: Linode): SearchableItem => ({
+export const formatLinode = (
+  linode: Linode,
+  types: ExtendedType[],
+  imageLabel: null | string
+): SearchableItem => ({
   data: {
     created: linode.created,
-    description: `${linode.image}, ${linode.specs.vcpus} CPU, ${
-      linode.specs.disk / 1024
-    } GB Storage, ${linode.specs.memory / 1024} GB RAM`,
+    description: getLinodeDescription(
+      displayType(linode.type, types),
+      linode.specs.memory,
+      linode.specs.disk,
+      linode.specs.vcpus,
+      imageLabel
+    ),
+    icon: 'linode',
     ips: getLinodeIps(linode),
     path: `/linodes/${linode.id}`,
     region: linode.region,
+    searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
     status: linode.status,
     tags: linode.tags,
   },
@@ -59,6 +70,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   data: {
     created: volume.created,
     description: volume.size + ' GB',
+    icon: 'volume',
     path: `/volumes?query=${volume.label}`,
     region: volume.region,
     tags: volume.tags,
@@ -68,20 +80,19 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   value: volume.id,
 });
 
+export const imageReducer = (accumulator: SearchableItem[], image: Image) =>
+  image.is_public
+    ? accumulator
+    : [...accumulator, imageToSearchableItem(image)];
+
 export const imageToSearchableItem = (image: Image): SearchableItem => ({
   data: {
     created: image.created,
-    description:
-      image.description && image.description.length > 1
-        ? image.description
-        : `${image.size} MB, Replicated in ${pluralize(
-            'region',
-            'regions',
-            image.regions.length
-          )}`,
+    description: image.description || '',
     icon: 'image',
+    /* TODO: Choose a real location for this to link to */
     path: `/images?query="${image.label}"`,
-    tags: image.tags,
+    tags: [],
   },
   entityType: 'image',
   label: image.label,
@@ -91,6 +102,7 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
 export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   data: {
     description: domain.type === 'master' ? 'primary' : 'secondary',
+    icon: 'domain',
     ips: getDomainIps(domain),
     path: `/domains/${domain.id}`,
     status: domain.status,
@@ -107,6 +119,7 @@ export const nodeBalToSearchableItem = (
   data: {
     created: nodebal.created,
     description: nodebal.hostname,
+    icon: 'nodebalancer',
     ips: getNodebalIps(nodebal),
     path: `/nodebalancers/${nodebal.id}`,
     region: nodebal.region,
@@ -118,11 +131,13 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: KubernetesCluster
+  kubernetesCluster: KubernetesCluster,
+  regions: Region[]
 ): SearchableItem => ({
   data: {
     created: kubernetesCluster.created,
-    description: getDescriptionForCluster(kubernetesCluster),
+    description: getDescriptionForCluster(kubernetesCluster, regions),
+    icon: 'kube',
     k8s_version: kubernetesCluster.k8s_version,
     label: kubernetesCluster.label,
     path: `/kubernetes/clusters/${kubernetesCluster.id}/summary`,
@@ -158,6 +173,7 @@ export const firewallToSearchableItem = (
   data: {
     created: firewall.created,
     description: getFirewallDescription(firewall),
+    icon: 'firewall',
     path: `/firewalls/${firewall.id}`,
     tags: firewall.tags,
   },
@@ -172,6 +188,7 @@ export const databaseToSearchableItem = (
   data: {
     created: database.created,
     description: getDatabasesDescription(database),
+    icon: 'database',
     path: `/databases/${database.engine}/${database.id}`,
     region: database.region,
     status: database.status,
@@ -179,19 +196,4 @@ export const databaseToSearchableItem = (
   entityType: 'database',
   label: database.label,
   value: `${database.engine}/${database.id}`,
-});
-
-export const stackscriptToSearchableItem = (
-  stackscript: StackScript
-): SearchableItem => ({
-  data: {
-    created: stackscript.created,
-    description: stackscript.description
-      ? stackscript.description
-      : `${stackscript.deployments_total} deploys, ${stackscript.deployments_active} active deployments`,
-    path: `/stackscripts/${stackscript.id}`,
-  },
-  entityType: 'stackscript',
-  label: stackscript.label,
-  value: stackscript.id,
 });

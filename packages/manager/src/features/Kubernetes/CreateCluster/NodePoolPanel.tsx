@@ -1,23 +1,22 @@
-import { useRegionsQuery } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { CircleProgress } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
-  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
-  ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION,
 } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
 import type {
   KubeNodePoolResponse,
-  KubernetesTier,
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
@@ -34,7 +33,6 @@ export interface NodePoolPanelProps {
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
-  selectedTier: KubernetesTier;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
@@ -68,9 +66,12 @@ const Panel = (props: NodePoolPanelProps) => {
     isSelectedRegionEligibleForPlan,
     regionsData,
     selectedRegionId,
-    selectedTier,
     types,
   } = props;
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
@@ -96,33 +97,21 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
-  const regionSupportsDiskEncryption =
-    doesRegionSupportFeature(
-      selectedRegionId ?? '',
-      regions,
-      'Disk Encryption'
-    ) ||
-    doesRegionSupportFeature(
-      selectedRegionId ?? '',
-      regions,
-      'LA Disk Encryption'
-    );
-
-  const getPlansPanelCopy = () => {
-    // TODO - LKE-E: Remove the 'ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION' copy once LDE is enabled on LKE-E.
-    if (selectedTier === 'enterprise') {
-      return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
-    }
-    return regionSupportsDiskEncryption
-      ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
-      : ADD_NODE_POOLS_DESCRIPTION;
-  };
+  const regionSupportsDiskEncryption = doesRegionSupportFeature(
+    selectedRegionId ?? '',
+    regions,
+    'Disk Encryption'
+  );
 
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
+          copy={
+            isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
+              ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
+              : ADD_NODE_POOLS_DESCRIPTION
+          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
@@ -135,7 +124,6 @@ const Panel = (props: NodePoolPanelProps) => {
             // No Nanodes in Kubernetes clusters
             return t.class !== 'nanode';
           })}
-          copy={getPlansPanelCopy()}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
@@ -148,7 +136,6 @@ const Panel = (props: NodePoolPanelProps) => {
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
           selectedRegionId={selectedRegionId}
-          selectedTier={selectedTier}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

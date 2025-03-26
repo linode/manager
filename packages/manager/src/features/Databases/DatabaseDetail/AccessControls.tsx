@@ -1,7 +1,8 @@
-import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Table } from 'src/components/Table';

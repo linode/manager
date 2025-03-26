@@ -22,8 +22,7 @@ const mockS3Regions = [
   },
 ];
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => ({
     data: [
       ...regionFactory.buildList(1, { id: 'region1', label: 'Newark, NJ' }),

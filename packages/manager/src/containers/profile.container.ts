@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { useGrants, useProfile } from '@linode/queries';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 export interface WithProfileProps {
   grants: UseQueryResult<Grants, APIError[]>;

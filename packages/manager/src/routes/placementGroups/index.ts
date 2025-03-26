@@ -102,11 +102,8 @@ const placementGroupLinodesActionBaseRoute = createRoute({
   beforeLoad: async ({ params }) => {
     if (!(params.action in placementGroupLinodeAction)) {
       throw redirect({
-        params: {
-          id: params.id,
-        },
         search: () => ({}),
-        to: `/placement-groups/$id`,
+        to: `/placement-groups/${params.id}`,
       });
     }
   },

@@ -8,14 +8,13 @@ import { useUpdateStackScriptMutation } from 'src/queries/stackscripts';
 import type { StackScript } from '@linode/api-v4';
 
 interface Props {
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   stackscript: StackScript | undefined;
 }
 
 export const StackScriptMakePublicDialog = (props: Props) => {
-  const { isFetching, onClose, open, stackscript } = props;
+  const { onClose, open, stackscript } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { error, isPending, mutate } = useUpdateStackScriptMutation(
@@ -46,7 +45,6 @@ export const StackScriptMakePublicDialog = (props: Props) => {
         </Stack>
       }
       error={error?.[0].reason}
-      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={`Make StackScript ${stackscript?.label ?? ''} Public?`}

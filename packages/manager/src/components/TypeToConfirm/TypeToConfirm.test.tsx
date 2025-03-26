@@ -4,7 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TypeToConfirm } from './TypeToConfirm';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const props = { onClick: vi.fn() };
 
@@ -14,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/profile/preferences', async () => {
+  const actual = await vi.importActual('src/queries/profile/preferences');
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,

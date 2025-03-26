@@ -1,10 +1,9 @@
 import { Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
@@ -27,11 +26,11 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <MaskableText isToggleable text={user.username} />,
+      value: <Typography>{user.username}</Typography>,
     },
     {
       label: 'Email',
-      value: <MaskableText isToggleable text={user.email} />,
+      value: <Typography>{user.email}</Typography>,
     },
     {
       label: 'Access',
@@ -45,7 +44,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
             </Link>
           </Typography>
         ) : (
-          <span>No Roles Assigned</span>
+          <span>no roles assigned</span>
         ),
     },
     {
@@ -89,12 +88,7 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: (
-        <MaskableText
-          isToggleable
-          text={user.verified_phone_number ?? 'None'}
-        />
-      ),
+      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
     },
     {
       label: 'SSH Keys',
@@ -115,29 +109,9 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     <Paper>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
-          <Grid
-            size={{
-              md: 2,
-              sm: 2,
-              xs: 2,
-            }}
-            key={item.label}
-          >
-            <Stack
-              sx={{
-                '& > p:nth-of-type(2)': {
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                },
-              }}
-              direction="row"
-              spacing={1}
-            >
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
+          <Grid key={item.label} md={2} sm={2} xs={2}>
+            <Stack direction="row" spacing={1}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 {item.label}
               </Typography>
               {item.value}

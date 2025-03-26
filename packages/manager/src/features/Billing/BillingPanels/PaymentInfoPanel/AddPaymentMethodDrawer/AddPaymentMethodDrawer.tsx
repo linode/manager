@@ -1,20 +1,13 @@
-import { useProfile } from '@linode/queries';
-import {
-  Box,
-  Divider,
-  Drawer,
-  Notice,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { NotFound } from 'src/components/NotFound';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useProfile } from 'src/queries/profile/profile';
 
 import GooglePayChip from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
@@ -93,12 +86,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const disabled = isProcessing || hasMaxPaymentMethods || isReadOnly;
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Add Payment Method"
-    >
+    <Drawer onClose={onClose} open={open} title="Add Payment Method">
       {isProcessing ? (
         <LinearProgress
           sx={{
@@ -109,7 +97,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         />
       ) : null}
       {isReadOnly && (
-        <Grid size={12}>
+        <Grid xs={12}>
           <Notice
             text={getRestrictedResourceText({
               isChildUser,
@@ -135,12 +123,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Divider />
         <Box sx={sxBox}>
           <Grid container spacing={2}>
-            <Grid
-              size={{
-                md: 9,
-                xs: 8,
-              }}
-            >
+            <Grid md={9} xs={8}>
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
                 You&rsquo;ll be taken to Google Pay to complete sign up.
@@ -148,15 +131,11 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                size={{
-                  md: 3,
-                  xs: 4,
-                }}
-                sx={{
-                  alignContent: 'center',
-                  justifyContent: 'flex-end',
-                }}
+                alignContent="center"
                 container
+                justifyContent="flex-end"
+                md={3}
+                xs={4}
               >
                 <GooglePayChip
                   disabled={disabled}
@@ -172,12 +151,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
         <Divider />
         <Box sx={sxBox}>
           <Grid container spacing={2}>
-            <Grid
-              size={{
-                md: 9,
-                xs: 8,
-              }}
-            >
+            <Grid md={9} xs={8}>
               <Typography variant="h3">PayPal</Typography>
               <Typography>
                 You&rsquo;ll be taken to PayPal to complete sign up.
@@ -185,15 +159,11 @@ export const AddPaymentMethodDrawer = (props: Props) => {
             </Grid>
             {!isReadOnly && (
               <Grid
-                size={{
-                  md: 3,
-                  xs: 4,
-                }}
-                sx={{
-                  alignContent: 'center',
-                  justifyContent: 'flex-end',
-                }}
+                alignContent="center"
                 container
+                justifyContent="flex-end"
+                md={3}
+                xs={4}
               >
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalChip

@@ -2,10 +2,8 @@
  * @file DBaaS integration tests for delete operations.
  */
 
-import {
-  databaseConfigurations,
-  mockDatabaseNodeTypes,
-} from 'support/constants/databases';
+import { accountFactory, databaseFactory } from 'src/factories';
+import { randomNumber, randomIp } from 'support/util/random';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeleteDatabase,
@@ -14,11 +12,11 @@ import {
   mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { ui } from 'support/ui';
-import { randomIp, randomNumber } from 'support/util/random';
-
-import { accountFactory, databaseFactory } from 'src/factories';
-
-import type { databaseClusterConfiguration } from 'support/constants/databases';
+import {
+  databaseClusterConfiguration,
+  databaseConfigurations,
+  mockDatabaseNodeTypes,
+} from 'support/constants/databases';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
@@ -32,13 +30,13 @@ describe('Delete database clusters', () => {
         it('Can delete active database clusters', () => {
           const allowedIp = randomIp();
           const database = databaseFactory.build({
-            allow_list: [allowedIp],
-            engine: configuration.dbType,
             id: randomNumber(1, 1000),
+            type: configuration.linodeType,
             label: configuration.label,
             region: configuration.region.id,
+            engine: configuration.dbType,
             status: 'active',
-            type: configuration.linodeType,
+            allow_list: [allowedIp],
           });
 
           // Mock account to ensure 'Managed Databases' capability.
@@ -63,8 +61,7 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click();
-              cy.focused().type(database.label);
+              cy.findByLabelText('Cluster Name').click().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')
@@ -85,17 +82,17 @@ describe('Delete database clusters', () => {
          */
         it('Cannot delete provisioning database clusters', () => {
           const database = databaseFactory.build({
-            allow_list: [],
+            id: randomNumber(1, 1000),
+            type: configuration.linodeType,
+            label: configuration.label,
+            region: configuration.region.id,
             engine: configuration.dbType,
+            status: 'provisioning',
+            allow_list: [],
             hosts: {
               primary: undefined,
               secondary: undefined,
             },
-            id: randomNumber(1, 1000),
-            label: configuration.label,
-            region: configuration.region.id,
-            status: 'provisioning',
-            type: configuration.linodeType,
           });
 
           const errorMessage =
@@ -126,8 +123,7 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click();
-              cy.focused().type(database.label);
+              cy.findByLabelText('Cluster Name').click().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')

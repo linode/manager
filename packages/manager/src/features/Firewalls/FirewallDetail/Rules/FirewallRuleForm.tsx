@@ -1,5 +1,4 @@
 import {
-  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   Notice,
@@ -8,10 +7,10 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
   addressOptions,
@@ -19,6 +18,7 @@ import {
   portPresets,
   protocolOptions,
 } from 'src/features/Firewalls/shared';
+import { capitalize } from 'src/utilities/capitalize';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';

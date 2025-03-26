@@ -1,6 +1,8 @@
 import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
+import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
@@ -42,11 +44,15 @@ describe('database summary section', () => {
         );
       })
     );
+    const history = createMemoryHistory();
+    history.push('databases/create');
 
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-      flags,
-    });
+    const { getByTestId } = renderWithTheme(
+      <Router history={history}>
+        <DatabaseCreate />
+      </Router>,
+      { flags }
+    );
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
     const selectedPlan = await waitFor(
       () => document.getElementById('g6-dedicated-2') as HTMLInputElement

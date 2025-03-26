@@ -1,4 +1,6 @@
-import { Factory } from '@linode/utilities';
+import { v4 } from 'uuid';
+
+import Factory from 'src/factories/factoryProxy';
 
 import type {
   ControlPlaneACLOptions,
@@ -10,7 +12,7 @@ import type {
   KubernetesTieredVersion,
   KubernetesVersion,
   PoolNodeResponse,
-} from '@linode/api-v4';
+} from '@linode/api-v4/lib/kubernetes/types';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each((id) => `id-${id}`),
@@ -56,13 +58,13 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
 
 export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
   {
-    endpoint: `https://${crypto.randomUUID && crypto.randomUUID()}`,
+    endpoint: `https://${v4()}`,
   }
 );
 
 export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
   {
-    url: `https://${crypto.randomUUID && crypto.randomUUID()}`,
+    url: `https://${v4()}`,
   }
 );
 

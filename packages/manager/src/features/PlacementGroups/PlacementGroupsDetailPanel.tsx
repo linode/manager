@@ -8,7 +8,8 @@ import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/Pla
 import { PlacementGroupsCreateDrawer } from 'src/features/PlacementGroups/PlacementGroupsCreateDrawer';
 import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGroups/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllPlacementGroupsQuery, useRegionsQuery } from '@linode/queries';
+import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import {

@@ -1,16 +1,15 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import {
-  interceptAddDisks,
-  interceptDeleteDisks,
-  interceptResizeDisks,
-} from 'support/intercepts/linodes';
+import { Linode } from '@linode/api-v4';
+import { authenticate } from 'support/api/authentication';
+import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
-
-import type { Linode } from '@linode/api-v4';
+import {
+  interceptDeleteDisks,
+  interceptAddDisks,
+  interceptResizeDisks,
+} from 'support/intercepts/linodes';
 
 /**
  * Waits for a Linode to finish provisioning by checking the details page status indicator.
@@ -118,8 +117,7 @@ const addDisk = (diskName: string, diskSize: number = DISK_CREATE_SIZE_MB) => {
     .should('be.visible')
     .within(() => {
       cy.findByLabelText('Label (required)').type(diskName);
-      cy.findByLabelText('Size (required)').clear();
-      cy.focused().type(`${diskSize}`);
+      cy.findByLabelText('Size (required)').clear().type(`${diskSize}`);
       ui.button.findByTitle('Create').click();
     });
 
@@ -237,8 +235,9 @@ describe('linode storage tab', () => {
         .findByTitle(`Resize ${diskName}`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Size (required)').clear();
-          cy.focused().type(`${DISK_RESIZE_SIZE_MB}`);
+          cy.findByLabelText('Size (required)')
+            .clear()
+            .type(`${DISK_RESIZE_SIZE_MB}`);
           ui.button.findByTitle('Resize').click();
         });
 

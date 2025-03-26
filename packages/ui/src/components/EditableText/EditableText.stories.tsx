@@ -49,8 +49,7 @@ export const WithSuffix: Story = {
 const Link = (
   props: React.PropsWithChildren<{ className?: string; to?: string }>
 ) => {
-  // eslint-disable-next-line jsx-a11y/anchor-has-content
-  return <a {...props} href={props.to} rel="noreferrer" target="_blank" />;
+  return <a {...props} href={props.to} target="_blank" />;
 };
 
 export const WithCustomLinkComponent: Story = {

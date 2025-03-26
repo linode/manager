@@ -1,16 +1,10 @@
 import { createUser } from '@linode/api-v4/lib/account';
-import {
-  ActionsPanel,
-  Drawer,
-  FormControlLabel,
-  Notice,
-  TextField,
-  Toggle,
-} from '@linode/ui';
+import { FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -116,12 +110,7 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Drawer
-        NotFoundComponent={NotFound}
-        onClose={onClose}
-        open={open}
-        title="Add a User"
-      >
+      <Drawer onClose={onClose} open={open} title="Add a User">
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           data-qa-create-username

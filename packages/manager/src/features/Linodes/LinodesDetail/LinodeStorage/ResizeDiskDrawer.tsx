@@ -1,27 +1,21 @@
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskResizeMutation,
-  useLinodeQuery,
-} from '@linode/queries';
-import {
-  ActionsPanel,
-  Drawer,
-  FormHelperText,
-  InputAdornment,
-  Notice,
-  TextField,
-} from '@linode/ui';
+import { FormHelperText, InputAdornment, Notice, TextField } from '@linode/ui';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeDiskResizeMutation,
+} from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { sendEvent } from 'src/utilities/analytics/utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -89,12 +83,7 @@ export const ResizeDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title={`Resize ${disk?.label}`}
-    >
+    <Drawer onClose={onClose} open={open} title={`Resize ${disk?.label}`}>
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice

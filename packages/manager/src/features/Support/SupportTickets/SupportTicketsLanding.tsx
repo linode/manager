@@ -1,4 +1,3 @@
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -10,13 +9,14 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import type { BaseQueryParams } from '@linode/utilities';
 import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface QueryParams extends BaseQueryParams {
   drawerOpen: BooleanString;

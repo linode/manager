@@ -5,7 +5,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -72,13 +72,7 @@ const AutoBackups = (props: Props) => {
             .
           </Typography>
         </Grid>
-        <Grid
-          container
-          direction="row"
-          sx={{
-            alignItems: 'center',
-          }}
-        >
+        <Grid alignItems="center" container direction="row">
           <Grid>
             <FormControlLabel
               control={

@@ -1,6 +1,6 @@
-import { ActionsPanel } from '@linode/ui';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/analytics/customEventAnalytics';

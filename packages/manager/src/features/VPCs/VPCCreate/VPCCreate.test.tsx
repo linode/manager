@@ -11,7 +11,7 @@ beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-vi.mock('@linode/utilities');
+vi.mock('src/utilities/scrollErrorIntoView');
 
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {

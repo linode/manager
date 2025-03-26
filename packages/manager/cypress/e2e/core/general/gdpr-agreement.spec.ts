@@ -1,11 +1,10 @@
-import { linodeFactory, regionFactory } from '@src/factories';
-import { mockGetAccountAgreements } from 'support/intercepts/account';
-import { mockCreateLinode } from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { randomLabel, randomString } from 'support/util/random';
-
+import { linodeFactory, regionFactory } from '@src/factories';
+import { randomString, randomLabel } from 'support/util/random';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetAccountAgreements } from 'support/intercepts/account';
 import type { Region } from '@linode/api-v4';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -44,9 +43,9 @@ describe('GDPR agreement', () => {
   it('displays the GDPR agreement based on region, if user has not agreed yet', () => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
-      billing_agreement: false,
-      eu_model: false,
       privacy_policy: false,
+      eu_model: false,
+      billing_agreement: false,
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
@@ -73,9 +72,9 @@ describe('GDPR agreement', () => {
   it('does not display the GDPR agreement based on any region, if user has already agreed', () => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
-      billing_agreement: false,
-      eu_model: true,
       privacy_policy: false,
+      eu_model: true,
+      billing_agreement: false,
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
@@ -102,9 +101,9 @@ describe('GDPR agreement', () => {
   it('needs the agreement checked to submit the form', () => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
-      billing_agreement: false,
-      eu_model: false,
       privacy_policy: false,
+      eu_model: false,
+      billing_agreement: false,
     }).as('getAgreements');
     const rootpass = randomString(32);
     const linodeLabel = randomLabel();
@@ -122,18 +121,16 @@ describe('GDPR agreement', () => {
 
     cy.get('[id="g6-nanode-1"]').click();
 
-    cy.findByLabelText('Linode Label').clear();
-    cy.focused().type(linodeLabel);
+    cy.findByLabelText('Linode Label').clear().type(linodeLabel);
 
     cy.findByLabelText('Root Password').type(rootpass);
 
     cy.get('[data-testid="eu-agreement-checkbox"]')
-      .as('euAgreement')
-      .scrollIntoView();
-    cy.get('@euAgreement').should('be.visible');
+      .scrollIntoView()
+      .should('be.visible');
 
-    cy.findByText('Create Linode').as('lblCreateLinode').scrollIntoView();
-    cy.get('@lblCreateLinode')
+    cy.findByText('Create Linode')
+      .scrollIntoView()
       .should('be.enabled')
       .should('be.visible')
       .click();

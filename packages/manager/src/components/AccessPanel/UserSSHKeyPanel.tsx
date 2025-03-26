@@ -1,6 +1,4 @@
-import { useAccountUsers, useProfile, useSSHKeysQuery } from '@linode/queries';
-import { Box, Button, Checkbox, Typography } from '@linode/ui';
-import { truncateAndJoinList } from '@linode/utilities';
+import { Button, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -14,15 +12,17 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
+import { useAccountUsers } from 'src/queries/account/users';
+import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
-import type { TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
-const MAX_SSH_KEYS_DISPLAY = 25;
+export const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cellCheckbox: {
@@ -46,23 +46,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   authorizedUsers: string[];
   disabled?: boolean;
-  /**
-   * Override the "SSH Keys" heading variant
-   * @default h2
-   */
-  headingVariant?: TypographyProps['variant'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
-export const UserSSHKeyPanel = (props: Props) => {
+const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const {
-    authorizedUsers,
-    disabled,
-    headingVariant,
-    setAuthorizedUsers,
-  } = props;
+  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -202,8 +192,8 @@ export const UserSSHKeyPanel = (props: Props) => {
   };
 
   return (
-    <Box>
-      <Typography className={classes.title} variant={headingVariant ?? 'h2'}>
+    <React.Fragment>
+      <Typography className={classes.title} variant="h2">
         SSH Keys
       </Typography>
       <Table spacingBottom={16}>
@@ -237,6 +227,8 @@ export const UserSSHKeyPanel = (props: Props) => {
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
-    </Box>
+    </React.Fragment>
   );
 };
+
+export default React.memo(UserSSHKeyPanel);

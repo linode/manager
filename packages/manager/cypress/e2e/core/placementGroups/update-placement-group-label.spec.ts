@@ -2,18 +2,17 @@
  * @file Integration tests for Placement Group update label flows.
  */
 
-import { mockGetAccount } from 'support/intercepts/account';
+import { randomLabel, randomNumber } from 'support/util/random';
 import {
   mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUpdatePlacementGroup,
   mockUpdatePlacementGroupError,
 } from 'support/intercepts/placement-groups';
-import { ui } from 'support/ui';
-import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-
 import { accountFactory, placementGroupFactory } from 'src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
+import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 const mockAccount = accountFactory.build();
 
@@ -36,12 +35,12 @@ describe('Placement Group update label flow', () => {
 
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
-      members: [],
-      placement_group_policy: 'flexible',
-      placement_group_type: 'anti_affinity:local',
       region: mockPlacementGroupCompliantRegion.id,
+      placement_group_type: 'anti_affinity:local',
+      is_compliant: true,
+      placement_group_policy: 'flexible',
+      members: [],
     });
 
     const mockPlacementGroupUpdated = {
@@ -76,10 +75,8 @@ describe('Placement Group update label flow', () => {
       cy.findByText('Edit').should('be.visible');
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
-        .click();
-      cy.focused().type(
-        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
-      );
+        .click()
+        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
 
       cy.findByText('Edit').should('be.visible').click();
 
@@ -105,12 +102,12 @@ describe('Placement Group update label flow', () => {
 
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
-      members: [],
-      placement_group_policy: 'flexible',
-      placement_group_type: 'anti_affinity:local',
       region: mockPlacementGroupCompliantRegion.id,
+      placement_group_type: 'anti_affinity:local',
+      is_compliant: true,
+      placement_group_policy: 'flexible',
+      members: [],
     });
 
     const mockPlacementGroupUpdated = {
@@ -143,10 +140,8 @@ describe('Placement Group update label flow', () => {
       cy.findByText('Edit').should('be.visible');
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
-        .click();
-      cy.focused().type(
-        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
-      );
+        .click()
+        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
 
       cy.findByText('Edit').should('be.visible').click();
 

@@ -2,7 +2,10 @@ import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
 import { Select } from '@linode/ui';
 import * as React from 'react';
 
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import type { SelectOption, SelectProps } from '@linode/ui';
 

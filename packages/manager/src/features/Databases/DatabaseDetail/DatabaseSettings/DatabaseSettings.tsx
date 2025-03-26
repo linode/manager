@@ -16,7 +16,7 @@ import {
   isDefaultDatabase,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';

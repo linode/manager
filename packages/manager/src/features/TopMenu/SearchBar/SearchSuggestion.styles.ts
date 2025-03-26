@@ -7,10 +7,10 @@ export const StyledSearchSuggestion = styled(MenuItem, {
 })(({ theme }) => ({
   '&.MuiButtonBase-root.MuiMenuItem-root': {
     '&.Mui-focused, &:hover': {
-      backgroundColor: `${theme.tokens.component.Dropdown.Background.Hover} !important`,
-      color: theme.tokens.component.Dropdown.Text.Default,
+      backgroundColor: `${theme.tokens.dropdown.Background.Hover} !important`,
+      color: theme.tokens.dropdown.Text.Default,
     },
-    background: theme.tokens.component.Dropdown.Background.Default,
+    background: theme.tokens.dropdown.Background.Default,
     margin: '0 !important',
     padding: `${theme.spacing(0.25)} ${theme.spacing(1)} !important`,
   },
@@ -29,16 +29,16 @@ export const StyledSuggestionIcon = styled('div', {
 export const StyledSuggestionTitle = styled('div', {
   label: 'StyledSuggestionTitle',
 })(({ theme }) => ({
-  color: theme.tokens.component.Dropdown.Text.Default,
-  font: theme.tokens.alias.Typography.Label.Bold.S,
+  color: theme.tokens.dropdown.Text.Default,
+  font: theme.tokens.typography.Label.Bold.S,
   wordBreak: 'break-all',
 }));
 
 export const StyledSuggestionDescription = styled('div', {
   label: 'StyledSuggestionDescription',
 })(({ theme }) => ({
-  color: theme.tokens.component.Dropdown.Text.Default,
-  font: theme.tokens.alias.Typography.Label.Regular.Xs,
+  color: theme.tokens.dropdown.Text.Default,
+  font: theme.tokens.typography.Label.Regular.Xs,
   overflowWrap: 'break-word',
   whiteSpace: 'normal',
   width: '100%',
@@ -48,7 +48,7 @@ export const StyledSuggestionDescription = styled('div', {
 export const StyledSegment = styled('span', {
   label: 'StyledSegment',
 })(({ theme }) => ({
-  color: theme.tokens.component.Dropdown.Text.Default,
+  color: theme.tokens.dropdown.Text.Default,
 }));
 
 export const StyledTagContainer = styled('div', {

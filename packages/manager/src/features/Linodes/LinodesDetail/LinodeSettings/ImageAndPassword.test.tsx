@@ -10,13 +10,10 @@ import { ImageAndPassword } from './ImageAndPassword';
 
 const props = {
   authorizedUsers: [],
-  disabled: false,
-  imageFieldError: undefined,
   linodeId: 0,
   onImageChange: vi.fn(),
   onPasswordChange: vi.fn(),
   password: '',
-  passwordError: undefined,
   selectedImage: '',
   setAuthorizedUsers: vi.fn(),
 };

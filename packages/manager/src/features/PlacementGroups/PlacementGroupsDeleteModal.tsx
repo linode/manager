@@ -1,13 +1,13 @@
-import {
-  useDeletePlacementGroup,
-  useUnassignLinodesFromPlacementGroup,
-} from '@linode/queries';
 import { Button, List, ListItem, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import {
+  useDeletePlacementGroup,
+  useUnassignLinodesFromPlacementGroup,
+} from 'src/queries/placementGroups';
 
 import { getPlacementGroupLinodes } from './utils';
 

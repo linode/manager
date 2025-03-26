@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import { Box, CircleProgress, ErrorState } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
+
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
@@ -52,10 +54,7 @@ const Glish = (props: Props) => {
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
-    if (
-      !ref.current?.rfb ||
-      ref.current.rfb._rfbConnectionState !== 'connected'
-    ) {
+    if (!ref.current?.rfb) {
       return;
     }
     if (event.clipboardData === null) {
@@ -148,12 +147,6 @@ const sendCharacter = (
   character: string,
   ref: React.RefObject<VncScreenHandle>
 ) => {
-  if (
-    !ref.current?.rfb ||
-    ref.current.rfb._rfbConnectionState !== 'connected'
-  ) {
-    return;
-  }
   const actualCharacter = character[0];
   const requiresShift = actualCharacter.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
 

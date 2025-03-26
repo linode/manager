@@ -1,10 +1,9 @@
-import { createDomain } from '@linode/api-v4/lib/domains';
+import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { ui } from 'support/ui';
 import { randomDomainName } from 'support/util/random';
-
-import type { Domain } from '@linode/api-v4';
+import { createDomain } from '@linode/api-v4/lib/domains';
+import { ui } from 'support/ui';
 
 authenticate();
 beforeEach(() => {
@@ -73,8 +72,7 @@ describe('Delete a Domain', () => {
               .findButtonByTitle('Delete Domain')
               .should('be.visible')
               .should('be.disabled');
-            cy.contains('Domain Name').click();
-            cy.focused().type(domain.domain);
+            cy.contains('Domain Name').click().type(domain.domain);
 
             ui.buttonGroup
               .findButtonByTitle('Delete Domain')

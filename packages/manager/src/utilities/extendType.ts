@@ -1,10 +1,11 @@
-import { formatStorageUnits, isNotNullOrUndefined } from '@linode/utilities';
+import { APIError, LinodeType } from '@linode/api-v4';
+import { UseQueryResult } from '@tanstack/react-query';
 
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 
-import type { APIError, LinodeType } from '@linode/api-v4';
-import type { UseQueryResult } from '@tanstack/react-query';
+import { formatStorageUnits } from './formatStorageUnits';
+import { isNotNullOrUndefined } from './nullOrUndefined';
 
 export interface ExtendedType extends LinodeType {
   formattedLabel: string;

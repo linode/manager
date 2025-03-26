@@ -1,12 +1,13 @@
-import { useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useGrants } from 'src/queries/profile/profile';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -16,6 +17,8 @@ import { PromoDisplay } from './PromoDisplay';
 
 import type { PaymentMethod } from '@linode/api-v4';
 import type { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import type { GridSize } from '@mui/material';
+import type { Breakpoint } from '@mui/material/styles';
 
 interface BillingSummaryProps {
   balance: number;
@@ -121,7 +124,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   };
 
   // The layout changes if there are promotions.
-  const gridDimensions =
+  const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
     promotions && promotions.length > 0 ? { md: 4, xs: 12 } : { sm: 6, xs: 12 };
 
   const balanceJSX =
@@ -153,20 +156,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   return (
     <>
-      <Grid
-        sx={{
-          margin: 0,
-        }}
-        container
-        size={12}
-        spacing={2}
-      >
-        <Grid
-          size={{
-            sm: 6,
-            ...gridDimensions,
-          }}
-        >
+      <Grid container margin={0} spacing={2} xs={12}>
+        <Grid {...gridDimensions} sm={6}>
           <BillingPaper variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
             <Divider />
@@ -211,13 +202,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
           </BillingPaper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
-          <Grid
-            size={{
-              md: 4,
-              sm: 6,
-              xs: 12,
-            }}
-          >
+          <Grid md={4} sm={6} xs={12}>
             <BillingPaper variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
@@ -233,7 +218,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
             </BillingPaper>
           </Grid>
         ) : null}
-        <Grid size={gridDimensions}>
+        <Grid {...gridDimensions}>
           <BillingPaper variant="outlined">
             <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>

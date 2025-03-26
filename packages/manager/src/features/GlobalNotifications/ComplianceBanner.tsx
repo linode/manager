@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useNotificationsQuery } from '@linode/queries';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 
 import { isEUModelContractNotification } from '../NotificationCenter/utils';
 

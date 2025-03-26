@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
 
 export const TaxCollectionBanner = () => {
   const history = useHistory();

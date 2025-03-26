@@ -1,14 +1,11 @@
-import { useTheme } from '@mui/material/styles';
+import { Token } from '@linode/api-v4/lib/profile';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
-
-import type { Token } from '@linode/api-v4/lib/profile';
-import type { Theme } from '@mui/material/styles';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   isProxyUser: boolean;

@@ -1,10 +1,11 @@
-import { ActionsPanel, Drawer, Notice, Select, TextField } from '@linode/ui';
+import { Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
@@ -108,7 +109,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={closeDrawer}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}
@@ -146,6 +146,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                   variant="error"
                 />
               )}
+
               <form onSubmit={handleSubmit}>
                 <TextField
                   error={!!errors.name}
@@ -171,12 +172,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                 />
 
                 <Grid container spacing={2}>
-                  <Grid
-                    size={{
-                      md: 6,
-                      xs: 12,
-                    }}
-                  >
+                  <Grid md={6} xs={12}>
                     <TextField
                       error={!!primaryPhoneError}
                       errorText={primaryPhoneError}
@@ -187,12 +183,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                       value={values?.phone?.primary ?? ''}
                     />
                   </Grid>
-                  <Grid
-                    size={{
-                      md: 6,
-                      xs: 12,
-                    }}
-                  >
+                  <Grid md={6} xs={12}>
                     <TextField
                       error={!!secondaryPhoneError}
                       errorText={secondaryPhoneError}

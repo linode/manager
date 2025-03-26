@@ -1,61 +1,58 @@
-import {
-  linodeConfigInterfaceFactory,
-  linodeConfigInterfaceFactoryWithVPC,
-} from '@linode/utilities';
-import {
-  VLANFactory,
-  kernelFactory,
-  linodeConfigFactory,
-  linodeFactory,
-  subnetFactory,
-  vpcFactory,
-} from '@src/factories';
+import { createTestLinode } from 'support/util/linodes';
+import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
+import { cleanUp } from 'support/util/cleanup';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CLONE_TIMEOUT } from 'support/constants/linodes';
-import {
-  interceptCreateLinodeConfigs,
-  interceptDeleteLinodeConfig,
-  interceptGetLinodeConfigs,
-  interceptUpdateLinodeConfigs,
-  mockCreateLinodeConfigs,
-  mockGetLinodeConfigs,
-  mockUpdateLinodeConfigs,
-} from 'support/intercepts/configs';
+import { chooseRegion, getRegionById } from 'support/util/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import {
   interceptRebootLinode,
   mockGetLinodeDetails,
   mockGetLinodeDisks,
-  mockGetLinodeKernel,
   mockGetLinodeKernels,
   mockGetLinodeVolumes,
+  mockGetLinodeKernel,
 } from 'support/intercepts/linodes';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
-import { fetchAllKernels, findKernelById } from 'support/util/kernels';
+import {
+  interceptGetLinodeConfigs,
+  interceptDeleteLinodeConfig,
+  interceptCreateLinodeConfigs,
+  interceptUpdateLinodeConfigs,
+  mockGetLinodeConfigs,
+  mockCreateLinodeConfigs,
+  mockUpdateLinodeConfigs,
+} from 'support/intercepts/configs';
 import { fetchLinodeConfigs } from 'support/util/linodes';
-import { createTestLinode } from 'support/util/linodes';
-import { randomIp, randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
-
+import {
+  kernelFactory,
+  vpcFactory,
+  linodeFactory,
+  linodeConfigFactory,
+  VLANFactory,
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+  subnetFactory,
+} from '@src/factories';
+import { randomNumber, randomLabel, randomIp } from 'support/util/random';
+import { fetchAllKernels, findKernelById } from 'support/util/kernels';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
 
+import type { CreateTestLinodeOptions } from 'support/util/linodes';
 import type {
   Config,
   CreateLinodeRequest,
   InterfacePurpose,
-  Kernel,
   Linode,
-  Region,
   VLAN,
+  Region,
+  Kernel,
 } from '@linode/api-v4';
-import type { CreateTestLinodeOptions } from 'support/util/linodes';
 
 /**
  * Returns a Promise that resolves to a new test Linode and its first config object.
@@ -258,7 +255,7 @@ describe('Linode Config management', () => {
         () =>
           createLinodeAndGetConfig(
             { booted: true },
-            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+            { waitForBoot: true, securityMethod: 'vlan_no_internet' }
           ),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
@@ -347,10 +344,9 @@ describe('Linode Config management', () => {
               .type(sharedConfigLabel);
 
             cy.findByText('Select a Kernel')
-              .as('qaSelectKernel')
-              .scrollIntoView();
-            cy.get('@qaSelectKernel').click();
-            cy.focused().type('Latest 64 bit{enter}');
+              .scrollIntoView()
+              .click()
+              .type('Latest 64 bit{enter}');
 
             ui.buttonGroup
               .findButtonByTitle('Add Configuration')
@@ -468,19 +464,19 @@ describe('Linode Config management', () => {
     // Mock config with public internet for eth0 and VLAN for eth1.
     const mockConfig: Config = linodeConfigFactory.build({
       id: randomNumber(),
+      label: randomLabel(),
+      kernel: mockKernel.id,
       interfaces: [
-        linodeConfigInterfaceFactory.build({
+        LinodeConfigInterfaceFactory.build({
           ipam_address: null,
-          label: null,
           purpose: 'public',
+          label: null,
         }),
-        linodeConfigInterfaceFactory.build({
+        LinodeConfigInterfaceFactory.build({
           label: randomLabel(),
           purpose: 'vlan',
         }),
       ],
-      kernel: mockKernel.id,
-      label: randomLabel(),
     });
 
     const mockVLANs: VLAN[] = VLANFactory.buildList(2);
@@ -501,10 +497,10 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          linodeConfigInterfaceFactoryWithVPC.build({
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
             active: false,
             label: null,
-            vpc_id: mockVPC.id,
           }),
         ],
       };
@@ -546,10 +542,9 @@ describe('Linode Config management', () => {
           // Confirm that "VPC" can be selected for either "eth0", "eth1", or "eth2".
           // Add VPC to eth0
           cy.get('[data-qa-textfield-label="eth0"]')
-            .as('qaEth')
-            .scrollIntoView();
-          cy.get('@qaEth').click();
-          cy.focused().type('VPC');
+            .scrollIntoView()
+            .click()
+            .type('VPC');
 
           ui.autocomplete.find().should('be.visible');
           ui.autocompletePopper.findByTitle('VPC').should('be.visible').click();
@@ -561,10 +556,9 @@ describe('Linode Config management', () => {
           // Confirm that VPC is an option for eth1 and eth2, but don't select them.
           ['eth1', 'eth2'].forEach((interfaceName) => {
             cy.get(`[data-qa-textfield-label="${interfaceName}"]`)
-              .as('qaInterfaceName')
-              .scrollIntoView();
-            cy.get('@qaInterfaceName').click();
-            cy.focused().type('VPC');
+              .scrollIntoView()
+              .click()
+              .type('VPC');
 
             ui.autocomplete.find().should('be.visible');
             ui.autocompletePopper
@@ -614,10 +608,10 @@ describe('Linode Config management', () => {
         ...mockConfig,
         interfaces: [
           ...mockConfigInterfaces,
-          linodeConfigInterfaceFactoryWithVPC.build({
-            active: false,
+          LinodeConfigInterfaceFactoryWithVPC.build({
             label: undefined,
             vpc_id: mockVPC.id,
+            active: false,
           }),
         ],
       };
@@ -659,9 +653,10 @@ describe('Linode Config management', () => {
         .should('be.visible')
         .within(() => {
           // Set eth2 to VPC and submit.
-          cy.get('[data-qa-textfield-label="eth2"]').scrollIntoView();
-          cy.get('[data-qa-textfield-label="eth2"]').click();
-          cy.focused().type('VPC{enter}');
+          cy.get('[data-qa-textfield-label="eth2"]')
+            .scrollIntoView()
+            .click()
+            .type('VPC{enter}');
 
           ui.button
             .findByTitle('Save Changes')
@@ -700,9 +695,9 @@ describe('Linode Config management', () => {
       });
       const mockSubnet = subnetFactory.build({
         id: randomNumber(),
-        ipv4: `${randomIp()}/0`,
         label: randomLabel(),
         linodes: [],
+        ipv4: `${randomIp()}/0`,
       });
       const mockVPC = vpcFactory.build({
         id: randomNumber(),
@@ -715,15 +710,15 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          linodeConfigInterfaceFactory.build({
+          LinodeConfigInterfaceFactory.build({
             ipam_address: null,
-            label: null,
             purpose: 'public',
+            label: null,
           }),
-          linodeConfigInterfaceFactoryWithVPC.build({
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
             active: false,
             label: null,
-            vpc_id: mockVPC.id,
           }),
         ],
       };
@@ -763,17 +758,19 @@ describe('Linode Config management', () => {
           cy.get('#label').type(`${mockConfigWithVpc.label}`);
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC"
-          cy.get('[data-qa-textfield-label="eth0"]').scrollIntoView();
-          cy.get('[data-qa-textfield-label="eth0"]').click();
-          cy.focused().type('Public Internet');
+          cy.get('[data-qa-textfield-label="eth0"]')
+            .scrollIntoView()
+            .click()
+            .type('Public Internet');
           ui.autocomplete.find().should('be.visible');
           ui.autocompletePopper
             .findByTitle('Public Internet')
             .should('be.visible')
             .click();
-          cy.get('[data-qa-textfield-label="eth1"]').scrollIntoView();
-          cy.get('[data-qa-textfield-label="eth1"]').click();
-          cy.focused().type('VPC');
+          cy.get('[data-qa-textfield-label="eth1"]')
+            .scrollIntoView()
+            .click()
+            .type('VPC');
           ui.autocomplete.find().should('be.visible');
           ui.autocompletePopper.findByTitle('VPC').should('be.visible').click();
           // Confirm that internet access warning is displayed.
@@ -781,17 +778,19 @@ describe('Linode Config management', () => {
 
           // Sets eth0 to "Public Internet", and sets eth1 to "VPC",
           // and checks "Assign a public IPv4 address for this Linode"
-          cy.get('[data-qa-textfield-label="VPC"]').scrollIntoView();
-          cy.get('[data-qa-textfield-label="VPC"]').click();
-          cy.focused().type(`${mockVPC.label}`);
+          cy.get('[data-qa-textfield-label="VPC"]')
+            .scrollIntoView()
+            .click()
+            .type(`${mockVPC.label}`);
           ui.autocomplete.find().should('be.visible');
           ui.autocompletePopper
             .findByTitle(`${mockVPC.label}`)
             .should('be.visible')
             .click();
-          cy.get('[data-qa-textfield-label="Subnet"]').scrollIntoView();
-          cy.get('[data-qa-textfield-label="Subnet"]').click();
-          cy.focused().type(`${mockSubnet.label}`);
+          cy.get('[data-qa-textfield-label="Subnet"]')
+            .scrollIntoView()
+            .click()
+            .type(`${mockSubnet.label}`);
           ui.autocomplete.find().should('be.visible');
           ui.autocompletePopper
             .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
@@ -801,14 +800,13 @@ describe('Linode Config management', () => {
             .should('be.visible')
             .click();
           // Confirm that internet access warning is displayed.
-          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT).scrollIntoView();
-          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT).should('be.visible');
+          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT)
+            .scrollIntoView()
+            .should('be.visible');
 
           ui.buttonGroup
             .findButtonByTitle('Add Configuration')
-            .scrollIntoView();
-          ui.buttonGroup
-            .findButtonByTitle('Add Configuration')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();

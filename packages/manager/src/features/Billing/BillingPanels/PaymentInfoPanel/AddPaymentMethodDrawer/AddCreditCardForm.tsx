@@ -1,8 +1,7 @@
 import { addPaymentMethod } from '@linode/api-v4/lib';
-import { accountQueries } from '@linode/queries';
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -10,6 +9,8 @@ import * as React from 'react';
 import NumberFormat from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { accountQueries } from 'src/queries/account/queries';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -164,12 +165,12 @@ const AddCreditCardForm = (props: Props) => {
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <Grid className={classes.error} size={12}>
+        <Grid className={classes.error} xs={12}>
           <Notice text={error} variant="error" />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid size={12}>
+        <Grid xs={12}>
           <TextField
             InputProps={{
               inputComponent: creditCardField,
@@ -183,12 +184,7 @@ const AddCreditCardForm = (props: Props) => {
             value={values.card_number}
           />
         </Grid>
-        <Grid
-          size={{
-            sm: 6,
-            xs: 12,
-          }}
-        >
+        <Grid sm={6} xs={12}>
           <TextField
             error={
               (touched.expiry_month || touched.expiry_year) &&
@@ -207,12 +203,7 @@ const AddCreditCardForm = (props: Props) => {
             placeholder="MM/YY"
           />
         </Grid>
-        <Grid
-          size={{
-            sm: 6,
-            xs: 12,
-          }}
-        >
+        <Grid sm={6} xs={12}>
           <TextField
             disabled={disableInput}
             error={touched.cvv && Boolean(errors.cvv)}

@@ -1,3 +1,4 @@
+import type { Grant, Grants } from '@linode/api-v4';
 import { profileFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
@@ -14,8 +15,6 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { shuffleArray } from 'support/util/arrays';
 import { randomLabel } from 'support/util/random';
-
-import type { Grant, Grants } from '@linode/api-v4';
 
 // Message shown when user has unrestricted account access.
 const unrestrictedAccessMessage =
@@ -176,8 +175,8 @@ describe('User permission management', () => {
    */
   it('can toggle full account access', () => {
     const mockUser = accountUserFactory.build({
-      restricted: false,
       username: randomLabel(),
+      restricted: false,
     });
 
     const mockUserUpdated = {
@@ -267,8 +266,8 @@ describe('User permission management', () => {
    */
   it('can update global and specific permissions', () => {
     const mockUser = accountUserFactory.build({
-      restricted: true,
       username: randomLabel(),
+      restricted: true,
     });
 
     const mockUserGrants = { ...userPermissionsGrants };
@@ -279,20 +278,18 @@ describe('User permission management', () => {
       ...mockUserGrants,
       global: {
         account_access: 'read_only',
-        add_buckets: true,
-        add_databases: true,
+        cancel_account: true,
+        child_account_access: true,
         add_domains: true,
+        add_databases: true,
         add_firewalls: true,
         add_images: true,
-        add_kubernetes: true,
         add_linodes: true,
         add_longview: true,
         add_nodebalancers: true,
         add_stackscripts: true,
         add_volumes: true,
         add_vpcs: true,
-        cancel_account: true,
-        child_account_access: true,
         longview_subscription: true,
       },
     };
@@ -388,8 +385,8 @@ describe('User permission management', () => {
    */
   it('can reset user permissions changes', () => {
     const mockUser = accountUserFactory.build({
-      restricted: true,
       username: randomLabel(),
+      restricted: true,
     });
 
     const mockUserGrants = { ...userPermissionsGrants };
@@ -488,9 +485,9 @@ describe('User permission management', () => {
     });
 
     const mockActiveUser = accountUserFactory.build({
+      username: 'unrestricted-child-user',
       restricted: false,
       user_type: 'child',
-      username: 'unrestricted-child-user',
     });
 
     const mockRestrictedUser = {
@@ -546,8 +543,8 @@ describe('User permission management', () => {
    */
   it('tests the user permissions for a child account viewing a proxy user', () => {
     const mockChildProfile = profileFactory.build({
-      user_type: 'child',
       username: 'proxy-user',
+      user_type: 'child',
     });
 
     const mockChildUser = accountUserFactory.build({

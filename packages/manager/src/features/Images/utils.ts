@@ -1,4 +1,4 @@
-import { useGrants, useProfile } from '@linode/queries';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
 

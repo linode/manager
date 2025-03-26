@@ -3,7 +3,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { AvatarForm } from './AvatarForm';
 import { EmailForm } from './EmailForm';

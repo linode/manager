@@ -1,7 +1,8 @@
-import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
+import { Box, CircleProgress, Divider, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -171,14 +172,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 resource_ids={[resource]}
               />
             )}
-            <Grid
-              item
-              xs={12}
-              sx={{
-                mb: 3,
-                mt: -3,
-              }}
-            >
+            <Grid item mb={3} mt={-3} xs={12}>
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
                   filters={filterData.label}

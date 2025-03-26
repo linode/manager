@@ -34,7 +34,6 @@ const props: Props = {
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
-  regionSupportsDiskEncryption: false,
   statusFilter: 'all',
   tags: [],
   typeLabel: 'Linode 2G',
@@ -104,7 +103,7 @@ describe('NodeTable', () => {
 
     expect(
       await findByText(
-        'Worker nodes will appear once cluster provisioning is complete.'
+        'Nodes will appear once cluster provisioning is complete.'
       )
     ).toBeVisible();
 

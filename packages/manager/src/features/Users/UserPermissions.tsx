@@ -4,9 +4,7 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { accountQueries } from '@linode/queries';
 import {
-  ActionsPanel,
   Box,
   CircleProgress,
   FormControlLabel,
@@ -16,12 +14,12 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -32,8 +30,10 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import {
   StyledCircleProgress,
@@ -410,13 +410,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         )}
         <StyledPaper>
           <Grid
-            sx={{
-              alignItems: 'center',
-              margin: 0,
-              width: 'auto',
-            }}
+            alignItems="center"
             container
             spacing={2}
+            sx={{ margin: 0, width: 'auto' }}
           >
             <StyledHeaderGrid>
               <Typography
@@ -490,14 +487,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Grid
-        size={{
-          sm: 6,
-          xs: 12,
-        }}
-        className="py0"
-        key={perm}
-      >
+      <Grid className="py0" key={perm} sm={6} xs={12}>
         <FormControlLabel
           control={
             <Toggle
@@ -598,13 +588,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })}
         data-qa-entity-section
       >
-        <Grid
-          sx={{
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-          container
-        >
+        <Grid alignItems="center" container justifyContent="space-between">
           <Grid>
             <Typography
               data-qa-permissions-header="Specific Permissions"

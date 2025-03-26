@@ -1,15 +1,5 @@
 import 'cypress-file-upload';
-import {
-  closableMessage,
-  closeButtonText,
-} from 'support/constants/help-and-support';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockCloseSupportTicket,
-  mockGetSupportTicket,
-  mockGetSupportTicketReplies,
-  mockGetSupportTickets,
-} from 'support/intercepts/support';
 import { ui } from 'support/ui';
 import {
   randomItem,
@@ -17,9 +7,18 @@ import {
   randomNumber,
   randomPhrase,
 } from 'support/util/random';
-
 import { supportTicketFactory } from 'src/factories';
+import {
+  mockGetSupportTicket,
+  mockGetSupportTickets,
+  mockGetSupportTicketReplies,
+  mockCloseSupportTicket,
+} from 'support/intercepts/support';
 import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
+import {
+  closableMessage,
+  closeButtonText,
+} from 'support/constants/help-and-support';
 
 describe('close support tickets', () => {
   /*
@@ -28,11 +27,11 @@ describe('close support tickets', () => {
    */
   it('cannot close a default support ticket by customers', () => {
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: randomLabel(),
     });
 
     // Get severity label for numeric severity level.
@@ -79,18 +78,18 @@ describe('close support tickets', () => {
    */
   it('can close a closable support ticket', () => {
     const mockTicket = supportTicketFactory.build({
-      closable: true,
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: randomLabel(),
+      closable: true,
     });
 
     const mockClosedTicket = supportTicketFactory.build({
       ...mockTicket,
-      closed: 'close by customers',
       status: 'closed',
+      closed: 'close by customers',
     });
 
     // Get severity label for numeric severity level.

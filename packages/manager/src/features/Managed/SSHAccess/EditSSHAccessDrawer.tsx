@@ -1,18 +1,11 @@
-import {
-  ActionsPanel,
-  Drawer,
-  FormControlLabel,
-  Notice,
-  TextField,
-  Toggle,
-  Typography,
-} from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { FormControlLabel, Notice, TextField, Toggle } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -21,6 +14,11 @@ import {
 import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
 import { DEFAULTS } from './common';
+import {
+  StyledIPGrid,
+  StyledPortGrid,
+  StyledTypography,
+} from './EditSSHAccessDrawer.styles';
 
 import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import type { FormikHelpers } from 'formik';
@@ -79,12 +77,7 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={closeDrawer}
-      open={isOpen}
-      title={title}
-    >
+    <Drawer onClose={closeDrawer} open={isOpen} title={title}>
       {!linodeSetting ? null : (
         <>
           {/* We're intentionally not validating with Formik, because we want to allow "Port" to
@@ -135,11 +128,11 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                   )}
 
                   <form>
-                    <Typography variant="body1">
+                    <StyledTypography variant="body1">
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
-                    </Typography>
+                    </StyledTypography>
 
                     <FormControlLabel
                       control={
@@ -163,8 +156,8 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                       value={user}
                     />
 
-                    <Grid container mt={2} spacing={2}>
-                      <Grid size={{ md: 8, xs: 12 }}>
+                    <Grid container spacing={2}>
+                      <StyledIPGrid md={8} xs={12}>
                         <IPSelect
                           customizeOptions={(options) => [
                             // The first option should always be "Any".
@@ -191,22 +184,21 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                           errorText={ipError}
                           linodeId={linodeSetting.id}
                         />
-                      </Grid>
+                      </StyledIPGrid>
 
-                      <Grid size={{ md: 4, xs: 12 }}>
+                      <StyledPortGrid md={4} xs={12}>
                         <TextField
                           error={!!portError}
                           errorText={portError}
                           label="Port"
                           name="ssh.port"
-                          noMarginTop
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder={String(port || DEFAULTS.port)}
                           type="number"
                           value={port}
                         />
-                      </Grid>
+                      </StyledPortGrid>
                     </Grid>
                     <ActionsPanel
                       primaryButtonProps={{

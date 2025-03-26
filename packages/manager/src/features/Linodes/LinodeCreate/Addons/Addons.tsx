@@ -2,7 +2,7 @@ import { Divider, Notice, Paper, Stack, Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { Backups } from './Backups';
 import { PrivateIP } from './PrivateIP';

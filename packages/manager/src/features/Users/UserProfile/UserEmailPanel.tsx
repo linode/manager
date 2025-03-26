@@ -4,7 +4,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useMutateProfile, useProfile } from '@linode/queries';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import type { User } from '@linode/api-v4';
 

@@ -1,5 +1,4 @@
 import { Button, Paper, Typography } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -7,6 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
+import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { KubeConfigDrawer } from './KubeConfigDrawer';

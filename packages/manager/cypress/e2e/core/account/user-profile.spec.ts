@@ -1,3 +1,4 @@
+import { accountUserFactory } from 'src/factories/accountUsers';
 import { getProfile } from 'support/api/account';
 import {
   interceptGetUser,
@@ -5,11 +6,9 @@ import {
   mockGetUsers,
   mockUpdateUsername,
 } from 'support/intercepts/account';
-import { mockUpdateProfile } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
-
-import { accountUserFactory } from 'src/factories/accountUsers';
+import { ui } from 'support/ui';
+import { mockUpdateProfile } from 'support/intercepts/profile';
 import {
   PARENT_USER,
   RESTRICTED_FIELD_TOOLTIP,
@@ -56,8 +55,8 @@ describe('User Profile', () => {
       cy.get('[id="email"]')
         .should('be.visible')
         .should('have.value', activeEmail)
-        .clear();
-      cy.focused().type(newEmail);
+        .clear()
+        .type(newEmail);
 
       cy.get('[data-qa-textfield-label="Email"]')
         .parent()
@@ -80,8 +79,8 @@ describe('User Profile', () => {
       cy.get('[id="username"]')
         .should('be.visible')
         .should('have.value', activeUsername)
-        .clear();
-      cy.focused().type(newUsername);
+        .clear()
+        .type(newUsername);
 
       cy.get('[data-qa-textfield-label="Username"]')
         .parent()
@@ -168,8 +167,8 @@ describe('User Profile', () => {
       cy.get('[id="username"]')
         .should('be.visible')
         .should('have.value', additionalUsername)
-        .clear();
-      cy.focused().type(newUsername);
+        .clear()
+        .type(newUsername);
 
       cy.get('[data-qa-textfield-label="Username"]')
         .parent()
@@ -200,8 +199,8 @@ describe('User Profile', () => {
     getProfile().then((profile) => {
       const proxyUsername = 'proxy_user';
       const mockAccountUsers = accountUserFactory.buildList(1, {
-        user_type: 'proxy',
         username: proxyUsername,
+        user_type: 'proxy',
       });
 
       mockGetUsers(mockAccountUsers).as('getUsers');

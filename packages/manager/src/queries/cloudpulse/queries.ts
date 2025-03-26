@@ -6,16 +6,13 @@ import {
   getJWEToken,
   getMetricDefinitionsByServiceType,
 } from '@linode/api-v4';
-import { getAllLinodesRequest, volumeQueries } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { databaseQueries } from '../databases/databases';
+import { getAllLinodesRequest } from '../linodes/requests';
+import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
-import {
-  getAllAlertsRequest,
-  getAllNotificationChannels,
-  getAllertsByServiceTypeRequest,
-} from './requests';
+import { getAllAlertsRequest, getAllNotificationChannels } from './requests';
 
 import type {
   CloudPulseMetricsRequest,
@@ -37,10 +34,6 @@ export const queryFactory = createQueryKeys(key, {
         queryFn: () =>
           getAlertDefinitionByServiceTypeAndId(serviceType, alertId),
         queryKey: [alertId, serviceType],
-      }),
-      alertsByServiceType: (serviceType) => ({
-        queryFn: () => getAllertsByServiceTypeRequest(serviceType),
-        queryKey: [serviceType],
       }),
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllAlertsRequest(params, filter),

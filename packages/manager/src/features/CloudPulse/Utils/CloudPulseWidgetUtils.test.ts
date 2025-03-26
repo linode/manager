@@ -1,4 +1,4 @@
-import { formatPercentage } from '@linode/utilities';
+import { formatPercentage } from 'src/utilities/statMetrics';
 
 import {
   generateGraphData,

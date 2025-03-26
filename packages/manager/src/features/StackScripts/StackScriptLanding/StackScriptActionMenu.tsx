@@ -1,6 +1,5 @@
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';

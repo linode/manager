@@ -24,13 +24,13 @@ const mockParentAccount = accountFactory.build({
 });
 
 const mockParentProfile = profileFactory.build({
-  user_type: 'parent',
   username: randomLabel(),
+  user_type: 'parent',
 });
 
 const mockParentUser = accountUserFactory.build({
-  user_type: 'parent',
   username: mockParentProfile.username,
+  user_type: 'parent',
 });
 
 const mockChildAccount = accountFactory.build({
@@ -38,14 +38,14 @@ const mockChildAccount = accountFactory.build({
 });
 
 const mockParentAccountToken = appTokenFactory.build({
+  id: randomNumber(),
   created: DateTime.now().toISO(),
   expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
-  id: randomNumber(),
   label: `${mockParentAccount.company}_proxy`,
   scopes: '*',
-  thumbnail_url: undefined,
   token: randomString(32),
   website: undefined,
+  thumbnail_url: undefined,
 });
 
 describe('Token scopes', () => {
@@ -91,9 +91,12 @@ describe('Token scopes', () => {
         );
 
         // Specify a label and re-submit.
-        cy.findByLabelText('Label').as('qaLabel').scrollIntoView();
-        cy.get('@qaLabel').should('be.visible').should('be.enabled').click();
-        cy.focused().type(mockParentAccountToken.label);
+        cy.findByLabelText('Label')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .type(mockParentAccountToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Create Token')
@@ -157,9 +160,8 @@ describe('Token scopes', () => {
       .within(() => {
         // Confirm that the “Child account access” grant is not visible in the list of permissions.
         cy.findAllByText('Child Account Access')
-          .as('qaChildAccount')
-          .scrollIntoView();
-        cy.get('@qaChildAccount').should('be.visible');
+          .scrollIntoView()
+          .should('be.visible');
 
         // Specify ALL scopes by selecting the "No Access" Select All radio button.
         cy.get('[data-qa-perm-rw-radio]').click();
@@ -170,9 +172,12 @@ describe('Token scopes', () => {
         );
 
         // Specify a label and re-submit.
-        cy.findByLabelText('Label').as('qaLabel').scrollIntoView();
-        cy.get('@qaLabel').should('be.visible').should('be.enabled').click();
-        cy.focused().type(mockParentAccountToken.label);
+        cy.findByLabelText('Label')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click()
+          .type(mockParentAccountToken.label);
 
         ui.buttonGroup
           .findButtonByTitle('Create Token')

@@ -1,4 +1,4 @@
-import { capitalizeAllWords } from '@linode/utilities';
+import { Event, EventAction } from '@linode/api-v4/lib/account';
 
 import {
   isEventRelevantToLinode,
@@ -6,8 +6,7 @@ import {
   isPrimaryEntity,
   isSecondaryEntity,
 } from 'src/queries/events/event.helpers';
-
-import type { Event, EventAction } from '@linode/api-v4/lib/account';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 export const transitionStatus = [
   'booting',

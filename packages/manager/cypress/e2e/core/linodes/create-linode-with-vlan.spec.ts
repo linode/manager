@@ -1,26 +1,18 @@
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
+import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
   randomLabel,
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-
-import { VLANFactory, linodeFactory, regionFactory } from 'src/factories';
+import { mockGetVLANs } from 'support/intercepts/vlans';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 
 describe('Create Linode with VLANs', () => {
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeInterfaces: { enabled: false },
-    });
-  });
-
   /*
    * - Uses mock API data to confirm VLAN attachment UI flow during Linode create.
    * - Confirms that outgoing Linode create API request contains expected data for VLAN.
@@ -37,11 +29,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
-      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      linodes: [],
       region: mockLinodeRegion.id,
+      cidr_block: `${randomIp()}/24`,
+      linodes: [],
     });
 
     mockGetVLANs([mockVlan]);
@@ -75,10 +67,11 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
-    });
+    cy.get('[data-qa-linode-create-summary]')
+      .scrollIntoView()
+      .within(() => {
+        cy.findByText('VLAN Attached').should('be.visible');
+      });
 
     ui.button
       .findByTitle('Create Linode')
@@ -124,11 +117,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
-      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      linodes: [],
       region: mockLinodeRegion.id,
+      cidr_block: `${randomIp()}/24`,
+      linodes: [],
     });
 
     mockGetVLANs([]);
@@ -158,10 +151,11 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
-    cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
-    });
+    cy.get('[data-qa-linode-create-summary]')
+      .scrollIntoView()
+      .within(() => {
+        cy.findByText('VLAN Attached').should('be.visible');
+      });
 
     ui.button
       .findByTitle('Create Linode')

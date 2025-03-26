@@ -1,28 +1,27 @@
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { buildArray } from 'support/util/arrays';
+import { extendRegion } from 'support/util/regions';
 import {
-  mockCreateAccessKey,
+  accountFactory,
+  regionFactory,
+  objectStorageKeyFactory,
+  objectStorageBucketFactory,
+} from 'src/factories';
+import {
+  randomString,
+  randomNumber,
+  randomLabel,
+  randomDomainName,
+} from 'support/util/random';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetRegions } from 'support/intercepts/regions';
+import {
   mockGetAccessKeys,
+  mockCreateAccessKey,
   mockGetBucketsForRegion,
   mockUpdateAccessKey,
 } from 'support/intercepts/object-storage';
-import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { buildArray } from 'support/util/arrays';
-import {
-  randomDomainName,
-  randomLabel,
-  randomNumber,
-  randomString,
-} from 'support/util/random';
-import { extendRegion } from 'support/util/regions';
-
-import {
-  accountFactory,
-  objectStorageBucketFactory,
-  objectStorageKeyFactory,
-  regionFactory,
-} from 'src/factories';
 
 import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4';
 
@@ -30,9 +29,9 @@ describe('Object Storage Multicluster access keys', () => {
   const mockRegionsObj = buildArray(3, () => {
     return extendRegion(
       regionFactory.build({
-        capabilities: ['Object Storage'],
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
       })
     );
   });
@@ -58,14 +57,14 @@ describe('Object Storage Multicluster access keys', () => {
    */
   it('can create unlimited access keys with OBJ Multicluster', () => {
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
+      access_key: randomString(20),
+      secret_key: randomString(39),
       regions: mockRegionsObj.map((mockObjRegion) => ({
         id: mockObjRegion.id,
         s3_endpoint: randomDomainName(),
       })),
-      secret_key: randomString(39),
     });
 
     mockGetAccessKeys([]);
@@ -88,8 +87,10 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)').should('be.visible').click();
-        cy.focused().type(mockAccessKey.label);
+        cy.contains('Label (required)')
+          .should('be.visible')
+          .click()
+          .type(mockAccessKey.label);
 
         cy.contains('Regions (required)').should('be.visible').click();
 
@@ -103,8 +104,10 @@ describe('Object Storage Multicluster access keys', () => {
         });
 
         // Close the regions drop-down.
-        cy.contains('Regions (required)').should('be.visible').click();
-        cy.focused().type('{esc}');
+        cy.contains('Regions (required)')
+          .should('be.visible')
+          .click()
+          .type('{esc}');
 
         // TODO Confirm expected regions are shown.
         ui.buttonGroup
@@ -151,19 +154,29 @@ describe('Object Storage Multicluster access keys', () => {
   it('can create limited access keys with OBJ Multicluster', () => {
     const mockRegion = extendRegion(
       regionFactory.build({
-        capabilities: ['Object Storage'],
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
       })
     );
 
     const mockBuckets = objectStorageBucketFactory.buildList(2, {
-      cluster: undefined,
       region: mockRegion.id,
+      cluster: undefined,
     });
 
     const mockAccessKey = objectStorageKeyFactory.build({
+      id: randomNumber(10000, 99999),
+      label: randomLabel(),
       access_key: randomString(20),
+      secret_key: randomString(39),
+      regions: [
+        {
+          id: mockRegion.id,
+          s3_endpoint: randomDomainName(),
+        },
+      ],
+      limited: true,
       bucket_access: mockBuckets.map(
         (bucket): ObjectStorageKeyBucketAccess => ({
           bucket_name: bucket.label,
@@ -172,16 +185,6 @@ describe('Object Storage Multicluster access keys', () => {
           region: mockRegion.id,
         })
       ),
-      id: randomNumber(10000, 99999),
-      label: randomLabel(),
-      limited: true,
-      regions: [
-        {
-          id: mockRegion.id,
-          s3_endpoint: randomDomainName(),
-        },
-      ],
-      secret_key: randomString(39),
     });
 
     mockGetAccessKeys([]);
@@ -202,19 +205,25 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)').should('be.visible').click();
-        cy.focused().type(mockAccessKey.label);
+        cy.contains('Label (required)')
+          .should('be.visible')
+          .click()
+          .type(mockAccessKey.label);
 
-        cy.contains('Regions (required)').should('be.visible').click();
-        cy.focused().type(`${mockRegion.label}{enter}`);
+        cy.contains('Regions (required)')
+          .should('be.visible')
+          .click()
+          .type(`${mockRegion.label}{enter}`);
 
         ui.autocompletePopper
           .findByTitle(`${mockRegion.label} (${mockRegion.id})`)
           .should('be.visible');
 
         // Dismiss region drop-down.
-        cy.contains('Regions (required)').should('be.visible').click();
-        cy.focused().type('{esc}');
+        cy.contains('Regions (required)')
+          .should('be.visible')
+          .click()
+          .type('{esc}');
 
         // Enable "Limited Access" toggle for access key and confirm Create button is disabled.
         cy.findByText('Limited Access').should('be.visible').click();
@@ -287,33 +296,33 @@ describe('Object Storage Multicluster access keys', () => {
   it('can update access keys with OBJ Multicluster', () => {
     const mockInitialRegion = extendRegion(
       regionFactory.build({
-        capabilities: ['Object Storage'],
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
       })
     );
 
     const mockUpdatedRegion = extendRegion(
       regionFactory.build({
-        capabilities: ['Object Storage'],
         id: `us-${randomString(5)}`,
         label: `mock-obj-region-${randomString(5)}`,
+        capabilities: ['Object Storage'],
       })
     );
 
     const mockRegions = [mockInitialRegion, mockUpdatedRegion];
 
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
+      access_key: randomString(20),
+      secret_key: randomString(39),
       regions: [
         {
           id: mockInitialRegion.id,
           s3_endpoint: randomDomainName(),
         },
       ],
-      secret_key: randomString(39),
     });
 
     const mockUpdatedAccessKeyEndpoint = randomDomainName();
@@ -355,12 +364,16 @@ describe('Object Storage Multicluster access keys', () => {
       .findByTitle('Edit Access Key')
       .should('be.visible')
       .within(() => {
-        cy.contains('Label (required)').should('be.visible').click();
-        cy.focused().type('{selectall}{backspace}');
-        cy.focused().type(mockUpdatedAccessKey.label);
+        cy.contains('Label (required)')
+          .should('be.visible')
+          .click()
+          .type('{selectall}{backspace}')
+          .type(mockUpdatedAccessKey.label);
 
-        cy.contains('Regions (required)').should('be.visible').click();
-        cy.focused().type(`${mockUpdatedRegion.label}{enter}{esc}`);
+        cy.contains('Regions (required)')
+          .should('be.visible')
+          .click()
+          .type(`${mockUpdatedRegion.label}{enter}{esc}`);
 
         cy.contains(mockUpdatedRegion.label).should('be.visible').and('exist');
 

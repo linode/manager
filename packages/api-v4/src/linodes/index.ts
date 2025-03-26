@@ -12,6 +12,4 @@ export * from './ips';
 
 export * from './linodes';
 
-export * from './linode-interfaces';
-
 export * from './types';

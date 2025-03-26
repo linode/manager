@@ -23,8 +23,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual<any>('src/queries/linodes/linodes');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,

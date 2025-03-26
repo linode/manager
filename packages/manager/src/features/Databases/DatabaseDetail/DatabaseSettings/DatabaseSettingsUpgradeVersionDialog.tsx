@@ -1,14 +1,10 @@
-import {
-  ActionsPanel,
-  Autocomplete,
-  FormControl,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete } from '@linode/ui';
+import { FormControl, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
   DATABASE_ENGINE_MAP,

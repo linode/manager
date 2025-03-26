@@ -10,15 +10,11 @@ import {
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
-import type {
-  CreateNodePoolData,
-  KubernetesTier,
-  Region,
-} from '@linode/api-v4';
+import type { CreateNodePoolData, Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
@@ -41,7 +37,6 @@ interface Props {
   resetValues: () => void;
   selectedId?: string;
   selectedRegionId?: Region['id'] | string;
-  selectedTier: KubernetesTier;
   types: ExtendedType[];
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -63,7 +58,6 @@ export const KubernetesPlansPanel = (props: Props) => {
     resetValues,
     selectedId,
     selectedRegionId,
-    selectedTier,
     types,
     updatePlanCount,
   } = props;
@@ -72,7 +66,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionId || '',
-    Boolean(flags.soldOutChips) && Boolean(selectedRegionId)
+    Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
 
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
@@ -80,18 +74,13 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const _types = types.filter(
     (type) =>
-      !type.id.includes('dedicated-edge') &&
-      !type.id.includes('nanode-edge') &&
-      // Filter out GPU types for enterprise; otherwise, return the rest of the types.
-      // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
-      (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true)
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
   );
 
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
-      : _types,
-    { isLKE: true }
+      : _types
   );
 
   const tabs = Object.keys(plans).map(

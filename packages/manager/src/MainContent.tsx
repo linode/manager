@@ -1,6 +1,6 @@
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
@@ -27,9 +27,7 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-  useAccountSettings,
-  useProfile,
-} from '@linode/queries';
+} from 'src/queries/profile/preferences';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
@@ -41,6 +39,8 @@ import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
+import { useAccountSettings } from './queries/account/settings';
+import { useProfile } from './queries/profile/profile';
 import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
@@ -132,6 +132,9 @@ const Profile = React.lazy(() =>
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );
+const StackScripts = React.lazy(
+  () => import('src/features/StackScripts/StackScripts')
+);
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -159,23 +162,14 @@ const EventsLanding = React.lazy(() =>
 const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
 );
+const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
-const CloudPulseMetrics = React.lazy(() =>
-  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
-    (module) => ({
-      default: module.CloudPulseDashboardLanding,
-    })
-  )
-);
-
-const CloudPulseAlerts = React.lazy(() =>
-  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
-    (module) => ({
-      default: module.AlertsLanding,
-    })
-  )
+const CloudPulse = React.lazy(() =>
+  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
+    default: module.CloudPulseLanding,
+  }))
 );
 
 const IAM = React.lazy(() =>
@@ -374,6 +368,10 @@ export const MainContent = () => {
                             />
                             <Route component={Managed} path="/managed" />
                             <Route
+                              component={StackScripts}
+                              path="/stackscripts"
+                            />
+                            <Route
                               component={ObjectStorage}
                               path="/object-storage"
                             />
@@ -386,21 +384,13 @@ export const MainContent = () => {
                             <Route component={Help} path="/support" />
                             <Route component={SearchLanding} path="/search" />
                             <Route component={EventsLanding} path="/events" />
+                            <Route component={Firewalls} path="/firewalls" />
                             {isDatabasesEnabled && (
                               <Route component={Databases} path="/databases" />
                             )}
                             <Route component={VPC} path="/vpcs" />
                             {isACLPEnabled && (
-                              <Route
-                                component={CloudPulseMetrics}
-                                path="/metrics"
-                              />
-                            )}
-                            {isACLPEnabled && (
-                              <Route
-                                component={CloudPulseAlerts}
-                                path="/alerts"
-                              />
+                              <Route component={CloudPulse} path="/monitor" />
                             )}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}

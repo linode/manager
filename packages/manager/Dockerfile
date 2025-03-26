@@ -32,7 +32,7 @@ RUN apt-get update \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-CMD pnpm start:manager:ci
+CMD yarn start:manager:ci
 
 # e2e-build
 #

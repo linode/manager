@@ -44,8 +44,8 @@ import {
   communityStackScriptFilter,
 } from './utilities';
 
-import type { LinodeCreateFormValues } from '../../utilities';
 import type { StackScriptTabType } from './utilities';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface Props {
   type: StackScriptTabType;
@@ -68,7 +68,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     },
     getValues,
     setValue,
-  } = useFormContext<LinodeCreateFormValues>();
+  } = useFormContext<CreateLinodeRequest>();
 
   const { field } = useController({
     control,
@@ -81,10 +81,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
-  const {
-    data: stackscript,
-    isLoading: isSelectedStackScriptLoading,
-  } = useStackScriptQuery(
+  const { data: stackscript } = useStackScriptQuery(
     params.stackScriptID ?? -1,
     hasPreselectedStackScript
   );
@@ -135,13 +132,11 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           <TableBody>
             {stackscript && (
               <StackScriptSelectionRow
+                disabled
                 isSelected={field.value === stackscript.id}
                 onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
                 stackscript={stackscript}
               />
-            )}
-            {isSelectedStackScriptLoading && (
-              <TableRowLoading columns={3} rows={1} />
             )}
           </TableBody>
         </Table>
@@ -156,17 +151,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             Choose Another StackScript
           </Button>
         </Box>
-        <StackScriptDetailsDialog
-          id={selectedStackScriptId}
-          onClose={() => setSelectedStackScriptId(undefined)}
-          open={Boolean(selectedStackScriptId)}
-        />
       </Stack>
     );
   }
 
   return (
-    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+    <Box sx={{ height: 500, overflow: 'auto' }}>
       <TextField
         InputProps={{
           endAdornment: query && (
@@ -249,7 +239,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <StackScriptDetailsDialog
         id={selectedStackScriptId}
         onClose={() => setSelectedStackScriptId(undefined)}
-        open={Boolean(selectedStackScriptId)}
+        open={selectedStackScriptId !== undefined}
       />
     </Box>
   );

@@ -1,8 +1,9 @@
-import { CircleProgress, ErrorState, Stack, Typography } from '@linode/ui';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
 import { Divider, Grid } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
@@ -58,13 +59,7 @@ export const AlertDetailNotification = React.memo(
         <Typography marginBottom={2} variant="h2">
           Notification Channels
         </Typography>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            alignItems: 'center',
-          }}
-        >
+        <Grid alignItems="center" container spacing={2}>
           {channels.map((notificationChannel, index) => {
             const { channel_type, id, label } = notificationChannel;
             return (

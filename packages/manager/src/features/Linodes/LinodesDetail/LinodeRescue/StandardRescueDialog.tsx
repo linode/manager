@@ -1,26 +1,20 @@
-import {
-  useAllLinodeDisksQuery,
-  useAllVolumesQuery,
-  useGrants,
-  useLinodeQuery,
-  useLinodeRescueMutation,
-  useProfile,
-} from '@linode/queries';
-import {
-  ActionsPanel,
-  Button,
-  Dialog,
-  ErrorState,
-  Notice,
-  Paper,
-  clamp,
-} from '@linode/ui';
-import { usePrevious } from '@linode/utilities';
+import { Button, Dialog, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
+import { assoc, equals } from 'ramda';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useLinodeQuery,
+  useLinodeRescueMutation,
+} from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -119,10 +113,9 @@ export const StandardRescueDialog = (props: Props) => {
   //   open
   // );
 
-  const linodeDisks = disks?.map((disk) => ({
-    ...disk,
-    _id: `disk-${disk.id}`,
-  }));
+  const linodeDisks = disks?.map((disk) =>
+    assoc('_id', `disk-${disk.id}`, disk)
+  );
 
   const filteredVolumes =
     volumes?.filter((volume) => {
@@ -154,13 +147,7 @@ export const StandardRescueDialog = (props: Props) => {
   const [APIError, setAPIError] = React.useState<string>('');
 
   React.useEffect(() => {
-    if (
-      Object.entries(deviceMap).length !==
-        Object.entries(prevDeviceMap ?? {}).length ||
-      Object.entries(deviceMap).some(
-        ([key, value]) => prevDeviceMap?.[key as keyof DeviceMap] !== value
-      )
-    ) {
+    if (!equals(deviceMap, prevDeviceMap)) {
       setCounter(initialCounter);
       setRescueDevices(deviceMap);
       setAPIError('');

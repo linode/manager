@@ -1,8 +1,9 @@
 import { Autocomplete, CustomPopper } from '@linode/ui';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import React from 'react';
 
-import Close from 'src/assets/icons/close.svg';
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';
@@ -142,7 +143,7 @@ export const LinodeSelect = (
             : linodes?.find(value) ?? null
           : mapIdsToDevices<Linode>(value, linodes)
       }
-      ChipProps={{ deleteIcon: <Close /> }}
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={false}
       data-testid="add-linode-autocomplete"
@@ -162,6 +163,7 @@ export const LinodeSelect = (
       onBlur={onBlur}
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
+      popupIcon={<KeyboardArrowDownIcon />}
       sx={sx}
     />
   );

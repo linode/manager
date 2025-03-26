@@ -1,10 +1,10 @@
-import { truncateEnd, truncateMiddle } from '@linode/utilities';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
 import { FolderTableRow } from './FolderTableRow';

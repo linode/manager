@@ -1,25 +1,23 @@
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import type { KubernetesCluster } from '@linode/api-v4';
 import {
-  mockGetClusterPools,
   mockGetClusters,
+  mockGetClusterPools,
   mockGetKubeconfig,
   mockGetKubernetesVersions,
   mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
-import { ui } from 'support/ui';
-import { readDownload } from 'support/util/downloads';
-import { getRegionById } from 'support/util/regions';
-
 import {
   accountFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
 } from 'src/factories';
-
-import type { KubernetesCluster } from '@linode/api-v4';
+import { getRegionById } from 'support/util/regions';
+import { readDownload } from 'support/util/downloads';
+import { ui } from 'support/ui';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('LKE landing page', () => {
   it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
@@ -252,7 +250,7 @@ describe('LKE landing page', () => {
 
     ui.dialog
       .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
+        `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
       )
       .should('be.visible');
 
@@ -266,7 +264,9 @@ describe('LKE landing page', () => {
 
     cy.wait(['@updateCluster', '@getClusters']);
 
-    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
+    ui.dialog
+      .findByTitle('Step 2: Recycle All Cluster Nodes')
+      .should('be.visible');
 
     ui.button
       .findByTitle('Recycle All Nodes')
@@ -321,7 +321,7 @@ describe('LKE landing page', () => {
 
     ui.dialog
       .findByTitle(
-        `Upgrade Kubernetes version to ${newVersion} on ${cluster.label}?`
+        `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
       )
       .should('be.visible');
 
@@ -335,7 +335,9 @@ describe('LKE landing page', () => {
 
     cy.wait(['@updateCluster', '@getClusters']);
 
-    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
+    ui.dialog
+      .findByTitle('Step 2: Recycle All Cluster Nodes')
+      .should('be.visible');
 
     ui.button
       .findByTitle('Recycle All Nodes')

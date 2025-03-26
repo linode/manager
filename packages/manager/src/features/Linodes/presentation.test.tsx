@@ -1,4 +1,4 @@
-import { typeLabelDetails } from './presentation';
+import { displayTypeForKubePoolNode, typeLabelDetails } from './presentation';
 
 describe('Linode presentation helpers', () => {
   describe('type label details', () => {
@@ -25,6 +25,26 @@ describe('Linode presentation helpers', () => {
     it('should return number of CPUs', () => {
       const typedLabel = typeLabelDetails(1024, 2048, 4);
       expect(typedLabel.includes('4CPU'));
+    });
+  });
+
+  describe('Display for Kube pool nodes', () => {
+    it('should return a string with heading, size, and CPUs', () => {
+      expect(displayTypeForKubePoolNode('standard', 4096, 2)).toEqual(
+        'Standard 4 GB, 2 CPUs'
+      );
+    });
+
+    it('should pluralize CPUs correctly', () => {
+      expect(displayTypeForKubePoolNode('standard', 2048, 1)).toEqual(
+        'Standard 2 GB, 1 CPU'
+      );
+    });
+
+    it('should format highmem instances', () => {
+      expect(displayTypeForKubePoolNode('highmem', 2048, 1)).toEqual(
+        'High Memory 2 GB, 1 CPU'
+      );
     });
   });
 });

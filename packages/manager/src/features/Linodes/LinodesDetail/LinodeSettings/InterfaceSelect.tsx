@@ -7,12 +7,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
-import { useVlansQuery } from '@linode/queries';
+import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type {
@@ -310,31 +310,16 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           container
           spacing={isSmallBp ? 0 : 4}
         >
-          <Grid
-            size={{
-              sm: 6,
-              xs: 12,
-            }}
-          >
+          <Grid sm={6} xs={12}>
             {jsxSelectVLAN}
           </Grid>
-          <Grid
-            size={{
-              sm: 6,
-              xs: 12,
-            }}
-          >
+          <Grid sm={6} xs={12}>
             {jsxIPAMForVLAN}
           </Grid>
         </Grid>
       </Grid>
     ) : (
-      <Grid
-        size={{
-          sm: 6,
-          xs: 12,
-        }}
-      >
+      <Grid sm={6} xs={12}>
         <Stack>
           {jsxSelectVLAN}
           {jsxIPAMForVLAN}
@@ -364,16 +349,12 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     <Grid container>
       {fromAddonsPanel ? null : (
         <>
-          <Grid
-            sx={{
-              width: '100%',
-            }}
-          >
+          <Grid width={'100%'}>
             {errors.primaryError && (
               <Notice text={errors.primaryError} variant="error" />
             )}
           </Grid>
-          <Grid size={isSmallBp ? 12 : 6}>
+          <Grid xs={isSmallBp ? 12 : 6}>
             <Autocomplete
               options={
                 // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
@@ -403,7 +384,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
         regionHasVLANs !== false &&
         enclosingJSXForVLANFields(jsxSelectVLAN, jsxIPAMForVLAN)}
       {purpose === 'vpc' && regionHasVPCs !== false && (
-        <Grid size={isSmallBp ? 12 : 6}>
+        <Grid xs={isSmallBp ? 12 : 6}>
           <VPCPanel
             toggleAssignPublicIPv4Address={() =>
               handleIPv4Input(
@@ -432,6 +413,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           />
         </Grid>
       )}
+
       {!fromAddonsPanel && (
         <Divider
           sx={{

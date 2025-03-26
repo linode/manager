@@ -4,11 +4,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import {
-  useAllAccountMaintenanceQuery,
-  useAllLinodesQuery,
-} from '@linode/queries';
+import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { storage } from 'src/utilities/storage';
 

@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type { VPC, VPCIP } from '@linode/api-v4';
 

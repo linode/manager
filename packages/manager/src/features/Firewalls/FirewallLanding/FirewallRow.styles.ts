@@ -1,4 +1,11 @@
 import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
+
+export const StyledDevicesLink = styled(Link, {
+  label: 'StyledDevicesLink',
+})(() => ({
+  display: 'inline-block',
+}));
 
 export const StyledDivWrapper = styled('div', {
   label: 'StyledDivWrapper',

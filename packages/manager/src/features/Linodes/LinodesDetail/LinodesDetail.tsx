@@ -1,21 +1,19 @@
-import { useLinodeQuery } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import { CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
   Redirect,
   Route,
   Switch,
-  useHistory,
   useLocation,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
 
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-
-import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
@@ -39,20 +37,10 @@ export const LinodeDetail = () => {
   const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
   const location = useLocation();
-  const history = useHistory();
 
   const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
     location.search
   );
-
-  const pathname = location.pathname;
-
-  const closeUpgradeInterfacesDialog = () => {
-    const newPath = pathname.includes('upgrade-interfaces')
-      ? pathname.split('/').slice(0, -1).join('/')
-      : pathname;
-    history.replace(newPath);
-  };
 
   const id = Number(linodeId);
 
@@ -94,11 +82,6 @@ export const LinodeDetail = () => {
             <React.Fragment>
               <LinodesDetailHeader />
               <LinodesDetailNavigation />
-              <UpgradeInterfacesDialog
-                linodeId={id}
-                onClose={closeUpgradeInterfacesDialog}
-                open={pathname.includes('upgrade-interfaces')}
-              />
             </React.Fragment>
           )}
         />

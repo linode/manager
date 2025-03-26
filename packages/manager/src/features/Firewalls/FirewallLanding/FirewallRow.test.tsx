@@ -1,4 +1,3 @@
-import { capitalize } from '@linode/utilities';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
@@ -7,6 +6,7 @@ import {
   firewallDeviceFactory,
   firewallFactory,
 } from 'src/factories/firewalls';
+import { capitalize } from 'src/utilities/capitalize';
 import {
   mockMatchMedia,
   renderWithTheme,

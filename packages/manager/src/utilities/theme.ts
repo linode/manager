@@ -1,11 +1,13 @@
-import { usePreferences } from '@linode/queries';
 import { dark, light } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { getAuthToken } from './authentication';
+import { useAuthentication } from 'src/hooks/useAuthentication';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { ThemeName } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
+
+export type ThemeChoice = 'dark' | 'light' | 'system';
 
 export const themes: Record<ThemeName, Theme> = { dark, light };
 
@@ -50,7 +52,7 @@ export const getThemeFromPreferenceValue = (
 };
 
 export const useColorMode = () => {
-  const isAuthenticated = !!getAuthToken().token;
+  const isAuthenticated = !!useAuthentication().token;
 
   const { data: themePreference } = usePreferences(
     (preferences) => preferences?.theme,

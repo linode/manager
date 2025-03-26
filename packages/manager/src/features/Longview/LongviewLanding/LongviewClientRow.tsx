@@ -1,11 +1,16 @@
-import { useGrants } from '@linode/queries';
-import { Paper } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Grant } from '@linode/api-v4/lib/account';
+import { default as Grid } from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import withLongviewClients from 'src/containers/longview.container';
-import withClientStats from 'src/containers/longview.stats.container';
+import { Paper } from '@linode/ui';
+import withLongviewClients, {
+  DispatchProps,
+} from 'src/containers/longview.container';
+import withClientStats, {
+  Props as LVDataProps,
+} from 'src/containers/longview.stats.container';
+import { useGrants } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { CPUGauge } from './Gauges/CPU';
@@ -14,14 +19,9 @@ import { NetworkGauge } from './Gauges/Network';
 import { RAMGauge } from './Gauges/RAM';
 import { StorageGauge } from './Gauges/Storage';
 import { SwapGauge } from './Gauges/Swap';
-import { LongviewActionMenu } from './LongviewActionMenu';
+import { ActionHandlers, LongviewActionMenu } from './LongviewActionMenu';
 import { LongviewClientHeader } from './LongviewClientHeader';
 import { LongviewClientInstructions } from './LongviewClientInstructions';
-
-import type { ActionHandlers } from './LongviewActionMenu';
-import type { Grant } from '@linode/api-v4';
-import type { DispatchProps } from 'src/containers/longview.container';
-import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props extends ActionHandlers {
   clientAPIKey: string;
@@ -105,14 +105,8 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
         spacing={2}
         wrap="nowrap"
       >
-        <Grid container size={11}>
-          <Grid
-            size={{
-              md: 3,
-              xs: 12,
-            }}
-            container
-          >
+        <Grid container xs={11}>
+          <Grid container md={3} xs={12}>
             <LongviewClientHeader
               clientID={clientID}
               clientLabel={clientLabel}
@@ -124,77 +118,45 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
             />
           </Grid>
           <Grid
-            size={{
-              md: 9,
-              xs: 12,
-            }}
             alignItems="center"
             container
             direction="row"
+            md={9}
             mt={-4}
             spacing={2}
+            xs={12}
           >
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <CPUGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
               />
             </Grid>
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <RAMGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
               />
             </Grid>
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <SwapGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
               />
             </Grid>
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <LoadGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
               />
             </Grid>
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <NetworkGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
               />
             </Grid>
-            <Grid
-              size={{
-                sm: 2,
-                xs: 4,
-              }}
-            >
+            <Grid sm={2} xs={4}>
               <StorageGauge
                 clientID={clientID}
                 lastUpdatedError={lastUpdatedError}
@@ -202,7 +164,7 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container justifyContent="flex-end" size={1}>
+        <Grid container justifyContent="flex-end" xs={1}>
           <LongviewActionMenu
             longviewClientID={clientID}
             longviewClientLabel={clientLabel}

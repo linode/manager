@@ -3,8 +3,6 @@ import * as React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import type { SxProps } from '@mui/material/styles';
-
 export interface TableRowEmptyProps {
   /**
    *  The number of columns the empty state should span
@@ -15,10 +13,6 @@ export interface TableRowEmptyProps {
    * @default 'No items to display.'
    */
   message?: JSX.Element | string;
-  /**
-   * The style overrides for the TableCell
-   */
-  sx?: SxProps;
 }
 
 /**
@@ -26,10 +20,10 @@ export interface TableRowEmptyProps {
  * - An empty table should have language that clearly says why the table has no data and what action to take to populate with data.
  */
 export const TableRowEmpty = (props: TableRowEmptyProps) => {
-  const { colSpan, message, sx } = props;
+  const { colSpan, message } = props;
 
   return (
-    <TableRow data-testid={'table-row-empty'} hover={false} sx={sx}>
+    <TableRow data-testid={'table-row-empty'} hover={false}>
       <TableCell
         sx={{
           height: '40px',

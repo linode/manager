@@ -1,26 +1,22 @@
-import {
-  ActionsPanel,
-  CircleProgress,
-  Drawer,
-  Notice,
-  Typography,
-} from '@linode/ui';
-import { isNumber, pluralize } from '@linode/utilities';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
+import { isNumber } from 'src/utilities/isNumber';
+import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import { nodeWarning } from '../../constants';
+import { nodeWarning } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
@@ -130,7 +126,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
@@ -144,6 +139,16 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             handleSubmit();
           }}
         >
+          <div className={classes.section}>
+            <Typography className={classes.summary}>
+              Current pool: $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+              /month ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month)
+            </Typography>
+          </div>
+
           {resizeNodePoolError && (
             <Notice variant="error">
               <ErrorMessage
@@ -155,7 +160,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
           <div className={classes.section}>
             <Typography className={classes.helperText}>
-              Adjust the total number of nodes to resize this node pool.
+              Enter the number of nodes you'd like in this pool:
             </Typography>
             <EnhancedNumberInput
               min={1}
@@ -165,23 +170,14 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </div>
 
           <div className={classes.section}>
-            <Typography className={classes.summary}>
-              Current price: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
-              /month ({pluralize('node', 'nodes', nodePool.count)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month each)
-            </Typography>
-          </div>
-          <div className={classes.section}>
             {/* Renders total pool price/month for N nodes at price per node/month. */}
             <Typography className={classes.summary}>
-              {`Resized price: $${renderMonthlyPriceToCorrectDecimalPlace(
+              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
                 isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
               )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month each)
+              /month)
             </Typography>
           </div>
 

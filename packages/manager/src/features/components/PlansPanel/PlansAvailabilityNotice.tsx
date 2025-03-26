@@ -1,6 +1,8 @@
 import { ListItem, Notice } from '@linode/ui';
-import { formatPlanTypes, getCapabilityFromPlanType } from '@linode/utilities';
 import * as React from 'react';
+
+import { formatPlanTypes } from 'src/utilities/planNotices';
+import { getCapabilityFromPlanType } from 'src/utilities/planNotices';
 
 import {
   StyledFormattedRegionList,

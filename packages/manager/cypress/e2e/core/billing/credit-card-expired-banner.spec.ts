@@ -1,8 +1,7 @@
+import { accountFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-
-import { accountFactory } from 'src/factories';
 
 const creditCardExpiredBannerNotice =
   'Your credit card has expired! Please update your payment details.';

@@ -1,20 +1,20 @@
-import { Paper } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import Grid from '@mui/material/Unstable_Grid2';
 
+import { Paper } from '@linode/ui';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
+import { WithStartAndEnd } from '../../../request.types';
 import { TimeRangeSelect } from '../../../shared/TimeRangeSelect';
+
 import { StyledTypography } from '../CommonStyles.styles';
 import { CPUGraph } from './CPUGraph';
 import { DiskGraph } from './DiskGraph';
 import { LoadGraph } from './LoadGraph';
 import { MemoryGraph } from './MemoryGraph';
 import { NetworkGraph } from './NetworkGraph';
-
-import type { WithStartAndEnd } from '../../../request.types';
-import type { GraphProps } from './types';
+import { GraphProps } from './types';
 
 interface Props {
   clientAPIKey: string;
@@ -51,7 +51,7 @@ export const OverviewGraphs = (props: Props) => {
 
   return (
     <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
-      <StyledGrid size={{ xs: 12 }}>
+      <StyledGrid xs={12}>
         <Grid sx={{ ...itemSpacing }}>
           <StyledTypography variant="h2">
             Resource Allocation History
@@ -75,7 +75,7 @@ export const OverviewGraphs = (props: Props) => {
         </Grid>
       </StyledGrid>
       <Grid sx={{ ...itemSpacing }} />
-      <Grid size={12} sx={{ ...itemSpacing }}>
+      <Grid sx={{ ...itemSpacing }} xs={12}>
         <Paper
           sx={{
             marginBottom: `calc(${theme.spacing(1)} + 3px)`,
@@ -83,57 +83,25 @@ export const OverviewGraphs = (props: Props) => {
           }}
         >
           <Grid
-            sx={{
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
+            alignItems="center"
             container
             direction="row"
+            justifyContent="space-between"
             spacing={4}
           >
-            <Grid
-              size={{
-                sm: 6,
-                xs: 12,
-              }}
-              sx={{ ...itemSpacing }}
-            >
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <CPUGraph {...graphProps} />
             </Grid>
-            <Grid
-              size={{
-                sm: 6,
-                xs: 12,
-              }}
-              sx={{ ...itemSpacing }}
-            >
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <MemoryGraph {...graphProps} />
             </Grid>
-            <Grid
-              size={{
-                sm: 6,
-                xs: 12,
-              }}
-              sx={{ ...itemSpacing }}
-            >
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <NetworkGraph {...graphProps} />
             </Grid>
-            <Grid
-              size={{
-                sm: 6,
-                xs: 12,
-              }}
-              sx={{ ...itemSpacing }}
-            >
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <DiskGraph {...graphProps} />
             </Grid>
-            <Grid
-              size={{
-                sm: 6,
-                xs: 12,
-              }}
-              sx={{ ...itemSpacing }}
-            >
+            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
               <LoadGraph {...graphProps} />
             </Grid>
           </Grid>

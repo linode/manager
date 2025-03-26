@@ -1,9 +1,10 @@
-import { CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { roundTo } from '@linode/utilities';
+import { CircleProgress, Typography } from '@linode/ui';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { roundTo } from 'src/utilities/roundTo';
 
 import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';
 
@@ -30,12 +31,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   const noDataMessage = 'No data to display';
   return (
-    <Box
-      sx={{
-        p: 2,
-        position: 'relative',
-      }}
-    >
+    <Box p={2} position="relative">
       {error ? (
         <Box sx={{ height: '100%' }}>
           <ErrorState errorText={error} />

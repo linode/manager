@@ -2,29 +2,27 @@
  * @file Integration tests for Cloud Manager email bounce banners.
  */
 
+import { Notification } from '@linode/api-v4';
 import { notificationFactory } from '@src/factories/notification';
-import { getProfile } from 'support/api/account';
-import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 import { mockGetNotifications } from 'support/intercepts/events';
-import { mockUpdateProfile } from 'support/intercepts/profile';
+import { getProfile } from 'support/api/account';
 import { ui } from 'support/ui';
+import { mockUpdateProfile } from 'support/intercepts/profile';
 import { randomString } from 'support/util/random';
-
 import { accountFactory } from 'src/factories/account';
-
-import type { Notification } from '@linode/api-v4';
+import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 
 const notifications_billing_email_bounce: Notification[] = [
   notificationFactory.build({
-    severity: 'major',
     type: 'billing_email_bounce',
+    severity: 'major',
   }),
 ];
 
 const notifications_user_email_bounce: Notification[] = [
   notificationFactory.build({
-    severity: 'major',
     type: 'user_email_bounce',
+    severity: 'major',
   }),
 ];
 
@@ -106,8 +104,8 @@ describe('Email bounce banners', () => {
       cy.get('[id="email"]')
         .should('be.visible')
         .should('have.value', userprofileEmail)
-        .clear();
-      cy.focused().type(newEmail);
+        .clear()
+        .type(newEmail);
 
       cy.get('[data-qa-textfield-label="Email"]')
         .parent()

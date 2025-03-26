@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useAccount } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 export const CreditCardExpiredBanner = () => {

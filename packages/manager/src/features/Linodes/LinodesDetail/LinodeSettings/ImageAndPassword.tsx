@@ -1,20 +1,22 @@
-import { Divider } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+
+import { LinodePermissionsError } from '../LinodePermissionsError';
 
 import type { Image } from '@linode/api-v4';
 
 interface Props {
   authorizedUsers: string[];
-  disabled: boolean;
-  imageFieldError: string | undefined;
+  imageFieldError?: string;
+  linodeId: number;
   onImageChange: (image: Image) => void;
   onPasswordChange: (password: string) => void;
   password: string;
-  passwordError: string | undefined;
+  passwordError?: string;
   selectedImage: Image['id'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
@@ -22,8 +24,8 @@ interface Props {
 export const ImageAndPassword = (props: Props) => {
   const {
     authorizedUsers,
-    disabled,
     imageFieldError,
+    linodeId,
     onImageChange,
     onPasswordChange,
     password,
@@ -32,8 +34,16 @@ export const ImageAndPassword = (props: Props) => {
     setAuthorizedUsers,
   } = props;
 
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+
+  const disabled =
+    profile?.restricted &&
+    grants?.linode.find((g) => g.id === linodeId)?.permissions !== 'read_write';
+
   return (
     <React.Fragment>
+      {disabled && <LinodePermissionsError />}
       <ImageSelect
         disabled={disabled}
         errorText={imageFieldError}
@@ -41,18 +51,26 @@ export const ImageAndPassword = (props: Props) => {
         value={selectedImage}
         variant="all"
       />
-      <PasswordInput
-        errorText={passwordError}
-        label="Root Password"
-        onChange={(e) => onPasswordChange(e.target.value)}
-        value={password || ''}
-      />
-      <Divider spacingBottom={20} spacingTop={24} />
-      <UserSSHKeyPanel
+      <StyledAccessPanel
+        disabledReason={
+          disabled
+            ? "You don't have permissions to modify this Linode"
+            : undefined
+        }
         authorizedUsers={authorizedUsers}
         disabled={disabled}
+        error={passwordError}
+        handleChange={onPasswordChange}
+        password={password || ''}
         setAuthorizedUsers={setAuthorizedUsers}
       />
     </React.Fragment>
   );
 };
+
+const StyledAccessPanel = styled(AccessPanel, { label: 'StyledAccessPanel' })(
+  ({ theme }) => ({
+    margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
+    padding: 0,
+  })
+);

@@ -1,15 +1,16 @@
-import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Box, CircleProgress, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getUserTimezone } from 'src/utilities/getUserTimezone';
 

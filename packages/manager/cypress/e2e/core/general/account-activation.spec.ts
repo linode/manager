@@ -11,6 +11,7 @@ describe('account activation', () => {
    */
   it('should render an activation landing page if the customer is not activated', () => {
     cy.intercept('GET', apiMatcher('*'), {
+      statusCode: 403,
       body: {
         errors: [
           {
@@ -19,7 +20,6 @@ describe('account activation', () => {
           },
         ],
       },
-      statusCode: 403,
     });
 
     cy.visitWithLogin('/');

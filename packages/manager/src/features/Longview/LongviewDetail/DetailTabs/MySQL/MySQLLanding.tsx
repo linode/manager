@@ -1,13 +1,16 @@
 import { Box, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import { StyledTypography } from '../CommonStyles.styles';
+import { StyledItemGrid } from '../CommonStyles.styles';
+import {
+  StyledTimeRangeSelect,
+  StyledTypography,
+} from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { MySQLGraphs } from './MySQLGraphs';
 
@@ -80,7 +83,7 @@ export const MySQLLanding = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
-      <Grid size={{ xs: 12 }}>
+      <StyledItemGrid xs={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -92,16 +95,15 @@ export const MySQLLanding = React.memo((props: Props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <TimeRangeSelect
+          <StyledTimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            sx={{ width: 250 }}
           />
         </Box>
-      </Grid>
-      <Grid size={{ xs: 12 }} sx={{ py: 0 }}>
+      </StyledItemGrid>
+      <StyledItemGrid className="py0" xs={12}>
         <MySQLGraphs
           data={data?.Applications?.MySQL}
           end={time.end}
@@ -114,7 +116,7 @@ export const MySQLLanding = React.memo((props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </Grid>
+      </StyledItemGrid>
     </Grid>
   );
 });

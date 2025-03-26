@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { useAccount } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type { Linode } from '@linode/api-v4';

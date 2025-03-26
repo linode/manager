@@ -1,5 +1,5 @@
 import { Box, Divider } from '@linode/ui';
-import { IconButton } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -91,6 +91,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
+  const theme = useTheme();
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -120,10 +122,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
-                sx={(theme) => ({
+                sx={{
                   marginBlockEnd: 'auto',
                   marginTop: { md: theme.spacing(3.5) },
-                })}
+                }}
                 aria-label="Refresh Dashboard Metrics"
                 data-testid="global-refresh"
                 disabled={!selectedDashboard}
@@ -139,10 +141,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       {selectedDashboard && (
         <Grid item xs={12}>
           <Divider
-            sx={(theme) => ({
+            sx={{
               borderColor: theme.color.grey5,
               margin: 0,
-            })}
+            }}
           />
         </Grid>
       )}

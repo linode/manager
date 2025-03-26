@@ -1,6 +1,6 @@
-import { isNotNullOrUndefined } from '@linode/utilities';
+import { Linode, NodeBalancer } from '@linode/api-v4';
 
-import type { Linode, NodeBalancer } from '@linode/api-v4';
+import { isNotNullOrUndefined } from './nullOrUndefined';
 
 type Device = Linode | NodeBalancer;
 

@@ -1,5 +1,4 @@
 import { Stack, Typography } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -10,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';

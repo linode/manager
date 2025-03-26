@@ -26,14 +26,6 @@ describe('Create API Token Drawer', () => {
     getByText('Create');
     getByText('Cancel');
   });
-  it('Should have the Public checkbox as checked by default', () => {
-    const { getByRole } = renderWithTheme(
-      <CreateOAuthClientDrawer {...props} />
-    );
-
-    const checkbox = getByRole('checkbox', { name: 'Public' });
-    expect(checkbox).toBeChecked();
-  });
   it('Should show client side validation errors', async () => {
     const { getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
+import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/FirewallDeviceLanding';
 
 import { EventLink } from '../EventLink';
 

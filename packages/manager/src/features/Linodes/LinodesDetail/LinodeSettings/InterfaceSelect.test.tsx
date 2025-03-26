@@ -2,7 +2,7 @@ import { InterfacePurpose } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { queryClientFactory } from '@linode/queries';
+import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { InterfaceSelect } from './InterfaceSelect';

@@ -1,17 +1,14 @@
-import { createVolume } from '@linode/api-v4/lib/volumes';
+import { createVolume, VolumeRequestPayload } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4';
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptDeleteVolume } from 'support/intercepts/volumes';
-import { ui } from 'support/ui';
-import { SimpleBackoffMethod } from 'support/util/backoff';
-import { cleanUp } from 'support/util/cleanup';
-import { pollVolumeStatus } from 'support/util/polling';
 import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
-
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
-
-import type { Volume } from '@linode/api-v4';
-import type { VolumeRequestPayload } from '@linode/api-v4/lib/volumes';
+import { cleanUp } from 'support/util/cleanup';
+import { SimpleBackoffMethod } from 'support/util/backoff';
+import { pollVolumeStatus } from 'support/util/polling';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -93,8 +90,10 @@ describe('volume delete flow', () => {
           .findByTitle(`Delete Volume ${volume.label}?`)
           .should('be.visible')
           .within(() => {
-            cy.findByLabelText('Volume Label').should('be.visible').click();
-            cy.focused().type(volume.label);
+            cy.findByLabelText('Volume Label')
+              .should('be.visible')
+              .click()
+              .type(volume.label);
 
             ui.buttonGroup
               .findButtonByTitle('Delete')

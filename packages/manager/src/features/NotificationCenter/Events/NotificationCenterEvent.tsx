@@ -8,7 +8,7 @@ import {
   getEventMessage,
   getEventUsername,
 } from 'src/features/Events/utils';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import {
   NotificationEventAvatar,

@@ -2,15 +2,14 @@
  * @file Integration tests for account security questions.
  */
 
+import { profileFactory } from 'src/factories/profile';
+import { securityQuestionsFactory } from 'src/factories/profile';
 import {
   mockGetProfile,
   mockGetSecurityQuestions,
   mockUpdateSecurityQuestions,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-
-import { securityQuestionsFactory } from 'src/factories/profile';
-import { profileFactory } from 'src/factories/profile';
 
 /**
  * Finds the "Security Questions" section on the profile auth page.
@@ -96,16 +95,16 @@ const setSecurityQuestionAnswer = (
   getSecurityQuestion(questionNumber).within(() => {
     cy.findByLabelText(`Question ${questionNumber}`)
       .should('be.visible')
-      .click();
-    cy.focused().type(`${question}{enter}`);
+      .click()
+      .type(`${question}{enter}`);
   });
 
   getSecurityQuestionAnswer(questionNumber).within(() => {
     cy.findByLabelText(`Answer ${questionNumber}`)
       .should('be.visible')
       .should('be.enabled')
-      .click();
-    cy.focused().type(answer);
+      .click()
+      .type(answer);
   });
 };
 

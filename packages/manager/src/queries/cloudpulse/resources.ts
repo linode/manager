@@ -22,7 +22,6 @@ export const useResourcesQuery = (
           label: resource.label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
-          tags: resource.tags,
         };
       });
     },

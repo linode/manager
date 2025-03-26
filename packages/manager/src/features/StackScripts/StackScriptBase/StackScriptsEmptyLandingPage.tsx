@@ -1,5 +1,5 @@
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -15,7 +15,7 @@ import {
 } from './StackScriptsEmptyResourcesData';
 
 export const StackScriptsEmptyLandingState = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const isStackScriptCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_stackscripts',
@@ -33,7 +33,7 @@ export const StackScriptsEmptyLandingState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create StackScript',
             });
-            navigate({ to: '/stackscripts/create' });
+            history.push('/stackscripts/create');
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',

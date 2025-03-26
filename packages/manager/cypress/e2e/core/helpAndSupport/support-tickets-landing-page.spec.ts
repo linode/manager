@@ -1,34 +1,32 @@
-import { linodeConfigInterfaceFactory } from '@linode/utilities';
-import { mockGetLinodeConfigs } from 'support/intercepts/configs';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockGetLinodeDetails,
-  mockGetLinodeDisks,
-  mockGetLinodeVolumes,
-} from 'support/intercepts/linodes';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import {
-  mockGetSupportTicket,
-  mockGetSupportTicketReplies,
-  mockGetSupportTickets,
-} from 'support/intercepts/support';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   randomItem,
   randomLabel,
   randomNumber,
   randomPhrase,
 } from 'support/util/random';
-
 import {
   entityFactory,
-  linodeConfigFactory,
   linodeFactory,
   supportTicketFactory,
   volumeFactory,
+  linodeConfigFactory,
+  LinodeConfigInterfaceFactory,
 } from 'src/factories';
+import {
+  mockGetSupportTicket,
+  mockGetSupportTickets,
+  mockGetSupportTicketReplies,
+} from 'support/intercepts/support';
 import { SEVERITY_LABEL_MAP } from 'src/features/Support/SupportTickets/constants';
-
-import type { Config, Disk } from '@linode/api-v4';
+import { mockGetLinodeConfigs } from 'support/intercepts/configs';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodeVolumes,
+  mockGetLinodeDisks,
+} from 'support/intercepts/linodes';
+import { Config, Disk } from '@linode/api-v4';
 
 describe('support tickets landing page', () => {
   /*
@@ -71,19 +69,19 @@ describe('support tickets landing page', () => {
   it('lists support tickets in the table as expected', () => {
     // TODO Integrate this test with the above test when feature flag goes away.
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: randomLabel(),
     });
 
     const mockAnotherTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'open',
-      summary: randomLabel(),
     });
 
     const mockTickets = [mockTicket, mockAnotherTicket];
@@ -135,11 +133,11 @@ describe('support tickets landing page', () => {
   it("can navigate to the ticket's page when clicking on the ticket subject", () => {
     // TODO Integrate this test with the above test when feature flag goes away.
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
       id: randomNumber(),
+      summary: randomLabel(),
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: randomLabel(),
     });
 
     // Get severity label for numeric severity level.
@@ -188,7 +186,7 @@ describe('support tickets landing page', () => {
       label: `${randomLabel()}-linode`,
     });
     const mockVolume = volumeFactory.build();
-    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });
@@ -201,22 +199,22 @@ describe('support tickets landing page', () => {
     });
     const mockDisks: Disk[] = [
       {
-        created: '2020-08-21T17:26:14',
-        filesystem: 'ext4',
         id: 44311273,
-        label: 'Debian 10 Disk',
-        size: 81408,
         status: 'ready',
+        label: 'Debian 10 Disk',
+        created: '2020-08-21T17:26:14',
         updated: '2020-08-21T17:26:30',
+        filesystem: 'ext4',
+        size: 81408,
       },
       {
-        created: '2020-08-21T17:26:14',
-        filesystem: 'swap',
         id: 44311274,
-        label: '512 MB Swap Image',
-        size: 512,
         status: 'ready',
+        label: '512 MB Swap Image',
+        created: '2020-08-21T17:26:14',
         updated: '2020-08-21T17:26:31',
+        filesystem: 'swap',
+        size: 512,
       },
     ];
 
@@ -228,12 +226,12 @@ describe('support tickets landing page', () => {
     });
 
     const mockTicket = supportTicketFactory.build({
-      description: randomPhrase(),
-      entity: mockEntity,
       id: randomNumber(),
+      entity: mockEntity,
+      summary: `${randomLabel()}-support-ticket`,
+      description: randomPhrase(),
       severity: randomItem([1, 2, 3]),
       status: 'new',
-      summary: `${randomLabel()}-support-ticket`,
     });
 
     // Get severity label for numeric severity level.

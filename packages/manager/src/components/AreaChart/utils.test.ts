@@ -1,4 +1,4 @@
-import { determinePower } from '@linode/utilities';
+import { determinePower } from 'src/utilities/unitConversions';
 
 import {
   generate12HourTicks,
@@ -9,7 +9,7 @@ import {
 } from './utils';
 
 import type { DataSet } from './AreaChart';
-import type { StorageSymbol } from '@linode/utilities';
+import type { StorageSymbol } from 'src/utilities/unitConversions';
 
 const timestamp = 1704204000000;
 

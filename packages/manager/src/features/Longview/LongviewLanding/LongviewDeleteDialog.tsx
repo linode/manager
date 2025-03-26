@@ -1,9 +1,9 @@
-import { ActionsPanel } from '@linode/ui';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { APIError } from '@linode/api-v4/lib/types';
 interface Props {
   closeDialog: () => void;
   deleteClient: (id: number) => Promise<{}>;

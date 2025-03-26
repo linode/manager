@@ -1,7 +1,5 @@
-import { useRegionsQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
-import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -14,6 +12,9 @@ import {
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { Region } from '@linode/api-v4';
 import type {
@@ -72,65 +73,35 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <StyledGridContainer container size={{ md: 11 }} spacing={0}>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
+      <StyledGridContainer container md={11} spacing={0}>
+        <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Status</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={2} md={4} xs={8}>
           <DatabaseStatusDisplay database={database} events={events} />
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 0.9,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={0.9} md={2} xs={4}>
           <StyledLabelTypography>Plan</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 2.2, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={2.2} md={4} xs={8}>
           {formatStorageUnits(type.label)}
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Nodes</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 1.7, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={1.7} md={4} xs={8}>
           {configuration}
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1.7,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={1.7} md={2} xs={4}>
           <StyledLabelTypography>CPUs</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 1.5, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={1.5} md={4} xs={8}>
           {type.vcpus}
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={2} md={4} xs={8}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -139,42 +110,24 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             databaseVersion={database.version}
           />
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 0.9,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={0.9} md={2} xs={4}>
           <StyledLabelTypography>Region</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 2.2, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={2.2} md={4} xs={8}>
           {region?.label ?? database.region}
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>RAM</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 1.7, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={1.7} md={4} xs={8}>
           {type.memory / 1024} GB
         </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1.7,
-            md: 2,
-            xs: 4,
-          }}
-        >
+        <Grid lg={1.7} md={2} xs={4}>
           <StyledLabelTypography>
             {database.total_disk_size_gb ? 'Total Disk Size' : 'Storage'}
           </StyledLabelTypography>
         </Grid>
-        <StyledValueGrid size={{ lg: 1.5, md: 4, xs: 8 }}>
+        <StyledValueGrid lg={1.5} md={4} xs={8}>
           {database.total_disk_size_gb ? (
             <>
               {database.total_disk_size_gb} GB

@@ -1,8 +1,7 @@
-import { useLinodeFirewallsQuery } from '@linode/queries';
-import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
+import { Button, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { Drawer } from 'src/components/Drawer';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -12,6 +11,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
+import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 
 import { AddFirewallForm } from './AddFirewallForm';
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
@@ -120,7 +120,6 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         open={isRemoveDeviceDialogOpen}
       />
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={() => setIsAddFirewalDrawerOpen(false)}
         open={isAddFirewallDrawerOpen}
         title="Add Firewall"

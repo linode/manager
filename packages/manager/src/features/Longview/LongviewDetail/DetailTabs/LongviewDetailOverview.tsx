@@ -1,11 +1,12 @@
 import { Paper } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { LongviewPackageDrawer } from '../../LongviewPackageDrawer';
 import { ActiveConnections } from './ActiveConnections/ActiveConnections';
+import { StyledItemGrid } from './CommonStyles.styles';
 import { GaugesSection } from './GaugesSection';
 import { IconSection } from './IconSection';
 import { ListeningServices } from './ListeningServices/ListeningServices';
@@ -73,14 +74,14 @@ export const LongviewDetailOverview = (props: Props) => {
     <React.Fragment>
       <DocumentTitleSegment segment="Overview" />
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }}>
+        <StyledItemGrid xs={12}>
           <Paper>
-            <Grid
+            <StyledItemGrid
               alignItems="flex-start"
               container
               justifyContent="space-between"
-              size={{ xs: 12 }}
               spacing={0}
+              xs={12}
             >
               <IconSection
                 client={client}
@@ -98,20 +99,20 @@ export const LongviewDetailOverview = (props: Props) => {
                 topProcessesError={topProcessesError}
                 topProcessesLoading={topProcessesLoading}
               />
-            </Grid>
+            </StyledItemGrid>
           </Paper>
-        </Grid>
+        </StyledItemGrid>
         <OverviewGraphs
           clientAPIKey={clientAPIKey}
           lastUpdated={lastUpdated}
           lastUpdatedError={!!lastUpdatedError}
           timezone={timezone}
         />
-        <Grid
+        <StyledItemGrid
           container
           justifyContent="space-between"
-          size={{ xs: 12 }}
           sx={{ paddingLeft: 0, paddingRight: 0 }}
+          xs={12}
         >
           <ListeningServices
             services={listeningPortsData.Ports?.listening ?? []}
@@ -123,7 +124,7 @@ export const LongviewDetailOverview = (props: Props) => {
             connectionsError={portsError}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
           />
-        </Grid>
+        </StyledItemGrid>
       </Grid>
       <LongviewPackageDrawer
         clientID={clientID}

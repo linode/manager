@@ -2,17 +2,16 @@
  * @file Integration tests for Cloud Manager account login history flows.
  */
 
-import {
-  loginEmptyStateMessageText,
-  loginHelperText,
-} from 'support/constants/account';
-import { mockGetAccountLogins } from 'support/intercepts/account';
-import { mockGetProfile } from 'support/intercepts/profile';
-
 import { profileFactory } from 'src/factories';
 import { accountLoginFactory } from 'src/factories/accountLogin';
-import { PARENT_USER } from 'src/features/Account/constants';
 import { formatDate } from 'src/utilities/formatDate';
+import { mockGetAccountLogins } from 'support/intercepts/account';
+import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  loginHelperText,
+  loginEmptyStateMessageText,
+} from 'support/constants/account';
+import { PARENT_USER } from 'src/features/Account/constants';
 
 describe('Account login history', () => {
   /*
@@ -23,18 +22,18 @@ describe('Account login history', () => {
    */
   it('users can view the login history table', () => {
     const mockProfile = profileFactory.build({
+      username: 'mock-user',
       restricted: false,
       user_type: 'default',
-      username: 'mock-user',
     });
     const mockFailedLogin = accountLoginFactory.build({
-      restricted: true,
       status: 'failed',
       username: 'mock-restricted-user',
+      restricted: true,
     });
     const mockSuccessfulLogin = accountLoginFactory.build({
-      restricted: false,
       status: 'successful',
+      restricted: false,
     });
 
     mockGetProfile(mockProfile).as('getProfile');
@@ -96,9 +95,9 @@ describe('Account login history', () => {
    */
   it('restricted child users cannot view login history', () => {
     const mockProfile = profileFactory.build({
+      username: 'mock-child-user',
       restricted: true,
       user_type: 'child',
-      username: 'mock-child-user',
     });
 
     mockGetProfile(mockProfile).as('getProfile');
@@ -122,9 +121,9 @@ describe('Account login history', () => {
    */
   it('unrestricted child users can view login history', () => {
     const mockProfile = profileFactory.build({
+      username: 'mock-child-user',
       restricted: false,
       user_type: 'child',
-      username: 'mock-child-user',
     });
 
     mockGetProfile(mockProfile).as('getProfile');
@@ -145,9 +144,9 @@ describe('Account login history', () => {
    */
   it('restricted users cannot view login history', () => {
     const mockProfile = profileFactory.build({
+      username: 'mock-restricted-user',
       restricted: true,
       user_type: 'default',
-      username: 'mock-restricted-user',
     });
 
     mockGetProfile(mockProfile).as('getProfile');
@@ -173,19 +172,19 @@ describe('Account login history', () => {
    */
   it('shows each login in the Login History landing page as expected', () => {
     const mockProfile = profileFactory.build({
+      username: 'mock-user',
       restricted: false,
       user_type: 'default',
-      username: 'mock-user',
     });
     const mockFailedLogin = accountLoginFactory.build({
-      restricted: false,
       status: 'failed',
       username: 'mock-user-failed',
+      restricted: false,
     });
     const mockSuccessfulLogin = accountLoginFactory.build({
-      restricted: false,
       status: 'successful',
       username: 'mock-user-successful',
+      restricted: false,
     });
 
     mockGetProfile(mockProfile).as('getProfile');

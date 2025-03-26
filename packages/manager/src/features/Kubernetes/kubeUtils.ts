@@ -1,12 +1,13 @@
-import { useAccount, useAccountBetaQuery } from '@linode/queries';
-import { isFeatureEnabledV2, sortByVersion } from '@linode/utilities';
-
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+import { useAccountBetaQuery } from 'src/queries/account/betas';
 import {
   useKubernetesTieredVersionsQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getBetaStatus } from 'src/utilities/betaUtils';
+import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
 import type {
@@ -16,7 +17,11 @@ import type {
   KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
+import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
+export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
+export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
+export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
 
 interface ClusterData {
   CPU: number;
@@ -50,10 +55,14 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
+export const getDescriptionForCluster = (
+  cluster: KubernetesCluster,
+  regions: Region[]
+) => {
+  const region = regions.find((r) => r.id === cluster.region);
   const description: string[] = [
     `Kubernetes ${cluster.k8s_version}`,
-    cluster.region,
+    region?.label ?? cluster.region,
   ];
 
   if (cluster.control_plane.high_availability) {

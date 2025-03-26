@@ -1,19 +1,17 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetBucketAccess,
   mockGetBucketsForRegion,
   mockGetObjectStorageEndpoints,
+  mockGetBucketAccess,
 } from 'support/intercepts/object-storage';
-
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
   regionFactory,
 } from 'src/factories';
-
-import type { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
+import { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 describe('Object Storage Gen 2 bucket details tabs', () => {
   beforeEach(() => {

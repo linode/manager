@@ -15,7 +15,6 @@ describe('AlertsResourcesFilterRenderer', () => {
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
       regionOptions: [],
-      tagOptions: [],
     });
     const enginePropKeys = Object.keys(engineProps);
     expect(enginePropKeys.includes('handleFilterChange')).toBeTruthy();
@@ -37,7 +36,6 @@ describe('AlertsResourcesFilterRenderer', () => {
       handleFilterChange: handleFilterChangeMock,
       handleFilteredRegionsChange: handleFilterChangeMock,
       regionOptions: [],
-      tagOptions: [],
     });
     const regionPropKeys = Object.keys(regionProps);
     expect(regionPropKeys.includes('handleFilterChange')).toBeFalsy();
@@ -52,26 +50,5 @@ describe('AlertsResourcesFilterRenderer', () => {
     );
 
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
-
-    const tagProps = getAlertResourceFilterProps({
-      filterKey: 'tags',
-      handleFilterChange: handleFilterChangeMock,
-      handleFilteredRegionsChange: handleFilterChangeMock,
-      regionOptions: [],
-      tagOptions: ['tag1', 'tag2'],
-    });
-    const tagPropKeys = Object.keys(tagProps);
-    expect(tagPropKeys.includes('handleFilterChange')).toBeTruthy();
-    expect(tagPropKeys.includes('handleSelectionChange')).toBeFalsy();
-
-    // Check for region filter
-    renderWithTheme(
-      <AlertResourcesFilterRenderer
-        component={serviceToFiltersMap['linode'][1].component}
-        componentProps={tagProps}
-      />
-    );
-
-    expect(getByPlaceholderText('Select Tags')).toBeInTheDocument();
   });
 });

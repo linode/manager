@@ -16,7 +16,7 @@ import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
-import type { Order } from '@linode/utilities';
+import type { Order } from 'src/hooks/useOrder';
 
 export interface AlertInstance {
   /**
@@ -40,11 +40,6 @@ export interface AlertInstance {
    * The region associated with the instance
    */
   region: string;
-
-  /**
-   * The list of tags associated with the instance
-   */
-  tags?: string[];
 }
 
 export interface DisplayAlertResourceProp {

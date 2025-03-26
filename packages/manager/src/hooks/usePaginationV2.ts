@@ -1,9 +1,12 @@
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
-import type { RegisteredRouter, ToSubOptions } from '@tanstack/react-router';
+import type { ToSubOptions } from '@tanstack/react-router';
 import type { TableSearchParams } from 'src/routes/types';
 
 export interface PaginationPropsV2 {
@@ -78,7 +81,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     : preferredPageSize;
 
   const setPage = (page: number) => {
-    navigate<RegisteredRouter, string, string>({
+    navigate({
       search: (prev: TableSearchParams & T) => ({
         ...setTableSearchParams(prev),
         ...(searchParams?.(prev) ?? {}),
@@ -90,7 +93,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   };
 
   const setPageSize = (pageSize: number) => {
-    navigate<RegisteredRouter, string, string>({
+    navigate({
       search: (prev: TableSearchParams & T) => ({
         ...setTableSearchParams(prev),
         ...(searchParams?.(prev) ?? {}),

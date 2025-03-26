@@ -3,26 +3,25 @@
  */
 
 import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockDeletePlacementGroup,
-  mockDeletePlacementGroupError,
   mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
+  mockDeletePlacementGroupError,
   mockUnassignPlacementGroupLinodesError,
 } from 'support/intercepts/placement-groups';
-import { ui } from 'support/ui';
-import { buildArray } from 'support/util/arrays';
-import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-
 import {
   accountFactory,
   linodeFactory,
   placementGroupFactory,
 } from 'src/factories';
 import { headers as emptyStatePageHeaders } from 'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLandingEmptyStateData';
+import { randomLabel, randomNumber } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
+import { buildArray } from 'support/util/arrays';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 
 // Mock an account with 'Placement Group' capability.
 const mockAccount = accountFactory.build();
@@ -57,10 +56,10 @@ describe('Placement Group deletion', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
@@ -144,8 +143,8 @@ describe('Placement Group deletion', () => {
     // Linodes that are assigned to the Placement Group being deleted.
     const mockPlacementGroupLinodes = buildArray(3, () =>
       linodeFactory.build({
-        id: randomNumber(),
         label: randomLabel(),
+        id: randomNumber(),
         region: mockPlacementGroupRegion.id,
       })
     );
@@ -153,22 +152,22 @@ describe('Placement Group deletion', () => {
     // Placement Group that will be deleted.
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: mockPlacementGroupLinodes.map((linode) => ({
-        is_compliant: true,
         linode_id: linode.id,
+        is_compliant: true,
       })),
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     // Second unrelated Placement Group to verify landing page content after deletion.
     const secondMockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     mockGetLinodes(mockPlacementGroupLinodes).as('getLinodes');
@@ -318,10 +317,10 @@ describe('Placement Group deletion', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
@@ -420,8 +419,8 @@ describe('Placement Group deletion', () => {
     // Linodes that are assigned to the Placement Group being deleted.
     const mockPlacementGroupLinodes = buildArray(3, () =>
       linodeFactory.build({
-        id: randomNumber(),
         label: randomLabel(),
+        id: randomNumber(),
         region: mockPlacementGroupRegion.id,
       })
     );
@@ -429,22 +428,22 @@ describe('Placement Group deletion', () => {
     // Placement Group that will be deleted.
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: mockPlacementGroupLinodes.map((linode) => ({
-        is_compliant: true,
         linode_id: linode.id,
+        is_compliant: true,
       })),
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     // Second unrelated Placement Group to verify landing page content after deletion.
     const secondMockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
     });
 
     mockGetLinodes(mockPlacementGroupLinodes).as('getLinodes');

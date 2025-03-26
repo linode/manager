@@ -1,24 +1,23 @@
-import { latestKubernetesVersion } from 'support/constants/lke';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockGetApiEndpoints,
-  mockGetCluster,
-  mockGetClusterPools,
-  mockGetControlPlaneACL,
-  mockGetDashboardUrl,
-  mockGetKubeconfig,
-  mockGetKubernetesVersions,
-  mockUpdateCluster,
-} from 'support/intercepts/lke';
-import { ui } from 'support/ui';
-import { readDownload } from 'support/util/downloads';
-import { randomLabel } from 'support/util/random';
-
 import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   nodePoolFactory,
 } from 'src/factories';
+import { latestKubernetesVersion } from 'support/constants/lke';
+import {
+  mockGetCluster,
+  mockGetKubeconfig,
+  mockGetKubernetesVersions,
+  mockGetClusterPools,
+  mockGetDashboardUrl,
+  mockGetApiEndpoints,
+  mockGetControlPlaneACL,
+  mockUpdateCluster,
+} from 'support/intercepts/lke';
+import { randomLabel } from 'support/util/random';
+import { readDownload } from 'support/util/downloads';
+import { ui } from 'support/ui';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockKubeconfigContents = '---'; // Valid YAML.
 const mockKubeconfigResponse = {
@@ -89,8 +88,8 @@ describe('LKE summary page', () => {
       },
     });
     const mockCluster = kubernetesClusterFactory.build({
-      control_plane: mockACL,
       k8s_version: latestKubernetesVersion,
+      control_plane: mockACL,
     });
     const tag = randomLabel();
     const mockClusterUpdated = {
@@ -121,8 +120,8 @@ describe('LKE summary page', () => {
     });
     cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
       .should('be.visible')
-      .clear();
-    cy.focused().type(`${tag}`);
+      .clear()
+      .type(`${tag}`);
     cy.findByText(`Create "${tag}"`).should('be.visible').click();
 
     // Confirms that a put request is sent
@@ -151,8 +150,8 @@ describe('LKE summary page', () => {
 
     const tagNew = randomLabel();
     const mockCluster = kubernetesClusterFactory.build({
-      control_plane: mockACL,
       k8s_version: latestKubernetesVersion,
+      control_plane: mockACL,
       tags: tagsExisting,
     });
 
@@ -192,8 +191,8 @@ describe('LKE summary page', () => {
         cy.findByText('Add a tag').click();
         cy.get('[data-qa-autocomplete="Create or Select a Tag"]')
           .should('be.visible')
-          .clear();
-        cy.focused().type(`${tagNew}`);
+          .clear()
+          .type(`${tagNew}`);
         cy.findByText(`Create "${tagNew}"`).should('be.visible').click();
 
         // Confirms that a put request is sent
@@ -221,8 +220,8 @@ describe('LKE summary page', () => {
     });
     const tagExisting = randomLabel();
     const mockCluster = kubernetesClusterFactory.build({
-      control_plane: mockACL,
       k8s_version: latestKubernetesVersion,
+      control_plane: mockACL,
       tags: [tagExisting],
     });
 
@@ -274,8 +273,8 @@ describe('LKE summary page', () => {
     });
     const tagsExisting = buildTags(2);
     const mockCluster = kubernetesClusterFactory.build({
-      control_plane: mockACL,
       k8s_version: latestKubernetesVersion,
+      control_plane: mockACL,
       tags: tagsExisting,
     });
 

@@ -1,9 +1,9 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface DNSResolversProps {
   region: string;
@@ -55,7 +55,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           paddingBottom: 0,
           paddingTop: 0,
         }}
-        size={12}
+        xs={12}
       >
         <Typography>
           <strong>DNS Resolvers</strong>
@@ -66,7 +66,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           gridArea: 'two',
           paddingRight: theme.spacing(2),
         }}
-        size="auto"
+        xs="auto"
       >
         {renderIPResolvers(v4Resolvers)}
       </Grid>
@@ -75,7 +75,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           gridArea: 'three',
           paddingLeft: theme.spacing(2),
         }}
-        size="auto"
+        xs="auto"
       >
         {renderIPResolvers(v6Resolvers)}
       </Grid>

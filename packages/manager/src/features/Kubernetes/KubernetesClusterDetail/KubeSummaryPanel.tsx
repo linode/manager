@@ -1,15 +1,10 @@
-import {
-  ActionsPanel,
-  Box,
-  Stack,
-  StyledActionButton,
-  Typography,
-} from '@linode/ui';
+import { Box, Stack, StyledActionButton, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
@@ -20,7 +15,7 @@ import {
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useAccount } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
@@ -215,7 +210,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
-        clusterTier={cluster.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog

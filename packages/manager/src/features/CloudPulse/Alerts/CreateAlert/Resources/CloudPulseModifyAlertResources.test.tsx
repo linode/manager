@@ -42,8 +42,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -77,7 +77,6 @@ describe('CreateAlertResources component tests', () => {
     const {
       getByPlaceholderText,
       getByTestId,
-      queryByTestId,
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: <CloudPulseModifyAlertResources name="entity_ids" />,
       useFormOptions: {
@@ -135,41 +134,5 @@ describe('CreateAlertResources component tests', () => {
       checkedAttribute,
       'false'
     );
-    // no error notice should be there in happy path
-    expect(queryByTestId('alert_message_notice')).not.toBeInTheDocument();
-  });
-
-  it('should be able to see the error notice if the forms field state has error', () => {
-    const {
-      getAllByTestId,
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <CloudPulseModifyAlertResources name="entity_ids" />,
-      options: {
-        flags: {
-          aclpAlertServiceTypeConfig: [
-            {
-              maxResourceSelectionCount: 2,
-              serviceType: 'linode',
-            },
-          ],
-        },
-      },
-      useFormOptions: {
-        defaultValues: {
-          entity_ids: ['1', '2', '3'],
-          serviceType: 'linode',
-        },
-        errors: {
-          entity_ids: {
-            message: 'More than 2 resources selected',
-          },
-        },
-      },
-    });
-
-    expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
-    expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();
-    expect(getByText('More than 2 resources selected')).toBeInTheDocument();
   });
 });

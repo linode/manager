@@ -1,10 +1,4 @@
-import {
-  useAllLinodesQuery,
-  usePlacementGroupQuery,
-  usePlacementGroupsQuery,
-  useRegionsQuery,
-} from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { CircleProgress } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
   useLocation,
@@ -15,6 +9,7 @@ import {
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -30,6 +25,12 @@ import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import {
+  usePlacementGroupQuery,
+  usePlacementGroupsQuery,
+} from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {

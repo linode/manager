@@ -91,30 +91,28 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
   const filter = xFilter ? JSON.parse(xFilter) : {};
   const orderBy = filter['+order_by'] || 'id';
   const order = filter['+order'] || 'asc';
-
-  const propertyFilters = Object.entries(filter).filter(
-    ([key, value]) => !key.startsWith('+') && typeof value !== 'object'
+  const containsFilters = Object.entries(filter).filter(
+    ([_, value]) =>
+      typeof value === 'object' && value !== null && '+contains' in value
   );
 
-  // Filter the data based on both types of filters
-  const filteredData = dataArray.filter((item) => {
-    // Special case for 'global' region
-    return propertyFilters.every(([key, value]) => {
-      if (
-        (key === 'region_applied' || key === 's3_endpoint') &&
-        value === 'global'
-      ) {
-        return true;
-      }
-
-      return (
-        typeof item === 'object' &&
-        item !== null &&
-        key in item &&
-        item[key] === value
-      );
-    });
-  });
+  // Filter the data based on the contains X-Filter
+  const filteredData =
+    containsFilters.length > 0
+      ? dataArray.filter((item) =>
+          containsFilters.every(([key, value]) => {
+            const searchValue = (value as { '+contains': string })[
+              '+contains'
+            ].toLowerCase();
+            return (
+              typeof item === 'object' &&
+              item !== null &&
+              key in item &&
+              String(item[key]).toLowerCase().includes(searchValue)
+            );
+          })
+        )
+      : dataArray;
 
   // Sort the data based on the order_by X-Filter
   // with type guards to ensure that the data is of the expected type

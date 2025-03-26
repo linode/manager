@@ -1,6 +1,6 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const preferencesFactory = Factory.Sync.makeFactory<ManagerPreferences>({
   backups_cta_dismissed: true,

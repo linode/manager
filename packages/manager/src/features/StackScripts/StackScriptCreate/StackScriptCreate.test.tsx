@@ -4,18 +4,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
 
-const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn(() => vi.fn()),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useNavigate: queryMocks.useNavigate,
-  };
-});
-
 describe('StackScriptCreate', () => {
   it('should render header, inputs, and buttons', () => {
     const { getByLabelText, getByText } = renderWithTheme(

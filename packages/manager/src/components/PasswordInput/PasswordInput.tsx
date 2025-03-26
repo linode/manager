@@ -13,7 +13,7 @@ interface Props extends TextFieldProps {
   hideValidation?: boolean;
 }
 
-export const PasswordInput = React.memo((props: Props) => {
+const PasswordInput = (props: Props) => {
   const {
     disabledReason,
     hideStrengthLabel,
@@ -42,7 +42,7 @@ export const PasswordInput = React.memo((props: Props) => {
       )}
     </Stack>
   );
-});
+};
 
 const maybeStrength = (value: Props['value']) => {
   if (!value) {
@@ -51,3 +51,5 @@ const maybeStrength = (value: Props['value']) => {
 
   return zxcvbn(String(value)).score;
 };
+
+export default React.memo(PasswordInput);

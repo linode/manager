@@ -23,18 +23,13 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
-vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
-  };
-});
+vi.mock('src/queries/databases/databases', () => ({
+  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+}));
 
 describe('DatabaseSummaryClusterConfiguration', () => {
   it('should display correctly for default db', async () => {

@@ -4,11 +4,9 @@ import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeConfigsQuery,
-  useDeleteLinodeMutation,
-  vpcQueries,
-} from '@linode/queries';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useDeleteLinodeMutation } from 'src/queries/linodes/linodes';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 

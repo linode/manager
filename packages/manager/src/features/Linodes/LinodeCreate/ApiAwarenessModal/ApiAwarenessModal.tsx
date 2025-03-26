@@ -1,8 +1,9 @@
-import { ActionsPanel, Dialog, Typography } from '@linode/ui';
+import { Dialog, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';

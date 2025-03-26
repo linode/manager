@@ -39,5 +39,5 @@ export const ErrorMessage = (props: Props) => {
     return <LinodeResizeAllocationError />;
   }
 
-  return <Typography py={1}>{message}</Typography>;
+  return <Typography py={2}>{message}</Typography>;
 };

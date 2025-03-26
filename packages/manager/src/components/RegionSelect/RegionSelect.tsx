@@ -1,11 +1,10 @@
 import { Autocomplete } from '@linode/ui';
-import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
@@ -49,7 +48,6 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
-    sx,
     tooltipText,
     value,
     width,
@@ -124,7 +122,6 @@ export const RegionSelect = <
           );
         }}
         sx={(theme) => ({
-          ...sx,
           [theme.breakpoints.up('md')]: {
             width: tooltipText ? '458px' : '416px',
           },
@@ -135,19 +132,9 @@ export const RegionSelect = <
             endAdornment:
               isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
             required,
-            startAdornment:
-              selectedRegion &&
-              (selectedRegion.id === 'global' ? (
-                <PublicIcon
-                  sx={{
-                    height: '24px',
-                    mr: 1,
-                    width: '24px',
-                  }}
-                />
-              ) : (
-                <Flag country={selectedRegion?.country} mr={1} />
-              )),
+            startAdornment: selectedRegion && (
+              <Flag country={selectedRegion?.country} mr={1} />
+            ),
           },
           tooltipText,
         }}
@@ -162,10 +149,10 @@ export const RegionSelect = <
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}
-        loading={accountAvailabilityLoading || props.loading}
+        loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
         noMarginTop={noMarginTop}
-        noOptionsText={props.noOptionsText ?? 'No results'}
+        noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}

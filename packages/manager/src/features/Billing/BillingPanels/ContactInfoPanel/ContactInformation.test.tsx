@@ -29,8 +29,8 @@ const props = {
   zip: '19106',
 };
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual<any>('src/queries/profile/profile');
   return {
     ...actual,
     useGrants: queryMocks.useGrants,

@@ -1,7 +1,7 @@
-import { pickRandom } from '@linode/utilities';
-import { Factory } from '@linode/utilities';
+import { AccountAvailability } from '@linode/api-v4';
+import Factory from 'src/factories/factoryProxy';
 
-import type { AccountAvailability } from '@linode/api-v4';
+import { pickRandom } from 'src/utilities/random';
 
 export const accountAvailabilityFactory = Factory.Sync.makeFactory<AccountAvailability>(
   {

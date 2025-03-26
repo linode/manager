@@ -8,7 +8,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { IAM_DOCS_LINK } from './Shared/constants';
 
 const Users = React.lazy(() =>
   import('./Users/UsersTable/Users').then((module) => ({
@@ -53,7 +52,8 @@ export const IdentityAccessLanding = React.memo(() => {
     breadcrumbProps: {
       pathname: '/iam',
     },
-    docsLink: IAM_DOCS_LINK,
+    docsLink:
+      'https://www.linode.com/docs/platform/identity-access-management/',
     entity: 'Identity and Access',
     title: 'Identity and Access',
   };

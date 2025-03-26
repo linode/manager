@@ -1,8 +1,7 @@
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -10,9 +9,10 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
+import { pluralize } from 'src/utilities/pluralize';
 import {
   HA_PRICE_ERROR_MESSAGE,
   UNKNOWN_PRICE,
@@ -132,12 +132,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const kubeSpecItem = (spec: string, idx: number) => {
     return (
       <Grid
+        alignItems="center"
         className={classes.item}
         key={`spec-${idx}`}
         wrap="nowrap"
-        sx={{
-          alignItems: 'center',
-        }}
       >
         <Grid className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
@@ -148,30 +146,14 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
 
   return (
     <Grid
+      columnGap={matchesColGapBreakpointDown ? 2 : 0}
       container
       direction="row"
-      size={{
-        lg: 3,
-        xs: 12,
-      }}
-      sx={{
-        columnGap: matchesColGapBreakpointDown ? 2 : 0,
-      }}
+      lg={3}
+      xs={12}
     >
-      <Grid
-        size={{
-          lg: 6,
-        }}
-      >
-        {kubeSpecsLeft.map(kubeSpecItem)}
-      </Grid>
-      <Grid
-        size={{
-          lg: 6,
-        }}
-      >
-        {kubeSpecsRight.map(kubeSpecItem)}
-      </Grid>
+      <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
+      <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
     </Grid>
   );
 });

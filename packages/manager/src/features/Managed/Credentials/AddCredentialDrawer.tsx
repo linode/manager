@@ -1,8 +1,9 @@
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
@@ -10,10 +11,8 @@ import { creationSchema } from './credential.schema';
 
 import type { CredentialPayload } from '@linode/api-v4/lib/managed';
 
-const PasswordInput = React.lazy(() =>
-  import('src/components/PasswordInput/PasswordInput').then((module) => ({
-    default: module.PasswordInput,
-  }))
+const PasswordInput = React.lazy(
+  () => import('src/components/PasswordInput/PasswordInput')
 );
 
 export interface CredentialDrawerProps {
@@ -26,12 +25,7 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
   const { onClose, onSubmit, open } = props;
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title={'Add Credential'}
-    >
+    <Drawer onClose={onClose} open={open} title={'Add Credential'}>
       <Formik
         initialValues={{
           label: '',

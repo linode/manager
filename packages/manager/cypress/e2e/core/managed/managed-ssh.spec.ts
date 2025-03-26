@@ -2,6 +2,11 @@
  * @file Integration tests for Managed SSH access.
  */
 
+import type { ManagedLinodeSetting } from '@linode/api-v4';
+import {
+  managedLinodeSettingFactory,
+  managedSSHSettingFactory,
+} from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockGetLinodeSettings,
@@ -16,13 +21,6 @@ import {
   randomString,
 } from 'support/util/random';
 
-import {
-  managedLinodeSettingFactory,
-  managedSSHSettingFactory,
-} from 'src/factories/managed';
-
-import type { ManagedLinodeSetting } from '@linode/api-v4';
-
 // Message that is shown when no Linodes are listed.
 const noLinodesMessage = "You don't have any Linodes on your account.";
 
@@ -33,11 +31,11 @@ const noLinodesMessage = "You don't have any Linodes on your account.";
  */
 const randomPublicSshKey = (): string => {
   const randomKey = randomString(400, {
+    uppercase: true,
     lowercase: true,
     numbers: true,
     spaces: false,
     symbols: false,
-    uppercase: true,
   });
 
   return `ssh-rsa e2etestkey${randomKey} managedservices@linode`;
@@ -98,9 +96,9 @@ describe('Managed SSH Access tab', () => {
       ...originalLinodeSettings,
       ssh: {
         ...originalLinodeSettings.ssh,
-        ip: 'any',
-        port: newPort,
         user: newUser,
+        port: newPort,
+        ip: 'any',
       },
     };
 
@@ -137,17 +135,23 @@ describe('Managed SSH Access tab', () => {
       .findByTitle(`Edit SSH Access for ${linodeLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('User Account').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(newUser);
+        cy.findByLabelText('User Account')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(newUser);
 
         // Set IP address to 'Any'.
-        cy.findByLabelText('IP Address').should('be.visible').click();
-        cy.focused().type('Any{enter}');
+        cy.findByLabelText('IP Address')
+          .should('be.visible')
+          .click()
+          .type('Any{enter}');
 
-        cy.findByLabelText('Port').should('be.visible').click();
-        cy.focused().clear();
-        cy.focused().type(`${newPort}`);
+        cy.findByLabelText('Port')
+          .should('be.visible')
+          .click()
+          .clear()
+          .type(`${newPort}`);
 
         ui.button
           .findByTitle('Save Changes')

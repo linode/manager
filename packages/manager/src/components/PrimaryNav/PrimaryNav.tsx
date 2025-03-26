@@ -18,11 +18,11 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountSettings } from 'src/queries/account/settings';
 import {
-  useAccountSettings,
   useMutatePreferences,
   usePreferences,
-} from '@linode/queries';
+} from 'src/queries/profile/preferences';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';
@@ -33,7 +33,6 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
-  | 'Alerts'
   | 'Betas'
   | 'Cloud Load Balancers'
   | 'Dashboard'
@@ -48,7 +47,6 @@ export type NavEntity =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
-  | 'Metrics'
   | 'Monitor'
   | 'NodeBalancers'
   | 'Object Storage'
@@ -90,12 +88,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
-
-  const isAlertsEnabled =
-    isACLPEnabled &&
-    (flags.aclpAlerting?.alertDefinitions ||
-      flags.aclpAlerting?.recentActivity ||
-      flags.aclpAlerting?.notificationChannels);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
@@ -225,20 +217,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         icon: <Monitor />,
         links: [
           {
-            display: 'Metrics',
-            hide: !isACLPEnabled,
-            href: '/metrics',
-            isBeta: flags.aclp?.beta,
-          },
-          {
-            display: 'Alerts',
-            hide: !isAlertsEnabled,
-            href: '/alerts',
-            isBeta: flags.aclp?.beta,
-          },
-          {
             display: 'Longview',
             href: '/longview',
+          },
+          {
+            display: 'Monitor',
+            hide: !isACLPEnabled,
+            href: '/monitor',
+            isBeta: flags.aclp?.beta,
           },
         ],
         name: 'Monitor',
@@ -381,10 +367,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Box
-      height={{
-        md: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
-        xs: '100%',
-      }}
       sx={{
         '&:hover': {
           '.primary-nav-toggle': {
@@ -397,6 +379,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       display="flex"
       flexDirection="column"
       gap={0}
+      height={`calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`}
       id="main-navigation"
       justifyContent="flex-start"
       ref={primaryNavRef}
@@ -474,9 +457,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         })}
       </Box>
       <PrimaryNavToggle
-        areNavItemsOverflowing={navItemsOverflowing}
         desktopMenuToggle={desktopMenuToggle}
         isCollapsed={isCollapsed}
+        areNavItemsOverflowing={navItemsOverflowing}
       />
     </Box>
   );

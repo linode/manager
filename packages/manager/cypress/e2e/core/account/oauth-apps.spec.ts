@@ -7,8 +7,7 @@ import {
   mockUpdateOAuthApps,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { randomHex, randomLabel } from 'support/util/random';
-
+import { randomLabel, randomHex } from 'support/util/random';
 import type { OAuthClient } from '@linode/api-v4';
 
 /**
@@ -31,12 +30,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .findByTitle('Create OAuth App')
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Label').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.label);
-      cy.findByLabelText('Callback URL').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.redirect_uri);
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
       ui.buttonGroup
         .findButtonByTitle('Cancel')
         .should('be.visible')
@@ -58,12 +56,11 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .findByTitle('Create OAuth App')
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Label').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.label);
-      cy.findByLabelText('Callback URL').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.redirect_uri);
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
     });
   ui.drawerCloseButton.find().click();
 
@@ -83,10 +80,8 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
     .should('be.visible')
     .within(() => {
       // An error message appears when attempting to create an OAuth App without a label
-      cy.findByLabelText('Label').click();
-      cy.focused().clear();
-      cy.findByLabelText('Callback URL').click();
-      cy.focused().clear();
+      cy.findByLabelText('Label').click().clear();
+      cy.findByLabelText('Callback URL').click().clear();
       ui.button
         .findByTitle('Create')
         .should('be.visible')
@@ -96,14 +91,13 @@ const createOAuthApp = (oauthApp: OAuthClient) => {
       cy.findByText('Redirect URI is required.');
 
       // Fill out and submit OAuth App create form.
-      cy.findByLabelText('Label').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.label);
-      cy.findByLabelText('Callback URL').click();
-      cy.focused().clear();
-      cy.focused().type(oauthApp.redirect_uri);
-      // Uncheck the 'public' checkbox
-      if (!oauthApp.public) {
+      cy.findByLabelText('Label').click().clear().type(oauthApp.label);
+      cy.findByLabelText('Callback URL')
+        .click()
+        .clear()
+        .type(oauthApp.redirect_uri);
+      // Check the 'public' checkbox
+      if (oauthApp.public) {
         cy.get('[data-qa-checked]').should('be.visible').click();
       }
       mockCreateOAuthApp(oauthApp).as('createOauthApp');
@@ -150,8 +144,8 @@ describe('OAuth Apps', () => {
       }),
       oauthClientFactory.build({
         label: randomLabel(),
-        public: true,
         secret: randomHex(64),
+        public: true,
       }),
     ];
 
@@ -326,12 +320,11 @@ describe('OAuth Apps', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        cy.findByLabelText('Label').click();
-        cy.focused().clear();
-        cy.focused().type(updatedApps[0].label);
-        cy.findByLabelText('Callback URL').click();
-        cy.focused().clear();
-        cy.focused().type(updatedApps[0].label);
+        cy.findByLabelText('Label').click().clear().type(updatedApps[0].label);
+        cy.findByLabelText('Callback URL')
+          .click()
+          .clear()
+          .type(updatedApps[0].label);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')
