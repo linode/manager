@@ -96,11 +96,18 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  const regionSupportsDiskEncryption = doesRegionSupportFeature(
-    selectedRegionId ?? '',
-    regions,
-    'Disk Encryption'
-  );
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
+  const regionSupportsDiskEncryption =
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'Disk Encryption'
+    ) ||
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'LA Disk Encryption'
+    );
 
   const getPlansPanelCopy = () => {
     // TODO - LKE-E: Remove the 'ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION' copy once LDE is enabled on LKE-E.
