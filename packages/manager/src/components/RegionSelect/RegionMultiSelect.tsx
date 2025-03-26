@@ -1,21 +1,25 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
+  useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableItemOption } from '@linode/ui';
 
 interface RegionChipLabelProps {
   region: Region;
@@ -37,6 +41,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
+    flags,
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
@@ -62,6 +67,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     forcefullyShownRegionIds,
     regions,
   });
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)
@@ -122,6 +128,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 item={option}
                 key={key}
                 props={rest}
