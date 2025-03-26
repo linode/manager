@@ -3,7 +3,6 @@ import {
   Autocomplete,
   Drawer,
   Notice,
-  TextField,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -150,15 +149,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  errorText={fieldState.error?.message}
-                  hiddenLabel
-                  label=""
-                  noMarginTop
-                />
-              )}
+              errorText={fieldState.error?.message}
               label="Assign New Roles"
               loading={accountPermissionsLoading}
               onChange={(_, value) => field.onChange(value)}
@@ -170,7 +161,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
           )}
           control={control}
           name="roleName"
-          rules={{ required: 'Role is required' }}
+          rules={{ required: 'Role is required.' }}
         />
 
         {selectedRole && (
