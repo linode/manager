@@ -108,6 +108,11 @@ export const AlertsGroupedByTag = ({
                           handleTagPageChange(newPage);
                           scrollToTagWithAnimation(tag);
                         }}
+                        handleSizeChange={(pageSize) => {
+                          handleTagPageSizeChange(pageSize);
+                          handleTagPageChange(1);
+                          scrollToTagWithAnimation(tag);
+                        }}
                         sx={{
                           border: 0,
                           marginBottom: theme.spacing(2),
@@ -115,7 +120,6 @@ export const AlertsGroupedByTag = ({
                         }}
                         count={count}
                         eventCategory={`Alert Definitions Table ${tag}`}
-                        handleSizeChange={handleTagPageSizeChange}
                         page={page}
                         pageSize={pageSize}
                       />
