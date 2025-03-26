@@ -1,4 +1,4 @@
-import { useAllLinodesQuery, useFirewallSettingsQuery } from '@linode/queries';
+import { useAllLinodesQuery } from '@linode/queries';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 
@@ -8,10 +8,10 @@ import { Skeleton } from 'src/components/Skeleton';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { DefaultFirewallChip } from '../components/DefaultFirewallChip';
-import { getDefaultFirewallDescription } from '../components/FirewallSelectOption.utils';
 import { getLinodeIdFromInterfaceDevice } from '../shared';
 import { FirewallActionMenu } from './FirewallActionMenu';
 
@@ -30,13 +30,11 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { data: firewallSettings } = useFirewallSettingsQuery({
-    enabled: isLinodeInterfacesEnabled,
-  });
-
-  const tooltipText =
-    firewallSettings && getDefaultFirewallDescription(id, firewallSettings);
-  const isDefaultFirewall = !!tooltipText;
+  const {
+    isDefault,
+    numEntitiesIsDefaultFor,
+    tooltipText,
+  } = useDefaultFirewallChipInformation(id);
 
   const neededLinodeIdsForInterfaceDevices = entities
     .slice(0, 3) // only take the first three entities since we only show those entity links
@@ -65,9 +63,10 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
         <Link tabIndex={0} to={`/firewalls/${id}`}>
           {label}
         </Link>
-        {isLinodeInterfacesEnabled && isDefaultFirewall && (
+        {isLinodeInterfacesEnabled && isDefault && (
           <DefaultFirewallChip
             chipProps={{ sx: { marginLeft: 1 } }}
+            numEntitiesIsDefaultFor={numEntitiesIsDefaultFor}
             tooltipText={tooltipText}
           />
         )}
@@ -94,7 +93,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
           firewallID={id}
           firewallLabel={label}
           firewallStatus={status}
-          isDefaultFirewall={isDefaultFirewall}
+          isDefaultFirewall={isDefault}
           {...actionHandlers}
         />
       </TableCell>
