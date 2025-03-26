@@ -9,12 +9,12 @@ export const StyledConfigValue = styled(StyledValueGrid, {
 }));
 
 export const GroupHeader = styled('div')(({ theme }) => ({
-  background: theme.tokens.background.Neutral,
+  background: theme.tokens.alias.Background.Neutral,
   color:
     theme.palette.mode === 'dark'
       ? theme.tokens.color.Neutrals[5]
       : theme.tokens.color.Neutrals[100],
-  font: theme.tokens.typography.Label.Bold.Xs,
+  font: theme.tokens.alias.Typography.Label.Bold.Xs,
   padding: '8px 12px',
   position: 'sticky',
   textTransform: 'uppercase',
@@ -27,7 +27,7 @@ export const GroupItems = styled('ul')(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? theme.tokens.color.Neutrals[5]
         : theme.tokens.color.Neutrals[100],
-    font: theme.tokens.typography.Label.Regular.Xs,
+    font: theme.tokens.alias.Typography.Label.Regular.Xs,
   },
   padding: 0,
 }));
