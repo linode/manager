@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { QuotasTable } from './QuotasTable';
 import { useGetLocationsForQuotaService } from './utils';
@@ -15,6 +16,7 @@ import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
+  const flags = useFlags();
   const history = useHistory();
   const [selectedService, setSelectedService] = React.useState<
     SelectOption<QuotaType>
@@ -110,6 +112,7 @@ export const Quotas = () => {
                 currentCapability={undefined}
                 disableClearable
                 disabled={isFetchingLocations}
+                flags={flags}
                 loading={isFetchingLocations}
                 noOptionsText={`No resource found for ${selectedService.label}`}
                 regions={regions ?? []}

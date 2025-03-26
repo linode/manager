@@ -42,7 +42,7 @@ import type {
   ResourcePage,
   UpdateFirewallRules,
   FirewallSettings,
-  UpdateFirewallSettings
+  UpdateFirewallSettings,
 } from '@linode/api-v4';
 
 const getAllFirewallDevices = (
