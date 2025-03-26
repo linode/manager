@@ -76,9 +76,10 @@ describe('BillingActivityPanel', () => {
       <BillingActivityPanel />
     );
 
+    const transactionTypeSelect = getByLabelText('Transaction Types');
+
     // Test selecting "Invoices"
     await waitFor(() => {
-      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'invoice' },
       });
@@ -87,7 +88,6 @@ describe('BillingActivityPanel', () => {
 
     // Test selecting "Payments"
     await waitFor(() => {
-      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'payment' },
       });
