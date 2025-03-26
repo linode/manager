@@ -22,7 +22,7 @@ interface Props {
   vpc?: VPC;
 }
 
-const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
+const REGION_HELPER_TEXT = 'Region cannot be changed.';
 
 export const VPCEditDrawer = (props: Props) => {
   const { onClose, open, vpc } = props;
@@ -129,9 +129,11 @@ export const VPCEditDrawer = (props: Props) => {
           name="description"
         />
         {regionsData && (
+          // The data center assignment cannot be changed.
+          // Once a VPC has been created, you cannot move it to a different data center.
           <RegionSelect
             currentCapability="VPCs"
-            disabled // the Region field will not be editable during beta
+            disabled
             errorText={(regionsError && regionsError[0].reason) || undefined}
             flags={flags}
             helperText={REGION_HELPER_TEXT}
