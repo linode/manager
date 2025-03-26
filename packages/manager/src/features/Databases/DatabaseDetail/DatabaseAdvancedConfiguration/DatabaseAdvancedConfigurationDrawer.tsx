@@ -73,10 +73,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     databaseConfig
   );
 
-  const initialValues = Object.fromEntries(
-    existingConfigsArray.map((opt) => [opt.label, opt.value ?? ''])
-  );
-
   const {
     control,
     formState: { isDirty },
