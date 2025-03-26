@@ -51,6 +51,20 @@ export const AlertsGroupedByTag = ({
     Map<string, React.RefObject<HTMLTableRowElement>>
   >(new Map(groupedAlerts.map(([tag]) => [tag, React.createRef()])));
 
+  const scrollToTagWithAnimation = React.useCallback(
+    (tag: string) => {
+      requestAnimationFrame(() => {
+        const ref = tagRefs.current.get(tag);
+        if (ref?.current) {
+          ref.current.scrollIntoView({
+            behavior: 'smooth',
+          });
+        }
+      });
+    },
+    [tagRefs]
+  );
+
   return (
     <React.Fragment>
       {groupedAlerts.map(([tag, alertsForTag]) => {
@@ -92,12 +106,7 @@ export const AlertsGroupedByTag = ({
                       <PaginationFooter
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
-                          // Ensure consistent scroll behavior with a small delay
-                          setTimeout(() => {
-                            tagRef?.current?.scrollIntoView({
-                              behavior: 'smooth',
-                            });
-                          }, 100);
+                          scrollToTagWithAnimation(tag);
                         }}
                         sx={{
                           border: 0,
