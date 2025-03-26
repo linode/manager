@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+  useGrants,
+  useRegionsQuery,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   Button,
@@ -20,17 +27,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-  useGrants,
-  useRegionsQuery,
-} from '@linode/queries';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 

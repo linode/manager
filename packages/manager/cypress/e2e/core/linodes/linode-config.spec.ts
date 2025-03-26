@@ -1,12 +1,12 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
 } from '@linode/utilities';
 import {
   VLANFactory,
   kernelFactory,
   linodeConfigFactory,
-  linodeFactory,
   subnetFactory,
   vpcFactory,
 } from '@src/factories';
@@ -35,8 +35,7 @@ import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
-import { fetchLinodeConfigs } from 'support/util/linodes';
-import { createTestLinode } from 'support/util/linodes';
+import { createTestLinode, fetchLinodeConfigs } from 'support/util/linodes';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 
