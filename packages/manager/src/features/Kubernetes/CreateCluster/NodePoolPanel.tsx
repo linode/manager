@@ -3,6 +3,7 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { doesRegionSupportFeature } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { extendType } from 'src/utilities/extendType';
@@ -72,6 +73,8 @@ const Panel = (props: NodePoolPanelProps) => {
     types,
   } = props;
 
+  const flags = useFlags();
+
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const regions = useRegionsQuery().data ?? [];
@@ -114,7 +117,7 @@ const Panel = (props: NodePoolPanelProps) => {
     if (selectedTier === 'enterprise') {
       return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
     }
-    return regionSupportsDiskEncryption
+    return regionSupportsDiskEncryption && Boolean(flags.linodeDiskEncryption)
       ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
       : ADD_NODE_POOLS_DESCRIPTION;
   };
