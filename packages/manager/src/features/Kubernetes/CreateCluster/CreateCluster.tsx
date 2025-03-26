@@ -36,6 +36,7 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useCreateKubernetesClusterBetaMutation,
@@ -79,6 +80,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
+  const flags = useFlags();
   const { classes } = useStyles();
   const [selectedRegion, setSelectedRegion] = React.useState<
     Region | undefined
@@ -431,6 +433,7 @@ export const CreateCluster = () => {
                 disableClearable
                 disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
+                flags={flags}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
                 value={selectedRegion?.id}

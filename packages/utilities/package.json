@@ -1,6 +1,6 @@
 {
   "name": "@linode/utilities",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Linode Utility functions library",
   "main": "src/index.js",
   "module": "src/index.ts",
@@ -32,7 +32,8 @@
   },
   "dependencies": {
     "@linode/api-v4": "workspace:*",
-    "@types/ramda": "0.25.16",
+    "luxon": "3.4.4",
+    "ramda": "~0.25.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -41,6 +42,8 @@
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
+    "@types/luxon": "3.4.2",
+    "@types/ramda": "0.25.16",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -50,7 +53,6 @@
     "eslint-plugin-prettier": "~3.3.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "factory.ts": "^0.5.1",
-    "prettier": "~2.2.1",
-    "ramda": "~0.25.0"
+    "prettier": "~2.2.1"
   }
 }
