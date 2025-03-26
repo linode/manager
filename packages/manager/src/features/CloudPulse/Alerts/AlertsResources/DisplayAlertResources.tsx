@@ -175,7 +175,7 @@ export const DisplayAlertResources = React.memo(
 
     const ErrorTypoGraphy = React.memo(() => {
       return (
-        <Typography>
+        <Typography data-testid="warning-tip">
           {`You can select upto ${maxSelectionCount} resources.`}
         </Typography>
       );

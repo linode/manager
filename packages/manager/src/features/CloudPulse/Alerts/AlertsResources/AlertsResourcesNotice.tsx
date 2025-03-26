@@ -55,7 +55,7 @@ export const AlertsResourcesNotice = React.memo(
           }}
           title={
             isButtonDisabled ? (
-              <Typography>
+              <Typography data-testid="warning-tip">
                 {`You can select upto ${maxSelectionCount} resources.`}
               </Typography>
             ) : undefined
