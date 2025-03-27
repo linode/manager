@@ -58,6 +58,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
 import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
@@ -401,7 +402,7 @@ export const CreateCluster = () => {
           />
           {isLkeEnterpriseLAFlagEnabled && (
             <>
-              <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
+              <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
               <ClusterTierPanel
                 handleClusterTierSelection={handleClusterTierSelection}
                 isUserRestricted={isCreateClusterRestricted}
@@ -488,7 +489,12 @@ export const CreateCluster = () => {
               </StyledStackWithTabletBreakpoint>
             </>
           )}
-          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+          <Divider
+            sx={{
+              marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+              marginTop: showAPL ? 1 : 4,
+            }}
+          />
           {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
@@ -505,9 +511,12 @@ export const CreateCluster = () => {
               />
             </Box>
           )}
+          {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
           {showControlPlaneACL && (
             <>
-              {selectedTier !== 'enterprise' && <Divider />}
+              <Divider
+                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+              />
               <ControlPlaneACLPane
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
