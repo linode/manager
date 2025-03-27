@@ -25,13 +25,14 @@ export const CloudPulseModifyAlertResources = React.memo(
 
     const flags = useFlags();
 
-    const getMaxSelectionCount = React.useCallback(() => {
+    const maxSelectionCount = React.useMemo(() => {
       if (!serviceTypeWatcher || !flags.aclpAlertServiceTypeConfig) {
         return undefined;
       }
 
       return flags.aclpAlertServiceTypeConfig?.find(
-        ({ serviceType }) => serviceType === serviceTypeWatcher
+        (config) =>
+          config.serviceType && config.serviceType === serviceTypeWatcher
       )?.maxResourceSelectionCount;
     }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
@@ -58,15 +59,13 @@ export const CloudPulseModifyAlertResources = React.memo(
               })}
             >
               <AlertResources
-                errorText={
-                  fieldState.error ? fieldState.error.message : undefined
-                }
                 alertResourceIds={field.value}
                 alertType="user"
+                errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}
                 hideLabel
                 isSelectionsNeeded
-                maxSelectionCount={getMaxSelectionCount()}
+                maxSelectionCount={maxSelectionCount}
                 scrollElement={titleRef.current}
                 serviceType={serviceTypeWatcher || undefined}
               />

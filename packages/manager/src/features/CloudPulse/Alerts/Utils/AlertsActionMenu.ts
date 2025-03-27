@@ -29,20 +29,17 @@ export const getAlertTypeToActionsList = (
       title: 'Show Details',
     },
     {
+      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
       onClick: handleEdit,
       title: 'Edit',
     },
     {
-      disabled: isStatusActionDisabled(alertStatus),
+      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
       onClick: handleStatusChange,
       title: getTitleForStatusChange(alertStatus),
     },
   ],
 });
-
-export const isStatusActionDisabled = (alertStatus: AlertStatusType) => {
-  return alertStatus === 'in progress' || alertStatus === 'failed';
-};
 
 export const getTitleForStatusChange = (alertStatus: AlertStatusType) => {
   return statusToActionMap[alertStatus];

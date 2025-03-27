@@ -16,6 +16,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { OPTIMISTIC_SUCCESS_MESSAGE } from '../constants';
 import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlerts';
 import { AlertsTable } from './UngroupedAlerts';
@@ -90,8 +91,8 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(`Alert ${toggleStatus}`, {
-            variant: 'success',
+          enqueueSnackbar(OPTIMISTIC_SUCCESS_MESSAGE, {
+            variant: 'info',
           });
         })
         .catch((updateError: APIError[]) => {

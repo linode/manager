@@ -97,7 +97,7 @@ export const editAlertDefinitionSchema = object({
       })).required()).required(),
     })
       .optional(),
-  tags: array().of(string().required()).optional(),
+  tags: array().of(string().defined()).optional(),
   trigger_conditions: triggerConditionValidation.optional(),
   severity: number().oneOf([0, 1, 2, 3])
     .optional(),

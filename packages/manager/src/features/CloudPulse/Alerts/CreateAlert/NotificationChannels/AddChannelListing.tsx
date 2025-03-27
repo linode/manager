@@ -1,11 +1,12 @@
-import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
+import { Box, Button, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
-import { channelTypeOptions } from '../../constants';
+import { MULTILINE_ERROR_SEPARATOR, channelTypeOptions } from '../../constants';
+import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
 import { AddNotificationChannelDrawer } from './AddNotificationChannelDrawer';
@@ -140,16 +141,20 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
   return (
     <Controller
       render={({ fieldState, formState }) => (
-        <>
-          <Typography marginBottom={1} marginTop={3} variant="h2">
+        <Stack mt={3} spacing={2}>
+          <Typography marginBottom={1} variant="h2">
             4. Notification Channels
           </Typography>
-          {(formState.isSubmitted || fieldState.isTouched) && fieldState.error && (
-            <Notice spacingBottom={0} spacingTop={12} variant="error">
-              {fieldState.error.message}
-            </Notice>
-          )}
-          <Stack spacing={1}>
+          {(formState.isSubmitted || fieldState.isTouched) &&
+            fieldState.error &&
+            fieldState.error.message?.length&& (
+              <AlertListNoticeMessages
+                errorMessage={fieldState.error.message}
+                separator={MULTILINE_ERROR_SEPARATOR}
+                variant="error"
+              />
+            )}
+          <Stack spacing={2}>
             {selectedNotifications.length > 0 &&
               selectedNotifications.map((notification, id) => (
                 <NotificationChannelCard
@@ -165,7 +170,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             disabled={notificationChannelWatcher.length === 5}
             onClick={handleOpenDrawer}
             size="medium"
-            sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            sx={{ width: '215px' }}
             tooltipText="You can add up to 5 notification channels."
           >
             Add notification channel
@@ -179,7 +184,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             open={openAddNotification}
             templateData={notifications ?? []}
           />
-        </>
+        </Stack>
       )}
       control={control}
       name={name}

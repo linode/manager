@@ -1,14 +1,16 @@
+import {
+  linodeQueries,
+  nodebalancerQueries,
+  useRemoveFirewallDeviceMutation,
+} from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useRemoveFirewallDeviceMutation,
-  linodeQueries,
-  nodebalancerQueries,
-} from '@linode/queries';
+
+import { formattedTypes } from './constants';
 
 import type { FirewallDevice } from '@linode/api-v4';
 
@@ -16,16 +18,30 @@ export interface Props {
   device: FirewallDevice | undefined;
   firewallId: number;
   firewallLabel: string;
+  isFetching?: boolean;
   onClose: () => void;
   onService: boolean | undefined;
   open: boolean;
 }
 
 export const RemoveDeviceDialog = React.memo((props: Props) => {
-  const { device, firewallId, firewallLabel, onClose, onService, open } = props;
+  const {
+    device,
+    firewallId,
+    firewallLabel,
+    isFetching,
+    onClose,
+    onService,
+    open,
+  } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
+
+  const entityLabelToUse =
+    deviceType === 'interface'
+      ? `(ID: ${device?.entity.id})`
+      : device?.entity.label;
 
   const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
@@ -34,7 +50,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const queryClient = useQueryClient();
 
-  const deviceDialog = deviceType === 'linode' ? 'Linode' : 'NodeBalancer';
+  const deviceDialog = formattedTypes[deviceType ?? 'linode'];
 
   const onDelete = async () => {
     if (!device) {
@@ -45,7 +61,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
     const toastMessage = onService
       ? `Firewall ${firewallLabel} successfully unassigned`
-      : `${deviceDialog} ${device.entity.label} successfully removed`;
+      : `${deviceDialog} ${entityLabelToUse} successfully removed`;
 
     enqueueSnackbar(toastMessage, {
       variant: 'success',
@@ -75,14 +91,14 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
 
   const dialogTitle = onService
     ? `Unassign Firewall ${firewallLabel}?`
-    : `Remove ${deviceDialog} ${device?.entity.label}?`;
+    : `Remove ${deviceDialog} ${entityLabelToUse}?`;
 
   const confirmationText = (
     <Typography>
       Are you sure you want to{' '}
       {onService
         ? `unassign Firewall ${firewallLabel} from ${deviceDialog} ${device?.entity.label}?`
-        : `remove ${deviceDialog} ${device?.entity.label} from Firewall ${firewallLabel}?`}
+        : `remove ${deviceDialog} ${entityLabelToUse} from Firewall ${firewallLabel}?`}
     </Typography>
   );
 
@@ -105,6 +121,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
         />
       }
       error={error?.[0]?.reason}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={dialogTitle}

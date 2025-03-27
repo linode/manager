@@ -1,10 +1,16 @@
-import { Box, Button, Stack, Typography } from '@linode/ui';
-import Grid2 from '@mui/material/Grid2/Grid2';
+import { Button, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
+import { MULTILINE_ERROR_SEPARATOR } from '../../constants';
+import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { convertToSeconds } from '../utilities';
 import { Metric } from './Metric';
 
@@ -67,58 +73,60 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
   });
 
   return (
-    <Grid2
-      container
-      display="flex"
-      flexDirection="column"
-      rowSpacing={2} // this helps in spacing automatically
-      sx={(theme) => ({ marginTop: theme.spacing(3) })}
-    >
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        sx={{ marginBottom: 1 }}
-      >
-        <Typography variant="h2">3. Criteria</Typography>
-      </Box>
-      <Stack spacing={2}>
-        {fields !== null &&
-          fields.length !== 0 &&
-          fields.map((field, index) => {
-            return (
-              <Metric
-                data={metricDefinitions ? metricDefinitions.data : []}
-                isMetricDefinitionError={isMetricDefinitionError}
-                isMetricDefinitionLoading={isMetricDefinitionLoading}
-                key={field.id}
-                name={`rule_criteria.rules.${index}`}
-                onMetricDelete={() => remove(index)}
-                showDeleteIcon={fields.length > 1}
+    <Controller
+      render={({ fieldState, formState }) => (
+        <Stack mt={3} spacing={2}>
+          <Typography variant="h2">3. Criteria</Typography>
+          {formState.isSubmitted &&
+            fieldState.error &&
+            fieldState.error.message?.length && (
+              <AlertListNoticeMessages
+                errorMessage={fieldState.error.message}
+                separator={MULTILINE_ERROR_SEPARATOR}
+                variant="error"
               />
-            );
-          })}
-      </Stack>
-      <Button
-        onClick={() =>
-          append({
-            aggregate_function: null,
-            dimension_filters: [],
-            metric: null,
-            operator: null,
-            threshold: 0,
-          })
-        }
-        sx={{
-          width: '130px', // added a nice width for the button
-        }}
-        buttonType="outlined"
-        disabled={metricCriteriaWatcher.length === 5}
-        size="medium"
-        tooltipText="You can add up to 5 metrics."
-      >
-        Add metric
-      </Button>
-    </Grid2>
+            )}
+          <Stack spacing={2}>
+            {fields !== null &&
+              fields.length !== 0 &&
+              fields.map((field, index) => {
+                return (
+                  <Metric
+                    data={metricDefinitions ? metricDefinitions.data : []}
+                    isMetricDefinitionError={isMetricDefinitionError}
+                    isMetricDefinitionLoading={isMetricDefinitionLoading}
+                    key={field.id}
+                    name={`rule_criteria.rules.${index}`}
+                    onMetricDelete={() => remove(index)}
+                    showDeleteIcon={fields.length > 1}
+                  />
+                );
+              })}
+          </Stack>
+          <Button
+            onClick={() =>
+              append({
+                aggregate_function: null,
+                dimension_filters: [],
+                metric: null,
+                operator: null,
+                threshold: 0,
+              })
+            }
+            sx={{
+              width: '130px',
+            }}
+            buttonType="outlined"
+            disabled={metricCriteriaWatcher.length === 5}
+            size="medium"
+            tooltipText="You can add up to 5 metrics."
+          >
+            Add metric
+          </Button>
+        </Stack>
+      )}
+      control={control}
+      name={name}
+    />
   );
 };

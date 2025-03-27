@@ -405,7 +405,7 @@ describe('Create Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', '/alerts/definitions');
-      ui.toast.assertMessage('Alert successfully created');
+      ui.toast.assertMessage('Alert successfully created.');
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText(label)

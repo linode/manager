@@ -39,6 +39,7 @@ import {
   regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
+import { OPTIMISTIC_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
@@ -358,7 +359,7 @@ describe('Integration Tests for Edit Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', 'alerts/definitions');
-      ui.toast.assertMessage('Alert successfully updated.');
+      ui.toast.assertMessage(OPTIMISTIC_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText('Alert-2')
