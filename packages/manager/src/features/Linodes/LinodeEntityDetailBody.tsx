@@ -242,36 +242,33 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 )}
               </Box>
             </Grid>
-            {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
-              encryptionStatus && (
-                <Grid>
-                  <Box
-                    alignItems="center"
-                    data-testid={encryptionStatusTestId}
-                    display="flex"
-                    flexDirection="row"
-                  >
-                    <EncryptedStatus
-                      regionSupportsDiskEncryption={
-                        regionSupportsDiskEncryption
-                      }
-                      /**
-                       * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                       * explaining how LDE can be enabled on LKE-E node pools.
-                       * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                       */
-                      tooltipText={
-                        isLKELinode && cluster?.tier === 'enterprise'
-                          ? undefined
-                          : isLKELinode
-                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                      }
-                      encryptionStatus={encryptionStatus}
-                    />
-                  </Box>
-                </Grid>
-              )}
+            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
+              <Grid>
+                <Box
+                  alignItems="center"
+                  data-testid={encryptionStatusTestId}
+                  display="flex"
+                  flexDirection="row"
+                >
+                  <EncryptedStatus
+                    /**
+                     * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
+                     * explaining how LDE can be enabled on LKE-E node pools.
+                     * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
+                     */
+                    tooltipText={
+                      isLKELinode && cluster?.tier === 'enterprise'
+                        ? undefined
+                        : isLKELinode
+                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                    }
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+                  />
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </Grid>
 
