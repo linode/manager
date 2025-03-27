@@ -15,7 +15,10 @@ export const GroupHeader = styled('div')(({ theme }) => ({
       ? theme.tokens.color.Neutrals[5]
       : theme.tokens.color.Neutrals[100],
   font: theme.tokens.alias.Typography.Label.Bold.Xs,
-  padding: '8px 12px',
+  paddingBottom: theme.tokens.spacing.S8,
+  paddingLeft: theme.tokens.spacing.S12,
+  paddingRight: theme.tokens.spacing.S12,
+  paddingTop: theme.tokens.spacing.S8,
   position: 'sticky',
   textTransform: 'uppercase',
   top: 0,
