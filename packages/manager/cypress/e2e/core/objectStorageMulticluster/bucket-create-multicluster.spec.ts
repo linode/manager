@@ -65,9 +65,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getRegions', '@getBuckets']);
 
-    ui.entityHeader.find().within(() => {
-      ui.button.findByTitle('Create Bucket').should('be.visible').click();
-    });
+    ui.button.findByTitle('Create Bucket').should('be.visible').click();
 
     ui.drawer
       .findByTitle('Create Bucket')

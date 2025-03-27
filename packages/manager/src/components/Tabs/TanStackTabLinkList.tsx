@@ -25,6 +25,7 @@ export const TanStackTabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
           <Tab
             // @ts-expect-error - Tab accepts 'as' prop at runtime but it's not in the types
             as={noLink ? undefined : TanstackLink}
+            data-testid={tab.title}
             key={`tab-${_index}`}
             preload={noLink ? undefined : 'intent'}
             to={noLink ? undefined : tab.to}
