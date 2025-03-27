@@ -2,6 +2,7 @@ export * from './useDebouncedValue';
 export * from './useDialog';
 export * from './useEditableLabelState';
 export * from './useErrors';
+export * from './useFormattedDate';
 export * from './useFormValidateOnChange';
 export * from './useInterval';
 export * from './useOpenClose';
