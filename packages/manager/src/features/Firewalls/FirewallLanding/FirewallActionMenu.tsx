@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
 import {
@@ -15,7 +16,6 @@ import {
 import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 export interface ActionHandlers {
   [index: string]: any;
