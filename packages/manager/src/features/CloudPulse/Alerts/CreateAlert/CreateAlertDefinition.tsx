@@ -16,6 +16,7 @@ import {
   CREATE_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
+  CREATE_ALERT_SUCCESS_MESSAGE
 } from '../constants';
 import {
   enhanceValidationSchemaWithEntityIdValidation,
@@ -119,7 +120,7 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created.', {
+      enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       alertCreateExit();

@@ -205,3 +205,9 @@ export const EDIT_ALERT_ERROR_FIELD_MAP: Record<
 
 export const MULTILINE_ERROR_SEPARATOR = '|';
 export const SINGLELINE_ERROR_SEPARATOR = '\t';
+
+export const CREATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+
+export const UPDATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully updated. It may take a few minutes for your changes to take effect.';

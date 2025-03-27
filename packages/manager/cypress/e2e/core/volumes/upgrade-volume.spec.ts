@@ -1,6 +1,6 @@
+import { linodeFactory } from '@linode/utilities';
 import {
   eventFactory,
-  linodeFactory,
   notificationFactory,
   volumeFactory,
 } from '@src/factories';
