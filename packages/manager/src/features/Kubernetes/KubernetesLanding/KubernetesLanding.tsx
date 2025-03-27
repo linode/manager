@@ -173,7 +173,7 @@ export const KubernetesLanding = () => {
       {isDiskEncryptionFeatureEnabled && ( // @TODO LDE: once LDE is GA in all DCs, remove this condition
         <DismissibleBanner
           preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
-          spacingBottom={8}
+          spacingBottom={24}
           variant="info"
         >
           <Typography fontSize="inherit">
