@@ -101,19 +101,17 @@ describe('create a database cluster, mocked data', () => {
             },
           };
           const expectedItems = menuStates[state];
-          cy.get(`[id="action-menu-for-database-${databaseMock.label}-button"]`)
+          ui.actionMenu
+            .findByTitle(`Action menu for Database ${databaseMock.label}`)
             .should('be.visible')
             .click();
 
-          cy.findByRole('menu')
-            .should('be.visible')
-            .within(() => {
-              Object.entries(expectedItems).forEach(([id, enabled]) => {
-                cy.findByTestId(id)
-                  .should('be.visible')
-                  .should(enabled ? 'be.enabled' : 'be.disabled');
-              });
-            });
+          Object.entries(expectedItems).forEach(([label, enabled]) => {
+            ui.actionMenuItem
+              .findByTitle(label)
+              .should('be.visible')
+              .should(enabled ? 'be.enabled' : 'be.disabled');
+          });
           cy.get('body').click(0, 0);
         };
 
