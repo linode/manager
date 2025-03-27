@@ -1,6 +1,6 @@
 import { Box } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
-import { Grid, TableBody, TableHead, TableRow } from '@mui/material';
+import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -17,8 +17,8 @@ import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertListingTableLabelMap } from './constants';
-import { AlertsGroupedByTag } from './GroupedAlerts';
-import { UngroupedAlerts } from './UngroupedAlerts';
+import { GroupedAlertsTable } from './GroupedAlerts';
+import { AlertsTable } from './UngroupedAlerts';
 
 import type { Item } from '../constants';
 import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
@@ -78,7 +78,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleEnableDisable = React.useCallback(
+  const handleStatusChange = React.useCallback(
     (alert: Alert) => {
       const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
       const errorStatus =
@@ -127,7 +127,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
               pageSize,
             }) => (
               <>
-                <Grid sx={{ marginTop: 2 }}>
+                <Grid2 sx={{ marginTop: 2 }}>
                   <Table
                     colCount={7}
                     data-qa="alert-table"
@@ -181,25 +181,25 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         loadingProps={{ columns: 6 }}
                       />
                       {alertsGroupedByTag ? (
-                        <AlertsGroupedByTag
+                        <GroupedAlertsTable
                           groupedAlerts={sortGroups(groupByTags(orderedData))}
                           handleDetails={handleDetails}
                           handleEdit={handleEdit}
-                          handleEnableDisable={handleEnableDisable}
+                          handleStatusChange={handleStatusChange}
                           services={services}
                         />
                       ) : (
-                        <UngroupedAlerts
+                        <AlertsTable
                           alerts={paginatedAndOrderedAlerts}
                           handleDetails={handleDetails}
                           handleEdit={handleEdit}
-                          handleEnableDisable={handleEnableDisable}
+                          handleStatusChange={handleStatusChange}
                           services={services}
                         />
                       )}
                     </TableBody>
                   </Table>
-                </Grid>
+                </Grid2>
                 {!alertsGroupedByTag && (
                   <PaginationFooter
                     handlePageChange={(page: number) => {

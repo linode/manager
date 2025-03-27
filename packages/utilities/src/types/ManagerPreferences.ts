@@ -22,7 +22,7 @@ export type ThemeChoice = 'dark' | 'light' | 'system';
 
 export type ManagerPreferences = Partial<{
   aclpPreference: AclpConfig; // Why is this type in @linode/api-v4?
-  alerts_group_by_tag: boolean;
+  alertsGroupByTag: boolean;
   avatarColor: string;
   backups_cta_dismissed: boolean;
   collapsedSideNavProductFamilies: number[];
