@@ -425,7 +425,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
         )}
         {errorText?.length && (
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <AlertListNoticeMessages
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
@@ -435,7 +435,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
         )}
         {maxSelectionCount !== undefined && (
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <AlertListNoticeMessages
               errorMessage={`You can select up to ${maxSelectionCount} resources.`}
               separator={MULTILINE_ERROR_SEPARATOR}
