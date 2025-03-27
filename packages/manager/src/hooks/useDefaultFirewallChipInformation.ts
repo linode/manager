@@ -2,7 +2,7 @@ import { useFirewallSettingsQuery } from '@linode/queries';
 
 import {
   getDefaultFirewallDescription,
-  getEntitiesThatFirewallIsDefaultFor,
+  getFirewallDefaultEntities,
 } from 'src/features/Firewalls/components/FirewallSelectOption.utils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -27,16 +27,16 @@ export const useDefaultFirewallChipInformation = (
     firewallId &&
     firewallSettings &&
     getDefaultFirewallDescription(firewallId, firewallSettings);
-  const numEntitiesIsDefaultFor =
+  const defaultNumEntities =
     firewallSettings && firewallId
-      ? getEntitiesThatFirewallIsDefaultFor(firewallId, firewallSettings).length
+      ? getFirewallDefaultEntities(firewallId, firewallSettings).length
       : 0;
 
   const isDefault = !!tooltipText;
 
   return {
+    defaultNumEntities,
     isDefault,
-    numEntitiesIsDefaultFor,
     tooltipText,
   };
 };

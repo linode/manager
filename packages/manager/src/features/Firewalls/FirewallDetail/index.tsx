@@ -30,7 +30,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
-  getEntitiesThatFirewallIsDefaultFor,
+  getFirewallDefaultEntities,
 } from '../components/FirewallSelectOption.utils';
 import {
   checkIfUserCanModifyFirewall,
@@ -70,9 +70,9 @@ export const FirewallDetail = () => {
     enabled: isLinodeInterfacesEnabled,
   });
 
-  const defaultForEntities =
+  const defaultEntities =
     firewallSettings &&
-    getEntitiesThatFirewallIsDefaultFor(firewallId, firewallSettings);
+    getFirewallDefaultEntities(firewallId, firewallSettings);
 
   const userCanModifyFirewall = checkIfUserCanModifyFirewall(
     firewallId,
@@ -191,8 +191,8 @@ export const FirewallDetail = () => {
         />
       )}
       {isLinodeInterfacesEnabled &&
-        defaultForEntities &&
-        defaultForEntities.length > 0 && (
+        defaultEntities &&
+        defaultEntities.length > 0 && (
           <Paper
             sx={(theme) => ({
               alignItems: 'center',
@@ -209,7 +209,7 @@ export const FirewallDetail = () => {
             <Typography>
               <strong>Default</strong>
             </Typography>
-            {defaultForEntities.map((defaultEntity) => (
+            {defaultEntities.map((defaultEntity) => (
               <Chip
                 key={defaultEntity}
                 label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}

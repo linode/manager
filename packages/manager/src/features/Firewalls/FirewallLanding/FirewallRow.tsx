@@ -31,8 +31,8 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
+    defaultNumEntities,
     isDefault,
-    numEntitiesIsDefaultFor,
     tooltipText,
   } = useDefaultFirewallChipInformation(id);
 
@@ -66,7 +66,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
         {isLinodeInterfacesEnabled && isDefault && (
           <DefaultFirewallChip
             chipProps={{ sx: { marginLeft: 1 } }}
-            numEntitiesIsDefaultFor={numEntitiesIsDefaultFor}
+            defaultNumEntities={defaultNumEntities}
             tooltipText={tooltipText}
           />
         )}
@@ -174,15 +174,17 @@ export const getDeviceLinks = (
         // TODO @Linode Interfaces - switch to parent entity when endpoints are updated
         const isInterfaceDevice = entity.type === 'interface';
         let entityLabel = entity.label;
-        let entityLink =
-          `/${entity.type}s/${entity.id}/${entity.type === 'linode' ? 'networking' : 'summary'}`;
+        let entityLink = `/${entity.type}s/${entity.id}/${
+          entity.type === 'linode' ? 'networking' : 'summary'
+        }`;
 
         if (isInterfaceDevice) {
           const parentEntityId = getLinodeIdFromInterfaceDevice(entity);
-          entityLabel = linodesWithInterfaceDevices?.find(
-            (linode) => linode.id === parentEntityId
-          )?.label ?? entity.label;
-          entityLink = `/linodes/${parentEntityId}/networking/interfaces/${entity.id}`
+          entityLabel =
+            linodesWithInterfaceDevices?.find(
+              (linode) => linode.id === parentEntityId
+            )?.label ?? entity.label;
+          entityLink = `/linodes/${parentEntityId}/networking/interfaces/${entity.id}`;
         }
 
         return (

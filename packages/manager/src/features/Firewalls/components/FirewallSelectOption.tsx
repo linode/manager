@@ -23,8 +23,8 @@ export const FirewallSelectOption = (props: Props) => {
   const { hideDefaultChip, listItemProps, option, state } = props;
 
   const {
+    defaultNumEntities,
     isDefault,
-    numEntitiesIsDefaultFor,
     tooltipText,
   } = useDefaultFirewallChipInformation(option.id);
 
@@ -35,7 +35,7 @@ export const FirewallSelectOption = (props: Props) => {
         <Box flexGrow={1} />
         {isDefault && !hideDefaultChip && (
           <DefaultFirewallChip
-            numEntitiesIsDefaultFor={numEntitiesIsDefaultFor}
+            defaultNumEntities={defaultNumEntities}
             tooltipText={tooltipText}
           />
         )}

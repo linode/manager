@@ -19,7 +19,7 @@ export const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
 };
 
 /**
- * getEntitiesThatFirewallIsDefaultFor
+ * getFirewallDefaultEntities
  *
  * @param firewallId The ID of the Firewall
  * @param firewallSettings The account FirewallSettings from the API
@@ -27,7 +27,7 @@ export const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
  * @returns An array of entities that this Firewall is a default for.
  * @example ['nodebalancer', 'vpc_interface']
  */
-export function getEntitiesThatFirewallIsDefaultFor(
+export function getFirewallDefaultEntities(
   firewallId: number,
   firewallSettings: FirewallSettings
 ) {
@@ -56,7 +56,7 @@ export function getDefaultFirewallDescription(
   firewallId: number,
   firewallSettings: FirewallSettings
 ) {
-  const entitiesThatFirewallIsDefaultFor = getEntitiesThatFirewallIsDefaultFor(
+  const entitiesThatFirewallIsDefaultFor = getFirewallDefaultEntities(
     firewallId,
     firewallSettings
   );

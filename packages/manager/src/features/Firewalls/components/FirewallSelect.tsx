@@ -52,8 +52,8 @@ export const FirewallSelect = <DisableClearable extends boolean>(
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
   const {
+    defaultNumEntities,
     isDefault,
-    numEntitiesIsDefaultFor,
     tooltipText,
   } = useDefaultFirewallChipInformation(value, hideDefaultChips);
 
@@ -77,7 +77,7 @@ export const FirewallSelect = <DisableClearable extends boolean>(
         InputProps: {
           endAdornment: isDefault && !hideDefaultChips && (
             <DefaultFirewallChip
-              numEntitiesIsDefaultFor={numEntitiesIsDefaultFor}
+              defaultNumEntities={defaultNumEntities}
               tooltipText={tooltipText}
             />
           ),

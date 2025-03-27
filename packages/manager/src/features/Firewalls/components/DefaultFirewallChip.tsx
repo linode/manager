@@ -5,12 +5,12 @@ import type { ChipProps } from '@linode/ui';
 
 interface Props {
   chipProps?: Partial<ChipProps>;
-  numEntitiesIsDefaultFor: number;
+  defaultNumEntities: number;
   tooltipText: React.ReactNode;
 }
 
 export const DefaultFirewallChip = (props: Props) => {
-  const { chipProps, numEntitiesIsDefaultFor, tooltipText } = props;
+  const { chipProps, defaultNumEntities, tooltipText } = props;
   return (
     <Tooltip
       slotProps={{ tooltip: { sx: { minWidth: 245 } } }}
@@ -18,7 +18,7 @@ export const DefaultFirewallChip = (props: Props) => {
     >
       <Chip
         label={`DEFAULT${
-          numEntitiesIsDefaultFor > 1 ? ` (${numEntitiesIsDefaultFor})` : ''
+          defaultNumEntities > 1 ? ` (${defaultNumEntities})` : ''
         }`}
         size="small"
         {...chipProps}
