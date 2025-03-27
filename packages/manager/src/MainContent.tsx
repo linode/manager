@@ -333,7 +333,7 @@ export const MainContent = () => {
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
                       pt: {
-                        md: theme.spacing(3),
+                        md: theme.spacingFunction(24),
                         xs: theme.spacing(2),
                       },
                       px: {
