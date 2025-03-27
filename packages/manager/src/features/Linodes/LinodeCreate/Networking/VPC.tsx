@@ -137,7 +137,7 @@ export const VPC = ({ index }: Props) => {
         <Stack>
           <Controller
             render={({ field, fieldState }) => (
-              <>
+              <Box>
                 <FormControlLabel
                   label={
                     <Stack alignItems="center" direction="row">
@@ -165,7 +165,7 @@ export const VPC = ({ index }: Props) => {
                       errors.linodeInterfaces?.[index]?.vpc?.ipv4
                         ?.addresses?.[0]?.message
                     }
-                    containerProps={{ sx: { my: 1 } }}
+                    containerProps={{ sx: { mb: 1.5, mt: 1 } }}
                     label="VPC IPv4"
                     noMarginTop
                     onBlur={field.onBlur}
@@ -174,14 +174,14 @@ export const VPC = ({ index }: Props) => {
                     value={field.value}
                   />
                 )}
-              </>
+              </Box>
             )}
             control={control}
             name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
           />
           <Controller
             render={({ field, fieldState }) => (
-              <>
+              <Box>
                 {fieldState.error?.message && (
                   <Notice text={fieldState.error.message} variant="error" />
                 )}
@@ -206,7 +206,7 @@ export const VPC = ({ index }: Props) => {
                   control={<Checkbox sx={{ ml: 0.4 }} />}
                   disabled={!regionSupportsVPCs}
                 />
-              </>
+              </Box>
             )}
             control={control}
             name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
