@@ -15,6 +15,7 @@ export const enableHtmlReport: CypressPlugin = async function (on, config) {
     }
     config.reporterOptions.cypressMochawesomeReporterReporterOptions = {
       reportPageTitle: 'Cloud Manager E2e Test Results',
+      inlineAssets: true,
       embeddedScreenshots: true,
       videoOnFailOnly: true,
       charts: true,
