@@ -27,7 +27,7 @@ export const ExtraPresetOptionSelect = (
                 ?.id
           ) || ''
         }
-        className="dev-tools__select thin"
+        className="dt-select dev-tools__select thin"
         onChange={(e) => onSelectChange(e, group)}
         style={{ width: 125 }}
       >

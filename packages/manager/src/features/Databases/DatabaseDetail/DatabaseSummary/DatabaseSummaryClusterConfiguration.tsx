@@ -72,7 +72,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <StyledGridContainer container spacing={0} sx={{ md: 11 }}>
+      <StyledGridContainer container size={{ md: 11 }} spacing={0}>
         <Grid
           size={{
             lg: 1,
