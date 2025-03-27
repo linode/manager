@@ -206,7 +206,9 @@ export const FirewallDetail = () => {
               rowGap: 1,
             })}
           >
-            <Typography>
+            <Typography
+              sx={(theme) => ({ marginRight: theme.spacingFunction(8) })}
+            >
               <strong>Default</strong>
             </Typography>
             {defaultEntities.map((defaultEntity) => (
