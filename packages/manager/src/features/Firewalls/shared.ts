@@ -2,7 +2,7 @@ import { truncateAndJoinList } from '@linode/utilities';
 import { capitalize } from '@linode/utilities';
 
 import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
-import type { Grants, Profile } from '@linode/api-v4';
+import type { FirewallDeviceEntity, Grants, Profile } from '@linode/api-v4';
 import type {
   Firewall,
   FirewallRuleProtocol,
@@ -267,4 +267,18 @@ export const getFirewallDescription = (firewall: Firewall) => {
     `Services Assigned: ${firewall.entities.length}`,
   ];
   return description.join(', ');
+};
+
+// TODO @Linode Interfaces - probably get rid of this once the API changes to FirewallDevice come in
+/**
+ * Utility function to extract the Linode ID from firewall interface device entities. For Interface devices,
+ * the URL is "/v4/linode/instances/123/interfaces/123"
+ *
+ * Assumptions: the entity device being passed into this function always has type "interface". The URL is
+ * always in the above format.
+ */
+export const getLinodeIdFromInterfaceDevice = (
+  entity: FirewallDeviceEntity
+): number => {
+  return Number(entity.url.split('/')[4]);
 };

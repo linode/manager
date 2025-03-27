@@ -8,7 +8,7 @@ export type FirewallDefaultEntity = keyof FirewallSettings['default_firewall_ids
 /**
  * Maps an entity that supports default firewalls to a readable name.
  */
-const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
+export const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
   FirewallDefaultEntity,
   string
 > = {
@@ -19,7 +19,7 @@ const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
 };
 
 /**
- * getEntitiesThatFirewallIsDefaultFor
+ * getFirewallDefaultEntities
  *
  * @param firewallId The ID of the Firewall
  * @param firewallSettings The account FirewallSettings from the API
@@ -27,7 +27,7 @@ const FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME: Record<
  * @returns An array of entities that this Firewall is a default for.
  * @example ['nodebalancer', 'vpc_interface']
  */
-export function getEntitiesThatFirewallIsDefaultFor(
+export function getFirewallDefaultEntities(
   firewallId: number,
   firewallSettings: FirewallSettings
 ) {
@@ -56,7 +56,7 @@ export function getDefaultFirewallDescription(
   firewallId: number,
   firewallSettings: FirewallSettings
 ) {
-  const entitiesThatFirewallIsDefaultFor = getEntitiesThatFirewallIsDefaultFor(
+  const entitiesThatFirewallIsDefaultFor = getFirewallDefaultEntities(
     firewallId,
     firewallSettings
   );

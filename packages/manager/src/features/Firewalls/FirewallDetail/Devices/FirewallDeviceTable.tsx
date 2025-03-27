@@ -17,6 +17,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { getLinodeIdFromInterfaceDevice } from '../../shared';
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
@@ -69,7 +70,7 @@ export const FirewallDeviceTable = React.memo(
 
     const updatedDevices = devices.map((device) => {
       if (device.entity.type === 'interface') {
-        const linodeId = Number(device.entity.url.split('/')[4]);
+        const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
         const associatedLinode = linodesWithInterfaces?.find(
           (linode) => linode.id === linodeId
         );

@@ -1,11 +1,9 @@
-import { useFirewallSettingsQuery } from '@linode/queries';
 import { Box, SelectedIcon, Stack } from '@linode/ui';
 import React from 'react';
 
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
 
 import { DefaultFirewallChip } from './DefaultFirewallChip';
-import { getDefaultFirewallDescription } from './FirewallSelectOption.utils';
 
 import type { Firewall } from '@linode/api-v4';
 import type { AutocompleteRenderOptionState } from '@mui/material';
@@ -24,16 +22,11 @@ interface Props {
 export const FirewallSelectOption = (props: Props) => {
   const { hideDefaultChip, listItemProps, option, state } = props;
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { data: firewallSettings } = useFirewallSettingsQuery({
-    enabled: isLinodeInterfacesEnabled && !hideDefaultChip,
-  });
-
-  const defaultDescription =
-    firewallSettings &&
-    getDefaultFirewallDescription(option.id, firewallSettings);
-
-  const isDefault = !!defaultDescription;
+  const {
+    defaultNumEntities,
+    isDefault,
+    tooltipText,
+  } = useDefaultFirewallChipInformation(option.id);
 
   return (
     <li {...listItemProps}>
@@ -41,7 +34,10 @@ export const FirewallSelectOption = (props: Props) => {
         {option.label}
         <Box flexGrow={1} />
         {isDefault && !hideDefaultChip && (
-          <DefaultFirewallChip tooltipText={defaultDescription} />
+          <DefaultFirewallChip
+            defaultNumEntities={defaultNumEntities}
+            tooltipText={tooltipText}
+          />
         )}
         {state.selected && <SelectedIcon visible />}
       </Stack>

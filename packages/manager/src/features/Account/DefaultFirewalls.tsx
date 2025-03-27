@@ -19,6 +19,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+
 import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
 
 import type { UpdateFirewallSettings } from '@linode/api-v4';
@@ -27,12 +29,13 @@ const DEFAULT_FIREWALL_PLACEHOLDER = 'None';
 
 export const DefaultFirewalls = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     data: firewallSettings,
     error: firewallSettingsError,
     isLoading: isLoadingFirewallSettings,
-  } = useFirewallSettingsQuery();
+  } = useFirewallSettingsQuery({ enabled: isLinodeInterfacesEnabled });
 
   const { mutateAsync: updateFirewallSettings } = useMutateFirewallSettings();
 
