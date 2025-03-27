@@ -128,7 +128,7 @@ describe('VPC details page', () => {
    * - Confirms Subnets section and table is shown on the VPC details page.
    * - Confirms UI flow when deleting a subnet from a VPC's detail page.
    */
-  it.only('can create, edit, and delete a subnet from the VPC details page', () => {
+  it('can create, edit, and delete a subnet from the VPC details page', () => {
     // create a subnet
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
@@ -183,8 +183,7 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
-
-    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet).as('getSubnet');
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // edit a subnet
     const mockEditedSubnet = subnetFactory.build({
@@ -209,7 +208,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .click();
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
-    cy.wait('@getSubnet');
+    mockGetSubnet(mockVPC.id, mockEditedSubnet.id, mockEditedSubnet);
 
     ui.drawer
       .findByTitle('Edit Subnet')
@@ -231,7 +230,6 @@ describe('VPC details page', () => {
 
     // Confirm that edited subnet info displays
     cy.wait(['@editSubnet', '@getVPC', '@getSubnets']);
-    mockGetSubnet(mockVPC.id, mockSubnet.id, mockEditedSubnet).as('getSubnet2');
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockEditedSubnet.label).should('be.visible');
