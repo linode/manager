@@ -195,7 +195,7 @@ describe('create a database cluster, mocked data', () => {
         );
 
         // Validate Cluster Configuration on Summary page
-        cy.wrap([
+        [
           'Status',
           'Plan',
           'Nodes',
@@ -209,7 +209,7 @@ describe('create a database cluster, mocked data', () => {
           `${configuration.engine} v${configuration.version}`,
           nodes,
           `${databaseMock.total_disk_size_gb} GB`,
-        ]).each((text: string) => {
+        ].forEach((text: string) => {
           cy.findByText(text).should('be.visible');
         });
 
