@@ -29,7 +29,11 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import {
+  createDevicesFromStrings,
+  createStringsFromDevices,
+  scrollErrorIntoViewV2,
+} from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -52,8 +56,6 @@ import {
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
-import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -79,7 +81,7 @@ import type {
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4';
-import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import type { DevicesAsStrings } from '@linode/utilities';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
@@ -507,7 +509,6 @@ export const LinodeConfigDialog = (props: Props) => {
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
-
         /*
         If device slots are populated out of sequential order (e.g. sda and sdb are assigned
         but no others are until sdf), ascertain the last assigned slot to determine how many

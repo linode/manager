@@ -2,6 +2,7 @@
  * @file Integration tests for Cloud Manager account enable Linode Managed flows.
  */
 
+import { linodeFactory } from '@linode/utilities';
 import {
   visitUrlWithManagedDisabled,
   visitUrlWithManagedEnabled,
@@ -21,7 +22,6 @@ import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory } from 'src/factories/account';
-import { linodeFactory } from 'src/factories/linodes';
 import { profileFactory } from 'src/factories/profile';
 
 import type { Linode } from '@linode/api-v4';
