@@ -15,12 +15,13 @@ import {
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -154,10 +155,16 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { data: cluster } = useKubernetesClusterQuery(
-    linodeLkeClusterId ?? -1,
-    Boolean(linodeLkeClusterId)
-  );
+  const {
+    isAPLAvailabilityLoading,
+    isUsingBetaEndpoint,
+  } = useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
+    id: linodeLkeClusterId ?? -1,
+    isUsingBetaEndpoint,
+  });
 
   return (
     <>
