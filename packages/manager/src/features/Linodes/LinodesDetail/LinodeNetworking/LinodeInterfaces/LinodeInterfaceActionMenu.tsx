@@ -12,14 +12,13 @@ interface Props {
 
 export interface InterfaceActionHandlers {
   onDelete: (interfaceId: number) => void;
-  onShowDetails: (interfaceId: number) => void;
 }
 
 export const LinodeInterfaceActionMenu = (props: Props) => {
   const { handlers, id, type } = props;
 
   const actions = [
-    { onClick: () => handlers.onShowDetails(id), title: 'Details' },
+    { onClick: () => alert(`Details ${id}`), title: 'Details' },
     { onClick: () => alert(`Edit ${id}`), title: 'Edit' },
     { onClick: () => handlers.onDelete(id), title: 'Delete' },
   ];

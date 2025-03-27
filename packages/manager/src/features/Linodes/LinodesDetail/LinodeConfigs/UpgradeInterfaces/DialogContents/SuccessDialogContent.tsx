@@ -35,11 +35,18 @@ export const SuccessDialogContent = (
         <Box
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
-            marginTop: theme.spacingFunction(8),
-            padding: theme.spacingFunction(16),
+            marginTop: theme.spacing(1),
+            padding: theme.spacing(2),
           })}
         >
-          <Typography variant="h3">Upgrade Summary</Typography>
+          <Typography
+            sx={(theme) => ({
+              marginTop: theme.spacing(1),
+            })}
+            variant="h3"
+          >
+            Upgrade Summary
+          </Typography>
           {linodeInterfaces.map((linodeInterface) => (
             <LinodeInterfaceInfo
               key={linodeInterface.id}
@@ -79,27 +86,33 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
   } = props;
 
   return (
-    <Stack gap={2} marginTop={2}>
-      <Stack>
+    <>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
+        <strong>Interface Meta Info: Interface #{id}</strong>
+      </Typography>
+      <Typography>ID: {id}</Typography>
+      <Typography>MAC Address: {mac_address}</Typography>
+      <Typography>Created: {created}</Typography>
+      <Typography>Updated: {updated}</Typography>
+      <Typography>Version: {version}</Typography>
+      {publicInterface && (
         <Typography
           sx={(theme) => ({
-            marginBottom: theme.spacingFunction(16),
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(2),
           })}
         >
-          <strong>Interface Meta Info: Interface #{id}</strong>
+          Public Interface successfully upgraded
         </Typography>
-        <Typography>ID: {id}</Typography>
-        <Typography>MAC Address: {mac_address}</Typography>
-        <Typography>Created: {created}</Typography>
-        <Typography>Updated: {updated}</Typography>
-        <Typography>Version: {version}</Typography>
-      </Stack>
-      {publicInterface && (
-        <Typography>Public Interface successfully upgraded</Typography>
       )}
       {vpc && <VPCInterfaceInfo {...vpc} default_route={props.default_route} />}
       {vlan && <VlanInterfaceInfo vlan={vlan} />}
-    </Stack>
+    </>
   );
 };
 
@@ -114,28 +127,31 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
 
   return (
     <>
-      <Typography>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
         <strong>VPC Interface Details</strong>
       </Typography>
-      <Stack>
-        {default_route && (
-          <Typography>
-            Default Route:{' '}
-            {default_route.ipv4 ? 'IPv4' : default_route.ipv6 ? 'IPv6' : 'None'}
-          </Typography>
-        )}
-        <Typography>VPC ID: {vpc_id}</Typography>
-        <Typography>Subnet ID: {subnet_id}</Typography>
+      {default_route && (
         <Typography>
-          Addresses: {addresses.map((address) => address.address).join(', ')}
+          Default Route:{' '}
+          {default_route.ipv4 ? 'IPv4' : default_route.ipv6 ? 'IPv6' : 'None'}
         </Typography>
-        {primaryAddress && (
-          <Typography>Primary Address: {primaryAddress.address}</Typography>
-        )}
-        {ranges.length > 0 && (
-          <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
-        )}
-      </Stack>
+      )}
+      <Typography>VPC ID: {vpc_id}</Typography>
+      <Typography>Subnet ID: {subnet_id}</Typography>
+      <Typography>
+        Addresses: {addresses.map((address) => address.address).join(', ')}
+      </Typography>
+      {primaryAddress && (
+        <Typography>Primary Address: {primaryAddress.address}</Typography>
+      )}
+      {ranges.length > 0 && (
+        <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
+      )}
     </>
   );
 };
@@ -147,13 +163,16 @@ const VlanInterfaceInfo = (props: Pick<LinodeInterface, 'vlan'>) => {
 
   return (
     <>
-      <Typography>
+      <Typography
+        sx={(theme) => ({
+          marginBottom: theme.spacing(2),
+          marginTop: theme.spacing(2),
+        })}
+      >
         <strong>VLAN Interface Details</strong>
       </Typography>
-      <Stack>
-        <Typography>Label: {vlan_label}</Typography>
-        <Typography>IPAM Address: {ipam_address}</Typography>
-      </Stack>
+      <Typography>Label: {vlan_label}</Typography>
+      <Typography>IPAM Address: {ipam_address}</Typography>
     </>
   );
 };
