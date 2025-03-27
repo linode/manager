@@ -53,6 +53,7 @@ export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 export const levelMap = {
   create: 2,
   delete: 2,
+  hidden: -1,
   modify: 2,
   none: 0,
   read_only: 1,
@@ -160,21 +161,24 @@ export const scopeStringToPermTuples = (
 
 export const allMaxPerm = (
   scopeTups: Permission[],
-  perms: typeof basePerms
+  perms: typeof basePerms,
+  exclude: PermissionKey[] = []
 ): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
 
-  return scopeTups.reduce(
-    (acc: boolean, [key, value]: Permission) =>
-      value === levelMap.read_write && acc,
-    true
+  const excludeSet = new Set(exclude);
+  return scopeTups.every(
+    ([key, value]) => value === levelMap.read_write || excludeSet.has(key)
   );
 };
 
-export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
-  if (allMaxPerm(scopeTups, basePerms)) {
+export const permTuplesToScopeString = (
+  scopeTups: Permission[],
+  exclude: PermissionKey[]
+): string => {
+  if (allMaxPerm(scopeTups, basePerms, exclude)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
