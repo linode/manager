@@ -12,7 +12,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { CREATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { enhanceValidationSchemaWithEntityIdValidation } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
@@ -111,7 +110,7 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
+      enqueueSnackbar('Alert successfully created', {
         variant: 'success',
       });
       alertCreateExit();

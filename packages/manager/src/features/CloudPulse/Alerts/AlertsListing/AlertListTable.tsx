@@ -14,7 +14,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertTableRow } from './AlertTableRow';
 import { AlertListingTableLabelMap } from './constants';
 
@@ -72,7 +71,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
+          enqueueSnackbar(`Alert ${toggleStatus}`, {
             variant: 'success',
           });
         })
