@@ -25,6 +25,10 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
+  const link = isInterfaceDevice
+    ? `/linodes/${entityId}/networking/interfaces/${id}`
+    : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
+
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
@@ -33,13 +37,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
         {isInterfaceDevice && !label ? (
           <Skeleton />
         ) : (
-          // @TODO Linode Interfaces - perhaps link to the interface's details later
-          <Link
-            to={`/${
-              isInterfaceDevice ? 'linode' : type
-            }s/${entityId}/networking`}
-            tabIndex={0}
-          >
+          <Link tabIndex={0} to={link}>
             {label}
           </Link>
         )}
