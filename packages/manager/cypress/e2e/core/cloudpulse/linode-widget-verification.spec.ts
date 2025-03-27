@@ -1,7 +1,7 @@
 /**
  * @file Integration Tests for CloudPulse Linode Dashboard.
  */
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -25,6 +25,7 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   kubeLinodeFactory,
+  linodeFactory,
   widgetFactory,
 } from 'src/factories';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';

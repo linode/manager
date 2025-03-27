@@ -1,7 +1,7 @@
 import { LinodeBackupsResponse } from '@linode/api-v4';
-import { backupFactory, linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
+import { backupFactory, linodeFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

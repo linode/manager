@@ -2,8 +2,8 @@
  * @file Integration tests for VPC create flow.
  */
 
-import { linodeFactory, regionFactory } from '@linode/utilities';
-import { subnetFactory, vpcFactory } from '@src/factories';
+import { regionFactory } from '@linode/utilities';
+import { linodeFactory, subnetFactory, vpcFactory } from '@src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPC,

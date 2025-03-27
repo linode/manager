@@ -1,10 +1,10 @@
-import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { useAccount } from '@linode/queries';
 
 import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 import {

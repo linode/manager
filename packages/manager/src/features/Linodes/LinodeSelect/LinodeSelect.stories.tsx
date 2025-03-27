@@ -1,3 +1,4 @@
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
@@ -7,7 +8,6 @@ import type {
   LinodeMultiSelectProps,
   LinodeSingleSelectProps,
 } from './LinodeSelect';
-import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const linodes = [

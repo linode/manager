@@ -1,4 +1,3 @@
-import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { latestKubernetesVersion } from 'support/constants/lke';
@@ -33,7 +32,8 @@ import {
 } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { randomIp, randomLabel, randomString } from 'support/util/random';
+import { randomString } from 'support/util/random';
+import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 
 import {
@@ -42,6 +42,8 @@ import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  linodeFactory,
+  linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';

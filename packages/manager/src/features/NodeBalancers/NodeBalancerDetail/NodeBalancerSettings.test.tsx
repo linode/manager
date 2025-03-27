@@ -1,7 +1,6 @@
-import { nodeBalancerFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { firewallFactory } from 'src/factories';
+import { firewallFactory, nodeBalancerFactory } from 'src/factories';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

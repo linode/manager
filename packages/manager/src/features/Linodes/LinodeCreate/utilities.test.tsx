@@ -1,11 +1,12 @@
 import {
-  createLinodeRequestFactory,
   getIsLegacyInterfaceArray,
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
 } from '@linode/utilities';
+
+import { createLinodeRequestFactory } from 'src/factories';
 
 import {
   getDefaultInterfaceGenerationFromAccountSetting,

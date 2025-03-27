@@ -1,6 +1,6 @@
-import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import * as React from 'react';
 
+import { linodeFactory, linodeTypeFactory } from 'src/factories/linodes';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 

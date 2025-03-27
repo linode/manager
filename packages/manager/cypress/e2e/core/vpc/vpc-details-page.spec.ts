@@ -1,9 +1,13 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
-  linodeFactory,
 } from '@linode/utilities';
-import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
+import {
+  linodeConfigFactory,
+  linodeFactory,
+  subnetFactory,
+  vpcFactory,
+} from '@src/factories';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
@@ -18,7 +22,8 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
+import { getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
 
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 

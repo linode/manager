@@ -2,13 +2,14 @@
  * @file Smoke tests for Linode Create flow across common mobile viewport sizes.
  */
 
-import { linodeFactory } from '@linode/utilities';
 import { MOBILE_VIEWPORTS } from 'support/constants/environment';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { linodeFactory } from 'src/factories';
 
 describe('Linode create mobile smoke', () => {
   MOBILE_VIEWPORTS.forEach((viewport) => {

@@ -1,5 +1,5 @@
 import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';

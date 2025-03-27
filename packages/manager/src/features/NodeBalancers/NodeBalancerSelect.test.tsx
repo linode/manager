@@ -1,8 +1,8 @@
-import { nodeBalancerFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { nodeBalancerFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerSelect } from './NodeBalancerSelect';

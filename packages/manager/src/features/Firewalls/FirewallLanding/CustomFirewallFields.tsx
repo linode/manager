@@ -1,5 +1,4 @@
 import { useAllFirewallsQuery, useGrants } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   FormControlLabel,
@@ -13,6 +12,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';

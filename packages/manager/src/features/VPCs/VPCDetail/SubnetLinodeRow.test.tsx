@@ -1,7 +1,6 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
-  linodeFactory,
 } from '@linode/utilities';
 import {
   fireEvent,
@@ -16,6 +15,7 @@ import {
   subnetFactory,
 } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
+import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {

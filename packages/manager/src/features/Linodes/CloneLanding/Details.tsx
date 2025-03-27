@@ -1,5 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
   Button,
@@ -15,6 +13,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useRegionsQuery } from '@linode/queries';
 
 import {
   StyledButton,

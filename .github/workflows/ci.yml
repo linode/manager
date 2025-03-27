@@ -17,7 +17,6 @@ jobs:
             "linode-manager",
             "@linode/api-v4",
             "@linode/queries",
-            "@linode/shared",
             "@linode/ui",
             "@linode/utilities",
             "@linode/validation",
@@ -234,30 +233,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/queries test
 
-  test-shared:
-    runs-on: ubuntu-latest
-    needs: build-sdk
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.17"
-          cache: "pnpm"
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-api-v4-lib
-          path: packages/api-v4/lib
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-validation-lib
-          path: packages/validation/lib
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/shared test
-
   typecheck-ui:
     runs-on: ubuntu-latest
     needs: build-sdk
@@ -313,30 +288,6 @@ jobs:
           path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter @linode/queries typecheck
-    
-  typecheck-shared:
-    runs-on: ubuntu-latest
-    needs: build-sdk
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.17"
-          cache: "pnpm"
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-api-v4-lib
-          path: packages/api-v4/lib
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-validation-lib
-          path: packages/validation/lib
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run --filter @linode/shared typecheck
     
   typecheck-manager:
     runs-on: ubuntu-latest

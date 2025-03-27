@@ -1,10 +1,6 @@
 // TODO: Cypress
-import {
-  linodeTypeFactory,
-  regionAvailabilityFactory,
-  regionFactory,
-} from '@linode/utilities';
-import { accountFactory } from '@src/factories';
+import { regionAvailabilityFactory, regionFactory } from '@linode/utilities';
+import { accountFactory, linodeTypeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';

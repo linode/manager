@@ -1,4 +1,4 @@
-import { createLinodeRequestFactory } from '@linode/utilities';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
 
 import { generateCLICommand } from './generate-cli';
 

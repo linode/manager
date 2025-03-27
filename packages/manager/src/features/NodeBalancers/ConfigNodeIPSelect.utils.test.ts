@@ -1,4 +1,4 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory } from 'src/factories';
 
 import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';
 

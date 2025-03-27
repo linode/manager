@@ -1,7 +1,10 @@
-import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { accountSettingsFactory, profileFactory } from 'src/factories';
+import {
+  accountSettingsFactory,
+  linodeFactory,
+  profileFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';

@@ -1,11 +1,11 @@
-import {
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
-} from '@linode/utilities';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import {
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';

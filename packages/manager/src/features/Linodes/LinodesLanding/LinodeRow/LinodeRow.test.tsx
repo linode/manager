@@ -1,7 +1,7 @@
-import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { linodeFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeRow, RenderFlag } from './LinodeRow';

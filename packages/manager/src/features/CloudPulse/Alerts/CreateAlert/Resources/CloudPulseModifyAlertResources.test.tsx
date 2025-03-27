@@ -1,8 +1,8 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { alertFactory } from 'src/factories';
+import { alertFactory, linodeFactory } from 'src/factories';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { CloudPulseModifyAlertResources } from './CloudPulseModifyAlertResources';

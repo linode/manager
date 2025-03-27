@@ -1,4 +1,4 @@
-import { isNotNullOrUndefined } from '../helpers';
+import { isNotNullOrUndefined } from '@linode/utilities';
 
 import type { Linode, NodeBalancer } from '@linode/api-v4';
 

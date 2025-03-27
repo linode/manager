@@ -1,9 +1,10 @@
-import { linodeBackupsFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { linodeBackupsFactory } from 'src/factories/linodes';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeActionMenu } from './LinodeActionMenu';

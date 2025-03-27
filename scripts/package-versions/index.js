@@ -11,8 +11,7 @@
  * - `<validation-version>` (Optional) Desired Validation package version.
  * - `<ui-version>`         (Optional) Desired UI package version.
  * - `<utilities-version>`  (Optional) Desired Utilities package version.
- * - `<queries-version>`    (Optional) Desired Queries package version.
- * - `<shared-version>`     (Optional) Desired Shared package version.
+ * - `<queries-version>`  (Optional) Desired Queries package version.
  *
  * Optional Flags:
  * - `-f | --force`         Forces the script to update package versions without
@@ -116,7 +115,6 @@ const jobs = [
   { name: 'ui', path: getPackagePath('ui'), desiredVersion: desiredUiVersion },
   { name: 'utilities', path: getPackagePath('utilities'), desiredVersion: desiredUtilitiesVersion },
   { name: 'queries', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
-  { name: 'shared', path: getPackagePath('shared'), desiredVersion: desiredSharedVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.

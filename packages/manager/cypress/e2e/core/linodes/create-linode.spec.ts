@@ -2,14 +2,11 @@
  * @file Linode Create end-to-end tests.
  */
 
-import {
-  linodeFactory,
-  linodeTypeFactory,
-  regionFactory,
-} from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
-import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateLinode,
@@ -17,8 +14,8 @@ import {
   mockCreateLinodeError,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
+import { interceptGetProfile } from 'support/intercepts/profile';
 import {
-  interceptGetProfile,
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
@@ -34,6 +31,8 @@ import {
   accountFactory,
   accountUserFactory,
   grantsFactory,
+  linodeFactory,
+  linodeTypeFactory,
   profileFactory,
 } from 'src/factories';
 

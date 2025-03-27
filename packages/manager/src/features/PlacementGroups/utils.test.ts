@@ -1,7 +1,7 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
-import { placementGroupFactory } from 'src/factories';
+import { linodeFactory, placementGroupFactory } from 'src/factories';
 
 import {
   getLinodesFromAllPlacementGroups,

@@ -1,4 +1,3 @@
-import { linodeFactory } from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetEvents } from 'support/intercepts/events';
 import { mockCreateImage } from 'support/intercepts/images';
@@ -14,6 +13,7 @@ import {
   accountUserFactory,
   eventFactory,
   grantsFactory,
+  linodeFactory,
   profileFactory,
 } from 'src/factories';
 import { linodeDiskFactory } from 'src/factories/disk';

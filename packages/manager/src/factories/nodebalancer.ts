@@ -1,4 +1,4 @@
-import { Factory } from './factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
   NodeBalancer,

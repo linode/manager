@@ -1,7 +1,6 @@
-import { linodeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
-import { accountMaintenanceFactory } from 'src/factories';
+import { accountMaintenanceFactory, linodeFactory } from 'src/factories';
 
 import {
   addMaintenanceToLinodes,

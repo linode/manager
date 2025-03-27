@@ -1,4 +1,3 @@
-import { usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -10,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { usePreferences } from '@linode/queries';
 
 import NodeActionMenu from './NodeActionMenu';
 

@@ -2,11 +2,13 @@
  * @file Integration tests for VPC assign/unassign Linodes flows.
  */
 
+import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
 import {
-  linodeConfigInterfaceFactoryWithVPC,
+  linodeConfigFactory,
   linodeFactory,
-} from '@linode/utilities';
-import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
+  subnetFactory,
+  vpcFactory,
+} from '@src/factories';
 import {
   vpcAssignLinodeRebootNotice,
   vpcUnassignLinodeRebootNotice,

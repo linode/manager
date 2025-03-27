@@ -1,10 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { regionFactory } from '@linode/utilities';
 import {
   createLinodeRequestFactory,
+  firewallFactory,
   linodeFactory,
-  regionFactory,
-} from '@linode/utilities';
-import { firewallFactory } from '@src/factories';
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptCreateFirewall,
@@ -21,7 +21,8 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegions, extendRegion } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
+import { chooseRegions } from 'support/util/regions';
 
 import type { Linode, Region } from '@linode/api-v4';
 

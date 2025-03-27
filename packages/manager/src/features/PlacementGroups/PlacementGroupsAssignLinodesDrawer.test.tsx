@@ -1,8 +1,8 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import { linodeFactory, placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsAssignLinodesDrawer } from './PlacementGroupsAssignLinodesDrawer';

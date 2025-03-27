@@ -1,4 +1,4 @@
-import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
+import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {

@@ -1,4 +1,3 @@
-import { LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Divider, Drawer, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { NotFound } from 'src/components/NotFound';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 

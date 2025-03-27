@@ -1,4 +1,3 @@
-import { linodeFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
@@ -6,7 +5,11 @@ import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { accountFactory, placementGroupFactory } from 'src/factories';
+import {
+  accountFactory,
+  linodeFactory,
+  placementGroupFactory,
+} from 'src/factories';
 
 const mockAccount = accountFactory.build();
 

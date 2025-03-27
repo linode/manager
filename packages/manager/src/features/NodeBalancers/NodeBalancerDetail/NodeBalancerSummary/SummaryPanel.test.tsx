@@ -1,11 +1,11 @@
-import {
-  nodeBalancerConfigFactory,
-  nodeBalancerFactory,
-} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { firewallFactory } from 'src/factories';
+import {
+  firewallFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerFactory,
+} from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 

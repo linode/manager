@@ -1,10 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
+  accountSettingsFactory,
   createLinodeRequestFactory,
   linodeBackupsFactory,
   linodeFactory,
-} from '@linode/utilities';
-import { accountSettingsFactory } from '@src/factories';
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { expectManagedDisabled } from 'support/api/managed';
 import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';

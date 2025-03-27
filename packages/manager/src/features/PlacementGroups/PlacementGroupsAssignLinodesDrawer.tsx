@@ -7,7 +7,6 @@ import {
   useAllPlacementGroupsQuery,
   useAssignLinodesToPlacementGroup,
 } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
   Box,
@@ -25,6 +24,7 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { NotFound } from 'src/components/NotFound';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
+import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
