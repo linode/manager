@@ -42,12 +42,12 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(enabled);
-  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: lkeClustersError,
     isLoading: lkeClustersLoading,
-  } = useAllKubernetesClustersQuery(enabled, useBetaEndpoint);
+  } = useAllKubernetesClustersQuery({ enabled, isUsingBetaEndpoint });
   const {
     data: volumes,
     error: volumesError,

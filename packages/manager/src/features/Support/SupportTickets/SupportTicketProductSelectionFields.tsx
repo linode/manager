@@ -71,15 +71,15 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: nodebalancersLoading,
   } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
-  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: clustersError,
     isLoading: clustersLoading,
-  } = useAllKubernetesClustersQuery(
-    entityType === 'lkecluster_id',
-    useBetaEndpoint
-  );
+  } = useAllKubernetesClustersQuery({
+    enabled: entityType === 'lkecluster_id',
+    isUsingBetaEndpoint,
+  });
 
   const {
     data: linodes,

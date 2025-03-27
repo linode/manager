@@ -30,11 +30,11 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
 
-  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const { data: cluster, error, isLoading } = useKubernetesClusterQuery({
     id,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   });
   const { data: regionsData } = useRegionsQuery();
 

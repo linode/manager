@@ -157,13 +157,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const {
     isAPLAvailabilityLoading,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   } = useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
     id: linodeLkeClusterId ?? -1,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   });
 
   return (

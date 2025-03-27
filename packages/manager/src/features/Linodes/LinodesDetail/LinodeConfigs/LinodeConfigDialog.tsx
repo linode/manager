@@ -262,7 +262,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const {
     isAPLAvailabilityLoading,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   } = useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
@@ -271,7 +271,7 @@ export const LinodeConfigDialog = (props: Props) => {
       Boolean(linode?.lke_cluster_id) &&
       !isAPLAvailabilityLoading,
     id: linode?.lke_cluster_id ?? -1,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   });
 
   const { enqueueSnackbar } = useSnackbar();

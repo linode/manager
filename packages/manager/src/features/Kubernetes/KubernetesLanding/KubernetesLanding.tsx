@@ -99,7 +99,7 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { data, error, isLoading } = useKubernetesClustersQuery({
     enabled: !isRestricted,
     filter,
@@ -107,7 +107,7 @@ export const KubernetesLanding = () => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   });
 
   const {

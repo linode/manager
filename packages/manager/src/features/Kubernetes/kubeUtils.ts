@@ -270,10 +270,10 @@ export const useLkeStandardOrEnterpriseVersions = (
 export const useKubernetesBetaEndpoint = () => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
+  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return {
     isAPLAvailabilityLoading,
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   };
 };

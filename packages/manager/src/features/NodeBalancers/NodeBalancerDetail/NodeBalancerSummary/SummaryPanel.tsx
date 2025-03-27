@@ -42,7 +42,7 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
-  const { useBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
   const { status: clusterStatus } = useKubernetesClusterQuery({
@@ -54,7 +54,7 @@ export const SummaryPanel = () => {
       refetchOnWindowFocus: false,
       retry: false,
     },
-    useBetaEndpoint,
+    isUsingBetaEndpoint,
   });
 
   const configPorts = configs?.reduce((acc, config) => {
