@@ -10,7 +10,6 @@ import { useLocation } from 'react-router-dom';
 import {
   getIsDistributedRegion,
   isDistributedRegionSupported,
-  useIsGeckoEnabled,
 } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
@@ -30,6 +29,7 @@ import {
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import { useIsGeckoEnabled } from '@linode/shared';
 
 export interface PlansPanelProps {
   className?: string;
@@ -88,7 +88,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search

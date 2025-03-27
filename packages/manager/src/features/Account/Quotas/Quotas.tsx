@@ -14,9 +14,14 @@ import { useGetLocationsForQuotaService } from './utils';
 import type { Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
+import { useIsGeckoEnabled } from '@linode/shared';
 
 export const Quotas = () => {
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const history = useHistory();
   const [selectedService, setSelectedService] = React.useState<
     SelectOption<QuotaType>
@@ -112,7 +117,7 @@ export const Quotas = () => {
                 currentCapability={undefined}
                 disableClearable
                 disabled={isFetchingLocations}
-                flags={flags}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 loading={isFetchingLocations}
                 noOptionsText={`No resource found for ${selectedService.label}`}
                 regions={regions ?? []}

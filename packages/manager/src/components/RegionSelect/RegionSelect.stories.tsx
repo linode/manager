@@ -31,7 +31,6 @@ const meta: Meta<RegionSelectProps> = {
     currentCapability: undefined,
     disabled: false,
     errorText: '',
-    flags: {},
     helperText: '',
     label: 'Region',
     regions,

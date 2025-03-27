@@ -1,3 +1,4 @@
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Divider, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
@@ -53,6 +54,10 @@ export const DatabaseClusterData = (props: Props) => {
     globalGrantType: 'add_databases',
   });
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const labelToolTip = (
     <StyledLabelTooltip>
@@ -95,7 +100,7 @@ export const DatabaseClusterData = (props: Props) => {
           disableClearable
           disabled={isRestricted}
           errorText={errors.region}
-          flags={flags}
+          isGeckoLAEnabled={isGeckoLAEnabled}
           onChange={(e, region) => onChange('region', region.id)}
           regions={regionsData}
           value={values.region}

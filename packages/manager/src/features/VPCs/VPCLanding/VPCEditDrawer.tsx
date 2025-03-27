@@ -5,6 +5,7 @@ import {
   useRegionsQuery,
   useUpdateVPCMutation,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
@@ -30,6 +31,10 @@ export const VPCEditDrawer = (props: Props) => {
   const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
 
@@ -133,8 +138,8 @@ export const VPCEditDrawer = (props: Props) => {
             currentCapability="VPCs"
             disabled // the Region field will not be editable during beta
             errorText={(regionsError && regionsError[0].reason) || undefined}
-            flags={flags}
             helperText={REGION_HELPER_TEXT}
+            isGeckoLAEnabled={isGeckoLAEnabled}
             onChange={() => null}
             regions={regionsData}
             value={vpc?.region}

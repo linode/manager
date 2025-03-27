@@ -47,7 +47,6 @@ const meta: Meta<RegionMultiSelectProps> = {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    flags: {},
     isClearable: false,
     label: 'Regions',
     placeholder: 'Select Regions or type to search',
