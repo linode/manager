@@ -230,7 +230,7 @@ export const VPCSubnetsTable = (props: Props) => {
         params: { vpcId },
         to: VPC_DETAILS_ROUTE,
       });
-      enqueueSnackbar('Linode not found in subnet', {
+      enqueueSnackbar(`Linode ${selectedLinode.label} not found in subnet`, {
         variant: 'error',
       });
     }
