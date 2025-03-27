@@ -93,11 +93,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
-        <StyledTabs
-          id="plan-selection-tabs"
-          index={tabIndex}
-          onChange={tabChangeHandler}
-        >
+        <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (
               <StyledTab

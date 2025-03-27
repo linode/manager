@@ -93,7 +93,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      <Tabs id="two-step-region-tabs">
+      <Tabs>
         <TabList>
           <Tab>Core</Tab>
           <Tab>Distributed</Tab>
