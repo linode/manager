@@ -1,4 +1,5 @@
-import { useSecurityQuestions, useProfile } from '@linode/queries';
+import { useProfile, useSecurityQuestions } from '@linode/queries';
+import { Box } from '@linode/ui';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
@@ -52,7 +53,7 @@ export const GlobalNotifications = () => {
   );
 
   return (
-    <>
+    <Box sx={(theme) => ({ marginBottom: theme.spacingFunction(24) })}>
       <CreditCardExpiredBanner />
       <DesignUpdateBanner />
       <EmailBounceNotificationSection />
@@ -87,6 +88,6 @@ export const GlobalNotifications = () => {
       Object.keys(flags.taxCollectionBanner).length > 0 ? (
         <TaxCollectionBanner />
       ) : null}
-    </>
+    </Box>
   );
 };
