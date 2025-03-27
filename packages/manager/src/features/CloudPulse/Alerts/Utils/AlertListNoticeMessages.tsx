@@ -17,18 +17,27 @@ interface AlertListNoticeMessagesProps extends NoticeProps {
 export const AlertListNoticeMessages = (
   props: AlertListNoticeMessagesProps
 ) => {
-  const { errorMessage, separator, style, variant } = props;
+  const { errorMessage, separator, style, sx, variant } = props;
   const errorList = errorMessage.split(separator);
 
   if (errorList.length > 1) {
     return (
-      <Notice data-alert-notice style={style} variant={variant}>
-        <List sx={{ listStyleType: 'disc', pl: 1.5 }}>
+      <Notice data-alert-notice style={style} sx={sx} variant={variant}>
+        <List
+          sx={(theme) => ({
+            listStyleType: 'disc',
+            pl: theme.spacingFunction(8),
+          })}
+        >
           {errorList.map((error, index) => (
             <ListItem
+              sx={(theme) => ({
+                display: 'list-item',
+                pl: theme.spacingFunction(4),
+                py: theme.spacingFunction(4),
+              })}
               data-testid="alert_notice_message_list"
               key={index}
-              sx={{ display: 'list-item', pl: 0.5, py: 0.5 }}
             >
               {error}
             </ListItem>
@@ -39,10 +48,10 @@ export const AlertListNoticeMessages = (
   }
 
   return (
-    <Notice data-alert-notice style={style} variant={variant}>
+    <Notice data-alert-notice style={style} sx={sx} variant={variant}>
       <Typography
         sx={(theme) => ({
-          fontFamily: theme.tokens.font.FontWeight.Bold,
+          fontFamily: theme.tokens.font.FontWeight.Extrabold,
         })}
         data-testid="alert_message_notice"
       >

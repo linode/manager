@@ -338,6 +338,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+  const noticeStyles: React.CSSProperties = {
+    alignItems: 'center',
+    backgroundColor: theme.tokens.alias.Background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacingFunction(16),
+  };
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -418,17 +427,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {errorText?.length && (
           <Grid item md={12}>
             <AlertListNoticeMessages
-              style={{
-                alignItems: 'center',
-                background: theme.tokens.alias.Background.Normal,
-                borderRadius: 1,
-                display: 'flex',
-                flexWrap: 'nowrap',
-                marginBottom: 0,
-                padding: theme.tokens.spacing.S16,
-              }}
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
               variant="error"
             />
           </Grid>
@@ -436,17 +437,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {maxSelectionCount !== undefined && (
           <Grid item md={12}>
             <AlertListNoticeMessages
-              style={{
-                alignItems: 'center',
-                background: theme.tokens.alias.Background.Normal,
-                borderRadius: 1,
-                display: 'flex',
-                flexWrap: 'nowrap',
-                marginBottom: 0,
-                padding: theme.tokens.spacing.S16,
-              }}
               errorMessage={`You can select up to ${maxSelectionCount} resources.`}
               separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
               variant="warning"
             />
           </Grid>
