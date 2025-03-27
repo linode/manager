@@ -1,4 +1,4 @@
-import { useAccountSettings, useRegionsQuery } from '@linode/queries';
+import { useAccountSettings, useRegionQuery } from '@linode/queries';
 
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -19,13 +19,11 @@ export const useShowUpgradeInterfaces = (
   interfaceType: InterfaceGenerationType | undefined
 ) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { data: regions } = useRegionsQuery();
+  const { data: region } = useRegionQuery(linodeRegion ?? '');
   const { data: accountSettings } = useAccountSettings();
 
   const regionSupportsLinodeInterfaces =
-    regions
-      ?.find((r) => r.id === linodeRegion)
-      ?.capabilities.includes('Linode Interfaces') ?? false;
+    region?.capabilities.includes('Linode Interfaces') ?? false;
 
   const showUpgradeInterfaces =
     // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
