@@ -1,3 +1,4 @@
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
@@ -26,7 +27,6 @@ import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
-import { useIsGeckoEnabled } from '@linode/shared';
 
 interface QueryParams extends BaseQueryParams {
   page: string;

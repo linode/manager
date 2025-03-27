@@ -1,4 +1,5 @@
 import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
@@ -29,7 +30,6 @@ import {
 import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
-import { useIsGeckoEnabled } from '@linode/shared';
 
 export interface PlansPanelProps {
   className?: string;

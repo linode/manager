@@ -1,4 +1,5 @@
 import { quotaTypes } from '@linode/api-v4';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Divider, Paper, Select, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -14,7 +15,6 @@ import { useGetLocationsForQuotaService } from './utils';
 import type { Quota, QuotaType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
-import { useIsGeckoEnabled } from '@linode/shared';
 
 export const Quotas = () => {
   const flags = useFlags();
