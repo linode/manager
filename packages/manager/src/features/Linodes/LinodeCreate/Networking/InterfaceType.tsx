@@ -15,7 +15,11 @@ interface Props {
 }
 
 export const InterfaceType = ({ index }: Props) => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    setValue,
+    getFieldState,
+  } = useFormContext<LinodeCreateFormValues>();
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
 
@@ -34,14 +38,20 @@ export const InterfaceType = ({ index }: Props) => {
           // Change the interface purpose (Public, VPC, VLAN)
           field.onChange(value);
 
-          // Set the Firewall based on defaults
-          setValue(
-            `linodeInterfaces.${index}.firewall_id`,
-            getDefaultFirewallForInterfacePurpose(
-              value as InterfacePurpose,
-              firewallSettings
-            )
+          const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+            value as InterfacePurpose,
+            firewallSettings
           );
+
+          // Set the Firewall based on defaults if:
+          // - there is a default firewall for this interface type
+          // - the user has not touched the Firewall field
+          if (
+            defaultFirewall &&
+            !getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched
+          ) {
+            setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+          }
         }}
         aria-labelledby="network-interface"
         row
