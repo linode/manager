@@ -1,7 +1,12 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-import { pluralize, regionFactory } from '@linode/utilities';
+import {
+  dedicatedTypeFactory,
+  linodeTypeFactory,
+  pluralize,
+  regionFactory,
+} from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
@@ -38,18 +43,16 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
-import { accountBetaFactory, lkeEnterpriseTypeFactory } from 'src/factories';
 import {
+  accountBetaFactory,
   accountFactory,
-  dedicatedTypeFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
 } from 'src/factories';

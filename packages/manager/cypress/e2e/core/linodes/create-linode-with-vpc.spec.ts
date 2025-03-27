@@ -1,5 +1,6 @@
 import {
   linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
   regionFactory,
 } from '@linode/utilities';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
@@ -27,12 +28,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import {
-  linodeConfigFactory,
-  linodeFactory,
-  subnetFactory,
-  vpcFactory,
-} from 'src/factories';
+import { linodeConfigFactory, subnetFactory, vpcFactory } from 'src/factories';
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 
 describe('Create Linode with VPCs', () => {

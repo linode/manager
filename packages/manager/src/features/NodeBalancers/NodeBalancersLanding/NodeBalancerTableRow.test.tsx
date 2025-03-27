@@ -1,8 +1,8 @@
 import { breakpoints } from '@linode/ui';
+import { nodeBalancerFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { nodeBalancerFactory } from 'src/factories';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 

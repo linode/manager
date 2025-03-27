@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-03-26] - v1.138.1
+
+### Fixed:
+
+- Authentication redirect issue ([#11925](https://github.com/linode/manager/pull/11925))
+
 ## [2025-03-25] - v1.138.0
 
 

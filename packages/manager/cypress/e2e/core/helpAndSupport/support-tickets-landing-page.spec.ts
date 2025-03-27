@@ -1,4 +1,4 @@
-import { linodeConfigInterfaceFactory } from '@linode/utilities';
+import { linodeConfigInterfaceFactory, linodeFactory } from '@linode/utilities';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -22,7 +22,6 @@ import {
 import {
   entityFactory,
   linodeConfigFactory,
-  linodeFactory,
   supportTicketFactory,
   volumeFactory,
 } from 'src/factories';
