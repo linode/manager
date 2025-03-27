@@ -54,6 +54,15 @@ const flags = args.filter((arg) => {
  */
 const root = path.resolve(import.meta.dirname, '..', '..');
 
+const PACKAGE_PATHS = {
+  'manager': path.resolve(root, 'packages', 'manager', 'package.json'),
+  'api-v4': path.resolve(root, 'packages', 'api-v4', 'package.json'),
+  'validation': path.resolve(root, 'packages', 'validation', 'package.json'),
+  'ui': path.resolve(root, 'packages', 'ui', 'package.json'),
+  'utilities': path.resolve(root, 'packages', 'utilities', 'package.json'),
+  'queries': path.resolve(root, 'packages', 'queries', 'package.json')
+};
+
 /**
  * Gets the path to the package.json file for the package with the given name.
  *
@@ -62,7 +71,11 @@ const root = path.resolve(import.meta.dirname, '..', '..');
  * @returns {string} Package path for `packageName`.
  */
 const getPackagePath = (packageName) => {
-  return path.join(root, 'packages', packageName, 'package.json');
+  if (!PACKAGE_PATHS[packageName]) {
+    throw new Error(`Invalid package name: ${packageName}`);
+  }
+  
+  return PACKAGE_PATHS[packageName];
 };
 
 /**
