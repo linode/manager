@@ -161,9 +161,11 @@ export const VPC = ({ index }: Props) => {
                 {field.value !== 'auto' && (
                   <TextField
                     errorText={
-                      fieldState.error?.message ??
-                      errors.linodeInterfaces?.[index]?.vpc?.ipv4
-                        ?.addresses?.[0]?.message
+                      fieldState.isTouched ?
+                        fieldState.error?.message ??
+                        errors.linodeInterfaces?.[index]?.vpc?.ipv4
+                          ?.addresses?.[0]?.message
+                        : undefined
                     }
                     containerProps={{ sx: { mb: 1.5, mt: 1 } }}
                     label="VPC IPv4"
