@@ -5,12 +5,12 @@ import {
   deleteFirewallDevice,
   getFirewall,
   getFirewallDevices,
+  getFirewallSettings,
   getFirewalls,
   getTemplate,
   getTemplates,
   updateFirewall,
   updateFirewallRules,
-  getFirewallSettings,
   updateFirewallSettings,
 } from '@linode/api-v4/lib/firewalls';
 import { getAll } from '@linode/utilities';
@@ -36,14 +36,15 @@ import type {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallSettings,
   FirewallTemplate,
   FirewallTemplateSlug,
   Params,
   ResourcePage,
   UpdateFirewallRules,
-  FirewallSettings,
   UpdateFirewallSettings,
 } from '@linode/api-v4';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 const getAllFirewallDevices = (
   id: number,
@@ -285,8 +286,13 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   });
 };
 
-export const useFirewallSettingsQuery = () => {
-  return useQuery<FirewallSettings, APIError[]>(firewallQueries.settings);
+export const useFirewallSettingsQuery = (
+  options?: Partial<UseQueryOptions<FirewallSettings, APIError[]>>
+) => {
+  return useQuery<FirewallSettings, APIError[]>({
+    ...firewallQueries.settings,
+    ...options,
+  });
 };
 
 export const useFirewallTemplatesQuery = () => {

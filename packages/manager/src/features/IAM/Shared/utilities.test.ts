@@ -1,5 +1,8 @@
+import { userPermissionsFactory } from 'src/factories/userPermissions';
+
 import {
   combineRoles,
+  deleteUserRole,
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
@@ -197,6 +200,84 @@ describe('updateUserRoles', () => {
         assignedRoles: userPermissions,
         initialRole,
         newRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+});
+
+describe('deleteUserRole', () => {
+  it('should return an object of updated users roles with resource access', () => {
+    const initialRole = 'linode_contributor';
+
+    const expectedRoles = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      resource_access: [],
+    };
+
+    expect(
+      deleteUserRole({
+        access: resourceAccess,
+        assignedRoles: userPermissions,
+        initialRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with resource access', () => {
+    const initialRole = 'linode_contributor';
+
+    const userPermissions = userPermissionsFactory.build();
+
+    const expectedRoles = {
+      account_access: [
+        'account_linode_admin',
+        'linode_creator',
+        'firewall_creator',
+        'account_admin',
+        'account_viewer',
+      ],
+      resource_access: [
+        {
+          resource_id: 23456789,
+          resource_type: 'linode',
+          roles: ['linode_viewer'],
+        },
+        {
+          resource_id: 45678901,
+          resource_type: 'firewall',
+          roles: ['update_firewall'],
+        },
+      ],
+    };
+
+    expect(
+      deleteUserRole({
+        access: resourceAccess,
+        assignedRoles: userPermissions,
+        initialRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with account access', () => {
+    const initialRole = 'account_linode_admin';
+
+    const expectedRoles = {
+      account_access: ['linode_creator'],
+      resource_access: [
+        {
+          resource_id: 12345678,
+          resource_type: 'linode',
+          roles: ['linode_contributor'],
+        },
+      ],
+    };
+
+    expect(
+      deleteUserRole({
+        access: accountAccess,
+        assignedRoles: userPermissions,
+        initialRole,
       })
     ).toEqual(expectedRoles);
   });

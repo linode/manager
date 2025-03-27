@@ -1,8 +1,10 @@
-import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
+import {
+  linodeConfigInterfaceFactoryWithVPC,
+  linodeIPFactory,
+} from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeIPFactory } from 'src/factories/linodes';
 import {
   ipResponseToDisplayRows,
   vpcConfigInterfaceToDisplayRows,
