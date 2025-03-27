@@ -40,7 +40,9 @@ export const CloudPulseServiceSelect = (
     string,
     AlertServiceType
   >[] => {
-    return serviceOptions && serviceOptions.data.length > 0
+    return serviceOptions &&
+      serviceOptions.data &&
+      serviceOptions.data.length > 0
       ? serviceOptions.data.map((service) => ({
           label: service.label,
           value: service.service_type as AlertServiceType,
