@@ -48,6 +48,7 @@ const meta: Meta<RegionMultiSelectProps> = {
     disabled: false,
     errorText: '',
     isClearable: false,
+    isGeckoLAEnabled: false,
     label: 'Regions',
     placeholder: 'Select Regions or type to search',
     regions,

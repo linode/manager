@@ -32,6 +32,7 @@ const meta: Meta<RegionSelectProps> = {
     disabled: false,
     errorText: '',
     helperText: '',
+    isGeckoLAEnabled: false,
     label: 'Region',
     regions,
     required: true,
