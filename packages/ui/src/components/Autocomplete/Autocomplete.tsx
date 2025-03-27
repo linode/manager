@@ -96,6 +96,7 @@ export const Autocomplete = <
     value,
     ...rest
   } = props;
+  const [isReadonly, setIsReadonly] = React.useState(false);
 
   const isSelectAllActive =
     multiple && Array.isArray(value) && value.length === options.length;
@@ -144,6 +145,11 @@ export const Autocomplete = <
                     </>
                   ),
                 }}
+                inputProps={{
+                  ...params.inputProps,
+                  ...textFieldProps?.inputProps,
+                  readOnly: isReadonly,
+                }}
               />
             )
       }
@@ -183,6 +189,9 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
+      onTouchStart={() => {
+        setIsReadonly(true);
+      }}
       popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       value={value}
       {...rest}
