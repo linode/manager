@@ -69,6 +69,9 @@ export interface DisplayAlertResourceProp {
    */
   isSelectionsNeeded?: boolean;
 
+  /**
+   * The maximum number of elements that can be selected
+   */
   maxSelectionCount?: number;
 
   /**
@@ -76,6 +79,9 @@ export interface DisplayAlertResourceProp {
    */
   scrollToElement: () => void;
 
+  /**
+   * The number of elements that can be selected based on selected resources and maximum selections
+   */
   selectionsRemaining?: number;
 
   /**
