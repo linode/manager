@@ -25,6 +25,7 @@ interface Props {
 export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
+
   const {
     ipAddress,
     ipType,
@@ -36,15 +37,15 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   } = props;
 
   const showEdit = ![
-    'Link Local – IPv6',
-    'Private – IPv4',
-    'Reserved IPv4 (private)',
-    'Reserved IPv4 (public)',
-    'VPC NAT – IPv4',
-    'VPC – IPv4',
+    'IPv4 – Private',
+    'IPv4 – Reserved (private)',
+    'IPv4 – Reserved (public)',
+    'IPv4 – VPC',
+    'IPv6 – Link Local',
+    'VPC IPv4 – NAT',
   ].includes(ipType);
 
-  const deletableIPTypes = ['Private – IPv4', 'Public – IPv4', 'Range – IPv6'];
+  const deletableIPTypes = ['IPv4 – Public', 'IPv4 – Private', 'IPv6 – Range'];
 
   // if we have a 116 we don't want to give the option to remove it
   const is116Range = ipAddress?.prefix === 116;

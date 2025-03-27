@@ -1,8 +1,8 @@
 import {
-  useAllIPsQuery,
+  usePreferences,
   useLinodeIPsQuery,
   useLinodeQuery,
-  usePreferences,
+  useAllIPsQuery,
 } from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -59,7 +59,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   );
 
   const isOnlyPublicIP =
-    ips?.ipv4.public.length === 1 && type === 'Public – IPv4';
+    ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
   return (
     <StyledTableRow

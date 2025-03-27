@@ -135,10 +135,10 @@ describe('ipResponseToDisplayRows', () => {
     );
 
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'Public – IPv4')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
     ).toBeUndefined();
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC NAT – IPv4')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC IPv4 – NAT')
     ).toBeDefined();
   });
 });

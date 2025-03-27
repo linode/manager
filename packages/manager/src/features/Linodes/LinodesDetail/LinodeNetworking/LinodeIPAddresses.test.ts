@@ -1,9 +1,9 @@
+import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+
 import { ipAddressFactory } from 'src/factories/networking';
 
-import { createType, ipResponseToDisplayRows } from './LinodeIPAddresses';
 import { listIPv6InRange } from './LinodeIPAddressRow';
-
-import type { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { createType, ipResponseToDisplayRows } from './LinodeIPAddresses';
 
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);
@@ -86,19 +86,21 @@ describe('createType utility function', () => {
     const publicIPv4 = ipAddressFactory.build({ public: true, type: 'ipv4' });
     const privateIPv4 = ipAddressFactory.build({ public: false, type: 'ipv4' });
 
-    expect(createType(publicIPv4, 'Public')).toBe('Public – IPv4');
-    expect(createType(privateIPv4, 'Private')).toBe('Private – IPv4');
+    expect(createType(publicIPv4, 'Public')).toBe('IPv4 – Public');
+    expect(createType(privateIPv4, 'Private')).toBe('IPv4 – Private');
 
-    expect(createType(publicIPv4, 'Reserved')).toBe('Reserved IPv4 (public)');
-    expect(createType(privateIPv4, 'Reserved')).toBe('Reserved IPv4 (private)');
+    expect(createType(publicIPv4, 'Reserved')).toBe('IPv4 – Reserved (public)');
+    expect(createType(privateIPv4, 'Reserved')).toBe(
+      'IPv4 – Reserved (private)'
+    );
 
-    expect(createType(publicIPv4, 'Shared')).toBe('Shared – IPv4');
+    expect(createType(publicIPv4, 'Shared')).toBe('IPv4 – Shared');
   });
 
   it('creates the correct type for ipv6', () => {
     const ipv6 = ipAddressFactory.build({ type: 'ipv6' });
 
-    expect(createType(ipv6, 'SLAAC')).toBe('Public – IPv6 – SLAAC');
-    expect(createType(ipv6, 'Link Local')).toBe('Link Local – IPv6');
+    expect(createType(ipv6, 'SLAAC')).toBe('IPv6 – SLAAC');
+    expect(createType(ipv6, 'Link Local')).toBe('IPv6 – Link Local');
   });
 });

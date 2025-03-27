@@ -1,9 +1,9 @@
-import { useLinodeIPDeleteMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { useLinodeIPDeleteMutation } from '@linode/queries';
 
 interface Props {
   address: string;

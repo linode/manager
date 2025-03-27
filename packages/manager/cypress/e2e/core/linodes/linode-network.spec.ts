@@ -83,7 +83,7 @@ describe('IP Addresses', () => {
    * - Confirms the success toast message after editing RDNS
    */
   it('checks for the toast message upon editing an RDNS', () => {
-    cy.findByLabelText('Linode IP Addresses')
+    cy.findByLabelText('IPv4 Addresses')
       .should('be.visible')
       .within(() => {
         // confirm table headers
@@ -99,7 +99,7 @@ describe('IP Addresses', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText('Public – IPv4').should('be.visible');
+        cy.findByText('IPv4 – Public').should('be.visible');
         cy.findByText(mockRDNS).should('be.visible');
 
         // open up the edit RDNS drawer
@@ -136,7 +136,7 @@ describe('IP Addresses', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText('Public – IPv4').should('be.visible');
+        cy.findByText('IPv4 – Public').should('be.visible');
         ui.actionMenu
           .findByTitle(`Action menu for IP Address ${linodeIPv4}`)
           .should('be.visible');
@@ -147,7 +147,7 @@ describe('IP Addresses', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText('Range – IPv6').should('be.visible');
+        cy.findByText('IPv6 – Range').should('be.visible');
         ui.actionMenu
           .findByTitle(`Action menu for IP Address ${_ipv6Range.range}`)
           .should('be.visible');

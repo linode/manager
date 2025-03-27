@@ -1,9 +1,4 @@
 import {
-  useLinodeIPsQuery,
-  useLinodeQuery,
-  useRegionsQuery,
-} from '@linode/queries';
-import {
   Box,
   Button,
   CircleProgress,
@@ -26,6 +21,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import {
+  useLinodeQuery,
+  useLinodeIPsQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -48,7 +48,7 @@ import type {
   LinodeIPsResponse,
 } from '@linode/api-v4';
 
-export const ipTableId = 'ips';
+export const ipv4TableID = 'ips';
 
 interface LinodeIPAddressesProps {
   linodeID: number;
@@ -207,15 +207,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <OrderBy
-        data={ipDisplay}
-        order="asc"
-        orderBy="type"
-        preferenceKey={'linode-network-ip-table'}
-      >
+      <OrderBy data={ipDisplay} order="asc" orderBy="type">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
-            <Table aria-label="Linode IP Addresses" id={ipTableId}>
+            <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: '15%' }}>Address</TableCell>
@@ -240,7 +235,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                     {...ipDisplay}
                     {...handlers}
                     isVPCOnlyLinode={
-                      isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
+                      isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
                     }
                     key={`${ipDisplay.address}-${ipDisplay.type}`}
                     linodeId={linodeID}
@@ -344,7 +339,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.vpc) {
     ipDisplay.push({
       address: ipv4.vpc,
-      type: 'VPC – IPv4',
+      type: 'IPv4 – VPC',
       ...emptyProps,
     });
   }
@@ -352,7 +347,7 @@ export const vpcConfigInterfaceToDisplayRows = (
   if (ipv4?.nat_1_1) {
     ipDisplay.push({
       address: ipv4.nat_1_1,
-      type: 'VPC NAT – IPv4',
+      type: 'VPC IPv4 – NAT',
       ...emptyProps,
     });
   }
@@ -361,7 +356,7 @@ export const vpcConfigInterfaceToDisplayRows = (
     ip_ranges.forEach((ip_range) => {
       ipDisplay.push({
         address: ip_range,
-        type: 'VPC – Range – IPv4',
+        type: 'IPv4 – VPC – Range',
         ...emptyProps,
       });
     });
@@ -428,7 +423,7 @@ export const ipResponseToDisplayRows = (
         gateway: '',
         rdns: '',
         subnetMask: '',
-        type: 'Range – IPv6' as IPDisplay['type'],
+        type: 'IPv6 – Range' as IPDisplay['type'],
       };
     })
   );
@@ -460,13 +455,16 @@ const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
 };
 
 export const createType = (ip: IPAddress, key: ipKey) => {
-  if (key === 'Reserved' && ip.type === 'ipv4') {
-    return ip.public ? 'Reserved IPv4 (public)' : 'Reserved IPv4 (private)';
+  let type = '';
+  type += ip.type === 'ipv4' ? 'IPv4' : 'IPv6';
+
+  type += ' – ';
+
+  if (key === 'Reserved') {
+    type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
+  } else {
+    type += key;
   }
 
-  if (key === 'SLAAC') {
-    return 'Public – IPv6 – SLAAC';
-  }
-
-  return `${key} – ${ip.type === 'ipv4' ? 'IPv4' : 'IPv6'}`;
+  return type;
 };
