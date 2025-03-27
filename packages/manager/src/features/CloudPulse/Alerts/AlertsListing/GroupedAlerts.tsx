@@ -33,18 +33,18 @@ interface GroupedAlertsProps {
   /**
    *  Callback function to handle enabling or disabling an alert
    */
-  handleEnableDisable: (alert: Alert) => void;
+  handleStatusChange: (alert: Alert) => void;
   /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
 }
 
-export const AlertsGroupedByTag = ({
+export const GroupedAlertsTable = ({
   groupedAlerts,
   handleDetails,
   handleEdit,
-  handleEnableDisable,
+  handleStatusChange,
   services,
 }: GroupedAlertsProps) => {
   const theme = useTheme();
@@ -66,7 +66,7 @@ export const AlertsGroupedByTag = ({
   );
 
   return (
-    <React.Fragment>
+    <>
       {groupedAlerts.map(([tag, alertsForTag]) => {
         const tagRef = tagRefs.current.get(tag);
 
@@ -88,12 +88,12 @@ export const AlertsGroupedByTag = ({
                     </StyledTagHeader>
                   </TableCell>
                 </StyledTagHeaderRow>
-                {paginatedTagAlerts.map((alert: Alert) => (
+                {paginatedTagAlerts.map((alert) => (
                   <AlertTableRow
                     handlers={{
                       handleDetails: () => handleDetails(alert),
                       handleEdit: () => handleEdit(alert),
-                      handleEnableDisable: () => handleEnableDisable(alert),
+                      handleStatusChange: () => handleStatusChange(alert),
                     }}
                     alert={alert}
                     key={alert.id}
@@ -131,6 +131,6 @@ export const AlertsGroupedByTag = ({
           </Paginate>
         );
       })}
-    </React.Fragment>
+    </>
   );
 };

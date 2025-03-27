@@ -103,7 +103,7 @@ export const usePreferencesToggle = (
 
     // if the preference is undefined, set it to false
     if (preference === undefined) {
-      newPreferenceToSet = options[0];
+      newPreferenceToSet = options[1];
     } else if (preference === options[0]) {
       newPreferenceToSet = options[1];
     } else {

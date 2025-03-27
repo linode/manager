@@ -22,18 +22,18 @@ interface UngroupedAlertsProps {
   /**
    * Callback function to handle enabling or disabling an alert
    */
-  handleEnableDisable: (alert: Alert) => void;
+  handleStatusChange: (alert: Alert) => void;
   /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
 }
 
-export const UngroupedAlerts = ({
+export const AlertsTable = ({
   alerts,
   handleDetails,
   handleEdit,
-  handleEnableDisable,
+  handleStatusChange,
   services,
 }: UngroupedAlertsProps) => {
   return (
@@ -43,7 +43,7 @@ export const UngroupedAlerts = ({
           handlers={{
             handleDetails: () => handleDetails(alert),
             handleEdit: () => handleEdit(alert),
-            handleEnableDisable: () => handleEnableDisable(alert),
+            handleStatusChange: () => handleStatusChange(alert),
           }}
           alert={alert}
           key={alert.id}

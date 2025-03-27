@@ -124,7 +124,7 @@ export const AlertListing = () => {
   const {
     preference,
     toggle: toggleAlertsGroupedByTag,
-  } = usePreferencesToggle('alerts_group_by_tag', [false, true]);
+  } = usePreferencesToggle('alertsGroupByTag', [false, true]);
 
   if (alerts && alerts.length === 0) {
     return (
