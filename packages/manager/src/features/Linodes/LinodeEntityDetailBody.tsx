@@ -83,6 +83,7 @@ export interface BodyProps {
   numVolumes: number;
   region: string;
   regionSupportsDiskEncryption: boolean;
+  showUpgradeInterfacesChip: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -107,6 +108,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numVolumes,
     region,
     regionSupportsDiskEncryption,
+    showUpgradeInterfacesChip,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -128,6 +130,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -416,9 +419,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-              1
-            )} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
+              16
+            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 2,
             },
@@ -482,17 +485,19 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <Chip
-                    sx={(theme) => ({
-                      backgroundColor: theme.color.tagButtonBg,
-                      color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
-                    })}
-                    component="span"
-                    label="UPGRADE"
-                    onClick={openUpgradeInterfacesDialog}
-                    size="small"
-                  />
+                  {showUpgradeInterfacesChip && (
+                    <Chip
+                      sx={(theme) => ({
+                        backgroundColor: theme.color.tagButtonBg,
+                        color: theme.tokens.color.Neutrals[80],
+                        marginLeft: theme.spacingFunction(4),
+                      })}
+                      component="span"
+                      label="UPGRADE"
+                      onClick={openUpgradeInterfacesDialog}
+                      size="small"
+                    />
+                  )}
                 </Box>
               )}
             </StyledListItem>

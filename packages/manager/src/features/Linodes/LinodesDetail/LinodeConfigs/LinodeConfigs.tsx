@@ -19,8 +19,8 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
@@ -37,9 +37,11 @@ const LinodeConfigs = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
+  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+    linode?.lke_cluster_id,
+    linode?.region,
+    linode?.interface_generation
+  );
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
@@ -112,18 +114,17 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        {isLinodeInterfacesEnabled &&
-          linode?.interface_generation !== 'linode' && (
-            <Button
-              alwaysShowTooltip
-              buttonType="outlined"
-              disabled={isReadOnly}
-              onClick={openUpgradeInterfacesDialog}
-              tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
-            >
-              Upgrade Interfaces
-            </Button>
-          )}
+        {showUpgradeInterfaces && (
+          <Button
+            alwaysShowTooltip
+            buttonType="outlined"
+            disabled={isReadOnly}
+            onClick={openUpgradeInterfacesDialog}
+            tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
+          >
+            Upgrade Interfaces
+          </Button>
+        )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>

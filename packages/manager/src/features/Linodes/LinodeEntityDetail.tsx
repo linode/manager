@@ -12,6 +12,7 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -61,6 +62,12 @@ export const LinodeEntityDetail = (props: Props) => {
   const numberOfVolumes = volumes?.results ?? 0;
 
   const { data: regions } = useRegionsQuery();
+
+  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+    linode.lke_cluster_id,
+    linode.region,
+    linode.interface_generation
+  );
 
   const {
     configInterfaceWithVPC,
@@ -147,6 +154,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numVolumes={numberOfVolumes}
             region={linode.region}
             regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+            showUpgradeInterfacesChip={showUpgradeInterfaces}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }
