@@ -399,8 +399,8 @@ describe('longview', () => {
         .click();
     });
     ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-    ui.dialog.findByTitle(`Delete ${client.label}?`).within(() => {
+    // TODO: intentionally fail test
+    ui.dialog.findByTitle(`ABCDEFDelete ${client.label}?`).within(() => {
       ui.buttonGroup
         .findButtonByTitle('Delete')
         .should('be.visible')

@@ -83,7 +83,8 @@ export default defineConfig({
 
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
+    // TODO: only runa  few tests for presentation
+    specPattern: 'cypress/e2e/core/longview/*.spec.{ts,tsx}',
 
     setupNodeEvents(cypressOn, config) {
       const on = cypressOnFix(cypressOn);
