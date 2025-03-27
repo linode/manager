@@ -157,15 +157,15 @@ export const DisplayAlertResources = React.memo(
     );
 
     const disableRootCheckBox = (paginatedData: AlertInstance[]) => {
-      // 3, 3 -> true, 2,4 -> false , 4,2 -> true
+      if (selectionsRemaining === undefined) {
+        return false;
+      }
+
       const uncheckedData = paginatedData.filter(
         ({ checked = false }) => !checked
       );
 
-      return (
-        selectionsRemaining !== undefined &&
-        selectionsRemaining < uncheckedData.length
-      );
+      return selectionsRemaining < uncheckedData.length;
     };
 
     const columns = serviceTypeBasedColumns[serviceType ?? ''];
