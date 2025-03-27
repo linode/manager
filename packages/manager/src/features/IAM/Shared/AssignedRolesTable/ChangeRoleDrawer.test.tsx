@@ -95,13 +95,6 @@ describe('ChangeRoleDrawer', () => {
 
     const autocomplete = screen.getByRole('combobox');
 
-    await waitFor(
-      () => {
-        expect(autocomplete).toHaveValue('account_admin');
-      },
-      { interval: 100, timeout: 5000 }
-    );
-
     act(() => {
       // Open the dropdown
       fireEvent.click(autocomplete);

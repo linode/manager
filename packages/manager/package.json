@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.138.0",
+  "version": "1.138.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -28,6 +28,7 @@
     "@linode/validation": "workspace:*",
     "@linode/queries": "workspace:*",
     "@linode/search": "workspace:*",
+    "@linode/shared": "workspace:*",
     "@linode/ui": "workspace:*",
     "@linode/utilities": "workspace:*",
     "@lukemorales/query-key-factory": "^1.3.4",
