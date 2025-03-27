@@ -12,6 +12,7 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -62,6 +63,12 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
+  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+    linode.lke_cluster_id,
+    linode.region,
+    linode.interface_generation
+  );
+
   const {
     configInterfaceWithVPC,
     configs,
@@ -103,11 +110,6 @@ export const LinodeEntityDetail = (props: Props) => {
         ?.find((r) => r.id === linode.region)
         ?.capabilities.includes('LA Disk Encryption')) ??
     false;
-
-  const regionSupportsLinodeInterfaces =
-    regions
-      ?.find((r) => r.id === linode.region)
-      ?.capabilities.includes('Linode Interfaces') ?? false;
 
   let progress;
   let transitionText;
@@ -152,7 +154,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numVolumes={numberOfVolumes}
             region={linode.region}
             regionSupportsDiskEncryption={regionSupportsDiskEncryption}
-            regionSupportsLinodeInterfaces={regionSupportsLinodeInterfaces}
+            showUpgradeInterfacesChip={showUpgradeInterfaces}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

@@ -1,8 +1,4 @@
-import {
-  useAccountSettings,
-  useLinodeQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -18,6 +14,7 @@ import {
 } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
 
 import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 
@@ -61,21 +58,11 @@ export const LinodeDetail = () => {
   const id = Number(linodeId);
 
   const { data: linode, error, isLoading } = useLinodeQuery(id);
-  const { data: regions } = useRegionsQuery();
-  const { data: accountSettings } = useAccountSettings();
-  const regionSupportsLinodeInterfaces =
-    regions
-      ?.find((r) => r.id === linode?.region)
-      ?.capabilities.includes('Linode Interfaces') ?? false;
-
-  const showUpgradeInterfacesDialog =
-    // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
-    // using Legacy config profile interfaces in a region that supports the new Interfaces
-    // and our account can have Linodes using new interfaces
-    linode?.interface_generation !== 'linode' &&
-    !linode?.lke_cluster_id &&
-    accountSettings?.interfaces_for_new_linodes !== 'legacy_config_only' &&
-    regionSupportsLinodeInterfaces;
+  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+    linode?.lke_cluster_id,
+    linode?.region,
+    linode?.interface_generation
+  );
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -116,7 +103,7 @@ export const LinodeDetail = () => {
               <UpgradeInterfacesDialog
                 open={
                   pathname.includes('upgrade-interfaces') &&
-                  showUpgradeInterfacesDialog
+                  showUpgradeInterfaces
                 }
                 linodeId={id}
                 onClose={closeUpgradeInterfacesDialog}

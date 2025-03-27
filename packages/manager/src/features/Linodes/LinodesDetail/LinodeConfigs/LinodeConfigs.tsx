@@ -1,9 +1,7 @@
 import {
-  useAccountSettings,
   useAllLinodeConfigsQuery,
   useGrants,
   useLinodeQuery,
-  useRegionsQuery,
 } from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -21,8 +19,8 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
@@ -39,11 +37,11 @@ const LinodeConfigs = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-  const { data: regions } = useRegionsQuery();
-  const { data: accountSettings } = useAccountSettings();
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
+  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+    linode?.lke_cluster_id,
+    linode?.region,
+    linode?.interface_generation
+  );
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
@@ -54,20 +52,6 @@ const LinodeConfigs = () => {
     grants !== undefined &&
     grants?.linode.find((grant) => grant.id === id)?.permissions ===
       'read_only';
-
-  const regionSupportsLinodeInterfaces =
-    regions
-      ?.find((r) => r.id === linode?.region)
-      ?.capabilities.includes('Linode Interfaces') ?? false;
-  const showUpgradeInterfacesButton =
-    // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
-    // using Legacy config profile interfaces in a region that supports the new Interfaces
-    // and our account can have Linodes using new interfaces
-    isLinodeInterfacesEnabled &&
-    linode?.interface_generation !== 'linode' &&
-    !linode?.lke_cluster_id &&
-    accountSettings?.interfaces_for_new_linodes !== 'legacy_config_only' &&
-    regionSupportsLinodeInterfaces;
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
@@ -130,7 +114,7 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        {showUpgradeInterfacesButton && (
+        {showUpgradeInterfaces && (
           <Button
             alwaysShowTooltip
             buttonType="outlined"
