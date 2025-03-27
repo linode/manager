@@ -117,7 +117,8 @@ const Panel = (props: NodePoolPanelProps) => {
     if (selectedTier === 'enterprise') {
       return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
     }
-    return regionSupportsDiskEncryption && Boolean(flags.linodeDiskEncryption)
+    // @TODO LDE: once LDE has been fully rolled out and is in GA in all regions, remove the feature flag condition
+    return regionSupportsDiskEncryption && flags.linodeDiskEncryption
       ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
       : ADD_NODE_POOLS_DESCRIPTION;
   };
