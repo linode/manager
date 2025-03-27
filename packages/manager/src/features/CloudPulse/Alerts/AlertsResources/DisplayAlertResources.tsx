@@ -178,14 +178,6 @@ export const DisplayAlertResources = React.memo(
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;
-
-    const ErrorTypoGraphy = React.memo(() => {
-      return (
-        <Typography data-testid="warning-tip">
-          {`You can select upto ${maxSelectionCount} resources.`}
-        </Typography>
-      );
-    });
     return (
       <Paginate data={sortedData ?? []} pageSize={pageSize}>
         {({
@@ -218,8 +210,11 @@ export const DisplayAlertResources = React.memo(
                           },
                         }}
                         title={
+                          maxSelectionCount !== undefined &&
                           disableRootCheckBox(paginatedData) ? (
-                            <ErrorTypoGraphy />
+                            <ErrorTypoGraphy
+                              maxSelectionCount={maxSelectionCount}
+                            />
                           ) : undefined
                         }
                         placement="right"
@@ -291,7 +286,9 @@ export const DisplayAlertResources = React.memo(
                               title={
                                 boxDisabled &&
                                 maxSelectionCount !== undefined ? (
-                                  <ErrorTypoGraphy />
+                                  <ErrorTypoGraphy
+                                    maxSelectionCount={maxSelectionCount}
+                                  />
                                 ) : undefined
                               }
                               placement="right"
@@ -361,6 +358,16 @@ export const DisplayAlertResources = React.memo(
           </>
         )}
       </Paginate>
+    );
+  }
+);
+
+const ErrorTypoGraphy = React.memo(
+  ({ maxSelectionCount }: { maxSelectionCount: number }) => {
+    return (
+      <Typography data-testid="warning-tip">
+        {`You can select upto ${maxSelectionCount} resources.`}
+      </Typography>
     );
   }
 );
