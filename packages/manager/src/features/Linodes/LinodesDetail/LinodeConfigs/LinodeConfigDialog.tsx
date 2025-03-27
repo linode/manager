@@ -44,7 +44,10 @@ import * as React from 'react';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
-import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
+} from 'src/features/Kubernetes/kubeUtils';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -256,10 +259,20 @@ export const LinodeConfigDialog = (props: Props) => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const { data: cluster } = useKubernetesClusterQuery(
-    linode?.lke_cluster_id ?? -1,
-    isLkeEnterpriseLAFeatureEnabled && Boolean(linode?.lke_cluster_id)
-  );
+
+  const {
+    isAPLAvailabilityLoading,
+    isUsingBetaEndpoint,
+  } = useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    enabled:
+      isLkeEnterpriseLAFeatureEnabled &&
+      Boolean(linode?.lke_cluster_id) &&
+      !isAPLAvailabilityLoading,
+    id: linode?.lke_cluster_id ?? -1,
+    isUsingBetaEndpoint,
+  });
 
   const { enqueueSnackbar } = useSnackbar();
 
