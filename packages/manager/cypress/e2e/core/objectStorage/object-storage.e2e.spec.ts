@@ -170,31 +170,31 @@ describe('object storage end-to-end tests', () => {
       interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
         'updateBucketAccess'
       );
+
+      // Navigate to new bucket page, upload and delete an object.
+      cy.visitWithLogin(bucketAccessPage);
+
+      cy.wait('@getBucketAccess');
+
+      // Make object public, confirm it can be accessed.
+      cy.findByLabelText('Access Control List (ACL)')
+        .should('be.visible')
+        .should('not.have.value', 'Loading access...')
+        .should('have.value', 'Private')
+        .click();
+      cy.focused().type('Public Read');
+
+      ui.autocompletePopper
+        .findByTitle('Public Read')
+        .should('be.visible')
+        .click();
+
+      ui.button.findByTitle('Save').should('be.visible').click();
+
+      // TODO Confirm that outgoing API request contains expected values.
+      cy.wait('@updateBucketAccess');
+
+      cy.findByText('Bucket access updated successfully.');
     });
-
-    // Navigate to new bucket page, upload and delete an object.
-    cy.visitWithLogin(bucketAccessPage);
-
-    cy.wait('@getBucketAccess');
-
-    // Make object public, confirm it can be accessed.
-    cy.findByLabelText('Access Control List (ACL)')
-      .should('be.visible')
-      .should('not.have.value', 'Loading access...')
-      .should('have.value', 'Private')
-      .click();
-    cy.focused().type('Public Read');
-
-    ui.autocompletePopper
-      .findByTitle('Public Read')
-      .should('be.visible')
-      .click();
-
-    ui.button.findByTitle('Save').should('be.visible').click();
-
-    // TODO Confirm that outgoing API request contains expected values.
-    cy.wait('@updateBucketAccess');
-
-    cy.findByText('Bucket access updated successfully.');
   });
 });
