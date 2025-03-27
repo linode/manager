@@ -1,7 +1,9 @@
 import {
+  useAccountSettings,
   useAllLinodeConfigsQuery,
   useGrants,
   useLinodeQuery,
+  useRegionsQuery,
 } from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -37,6 +39,8 @@ const LinodeConfigs = () => {
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
+  const { data: regions } = useRegionsQuery();
+  const { data: accountSettings } = useAccountSettings();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
@@ -50,6 +54,20 @@ const LinodeConfigs = () => {
     grants !== undefined &&
     grants?.linode.find((grant) => grant.id === id)?.permissions ===
       'read_only';
+
+  const regionSupportsLinodeInterfaces =
+    regions
+      ?.find((r) => r.id === linode?.region)
+      ?.capabilities.includes('Linode Interfaces') ?? false;
+  const showUpgradeInterfacesButton =
+    // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
+    // using Legacy config profile interfaces in a region that supports the new Interfaces
+    // and our account can have Linodes using new interfaces
+    isLinodeInterfacesEnabled &&
+    linode?.interface_generation !== 'linode' &&
+    !linode?.lke_cluster_id &&
+    accountSettings?.interfaces_for_new_linodes !== 'legacy_config_only' &&
+    regionSupportsLinodeInterfaces;
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
@@ -112,18 +130,17 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        {isLinodeInterfacesEnabled &&
-          linode?.interface_generation !== 'linode' && (
-            <Button
-              alwaysShowTooltip
-              buttonType="outlined"
-              disabled={isReadOnly}
-              onClick={openUpgradeInterfacesDialog}
-              tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
-            >
-              Upgrade Interfaces
-            </Button>
-          )}
+        {showUpgradeInterfacesButton && (
+          <Button
+            alwaysShowTooltip
+            buttonType="outlined"
+            disabled={isReadOnly}
+            onClick={openUpgradeInterfacesDialog}
+            tooltipText="Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading."
+          >
+            Upgrade Interfaces
+          </Button>
+        )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>

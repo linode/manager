@@ -104,6 +104,11 @@ export const LinodeEntityDetail = (props: Props) => {
         ?.capabilities.includes('LA Disk Encryption')) ??
     false;
 
+  const regionSupportsLinodeInterfaces =
+    regions
+      ?.find((r) => r.id === linode.region)
+      ?.capabilities.includes('Linode Interfaces') ?? false;
+
   let progress;
   let transitionText;
 
@@ -147,6 +152,7 @@ export const LinodeEntityDetail = (props: Props) => {
             numVolumes={numberOfVolumes}
             region={linode.region}
             regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+            regionSupportsLinodeInterfaces={regionSupportsLinodeInterfaces}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }

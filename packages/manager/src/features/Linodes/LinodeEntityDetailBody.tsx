@@ -1,4 +1,8 @@
-import { usePreferences, useProfile } from '@linode/queries';
+import {
+  useAccountSettings,
+  usePreferences,
+  useProfile,
+} from '@linode/queries';
 import { Box, Chip, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
@@ -83,6 +87,7 @@ export interface BodyProps {
   numVolumes: number;
   region: string;
   regionSupportsDiskEncryption: boolean;
+  regionSupportsLinodeInterfaces: boolean;
   vpcLinodeIsAssignedTo?: VPC;
 }
 
@@ -107,6 +112,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     numVolumes,
     region,
     regionSupportsDiskEncryption,
+    regionSupportsLinodeInterfaces,
     vpcLinodeIsAssignedTo,
   } = props;
 
@@ -114,6 +120,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const history = useHistory();
 
   const { data: profile } = useProfile();
+  const { data: accountSettings } = useAccountSettings();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -128,6 +135,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+  const showUpgradeInterfacesChip =
+    !linodeLkeClusterId &&
+    accountSettings?.interfaces_for_new_linodes !== 'legacy_config_only' &&
+    regionSupportsLinodeInterfaces;
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -482,17 +493,19 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <Chip
-                    sx={(theme) => ({
-                      backgroundColor: theme.color.tagButtonBg,
-                      color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
-                    })}
-                    component="span"
-                    label="UPGRADE"
-                    onClick={openUpgradeInterfacesDialog}
-                    size="small"
-                  />
+                  {showUpgradeInterfacesChip && (
+                    <Chip
+                      sx={(theme) => ({
+                        backgroundColor: theme.color.tagButtonBg,
+                        color: theme.tokens.color.Neutrals[80],
+                        marginLeft: theme.spacingFunction(4),
+                      })}
+                      component="span"
+                      label="UPGRADE"
+                      onClick={openUpgradeInterfacesDialog}
+                      size="small"
+                    />
+                  )}
                 </Box>
               )}
             </StyledListItem>
