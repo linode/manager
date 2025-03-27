@@ -1,10 +1,10 @@
-import { screen, waitFor } from '@testing-library/react';
+import { linodeFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { describe, expect, test, vi } from 'vitest';
 
-import { linodeFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { QueryClientWrapper, renderWithWrappers } from '../utilities/wrap';
 import { LinodeSelect } from './LinodeSelect';
 
 import type { Linode } from '@linode/api-v4';
@@ -17,14 +17,15 @@ describe('LinodeSelect', () => {
     const options: Linode[] = []; // Assuming no options are available
     const onSelectionChange = vi.fn();
 
-    renderWithTheme(
+    const screen = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage} // Pass the custom message via prop
         onSelectionChange={onSelectionChange}
         options={options}
         value={null}
-      />
+      />,
+      [QueryClientWrapper()]
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);
@@ -43,13 +44,14 @@ describe('LinodeSelect', () => {
     const option: Linode[] = []; // Assuming no options are available
     const onSelectionChange = vi.fn();
 
-    renderWithTheme(
+    const screen = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         onSelectionChange={onSelectionChange}
         options={option}
         value={null}
-      />
+      />,
+      [QueryClientWrapper()]
     );
 
     // Open the dropdown
@@ -68,14 +70,15 @@ describe('LinodeSelect', () => {
     const option: Linode[] = []; // Assuming no options are available
     const onSelectionChange = vi.fn();
 
-    renderWithTheme(
+    const screen = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}
         options={option}
         value={null}
-      />
+      />,
+      [QueryClientWrapper()]
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);
@@ -93,14 +96,15 @@ describe('LinodeSelect', () => {
     const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
     const onSelectionChange = vi.fn();
 
-    renderWithTheme(
+    const screen = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}
         options={[option]}
         value={null}
-      />
+      />,
+      [QueryClientWrapper()]
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);
@@ -117,14 +121,15 @@ describe('LinodeSelect', () => {
     const option = linodeFactory.build({ id: 1, label: 'Linode 1' });
     const onSelectionChange = vi.fn();
 
-    renderWithTheme(
+    const screen = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage}
         onSelectionChange={onSelectionChange}
         options={[option]}
         value={null}
-      />
+      />,
+      [QueryClientWrapper()]
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);

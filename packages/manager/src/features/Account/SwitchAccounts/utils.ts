@@ -1,6 +1,7 @@
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
+import type { State as AuthState } from 'src/store/authentication';
 
 export interface ProxyTokenCreationParams {
   /**
@@ -20,7 +21,7 @@ export interface ProxyTokenCreationParams {
 export const updateParentTokenInLocalStorage = ({
   currentTokenWithBearer,
 }: {
-  currentTokenWithBearer?: string;
+  currentTokenWithBearer?: AuthState['token'];
 }) => {
   const parentToken: Token = {
     created: getStorage('authentication/created'),
