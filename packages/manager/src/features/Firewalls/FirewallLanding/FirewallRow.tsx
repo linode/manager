@@ -173,19 +173,17 @@ export const getDeviceLinks = (
       {firstThree.map((entity, idx) => {
         // TODO @Linode Interfaces - switch to parent entity when endpoints are updated
         const isInterfaceDevice = entity.type === 'interface';
-        const parentEntityId = isInterfaceDevice // for Linode Interface devices, we also need the Linode ID
-          ? getLinodeIdFromInterfaceDevice(entity)
-          : entity.id;
-        const entityLabel = isInterfaceDevice
-          ? linodesWithInterfaceDevices?.find(
-              (linode) => linode.id === parentEntityId
-            )?.label ?? entity.label
-          : entity.label;
-        const entityLink = isInterfaceDevice
-          ? `/linodes/${parentEntityId}/networking/interfaces/${entity.id}`
-          : `/${entity.type}s/${entity.id}/${
-              entity.type === 'linode' ? 'networking' : 'summary'
-            }`;
+        let entityLabel = entity.label;
+        let entityLink =
+          `/${entity.type}s/${entity.id}/${entity.type === 'linode' ? 'networking' : 'summary'}`;
+
+        if (isInterfaceDevice) {
+          const parentEntityId = getLinodeIdFromInterfaceDevice(entity);
+          entityLabel = linodesWithInterfaceDevices?.find(
+            (linode) => linode.id === parentEntityId
+          )?.label ?? entity.label;
+          entityLink = `/linodes/${parentEntityId}/networking/interfaces/${entity.id}`
+        }
 
         return (
           <React.Fragment key={entity.url}>
