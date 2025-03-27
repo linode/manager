@@ -86,22 +86,14 @@ const vpcsDetailRoute = createRoute({
   validateSearch: (search: SubnetSearchParams) => search,
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
-const subnetCreateRoute = createRoute({
-  getParentRoute: () => vpcsDetailRoute,
-  path: 'subnets/create',
-  validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
-
-const subnetDetailRoute = createRoute({
-  getParentRoute: () => vpcsDetailRoute,
-  parseParams: (params) => ({
-    subnetId: Number(params.subnetId),
-  }),
-  path: 'subnets/$subnetId',
-  validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
-
-const vpcDetailsActionRoute = createRoute({
+/**
+ * We must have different routes for the Edit and Delete modals on the VPC Landing page and the VPC Detail page, or we will get
+ * redirected to the Landing page whenever we try to view a modal on the VPC detail page.
+ *
+ * vpcs/$vpcId/detail/edit (detail page) <==> vpcs/$vpcId/edit (landing page)
+ * vpcs/$vpcId/detail/delete (detail page) <==> vpcs/$vpcId/delete (landing page)
+ */
+const vpcDetailActionRoute = createRoute({
   ...vpcActionRouteParams,
   beforeLoad: async ({ params }) => {
     if (!(params.action in vpcAction)) {
@@ -116,6 +108,21 @@ const vpcDetailsActionRoute = createRoute({
   },
   getParentRoute: () => vpcsDetailRoute,
   path: 'detail/$action',
+}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+
+const subnetCreateRoute = createRoute({
+  getParentRoute: () => vpcsDetailRoute,
+  path: 'subnets/create',
+  validateSearch: (search: SubnetSearchParams) => search,
+}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+
+const subnetDetailRoute = createRoute({
+  getParentRoute: () => vpcsDetailRoute,
+  parseParams: (params) => ({
+    subnetId: Number(params.subnetId),
+  }),
+  path: 'subnets/$subnetId',
+  validateSearch: (search: SubnetSearchParams) => search,
 }).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
 
 type SubnetActionRouteParams<P = number | string> = {
@@ -190,7 +197,7 @@ export const vpcsRouteTree = vpcsRoute.addChildren([
   vpcsLandingRoute.addChildren([vpcActionRoute]),
   vpcsCreateRoute,
   vpcsDetailRoute.addChildren([
-    vpcDetailsActionRoute,
+    vpcDetailActionRoute,
     subnetCreateRoute,
     subnetDetailRoute.addChildren([subnetActionRoute, subnetLinodeActionRoute]),
   ]),
