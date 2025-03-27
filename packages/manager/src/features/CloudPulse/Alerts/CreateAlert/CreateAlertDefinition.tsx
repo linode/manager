@@ -12,8 +12,16 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { CREATE_ALERT_SUCCESS_MESSAGE } from '../constants';
-import { enhanceValidationSchemaWithEntityIdValidation } from '../Utils/utils';
+import {
+  CREATE_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+  CREATE_ALERT_SUCCESS_MESSAGE
+} from '../constants';
+import {
+  enhanceValidationSchemaWithEntityIdValidation,
+  handleMultipleError,
+} from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -28,6 +36,7 @@ import type {
   MetricCriteriaForm,
   TriggerConditionForm,
 } from './types';
+import type { APIError } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
@@ -116,15 +125,19 @@ export const CreateAlertDefinition = () => {
       });
       alertCreateExit();
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      handleMultipleError<CreateAlertDefinitionForm>({
+        errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+        errors,
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Creating alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });
