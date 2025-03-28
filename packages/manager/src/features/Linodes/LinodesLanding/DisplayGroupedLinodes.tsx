@@ -1,6 +1,12 @@
 import { useIsGeckoEnabled } from '@linode/shared';
-import { IconButton } from '@linode/ui';
-import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  IconButton,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';

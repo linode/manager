@@ -1,19 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-  useUpdateVPCMutation,
-} from '@linode/queries';
-import { useIsGeckoEnabled } from '@linode/shared';
+import { useGrants, useProfile, useUpdateVPCMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { NotFound } from 'src/components/NotFound';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useFlags } from 'src/hooks/useFlags';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
@@ -23,18 +15,11 @@ interface Props {
   vpc?: VPC;
 }
 
-const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
-
 export const VPCEditDrawer = (props: Props) => {
   const { onClose, open, vpc } = props;
 
-  const flags = useFlags();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(
-    flags.gecko2?.enabled,
-    flags.gecko2?.la
-  );
 
   const vpcPermissions = grants?.vpc.find((v) => v.id === vpc?.id);
 
@@ -81,8 +66,6 @@ export const VPCEditDrawer = (props: Props) => {
       }
     }
   };
-
-  const { data: regionsData, error: regionsError } = useRegionsQuery();
 
   return (
     <Drawer
@@ -133,18 +116,6 @@ export const VPCEditDrawer = (props: Props) => {
           control={control}
           name="description"
         />
-        {regionsData && (
-          <RegionSelect
-            currentCapability="VPCs"
-            disabled // the Region field will not be editable during beta
-            errorText={(regionsError && regionsError[0].reason) || undefined}
-            helperText={REGION_HELPER_TEXT}
-            isGeckoLAEnabled={isGeckoLAEnabled}
-            onChange={() => null}
-            regions={regionsData}
-            value={vpc?.region}
-          />
-        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',

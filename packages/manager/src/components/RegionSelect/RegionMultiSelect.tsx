@@ -66,7 +66,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     forcefullyShownRegionIds,
     regions,
   });
-  // const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)
