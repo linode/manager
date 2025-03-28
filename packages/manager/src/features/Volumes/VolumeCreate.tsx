@@ -8,6 +8,7 @@ import {
   useRegionsQuery,
   useVolumeTypesQuery,
 } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   Button,
@@ -18,6 +19,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { doesRegionSupportFeature } from '@linode/utilities';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
@@ -44,17 +46,15 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
+import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -126,6 +126,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const VolumeCreate = () => {
+  const flags = useFlags();
   const theme = useTheme();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -410,6 +411,7 @@ export const VolumeCreate = () => {
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
+                flags={flags}
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}

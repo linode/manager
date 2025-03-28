@@ -1,9 +1,8 @@
 import { Paper } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
-import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { TimeRangeSelect } from '../../../shared/TimeRangeSelect';
 import { StyledTypography } from '../CommonStyles.styles';

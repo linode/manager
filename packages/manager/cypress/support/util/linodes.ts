@@ -1,5 +1,5 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
-import { createLinodeRequestFactory } from '@src/factories';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';

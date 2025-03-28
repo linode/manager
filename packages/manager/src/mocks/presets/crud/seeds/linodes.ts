@@ -1,7 +1,6 @@
-import { configFactory } from '@linode/utilities';
+import { linodeFactory, configFactory } from '@linode/utilities';
 
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { linodeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 

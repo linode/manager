@@ -9,10 +9,11 @@ interface Props {
   linodeId: number;
   onClose: () => void;
   open: boolean;
+  regionId: string;
 }
 
 export const AddInterfaceDrawer = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, onClose, open, regionId } = props;
 
   return (
     <Drawer
@@ -21,7 +22,11 @@ export const AddInterfaceDrawer = (props: Props) => {
       open={open}
       title="Add Network Interface"
     >
-      <AddInterfaceForm linodeId={linodeId} onClose={onClose} />
+      <AddInterfaceForm
+        linodeId={linodeId}
+        onClose={onClose}
+        regionId={regionId}
+      />
     </Drawer>
   );
 };

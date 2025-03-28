@@ -1,4 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
+import { BetaChip } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
@@ -89,6 +90,7 @@ const AccountLanding = () => {
     ...(showQuotasTab
       ? [
           {
+            chip: <BetaChip color="secondary" />,
             routeName: '/account/quotas',
             title: 'Quotas',
           },

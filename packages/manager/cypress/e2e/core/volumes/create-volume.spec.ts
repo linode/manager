@@ -1,12 +1,16 @@
 import {
+  createLinodeRequestFactory,
+  linodeFactory,
+  regionFactory,
+} from '@linode/utilities';
+import {
   accountUserFactory,
   grantsFactory,
   profileFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
-import { mockGetUser } from 'support/intercepts/account';
-import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
@@ -28,11 +32,7 @@ import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-} from 'src/factories/linodes';
+import { accountFactory, volumeFactory } from 'src/factories';
 
 import type { Linode, Region } from '@linode/api-v4';
 

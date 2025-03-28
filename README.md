@@ -45,6 +45,7 @@ This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.
 - [`@linode/api-v4`](packages/api-v4/)
 - [`@linode/queries`](packages/queries/)
 - [`@linode/search`](packages/search/)
+- [`@linode/shared`](packages/shared/)
 - [`@linode/ui`](packages/ui/)
 - [`@linode/utilities`](packages/utilities/)
 - [`@linode/validation`](packages/validation/)
