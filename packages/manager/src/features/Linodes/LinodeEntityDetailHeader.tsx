@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';

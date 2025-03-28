@@ -1,5 +1,5 @@
 import { Divider, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';

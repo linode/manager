@@ -1,6 +1,6 @@
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';

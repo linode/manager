@@ -226,7 +226,7 @@ export const DateTimePicker = ({
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             {showTime && (
-              <Grid item xs={4}>
+              <Grid size={{ xs: 4 }}>
                 <TimePicker
                   minTime={
                     minDate?.toISODate() === selectedDateTime?.toISODate()
@@ -273,7 +273,7 @@ export const DateTimePicker = ({
               </Grid>
             )}
             {showTimeZone && (
-              <Grid item xs={7}>
+              <Grid size={{ xs: 7 }}>
                 <TimeZoneSelect
                   disabled={disabledTimeZone}
                   label={timeZoneSelectProps?.label || 'Timezone'}

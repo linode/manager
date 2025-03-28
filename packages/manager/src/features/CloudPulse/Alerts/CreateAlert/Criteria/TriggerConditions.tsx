@@ -64,7 +64,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
         container
         spacing={2}
       >
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid size={{ md: 3, sm: 6, xs: 12 }}>
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
@@ -99,7 +99,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             name={`${name}.evaluation_period_seconds`}
           />
         </Grid>
-        <Grid item md={3} sm={6} xs={12}>
+        <Grid size={{ md: 3, sm: 6, xs: 12 }}>
           <Controller
             render={({ field, fieldState }) => (
               <Autocomplete
@@ -142,11 +142,8 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           display="flex"
           flexDirection={{ sm: 'row', xs: 'column' }}
           gap={1}
-          item
           justifyContent={{ sm: 'left', xs: 'center' }}
-          md="auto"
-          sm={12}
-          xs={12}
+          size={{ md: 'auto', sm: 12, xs: 12 }}
         >
           <Typography
             marginTop={{ sm: '32px', xs: '0px' }}

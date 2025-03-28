@@ -11,7 +11,7 @@ import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';

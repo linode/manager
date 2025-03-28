@@ -2,7 +2,7 @@ import { enableManaged } from '@linode/api-v4/lib/managed';
 import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
 import { Accordion, ActionsPanel, Button, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 

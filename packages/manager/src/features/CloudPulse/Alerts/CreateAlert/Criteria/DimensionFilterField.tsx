@@ -92,7 +92,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       container
       data-testid={`${name}-id`}
     >
-      <Grid item md={3} xs={12}>
+      <Grid size={{ md: 3, xs: 12 }}>
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
@@ -122,7 +122,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           name={`${name}.dimension_label`}
         />
       </Grid>
-      <Grid item md={2} xs={12}>
+      <Grid size={{ md: 2, xs: 12 }}>
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
@@ -154,7 +154,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           name={`${name}.operator`}
         />
       </Grid>
-      <Grid item md={3} xs={12}>
+      <Grid size={{ md: 3, xs: 12 }}>
         <Box display="flex" gap={2}>
           <Controller
             render={({ field, fieldState }) => (

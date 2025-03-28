@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';

@@ -1,9 +1,9 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import FolderIcon from 'src/assets/icons/objectStorage/folder.svg';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

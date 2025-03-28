@@ -132,7 +132,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
           }}
         >
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Box
                 display="flex"
                 flexDirection={{ lg: 'row', xs: 'column' }}
@@ -153,7 +153,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Divider
                 sx={(theme) => ({
                   borderColor: theme.color.grey5,
@@ -172,12 +172,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
               />
             )}
             <Grid
-              item
-              xs={12}
               sx={{
                 mb: 3,
                 mt: -3,
               }}
+              size={{ xs: 12 }}
             >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer

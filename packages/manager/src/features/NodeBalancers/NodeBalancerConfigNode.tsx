@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { getErrorMap } from 'src/utilities/errorUtils';

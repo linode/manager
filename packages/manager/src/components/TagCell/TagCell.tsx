@@ -7,7 +7,7 @@ import {
 } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { Tag } from 'src/components/Tag/Tag';

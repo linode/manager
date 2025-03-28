@@ -49,7 +49,7 @@ export const Permissions = ({ permissions }: Props) => {
   // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
     <Grid container data-testid="parent" direction="column">
-      <StyledGrid container item md={1}>
+      <StyledGrid container size={{ md: 1 }}>
         <Typography
           sx={(theme) => ({
             font: theme.tokens.alias.Typography.Label.Bold.S,

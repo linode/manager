@@ -202,7 +202,7 @@ export const AddNotificationChannelDrawer = (
             {selectedTemplate && selectedTemplate.channel_type === 'email' && (
               <Box paddingTop={2}>
                 <Grid container>
-                  <Grid item md={1} sm={1} xs={2}>
+                  <Grid size={{ md: 1, sm: 1, xs: 2 }}>
                     <Typography variant="h3">To:</Typography>
                   </Grid>
                   <Grid
@@ -210,9 +210,7 @@ export const AddNotificationChannelDrawer = (
                       overflow: 'auto',
                       paddingRight: 1,
                     }}
-                    item
-                    md="auto"
-                    xs={12}
+                    size={{ md: 'auto', xs: 12 }}
                   >
                     <RenderChannelDetails template={selectedTemplate} />
                   </Grid>

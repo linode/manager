@@ -329,7 +329,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               : config.configuration.filterKey !== RELATIVE_TIME_DURATION // time duration is always defined explicitly
         )
         .map((filter, index) => (
-          <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
+          <Grid
+            key={filter.configuration.filterKey}
+            size={{ md: 4, sm: 6, xs: 12 }}
+          >
             {RenderComponent({
               componentKey:
                 filter.configuration.type !== undefined
@@ -352,22 +355,20 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     return (
       <Grid
-        container
-        item
-        xs={12}
         sx={{
           m: 3,
           paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
         }}
+        container
+        size={{ xs: 12 }}
       >
         <Grid
           sx={{
             m: 0,
             p: 0,
           }}
-          item
           key="toggleFilter"
-          xs={12}
+          size={{ xs: 12 }}
         >
           <Button
             startIcon={
@@ -394,10 +395,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           </Button>
         </Grid>
         <Grid
-          columnSpacing={theme.spacing(2)}
-          container
-          item
-          xs={12}
           sx={{
             display: showFilter ? 'flex' : 'none',
             maxHeight: theme.spacing(23),
@@ -405,6 +402,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             pr: { sm: 0, xs: 2 },
             rowGap: theme.spacing(2),
           }}
+          columnSpacing={theme.spacing(2)}
+          container
+          size={{ xs: 12 }}
         >
           <RenderFilters />
         </Grid>

@@ -1,6 +1,6 @@
 import { Button, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';

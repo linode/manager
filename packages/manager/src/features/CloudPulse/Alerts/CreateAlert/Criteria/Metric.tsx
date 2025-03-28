@@ -130,7 +130,7 @@ export const Metric = (props: MetricCriteriaProps) => {
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+          <Grid size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -175,7 +175,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.metric`}
             />
           </Grid>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+          <Grid size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -209,7 +209,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.aggregate_function`}
             />
           </Grid>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+          <Grid size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -246,7 +246,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               name={`${name}.operator`}
             />
           </Grid>
-          <Grid item lg={3} md={2} sm={6} xs={12}>
+          <Grid size={{ lg: 3, md: 2, sm: 6, xs: 12 }}>
             <Box display="flex" gap={1}>
               <Controller
                 render={({ field, fieldState }) => (

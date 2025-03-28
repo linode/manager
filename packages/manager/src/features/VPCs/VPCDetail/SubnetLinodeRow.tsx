@@ -3,7 +3,7 @@ import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

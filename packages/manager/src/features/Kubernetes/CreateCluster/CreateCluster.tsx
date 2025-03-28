@@ -15,7 +15,7 @@ import {
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';

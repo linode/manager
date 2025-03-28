@@ -89,7 +89,7 @@ export const CloudPulseDashboardLanding = () => {
       />
       <DocumentTitleSegment segment="Dashboards" />
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
               <GlobalFilters

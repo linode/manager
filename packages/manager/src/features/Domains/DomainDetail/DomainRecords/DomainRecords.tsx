@@ -1,7 +1,7 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

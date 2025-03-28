@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Formik } from 'formik';
 import * as React from 'react';
 

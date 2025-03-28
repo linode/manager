@@ -34,7 +34,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
 
   return (
     <Grid container data-qa-settings-section="Maintenance">
-      <Grid item xs={6}>
+      <Grid size={{ xs: 6 }}>
         <StyledTypography variant="h3">Maintenance</StyledTypography>
         <BoldTypography>Version</BoldTypography>
         <StyledTypography>{engineVersion}</StyledTypography>
@@ -68,7 +68,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           <StyledTypography variant="h3">End of life</StyledTypography>
         </Grid>
       */}
-      <Grid item xs={6}>
+      <Grid size={{ xs: 6 }}>
         <StyledTypography variant="h3">Maintenance updates</StyledTypography>
         {hasUpdates ? (
           <BoldTypography>

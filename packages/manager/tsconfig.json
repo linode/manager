@@ -44,5 +44,5 @@
   "include": [
     "src",
     "package.json"
-  ]
+, "../ui/src/components/Hidden/Hidden.tsx"  ]
 }

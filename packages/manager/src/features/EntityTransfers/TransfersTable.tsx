@@ -2,7 +2,7 @@ import { Accordion } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

@@ -45,13 +45,13 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
   const theme = useTheme();
 
   return (
-    <Grid container data-qa-item={label} item xs={12}>
-      <Grid item sm={labelGridColumns} xs={12}>
+    <Grid container data-qa-item={label} size={{ xs: 12 }}>
+      <Grid size={{ sm: labelGridColumns, xs: 12 }}>
         <StyledAlertTypography sx={{ font: theme.font.bold }}>
           {label}:
         </StyledAlertTypography>
       </Grid>
-      <Grid container item sm={valueGridColumns} xs={12}>
+      <Grid container size={{ sm: valueGridColumns, xs: 12 }}>
         {status && (
           <StatusIcon
             marginTop={theme.spacing(0.7)}

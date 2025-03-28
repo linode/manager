@@ -1,7 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';

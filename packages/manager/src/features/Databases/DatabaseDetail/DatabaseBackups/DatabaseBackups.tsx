@@ -188,13 +188,13 @@ export const DatabaseBackups = (props: Props) => {
           </RadioGroup>
         )}
         <Grid
-          container
           sx={{
             justifyContent: 'flex-start',
             mt: 2,
           }}
+          container
         >
-          <Grid item lg={3} md={4} xs={12}>
+          <Grid size={{ lg: 3, md: 4, xs: 12 }}>
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
               <StyledDateCalendar
@@ -207,7 +207,7 @@ export const DatabaseBackups = (props: Props) => {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item lg={3} md={4} xs={12}>
+          <Grid size={{ lg: 3, md: 4, xs: 12 }}>
             <Typography variant="h3">Time (UTC)</Typography>
             <FormControl style={{ marginTop: 0 }}>
               {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
@@ -249,7 +249,7 @@ export const DatabaseBackups = (props: Props) => {
             </FormControl>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Box display="flex" justifyContent="flex-end">
             <Button
               disabled={

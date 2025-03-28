@@ -36,7 +36,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <Grid>
         {RenderComponent({
           componentKey: 'tags',
           componentProps: {
@@ -75,7 +75,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <Grid>
         {RenderComponent({
           componentKey: 'region',
           componentProps: {
@@ -116,7 +116,7 @@ describe('ComponentRenderer component tests', () => {
       });
 
       const { getByPlaceholderText } = renderWithTheme(
-        <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
+        <Grid key={'resources'}>
           {RenderComponent({
             componentKey: 'resource_id',
             componentProps: {
@@ -158,7 +158,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <Grid>
         {RenderComponent({
           componentKey: 'node_type',
           componentProps: {

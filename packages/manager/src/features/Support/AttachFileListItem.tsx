@@ -1,7 +1,7 @@
 import { InputAdornment, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 

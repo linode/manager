@@ -1,6 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
 import { CircleProgress, Tooltip } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import {
   BraintreePayPalButtons,
   FUNDING,

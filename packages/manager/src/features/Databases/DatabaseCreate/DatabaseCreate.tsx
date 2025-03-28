@@ -9,7 +9,7 @@ import {
 } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';

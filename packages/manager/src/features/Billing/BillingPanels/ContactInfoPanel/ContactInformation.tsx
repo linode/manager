@@ -1,5 +1,5 @@
 import { Box, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useState } from 'react';

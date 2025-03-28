@@ -42,7 +42,7 @@ interface WidgetProps {
 
 const renderPlaceHolder = (subtitle: string) => {
   return (
-    <Grid item xs>
+    <Grid size={{ xs: 12 }}>
       <Paper>
         <CloudPulseErrorPlaceholder errorMessage={subtitle} />
       </Paper>
@@ -137,7 +137,7 @@ export const RenderWidgets = React.memo(
     // maintain a copy
     const newDashboard: Dashboard = createObjectCopy(dashboard)!;
     return (
-      <Grid columnSpacing={2} container item rowSpacing={2} xs={12}>
+      <Grid columnSpacing={2} container rowSpacing={2} size={{ xs: 12 }}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
           // check if widget metric definition is available or not
           if (widget) {

@@ -59,16 +59,16 @@ export const AlertDetailNotification = React.memo(
           Notification Channels
         </Typography>
         <Grid
-          container
-          spacing={2}
           sx={{
             alignItems: 'center',
           }}
+          container
+          spacing={2}
         >
           {channels.map((notificationChannel, index) => {
             const { channel_type, id, label } = notificationChannel;
             return (
-              <Grid container item key={id} spacing={2}>
+              <Grid container key={id} spacing={2}>
                 <AlertDetailRow
                   label="Type"
                   labelGridColumns={2}
@@ -81,7 +81,7 @@ export const AlertDetailNotification = React.memo(
                   value={label}
                   valueGridColumns={10}
                 />
-                <Grid item xs={12}>
+                <Grid>
                   <DisplayAlertDetailChips
                     {...getChipLabels(notificationChannel)}
                     labelGridColumns={2}
@@ -89,7 +89,7 @@ export const AlertDetailNotification = React.memo(
                   />
                 </Grid>
                 {channels.length > 1 && index !== channels.length - 1 && (
-                  <Grid item xs={12}>
+                  <Grid>
                     <Divider />
                   </Grid>
                 )}

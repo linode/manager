@@ -1,6 +1,6 @@
 import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 
 export const StyledButton = styled(Button, { label: 'StyledButton' })({
   '&:hover': {

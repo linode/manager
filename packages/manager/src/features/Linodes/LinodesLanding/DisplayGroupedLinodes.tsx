@@ -1,7 +1,7 @@
 import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
 import { IconButton } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';

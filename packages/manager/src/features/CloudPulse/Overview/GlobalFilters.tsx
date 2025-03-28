@@ -92,7 +92,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   return (
     <Grid container>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Box
           display="flex"
           flexDirection={{ lg: 'row', xs: 'column' }}
@@ -137,7 +137,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         </Box>
       </Grid>
       {selectedDashboard && (
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Divider
             sx={(theme) => ({
               borderColor: theme.color.grey5,

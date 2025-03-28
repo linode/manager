@@ -359,11 +359,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           }}
           columnSpacing={2}
           container
-          item
           rowSpacing={3}
-          xs={12}
+          size={{ xs: 12 }}
         >
-          <Grid item md={3} xs={12}>
+          <Grid size={{ md: 3, xs: 12 }}>
             <DebouncedSearchTextField
               sx={{
                 maxHeight: '34px',
@@ -378,7 +377,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
           {/* Dynamically render service type based filters */}
           {filtersToRender.map(({ component, filterKey }, index) => (
-            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
+            <Grid key={`${index}_${filterKey}`} size={{ md: 4, xs: 12 }}>
               <AlertResourcesFilterRenderer
                 componentProps={getAlertResourceFilterProps({
                   filterKey,
@@ -399,7 +398,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           ))}
         </Grid>
         {isSelectionsNeeded && (
-          <Grid item md={4} xs={12}>
+          <Grid size={{ md: 4, xs: 12 }}>
             <Checkbox
               sx={(theme) => ({
                 svg: {
@@ -427,7 +426,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           !isDataLoadingError &&
           resources &&
           resources.length > 0 && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
                 selectedResources={selectedResources.length}
@@ -435,7 +434,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               />
             </Grid>
           )}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <DisplayAlertResources
             scrollToElement={() =>
               scrollToElement(titleRef.current ?? scrollElement ?? null)

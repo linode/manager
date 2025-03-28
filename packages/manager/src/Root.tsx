@@ -6,7 +6,7 @@ import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
 import '@fontsource/nunito-sans/400-italic.css';
 import { Box } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 

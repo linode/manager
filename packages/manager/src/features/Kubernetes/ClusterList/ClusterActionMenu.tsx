@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

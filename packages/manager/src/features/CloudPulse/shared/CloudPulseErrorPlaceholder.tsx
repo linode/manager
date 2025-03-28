@@ -8,7 +8,7 @@ export const CloudPulseErrorPlaceholder = React.memo(
   (props: { errorMessage: string }) => {
     const { errorMessage } = props;
     return (
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Paper>
           <Placeholder
             icon={CloudPulseIcon}

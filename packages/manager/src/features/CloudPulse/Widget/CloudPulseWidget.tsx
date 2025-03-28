@@ -274,7 +274,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
   return (
-    <Grid container item lg={widget.size} xs={12}>
+    <Grid container size={{ lg: widget.size, xs: 12 }}>
       <Stack
         sx={{
           flexGrow: 1,

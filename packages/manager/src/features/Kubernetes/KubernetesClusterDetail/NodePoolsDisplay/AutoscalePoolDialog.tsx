@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

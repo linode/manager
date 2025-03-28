@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 

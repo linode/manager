@@ -6,7 +6,7 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';

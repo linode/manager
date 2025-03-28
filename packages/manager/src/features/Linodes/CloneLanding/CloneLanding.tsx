@@ -1,7 +1,7 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
 import * as React from 'react';

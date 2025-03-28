@@ -2,7 +2,7 @@ import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';

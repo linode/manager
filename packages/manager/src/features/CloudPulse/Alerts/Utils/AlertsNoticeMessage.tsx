@@ -21,7 +21,7 @@ export const AlertsNoticeMessage = (props: AlertsNoticeProps) => {
   const { text, variant } = props;
 
   return (
-    <Grid item xs={12}>
+    <Grid>
       <StyledNotice variant={variant}>
         <Typography
           sx={(theme) => ({

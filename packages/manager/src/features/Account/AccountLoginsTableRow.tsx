@@ -2,7 +2,7 @@ import { useProfile } from '@linode/queries';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

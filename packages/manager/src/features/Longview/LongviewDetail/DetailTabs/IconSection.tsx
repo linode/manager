@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@linode/ui';
 import { formatUptime, readableBytes } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';

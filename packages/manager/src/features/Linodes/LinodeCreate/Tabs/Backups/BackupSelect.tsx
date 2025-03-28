@@ -1,5 +1,5 @@
 import { Box, Notice, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 

@@ -1,6 +1,6 @@
 import { deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';

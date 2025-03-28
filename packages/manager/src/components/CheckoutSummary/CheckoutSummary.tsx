@@ -1,7 +1,7 @@
 import { Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid2 from '@mui/material/Grid2';
+import Grid2 from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
