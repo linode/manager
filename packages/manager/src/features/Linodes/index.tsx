@@ -2,11 +2,11 @@ import {
   useAllAccountMaintenanceQuery,
   useAllLinodesQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -57,7 +57,10 @@ export const LinodesLandingWrapper = React.memo(() => {
   );
   const flags = useFlags();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const [regionFilter, setRegionFilter] = React.useState<
     RegionFilter | undefined

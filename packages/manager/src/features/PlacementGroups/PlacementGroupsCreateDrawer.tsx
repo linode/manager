@@ -3,6 +3,7 @@ import {
   useCreatePlacementGroup,
   useRegionsQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   ActionsPanel,
   Divider,
@@ -64,6 +65,10 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegionId,
   } = props;
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { data: regions } = useRegionsQuery();
   const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegionId),
@@ -267,8 +272,8 @@ export const PlacementGroupsCreateDrawer = (
                 currentCapability="Placement Group"
                 disableClearable
                 disabledRegions={disabledRegions}
-                flags={flags}
                 helperText={values.region && pgRegionLimitHelperText}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
                 tooltipText="Only regions that support placement groups are listed."

@@ -6,6 +6,7 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Accordion,
   ActionsPanel,
@@ -99,6 +100,10 @@ const defaultFieldsStates = {
 
 const NodeBalancerCreate = () => {
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
@@ -545,7 +550,7 @@ const NodeBalancerCreate = () => {
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}
-              flags={flags}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}

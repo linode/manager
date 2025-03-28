@@ -1,5 +1,4 @@
 import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
-import { useRegionsQuery } from '@linode/queries';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
 // as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
@@ -11,8 +10,6 @@ import type {
 } from './RegionSelect.types';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
 import type { LinodeCreateType } from '@linode/utilities';
-// @todo: modularization - Update type FlagSet to import from `@linode/shared` package once available.
-import type { FlagSet } from 'src/featureFlags';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -165,21 +162,4 @@ export const getIsDistributedRegion = (
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
   return region?.site_type === 'distributed';
-};
-
-export const useIsGeckoEnabled = (flags: FlagSet) => {
-  const { data: regions } = useRegionsQuery();
-
-  const isGeckoLA = flags?.gecko2?.enabled && flags.gecko2.la;
-  const isGeckoBeta = flags?.gecko2?.enabled && !flags.gecko2?.la;
-
-  const hasDistributedRegionCapability = regions?.some((region: Region) =>
-    region.capabilities.includes('Distributed Plans')
-  );
-  const isGeckoLAEnabled = Boolean(hasDistributedRegionCapability && isGeckoLA);
-  const isGeckoBetaEnabled = Boolean(
-    hasDistributedRegionCapability && isGeckoBeta
-  );
-
-  return { isGeckoBetaEnabled, isGeckoLAEnabled };
 };

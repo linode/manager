@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 
-import { QueryClientWrapper, renderWithWrappers } from '../utilities/wrap';
+import { QueryClientWrapper, renderWithWrappers } from '../../utilities/wrap';
 import { LinodeSelect } from './LinodeSelect';
 
 import type { Linode } from '@linode/api-v4';

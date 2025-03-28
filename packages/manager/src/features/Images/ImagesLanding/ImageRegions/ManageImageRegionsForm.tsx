@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -33,6 +34,10 @@ export const ManageImageReplicasForm = (props: Props) => {
   const { image, onClose } = props;
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
 
@@ -118,8 +123,8 @@ export const ManageImageReplicasForm = (props: Props) => {
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
-        flags={flags}
         ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
+        isGeckoLAEnabled={isGeckoLAEnabled}
         label="Add Regions"
         placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}

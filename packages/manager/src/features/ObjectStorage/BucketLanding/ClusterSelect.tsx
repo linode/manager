@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -30,6 +31,10 @@ export const ClusterSelect: React.FC<Props> = (props) => {
   const { data: regions } = useRegionsQuery();
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const regionOptions = clusters?.reduce<Region[]>((acc, cluster) => {
     const region = regions?.find((r) => r.id === cluster.region);
@@ -53,7 +58,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       disableClearable
       disabled={disabled}
       errorText={errorText}
-      flags={flags}
+      isGeckoLAEnabled={isGeckoLAEnabled}
       label="Region"
       onBlur={onBlur}
       onChange={(e, region) => onChange(region.id)}

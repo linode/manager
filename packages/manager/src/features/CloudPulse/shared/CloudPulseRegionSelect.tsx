@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -36,6 +37,10 @@ export const CloudPulseRegionSelect = React.memo(
     const { data: regions, isError, isLoading } = useRegionsQuery();
 
     const flags = useFlags();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled(
+      flags.gecko2?.enabled,
+      flags.gecko2?.la
+    );
 
     const serviceType: string | undefined = selectedDashboard?.service_type;
     const capability = serviceType
@@ -93,8 +98,8 @@ export const CloudPulseRegionSelect = React.memo(
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
         errorText={isError ? `Failed to fetch ${label || 'Regions'}.` : ''}
-        flags={flags}
         fullWidth
+        isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}
         loading={isLoading}
         noMarginTop
