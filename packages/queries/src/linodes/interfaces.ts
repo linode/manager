@@ -67,18 +67,31 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
 
 export const useUpdateLinodeInterfaceMutation = (
   linodeId: number,
-  interfaceId: number
+  interfaceId: number,
+  options?: UseMutationOptions<
+    LinodeInterface,
+    APIError[],
+    ModifyLinodeInterfacePayload
+  >
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<LinodeInterface, APIError[], ModifyLinodeInterfacePayload>(
     {
       mutationFn: (data) => updateLinodeInterface(linodeId, interfaceId, data),
-      onSuccess(linodeInterface) {
+      ...options,
+      onSuccess(linodeInterface, variables, context) {
+        options?.onSuccess?.(linodeInterface, variables, context);
+        // Invalidate the list of interfaces
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.interfaces._ctx
             .interfaces.queryKey,
         });
+        // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+        });
+        // Set the specific interface in the cache
         queryClient.setQueryData(
           linodeQueries
             .linode(linodeId)
