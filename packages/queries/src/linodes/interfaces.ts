@@ -82,10 +82,9 @@ export const useUpdateLinodeInterfaceMutation = (
       ...options,
       onSuccess(linodeInterface, variables, context) {
         options?.onSuccess?.(linodeInterface, variables, context);
-        // Invalidate the list of interfaces
+        // Invalidate this Linode's interface queries
         queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId)._ctx.interfaces._ctx
-            .interfaces.queryKey,
+          queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
         });
         // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
         queryClient.invalidateQueries({

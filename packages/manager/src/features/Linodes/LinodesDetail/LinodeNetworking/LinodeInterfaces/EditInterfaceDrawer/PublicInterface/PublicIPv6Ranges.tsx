@@ -1,5 +1,4 @@
 import {
-  Button,
   CloseIcon,
   Divider,
   IconButton,
@@ -12,9 +11,10 @@ import {
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { AllocateIPv6Button } from './AllocateIPv6Button';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
+import { useAllocateIPv6Range } from './utilities';
 
 interface Props {
   interfaceId: number;
@@ -24,8 +24,10 @@ interface Props {
 export const PublicIPv6Ranges = (props: Props) => {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useFormContext<ModifyLinodeInterfacePayload>();
+
+  const { isAllocating, onAllocate } = useAllocateIPv6Range(props);
 
   const { append, fields, remove } = useFieldArray({
     control,
@@ -35,7 +37,38 @@ export const PublicIPv6Ranges = (props: Props) => {
   return (
     <Paper sx={{ p: 2 }} variant="outlined">
       <Stack spacing={1.5}>
-        <Typography variant="h3">IPv6 Ranges</Typography>
+        <Stack
+          alignItems="center"
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Typography variant="h3">IPv6 Ranges</Typography>
+          <ActionMenu
+            actionsList={[
+              {
+                disabled: isDirty || isAllocating,
+                onClick: () => onAllocate('/56'),
+                title: 'Allocate a /56 IPv6 range',
+                tooltip: isDirty
+                  ? 'Save or reset active changes to allocate a new IPv6 range.'
+                  : undefined,
+              },
+              {
+                disabled: isDirty || isAllocating,
+                onClick: () => onAllocate('/64'),
+                title: 'Allocate a /64 IPv6 range',
+                tooltip: isDirty
+                  ? 'Save or reset active changes to allocate a new IPv6 range.'
+                  : undefined,
+              },
+              {
+                onClick: () => append({ range: '' }),
+                title: 'Manually add IPv6 range',
+              },
+            ]}
+            ariaLabel="IPv6 ranges Action Menu"
+          />
+        </Stack>
         {errors.public?.ipv6?.ranges?.message && (
           <Notice text={errors.public?.ipv6?.ranges?.message} variant="error" />
         )}
@@ -72,13 +105,6 @@ export const PublicIPv6Ranges = (props: Props) => {
             ))}
           </Stack>
         )}
-        <Stack direction="row" gap={1}>
-          <Button buttonType="outlined" onClick={() => append({ range: '' })}>
-            Manually add IPv6
-          </Button>
-          <AllocateIPv6Button {...props} prefix="/56" />
-          <AllocateIPv6Button {...props} prefix="/64" />
-        </Stack>
       </Stack>
     </Paper>
   );

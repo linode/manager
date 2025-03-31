@@ -4,10 +4,11 @@ import {
   useUpdateLinodeInterfaceMutation,
 } from '@linode/queries';
 import {
-  ActionsPanel,
   Box,
+  Button,
   CircleProgress,
   ErrorState,
+  Notice,
   Stack,
 } from '@linode/ui';
 import { ModifyLinodeInterfaceSchema } from '@linode/validation';
@@ -16,6 +17,7 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { getLinodeInterfaceType } from '../utilities';
+import { DefaultRoute } from './PublicInterface/DefaultRoute';
 import { PublicIPv4Addresses } from './PublicInterface/PublicIPv4Addresses';
 import { PublicIPv6Ranges } from './PublicInterface/PublicIPv6Ranges';
 
@@ -55,7 +57,7 @@ export const EditInterfaceForm = (props: Props) => {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
-      onClose();
+      // onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -86,6 +88,7 @@ export const EditInterfaceForm = (props: Props) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
+          <DefaultRoute linodeInterface={linodeInterface} />
           {interfaceType === 'Public' && (
             <>
               <PublicIPv4Addresses
@@ -95,20 +98,35 @@ export const EditInterfaceForm = (props: Props) => {
               <PublicIPv6Ranges interfaceId={interfaceId} linodeId={linodeId} />
             </>
           )}
-          {interfaceType === 'VPC' && 'Todo VPC'}
-          {interfaceType === 'VLAN' && 'Todo VLAN'}
-          <ActionsPanel
-            primaryButtonProps={{
-              disabled: !form.formState.isDirty,
-              label: 'Save',
-              loading: form.formState.isSubmitting,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              label: 'Cancel',
-              onClick: onClose,
-            }}
-          />
+          {interfaceType === 'VPC' && (
+            <Notice
+              text="TODO: Support editing a VPC interface"
+              variant="warning"
+            />
+          )}
+          {interfaceType === 'VLAN' && (
+            <Notice
+              text="TODO: Support editing a VLAN interface"
+              variant="warning"
+            />
+          )}
+          <Stack direction="row" justifyContent="flex-end" spacing={1}>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button
+              disabled={!form.formState.isDirty}
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+            <Button
+              buttonType="primary"
+              disabled={!form.formState.isDirty}
+              loading={form.formState.isSubmitting}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Stack>
         </Stack>
       </form>
     </FormProvider>
