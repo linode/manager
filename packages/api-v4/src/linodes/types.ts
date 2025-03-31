@@ -177,13 +177,25 @@ export type LinodeStatus =
 // ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
+// IPv4
 export interface ConfigInterfaceIPv4 {
   vpc?: string | null;
   nat_1_1?: string | null;
 }
 
+// IPv6
+export interface SLAAC {
+  range: string;
+  address: string;
+}
+
+export interface ConfigInterfaceIPv6Range {
+  range?: string;
+}
 export interface ConfigInterfaceIPv6 {
-  vpc?: string | null;
+  slaac?: SLAAC[];
+  ranges?: ConfigInterfaceIPv6Range[];
+  is_public?: boolean;
 }
 
 // The legacy interface type - for Configuration Profile Interfaces
@@ -284,10 +296,18 @@ export interface LinodeInterfaces {
   interfaces: LinodeInterface[];
 }
 
+export interface LinodeInterfaceIPv6 {
+  slaac: SLAAC[];
+  ranges: {
+    range: string;
+  }[];
+  is_public: boolean;
+}
+
 export interface VPCInterfaceData {
   vpc_id: number;
   subnet_id: number;
-  ipv4: {
+  ipv4?: {
     addresses: {
       address: string;
       primary: boolean;
@@ -295,6 +315,7 @@ export interface VPCInterfaceData {
     }[];
     ranges: { range: string }[];
   };
+  ipv6?: LinodeInterfaceIPv6;
 }
 
 export interface PublicInterfaceData {
