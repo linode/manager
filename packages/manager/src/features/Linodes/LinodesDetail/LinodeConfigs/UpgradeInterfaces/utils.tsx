@@ -1,40 +1,31 @@
 import { List, ListItem, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-export const getUnableToUpgradeTooltipText = (reasons: {
-  isLegacyConfigOnlyAccount: boolean;
-  isLkeLinode: boolean;
-  isRegionUnsupported: boolean;
-}) => {
-  const {
-    isLegacyConfigOnlyAccount,
-    isLkeLinode,
-    isRegionUnsupported,
-  } = reasons;
+import type { CannotUpgradeInterfaceReasons } from 'src/hooks/useCanUpgradeInterfaces';
 
-  if (!isLegacyConfigOnlyAccount && !isLkeLinode && !isRegionUnsupported) {
+const UPGRADE_REASON_TO_COPY: Record<CannotUpgradeInterfaceReasons, string> = {
+  isLegacyConfigOnlyAccount:
+    'Your account does not support upgrading to Linode interfaces.',
+  isLkeLinode: 'This Linode belongs to an LKE cluster.',
+  regionUnsupported: "Your Linode's region does not support Linode interfaces.",
+};
+
+export const getUnableToUpgradeTooltipText = (
+  reasons: CannotUpgradeInterfaceReasons[]
+) => {
+  if (reasons.length === 0) {
     return null;
   }
 
   return (
     <Stack>
-      <Typography>Unable to upgrade:</Typography>
+      <Typography>Cannot upgrade interfaces:</Typography>
       <List sx={{ listStyleType: 'disc', pl: 3 }}>
-        {isLkeLinode && (
-          <ListItem disablePadding sx={{ display: 'list-item' }}>
-            This Linode belongs to an LKE cluster.
+        {reasons.map((entity) => (
+          <ListItem disablePadding key={entity} sx={{ display: 'list-item' }}>
+            {UPGRADE_REASON_TO_COPY[entity]}
           </ListItem>
-        )}
-        {isLegacyConfigOnlyAccount && (
-          <ListItem disablePadding sx={{ display: 'list-item' }}>
-            Your account does not support upgrading to Linode interfaces.
-          </ListItem>
-        )}
-        {isRegionUnsupported && (
-          <ListItem disablePadding sx={{ display: 'list-item' }}>
-            Your Linode&#39;s region does not support Linode interfaces.
-          </ListItem>
-        )}
+        ))}
       </List>
     </Stack>
   );

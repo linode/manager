@@ -4,6 +4,11 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import type { InterfaceGenerationType } from '@linode/api-v4';
 
+export type CannotUpgradeInterfaceReasons =
+  | 'isLegacyConfigOnlyAccount'
+  | 'isLkeLinode'
+  | 'regionUnsupported';
+
 /**
  * Hook to determine whether to show Upgrade Interface features for a Linode with the given
  * LKE cluster, region, and interface type.
@@ -38,12 +43,19 @@ export const useCanUpgradeInterfaces = (
     !isLegacyConfigOnlyAccount &&
     regionSupportsLinodeInterfaces;
 
+  const unableToUpgradeReasons: CannotUpgradeInterfaceReasons[] = [];
+  if (!!linodeLkeId) {
+    unableToUpgradeReasons.push('isLkeLinode');
+  }
+  if (isLegacyConfigOnlyAccount) {
+    unableToUpgradeReasons.push('isLegacyConfigOnlyAccount');
+  }
+  if (!regionSupportsLinodeInterfaces) {
+    unableToUpgradeReasons.push('regionUnsupported');
+  }
+
   return {
     canUpgradeInterfaces,
-    unableToUpgradeReasons: {
-      isLegacyConfigOnlyAccount,
-      isLkeLinode: !!linodeLkeId,
-      isRegionUnsupported: !regionSupportsLinodeInterfaces,
-    },
+    unableToUpgradeReasons,
   };
 };
