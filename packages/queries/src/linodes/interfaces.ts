@@ -1,6 +1,7 @@
 import {
   createLinodeInterface,
   deleteLinodeInterface,
+  updateLinodeInterface,
   upgradeToLinodeInterface,
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,6 +14,7 @@ import type {
   Firewall,
   LinodeInterface,
   LinodeInterfaces,
+  ModifyLinodeInterfacePayload,
   ResourcePage,
   UpgradeInterfaceData,
   UpgradeInterfacePayload,
@@ -58,6 +60,31 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
         });
+      },
+    }
+  );
+};
+
+export const useUpdateLinodeInterfaceMutation = (
+  linodeId: number,
+  interfaceId: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<LinodeInterface, APIError[], ModifyLinodeInterfacePayload>(
+    {
+      mutationFn: (data) => updateLinodeInterface(linodeId, interfaceId, data),
+      onSuccess(linodeInterface) {
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.interfaces._ctx
+            .interfaces.queryKey,
+        });
+        queryClient.setQueryData(
+          linodeQueries
+            .linode(linodeId)
+            ._ctx.interfaces._ctx.interface(linodeInterface.id).queryKey,
+          linodeInterface
+        );
       },
     }
   );

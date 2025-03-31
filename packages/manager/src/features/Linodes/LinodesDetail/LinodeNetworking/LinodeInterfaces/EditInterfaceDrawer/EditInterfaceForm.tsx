@@ -1,8 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useLinodeInterfaceQuery } from '@linode/queries';
+import {
+  useLinodeInterfaceQuery,
+  useUpdateLinodeInterfaceMutation,
+} from '@linode/queries';
+import { ActionsPanel, Checkbox, Stack } from '@linode/ui';
 import { ModifyLinodeInterfaceSchema } from '@linode/validation';
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
@@ -14,9 +18,14 @@ interface Props {
 }
 
 export const EditInterfaceForm = (props: Props) => {
-  const { interfaceId, linodeId } = props;
+  const { interfaceId, linodeId, onClose } = props;
 
   const { data: linodeInterface } = useLinodeInterfaceQuery(
+    linodeId,
+    interfaceId
+  );
+
+  const { mutateAsync } = useUpdateLinodeInterfaceMutation(
     linodeId,
     interfaceId
   );
@@ -27,13 +36,55 @@ export const EditInterfaceForm = (props: Props) => {
     values: linodeInterface,
   });
 
-  const onSubmit = (values: ModifyLinodeInterfacePayload) => {
+  const onSubmit = async (values: ModifyLinodeInterfacePayload) => {
     alert(JSON.stringify(values, null, 2));
+    try {
+      await mutateAsync(values);
+    } catch (errors) {
+      for (const error of errors) {
+        form.setError(error.field ?? 'root', error.reason);
+      }
+    }
   };
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>Form</form>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Stack spacing={1}>
+          <Controller
+            render={({ field, fieldState }) => (
+              <Checkbox
+                checked={field.value ?? false}
+                onChange={field.onChange}
+                text="Default route for IPv4"
+              />
+            )}
+            control={form.control}
+            name="default_route.ipv4"
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <Checkbox
+                checked={field.value ?? false}
+                onChange={field.onChange}
+                text="Default route for IPv6"
+              />
+            )}
+            control={form.control}
+            name="default_route.ipv6"
+          />
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Save',
+              type: 'submit',
+            }}
+            secondaryButtonProps={{
+              label: 'Cancel',
+              onClick: onClose,
+            }}
+          />
+        </Stack>
+      </form>
     </FormProvider>
   );
 };
