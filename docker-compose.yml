@@ -49,6 +49,7 @@ x-e2e-env:
 
   # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+  CY_TEST_HTML_REPORT: ${CY_TEST_HTML_REPORT}
   CY_TEST_USER_REPORT: ${CY_TEST_USER_REPORT}
 
   # Cloud Manager build environment.
