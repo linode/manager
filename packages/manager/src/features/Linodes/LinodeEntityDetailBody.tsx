@@ -143,7 +143,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     unableToUpgradeReasons
   );
 
-  const upgradeInterfacesChip = (
+  const upgradeInterfacesChip = canUpgradeInterfaces ? (
     <Chip
       sx={(theme) => ({
         backgroundColor: theme.color.tagButtonBg,
@@ -151,11 +151,24 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         marginLeft: theme.spacingFunction(4),
       })}
       component="span"
-      disabled={!canUpgradeInterfaces}
       label="UPGRADE"
       onClick={openUpgradeInterfacesDialog}
       size="small"
     />
+  ) : (
+    <Tooltip title={unableToUpgradeTooltipText}>
+      <Chip
+        sx={(theme) => ({
+          backgroundColor: theme.tokens.alias.Interaction.Background.Disabled,
+          color: theme.tokens.alias.Content.Text.Primary.Disabled,
+          marginLeft: theme.spacingFunction(4),
+        })}
+        aria-disabled
+        component="span"
+        label="UPGRADE"
+        size="small"
+      />
+    </Tooltip>
   );
 
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
@@ -508,13 +521,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  {!unableToUpgradeTooltipText ? (
-                    upgradeInterfacesChip
-                  ) : (
-                    <Tooltip title={unableToUpgradeTooltipText}>
-                      {upgradeInterfacesChip}
-                    </Tooltip>
-                  )}
+                  {upgradeInterfacesChip}
                 </Box>
               )}
             </StyledListItem>
