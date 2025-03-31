@@ -150,12 +150,12 @@ export const KubeControlPlaneACLDrawer = (
       acl: {
         enabled: acl.enabled,
         'revision-id': acl['revision-id'],
-        ...((ipv4.length > 0 || ipv6.length > 0) && {
+        ...{
           addresses: {
-            ...(ipv4.length > 0 && { ipv4 }),
-            ...(ipv6.length > 0 && { ipv6 }),
+            ...{ ipv4 },
+            ...{ ipv6 },
           },
-        }),
+        },
       },
     };
 
