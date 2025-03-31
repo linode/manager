@@ -6,8 +6,6 @@ import * as reactPlugin from 'eslint-plugin-react';
 import sonarjs from 'eslint-plugin-sonarjs';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
-import * as xssPlugin from 'eslint-plugin-xss';
-import * as scanjsPlugin from 'eslint-plugin-scanjs-rules';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'path';
