@@ -20,7 +20,9 @@ describe('NetworkInterfaces', () => {
         HttpResponse.json(makeResourcePage(firewallFactory.buildList(1)))
       )
     );
-    const { getByTestId, getByText } = renderWithTheme(<DefaultFirewalls />);
+    const { getByTestId, getByText } = renderWithTheme(<DefaultFirewalls />, {
+      flags: { linodeInterfaces: { enabled: true } },
+    });
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

@@ -3,10 +3,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getDefaultFirewallDescription,
-  getEntitiesThatFirewallIsDefaultFor,
+  getFirewallDefaultEntities,
 } from './FirewallSelectOption.utils';
 
-describe('getEntitiesThatFirewallIsDefaultFor', () => {
+describe('getFirewallDefaultEntities', () => {
   it('returns entities that a firewall is a default for', () => {
     const firewallSettings = firewallSettingsFactory.build({
       default_firewall_ids: {
@@ -17,7 +17,7 @@ describe('getEntitiesThatFirewallIsDefaultFor', () => {
       },
     });
 
-    expect(getEntitiesThatFirewallIsDefaultFor(4, firewallSettings)).toEqual([
+    expect(getFirewallDefaultEntities(4, firewallSettings)).toEqual([
       'linode',
       'nodebalancer',
       'public_interface',
@@ -34,9 +34,7 @@ describe('getEntitiesThatFirewallIsDefaultFor', () => {
       },
     });
 
-    expect(getEntitiesThatFirewallIsDefaultFor(1, firewallSettings)).toEqual(
-      []
-    );
+    expect(getFirewallDefaultEntities(1, firewallSettings)).toEqual([]);
   });
 
   it('returns an empty array if the user has no default firewalls set', () => {
@@ -49,9 +47,7 @@ describe('getEntitiesThatFirewallIsDefaultFor', () => {
       },
     });
 
-    expect(getEntitiesThatFirewallIsDefaultFor(1, firewallSettings)).toEqual(
-      []
-    );
+    expect(getFirewallDefaultEntities(1, firewallSettings)).toEqual([]);
   });
 });
 

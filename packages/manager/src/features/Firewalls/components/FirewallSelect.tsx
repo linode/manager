@@ -1,15 +1,11 @@
-import {
-  useAllFirewallsQuery,
-  useFirewallSettingsQuery,
-} from '@linode/queries';
+import { useAllFirewallsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React, { useMemo } from 'react';
 
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
 
 import { DefaultFirewallChip } from './DefaultFirewallChip';
 import { FirewallSelectOption } from './FirewallSelectOption';
-import { getDefaultFirewallDescription } from './FirewallSelectOption.utils';
 
 import type { Firewall } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from '@linode/ui';
@@ -53,19 +49,13 @@ export const FirewallSelect = <DisableClearable extends boolean>(
 ) => {
   const { errorText, hideDefaultChips, loading, value, ...rest } = props;
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
-  const { data: firewallSettings } = useFirewallSettingsQuery({
-    enabled: isLinodeInterfacesEnabled && !hideDefaultChips,
-  });
 
-  const defaultDescription =
-    firewallSettings &&
-    value &&
-    getDefaultFirewallDescription(value, firewallSettings);
-
-  const isDefault = !!defaultDescription;
+  const {
+    defaultNumEntities,
+    isDefault,
+    tooltipText,
+  } = useDefaultFirewallChipInformation(value, hideDefaultChips);
 
   const selectedFirewall = useMemo(
     () => firewalls?.find((firewall) => firewall.id === value) ?? null,
@@ -86,7 +76,10 @@ export const FirewallSelect = <DisableClearable extends boolean>(
       textFieldProps={{
         InputProps: {
           endAdornment: isDefault && !hideDefaultChips && (
-            <DefaultFirewallChip tooltipText={defaultDescription} />
+            <DefaultFirewallChip
+              defaultNumEntities={defaultNumEntities}
+              tooltipText={tooltipText}
+            />
           ),
         },
       }}
