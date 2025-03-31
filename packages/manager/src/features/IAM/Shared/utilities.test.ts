@@ -211,12 +211,12 @@ describe('deleteUserRole', () => {
 
     const expectedRoles = {
       account_access: ['account_linode_admin', 'linode_creator'],
-      resource_access: [],
+      entity_access: [],
     };
 
     expect(
       deleteUserRole({
-        access: resourceAccess,
+        access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
       })
@@ -236,23 +236,23 @@ describe('deleteUserRole', () => {
         'account_admin',
         'account_viewer',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 23456789,
-          resource_type: 'linode',
+          id: 10,
+          type: 'linode',
           roles: ['linode_viewer'],
         },
         {
-          resource_id: 45678901,
-          resource_type: 'firewall',
-          roles: ['update_firewall'],
+          id: 1,
+          type: 'firewall',
+          roles: ['firewall_admin'],
         },
       ],
     };
 
     expect(
       deleteUserRole({
-        access: resourceAccess,
+        access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
       })
@@ -264,10 +264,10 @@ describe('deleteUserRole', () => {
 
     const expectedRoles = {
       account_access: ['linode_creator'],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
+          type: 'linode',
           roles: ['linode_contributor'],
         },
       ],
