@@ -266,3 +266,14 @@ export const useLkeStandardOrEnterpriseVersions = (
     versionsError: enterpriseTierVersionsError || versionsError,
   };
 };
+
+export const useKubernetesBetaEndpoint = () => {
+  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
+
+  return {
+    isAPLAvailabilityLoading,
+    isUsingBetaEndpoint,
+  };
+};
