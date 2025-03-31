@@ -170,11 +170,11 @@ export const deleteSubnet = (vpcID: number, subnetID: number) =>
   );
 
 /**
- * getVPCsIPs
+ * getAllVPCIPs
  *
  * Get a paginated list of all VPC IP addresses and address ranges
  */
-export const getVPCsIPs = (params?: Params, filter?: Filter) =>
+export const getAllVPCIPs = (params?: Params, filter?: Filter) =>
   Request<Page<VPCIP>>(
     setURL(`${API_ROOT}/vpcs/ips`),
     setMethod('GET'),
