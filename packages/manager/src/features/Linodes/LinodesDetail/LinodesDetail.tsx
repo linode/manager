@@ -14,7 +14,7 @@ import {
 } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useShowUpgradeInterfaces } from 'src/hooks/useShowUpgradeInterfaces';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 
 import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 
@@ -58,7 +58,7 @@ export const LinodeDetail = () => {
   const id = Number(linodeId);
 
   const { data: linode, error, isLoading } = useLinodeQuery(id);
-  const { showUpgradeInterfaces } = useShowUpgradeInterfaces(
+  const { canUpgradeInterfaces } = useCanUpgradeInterfaces(
     linode?.lke_cluster_id,
     linode?.region,
     linode?.interface_generation
@@ -103,7 +103,7 @@ export const LinodeDetail = () => {
               <UpgradeInterfacesDialog
                 open={
                   pathname.includes('upgrade-interfaces') &&
-                  showUpgradeInterfaces
+                  canUpgradeInterfaces
                 }
                 linodeId={id}
                 onClose={closeUpgradeInterfacesDialog}

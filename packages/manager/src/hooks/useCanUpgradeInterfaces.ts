@@ -13,7 +13,7 @@ import type { InterfaceGenerationType } from '@linode/api-v4';
  * Interfaces, or if the customer's account settings specify only legacy
  * interfaces can be used, then the Linode cannot be upgraded.
  */
-export const useShowUpgradeInterfaces = (
+export const useCanUpgradeInterfaces = (
   linodeLkeId: null | number | undefined,
   linodeRegion: string | undefined,
   interfaceType: InterfaceGenerationType | undefined
@@ -25,15 +25,25 @@ export const useShowUpgradeInterfaces = (
   const regionSupportsLinodeInterfaces =
     region?.capabilities.includes('Linode Interfaces') ?? false;
 
-  const showUpgradeInterfaces =
+  const isLegacyConfigOnlyAccount =
+    accountSettings?.interfaces_for_new_linodes === 'legacy_config_only';
+
+  const canUpgradeInterfaces =
     // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
     // using Legacy config profile interfaces in a region that supports the new Interfaces
     // and our account can have Linodes using new interfaces
     isLinodeInterfacesEnabled &&
     interfaceType !== 'linode' &&
     !linodeLkeId &&
-    accountSettings?.interfaces_for_new_linodes !== 'legacy_config_only' &&
+    !isLegacyConfigOnlyAccount &&
     regionSupportsLinodeInterfaces;
 
-  return { showUpgradeInterfaces };
+  return {
+    canUpgradeInterfaces,
+    unableToUpgradeReasons: {
+      isLegacyConfigOnlyAccount,
+      isLkeLinode: !!linodeLkeId,
+      isRegionUnsupported: !regionSupportsLinodeInterfaces,
+    },
+  };
 };
