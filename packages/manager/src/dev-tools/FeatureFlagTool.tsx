@@ -210,7 +210,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button onClick={resetFlags}>Reset to LD DEV Defaults</button>
+          <button className="dev-tools-button" onClick={resetFlags}>
+            Reset to LD DEV Defaults
+          </button>
         </div>
       </div>
     </div>
