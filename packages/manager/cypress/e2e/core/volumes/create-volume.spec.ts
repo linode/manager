@@ -1,3 +1,4 @@
+import { createLinodeRequestFactory } from '@linode/utilities';
 import {
   accountUserFactory,
   grantsFactory,
@@ -16,8 +17,6 @@ import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { createLinodeRequestFactory } from 'src/factories/linodes';
 
 import type { Linode } from '@linode/api-v4';
 

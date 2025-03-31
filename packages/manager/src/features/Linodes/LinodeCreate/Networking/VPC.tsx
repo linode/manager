@@ -16,8 +16,8 @@ interface Props {
 export const VPC = ({ index }: Props) => {
   const {
     control,
-    setValue,
     resetField,
+    setValue,
   } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 

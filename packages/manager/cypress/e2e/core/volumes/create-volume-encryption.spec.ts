@@ -1,7 +1,7 @@
 /**
  * @file UI tests involving Volume creation with Block Storage Encryption functionality.
  */
-import { regionFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -18,7 +18,6 @@ import { randomLabel } from 'support/util/random';
 import {
   accountFactory,
   linodeDiskFactory,
-  linodeFactory,
   volumeFactory,
 } from 'src/factories';
 
