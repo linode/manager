@@ -28,7 +28,7 @@ import {
 import type {
   EntitiesRole,
   EntitiesType,
-  IamAccountEntity,
+  IamAccountEntities,
 } from '../../Shared/utilities';
 import type {
   AccountEntity,
@@ -70,7 +70,7 @@ export const AssignedEntitiesTable = () => {
     if (!assignedRoles || !entities) {
       return { entityTypes: [], roles: [] };
     }
-    const transformedEntities = transformedAccountEntities(entities);
+    const transformedEntities = transformedAccountEntities(entities.data);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
@@ -229,7 +229,7 @@ const getEntityTypes = (data: EntitiesRole[]): EntitiesType[] =>
 
 const addEntityNamesToRoles = (
   assignedRoles: IamUserPermissions,
-  entities: IamAccountEntity[]
+  entities: IamAccountEntities[]
 ): EntitiesRole[] => {
   const entitiesRoles = assignedRoles.entity_access;
 

@@ -1,6 +1,8 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
@@ -8,7 +10,6 @@ import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
 import type {
   EntityTypePermissions,
   IamAccessType,
-  IamAccountEntities,
   Roles,
 } from '@linode/api-v4/lib/iam/types';
 
@@ -53,30 +54,13 @@ const mockEntitiesAcceessRole: ExtendedRole = {
   ],
 };
 
-const mockEntities: IamAccountEntities = {
-  data: [
-    {
-      id: 7,
-      label: 'linode7',
-      type: 'linode',
-    },
-    {
-      id: 1,
-      label: 'no_devices',
-      type: 'firewall',
-    },
-    {
-      id: 1,
-      label: 'image-2',
-      type: 'image',
-    },
-    {
-      id: 3,
-      label: 'image-1',
-      type: 'image',
-    },
-  ],
-};
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 1,
+    label: 'image-1',
+    type: 'image',
+  }),
+];
 
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
@@ -107,8 +91,9 @@ describe('AssignedPermissionsPanel', () => {
   });
 
   it('renders with the correct context when the access is an entity', () => {
-    queryMocks.useAccountEntities.mockReturnValue({ data: mockEntities });
-
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
     const { getAllByRole, getAllByTestId, getByText } = renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
@@ -129,8 +114,9 @@ describe('AssignedPermissionsPanel', () => {
   });
 
   it('renders the Autocomplete when the access is an entity', () => {
-    queryMocks.useAccountEntities.mockReturnValue({ data: mockEntities });
-
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
     const { getAllByRole, getByText } = renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
@@ -140,7 +126,6 @@ describe('AssignedPermissionsPanel', () => {
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
     expect(getByText('image-1')).toBeInTheDocument();
-    expect(getByText('image-2')).toBeInTheDocument();
   });
 
   it('shows all permissions', () => {

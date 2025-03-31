@@ -1,17 +1,25 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountEntitiesFactory } from 'src/factories/accountEntities';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
 import { UserRoles } from './UserRoles';
 
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 7,
+    type: 'linode',
+  }),
+];
+
 const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({}),
   useAccountEntities: vi.fn().mockReturnValue({}),
+  useAccountPermissions: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -55,7 +63,7 @@ describe('UserRoles', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: makeResourcePage(mockEntities),
     });
 
     const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(

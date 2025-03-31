@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountAccessType,
+  AccountEntity,
   EntityAccess,
   EntityType,
   EntityTypePermissions,
@@ -307,7 +308,7 @@ export const mapRolesToPermissions = (
 
 export const addEntitiesNamesToRoles = (
   roles: ExtendedRoleMap[],
-  entities: IamAccountEntity[]
+  entities: IamAccountEntities[]
 ): ExtendedRoleMap[] => {
   return roles.map((role) => {
     // Find the resource group by entity_type
@@ -472,22 +473,21 @@ export const deleteUserRole = ({
 
   // If access type is invalid, return unchanged object
   return assignedRoles;
-  export interface IamAccountEntity {
-  entities: {
-    id: number;
-    label: string;
-  }[];
+};
+
+export interface IamAccountEntities {
+  entities: Pick<AccountEntity, 'id' | 'label'>[];
   type: EntityType;
 }
 
 export const transformedAccountEntities = (
-  entities: IamAccountEntities
-): IamAccountEntity[] => {
-  const result: IamAccountEntity[] = [];
+  entities: AccountEntity[]
+): IamAccountEntities[] => {
+  const result: IamAccountEntities[] = [];
 
   const map = new Map();
 
-  entities.data.forEach((item) => {
+  entities.forEach((item) => {
     if (!map.has(item.type)) {
       map.set(item.type, []);
     }

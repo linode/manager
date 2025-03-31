@@ -1,6 +1,56 @@
 import { Factory } from '@linode/utilities';
 
-import type { IamUserPermissions } from '@linode/api-v4';
+import type {
+  EntityAccess,
+  EntityType,
+  IamUserPermissions,
+  RoleType,
+} from '@linode/api-v4';
+
+const possibleRoles: RoleType[] = [
+  'firewall_admin',
+  'firewall_creator',
+  'linode_contributor',
+  'linode_creator',
+  'linode_viewer',
+  'update_firewall',
+];
+
+export const possibleTypes: EntityType[] = [
+  'database',
+  'domain',
+  'firewall',
+  'image',
+  'linode',
+  'longview',
+  'nodebalancer',
+  'stackscript',
+  'volume',
+  'vpc',
+];
+
+export const entityAccessFactory = Factory.Sync.makeFactory<EntityAccess>({
+  id: Factory.each((i) => i + 1),
+  roles: Factory.each((i) => [possibleRoles[i % possibleRoles.length]]),
+  type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
+});
+
+const entityAccessList = [
+  ...entityAccessFactory.buildList(7, {
+    roles: ['linode_contributor'],
+    type: 'linode',
+  }),
+  entityAccessFactory.build({
+    id: 10,
+    roles: ['linode_contributor', 'linode_viewer'],
+    type: 'linode',
+  }),
+  entityAccessFactory.build({
+    id: 1,
+    roles: ['firewall_admin'],
+    type: 'firewall',
+  }),
+];
 
 export const userPermissionsFactory = Factory.Sync.makeFactory<IamUserPermissions>(
   {
@@ -11,57 +61,6 @@ export const userPermissionsFactory = Factory.Sync.makeFactory<IamUserPermission
       'account_admin',
       'account_viewer',
     ],
-    entity_access: [
-      {
-        id: 10,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 1,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 2,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 3,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 4,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 5,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 6,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 7,
-        type: 'linode',
-        roles: ['linode_contributor', 'linode_viewer'],
-      },
-      {
-        id: 8,
-        type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        id: 1,
-        type: 'firewall',
-        roles: ['firewall_admin'],
-      },
-    ],
+    entity_access: entityAccessList,
   }
 );

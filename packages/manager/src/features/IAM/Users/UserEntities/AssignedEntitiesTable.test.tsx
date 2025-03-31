@@ -1,8 +1,9 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountEntitiesFactory } from 'src/factories/accountEntities';
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
@@ -28,6 +29,14 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 1,
+    label: 'no_devices',
+    type: 'firewall',
+  }),
+];
+
 describe('AssignedEntitiesTable', () => {
   it('should display no roles text if there are no roles assigned to user', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
@@ -45,7 +54,7 @@ describe('AssignedEntitiesTable', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: makeResourcePage(mockEntities),
     });
 
     const { getAllByLabelText, getByText } = renderWithTheme(
@@ -70,7 +79,7 @@ describe('AssignedEntitiesTable', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: makeResourcePage(mockEntities),
     });
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
@@ -91,7 +100,7 @@ describe('AssignedEntitiesTable', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: makeResourcePage(mockEntities),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(
@@ -114,7 +123,7 @@ describe('AssignedEntitiesTable', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: makeResourcePage(mockEntities),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(

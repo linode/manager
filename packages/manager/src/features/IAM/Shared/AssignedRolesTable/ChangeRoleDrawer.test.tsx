@@ -2,8 +2,8 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountEntitiesFactory } from 'src/factories/accountEntities';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -88,7 +88,7 @@ describe('ChangeRoleDrawer', () => {
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntitiesFactory.build(),
+      data: accountEntityFactory.build(),
     });
 
     const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);

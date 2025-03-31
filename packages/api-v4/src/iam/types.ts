@@ -1,31 +1,31 @@
 export type EntityTypePermissions =
-  | 'linode'
-  | 'firewall'
-  | 'nodebalancer'
-  | 'longview'
-  | 'domain'
-  | 'stackscript'
-  | 'image'
-  | 'volume'
-  | 'database'
   | 'account'
+  | 'database'
+  | 'domain'
+  | 'firewall'
+  | 'image'
+  | 'linode'
+  | 'longview'
+  | 'nodebalancer'
+  | 'stackscript'
+  | 'volume'
   | 'vpc';
 
 export type AccountAccessType =
-  | 'account_linode_admin'
-  | 'linode_creator'
-  | 'linode_contributor'
   | 'account_admin'
+  | 'account_linode_admin'
   | 'account_viewer'
-  | 'firewall_creator';
+  | 'firewall_creator'
+  | 'linode_contributor'
+  | 'linode_creator';
 
 export type RoleType =
-  | 'linode_contributor'
-  | 'linode_viewer'
   | 'firewall_admin'
+  | 'firewall_creator'
+  | 'linode_contributor'
   | 'linode_creator'
-  | 'update_firewall'
-  | 'firewall_creator';
+  | 'linode_viewer'
+  | 'update_firewall';
 
 export interface IamUserPermissions {
   account_access: AccountAccessType[];

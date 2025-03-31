@@ -1,18 +1,14 @@
 export type EntityType =
-  | 'linode'
-  | 'firewall'
-  | 'nodebalancer'
-  | 'longview'
-  | 'domain'
-  | 'stackscript'
-  | 'image'
-  | 'volume'
   | 'database'
+  | 'domain'
+  | 'firewall'
+  | 'image'
+  | 'linode'
+  | 'longview'
+  | 'nodebalancer'
+  | 'stackscript'
+  | 'volume'
   | 'vpc';
-
-export interface IamAccountEntities {
-  data: AccountEntity[];
-}
 
 export interface AccountEntity {
   label: string;

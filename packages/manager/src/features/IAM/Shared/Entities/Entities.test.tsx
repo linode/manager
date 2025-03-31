@@ -1,11 +1,11 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
-
-import type { IamAccountEntities } from '@linode/api-v4/lib/resources/types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -19,30 +19,17 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
-const mockEntities: IamAccountEntities = {
-  data: [
-    {
-      id: 7,
-      label: 'linode7',
-      type: 'linode',
-    },
-    {
-      id: 1,
-      label: 'no_devices',
-      type: 'firewall',
-    },
-    {
-      id: 1,
-      label: 'image-2',
-      type: 'image',
-    },
-    {
-      id: 3,
-      label: 'image-1',
-      type: 'image',
-    },
-  ],
-};
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 7,
+    type: 'linode',
+  }),
+  accountEntityFactory.build({
+    id: 1,
+    label: 'firewall-1',
+    type: 'firewall',
+  }),
+];
 
 describe('Entities', () => {
   it('renders correct data when it is an account access and type is an account', () => {
@@ -76,7 +63,9 @@ describe('Entities', () => {
   });
 
   it('renders correct data when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({ data: mockEntities });
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
 
     const { getAllByRole, getByText } = renderWithTheme(
       <Entities access="entity_access" type="image" />
@@ -92,10 +81,12 @@ describe('Entities', () => {
   });
 
   it('renders correct options in Autocomplete dropdown when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({ data: mockEntities });
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
 
     const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="entity_access" type="image" />
+      <Entities access="entity_access" type="firewall" />
     );
 
     expect(getByText('Entities')).toBeInTheDocument();
@@ -103,8 +94,7 @@ describe('Entities', () => {
     const autocomplete = getAllByRole('combobox')[0];
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
-    expect(getByText('image-1')).toBeInTheDocument();
-    expect(getByText('image-2')).toBeInTheDocument();
+    expect(getByText('firewall-1')).toBeInTheDocument();
   });
 
   it('updates selected options when Autocomplete value changes when it is an entity access', () => {
@@ -115,6 +105,6 @@ describe('Entities', () => {
     const autocomplete = getAllByRole('combobox')[0];
     fireEvent.change(autocomplete, { target: { value: 'linode7' } });
     fireEvent.keyDown(autocomplete, { key: 'Enter' });
-    expect(getByText('linode7')).toBeInTheDocument();
+    expect(getByText('test-1')).toBeInTheDocument();
   });
 });

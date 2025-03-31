@@ -87,7 +87,7 @@ export const AssignedRolesTable = () => {
     const resourceTypes = getResourceTypes(roles);
 
     if (entities) {
-      const transformedEntities = transformedAccountEntities(entities);
+      const transformedEntities = transformedAccountEntities(entities.data);
 
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }

@@ -8,12 +8,12 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import { placeholderMap, transformedAccountEntities } from '../utilities';
 
-import type { EntitiesOption, IamAccountEntity } from '../utilities';
+import type { EntitiesOption, IamAccountEntities } from '../utilities';
 import type {
+  AccountEntity,
   EntityType,
   EntityTypePermissions,
   IamAccessType,
-  IamAccountEntities,
 } from '@linode/api-v4/lib/iam/types';
 
 interface Props {
@@ -41,7 +41,7 @@ export const Entities = ({ access, assignedEntities, type }: Props) => {
     if (access !== 'entity_access' || !entities) {
       return [];
     }
-    const typeEntities = getEntitiesByType(type, entities);
+    const typeEntities = getEntitiesByType(type, entities.data);
     return typeEntities ? transformedEntities(typeEntities.entities) : [];
   }, [entities, access, type]);
 
@@ -100,8 +100,8 @@ const transformedEntities = (
 
 const getEntitiesByType = (
   roleEntityType: EntityType | EntityTypePermissions,
-  entities: IamAccountEntities
-): IamAccountEntity | undefined => {
+  entities: AccountEntity[]
+): IamAccountEntities | undefined => {
   const entitiesArray = transformedAccountEntities(entities);
 
   // Find the first matching entity by type
