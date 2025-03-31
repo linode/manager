@@ -253,7 +253,7 @@ describe('Volume creation with Block Storage Encryption', () => {
 
         // Confirm that reboot notice is absent after checking "Encrypt Volume",
         // and the "Create Volume" button is enabled.
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
 
         ui.button.findByTitle('Create Volume').should('be.enabled');
       });
