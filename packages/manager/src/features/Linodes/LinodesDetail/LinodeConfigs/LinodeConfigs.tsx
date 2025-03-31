@@ -128,17 +128,18 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        {isLinodeInterfacesEnabled && (
-          <Button
-            alwaysShowTooltip
-            buttonType="outlined"
-            disabled={isReadOnly || !canUpgradeInterfaces}
-            onClick={openUpgradeInterfacesDialog}
-            tooltipText={upgradeInterfacesTooltipText}
-          >
-            Upgrade Interfaces
-          </Button>
-        )}
+        {isLinodeInterfacesEnabled &&
+          linode?.interface_generation !== 'linode' && (
+            <Button
+              alwaysShowTooltip
+              buttonType="outlined"
+              disabled={isReadOnly || !canUpgradeInterfaces}
+              onClick={openUpgradeInterfacesDialog}
+              tooltipText={upgradeInterfacesTooltipText}
+            >
+              Upgrade Interfaces
+            </Button>
+          )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>
