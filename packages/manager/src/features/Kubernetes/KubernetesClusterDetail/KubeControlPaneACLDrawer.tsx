@@ -99,8 +99,16 @@ export const KubeControlPlaneACLDrawer = (
     values: {
       acl: {
         addresses: {
-          ipv4: aclPayload?.addresses?.ipv4 ?? [''],
-          ipv6: aclPayload?.addresses?.ipv6 ?? [''],
+          ipv4:
+            aclPayload?.addresses?.ipv4 &&
+            aclPayload?.addresses?.ipv4?.length > 0
+              ? aclPayload?.addresses?.ipv4
+              : [''],
+          ipv6:
+            aclPayload?.addresses?.ipv6 &&
+            aclPayload?.addresses?.ipv6.length > 0
+              ? aclPayload?.addresses?.ipv4
+              : [''],
         },
         enabled: aclPayload?.enabled ?? false,
         'revision-id': aclPayload?.['revision-id'] ?? '',
