@@ -3,7 +3,10 @@ import { defineConfig } from 'cypress';
 import { setupPlugins } from './cypress/support/plugins';
 import { configureBrowser } from './cypress/support/plugins/configure-browser';
 import { configureFileWatching } from './cypress/support/plugins/configure-file-watching';
-import { configureTestSuite } from './cypress/support/plugins/configure-test-suite';
+import {
+  enableJunitE2eReport,
+  enableJunitComponentReport,
+} from './cypress/support/plugins/junit-report';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config';
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
@@ -13,14 +16,15 @@ import { configureApi } from './cypress/support/plugins/configure-api';
 import { fetchAccount } from './cypress/support/plugins/fetch-account';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
-import { enableJunitReport } from './cypress/support/plugins/junit-report';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
 import cypressViteConfig from './cypress/vite.config';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
 import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
-
+import { enableHtmlReport } from './cypress/support/plugins/html-report';
+import { configureMultiReporters } from './cypress/support/plugins/configure-multi-reporters';
+import cypressOnFix from 'cypress-on-fix';
 /**
  * Exports a Cypress configuration object.
  *
@@ -62,11 +66,14 @@ export default defineConfig({
     viewportWidth: 500,
     viewportHeight: 500,
 
-    setupNodeEvents(on, config) {
+    setupNodeEvents(cypressOn, config) {
+      const on = cypressOnFix(cypressOn);
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         discardPassedTestRecordings,
-        enableJunitReport('Component', true),
+        enableJunitComponentReport,
+        enableHtmlReport,
+        configureMultiReporters,
       ]);
     },
   },
@@ -76,18 +83,15 @@ export default defineConfig({
 
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
-
-    // This is overridden when `CY_TEST_SUITE` is defined.
-    // See `cypress/support/plugins/configure-test-suite.ts`.
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
 
-    setupNodeEvents(on, config) {
+    setupNodeEvents(cypressOn, config) {
+      const on = cypressOnFix(cypressOn);
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
         configureApi,
         configureFileWatching,
-        configureTestSuite,
         configureBrowser,
         vitePreprocess,
         discardPassedTestRecordings,
@@ -98,8 +102,10 @@ export default defineConfig({
         featureFlagOverrides,
         logTestTagInfo,
         splitCypressRun,
-        enableJunitReport(),
         generateTestWeights,
+        enableJunitE2eReport,
+        enableHtmlReport,
+        configureMultiReporters,
         postRunCleanup,
       ]);
     },

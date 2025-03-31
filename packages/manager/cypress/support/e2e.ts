@@ -14,6 +14,8 @@
 // ***********************************************************
 
 import '@testing-library/cypress/add-commands';
+// reporter needs to register for events in order to attach media to test results in html report
+import 'cypress-mochawesome-reporter/register';
 // Cypress command and assertion setup.
 import chaiString from 'chai-string';
 import 'cypress-axe';
