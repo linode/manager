@@ -1,5 +1,4 @@
-import { regionFactory } from '@linode/utilities';
-import { linodeFactory } from '@src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';

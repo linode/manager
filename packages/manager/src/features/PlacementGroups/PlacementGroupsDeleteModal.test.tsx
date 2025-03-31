@@ -1,7 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory, placementGroupFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';

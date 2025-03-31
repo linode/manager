@@ -1,9 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import {
-  linodeFactory,
-  volumeFactory,
-  volumeTypeFactory,
-} from '@src/factories';
+import { linodeFactory } from '@linode/utilities';
+import { volumeFactory, volumeTypeFactory } from '@src/factories';
 import {
   mockGetLinodeDetails,
   mockGetLinodeVolumes,

@@ -54,7 +54,10 @@ export const AssignedEntities = ({
     >
       <Chip
         sx={{
-          backgroundColor: theme.tokens.color.Ultramarine[20],
+          backgroundColor:
+            theme.name === 'light'
+              ? theme.tokens.color.Ultramarine[20]
+              : theme.tokens.color.Neutrals.Black,
           color: theme.tokens.alias.Content.Text.Primary.Default,
         }}
         data-testid="entities"
@@ -83,7 +86,10 @@ export const AssignedEntities = ({
         <Box
           sx={{
             aligIitems: 'center',
-            backgroundColor: theme.tokens.color.Ultramarine[20],
+            backgroundColor:
+              theme.name === 'light'
+                ? theme.tokens.color.Ultramarine[20]
+                : theme.tokens.color.Neutrals.Black,
             borderRadius: 1,
             display: 'flex',
             height: '20px',

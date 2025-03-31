@@ -10,7 +10,7 @@ import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { SplashScreen } from 'src/components/SplashScreen';
 import 'src/exceptionReporting';
-import { Logout } from 'src/layouts/Logout';
+import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
@@ -33,16 +33,10 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
-const LoginAsCustomerCallback = React.lazy(() =>
-  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
-    default: module.LoginAsCustomerCallback,
-  }))
+const LoginAsCustomerCallback = React.lazy(
+  () => import('src/layouts/LoginAsCustomerCallback')
 );
-const OAuthCallback = React.lazy(() =>
-  import('src/layouts/OAuthCallback').then((module) => ({
-    default: module.OAuthCallback,
-  }))
-);
+const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
 const Main = () => {
   if (!navigator.cookieEnabled) {
@@ -57,7 +51,11 @@ const Main = () => {
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
-                <Route component={OAuthCallback} exact path="/oauth/callback" />
+                <Route
+                  component={OAuthCallbackPage}
+                  exact
+                  path="/oauth/callback"
+                />
                 <Route
                   component={LoginAsCustomerCallback}
                   exact

@@ -181,3 +181,9 @@ export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
 };
+
+export const CREATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+
+export const UPDATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully updated. It may take a few minutes for your changes to take effect.';

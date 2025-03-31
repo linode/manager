@@ -11,7 +11,8 @@
  * - `<validation-version>` (Optional) Desired Validation package version.
  * - `<ui-version>`         (Optional) Desired UI package version.
  * - `<utilities-version>`  (Optional) Desired Utilities package version.
- * - `<queries-version>`  (Optional) Desired Queries package version.
+ * - `<queries-version>`    (Optional) Desired Queries package version.
+ * - `<shared-version>`     (Optional) Desired Shared package version.
  *
  * Optional Flags:
  * - `-f | --force`         Forces the script to update package versions without
@@ -53,6 +54,15 @@ const flags = args.filter((arg) => {
  */
 const root = path.resolve(import.meta.dirname, '..', '..');
 
+const PACKAGE_PATHS = {
+  'manager': path.resolve(root, 'packages', 'manager', 'package.json'),
+  'api-v4': path.resolve(root, 'packages', 'api-v4', 'package.json'),
+  'validation': path.resolve(root, 'packages', 'validation', 'package.json'),
+  'ui': path.resolve(root, 'packages', 'ui', 'package.json'),
+  'utilities': path.resolve(root, 'packages', 'utilities', 'package.json'),
+  'queries': path.resolve(root, 'packages', 'queries', 'package.json')
+};
+
 /**
  * Gets the path to the package.json file for the package with the given name.
  *
@@ -61,7 +71,11 @@ const root = path.resolve(import.meta.dirname, '..', '..');
  * @returns {string} Package path for `packageName`.
  */
 const getPackagePath = (packageName) => {
-  return path.join(root, 'packages', packageName, 'package.json');
+  if (!PACKAGE_PATHS[packageName]) {
+    throw new Error(`Invalid package name: ${packageName}`);
+  }
+  
+  return PACKAGE_PATHS[packageName];
 };
 
 /**
@@ -115,6 +129,7 @@ const jobs = [
   { name: 'ui', path: getPackagePath('ui'), desiredVersion: desiredUiVersion },
   { name: 'utilities', path: getPackagePath('utilities'), desiredVersion: desiredUtilitiesVersion },
   { name: 'queries', path: getPackagePath('queries'), desiredVersion: desiredQueriesVersion },
+  { name: 'shared', path: getPackagePath('shared'), desiredVersion: desiredSharedVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.

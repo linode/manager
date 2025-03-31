@@ -29,6 +29,7 @@ import {
   notificationChannelFactory,
   triggerConditionFactory,
 } from 'src/factories';
+import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
@@ -405,7 +406,7 @@ describe('Create Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', '/alerts/definitions');
-      ui.toast.assertMessage('Alert successfully created');
+      ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText(label)
