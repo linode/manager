@@ -40,6 +40,14 @@ export interface EnhancedAutocompleteProps<
   noMarginTop?: boolean;
   /** Element to show when the Autocomplete search yields no results. */
   noOptionsText?: JSX.Element | string;
+  /**
+   * Keep the search input enabled on mobile.
+   * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
+   * Because some instances may require the search input to be editable on mobile, this prop is available to override that default behavior.
+   *
+   * @default false
+   */
+  keepSearchEnabledOnMobile?: boolean;
   placeholder?: string;
   renderInput?: (_params: AutocompleteRenderInputParams) => React.ReactNode;
   /** Label for the "select all" option. */
@@ -85,6 +93,7 @@ export const Autocomplete = <
     multiple,
     noMarginTop,
     noOptionsText,
+    keepSearchEnabledOnMobile = false,
     onBlur,
     onChange,
     options,
@@ -148,7 +157,7 @@ export const Autocomplete = <
                 inputProps={{
                   ...params.inputProps,
                   ...textFieldProps?.inputProps,
-                  readOnly: isReadonly,
+                  readOnly: isReadonly && !keepSearchEnabledOnMobile,
                 }}
               />
             )
