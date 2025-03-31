@@ -253,6 +253,7 @@ export const VPCSubnetsTable = (props: Props) => {
                   isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
                   key={linodeInfo.id}
                   linodeId={linodeInfo.id}
+                  linodeInterfaceInfo={linodeInfo.interfaces}
                   subnet={subnet}
                   subnetId={subnet.id}
                 />

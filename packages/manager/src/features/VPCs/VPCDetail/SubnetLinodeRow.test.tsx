@@ -94,6 +94,7 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
+          linodeInterfaceInfo={[]}
           subnetId={1}
         />
       )
@@ -162,6 +163,7 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
+          linodeInterfaceInfo={[]}
           subnetId={0}
         />
       )
@@ -223,6 +225,7 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory2.id}
+          linodeInterfaceInfo={[]}
           subnet={subnet}
           subnetId={subnet.id}
         />
@@ -264,6 +267,7 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
           linodeId={linodeFactory1.id}
+          linodeInterfaceInfo={[]}
           subnetId={0}
         />
       )
@@ -297,6 +301,7 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
           linodeId={linodeFactory2.id}
+          linodeInterfaceInfo={[]}
           subnet={subnet}
           subnetId={subnet.id}
         />

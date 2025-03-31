@@ -1,3 +1,10 @@
+import {
+  useAllLinodeConfigsQuery,
+  useLinodeFirewallsQuery,
+  useLinodeInterfaceFirewallsQuery,
+  useLinodeInterfaceQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
@@ -10,11 +17,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import {
-  useAllLinodeConfigsQuery,
-  useLinodeFirewallsQuery,
-  useLinodeQuery,
-} from '@linode/queries';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
@@ -27,7 +29,12 @@ import {
 } from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 
-import type { APIError, Firewall, Linode } from '@linode/api-v4';
+import type {
+  APIError,
+  Firewall,
+  Linode,
+  SubnetLinodeInterfaceData,
+} from '@linode/api-v4';
 import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -38,6 +45,7 @@ interface Props {
   hover?: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
+  linodeInterfaceInfo: SubnetLinodeInterfaceData[];
   subnet?: Subnet;
   subnetId: number;
 }
@@ -49,9 +57,13 @@ export const SubnetLinodeRow = (props: Props) => {
     hover = false,
     isVPCLKEEnterpriseCluster,
     linodeId,
+    linodeInterfaceInfo,
     subnet,
     subnetId,
   } = props;
+
+  const interfaceData = linodeInterfaceInfo[0];
+  const isLinodeInterface = interfaceData.config_id === null;
 
   const {
     data: linode,
@@ -60,16 +72,42 @@ export const SubnetLinodeRow = (props: Props) => {
   } = useLinodeQuery(linodeId);
 
   const {
-    data: attachedFirewalls,
-    error: firewallsError,
-    isLoading: firewallsLoading,
-  } = useLinodeFirewallsQuery(linodeId);
+    data: attachedFirewallsConfig,
+    error: firewallsErrorConfig,
+    isLoading: firewallsLoadingConfig,
+  } = useLinodeFirewallsQuery(linodeId, !isLinodeInterface);
+
+  const {
+    data: attachedFirewallsLinodeInterface,
+    error: firewallsErrorLinodeInterface,
+    isLoading: firewallsLoadingLinodeInterface,
+  } = useLinodeInterfaceFirewallsQuery(
+    linodeId,
+    linodeInterfaceInfo[0].id,
+    isLinodeInterface
+  );
+
+  const attachedFirewalls =
+    attachedFirewallsConfig ?? attachedFirewallsLinodeInterface;
+  const firewallsError = firewallsErrorConfig ?? firewallsErrorLinodeInterface;
+  const firewallsLoading =
+    firewallsLoadingConfig || firewallsLoadingLinodeInterface;
+
+  // const {
+  //   data: linodeInterface,
+  //   error: linodeInterfaceError,
+  //   isLoading: linodeInterfaceLoading,
+  // } = useLinodeInterfaceQuery(
+  //   linodeId,
+  //   linodeInterfaceInfo[0].id,
+  //   isLinodeInterface
+  // );
 
   const {
     data: configs,
     error: configsError,
     isLoading: configsLoading,
-  } = useAllLinodeConfigsQuery(linodeId);
+  } = useAllLinodeConfigsQuery(linodeId, !isLinodeInterface);
 
   const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
     configs ?? [],
@@ -106,7 +144,13 @@ export const SubnetLinodeRow = (props: Props) => {
   }
 
   const linkifiedLinodeLabel = (
-    <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+    <Link
+      to={`/linodes/${linode.id}${
+        isLinodeInterface ? `/networking/interfaces/${interfaceData.id}` : ''
+      }`}
+    >
+      {linode.label}
+    </Link>
   );
 
   const labelCell =
