@@ -1,7 +1,11 @@
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
+import eslint from '@eslint/js';
 import * as tsParser from '@typescript-eslint/parser';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginCypress from 'eslint-plugin-cypress/flat';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import perfectionist from 'eslint-plugin-perfectionist';
+import prettier from 'eslint-plugin-prettier';
 // import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactHooks from 'eslint-plugin-react-hooks';
 // import reactRefreshPlugin from 'eslint-plugin-react-refresh';
@@ -9,21 +13,11 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import { createRequire } from 'module';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import tseslint from 'typescript-eslint';
 
 const require = createRequire(import.meta.url);
-const testingLibrary = require('eslint-plugin-testing-library');
 const react = require('eslint-plugin-react');
-
-// const reactPlugin = require('eslint-plugin-react');
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const testingLibrary = require('eslint-plugin-testing-library');
 
 export default defineConfig([
   // 1. Ignores
@@ -59,11 +53,10 @@ export default defineConfig([
   pluginCypress.configs.recommended,
   react.configs.flat.recommended,
   reactHooks.configs['recommended-latest'],
-  ...compat.extends('plugin:@typescript-eslint/eslint-recommended'),
-  ...compat.extends('plugin:@typescript-eslint/recommended'),
-  ...compat.extends('plugin:prettier/recommended'),
-  ...compat.extends('plugin:jsx-a11y/recommended'),
-  ...compat.extends('plugin:perfectionist/recommended-natural'),
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  jsxA11y.flatConfigs.recommended,
+  perfectionist.configs['recommended-natural'],
 
   // 4. Base rules
   {
@@ -131,14 +124,15 @@ export default defineConfig([
       react,
     },
     rules: {
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
       'react/display-name': 'off',
       'react/jsx-no-bind': 'off',
       'react/jsx-no-script-url': 'error',
       'react/jsx-no-useless-fragment': 'warn',
+      'react/no-unescaped-entities': 'warn',
       'react/prop-types': 'off',
       'react/self-closing-comp': 'warn',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-hooks/rules-of-hooks': 'error',
       // 'react-refresh/only-export-components': 'warn',
     },
   },
@@ -211,54 +205,6 @@ export default defineConfig([
     },
   },
 
-  // 6. Perfectionist rules
-  {
-    files: ['**/*.{js,ts,tsx}'],
-    rules: {
-      'perfectionist/sort-array-includes': 'error',
-      'perfectionist/sort-classes': 'error',
-      'perfectionist/sort-enums': 'error',
-      'perfectionist/sort-exports': 'error',
-      'perfectionist/sort-imports': [
-        'warn',
-        {
-          'custom-groups': {
-            type: {
-              react: ['react', 'react-*'],
-              src: ['src*'],
-            },
-            value: {
-              src: ['src/**/*'],
-            },
-          },
-          groups: [
-            ['builtin', 'libraries', 'external'],
-            ['src', 'internal'],
-            ['parent', 'sibling', 'index'],
-            'object',
-            'unknown',
-            [
-              'type',
-              'internal-type',
-              'parent-type',
-              'sibling-type',
-              'index-type',
-            ],
-          ],
-          'newlines-between': 'always',
-        },
-      ],
-      'perfectionist/sort-interfaces': 'warn',
-      'perfectionist/sort-jsx-props': 'warn',
-      'perfectionist/sort-map-elements': 'warn',
-      'perfectionist/sort-named-exports': 'warn',
-      'perfectionist/sort-named-imports': 'warn',
-      'perfectionist/sort-object-types': 'warn',
-      'perfectionist/sort-objects': 'warn',
-      'perfectionist/sort-union-types': 'warn',
-    },
-  },
-
   // 7. JSX A11y rules
   {
     files: ['**/*.{jsx,tsx}'],
@@ -318,6 +264,70 @@ export default defineConfig([
       'sonarjs/file-header': 'off',
       'sonarjs/no-implicit-dependencies': 'off',
       'sonarjs/no-reference-error': 'off',
+    },
+  },
+
+  // 6. Perfectionist rules
+  {
+    files: ['**/*.{js,ts,tsx}'],
+    rules: {
+      'perfectionist/sort-array-includes': 'warn',
+      'perfectionist/sort-classes': 'warn',
+      'perfectionist/sort-enums': 'warn',
+      'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-imports': [
+        'warn',
+        {
+          customGroups: {
+            type: {
+              react: ['^react$', '^react-.+'],
+              src: ['^src$'],
+            },
+            value: {
+              react: ['^react$', '^react-.+'],
+              src: ['^src$', '^src/.+'],
+            },
+          },
+          groups: [
+            ['react', 'builtin', 'external'],
+            ['src', 'internal'],
+            ['parent', 'sibling', 'index'],
+            'object',
+            'unknown',
+            [
+              'type',
+              'internal-type',
+              'parent-type',
+              'sibling-type',
+              'index-type',
+            ],
+          ],
+          newlinesBetween: 'always',
+        },
+      ],
+      'perfectionist/sort-interfaces': 'warn',
+      'perfectionist/sort-intersection-types': 'off',
+      'perfectionist/sort-jsx-props': 'warn',
+      'perfectionist/sort-modules': 'off',
+      'perfectionist/sort-named-exports': 'warn',
+      'perfectionist/sort-named-imports': 'warn',
+      'perfectionist/sort-object-types': 'warn',
+      'perfectionist/sort-objects': 'warn',
+      'perfectionist/sort-switch-case': 'warn',
+      'perfectionist/sort-union-types': 'warn',
+      'sort-heritage-clauses': 'off',
+    },
+  },
+
+  // 8. Prettier rules
+  {
+    files: ['**/*.{js,ts,tsx}'],
+    plugins: {
+      prettier,
+    },
+    rules: {
+      ...eslintConfigPrettier.rules,
+      'prettier/prettier': 'warn',
     },
   },
 ]);
