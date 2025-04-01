@@ -202,9 +202,6 @@ importers:
       ipaddr.js:
         specifier: ^1.9.1
         version: 1.9.1
-      js-sha256:
-        specifier: ^0.11.0
-        version: 0.11.0
       jspdf:
         specifier: ^3.0.1
         version: 3.0.1
@@ -4812,9 +4809,6 @@ packages:
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
-
-  js-sha256@0.11.0:
-    resolution: {integrity: sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -11227,8 +11221,6 @@ snapshots:
     optional: true
 
   joycon@3.1.1: {}
-
-  js-sha256@0.11.0: {}
 
   js-tokens@4.0.0: {}
 
