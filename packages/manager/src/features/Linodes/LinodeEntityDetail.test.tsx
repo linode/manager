@@ -112,17 +112,18 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { findByTestId } = renderWithTheme(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />,
       {
         queryClient,
       }
     );
 
-    await waitFor(() => {
-      expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
-      expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual('test-vpc');
-    });
+    const vpcSection = await findByTestId(vpcSectionTestId);
+    const vpcLabel = await findByTestId(assignedVPCLabelTestId);
+
+    expect(vpcSection).toBeInTheDocument();
+    expect(vpcLabel.innerHTML).toEqual('test-vpc');
   });
 
   it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {
