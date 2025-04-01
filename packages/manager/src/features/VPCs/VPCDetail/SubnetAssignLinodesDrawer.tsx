@@ -446,7 +446,7 @@ export const SubnetAssignLinodesDrawer = (
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
-          sx={{ marginBottom: '8px' }}
+          sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
           value={values.selectedLinode?.id || null}
         />
         {values.selectedLinode?.id && (
@@ -455,7 +455,7 @@ export const SubnetAssignLinodesDrawer = (
               alignItems="center"
               display="flex"
               flexDirection="row"
-              sx={{ marginLeft: '2px' }}
+              sx={(theme) => ({ marginLeft: theme.spacingFunction(2) })}
             >
               <FormControlLabel
                 control={
@@ -484,7 +484,7 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
-                sx={{ marginBottom: '8px' }}
+                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
                 value={values.chosenIP}
               />
             )}
@@ -518,11 +518,11 @@ export const SubnetAssignLinodesDrawer = (
               linodeConfigs.length === 1) && (
               <AssignIPRanges
                 sx={{
-                  marginBottom: theme.spacing(),
+                  marginBottom: theme.spacingFunction(8),
                   marginTop:
                     linodeConfigs.length > 1
-                      ? theme.spacing(2)
-                      : theme.spacing(),
+                      ? theme.spacingFunction(16)
+                      : theme.spacingFunction(8),
                 }}
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}
