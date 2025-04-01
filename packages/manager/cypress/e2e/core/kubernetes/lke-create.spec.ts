@@ -1276,8 +1276,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
    * - Confirms LKE-E flow does not exist if account doesn't have the corresponding capability
    * @todo LKE-E: Remove this test once LKE-E is fully rolled out
    */
-  // TODO: revert me before we release on 4/8!
-  it.skip('does not show the LKE-E flow with the feature flag off', () => {
+  it('does not show the LKE-E flow with the feature flag off', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: false, la: false },
     }).as('getFeatureFlags');
@@ -1291,7 +1290,9 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    cy.contains('Cluster Tier').should('not.exist');
+    // TODO: revert me before we release on 4/8!
+    cy.contains('Cluster').should('not.exist');
+    cy.contains('Tier').should('not.exist');
   });
 
   describe('shows the LKE-E flow with the feature flag on', () => {

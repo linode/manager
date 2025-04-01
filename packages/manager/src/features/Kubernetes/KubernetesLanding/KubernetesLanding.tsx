@@ -34,9 +34,6 @@ import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
 import type { KubeNodePoolResponse, KubernetesTier } from '@linode/api-v4';
 
-// TODO: revert me before we release on 4/8!
-// eslint-disable-next-line no-console
-console.log('Delete me!');
 interface ClusterDialogState {
   loading: boolean;
   open: boolean;
