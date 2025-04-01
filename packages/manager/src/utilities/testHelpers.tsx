@@ -8,7 +8,7 @@ import {
   createRoute,
   createRouter,
 } from '@tanstack/react-router';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
@@ -96,9 +96,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   const uiToRender = ui.children ?? ui;
 
@@ -182,9 +180,7 @@ export const wrapWithThemeAndRouter = (
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   const rootRoute = createRootRoute({});
   const indexRoute = createRoute({
@@ -341,14 +337,16 @@ export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
 type Query = (f: MatcherFunction) => HTMLElement;
 
 /** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
-export const withMarkup = (query: Query) => (text: string): HTMLElement =>
-  query((content: string, node: HTMLElement) => {
-    const hasText = (node: HTMLElement) => node.textContent === text;
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child) => !hasText(child as HTMLElement)
-    );
-    return hasText(node) && childrenDontHaveText;
-  });
+export const withMarkup =
+  (query: Query) =>
+  (text: string): HTMLElement =>
+    query((content: string, node: HTMLElement) => {
+      const hasText = (node: HTMLElement) => node.textContent === text;
+      const childrenDontHaveText = Array.from(node.children).every(
+        (child) => !hasText(child as HTMLElement)
+      );
+      return hasText(node) && childrenDontHaveText;
+    });
 
 /**
  * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent

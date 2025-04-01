@@ -7,19 +7,17 @@ import pluginCypress from 'eslint-plugin-cypress/flat';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
+import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import sonarjs from 'eslint-plugin-sonarjs';
+import testingLibrary from 'eslint-plugin-testing-library';
 import xss from 'eslint-plugin-xss';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
-import { createRequire } from 'module';
 import tseslint from 'typescript-eslint';
 
-const require = createRequire(import.meta.url);
-const react = require('eslint-plugin-react');
-const testingLibrary = require('eslint-plugin-testing-library');
-
-export default defineConfig([
+// Base config array that can be extended
+const baseConfig = defineConfig([
   // 1. Ignores
   {
     ignores: [
@@ -355,14 +353,14 @@ export default defineConfig([
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {
-      '@linode/cloud-manager': linodeRules
+      '@linode/cloud-manager': linodeRules,
     },
     rules: {
       '@linode/cloud-manager/no-custom-fontWeight': 'warn',
       '@linode/cloud-manager/deprecate-formik': 'warn',
       '@linode/cloud-manager/no-createLinode': 'off',
-      '@linode/cloud-manager/no-mui-theme-spacing': 'warn'
-    }
+      '@linode/cloud-manager/no-mui-theme-spacing': 'warn',
+    },
   },
 
   // 8. Prettier rules
@@ -377,3 +375,11 @@ export default defineConfig([
     },
   },
 ]);
+
+// Export a function that can take overrides
+export function createConfig(overrides = []) {
+  return defineConfig([...baseConfig, ...overrides]);
+}
+
+// Also export the base config directly for cases where no overrides are needed
+export default baseConfig;

@@ -18,11 +18,11 @@ import { randomIp, randomNumber } from 'support/util/random';
 
 import { accountFactory, databaseFactory } from 'src/factories';
 
-import type { databaseClusterConfiguration } from 'support/constants/databases';
+import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
-    (configuration: databaseClusterConfiguration) => {
+    (configuration: DatabaseClusterConfiguration) => {
       describe(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         /*
          * - Tests database deletion UI flow using mocked data.
