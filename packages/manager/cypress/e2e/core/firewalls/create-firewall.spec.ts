@@ -7,6 +7,7 @@ import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 authenticate();
+// why is this skipped?
 describe.skip('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);

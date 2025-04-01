@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import eslint from '@eslint/js';
+import linodeRules from '@linode/eslint-plugin-cloud-manager/dist/index.js';
 import * as tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginCypress from 'eslint-plugin-cypress/flat';
@@ -293,6 +294,7 @@ export default defineConfig([
       'no-console': 'off',
       'sonarjs/pseudo-random': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
+      // '@linode/cloud-manager/no-createLinode': 'error',
     },
   },
 
@@ -347,6 +349,20 @@ export default defineConfig([
       'perfectionist/sort-switch-case': 'warn',
       'perfectionist/sort-union-types': 'warn',
     },
+  },
+
+  // Linode rules
+  {
+    files: ['**/*.{js,ts,tsx}'],
+    plugins: {
+      '@linode/cloud-manager': linodeRules
+    },
+    rules: {
+      '@linode/cloud-manager/no-custom-fontWeight': 'warn',
+      '@linode/cloud-manager/deprecate-formik': 'warn',
+      '@linode/cloud-manager/no-createLinode': 'off',
+      '@linode/cloud-manager/no-mui-theme-spacing': 'warn'
+    }
   },
 
   // 8. Prettier rules

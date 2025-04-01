@@ -167,6 +167,7 @@ const createLinodeAndFirewall = async (
 };
 
 authenticate();
+// why is this skipped?
 describe.skip('update firewall', () => {
   before(() => {
     cleanUp('firewalls');

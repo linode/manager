@@ -9,6 +9,7 @@ import { firewallFactory } from 'src/factories/firewalls';
 import type { Firewall } from '@linode/api-v4';
 
 authenticate();
+// why is this skipped?
 describe.skip('delete firewall', () => {
   before(() => {
     cleanUp('firewalls');
