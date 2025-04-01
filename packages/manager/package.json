@@ -128,7 +128,6 @@
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
     "@eslint/js": "^9.23.0",
-    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
     "@storybook/addon-a11y": "^8.6.7",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/addon-controls": "^8.6.7",
@@ -153,7 +152,6 @@
     "@types/chai-string": "^1.4.5",
     "@types/chart.js": "^2.9.21",
     "@types/css-mediaquery": "^0.1.1",
-    "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@types/he": "^1.1.0",
     "@types/history": "4",
