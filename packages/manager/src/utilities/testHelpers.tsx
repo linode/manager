@@ -1,3 +1,4 @@
+import { queryClientFactory } from '@linode/queries';
 import { CssBaseline } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -20,7 +21,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from '@linode/queries';
 import { setupInterceptors } from 'src/request';
 import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
@@ -233,19 +233,17 @@ export const renderWithThemeAndRouter = async (
     routeTree: options.routeTree || migrationRouteTree,
   });
 
-  let renderResult: RenderResult;
+  const utils: RenderResult = render(
+    wrapWithThemeAndRouter(ui, { ...options, router })
+  );
 
-  await act(async () => {
-    renderResult = render(wrapWithThemeAndRouter(ui, { ...options, router }));
-
-    // Wait for the router to be ready
-    await waitFor(() => expect(router.state.status).toBe('idle'));
-  });
+  // Wait for the router to be ready
+  await waitFor(() => expect(router.state.status).toBe('idle'));
 
   return {
-    ...renderResult!,
+    ...utils,
     rerender: (ui) =>
-      renderResult.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
+      utils.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
     router,
   };
 };
@@ -288,10 +286,10 @@ export const renderWithTheme = (
   ui: React.ReactNode,
   options: Options = {}
 ): RenderResult => {
-  const renderResult = render(wrapWithTheme(ui, options));
+  const utils = render(wrapWithTheme(ui, options));
   return {
-    ...renderResult,
-    rerender: (ui) => renderResult.rerender(wrapWithTheme(ui, options)),
+    ...utils,
+    rerender: (ui) => utils.rerender(wrapWithTheme(ui, options)),
   };
 };
 
