@@ -58,7 +58,7 @@ export interface ConfigurationItem {
   maxLength?: number; // max length for the text input
   minLength?: number; // min length for the text input
   pattern?: string;
-  type?: string | number | boolean | [string, null] | string[];
+  type?: string | [string, null] | string[];
   enum?: string[];
   restart_cluster?: boolean;
 }
@@ -66,12 +66,10 @@ export interface ConfigurationItem {
 export type ConfigValue = number | string | boolean;
 
 export type ConfigCategoryValues = Record<string, ConfigValue>;
-export interface DatabaseEngineConfig {
-  engine_config: Record<
-    string,
-    Record<string, ConfigurationItem> | ConfigurationItem
-  >;
-}
+export type DatabaseEngineConfig = Record<
+  string,
+  Record<string, ConfigurationItem> | ConfigurationItem
+>;
 export interface DatabaseInstanceAdvancedConfig {
   [category: string]: ConfigCategoryValues | ConfigValue;
 }
