@@ -1,4 +1,4 @@
-import { Box, Checkbox, Tooltip, Typography } from '@linode/ui';
+import { Box, Checkbox, Tooltip } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -13,6 +13,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
+import { AlertMaxSelectionText } from './AlertMaxSelectionText';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
@@ -212,12 +213,12 @@ export const DisplayAlertResources = React.memo(
                         title={
                           maxSelectionCount !== undefined &&
                           disableRootCheckBox(paginatedData) ? (
-                            <ErrorTypoGraphy
+                            <AlertMaxSelectionText
                               maxSelectionCount={maxSelectionCount}
                             />
                           ) : undefined
                         }
-                        placement="right"
+                        placement="right-start"
                       >
                         <Box>
                           <Checkbox
@@ -286,12 +287,12 @@ export const DisplayAlertResources = React.memo(
                               title={
                                 boxDisabled &&
                                 maxSelectionCount !== undefined ? (
-                                  <ErrorTypoGraphy
+                                  <AlertMaxSelectionText
                                     maxSelectionCount={maxSelectionCount}
                                   />
                                 ) : undefined
                               }
-                              placement="right"
+                              placement="right-start"
                             >
                               <Box>
                                 <Checkbox
@@ -358,16 +359,6 @@ export const DisplayAlertResources = React.memo(
           </>
         )}
       </Paginate>
-    );
-  }
-);
-
-const ErrorTypoGraphy = React.memo(
-  ({ maxSelectionCount }: { maxSelectionCount: number }) => {
-    return (
-      <Typography data-testid="warning-tip">
-        {`You can select upto ${maxSelectionCount} resources.`}
-      </Typography>
     );
   }
 );

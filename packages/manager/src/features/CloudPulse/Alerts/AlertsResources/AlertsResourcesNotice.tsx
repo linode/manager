@@ -2,6 +2,8 @@ import { Button, Notice, Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { AlertMaxSelectionText } from './AlertMaxSelectionText';
+
 import type { SelectDeselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
@@ -10,6 +12,9 @@ interface AlertResourceNoticeProps {
    */
   handleSelectionChange: (action: SelectDeselectAll) => void;
 
+  /**
+   * The maximum number of resources that can be selected based on service type.
+   */
   maxSelectionCount?: number;
 
   /**
@@ -27,13 +32,19 @@ export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
     const {
       handleSelectionChange,
-      maxSelectionCount = Number.MAX_VALUE,
+      maxSelectionCount,
       selectedResources,
       totalResources,
     } = props;
-    const isSelectAll = selectedResources === 0;
+    const isSelectAll =
+      maxSelectionCount !== undefined
+        ? selectedResources === 0
+        : selectedResources < totalResources;
     const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
-    const isButtonDisabled = isSelectAll && totalResources > maxSelectionCount;
+    const isButtonDisabled =
+      isSelectAll && maxSelectionCount !== undefined
+        ? totalResources > maxSelectionCount
+        : false;
 
     return (
       <StyledNotice gap={1} variant="info">
@@ -54,12 +65,11 @@ export const AlertsResourcesNotice = React.memo(
             },
           }}
           title={
-            isButtonDisabled ? (
-              <Typography data-testid="warning-tip">
-                {`You can select upto ${maxSelectionCount} resources.`}
-              </Typography>
+            isButtonDisabled && maxSelectionCount !== undefined ? (
+              <AlertMaxSelectionText maxSelectionCount={maxSelectionCount} />
             ) : undefined
           }
+          placement="right-start"
         >
           <Button
             data-testid={

@@ -288,6 +288,10 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocomplete.findByLabel('Severity').clear();
     ui.autocomplete.findByLabel('Severity').type('Info');
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
+      .contains('Deselect All')
+      .click();
 
     cy.get('[data-qa-notice="true"]').contains('Select All').click();
 
