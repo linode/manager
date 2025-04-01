@@ -3,6 +3,7 @@ import {
   useMutateAccountAgreements,
   useRegionsQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Autocomplete,
   Box,
@@ -81,6 +82,10 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { classes } = useStyles();
   const [selectedRegion, setSelectedRegion] = React.useState<
     Region | undefined
@@ -433,7 +438,7 @@ export const CreateCluster = () => {
                 disableClearable
                 disabled={isCreateClusterRestricted}
                 errorText={errorMap.region}
-                flags={flags}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 onChange={(e, region) => setSelectedRegion(region)}
                 regions={regionsData}
                 value={selectedRegion?.id}
