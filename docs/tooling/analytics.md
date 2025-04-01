@@ -14,7 +14,6 @@ Important notes:
 
 - Pendo is only loaded if the user has enabled Performance Cookies via OneTrust *and* if a valid `PENDO_API_KEY` is configured as an environment variable. In our development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
 - We load the Pendo agent from the CDN, rather than [self-hosting](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent), and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
-- We are hashing account and visitor IDs in a way that is consistent with Akamai's standards.
 - At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
 - Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in the local environment.
 - Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
