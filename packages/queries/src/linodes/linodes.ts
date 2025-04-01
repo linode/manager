@@ -3,8 +3,11 @@ import {
   cloneLinode,
   createLinode,
   deleteLinode,
+  getConfigInterface,
+  getConfigInterfaces,
   getLinode,
   getLinodeBackups,
+  getLinodeConfig,
   getLinodeFirewalls,
   getLinodeIPs,
   getLinodeInterface,
@@ -89,7 +92,27 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryKey: null,
       },
       configs: {
-        queryFn: () => getAllLinodeConfigs(id),
+        contextQueries: {
+          config: (configId: number) => ({
+            contextQueries: {
+              interface: (interfaceId: number) => ({
+                queryFn: () => getConfigInterface(id, interfaceId, interfaceId),
+                queryKey: [interfaceId],
+              }),
+              interfaces: {
+                queryFn: () => getConfigInterfaces(id, configId),
+                queryKey: null,
+              },
+              queryKey: null,
+            },
+            queryFn: () => getLinodeConfig(id, configId),
+            queryKey: [configId],
+          }),
+          configs: {
+            queryFn: () => getAllLinodeConfigs(id),
+            queryKey: null,
+          },
+        },
         queryKey: null,
       },
       disks: {

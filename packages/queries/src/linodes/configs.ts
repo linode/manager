@@ -10,12 +10,28 @@ import { linodeQueries } from './linodes';
 import type {
   APIError,
   Config,
+  Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4';
 
 export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   return useQuery<Config[], APIError[]>({
-    ...linodeQueries.linode(id)._ctx.configs,
+    ...linodeQueries.linode(id)._ctx.configs._ctx.configs,
+    enabled,
+  });
+};
+
+export const useLinodeConfigInterfaceQuery = (
+  linodeId: number,
+  configId: number,
+  interfaceId: number,
+  enabled = true
+) => {
+  return useQuery<Interface, APIError[]>({
+    ...linodeQueries
+      .linode(linodeId)
+      ._ctx.configs._ctx.config(configId)
+      ._ctx.interface(interfaceId),
     enabled,
   });
 };

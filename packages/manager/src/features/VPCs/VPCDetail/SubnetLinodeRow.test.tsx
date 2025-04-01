@@ -3,11 +3,8 @@ import {
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
 } from '@linode/utilities';
-import {
-  fireEvent,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import {
@@ -94,8 +91,8 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
-          linodeInterfaceInfo={[]}
           subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -119,12 +116,12 @@ describe('SubnetLinodeRow', () => {
 
     const rebootLinodeButton = getAllByRole('button')[2];
     expect(rebootLinodeButton).toHaveTextContent('Reboot');
-    fireEvent.click(rebootLinodeButton);
+    await userEvent.click(rebootLinodeButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
 
     const unassignLinodeButton = getAllByRole('button')[3];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
-    fireEvent.click(unassignLinodeButton);
+    await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
 
@@ -163,8 +160,8 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
-          linodeInterfaceInfo={[]}
           subnetId={0}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -184,11 +181,11 @@ describe('SubnetLinodeRow', () => {
     expect(buttons.length).toEqual(2);
     const powerOffButton = buttons[0];
     expect(powerOffButton).toHaveTextContent('Power Off');
-    fireEvent.click(powerOffButton);
+    await userEvent.click(powerOffButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
     const unassignLinodeButton = buttons[1];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
-    fireEvent.click(unassignLinodeButton);
+    await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
 
@@ -225,9 +222,9 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory2.id}
-          linodeInterfaceInfo={[]}
           subnet={subnet}
           subnetId={subnet.id}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -267,8 +264,8 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
           linodeId={linodeFactory1.id}
-          linodeInterfaceInfo={[]}
           subnetId={0}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -301,9 +298,9 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
           linodeId={linodeFactory2.id}
-          linodeInterfaceInfo={[]}
           subnet={subnet}
           subnetId={subnet.id}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
