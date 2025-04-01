@@ -67,8 +67,8 @@ const Main = () => {
                 <Route component={CancelLanding} exact path="/cancel" />
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                  autoHideDuration={4000}
-                  hideIconVariant={true}
+                  autoHideDuration={null}
+                  hideIconVariant={false}
                   maxSnack={3}
                 >
                   <Switch>
