@@ -243,10 +243,12 @@ export const KubeControlPlaneACLDrawer = (
                         isEnterpriseCluster ? true : field.value ?? false
                       }
                       onChange={() => {
-                        setValue('acl.enabled', !field.value);
+                        setValue('acl.enabled', !field.value, {
+                          shouldDirty: true,
+                        });
                         // Disabling ACL should clear the revision-id and any addresses (see LKE-6205).
                         if (!acl.enabled) {
-                          setValue('acl.revision-id', undefined);
+                          setValue('acl.revision-id', '');
                           setValue('acl.addresses.ipv6', ['']);
                           setValue('acl.addresses.ipv4', ['']);
                         }
