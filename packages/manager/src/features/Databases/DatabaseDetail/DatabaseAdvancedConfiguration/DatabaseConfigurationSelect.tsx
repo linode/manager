@@ -1,10 +1,13 @@
 import { Autocomplete, TextField } from '@linode/ui';
 import React from 'react';
 
+import { GroupHeader, GroupItems } from './DatabaseAdvancedConfiguration.style';
+
 import type { ConfigValue, ConfigurationItem } from '@linode/api-v4';
 
 export interface ConfigurationOption extends ConfigurationItem {
   category: string;
+  isNew?: boolean;
   label: string;
   value?: ConfigValue;
 }
@@ -24,8 +27,8 @@ export const DatabaseConfigurationSelect = (props: Props) => {
   return (
     <Autocomplete
       groupBy={(option) => {
-        if (option.category === 'Other') {
-          return 'Other';
+        if (option.category === 'other') {
+          return 'other';
         }
         return option.category;
       }}
@@ -35,6 +38,17 @@ export const DatabaseConfigurationSelect = (props: Props) => {
       onChange={(_, selected) => {
         onChange(selected!);
       }}
+      options={[...configurations].sort((a, b) => {
+        if (a.category === 'other') return 1;
+        if (b.category === 'other') return -1;
+        return a.category.localeCompare(b.category);
+      })}
+      renderGroup={(params) => (
+        <li key={params.key}>
+          <GroupHeader>{params.group}</GroupHeader>
+          <GroupItems>{params.children}</GroupItems>
+        </li>
+      )}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -63,7 +77,6 @@ export const DatabaseConfigurationSelect = (props: Props) => {
       clearIcon={null}
       getOptionLabel={(option) => option.label}
       label={''}
-      options={configurations}
       value={selectedConfig ?? null}
     />
   );

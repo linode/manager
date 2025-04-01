@@ -18,7 +18,10 @@ export const StyledBox = styled(Box, {
 export const StyledChip = styled(Chip, {
   label: 'StyledChip',
 })(({ theme }) => ({
-  backgroundColor: theme.tokens.color.Amber[5],
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? theme.tokens.alias.Background.Warningsubtle
+      : theme.tokens.color.Amber[5],
   color: theme.tokens.alias.Accent.Warning.Primary,
   font: theme.tokens.alias.Typography.Heading.Overline,
   textTransform: theme.tokens.alias.Typography.Heading.OverlineTextCase,
