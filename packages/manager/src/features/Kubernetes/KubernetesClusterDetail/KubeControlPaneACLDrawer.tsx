@@ -245,7 +245,7 @@ export const KubeControlPlaneACLDrawer = (
                       onChange={() => {
                         setValue('acl.enabled', !field.value);
                         // Disabling ACL should clear the revision-id and any addresses (see LKE-6205).
-                        if (acl.enabled === false) {
+                        if (!acl.enabled) {
                           setValue('acl.revision-id', undefined);
                           setValue('acl.addresses.ipv6', ['']);
                           setValue('acl.addresses.ipv4', ['']);
