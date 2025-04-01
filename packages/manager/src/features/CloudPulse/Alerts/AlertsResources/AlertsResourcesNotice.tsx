@@ -2,6 +2,8 @@ import { Button, Notice, Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { AlertMaxSelectionText } from './AlertMaxSelectionText';
+
 import type { SelectDeselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
@@ -63,10 +65,8 @@ export const AlertsResourcesNotice = React.memo(
             },
           }}
           title={
-            isButtonDisabled ? (
-              <Typography data-testid="warning-tip">
-                {`You can select upto ${maxSelectionCount} resources.`}
-              </Typography>
+            isButtonDisabled && maxSelectionCount !== undefined ? (
+              <AlertMaxSelectionText maxSelectionCount={maxSelectionCount} />
             ) : undefined
           }
           placement="right-start"
