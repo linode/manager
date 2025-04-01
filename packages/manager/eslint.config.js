@@ -14,6 +14,7 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import { createRequire } from 'module';
 import tseslint from 'typescript-eslint';
+import xss from 'eslint-plugin-xss';
 
 const require = createRequire(import.meta.url);
 const react = require('eslint-plugin-react');
@@ -184,6 +185,14 @@ export default defineConfig([
     },
   },
 
+  // 7. XSS rules
+  {
+    files: ['**/*.{js,ts,tsx}'],
+    plugins: {
+      xss,
+    },
+  },
+
   // 5. SonarJS rules
   {
     files: ['**/*.{js,ts,tsx}'],
@@ -205,6 +214,11 @@ export default defineConfig([
       'sonarjs/redundant-type-aliases': 'warn',
       'sonarjs/todo-tag': 'warn',
       'sonarjs/single-character-alternation': 'warn',
+      'sonarjs/no-duplicate-in-composite': 'warn',
+      'sonarjs/no-nested-template-literals': 'off',
+      'sonarjs/public-static-readonly': 'warn',
+      'sonarjs/concise-regex': 'warn',
+      'sonarjs/use-type-alias': 'warn',
     },
   },
 
@@ -268,6 +282,7 @@ export default defineConfig([
       'sonarjs/no-implicit-dependencies': 'off',
       'sonarjs/no-reference-error': 'off',
       'sonarjs/no-wildcard-import': 'off',
+      'no-empty-pattern': 'off',
     },
   },
 

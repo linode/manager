@@ -527,9 +527,6 @@ importers:
       eslint-plugin-react-refresh:
         specifier: 0.4.13
         version: 0.4.13(eslint@9.23.0(jiti@1.21.6))
-      eslint-plugin-scanjs-rules:
-        specifier: ^0.2.1
-        version: 0.2.1(jiti@1.21.6)
       eslint-plugin-sonarjs:
         specifier: ^3.0.2
         version: 3.0.2(eslint@9.23.0(jiti@1.21.6))
@@ -537,7 +534,7 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(eslint@9.23.0(jiti@1.21.6))(typescript@5.7.3)
       eslint-plugin-xss:
-        specifier: ^0.1.10
+        specifier: ^0.1.12
         version: 0.1.12
       factory.ts:
         specifier: ^0.5.1

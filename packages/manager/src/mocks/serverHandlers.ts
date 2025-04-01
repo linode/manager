@@ -2365,7 +2365,7 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        id: Number(params.placementGroupId) ?? -1,
+        id: Number(params.placementGroupId) || -1,
         label: 'pg-1',
         members: [
           {
@@ -2421,7 +2421,7 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      id: Number(params.placementGroupId) ?? -1,
+      id: Number(params.placementGroupId) || -1,
       label: 'pg-1',
       members: [
         {
