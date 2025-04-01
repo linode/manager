@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -55,6 +56,10 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { data: regions } = useRegionsQuery();
 
@@ -179,7 +184,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}
-            flags={flags}
+            isGeckoLAEnabled={isGeckoLAEnabled}
             label="New Region"
             onChange={(e, region) => handleSelectRegion(region.id)}
             value={selectedRegion}
