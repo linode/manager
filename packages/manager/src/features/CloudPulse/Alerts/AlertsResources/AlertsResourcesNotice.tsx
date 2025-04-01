@@ -30,13 +30,19 @@ export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
     const {
       handleSelectionChange,
-      maxSelectionCount = Number.MAX_VALUE,
+      maxSelectionCount,
       selectedResources,
       totalResources,
     } = props;
-    const isSelectAll = selectedResources === 0;
+    const isSelectAll =
+      maxSelectionCount !== undefined
+        ? selectedResources === 0
+        : selectedResources < totalResources;
     const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
-    const isButtonDisabled = isSelectAll && totalResources > maxSelectionCount;
+    const isButtonDisabled =
+      isSelectAll && maxSelectionCount !== undefined
+        ? totalResources > maxSelectionCount
+        : false;
 
     return (
       <StyledNotice gap={1} variant="info">
@@ -63,6 +69,7 @@ export const AlertsResourcesNotice = React.memo(
               </Typography>
             ) : undefined
           }
+          placement="right-start"
         >
           <Button
             data-testid={
