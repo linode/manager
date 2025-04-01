@@ -1,4 +1,4 @@
-import { Button, Notice, Typography } from '@linode/ui';
+import { Button, Notice, Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -9,6 +9,11 @@ interface AlertResourceNoticeProps {
    * Callback to handle selection changes (select all or deselect all).
    */
   handleSelectionChange: (action: SelectDeselectAll) => void;
+
+  /**
+   * The maximum number of resources that can be selected based on service type.
+   */
+  maxSelectionCount?: number;
 
   /**
    * The number of currently selected resources.
@@ -23,9 +28,15 @@ interface AlertResourceNoticeProps {
 
 export const AlertsResourcesNotice = React.memo(
   (props: AlertResourceNoticeProps) => {
-    const { handleSelectionChange, selectedResources, totalResources } = props;
-    const isSelectAll = selectedResources !== totalResources;
+    const {
+      handleSelectionChange,
+      maxSelectionCount = Number.MAX_VALUE,
+      selectedResources,
+      totalResources,
+    } = props;
+    const isSelectAll = selectedResources === 0;
     const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
+    const isButtonDisabled = isSelectAll && totalResources > maxSelectionCount;
 
     return (
       <StyledNotice gap={1} variant="info">
@@ -37,15 +48,33 @@ export const AlertsResourcesNotice = React.memo(
         >
           {selectedResources} of {totalResources} resources are selected.
         </Typography>
-        <Button
-          data-testid={
-            isSelectAll ? 'select_all_notice' : 'deselect_all_notice'
+        <Tooltip
+          slotProps={{
+            tooltip: {
+              sx: {
+                maxWidth: '250px',
+              },
+            },
+          }}
+          title={
+            isButtonDisabled ? (
+              <Typography data-testid="warning-tip">
+                {`You can select upto ${maxSelectionCount} resources.`}
+              </Typography>
+            ) : undefined
           }
-          onClick={() => handleSelectionChange(buttonText)}
-          sx={{ p: 0 }}
         >
-          {buttonText}
-        </Button>
+          <Button
+            data-testid={
+              isSelectAll ? 'select_all_notice' : 'deselect_all_notice'
+            }
+            disabled={isButtonDisabled}
+            onClick={() => handleSelectionChange(buttonText)}
+            sx={{ p: 0 }}
+          >
+            {buttonText}
+          </Button>
+        </Tooltip>
       </StyledNotice>
     );
   }

@@ -336,6 +336,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+  const selectionsRemaining =
+    maxSelectionCount && selectedResources
+      ? Math.max(0, maxSelectionCount - selectedResources.length)
+      : undefined;
 
   return (
     <Stack gap={2}>
@@ -430,6 +434,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
+                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />
@@ -444,6 +449,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
+            maxSelectionCount={maxSelectionCount}
+            selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
         </Grid>
