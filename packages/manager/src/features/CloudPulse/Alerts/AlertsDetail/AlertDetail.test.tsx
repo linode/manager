@@ -119,7 +119,7 @@ describe('AlertDetail component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(<AlertDetail />);
