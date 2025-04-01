@@ -96,7 +96,7 @@ export const linodeQueries = createQueryKeys('linodes', {
           config: (configId: number) => ({
             contextQueries: {
               interface: (interfaceId: number) => ({
-                queryFn: () => getConfigInterface(id, interfaceId, interfaceId),
+                queryFn: () => getConfigInterface(id, configId, interfaceId),
                 queryKey: [interfaceId],
               }),
               interfaces: {
