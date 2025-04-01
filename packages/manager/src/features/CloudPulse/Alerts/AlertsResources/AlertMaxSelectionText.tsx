@@ -8,13 +8,11 @@ interface AlertMaxSelectionTextProps {
   maxSelectionCount: number;
 }
 
-export const AlertMaxSelectionText = React.memo(
-  (props: AlertMaxSelectionTextProps) => {
-    const { maxSelectionCount } = props;
-    return (
-      <Typography data-testid="warning-tip">
-        You can select up to {maxSelectionCount} resources.
-      </Typography>
-    );
-  }
-);
+export const AlertMaxSelectionText = (props: AlertMaxSelectionTextProps) => {
+  const { maxSelectionCount } = props;
+  return (
+    <Typography data-testid="warning-tip">
+      You can select up to {maxSelectionCount} resources.
+    </Typography>
+  );
+};
