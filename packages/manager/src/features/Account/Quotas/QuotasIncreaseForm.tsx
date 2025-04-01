@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useProfile } from '@linode/queries';
+import { useCreateSupportTicketMutation, useProfile } from '@linode/queries';
 import {
   Accordion,
   ActionsPanel,
@@ -13,7 +13,6 @@ import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
-import { useCreateSupportTicketMutation } from 'src/queries/support';
 
 import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 
