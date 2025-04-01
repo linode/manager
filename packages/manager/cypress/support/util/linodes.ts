@@ -79,7 +79,7 @@ export const defaultCreateTestLinodeOptions = {
  * @returns Promise that resolves to the created Linode.
  */
 export const createTestLinode = async (
-  createRequestPayload?: Partial<CreateLinodeRequest> | null,
+  createRequestPayload?: null | Partial<CreateLinodeRequest>,
   options?: Partial<CreateTestLinodeOptions>
 ): Promise<Linode> => {
   const resolvedOptions = {
@@ -92,29 +92,32 @@ export const createTestLinode = async (
     regionId = chooseRegion().id;
   }
 
-  const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
-    switch (resolvedOptions.securityMethod) {
-      case 'firewall':
-      default:
-        const firewall = await findOrCreateDependencyFirewall();
-        return {
-          firewall_id: firewall.id,
-        };
+  const securityMethodPayload: Partial<CreateLinodeRequest> =
+    await (async () => {
+      switch (resolvedOptions.securityMethod) {
+        case 'firewall':
+          const firewall = await findOrCreateDependencyFirewall();
+          return {
+            firewall_id: firewall.id,
+          };
 
-      case 'vlan_no_internet':
-        const vlanConfig = linodeVlanNoInternetConfig;
-        const vlanLabel = await findOrCreateDependencyVlan(regionId);
-        vlanConfig[0].label = vlanLabel;
-        return {
-          interfaces: vlanConfig,
-        };
+        case 'powered_off':
+          return {
+            booted: false,
+          };
 
-      case 'powered_off':
-        return {
-          booted: false,
-        };
-    }
-  })();
+        case 'vlan_no_internet':
+          const vlanConfig = linodeVlanNoInternetConfig;
+          const vlanLabel = await findOrCreateDependencyVlan(regionId);
+          vlanConfig[0].label = vlanLabel;
+          return {
+            interfaces: vlanConfig,
+          };
+
+        default:
+          return {};
+      }
+    })();
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
@@ -149,7 +152,6 @@ export const createTestLinode = async (
     );
   }
 
-  // eslint-disable-next-line
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.

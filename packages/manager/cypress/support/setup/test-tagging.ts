@@ -30,6 +30,7 @@ Cypress.on('test:before:run', (_test: Test, _runnable: Runnable) => {
       const tags = context?.tags ?? [];
 
       if (!evaluateQuery(query, tags)) {
+        // eslint-disable-next-line sonarjs/no-skipped-tests
         context.skip();
       }
 

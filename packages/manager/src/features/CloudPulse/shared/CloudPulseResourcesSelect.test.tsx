@@ -43,35 +43,35 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(getByTestId('resource-select')).toBeInTheDocument();
     expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
-  }),
-    it('should render resources happy path', () => {
-      queryMocks.useResourcesQuery.mockReturnValue({
-        data: linodeFactory.buildList(2),
-        isError: false,
-        isLoading: false,
-        status: 'success',
-      });
-      renderWithTheme(
-        <CloudPulseResourcesSelect
-          handleResourcesSelection={mockResourceHandler}
-          label="Resources"
-          region={'us-east'}
-          resourceType={'us-east'}
-        />
-      );
-      fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-      expect(screen.getByLabelText('Resources')).toBeInTheDocument();
-      expect(
-        screen.getByRole('option', {
-          name: 'linode-3',
-        })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('option', {
-          name: 'linode-4',
-        })
-      ).toBeInTheDocument();
+  });
+  it('should render resources happy path', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+      status: 'success',
     });
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Resources"
+        region={'us-east'}
+        resourceType={'us-east'}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-3',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-4',
+      })
+    ).toBeInTheDocument();
+  });
   it('should be able to select all resources if resource selection limit is higher than number of resources', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(2),

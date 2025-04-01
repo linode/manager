@@ -6,15 +6,13 @@ import pluginCypress from 'eslint-plugin-cypress/flat';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
-// import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactHooks from 'eslint-plugin-react-hooks';
-// import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 import sonarjs from 'eslint-plugin-sonarjs';
+import xss from 'eslint-plugin-xss';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import { createRequire } from 'module';
 import tseslint from 'typescript-eslint';
-import xss from 'eslint-plugin-xss';
 
 const require = createRequire(import.meta.url);
 const react = require('eslint-plugin-react');
@@ -135,7 +133,6 @@ export default defineConfig([
       'react/no-unescaped-entities': 'warn',
       'react/prop-types': 'off',
       'react/self-closing-comp': 'warn',
-      // 'react-refresh/only-export-components': 'warn',
     },
   },
 
@@ -239,11 +236,12 @@ export default defineConfig([
     },
   },
 
-  // Tests & factories rules
+  // Unit tests & factories rules
   {
     files: [
       '**/*.test.{js,ts,tsx}',
-      '**/*.factory.{js,ts,tsx}',
+      '**/factories/**/*.{js,ts,tsx}',
+      '**/__data__/**/*.{js,ts,tsx}',
       '**/mocks/**/*.{js,ts,tsx}',
     ],
     plugins: {
@@ -282,7 +280,19 @@ export default defineConfig([
       'sonarjs/no-implicit-dependencies': 'off',
       'sonarjs/no-reference-error': 'off',
       'sonarjs/no-wildcard-import': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
+      'sonarjs/pseudo-random': 'off',
       'no-empty-pattern': 'off',
+    },
+  },
+
+  // 8. Cypress rules
+  {
+    files: ['**/cypress/**/*.{js,ts,tsx}'],
+    rules: {
+      'no-console': 'off',
+      'sonarjs/pseudo-random': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
     },
   },
 

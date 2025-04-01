@@ -524,9 +524,6 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^5.2.0
         version: 5.2.0(eslint@9.23.0(jiti@1.21.6))
-      eslint-plugin-react-refresh:
-        specifier: 0.4.13
-        version: 0.4.13(eslint@9.23.0(jiti@1.21.6))
       eslint-plugin-sonarjs:
         specifier: ^3.0.2
         version: 3.0.2(eslint@9.23.0(jiti@1.21.6))
@@ -10855,10 +10852,6 @@ snapshots:
   eslint-plugin-react-refresh@0.4.13(eslint@7.32.0):
     dependencies:
       eslint: 7.32.0
-
-  eslint-plugin-react-refresh@0.4.13(eslint@9.23.0(jiti@1.21.6)):
-    dependencies:
-      eslint: 9.23.0(jiti@1.21.6)
 
   eslint-plugin-react@7.37.2(eslint@7.32.0):
     dependencies:

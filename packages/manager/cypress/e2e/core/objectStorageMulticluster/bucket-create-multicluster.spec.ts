@@ -122,7 +122,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     // property in its payload when creating a bucket.
     cy.wait('@createBucket').then((xhr) => {
       const body = xhr.request.body;
-      expect(body.cluster).to.be.undefined;
+      expect(body.cluster).should('be.undefined');
       expect(body.region).to.eq(mockRegionWithObj.id);
     });
 

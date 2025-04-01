@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -35,7 +34,8 @@ describe('AreaChart', () => {
   it('renders an AreaChart', () => {
     const { container } = renderWithTheme(<AreaChart {...props} />);
 
-    expect(container.querySelector('recharts-responsive-container'))
-      .toBeVisible;
+    expect(
+      container.querySelector('recharts-responsive-container')
+    ).toBeVisible();
   });
 });
