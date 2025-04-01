@@ -89,13 +89,24 @@ export const TagsInput = (props: TagsInputProps) => {
     const newTag = { label: inputValue, value: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
-    if (inputValue.length < 3 || inputValue.length > 50) {
-      setErrors([
-        {
-          field: 'label',
-          reason: 'Length must be 3-50 characters',
-        },
-      ]);
+    const errors = [];
+
+    if (inputValue.trim() === '') {
+      errors.push({
+        field: 'label',
+        reason: 'Tag cannot be an empty',
+      });
+    }
+
+    if (inputValue.length < 1 || inputValue.length > 50) {
+      errors.push({
+        field: 'label',
+        reason: 'Length must be 1-50 characters',
+      });
+    }
+
+    if (errors.length > 0) {
+      setErrors(errors);
     } else {
       setErrors([]);
       onChange(updatedSelectedTags);

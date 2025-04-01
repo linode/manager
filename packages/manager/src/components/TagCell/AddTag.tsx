@@ -31,8 +31,9 @@ export const AddTag = (props: AddTagProps) => {
   const createTag =
     !!accountTags &&
     !!inputValue &&
+    inputValue.trim() !== '' &&
     !accountTags.some(
-      (tag) => tag.label.toLowerCase() == inputValue.toLowerCase()
+      (tag) => tag.label.toLowerCase() === inputValue.toLowerCase()
     );
 
   const tagOptions: { displayLabel?: string; label: string }[] = [
