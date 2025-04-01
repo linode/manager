@@ -71,6 +71,7 @@ export default defineConfig([
       'no-caller': 'error',
       'no-case-declarations': 'warn',
       'no-console': 'error',
+      'no-empty': 'warn',
       'no-eval': 'error',
       'no-extra-boolean-cast': 'warn',
       'no-invalid-this': 'off',
@@ -201,7 +202,9 @@ export default defineConfig([
       'sonarjs/no-small-switch': 'warn',
       'sonarjs/prefer-immediate-return': 'warn',
       'sonarjs/prefer-single-boolean-return': 'off',
+      'sonarjs/redundant-type-aliases': 'warn',
       'sonarjs/todo-tag': 'warn',
+      'sonarjs/single-character-alternation': 'warn',
     },
   },
 
@@ -264,6 +267,7 @@ export default defineConfig([
       'sonarjs/file-header': 'off',
       'sonarjs/no-implicit-dependencies': 'off',
       'sonarjs/no-reference-error': 'off',
+      'sonarjs/no-wildcard-import': 'off',
     },
   },
 
@@ -275,6 +279,7 @@ export default defineConfig([
       'perfectionist/sort-classes': 'warn',
       'perfectionist/sort-enums': 'warn',
       'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-heritage-clauses': 'off',
       'perfectionist/sort-imports': [
         'warn',
         {
@@ -312,10 +317,10 @@ export default defineConfig([
       'perfectionist/sort-named-exports': 'warn',
       'perfectionist/sort-named-imports': 'warn',
       'perfectionist/sort-object-types': 'warn',
-      'perfectionist/sort-objects': 'warn',
+      'perfectionist/sort-objects': 'off',
+      'perfectionist/sort-sets': 'off',
       'perfectionist/sort-switch-case': 'warn',
       'perfectionist/sort-union-types': 'warn',
-      'sort-heritage-clauses': 'off',
     },
   },
 

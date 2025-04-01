@@ -100,7 +100,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   if (config.swap_size) {
     terraformConfig += `  swap_size = ${config.swap_size}\n`;
   }
-  if (config.hasOwnProperty('private_ip')) {
+  if (Object.prototype.hasOwnProperty.call(config, 'private_ip')) {
     // Checks explicitly for property existence
     terraformConfig += `  private_ip = ${config.private_ip}\n`;
   }
