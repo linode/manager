@@ -73,6 +73,10 @@ describe('SubnetLinodeRow', () => {
       http.get('*/instances/*/configs', async () => {
         const configs = linodeConfigFactory.buildList(3);
         return HttpResponse.json(makeResourcePage(configs));
+      }),
+      http.get('*/instances/*/configs/*/interfaces/*', async () => {
+        const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build();
+        return HttpResponse.json(vpcInterface);
       })
     );
 
