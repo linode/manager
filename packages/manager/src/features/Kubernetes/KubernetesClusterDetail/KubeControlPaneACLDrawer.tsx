@@ -108,7 +108,7 @@ export const KubeControlPlaneACLDrawer = (
           ipv6:
             aclPayload?.addresses?.ipv6 &&
             aclPayload?.addresses?.ipv6.length > 0
-              ? aclPayload?.addresses?.ipv4
+              ? aclPayload?.addresses?.ipv6
               : [''],
         },
         enabled: aclPayload?.enabled ?? false,
