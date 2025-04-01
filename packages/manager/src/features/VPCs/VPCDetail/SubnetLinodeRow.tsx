@@ -33,6 +33,7 @@ import type {
   APIError,
   Firewall,
   Linode,
+  LinodeInterface,
   SubnetLinodeInterfaceData,
 } from '@linode/api-v4';
 import type { Config, Interface } from '@linode/api-v4/lib/linodes/types';
@@ -62,8 +63,8 @@ export const SubnetLinodeRow = (props: Props) => {
     subnetId,
   } = props;
 
-  const interfaceData = linodeInterfaceInfo[0];
-  const isLinodeInterface = interfaceData.config_id === null;
+  const interfaceIds = linodeInterfaceInfo[0];
+  const isLinodeInterface = interfaceIds?.config_id === null;
 
   const {
     data: linode,
@@ -83,7 +84,7 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: firewallsLoadingLinodeInterface,
   } = useLinodeInterfaceFirewallsQuery(
     linodeId,
-    linodeInterfaceInfo[0].id,
+    interfaceIds?.id ?? -1,
     isLinodeInterface
   );
 
@@ -93,21 +94,25 @@ export const SubnetLinodeRow = (props: Props) => {
   const firewallsLoading =
     firewallsLoadingConfig || firewallsLoadingLinodeInterface;
 
-  // const {
-  //   data: linodeInterface,
-  //   error: linodeInterfaceError,
-  //   isLoading: linodeInterfaceLoading,
-  // } = useLinodeInterfaceQuery(
-  //   linodeId,
-  //   linodeInterfaceInfo[0].id,
-  //   isLinodeInterface
-  // );
+  const {
+    data: linodeInterface,
+    error: linodeInterfaceError,
+    isLoading: linodeInterfaceLoading,
+  } = useLinodeInterfaceQuery(
+    linodeId,
+    interfaceIds?.id ?? -1,
+    isLinodeInterface
+  );
 
   const {
     data: configs,
     error: configsError,
     isLoading: configsLoading,
   } = useAllLinodeConfigsQuery(linodeId, !isLinodeInterface);
+
+  const interfaceData = linodeInterface ?? configs ?? [];
+  const interfaceError = linodeInterfaceError ?? configsError;
+  const interfaceLoading = linodeInterfaceLoading ?? configsLoading;
 
   const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
     configs ?? [],
@@ -146,7 +151,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const linkifiedLinodeLabel = (
     <Link
       to={`/linodes/${linode.id}${
-        isLinodeInterface ? `/networking/interfaces/${interfaceData.id}` : ''
+        isLinodeInterface ? `/networking/interfaces/${interfaceIds.id}` : ''
       }`}
     >
       {linode.label}
@@ -184,8 +189,8 @@ export const SubnetLinodeRow = (props: Props) => {
     isRunning &&
     configs?.some((config) =>
       config.interfaces?.some(
-        (linodeInterface) =>
-          linodeInterface.purpose === 'vpc' && !linodeInterface.active
+        (configInterface) =>
+          configInterface.purpose === 'vpc' && !configInterface.active
       )
     );
 
@@ -217,10 +222,10 @@ export const SubnetLinodeRow = (props: Props) => {
       <Hidden smDown>
         <TableCell>
           {getSubnetLinodeIPv4CellString(
-            configs ?? [],
-            configsLoading,
+            interfaceData,
+            interfaceLoading,
             subnetId,
-            configsError ?? undefined
+            interfaceError ?? undefined
           )}
         </TableCell>
       </Hidden>
@@ -300,7 +305,7 @@ const getFirewallsCellString = (
 };
 
 const getSubnetLinodeIPv4CellString = (
-  configs: Config[],
+  interfaceData: Config[] | LinodeInterface,
   loading: boolean,
   subnetId: number,
   error?: APIError[]
@@ -313,15 +318,27 @@ const getSubnetLinodeIPv4CellString = (
     return 'Error retrieving VPC IPv4s';
   }
 
-  if (configs.length === 0) {
-    return 'None';
-  }
+  if (Array.isArray(interfaceData)) {
+    if (interfaceData.length === 0) {
+      return 'None';
+    }
 
-  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
-  return getIPv4Link(configInterface);
+    const configInterface = getSubnetInterfaceFromConfigs(
+      interfaceData,
+      subnetId
+    );
+    return getIPv4LinkForConfigInterface(configInterface);
+  } else {
+    const primaryIPv4 = interfaceData.vpc?.ipv4.addresses.find(
+      (address) => address.primary
+    )?.address;
+    return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
+  }
 };
 
-const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
+const getIPv4LinkForConfigInterface = (
+  configInterface: Interface | undefined
+): JSX.Element => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
@@ -333,7 +350,7 @@ const getIPv4Link = (configInterface: Interface | undefined): JSX.Element => {
 };
 
 const getIPRangesCellContents = (
-  configs: Config[],
+  interfaceData: Config[] | LinodeInterface,
   loading: boolean,
   subnetId: number,
   error?: APIError[]
@@ -346,14 +363,26 @@ const getIPRangesCellContents = (
     return 'Error retrieving VPC IPv4s';
   }
 
-  if (configs.length === 0) {
-    return 'None';
-  }
+  if (Array.isArray(interfaceData)) {
+    if (interfaceData.length === 0) {
+      return 'None';
+    }
 
-  const configInterface = getSubnetInterfaceFromConfigs(configs, subnetId);
-  return determineNoneSingleOrMultipleWithChip(
-    configInterface?.ip_ranges ?? []
-  );
+    const configInterface = getSubnetInterfaceFromConfigs(
+      interfaceData,
+      subnetId
+    );
+    return determineNoneSingleOrMultipleWithChip(
+      configInterface?.ip_ranges ?? []
+    );
+  } else {
+    const linodeInterfaceVPCRanges = interfaceData.vpc?.ipv4.ranges.map(
+      (range) => range.range
+    );
+    return determineNoneSingleOrMultipleWithChip(
+      linodeInterfaceVPCRanges ?? []
+    );
+  }
 };
 
 const getFirewallLinks = (data: Firewall[]): JSX.Element => {
