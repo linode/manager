@@ -91,7 +91,9 @@ export const TagsInput = (props: TagsInputProps) => {
 
     const errors = [];
 
-    if (inputValue.trim() === '') {
+    inputValue = inputValue.trim();
+
+    if (inputValue === '') {
       errors.push({
         field: 'label',
         reason: 'Tag cannot be an empty',
