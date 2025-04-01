@@ -29,7 +29,7 @@ export interface AlertRouteParams {
 export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
+  const { data: alertDetails, isError, isLoading } = useAlertDefinitionQuery(
     alertId,
     serviceType
   );
@@ -54,7 +54,7 @@ export const AlertDetail = () => {
   const nonSuccessBoxHeight = '600px';
   const sectionMaxHeight = '785px';
 
-  if (isFetching) {
+  if (isLoading) {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -160,10 +160,10 @@ export const StyledPlaceholder = styled(Placeholder, {
   h1: {
     fontSize: theme.spacing(2),
   },
+  padding: 0,
   svg: {
     maxHeight: theme.spacing(10),
   },
-  padding: 0,
 }));
 
 export const StyledAlertChip = styled(Chip, {
