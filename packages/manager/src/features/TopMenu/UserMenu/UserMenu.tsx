@@ -1,3 +1,4 @@
+import { useAccount, useProfile } from '@linode/queries';
 import {
   Button,
   ChevronDownIcon,
@@ -16,7 +17,6 @@ import * as React from 'react';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
-import { useAccount, useProfile } from '@linode/queries';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { UserMenuPopover } from './UserMenuPopover';
@@ -158,6 +158,10 @@ const StyledUserMenuButton = styled(Button, {
     '.MuiButton-icon svg, .MuiStack-root .MuiTypography-root': {
       color: theme.tokens.component.GlobalHeader.Text.Hover,
     },
+  },
+  '.MuiButton-endIcon svg': {
+    height: '16px',
+    width: '16px',
   },
   '.MuiButton-icon svg': {
     color: open
