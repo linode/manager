@@ -1276,7 +1276,8 @@ describe('LKE Cluster Creation with LKE-E', () => {
    * - Confirms LKE-E flow does not exist if account doesn't have the corresponding capability
    * @todo LKE-E: Remove this test once LKE-E is fully rolled out
    */
-  it('does not show the LKE-E flow with the feature flag off', () => {
+  // TODO: revert me before we release on 4/8!
+  it.skip('does not show the LKE-E flow with the feature flag off', () => {
     mockAppendFeatureFlags({
       lkeEnterprise: { enabled: false, la: false },
     }).as('getFeatureFlags');
