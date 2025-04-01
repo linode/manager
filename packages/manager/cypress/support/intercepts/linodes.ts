@@ -119,7 +119,7 @@ export const interceptGetLinodes = (): Cypress.Chainable<null> => {
 export const mockGetLinodes = (linodes: Linode[]): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('linode/instances/**'),
+    apiMatcher('linode/instances*'),
     paginateResponse(linodes)
   );
 };

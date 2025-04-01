@@ -74,7 +74,7 @@ describe('linode landing checks', () => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
     cy.intercept('GET', apiMatcher('profile')).as('getProfile');
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
+    cy.intercept('GET', apiMatcher('linode/instances*'), (req) => {
       req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });
