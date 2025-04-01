@@ -210,12 +210,12 @@ export const DisplayAlertResources = React.memo(
                         title={
                           maxSelectionCount !== undefined &&
                           disableRootCheckBox(paginatedData) ? (
-                            <ErrorTypoGraphy
+                            <ToolTipTypography
                               maxSelectionCount={maxSelectionCount}
                             />
                           ) : undefined
                         }
-                        placement="right"
+                        placement="right-start"
                       >
                         <Box>
                           <Checkbox
@@ -284,12 +284,12 @@ export const DisplayAlertResources = React.memo(
                               title={
                                 boxDisabled &&
                                 maxSelectionCount !== undefined ? (
-                                  <ErrorTypoGraphy
+                                  <ToolTipTypography
                                     maxSelectionCount={maxSelectionCount}
                                   />
                                 ) : undefined
                               }
-                              placement="right"
+                              placement="right-start"
                             >
                               <Box>
                                 <Checkbox
@@ -360,11 +360,11 @@ export const DisplayAlertResources = React.memo(
   }
 );
 
-const ErrorTypoGraphy = React.memo(
+const ToolTipTypography = React.memo(
   ({ maxSelectionCount }: { maxSelectionCount: number }) => {
     return (
       <Typography data-testid="warning-tip">
-        {`You can select upto ${maxSelectionCount} resources.`}
+        You can select upto {maxSelectionCount} resources.
       </Typography>
     );
   }
