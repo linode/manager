@@ -8,7 +8,17 @@
  */
 import {
   accountAvailabilityFactory,
+  dedicatedTypeFactory,
+  linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
+  linodeTypeFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
+  nodeBalancerFactory,
   pickRandom,
+  proDedicatedTypeFactory,
   regionAvailabilityFactory,
   regions,
 } from '@linode/utilities';
@@ -33,11 +43,11 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  dedicatedTypeFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -54,11 +64,6 @@ import {
   kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
-  linodeFactory,
-  linodeIPFactory,
-  linodeStatsFactory,
-  linodeTransferFactory,
-  linodeTypeFactory,
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
@@ -72,9 +77,6 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
-  nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -90,7 +92,6 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
   securityQuestionsFactory,
@@ -370,6 +371,9 @@ const databases = [
 
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
+  }),
+  http.get('*/databases/:engine/config', () => {
+    return HttpResponse.json(databaseEngineConfigFactory.build());
   }),
 ];
 

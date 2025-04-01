@@ -5,6 +5,7 @@ import {
   useGrants,
   useProfile,
 } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Autocomplete,
   Box,
@@ -26,7 +27,6 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
