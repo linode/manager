@@ -41,9 +41,9 @@ export type DatabaseStatus =
   | 'resuming'
   | 'suspended'
   | 'suspending';
-
+/** @deprecated TODO (UIE-8214) remove after migration */
 export type DatabaseBackupType = 'snapshot' | 'auto';
-
+/** @deprecated TODO (UIE-8214) remove after migration */
 export interface DatabaseBackup {
   id: number;
   type: DatabaseBackupType;
