@@ -1,6 +1,7 @@
 import {
   Button,
   ChevronDownIcon,
+  ChevronUpIcon,
   Stack,
   Tooltip,
   Typography,
@@ -12,7 +13,6 @@ import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import ChevronUp from 'src/assets/icons/chevron-up.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
@@ -81,7 +81,7 @@ export const UserMenu = React.memo(() => {
       return undefined;
     }
     return open ? (
-      <ChevronUp color={theme.tokens.component.GlobalHeader.Text.Hover} />
+      <ChevronUpIcon color={theme.tokens.component.GlobalHeader.Text.Hover} />
     ) : (
       <ChevronDownIcon
         color={theme.tokens.component.GlobalHeader.Text.Default}
