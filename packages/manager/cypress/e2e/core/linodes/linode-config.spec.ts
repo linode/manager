@@ -692,7 +692,7 @@ describe('Linode Config management', () => {
      * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", sets eth1 to "VPC", and checks "Assign a public IPv4 address for this Linode", confirm that correct notice appears.
      * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
      */
-    it.only('Creates a new config using non-recommended settings and confirm the informational notices', () => {
+    it('Creates a new config using non-recommended settings and confirm the informational notices', () => {
       const region = chooseRegion({ capabilities: ['VPCs'] });
       const mockLinode = linodeFactory.build({
         id: randomNumber(),
