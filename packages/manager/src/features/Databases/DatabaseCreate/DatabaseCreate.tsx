@@ -235,7 +235,7 @@ const DatabaseCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
-      <form onSubmit={handleSubmit} ref={formRef}>
+      <form onSubmit={handleSubmit} ref={formRef} data-testid="db-create-form">
         <LandingHeader
           breadcrumbProps={{
             crumbOverrides: [

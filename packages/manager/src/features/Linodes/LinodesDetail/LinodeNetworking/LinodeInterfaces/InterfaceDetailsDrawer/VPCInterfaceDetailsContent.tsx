@@ -17,18 +17,16 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
     <>
       {ipv4.addresses.map((address) =>
         address.nat_1_1_address ? (
-          <>
+          <Stack key={address.address}>
             <MaskableText
               isToggleable
-              key={address.address}
               text={`${address.address} ${address.primary && '(Primary)'}`}
             />
             <MaskableText
               isToggleable
-              key={address.nat_1_1_address}
               text={`${address.nat_1_1_address} (VPC NAT)`}
             />
-          </>
+          </Stack>
         ) : (
           <MaskableText
             isToggleable
