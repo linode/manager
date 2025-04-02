@@ -25,14 +25,11 @@ import {
   transformedAccountEntities,
 } from '../../Shared/utilities';
 
-import type {
-  EntitiesRole,
-  EntitiesType,
-  IamAccountEntities,
-} from '../../Shared/utilities';
+import type { EntitiesRole, EntitiesType } from '../../Shared/utilities';
 import type {
   AccountEntity,
   EntityAccess,
+  EntityType,
   IamUserPermissions,
   RoleType,
 } from '@linode/api-v4';
@@ -229,15 +226,15 @@ const getEntityTypes = (data: EntitiesRole[]): EntitiesType[] =>
 
 const addEntityNamesToRoles = (
   assignedRoles: IamUserPermissions,
-  entities: IamAccountEntities[]
+  entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): EntitiesRole[] => {
   const entitiesRoles = assignedRoles.entity_access;
 
   return entitiesRoles.flatMap((entityRole: EntityAccess) => {
-    const entityByType = entities.find((r) => r.type === entityRole.type);
+    const entityByType = entities.get(entityRole.type as EntityType);
 
     if (entityByType) {
-      const entity = entityByType.entities.find(
+      const entity = entityByType.find(
         (res: AccountEntity) => res.id === entityRole.id
       );
 

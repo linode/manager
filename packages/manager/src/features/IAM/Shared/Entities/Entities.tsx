@@ -8,7 +8,7 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import { placeholderMap, transformedAccountEntities } from '../utilities';
 
-import type { EntitiesOption, IamAccountEntities } from '../utilities';
+import type { EntitiesOption } from '../utilities';
 import type {
   AccountEntity,
   EntityType,
@@ -42,7 +42,7 @@ export const Entities = ({ access, assignedEntities, type }: Props) => {
       return [];
     }
     const typeEntities = getEntitiesByType(type, entities.data);
-    return typeEntities ? transformedEntities(typeEntities.entities) : [];
+    return typeEntities ? transformedEntities(typeEntities) : [];
   }, [entities, access, type]);
 
   if (access === 'account_access') {
@@ -101,9 +101,9 @@ const transformedEntities = (
 const getEntitiesByType = (
   roleEntityType: EntityType | EntityTypePermissions,
   entities: AccountEntity[]
-): IamAccountEntities | undefined => {
-  const entitiesArray = transformedAccountEntities(entities);
+): Pick<AccountEntity, 'id' | 'label'>[] | undefined => {
+  const entitiesMap = transformedAccountEntities(entities);
 
   // Find the first matching entity by type
-  return entitiesArray.find((item) => item.type === roleEntityType);
+  return entitiesMap.get(roleEntityType as EntityType);
 };

@@ -308,18 +308,17 @@ export const mapRolesToPermissions = (
 
 export const addEntitiesNamesToRoles = (
   roles: ExtendedRoleMap[],
-  entities: IamAccountEntities[]
+  entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): ExtendedRoleMap[] => {
   return roles.map((role) => {
     // Find the resource group by entity_type
-    const resourceGroup = entities.find((res) => res.type === role.entity_type);
+    const resourceGroup = entities.get(role.entity_type as EntityType);
 
     if (resourceGroup && role.entity_ids) {
       // Map entity_ids to their names
       const resourceNames = role.entity_ids
         .map(
-          (id) =>
-            resourceGroup.entities.find((resource) => resource.id === id)?.label
+          (id) => resourceGroup.find((resource) => resource.id === id)?.label
         )
         .filter((label): label is string => label !== undefined); // Remove undefined values
 
@@ -475,31 +474,23 @@ export const deleteUserRole = ({
   return assignedRoles;
 };
 
-export interface IamAccountEntities {
-  entities: Pick<AccountEntity, 'id' | 'label'>[];
-  type: EntityType;
-}
-
 export const transformedAccountEntities = (
   entities: AccountEntity[]
-): IamAccountEntities[] => {
-  const result: IamAccountEntities[] = [];
-
-  const map = new Map();
+): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
+  const result: Map<
+    EntityType,
+    Pick<AccountEntity, 'id' | 'label'>[]
+  > = new Map();
 
   entities.forEach((item) => {
-    if (!map.has(item.type)) {
-      map.set(item.type, []);
+    if (!result.has(item.type)) {
+      result.set(item.type, []);
     }
 
-    map.get(item.type).push({
+    result.get(item.type)?.push({
       id: item.id,
       label: item.label,
     });
-  });
-
-  map.forEach((entities, type) => {
-    result.push({ entities, type });
   });
 
   return result;
