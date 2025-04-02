@@ -209,7 +209,7 @@ describe('Create Linode with Disk Encryption', () => {
           const requestPayload = xhr.request.body;
           const regionId = requestPayload['region'];
           expect(regionId).to.equal(mockLinode.region);
-          expect(requestPayload['disk_encryption']).should('be.undefined');
+          expect(requestPayload['disk_encryption']).to.eq(undefined);
         });
       });
     });

@@ -14,9 +14,9 @@ export const apiCheckErrors = (
   }
   if (failOnError) {
     if (errs) {
-      expect(errs[0].ERRORMESSAGE).should('not.exist');
+      expect(errs[0]?.ERRORMESSAGE).to.equal(undefined);
     } else {
-      expect(errs).should('be.undefined');
+      expect(errs).to.equal(false);
     }
   }
   return errs;

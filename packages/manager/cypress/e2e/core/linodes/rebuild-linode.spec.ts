@@ -405,7 +405,7 @@ describe('rebuild linode', () => {
     cy.wait('@rebuildLinode').then((xhr) => {
       // Confirm that metadata is NOT in the payload.
       // If we omit metadata from the payload, the API will reuse previously provided userdata.
-      expect(xhr.request.body.metadata).should('be.undefined');
+      expect(xhr.request.body.metadata).to.equal(undefined);
 
       // Verify other expected values are in the request
       expect(xhr.request.body.image).to.equal(image.id);

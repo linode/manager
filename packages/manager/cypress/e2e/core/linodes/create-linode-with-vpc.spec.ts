@@ -134,7 +134,7 @@ describe('Create Linode with VPCs', () => {
 
       // Confirm that request payload includes VPC interface.
       expect(expectedVpcInterface['vpc_id']).to.equal(mockVPC.id);
-      expect(expectedVpcInterface['ipv4']).should('be.an', 'object').that('is', 'empty');
+      expect(expectedVpcInterface['ipv4']).to.deep.equal({});
       expect(expectedVpcInterface['subnet_id']).to.equal(mockSubnet.id);
       expect(expectedVpcInterface['purpose']).to.equal('vpc');
       // Confirm that VPC interfaces are always marked as the primary interface
