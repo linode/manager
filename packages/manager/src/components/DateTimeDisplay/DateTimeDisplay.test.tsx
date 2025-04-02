@@ -8,7 +8,13 @@ import { DateTimeDisplay } from './DateTimeDisplay';
 
 import type { DateTimeDisplayProps } from './DateTimeDisplay';
 
-vi.mock('../../utilities/getUserTimezone');
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    getUserTimezone: vi.fn().mockReturnValue('utc'),
+  };
+});
 
 const APIDate = '2018-07-20T04:23:17';
 
