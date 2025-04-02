@@ -302,6 +302,28 @@ export const mapRolesToPermissions = (
   return Array.from(roleMap.values());
 };
 
+
+/**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapAccountPermissionsToRoles = (
+  accountPermissions: IamAccountPermissions
+): RoleMap[] => {
+  const mapperFn: RoleMap = (access: string, resource_type: any, role: any) => ({
+    access,
+    description: role.description,
+    id: role.name,
+    name: role.name,
+    permissions: role.permissions,
+    resource_type,
+  });
+
+  return [
+    ...accountPermissions.account_access.map(resource => resource.roles.map(role => mapperFn('account_access', resource.type, role))),
+    ...accountPermissions.entity_access.map(resource => resource.roles.map(role => mapperFn('entity_access', resource.type, role))),
+  ].flat();
+};
+
 /**
  * Add assigned entities to role
  */

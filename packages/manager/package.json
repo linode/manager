@@ -45,6 +45,7 @@
     "@tanstack/react-query-devtools": "5.51.24",
     "@tanstack/react-router": "^1.111.11",
     "@xterm/xterm": "^5.5.0",
+    "akamai-cds-react-components": "0.0.1-alpha.3",
     "algoliasearch": "^4.14.3",
     "axios": "~1.8.3",
     "braintree-web": "^3.92.2",

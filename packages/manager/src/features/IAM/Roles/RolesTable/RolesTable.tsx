@@ -1,63 +1,78 @@
 import React, { useState } from 'react';
-import { IamAccess, Roles } from '@linode/api-v4';
-import { Box } from '@linode/ui';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { getAPIFilterFromQuery } from '@linode/search';
-import { useAccountPermissions } from 'src/queries/iam/iam';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+  TableRowExpanded,
+  sortRows,
+} from 'akamai-cds-react-components/Table';
 
-export interface UiRole {
-  name: string;
-  type: string;
-  description: string;
-  permissions: string[];
-}
+import type { Order } from 'akamai-cds-react-components/Table';
+import { useAccountPermissions } from 'src/queries/iam/iam';
+import {
+  mapAccountPermissionsToRoles, RoleMap
+} from 'src/features/IAM/Shared/utilities';
+import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
+import { Permissions } from 'src/features/IAM/Shared/Permissions/Permissions';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useTheme } from '@mui/material';
 
 export const RolesTable = () => {
-  const [query, setQuery] = useState<string>();
 
-  const { error: searchError } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['name', 'type', 'description'],
-  });
+  const {data: accountPermissions, isLoading, isSuccess} = useAccountPermissions();
 
-  const { data: roles, error, isFetching, isLoading } = useAccountPermissions();
+  const theme = useTheme();
 
-  if (!!error || isLoading) {
-    // do something here?
-  }
-
-  const uiRoles = React.useMemo(() => {
-    if (!roles) {
-      return [];
+  const { roles } = React.useMemo(() => {
+    if (!accountPermissions) {
+      return { roles: [] };
     }
+    const roles = mapAccountPermissionsToRoles(accountPermissions);
 
-    const uiRoles: UiRole[] = [];
-    roles.account_access.forEach((iamAccess: IamAccess[]) => {
-      iamAccess.roles.forEach((r: Roles) => {
-        uiRoles.push({
-          name: snakeToCamel(r.name),
-          type: 'Account access',
-          description: r.description,
-          permissions: r.permissions,
-        });
-      });
-    });
+    return { roles };
+  }, [accountPermissions]);
 
-    roles.resource_access.forEach((iamAccess: IamAccess[]) => {
-      iamAccess.roles.forEach((r: Roles) => {
-        uiRoles.push({
-          name: snakeToCamel(r.name),
-          type: 'Entity access',
-          description: r.description,
-          permissions: r.permissions,
-        });
-      });
-    });
+  const [rows, setRows] = useState(roles);
 
-    return uiRoles;
-  }, [roles]);
+  const [sort, setSort] = useState<
+    { column: string; order: Order } | undefined
+  >(undefined);
+
+  const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
+
+  const areAllSelected = () => {
+    return rows.length === selectedRows.length;
+  };
+
+  const handleSort = (event: CustomEvent, column: string) => {
+    setSort({ column, order: event.detail as Order });
+    const visibileRows = sortRows(rows, event.detail as Order, column);
+    setRows(visibileRows);
+  };
+
+  const handleSelect = (event: CustomEvent, row: 'all' | RoleMap) => {
+    if (row === 'all') {
+      setSelectedRows(areAllSelected() ? [] : rows);
+    } else if (selectedRows.includes(row)) {
+      setSelectedRows(selectedRows.filter((r) => r !== row));
+    } else {
+      setSelectedRows([...selectedRows, row]);
+    }
+  };
+
+  const prettyPrintAccess = (access) => {
+    return access.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
 
   return (
     <>
+      <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+
         <Box
           sx={(theme) => ({
             alignItems: 'center',
@@ -69,25 +84,87 @@ export const RolesTable = () => {
           <DebouncedSearchTextField
             clearable
             debounceTime={250}
-            errorText={searchError?.message}
             hideLabel
-            isSearching={isFetching}
-            label="Filter"
-            onSearch={setQuery}
-            placeholder="Filter"
+            label="Search"
+            placeholder="Search"
             sx={{ width: 320 }}
             value=""
           />
         </Box>
 
-        <RolesTableCollapsible uiRoles={uiRoles} />
-        <RolesTableSelectable uiRoles={uiRoles} />
+        <Table>
+          <TableHead>
+            <TableRow
+              headerborder
+              select={(event) => handleSelect(event, 'all')}
+              selectable
+              selected={areAllSelected()}
+            >
+              <TableHeaderCell
+                sort={(event) => handleSort(event, 'name')}
+                sortable
+                sorted={sort?.column === 'name' ? sort.order : undefined}
+                style={{ width: '25%' }}
+              >
+                Role
+              </TableHeaderCell>
+              <TableHeaderCell
+                sort={(event) => handleSort(event, 'access')}
+                sortable
+                sorted={sort?.column === 'access' ? sort.order : undefined}
+                style={{ width: '15%' }}
+              >
+                Role Type
+              </TableHeaderCell>
+              <TableHeaderCell
+                sort={(event) => handleSort(event, 'description')}
+                sortable
+                sorted={sort?.column === 'description' ? sort.order : undefined}
+                style={{ width: '45%' }}
+              >
+                Description
+              </TableHeaderCell>
+              <TableHeaderCell style={{ width: '5%' }}></TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((roleRow) => (
+              <TableRow
+                expandable={!!roleRow.permissions.length}
+                hoverable
+                key={roleRow.name}
+                rowborder
+                select={(event) => handleSelect(event, roleRow)}
+                selectable
+                selected={selectedRows.includes(roleRow)}
+              >
+                <TableCell>{roleRow.name}</TableCell>
+                <TableCell>{prettyPrintAccess(roleRow.access)}</TableCell>
+                <TableCell>{roleRow.description}</TableCell>
+                <TableCell>
+                  <RolesTableActionMenu></RolesTableActionMenu>
+                </TableCell>
+                <TableRowExpanded slot="expanded" style={{ width: '100%' }}>
+
+                  <Paper
+                    sx={{
+                      backgroundColor:
+                        theme.name === 'light'
+                          ? theme.tokens.color.Neutrals[5]
+                          : theme.tokens.color.Neutrals[100],
+                      marginTop: theme.spacing(1.25),
+                      padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
+                      width: '90%',
+                    }}
+                  >
+                    <Permissions permissions={roleRow.permissions}></Permissions>
+                  </Paper>
+                </TableRowExpanded>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     </>
   );
 };
-
-const snakeToCamel = (str) => str;
-// str.toLowerCase()
-//   .replace(/([_][a-z])/g, group =>
-//     group.toUpperCase().replace('_', '')
-// );
