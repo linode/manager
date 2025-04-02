@@ -119,7 +119,7 @@ const ipv4ConfigInterface = object().when('purpose', {
 });
 
 const slaacSchema = object().shape({
-  range: string().defined().required(),
+  range: string().required(),
 });
 
 const ipv6ConfigInterfaceRangesSchema = object({
@@ -133,15 +133,16 @@ const ipv6ConfigInterface = object().when('purpose', {
       .shape({
         slaac: array()
           .of(slaacSchema)
-          .required()
           .test({
             name: 'slaac field must have zero or one entry',
             message: 'ipv6.slaac field must have zero or one entry',
-            test: (value) => value?.length === 0 || value?.length === 1,
+            test: (value) =>
+              !value ? true : value?.length === 0 || value?.length === 1,
           }),
-        ranges: array().of(ipv6ConfigInterfaceRangesSchema).required(),
-        is_public: boolean().required(),
+        ranges: array().of(ipv6ConfigInterfaceRangesSchema),
+        is_public: boolean(),
       })
+      .notRequired()
       .when('ipv4', {
         is: (value: unknown) => value === null || value === undefined,
         then: (schema) => schema.required(VPC_INTERFACE_IP_RULE),
@@ -617,20 +618,11 @@ const CreateVlanInterfaceSchema = object({
   ipam_address: string().nullable(),
 });
 
-const vpcIPv6RangesSchema = object({
-  range: string().required(),
-});
-
 export const CreateVPCInterfaceSchema = object({
   subnet_id: number().required('Subnet is required.'),
   ipv4: object({
     addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
     ranges: array().of(VPCInterfaceIPv4RangeSchema),
-  }).notRequired(),
-  ipv6: object({
-    slaac: array().of(slaacSchema),
-    ranges: array().of(vpcIPv6RangesSchema),
-    is_public: boolean().required(),
   }).notRequired(),
 });
 
