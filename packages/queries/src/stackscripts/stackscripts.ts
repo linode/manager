@@ -1,13 +1,9 @@
 import {
   createStackScript,
   deleteStackScript,
-  getStackScript,
-  getStackScripts,
   updateStackScript,
 } from '@linode/api-v4';
 import { queryPresets } from '@linode/queries';
-import { getAll } from '@linode/utilities';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -16,47 +12,16 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { getOneClickApps } from './requests';
+import { stackscriptQueries } from './keys';
 
 import type {
   APIError,
   Filter,
-  Params,
   ResourcePage,
   StackScript,
   StackScriptPayload,
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
-
-export const getAllOCAsRequest = (passedParams: Params = {}) =>
-  getAll<StackScript>((params) =>
-    getOneClickApps({ ...params, ...passedParams })
-  )().then((data) => data.data);
-
-export const getAllAccountStackScripts = () =>
-  getAll<StackScript>((params) =>
-    getStackScripts(params, { mine: true })
-  )().then((data) => data.data);
-
-export const stackscriptQueries = createQueryKeys('stackscripts', {
-  all: {
-    queryFn: () => getAllAccountStackScripts(),
-    queryKey: null,
-  },
-  infinite: (filter: Filter = {}) => ({
-    queryFn: ({ pageParam }) =>
-      getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
-    queryKey: [filter],
-  }),
-  marketplace: {
-    queryFn: () => getAllOCAsRequest(),
-    queryKey: null,
-  },
-  stackscript: (id: number) => ({
-    queryFn: () => getStackScript(id),
-    queryKey: [id],
-  }),
-});
 
 export const useMarketplaceAppsQuery = (enabled: boolean) => {
   return useQuery<StackScript[], APIError[]>({

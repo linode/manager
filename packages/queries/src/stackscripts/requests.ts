@@ -1,6 +1,7 @@
 import { getStackScripts } from '@linode/api-v4';
+import { getAll } from '@linode/utilities';
 
-import type { Params } from '@linode/api-v4';
+import type { Params, StackScript } from '@linode/api-v4';
 
 const oneClickFilter = [
   {
@@ -18,3 +19,13 @@ const oneClickFilter = [
 
 export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
+
+export const getAllOCAsRequest = (passedParams: Params = {}) =>
+  getAll<StackScript>((params) =>
+    getOneClickApps({ ...params, ...passedParams })
+  )().then((data) => data.data);
+
+export const getAllAccountStackScripts = () =>
+  getAll<StackScript>((params) =>
+    getStackScripts(params, { mine: true })
+  )().then((data) => data.data);
