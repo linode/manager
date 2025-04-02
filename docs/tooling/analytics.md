@@ -23,7 +23,7 @@ Important notes:
 1. Set the `REACT_APP_PENDO_API_KEY` environment variable in `.env`.
 2. Use the browser tools Network tab, filter requests by "psp.cloud", and check that successful network requests have been made to load Pendo scripts (also visible in the browser tools Sources tab).
 3. In the browser console, type `pendo.validateEnvironment()`.
-4. You should see command output in the console, and it should include a hashed `accountId` and hashed `visitorId`. Each page view change or custom event that fires should be visible as a request in the Network tab.
+4. You should see command output in the console, and it should include an `accountId` and a `visitorId` that correspond with your APIv4 account `euuid` and profile `uid`, respectively. Each page view change or custom event that fires should be visible as a request in the Network tab.
 5. If the console does not output the expected ids and instead outputs something like `Cookies are disabled in Pendo config. Is this expected?` in response to the above command, clear app storage with the browser tools. Once redirected back to Login, update the OneTrust cookie settings to enable cookies via "Manage Preferences" in the banner at the bottom of the screen. Log back into Cloud Manager and Pendo should load.
 
 ## Adobe Analytics
