@@ -28,7 +28,7 @@ const getUniquePendoId = (id: string | undefined) => {
   }
 
   // Append "-nonprod" to all IDs when in lower environments.
-  return `${id}${!isProdEnv && `-nonprod`}`;
+  return `${id}${!isProdEnv ? '-nonprod' : ''}`;
 };
 
 /**
