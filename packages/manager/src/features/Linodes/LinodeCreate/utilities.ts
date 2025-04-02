@@ -2,6 +2,7 @@ import {
   accountQueries,
   firewallQueries,
   linodeQueries,
+  stackscriptQueries,
 } from '@linode/queries';
 import { omitProps } from '@linode/ui';
 import {
@@ -14,7 +15,6 @@ import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
