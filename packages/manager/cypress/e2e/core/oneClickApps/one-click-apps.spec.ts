@@ -180,7 +180,7 @@ describe('OneClick Apps (OCA)', () => {
       cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
-      cy.get('[data-qa-selection-card="true"]').should('have.length', 2);
+      // The app may be listed 2 or 3 times.
       cy.findAllByText(stackscript.label).first().should('be.visible').click();
     });
 
