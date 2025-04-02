@@ -18,13 +18,7 @@ export interface NewFeatureChipProps
     | 'outlineColor'
     | 'size'
     | 'variant'
-  > {
-  /**
-   * The color of the chip.
-   * default renders a gray chip, primary renders a blue chip.
-   */
-  color?: 'primary' | 'secondary';
-}
+  > {}
 
 /**
  * ## Usage
@@ -36,33 +30,20 @@ export interface NewFeatureChipProps
  *
  */
 export const NewFeatureChip = (props: NewFeatureChipProps) => {
-  const { color = 'primary' } = props;
-
   return (
-    <StyledNewFeatureChip
-      {...props}
-      color={color}
-      data-testid="newFeatureChip"
-      label="new"
-    />
+    <StyledNewFeatureChip {...props} data-testid="newFeatureChip" label="new" />
   );
 };
 
 const StyledNewFeatureChip = styled(Chip, {
   label: 'StyledNewFeatureChip',
   shouldForwardProp: (prop) => prop !== 'color',
-})<NewFeatureChipProps>(({ color, theme }) => ({
+})<NewFeatureChipProps>(({ theme }) => ({
   '& .MuiChip-label': {
     padding: 0,
   },
-  background:
-    color === 'primary'
-      ? 'lch(77.7 28.7 275 / 0.12)'
-      : theme.tokens.color.Neutrals[60],
-  color:
-    color === 'primary'
-      ? theme.tokens.color.Ultramarine[50]
-      : theme.tokens.color.Neutrals.White,
+  background: theme.tokens.component.Badge.Informative.Subtle.Background,
+  color: theme.tokens.component.Badge.Pink.Subtle.Text,
 
   font: theme.font.bold,
   fontSize: '0.625rem',
