@@ -2,6 +2,7 @@ export * from './Accordion';
 export * from './ActionsPanel';
 export * from './Autocomplete';
 export * from './BetaChip';
+export * from './NewFeatureChip';
 export * from './Box';
 export * from './Button';
 export * from './Chip';
