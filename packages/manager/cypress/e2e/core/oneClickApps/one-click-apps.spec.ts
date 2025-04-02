@@ -20,7 +20,7 @@ import type { StackScript } from '@linode/api-v4';
 
 describe('OneClick Apps (OCA)', () => {
   it('Lists all the OneClick Apps', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -57,7 +57,7 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   it('Can view app details of a marketplace app', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -250,7 +250,7 @@ describe('OneClick Apps (OCA)', () => {
 
   // leave test disabled by default
   xit('Validate the summaries of all the OneClick Apps', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
