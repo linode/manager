@@ -187,6 +187,7 @@ describe('SubnetLinodeRow', () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      ip_ranges: [],
       primary: true,
     });
     server.use(
@@ -200,12 +201,12 @@ describe('SubnetLinodeRow', () => {
           )
         );
       }),
-      http.get('*/instances/*/configs/*', () => {
-        const config = linodeConfigFactory.build({
-          interfaces: [vpcInterface],
-        });
-        return HttpResponse.json(config);
-      })
+      http.get(
+        '*/instances/:id/configs/:configId/interfaces/:interfaceId',
+        async () => {
+          return HttpResponse.json(vpcInterface);
+        }
+      )
     );
 
     const handleUnassignLinode = vi.fn();
