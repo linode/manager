@@ -1,6 +1,6 @@
 import {
-  useAllLinodeConfigsQuery,
   useLinodeConfigInterfaceQuery,
+  useLinodeConfigQuery,
   useLinodeFirewallsQuery,
   useLinodeInterfaceFirewallsQuery,
   useLinodeInterfaceQuery,
@@ -61,7 +61,9 @@ export const SubnetLinodeRow = (props: Props) => {
     subnetInterfaces,
   } = props;
 
-  const subnetInterfaceData = subnetInterfaces[0];
+  const subnetInterfaceData =
+    subnetInterfaces.find((interfaceData) => interfaceData.active) ??
+    subnetInterfaces[0];
   const { config_id: configId, id: interfaceId } = subnetInterfaceData;
   const isLinodeInterface = configId === null;
 
@@ -110,9 +112,11 @@ export const SubnetLinodeRow = (props: Props) => {
     !isLinodeInterface
   );
 
-  // we still need to fetch configs to determine if we have an unrecommended configuration
-  const { data: configs } = useAllLinodeConfigsQuery(
+  // we still need to fetch the config this interface belongs to
+  // so that we can determine if we have an unrecommended configuration
+  const { data: config } = useLinodeConfigQuery(
     linodeId,
+    configId ?? -1,
     !isLinodeInterface
   );
 
@@ -121,7 +125,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const interfaceLoading = linodeInterfaceLoading ?? configInterfaceLoading;
 
   const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
-    configs ?? [],
+    config,
     subnetId
   );
 

@@ -21,6 +21,17 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   });
 };
 
+export const useLinodeConfigQuery = (
+  id: number,
+  configId: number,
+  enabled = true
+) => {
+  return useQuery<Config, APIError[]>({
+    ...linodeQueries.linode(id)._ctx.configs._ctx.config(configId),
+    enabled,
+  });
+};
+
 export const useLinodeConfigInterfaceQuery = (
   linodeId: number,
   configId: number,

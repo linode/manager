@@ -35,10 +35,10 @@ export const getSubnetInterfaceFromConfigs = (
 };
 
 export const hasUnrecommendedConfiguration = (
-  configs: Config[],
+  config: Config | undefined,
   subnetId: number
 ) => {
-  for (const config of configs) {
+  if (config) {
     const configInterfaces = config.interfaces;
 
     /*

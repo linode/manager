@@ -83,7 +83,7 @@ describe('getSubnetInterfaceFromConfigs', () => {
 });
 
 describe('hasUnrecommendedConfiguration function', () => {
-  it('returns true when a config has an active VPC interface and a non-VPC primary interface', () => {
+  it('returns true the given config has an active VPC interface and a non-VPC primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({
       id: 10,
       primary: true,
@@ -98,8 +98,6 @@ describe('hasUnrecommendedConfiguration function', () => {
     const config1 = linodeConfigFactory.build({
       interfaces: [publicInterface, vpcInterface],
     });
-
-    const config2 = linodeConfigFactory.build();
 
     const subnet = subnetFactory.build({
       id: 1,
@@ -120,22 +118,16 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
-      true
-    );
+    expect(hasUnrecommendedConfiguration(config1, subnet.id)).toBe(true);
   });
 
-  it('returns false when a config has an active VPC interface that is the primary interface', () => {
+  it('returns false the given config has an active VPC interface that is the primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({ id: 10 });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       id: 20,
       primary: true,
       subnet_id: 1,
-    });
-
-    const config1 = linodeConfigFactory.build({
-      interfaces: [publicInterface],
     });
 
     const config2 = linodeConfigFactory.build({
@@ -161,8 +153,6 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
-      false
-    );
+    expect(hasUnrecommendedConfiguration(config2, subnet.id)).toBe(false);
   });
 });

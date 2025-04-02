@@ -70,9 +70,9 @@ describe('SubnetLinodeRow', () => {
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        const configs = linodeConfigFactory.buildList(3);
-        return HttpResponse.json(makeResourcePage(configs));
+      http.get('*/instances/*/configs/:configId', async () => {
+        const config = linodeConfigFactory.build();
+        return HttpResponse.json(config);
       }),
       http.get('*/instances/*/configs/*/interfaces/*', async () => {
         const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build();
@@ -146,11 +146,11 @@ describe('SubnetLinodeRow', () => {
           )
         );
       }),
-      http.get('*/instances/*/configs', () => {
-        const configs = linodeConfigFactory.build({
+      http.get('*/instances/*/configs/*', () => {
+        const config = linodeConfigFactory.build({
           interfaces: [vpcInterface],
         });
-        return HttpResponse.json(makeResourcePage([configs]));
+        return HttpResponse.json(config);
       })
     );
 
@@ -214,8 +214,8 @@ describe('SubnetLinodeRow', () => {
     });
 
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        return HttpResponse.json(makeResourcePage([configurationProfile]));
+      http.get('*/instances/*/configs/*', async () => {
+        return HttpResponse.json(configurationProfile);
       })
     );
 
@@ -253,8 +253,8 @@ describe('SubnetLinodeRow', () => {
       })
     );
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        return HttpResponse.json(makeResourcePage([configurationProfile]));
+      http.get('*/instances/*/configs/*', async () => {
+        return HttpResponse.json(configurationProfile);
       })
     );
 
