@@ -14,12 +14,20 @@ import {
 } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
+import { useTheme } from '@mui/material/styles';
 
 type Props = {
+  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+const DEFAULT_NO_PERMISSIONS_MESSAGE = 'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.';
+
+export const Permissions = ({
+  noPermissionsMessage = DEFAULT_NO_PERMISSIONS_MESSAGE,
+  permissions,
+}: Props) => {
+  const theme = useTheme();
   const [showAll, setShowAll] = React.useState(false);
 
   const {
@@ -67,7 +75,12 @@ export const Permissions = ({ permissions }: Props) => {
 
       <StyledContainer>
         <StyledClampedContent ref={containerRef} showAll={showAll}>
-          {permissions.map((permission: PermissionType, index: number) => (
+          {!permissions.length && (
+            <Typography sx={{margin: theme.spacing(1)}}>
+              {noPermissionsMessage}
+            </Typography>
+          )}
+          {!!permissions.length && permissions.map((permission: PermissionType, index: number) => (
             <StyledPermissionItem
               data-testid="permission"
               key={permission}
