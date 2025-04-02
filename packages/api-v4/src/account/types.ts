@@ -204,6 +204,7 @@ export type GlobalGrantTypes =
   | 'add_images'
   | 'add_linodes'
   | 'add_longview'
+  | 'add_lkes'
   | 'add_databases'
   | 'add_kubernetes'
   | 'add_nodebalancers'
@@ -229,7 +230,8 @@ export type GrantType =
   | 'volume'
   | 'database'
   | 'firewall'
-  | 'vpc';
+  | 'vpc'
+  | 'lkecluster';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
