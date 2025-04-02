@@ -1,4 +1,3 @@
-// import { useStackScriptQuery } from 'src/queries/stackscripts';
 import { useStackScriptQuery } from '@linode/queries';
 import { CircleProgress, Dialog, ErrorState } from '@linode/ui';
 import React from 'react';
