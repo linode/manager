@@ -17,12 +17,14 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 // Base config array that can be extended
-const baseConfig = defineConfig([
+export const baseConfig = [
   // 1. Ignores
   {
     ignores: [
       '**/node_modules/*',
       '**/build/*',
+      '**/dist/*',
+      '**/lib/*',
       '**/storybook-static/*',
       '**/.storybook/*',
       '**/public/*',
@@ -239,6 +241,7 @@ const baseConfig = defineConfig([
   {
     files: [
       '**/*.test.{js,ts,tsx}',
+      '**/*.stories.{js,ts,tsx}',
       '**/factories/**/*.{js,ts,tsx}',
       '**/__data__/**/*.{js,ts,tsx}',
       '**/mocks/**/*.{js,ts,tsx}',
@@ -374,12 +377,6 @@ const baseConfig = defineConfig([
       'prettier/prettier': 'warn',
     },
   },
-]);
+];
 
-// Export a function that can take overrides
-export function createConfig(overrides = []) {
-  return defineConfig([...baseConfig, ...overrides]);
-}
-
-// Also export the base config directly for cases where no overrides are needed
-export default baseConfig;
+export default defineConfig(baseConfig);
