@@ -197,8 +197,7 @@ export const SubnetLinodeRow = (props: Props) => {
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
   const isOffline = linode.status === 'stopped' || linode.status === 'offline';
-  const isRebootNeeded =
-    isRunning && configInterface?.purpose === 'vpc' && !configInterface?.active;
+  const isRebootNeeded = isRunning && !configInterface?.active;
 
   const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
