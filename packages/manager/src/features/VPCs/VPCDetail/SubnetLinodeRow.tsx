@@ -24,7 +24,7 @@ import {
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
-import { hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration } from '../utils';
+import { hasUnrecommendedConfiguration } from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 
 import type {
@@ -64,7 +64,11 @@ export const SubnetLinodeRow = (props: Props) => {
   const subnetInterfaceData =
     subnetInterfaces.find((interfaceData) => interfaceData.active) ??
     subnetInterfaces[0];
-  const { config_id: configId, id: interfaceId } = subnetInterfaceData;
+  const {
+    active: isInterfaceActive,
+    config_id: configId,
+    id: interfaceId,
+  } = subnetInterfaceData;
   const isLinodeInterface = configId === null;
 
   const {
@@ -124,10 +128,9 @@ export const SubnetLinodeRow = (props: Props) => {
   const interfaceError = linodeInterfaceError ?? configInterfaceError;
   const interfaceLoading = linodeInterfaceLoading ?? configInterfaceLoading;
 
-  const hasUnrecommendedConfiguration = _hasUnrecommendedConfiguration(
-    config,
-    subnetId
-  );
+  const hasUnrecommendedSetup = isLinodeInterface
+    ? isInterfaceActive && !linodeInterface?.default_route.ipv4
+    : hasUnrecommendedConfiguration(config, subnetId);
 
   if (linodeLoading || !linode) {
     return (
@@ -171,7 +174,7 @@ export const SubnetLinodeRow = (props: Props) => {
   );
 
   const labelCell =
-    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
+    !isVPCLKEEnterpriseCluster && hasUnrecommendedSetup ? (
       <Box
         data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
         sx={{ alignItems: 'center', display: 'flex' }}
@@ -179,9 +182,9 @@ export const SubnetLinodeRow = (props: Props) => {
         <TooltipIcon
           text={
             <Typography>
-              This Linode is using a configuration profile with a Networking
-              setting that is not recommended. To avoid potential connectivity
-              issues, edit the Linode’s configuration.
+              {isLinodeInterface
+                ? "@TODO Linode Interfaces - double check this? This Linode's Network Interaces setup is not recommended. To avoid potential connectivity issues, set this Linode's VPC interface as the default IPv4 route."
+                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
             </Typography>
           }
           icon={<StyledWarningIcon />}
@@ -197,7 +200,8 @@ export const SubnetLinodeRow = (props: Props) => {
   const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
   const isOffline = linode.status === 'stopped' || linode.status === 'offline';
-  const isRebootNeeded = isRunning && !configInterface?.active;
+  const isRebootNeeded =
+    isRunning && !isLinodeInterface && !configInterface?.active;
 
   const showPowerButton = !isRebootNeeded && (isRunning || isOffline);
 
