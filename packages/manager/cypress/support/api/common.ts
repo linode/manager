@@ -12,12 +12,8 @@ export const apiCheckErrors = (
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
     errs = resp.body.ERRORARRAY;
   }
-  if (failOnError) {
-    if (errs) {
-      expect(errs[0]?.ERRORMESSAGE).to.equal(undefined);
-    } else {
-      expect(errs).to.equal(false);
-    }
+  if (failOnError && !!errs) {
+    throw new Error('API error!');
   }
   return errs;
 };

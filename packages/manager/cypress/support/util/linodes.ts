@@ -152,6 +152,7 @@ export const createTestLinode = async (
     );
   }
 
+  // eslint-disable-next-line @linode/cloud-manager/no-createLinode
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.

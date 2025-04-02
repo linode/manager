@@ -16,7 +16,6 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// Base config array that can be extended
 export const baseConfig = [
   // 1. Ignores
   {
@@ -28,11 +27,10 @@ export const baseConfig = [
       '**/storybook-static/*',
       '**/.storybook/*',
       '**/public/*',
-      '!.eslintrc.js',
     ],
   },
 
-  // 2. Base TypeScript configuration
+  // 2. TypeScript configuration
   {
     files: ['**/*.{js,ts,tsx}'],
     languageOptions: {
@@ -47,16 +45,16 @@ export const baseConfig = [
     },
   },
 
-  // 3. Recommended configs (using compat)
+  // 3. Recommended configs
+  eslint.configs.recommended,
   js.configs.recommended,
-  sonarjs.configs.recommended,
+  jsxA11y.flatConfigs.recommended,
+  perfectionist.configs['recommended-natural'],
   pluginCypress.configs.recommended,
   react.configs.flat.recommended,
   reactHooks.configs['recommended-latest'],
-  eslint.configs.recommended,
+  sonarjs.configs.recommended,
   tseslint.configs.recommended,
-  jsxA11y.flatConfigs.recommended,
-  perfectionist.configs['recommended-natural'],
 
   // 4. Base rules
   {
@@ -137,7 +135,7 @@ export const baseConfig = [
     },
   },
 
-  // 6. TypeScript-specific rules
+  // 6. TypeScript-specific
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
@@ -183,7 +181,7 @@ export const baseConfig = [
     },
   },
 
-  // 7. XSS rules
+  // 7. XSS
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {
@@ -191,7 +189,7 @@ export const baseConfig = [
     },
   },
 
-  // 5. SonarJS rules
+  // 8. SonarJS
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
@@ -220,7 +218,7 @@ export const baseConfig = [
     },
   },
 
-  // 7. JSX A11y rules
+  // 9. JSX A11y
   {
     files: ['**/*.{jsx,tsx}'],
     rules: {
@@ -237,69 +235,7 @@ export const baseConfig = [
     },
   },
 
-  // Unit tests & factories rules
-  {
-    files: [
-      '**/*.test.{js,ts,tsx}',
-      '**/*.stories.{js,ts,tsx}',
-      '**/factories/**/*.{js,ts,tsx}',
-      '**/__data__/**/*.{js,ts,tsx}',
-      '**/mocks/**/*.{js,ts,tsx}',
-    ],
-    plugins: {
-      'testing-library': testingLibrary,
-    },
-    rules: {
-      '@typescript-eslint/no-empty-object-type': 'off',
-      'no-useless-escape': 'off',
-      ...Object.fromEntries(
-        Object.keys(testingLibrary.rules).map((rule) => {
-          // Special case for consistent-data-testid which needs config
-          if (rule === 'consistent-data-testid') {
-            return [
-              `testing-library/${rule}`,
-              [
-                'warn',
-                {
-                  testIdAttribute: 'data-testid',
-                  testIdPattern: '^[a-z-]+$',
-                },
-              ],
-            ];
-          }
-          // All other rules just get set to warn
-          return [`testing-library/${rule}`, 'warn'];
-        })
-      ),
-      // This will make all sonar rules warnings.
-      // It is a good idea to keep them as such so that we don't introduce new issues that could trigger dependabot or security scripts.
-      ...Object.fromEntries(
-        Object.keys(sonarjs.rules).map((rule) => [`sonarjs/${rule}`, 'warn'])
-      ),
-      'sonarjs/arrow-function-convention': 'off',
-      'sonarjs/enforce-trailing-comma': 'off',
-      'sonarjs/file-header': 'off',
-      'sonarjs/no-implicit-dependencies': 'off',
-      'sonarjs/no-reference-error': 'off',
-      'sonarjs/no-wildcard-import': 'off',
-      'sonarjs/no-hardcoded-ip': 'off',
-      'sonarjs/pseudo-random': 'off',
-      'no-empty-pattern': 'off',
-    },
-  },
-
-  // 8. Cypress rules
-  {
-    files: ['**/cypress/**/*.{js,ts,tsx}'],
-    rules: {
-      'no-console': 'off',
-      'sonarjs/pseudo-random': 'off',
-      'sonarjs/no-hardcoded-ip': 'off',
-      // '@linode/cloud-manager/no-createLinode': 'error',
-    },
-  },
-
-  // 6. Perfectionist rules
+  // 12. Perfectionist
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
@@ -352,7 +288,7 @@ export const baseConfig = [
     },
   },
 
-  // Linode rules
+  // 13. Cloud Manager
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {
@@ -366,7 +302,136 @@ export const baseConfig = [
     },
   },
 
-  // 8. Prettier rules
+  // 10. Unit tests, factories, mocks & stories
+  {
+    files: [
+      '**/*.test.{js,ts,tsx}',
+      '**/*.stories.{js,ts,tsx}',
+      '**/factories/**/*.{js,ts,tsx}',
+      '**/__data__/**/*.{js,ts,tsx}',
+      '**/mocks/**/*.{js,ts,tsx}',
+    ],
+    plugins: {
+      'testing-library': testingLibrary,
+    },
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+      'no-useless-escape': 'off',
+      'no-empty-pattern': 'off',
+      ...Object.fromEntries(
+        Object.keys(testingLibrary.rules).map((rule) => {
+          // Special case for consistent-data-testid which needs config
+          if (rule === 'consistent-data-testid') {
+            return [
+              `testing-library/${rule}`,
+              [
+                'warn',
+                {
+                  testIdAttribute: 'data-testid',
+                  testIdPattern: '^[a-z-]+$',
+                },
+              ],
+            ];
+          }
+          // All other rules just get set to warn
+          return [`testing-library/${rule}`, 'warn'];
+        })
+      ),
+      // This will make all sonar rules warnings.
+      // It is a good idea to keep them as such so that we don't introduce new issues that could trigger dependabot or security scripts.
+      ...Object.fromEntries(
+        Object.keys(sonarjs.rules).map((rule) => [`sonarjs/${rule}`, 'warn'])
+      ),
+      'sonarjs/arrow-function-convention': 'off',
+      'sonarjs/enforce-trailing-comma': 'off',
+      'sonarjs/file-header': 'off',
+      'sonarjs/no-implicit-dependencies': 'off',
+      'sonarjs/no-reference-error': 'off',
+      'sonarjs/no-wildcard-import': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
+      'sonarjs/pseudo-random': 'off',
+    },
+  },
+
+  // 11. Cypress
+  {
+    files: ['**/cypress/**/*.{js,ts,tsx}'],
+    rules: {
+      'no-console': 'off',
+      'sonarjs/pseudo-random': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
+      '@linode/cloud-manager/no-createLinode': 'error',
+    },
+  },
+
+  // Tanstack Router (temporary)
+  {
+    files: [
+      // for each new features added to the migration router, add its directory here
+      'src/features/Betas/**/*',
+      'src/features/Domains/**/*',
+      'src/features/Firewalls/**/*',
+      'src/features/Images/**/*',
+      'src/features/Longview/**/*',
+      'src/features/NodeBalancers/**/*',
+      'src/features/PlacementGroups/**/*',
+      'src/features/StackScripts/**/*',
+      'src/features/Volumes/**/*',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
+        // For those cases react-router-dom history.push is still needed
+        // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
+        'error',
+        {
+          paths: [
+            {
+              importNames: [
+                // intentionally not including <Link> in this list as this will be updated last globally
+                'useNavigate',
+                'useParams',
+                'useLocation',
+                'useHistory',
+                'useRouteMatch',
+                'matchPath',
+                'MemoryRouter',
+                'Route',
+                'RouteProps',
+                'Switch',
+                'Redirect',
+                'RouteComponentProps',
+                'withRouter',
+              ],
+              message:
+                'Please use routing utilities intended for @tanstack/react-router.',
+              name: 'react-router-dom',
+            },
+            {
+              importNames: ['TabLinkList'],
+              message:
+                'Please use the TanStackTabLinkList component for components being migrated to TanStack Router.',
+              name: 'src/components/Tabs/TabLinkList',
+            },
+            {
+              importNames: ['OrderBy', 'default'],
+              message:
+                'Please use useOrderV2 hook for components being migrated to TanStack Router.',
+              name: 'src/components/OrderBy',
+            },
+            {
+              importNames: ['Prompt'],
+              message:
+                'Please use the TanStack useBlocker hook for components/features being migrated to TanStack Router.',
+              name: 'src/components/Prompt/Prompt',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // 15. Prettier (coming last as recommended)
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {
