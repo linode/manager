@@ -130,7 +130,7 @@ describe('SubnetLinodeRow', () => {
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
 
-  it('should display the ip and firewall for a Linode using Linode Interfaces', async () => {
+  it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     server.use(
       http.get('*/instances/*/interfaces/:interfaceId', async () => {
@@ -179,6 +179,7 @@ describe('SubnetLinodeRow', () => {
     );
 
     getAllByText('10.0.0.0');
+    getAllByText('10.0.0.1');
     getByText(mockFirewall0);
   });
 
