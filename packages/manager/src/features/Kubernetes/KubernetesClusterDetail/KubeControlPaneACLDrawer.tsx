@@ -247,6 +247,19 @@ export const KubeControlPlaneACLDrawer = (
                           setValue('acl.revision-id', '');
                           setValue('acl.addresses.ipv6', ['']);
                           setValue('acl.addresses.ipv4', ['']);
+                        } else {
+                          setValue(
+                            'acl.revision-id',
+                            aclPayload?.['revision-id']
+                          );
+                          setValue(
+                            'acl.addresses.ipv6',
+                            aclPayload?.addresses?.ipv6
+                          );
+                          setValue(
+                            'acl.addresses.ipv4',
+                            aclPayload?.addresses?.ipv4
+                          );
                         }
                       }}
                       disabled={isEnterpriseCluster}
