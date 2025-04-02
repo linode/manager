@@ -249,7 +249,7 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   // leave test disabled by default
-  xit('Validate the summaries of all the OneClick Apps', () => {
+  it.skip('Validate the summaries of all the OneClick Apps', () => {
     cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
