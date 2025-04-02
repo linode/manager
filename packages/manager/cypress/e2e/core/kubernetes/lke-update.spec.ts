@@ -2434,7 +2434,7 @@ describe('LKE ACL updates', () => {
     cy.contains('Control Plane ACL').should('not.exist');
   });
 
-  describe.only('with LKE ACL account capability', () => {
+  describe('with LKE ACL account capability', () => {
     beforeEach(() => {
       mockGetAccount(
         accountFactory.build({
