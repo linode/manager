@@ -2,6 +2,7 @@ import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -127,6 +128,58 @@ describe('SubnetLinodeRow', () => {
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
+  });
+
+  it('should display the ip and firewall for a Linode using Linode Interfaces', async () => {
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    server.use(
+      http.get('*/instances/*/interfaces/:interfaceId', async () => {
+        const vpcLinodeInterface = linodeInterfaceFactoryVPC.build();
+        return HttpResponse.json(vpcLinodeInterface);
+      }),
+      http.get('*/instances/*/interfaces/:interfaceId/firewalls', async () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            firewallFactory.buildList(1, { label: mockFirewall0 })
+          )
+        );
+      })
+    );
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const {
+      getAllByRole,
+      getAllByText,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
+        />
+      )
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const linodeLabelLink = getAllByRole('link')[0];
+    expect(linodeLabelLink).toHaveAttribute(
+      'href',
+      `/linodes/${linodeFactory1.id}/networking/interfaces/1`
+    );
+
+    getAllByText('10.0.0.0');
+    getByText(mockFirewall0);
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {

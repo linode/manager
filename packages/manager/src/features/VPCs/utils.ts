@@ -14,26 +14,6 @@ export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   return linodes.length;
 };
 
-export const getSubnetInterfaceFromConfigs = (
-  configs: Config[],
-  subnetId: number
-) => {
-  for (const config of configs) {
-    if (config.interfaces) {
-      for (const linodeInterface of config.interfaces) {
-        if (
-          linodeInterface.ipv4?.vpc &&
-          linodeInterface.subnet_id === subnetId
-        ) {
-          return linodeInterface;
-        }
-      }
-    }
-  }
-
-  return undefined;
-};
-
 export const hasUnrecommendedConfiguration = (
   config: Config | undefined,
   subnetId: number

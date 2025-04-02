@@ -10,7 +10,6 @@ import {
 } from 'src/factories/subnets';
 
 import {
-  getSubnetInterfaceFromConfigs,
   getUniqueLinodesFromSubnets,
   hasUnrecommendedConfiguration,
 } from './utils';
@@ -53,32 +52,6 @@ describe('getUniqueLinodesFromSubnets', () => {
     expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
     // updated factory for generating linode ids, so unique linodes will be different
     expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
-  });
-});
-
-describe('getSubnetInterfaceFromConfigs', () => {
-  it('returns the interface associated with the given subnet id', () => {
-    const interfaces = linodeConfigInterfaceFactoryWithVPC.buildList(5);
-    const singleConfig = linodeConfigFactory.build({ interfaces });
-    const configs = [linodeConfigFactory.build(), singleConfig];
-
-    const subnetInterface1 = getSubnetInterfaceFromConfigs(configs, 2);
-    expect(subnetInterface1).toEqual(interfaces[0]);
-    const subnetInterface2 = getSubnetInterfaceFromConfigs(configs, 3);
-    expect(subnetInterface2).toEqual(interfaces[1]);
-    const subnetInterface3 = getSubnetInterfaceFromConfigs(configs, 4);
-    expect(subnetInterface3).toEqual(interfaces[2]);
-    const subnetInterface4 = getSubnetInterfaceFromConfigs(configs, 5);
-    expect(subnetInterface4).toEqual(interfaces[3]);
-    const subnetInterface5 = getSubnetInterfaceFromConfigs(configs, 6);
-    expect(subnetInterface5).toEqual(interfaces[4]);
-  });
-
-  it('should return undefined if an interface with the given subnet ID is not found', () => {
-    const configs = linodeConfigFactory.buildList(4);
-
-    const subnetInterfaceUndefined = getSubnetInterfaceFromConfigs(configs, 5);
-    expect(subnetInterfaceUndefined).toBeUndefined();
   });
 });
 
