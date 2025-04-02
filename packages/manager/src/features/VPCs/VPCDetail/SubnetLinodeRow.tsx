@@ -183,7 +183,7 @@ export const SubnetLinodeRow = (props: Props) => {
           text={
             <Typography>
               {isLinodeInterface
-                ? "@TODO Linode Interfaces - double check this? This Linode's Network Interaces setup is not recommended. To avoid potential connectivity issues, set this Linode's VPC interface as the default IPv4 route."
+                ? '@TODO Linode Interfaces - confirm copy? This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
                 : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
             </Typography>
           }
