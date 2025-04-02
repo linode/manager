@@ -22,7 +22,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage([]));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]));
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { queryByTestId } = renderWithTheme(
@@ -46,7 +46,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage(sshKeys));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]));
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { getByText } = renderWithTheme(

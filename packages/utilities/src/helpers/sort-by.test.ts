@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sortByVersion } from '@linode/utilities';
+import { sortByVersion } from './sort-by';
 
 describe('sortByVersion', () => {
   it('should identify the later major version as greater', () => {

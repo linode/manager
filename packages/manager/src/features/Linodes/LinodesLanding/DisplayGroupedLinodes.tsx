@@ -1,5 +1,12 @@
-import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
-import { IconButton } from '@linode/ui';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
+  Box,
+  CircleProgress,
+  IconButton,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -10,7 +17,6 @@ import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -97,7 +103,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
 
   const flags = useFlags();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   if (display === 'grid') {
     return (

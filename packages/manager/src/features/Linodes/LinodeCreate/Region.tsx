@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,10 +10,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import {
-  isDistributedRegionSupported,
-  useIsGeckoEnabled,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -83,7 +81,11 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -91,10 +93,6 @@ export const Region = React.memo(() => {
     const values = getValues();
 
     field.onChange(region.id);
-
-    const regionSupportsDiskEncryption = region.capabilities.includes(
-      'Disk Encryption'
-    );
 
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions
@@ -142,15 +140,17 @@ export const Region = React.memo(() => {
       setValue('private_ip', false);
     }
 
-    if (isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) {
+    if (isDiskEncryptionFeatureEnabled) {
       if (region.site_type === 'distributed') {
         // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
         setValue('disk_encryption', undefined);
       } else {
         // Enable disk encryption by default if the region supports it
-        const defaultDiskEncryptionValue = regionSupportsDiskEncryption
-          ? 'enabled'
-          : undefined;
+        const defaultDiskEncryptionValue =
+          region.capabilities.includes('Disk Encryption') ||
+          region.capabilities.includes('LA Disk Encryption')
+            ? 'enabled'
+            : undefined;
 
         setValue('disk_encryption', defaultDiskEncryptionValue);
       }
@@ -252,7 +252,7 @@ export const Region = React.memo(() => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
-        flags={flags}
+        isGeckoLAEnabled={isGeckoLAEnabled}
         onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}

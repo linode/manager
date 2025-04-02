@@ -9,6 +9,7 @@ import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
@@ -70,11 +71,15 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: nodebalancersLoading,
   } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
 
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: clustersError,
     isLoading: clustersLoading,
-  } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
+  } = useAllKubernetesClustersQuery({
+    enabled: entityType === 'lkecluster_id',
+    isUsingBetaEndpoint,
+  });
 
   const {
     data: linodes,

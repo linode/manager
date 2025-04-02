@@ -4,6 +4,7 @@ import {
   deleteEntityFromAlert,
   editAlertDefinition,
 } from '@linode/api-v4/lib/cloudpulse';
+import { queryPresets } from '@linode/queries';
 import {
   keepPreviousData,
   useMutation,
@@ -11,7 +12,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets } from '@linode/queries';
 import { queryFactory } from './queries';
 
 import type {
@@ -61,6 +61,7 @@ export const useAlertDefinitionQuery = (
 ) => {
   return useQuery<Alert, APIError[]>({
     ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
+    refetchInterval: 120000,
   });
 };
 
@@ -78,8 +79,30 @@ export const useEditAlertDefinition = () => {
   return useMutation<Alert, APIError[], EditAlertPayloadWithService>({
     mutationFn: ({ alertId, serviceType, ...data }) =>
       editAlertDefinition(data, serviceType, alertId),
-    onSuccess() {
-      queryClient.invalidateQueries(queryFactory.alerts);
+
+    onSuccess(data) {
+      const allAlertsQueryKey = queryFactory.alerts._ctx.all().queryKey;
+      queryClient.cancelQueries({ queryKey: allAlertsQueryKey });
+      queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
+        return (
+          oldData?.map((alert) => {
+            return alert.id === data.id ? data : alert;
+          }) ?? [data]
+        );
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          data.service_type,
+          String(data.id)
+        ).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(
+          data.service_type
+        ).queryKey,
+      });
     },
   });
 };
