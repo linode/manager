@@ -1,3 +1,15 @@
+## [2025-04-08] - v0.137.0
+
+
+### Added:
+
+- DBaaS Advanced Configurations: added `getDatabaseEngineConfig` request to fetch all advanced configurations and updated types for advanced configs ([#11812](https://github.com/linode/manager/pull/11812))
+
+### Upcoming Features:
+
+- Add `/v4beta/nodebalancers` and `/v4/nodebalancers` endpoints for NB-VPC Integration ([#11832](https://github.com/linode/manager/pull/11832))
+- Update `ipv6` type in `CreateSubnetPayload` and rename `createSubnetSchema` to `createSubnetSchemaIPv4` ([#11896](https://github.com/linode/manager/pull/11896))
+
 ## [2025-03-25] - v0.136.0
 
 

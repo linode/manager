@@ -1,3 +1,15 @@
+## [2025-04-08] - v0.2.0
+
+
+### Added:
+
+- Created `tags/` directory and migrated relevant query keys and hooks ([#11897](https://github.com/linode/manager/pull/11897))
+- Created `support/` directory and migrated relevant query keys and hooks ([#11904](https://github.com/linode/manager/pull/11904))
+
+### Upcoming Features:
+
+- Add Firewall Settings query  ([#11828](https://github.com/linode/manager/pull/11828))
+
 ## [2025-03-25] - v0.1.0
 
 
