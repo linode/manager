@@ -173,8 +173,10 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 data-qa-trigger-occurrences
                 data-testid="trigger-occurences"
+                disabled={!serviceTypeWatcher}
                 errorText={fieldState.error?.message}
                 label=""
+                max={Number.MAX_SAFE_INTEGER}
                 min={0}
                 name={`${name}.trigger_occurrences`}
                 noMarginTop

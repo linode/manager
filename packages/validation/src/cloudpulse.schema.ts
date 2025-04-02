@@ -14,7 +14,7 @@ export const metricCriteria = object({
   operator: string().oneOf(['eq', 'gt', 'lt', 'gte', 'lte']).required(fieldErrorMessage),
   threshold: number()
     .required(fieldErrorMessage)
-    .min(0, "The value can't be negative.")
+    .positive("Enter a positive value.")
     .typeError('The value should be a number.'),
   dimension_filters: array().of(dimensionFilters.defined()).notRequired(),
 });
