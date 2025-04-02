@@ -1,3 +1,4 @@
+import { useIsGeckoEnabled } from '@linode/shared';
 import { sortByString } from '@linode/utilities';
 import * as React from 'react';
 
@@ -27,6 +28,10 @@ export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onChange, required, selectedRegion } = props;
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const {
     allRegionsError,
     availableStorageRegions,
@@ -48,8 +53,8 @@ export const AccessKeyRegions = (props: Props) => {
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
-      flags={flags}
       isClearable={false}
+      isGeckoLAEnabled={isGeckoLAEnabled}
       label="Regions"
       onChange={onChange}
       regions={availableStorageRegions ?? []}

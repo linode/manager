@@ -1,8 +1,9 @@
 import { getTags } from '@linode/api-v4';
-import { queryPresets } from '@linode/queries';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
+
+import { queryPresets } from '../base';
 
 import type { APIError, Filter, Params, Tag } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
