@@ -2,6 +2,7 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -23,15 +24,14 @@ import {
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
-  linodeFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
+import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 
 export interface MetricDetails {
   aggregationType: string;
@@ -397,7 +397,7 @@ describe('Create Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', '/alerts/definitions');
-      ui.toast.assertMessage('Alert successfully created');
+      ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText(label)

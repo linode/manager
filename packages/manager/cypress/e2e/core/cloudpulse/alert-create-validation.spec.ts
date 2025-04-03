@@ -4,6 +4,7 @@
  * such as dimension filters, metrics, and notification channels.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -27,7 +28,6 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
 

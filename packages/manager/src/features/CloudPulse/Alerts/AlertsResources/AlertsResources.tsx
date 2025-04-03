@@ -37,7 +37,6 @@ import type {
   Filter,
   Region,
 } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 
 export interface AlertResourcesProp {
   /**
