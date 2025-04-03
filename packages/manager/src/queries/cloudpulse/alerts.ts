@@ -28,8 +28,29 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
-    onSuccess() {
-      queryClient.invalidateQueries(queryFactory.alerts);
+    onSuccess(newAlert) {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      queryClient.setQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey,
+        (oldData) => (oldData ? [...oldData, newAlert] : [newAlert])
+      );
+
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          newAlert.service_type,
+          String(newAlert.id)
+        ).queryKey,
+        newAlert
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(
+          newAlert.service_type
+        ).queryKey,
+      });
     },
   });
 };
@@ -61,6 +82,7 @@ export const useAlertDefinitionQuery = (
 ) => {
   return useQuery<Alert, APIError[]>({
     ...queryFactory.alerts._ctx.alertByServiceTypeAndId(serviceType, alertId),
+    refetchInterval: 120000,
   });
 };
 
@@ -85,20 +107,18 @@ export const useEditAlertDefinition = () => {
       queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
         return (
           oldData?.map((alert) => {
-            if (alert.id === data.id) {
-              return data;
-            }
-            return alert;
+            return alert.id === data.id ? data : alert;
           }) ?? [data]
         );
       });
 
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+      queryClient.setQueryData<Alert>(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
           data.service_type,
           String(data.id)
         ).queryKey,
-      });
+        data
+      );
 
       queryClient.invalidateQueries({
         queryKey: allAlertsQueryKey,

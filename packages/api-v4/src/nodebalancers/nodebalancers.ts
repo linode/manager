@@ -15,8 +15,12 @@ import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
+  NodebalancerVpcConfig,
 } from './types';
-import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
+import {
+  combineNodeBalancerConfigNodeAddressAndPort,
+  combineNodeBalancerConfigNodeAddressAndPortBeta,
+} from './utils';
 import type { Firewall } from '../firewalls/types';
 
 /**
@@ -107,7 +111,7 @@ export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
     setData(
       data,
       NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPort
+      combineNodeBalancerConfigNodeAddressAndPortBeta
     )
   );
 
@@ -173,4 +177,46 @@ export const getNodeBalancerTypes = (params?: Params) =>
     setURL(`${API_ROOT}/nodebalancers/types`),
     setMethod('GET'),
     setParams(params)
+  );
+
+/**
+ * getNodeBalancerVPCConfigsBeta
+ *
+ * View all VPC Config information for this NodeBalancer
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
+ */
+export const getNodeBalancerVPCConfigsBeta = (
+  nodeBalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
+  Request<Page<NodebalancerVpcConfig>>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/vpcs`
+    ),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
+  );
+/**
+ * getNodeBalancerVPCConfigBeta
+ *
+ * View VPC Config information for this NodeBalancer and VPC Config id
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
+ */
+export const getNodeBalancerVPCConfigBeta = (
+  nodeBalancerId: number,
+  nbVpcConfigId: number
+) =>
+  Request<NodebalancerVpcConfig>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/vpcs/${encodeURIComponent(nbVpcConfigId)}`
+    ),
+    setMethod('GET')
   );

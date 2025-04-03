@@ -4,12 +4,7 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useWatch,
-} from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -19,10 +14,14 @@ import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
   CREATE_ALERT_ERROR_FIELD_MAP,
+  CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
-import { handleMultipleError, getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
+import {
+  getCreateSchemaWithEntityIdValidation,
+  handleMultipleError,
+} from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
@@ -125,7 +124,7 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created.', {
+      enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       alertCreateExit();
@@ -156,16 +155,9 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [
-      {
-        aggregate_function: null,
-        dimension_filters: [],
-        metric: null,
-        operator: null,
-        threshold: 0,
-      },
-    ]);
+    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
     setValue('entity_ids', []);
+    setValue('trigger_conditions', triggerConditionInitialValues);
   }, [setValue]);
 
   React.useEffect(() => {

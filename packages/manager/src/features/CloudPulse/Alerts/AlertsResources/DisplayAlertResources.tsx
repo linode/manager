@@ -1,4 +1,4 @@
-import { Checkbox } from '@linode/ui';
+import { Box, Checkbox, Tooltip } from '@linode/ui';
 import React from 'react';
 
 import { sortData } from 'src/components/OrderBy';
@@ -13,6 +13,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
+import { AlertMaxSelectionText } from './AlertMaxSelectionText';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
@@ -68,10 +69,21 @@ export interface DisplayAlertResourceProp {
    * This controls whether to show the selection check box or not
    */
   isSelectionsNeeded?: boolean;
+
+  /**
+   * The maximum number of elements that can be selected
+   */
+  maxSelectionCount?: number;
+
   /**
    * Callback to scroll till the element required on page change change or sorting change
    */
   scrollToElement: () => void;
+
+  /**
+   * The number of elements that can be selected based on selected resources and maximum selections
+   */
+  selectionsRemaining?: number;
 
   /**
    * The service type associated with the alert
@@ -86,7 +98,9 @@ export const DisplayAlertResources = React.memo(
       handleSelection,
       isDataLoadingError,
       isSelectionsNeeded,
+      maxSelectionCount,
       scrollToElement,
+      selectionsRemaining,
       serviceType,
     } = props;
     const pageSize = 25;
@@ -148,6 +162,19 @@ export const DisplayAlertResources = React.memo(
       },
       [handleSelection]
     );
+
+    const disableRootCheckBox = (paginatedData: AlertInstance[]) => {
+      if (selectionsRemaining === undefined) {
+        return false;
+      }
+
+      const uncheckedData = paginatedData.filter(
+        ({ checked = false }) => !checked
+      );
+
+      return selectionsRemaining < uncheckedData.length;
+    };
+
     const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
@@ -167,24 +194,53 @@ export const DisplayAlertResources = React.memo(
               <TableHead>
                 <TableRow>
                   {isSelectionsNeeded && (
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={
-                          isSomeSelected(paginatedData) &&
-                          !isAllPageSelected(paginatedData)
-                        }
-                        onClick={() =>
-                          handleSelectionChange(
-                            paginatedData.map(({ id }) => id),
-                            !isAllPageSelected(paginatedData)
-                          )
-                        }
-                        sx={{
-                          p: 0,
+                    <TableCell
+                      sx={{
+                        cursor: disableRootCheckBox(paginatedData)
+                          ? 'not-allowed'
+                          : 'auto',
+                      }}
+                      padding="checkbox"
+                    >
+                      <Tooltip
+                        slotProps={{
+                          tooltip: {
+                            sx: {
+                              maxWidth: '250px',
+                            },
+                          },
                         }}
-                        checked={isAllPageSelected(paginatedData)}
-                        data-testid={`select_all_in_page_${page}`}
-                      />
+                        title={
+                          maxSelectionCount !== undefined &&
+                          disableRootCheckBox(paginatedData) ? (
+                            <AlertMaxSelectionText
+                              maxSelectionCount={maxSelectionCount}
+                            />
+                          ) : undefined
+                        }
+                        placement="right-start"
+                      >
+                        <Box>
+                          <Checkbox
+                            indeterminate={
+                              isSomeSelected(paginatedData) &&
+                              !isAllPageSelected(paginatedData)
+                            }
+                            onClick={() =>
+                              handleSelectionChange(
+                                paginatedData.map(({ id }) => id),
+                                !isAllPageSelected(paginatedData)
+                              )
+                            }
+                            sx={{
+                              p: 0,
+                            }}
+                            checked={isAllPageSelected(paginatedData)}
+                            data-testid={`select_all_in_page_${page}`}
+                            disabled={disableRootCheckBox(paginatedData)}
+                          />
+                        </Box>
+                      </Tooltip>
                     </TableCell>
                   )}
                   {columns.map(({ label, sortingKey }) => (
@@ -211,20 +267,47 @@ export const DisplayAlertResources = React.memo(
                 {!isDataLoadingError &&
                   paginatedData.map((resource, index) => {
                     const { checked, id } = resource;
+                    const boxDisabled = !checked && selectionsRemaining === 0;
                     return (
                       <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                         {isSelectionsNeeded && (
-                          <TableCell>
-                            <Checkbox
-                              onClick={() => {
-                                handleSelectionChange([id], !checked);
+                          <TableCell
+                            sx={{
+                              cursor: boxDisabled ? 'not-allowed' : 'auto',
+                            }}
+                          >
+                            <Tooltip
+                              slotProps={{
+                                tooltip: {
+                                  sx: {
+                                    maxWidth: '250px',
+                                  },
+                                },
                               }}
-                              sx={{
-                                p: 0,
-                              }}
-                              checked={checked}
-                              data-testid={`select_item_${id}`}
-                            />
+                              title={
+                                boxDisabled &&
+                                maxSelectionCount !== undefined ? (
+                                  <AlertMaxSelectionText
+                                    maxSelectionCount={maxSelectionCount}
+                                  />
+                                ) : undefined
+                              }
+                              placement="right-start"
+                            >
+                              <Box>
+                                <Checkbox
+                                  onClick={() => {
+                                    handleSelectionChange([id], !checked);
+                                  }}
+                                  sx={{
+                                    p: 0,
+                                  }}
+                                  checked={checked}
+                                  data-testid={`select_item_${id}`}
+                                  disabled={boxDisabled}
+                                />
+                              </Box>
+                            </Tooltip>
                           </TableCell>
                         )}
                         {columns.map(({ accessor, label }) => (

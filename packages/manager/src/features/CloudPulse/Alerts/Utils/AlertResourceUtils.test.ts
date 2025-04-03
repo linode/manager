@@ -1,4 +1,4 @@
-import { regionFactory } from 'src/factories';
+import { regionFactory } from '@linode/utilities';
 
 import {
   getFilteredResources,

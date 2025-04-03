@@ -1,9 +1,9 @@
+import { useDeleteStackScriptMutation } from '@linode/queries';
 import { Button, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteStackScriptMutation } from 'src/queries/stackscripts';
 
 import type { StackScript } from '@linode/api-v4';
 
