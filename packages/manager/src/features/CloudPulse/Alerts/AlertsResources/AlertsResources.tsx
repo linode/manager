@@ -319,7 +319,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       <Stack gap={2}>
         {!hideLabel && (
           <Typography ref={titleRef} variant="h2">
-            {alertLabel || 'Resources'}
+            {alertLabel || 'Entities'}
             {/* It can be either the passed alert label or just Resources */}
           </Typography>
         )}
@@ -330,8 +330,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             },
           }}
           icon={EntityIcon}
-          subtitle="Once you assign the resources, they will show up here."
-          title="No resources associated with this alert definition."
+          subtitle="Once you assign the entities, they will show up here."
+          title="No entities associated with this alert definition."
         />
       </Stack>
     );
@@ -356,14 +356,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     <Stack gap={2}>
       {!hideLabel && (
         <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
+          {alertLabel || 'Entities'}
           {/* It can be either the passed alert label or just Resources */}
         </Typography>
       )}
       {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
-          You can enable or disable this system alert for each resource you have
-          access to. Select the resources listed below you want to enable the
+          You can enable or disable this system alert for each entities you have
+          access to. Select the entities listed below you want to enable the
           alert for.
         </Typography>
       )}
@@ -385,9 +385,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               }}
               clearable
               hideLabel
-              label="Search for a Region or Resource"
+              label="Search for a Region or Entity"
               onSearch={handleSearchTextChange}
-              placeholder="Search for a Region or Resource"
+              placeholder="Search for a Region or Entity"
               value={searchText || ''}
             />
           </Grid>
@@ -445,7 +445,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
         {maxSelectionCount !== undefined && (
           <Grid item xs={12}>
             <AlertListNoticeMessages
-              errorMessage={`You can select up to ${maxSelectionCount} resources.`}
+              errorMessage={`You can select up to ${maxSelectionCount} entities.`}
               separator={MULTILINE_ERROR_SEPARATOR}
               style={noticeStyles}
               variant="warning"
