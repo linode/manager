@@ -10,7 +10,7 @@ export const Default: StoryObj<BetaChipProps> = {
 };
 
 const meta: Meta<BetaChipProps> = {
-  args: { color: 'default' },
+  args: {},
   component: BetaChip,
   title: 'Foundations/Chip/BetaChip',
 };

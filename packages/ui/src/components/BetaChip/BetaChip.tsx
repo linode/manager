@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { Global } from '@linode/design-language-system';
 import * as React from 'react';
 
 import { Chip } from '../Chip';
@@ -18,13 +19,7 @@ export interface BetaChipProps
     | 'outlineColor'
     | 'size'
     | 'variant'
-  > {
-  /**
-   * The color of the chip.
-   * default renders a gray chip, primary renders a blue chip.
-   */
-  color?: 'primary' | 'secondary';
-}
+  > {}
 
 /**
  * ## Usage
@@ -36,39 +31,24 @@ export interface BetaChipProps
  *
  */
 export const BetaChip = (props: BetaChipProps) => {
-  const { color = 'primary' } = props;
-
-  return (
-    <StyledBetaChip
-      {...props}
-      color={color}
-      data-testid="betaChip"
-      label="beta"
-    />
-  );
+  return <StyledBetaChip {...props} data-testid="betaChip" label="beta" />;
 };
 
 const StyledBetaChip = styled(Chip, {
   label: 'StyledBetaChip',
   shouldForwardProp: (prop) => prop !== 'color',
-})<BetaChipProps>(({ color, theme }) => ({
+})<BetaChipProps>(({ theme }) => ({
   '& .MuiChip-label': {
     padding: 0,
   },
-  background:
-    color === 'primary'
-      ? 'lch(77.7 28.7 275 / 0.12)'
-      : theme.tokens.color.Neutrals[60],
-  color:
-    color === 'primary'
-      ? theme.tokens.color.Ultramarine[50]
-      : theme.tokens.color.Neutrals.White,
-
-  font: theme.font.bold,
-  fontSize: '0.625rem',
+  background: Global.Color.Neutrals[70],
+  color: Global.Color.Neutrals.White,
+  fontWeight: theme.tokens.font.FontWeight.Extrabold,
+  fontSize: '11px',
+  lineHeight: '12px',
   height: 16,
-  letterSpacing: '.25px',
+  letterSpacing: '.22px',
   marginLeft: theme.spacing(),
-  padding: theme.spacing(0.5),
-  textTransform: 'uppercase',
+  padding: theme.spacingFunction(4),
+  textTransform: theme.tokens.font.Textcase.Uppercase,
 }));

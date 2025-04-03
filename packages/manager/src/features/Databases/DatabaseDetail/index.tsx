@@ -114,9 +114,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: flags.dbaasV2MonitorMetrics?.beta ? (
-        <BetaChip color="secondary" />
-      ) : null,
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });
