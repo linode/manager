@@ -7,6 +7,9 @@ jobs:
     permissions:
       contents: read
       checks: write
+    strategy:
+      matrix:
+        package: [manager, api-v4, queries, shared, ui, utilities, validation]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -20,6 +23,7 @@ jobs:
       - run: pnpm install
       - uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd # v1.33.2
         with:
+          workdir: packages/${{ matrix.package }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
           level: warning  # This will report both warnings and errors
