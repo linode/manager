@@ -209,20 +209,20 @@ describe('Create Alert', () => {
     ui.autocomplete.findByLabel('Severity').should('be.visible').type('Severe');
     ui.autocompletePopper.findByTitle('Severe').should('be.visible').click();
 
-    // Search for Resource
-    cy.findByPlaceholderText('Search for a Region or Resource')
+    // Search for Entity
+    cy.findByPlaceholderText('Search for a Region or Entity')
       .should('be.visible')
       .type('database-2');
 
     // Find the table and locate the resource cell containing 'database-2', then check the corresponding checkbox
     cy.get('[data-qa-alert-table="true"]') // Find the table
-      .contains('[data-qa-alert-cell*="resource"]', 'database-2') // Find resource cell
+      .contains('[data-qa-alert-cell*="entity"]', 'database-2') // Find resource cell
       .parents('tr')
       .find('[type="checkbox"]')
       .check();
 
     // Assert resource selection notice
-    cy.findByText('1 of 10 resources are selected.');
+    cy.findByText('1 of 10 entities are selected.');
 
     // Fill metric details for the first rule
     const cpuUsageMetricDetails = {
