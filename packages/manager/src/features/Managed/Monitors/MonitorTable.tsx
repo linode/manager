@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,6 +14,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedContactsQuery,
   useAllManagedCredentialsQuery,
@@ -44,8 +44,7 @@ export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
 export const MonitorTable = () => {
   const { enqueueSnackbar } = useSnackbar();
-
-  const { data, error, isLoading } = useAllManagedMonitorsQuery();
+  const { data: monitors, error, isLoading } = useAllManagedMonitorsQuery();
   const {
     data: issues,
     failureReason,
@@ -70,10 +69,13 @@ export const MonitorTable = () => {
     return _groups;
   }, [contacts]);
 
-  const monitors = data || [];
-
-  const { closeDialog, dialog, handleError, openDialog, submitDialog } =
-    useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
+  const {
+    closeDialog,
+    dialog,
+    handleError,
+    openDialog,
+    submitDialog,
+  } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
   const [historyDrawerOpen, setHistoryDrawerOpen] =
     React.useState<boolean>(false);
@@ -164,22 +166,39 @@ export const MonitorTable = () => {
     }
   };
 
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: sortedMonitors,
+  } = useOrderV2({
+    data: monitors,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/managed/monitors',
+    },
+    preferenceKey: 'managed-monitors',
+  });
+
   return (
     <>
       <DocumentTitleSegment segment="Monitors" />
       <Grid
-        container
         sx={{
           alignItems: 'flex-end',
           justifyContent: 'flex-end',
         }}
+        container
       >
         <Grid>
           <Grid
-            container
             sx={{
               alignItems: 'flex-end',
             }}
+            container
           >
             <StyledGrid>
               <Button
@@ -192,76 +211,72 @@ export const MonitorTable = () => {
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={monitors} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              count,
-              data,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => (
-              <>
-                <Table aria-label="List of Your Managed Service Monitors">
-                  <TableHead>
-                    <TableRow>
-                      <TableSortCell
-                        active={orderBy === 'label'}
-                        data-qa-monitor-label-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'label'}
-                      >
-                        Monitor
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'status'}
-                        data-qa-monitor-status-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'status'}
-                      >
-                        Status
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'address'}
-                        data-qa-monitor-resource-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'address'}
-                      >
-                        Resource
-                      </TableSortCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <MonitorTableContent
-                      error={error}
-                      issues={issues || []}
-                      loading={isLoading}
-                      monitors={data}
-                      openDialog={openDialog}
-                      openHistoryDrawer={handleHistoryDrawerOpen}
-                      openMonitorDrawer={handleMonitorDrawerOpen}
-                    />
-                  </TableBody>
-                </Table>
-                <PaginationFooter
-                  count={count}
-                  eventCategory="managed service monitor table"
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
+      <Paginate data={sortedMonitors ?? []}>
+        {({
+          count,
+          data,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => (
+          <>
+            <Table aria-label="List of Your Managed Service Monitors">
+              <TableHead>
+                <TableRow>
+                  <TableSortCell
+                    active={orderBy === 'label'}
+                    data-qa-monitor-label-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'label'}
+                  >
+                    Monitor
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'status'}
+                    data-qa-monitor-status-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'status'}
+                  >
+                    Status
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'address'}
+                    data-qa-monitor-resource-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'address'}
+                  >
+                    Resource
+                  </TableSortCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <MonitorTableContent
+                  error={error}
+                  issues={issues || []}
+                  loading={isLoading}
+                  monitors={data}
+                  openDialog={openDialog}
+                  openHistoryDrawer={handleHistoryDrawerOpen}
+                  openMonitorDrawer={handleMonitorDrawerOpen}
                 />
-              </>
-            )}
-          </Paginate>
+              </TableBody>
+            </Table>
+            <PaginationFooter
+              count={count}
+              eventCategory="managed service monitor table"
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+            />
+          </>
         )}
-      </OrderBy>
+      </Paginate>
       <DeletionDialog
         entity="monitor"
         error={dialog.error}
@@ -275,7 +290,7 @@ export const MonitorTable = () => {
         credentials={credentials || []}
         groups={groups}
         mode={drawerMode}
-        monitor={monitors.find((m) => m.id === editID)}
+        monitor={monitors?.find((m) => m.id === editID)}
         onClose={handleDrawerClose}
         onSubmit={submitMonitorForm}
         open={monitorDrawerOpen}

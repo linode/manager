@@ -3,6 +3,12 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { ManagedRoute } from './ManagedRoute';
 
+import type { TableSearchParams } from '../types';
+
+export interface ManagedSearchParams extends TableSearchParams {
+  query?: string;
+}
+
 const managedRoute = createRoute({
   component: ManagedRoute,
   getParentRoute: () => rootRoute,
@@ -26,6 +32,7 @@ const managedSummaryRoute = createRoute({
 const managedMonitorsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'monitors',
+  validateSearch: (search: ManagedSearchParams) => search,
 }).lazy(() =>
   import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
 );
