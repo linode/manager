@@ -1,5 +1,5 @@
+import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import {
@@ -8,28 +8,13 @@ import {
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
-const loadingTestId = 'circle-progress';
-
 beforeAll(() => mockMatchMedia());
 
-const queryMocks = vi.hoisted(() => ({
-  useSearch: vi.fn().mockReturnValue({ query: undefined }),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useSearch: queryMocks.useSearch,
-  };
-});
+const loadingTestId = 'circle-progress';
 
 describe('VPC Subnets table', () => {
   it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
@@ -50,9 +35,9 @@ describe('VPC Subnets table', () => {
       getAllByRole,
       getAllByText,
       getByPlaceholderText,
+      getByTestId,
       getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
+    } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={1}
@@ -60,10 +45,7 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByPlaceholderText('Filter Subnets by label or id');
     getByText('Subnet Label');
@@ -78,7 +60,7 @@ describe('VPC Subnets table', () => {
     getByText(subnet.linodes.length);
 
     const actionMenuButton = getAllByRole('button')[4];
-    await userEvent.click(actionMenuButton);
+    fireEvent.click(actionMenuButton);
 
     getByText('Assign Linodes');
     getByText('Unassign Linodes');
@@ -94,11 +76,7 @@ describe('VPC Subnets table', () => {
       })
     );
 
-    const {
-      getAllByRole,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
+    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={2}
@@ -106,13 +84,10 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
+    fireEvent.click(expandTableButton);
     getByText('No Linodes');
   });
 
@@ -125,11 +100,7 @@ describe('VPC Subnets table', () => {
         return HttpResponse.json(makeResourcePage([subnet]));
       })
     );
-    const {
-      getAllByRole,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
+    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={false}
         vpcId={3}
@@ -137,13 +108,10 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
+    fireEvent.click(expandTableButton);
 
     getByText('Linode Label');
     getByText('Status');
@@ -152,7 +120,7 @@ describe('VPC Subnets table', () => {
   });
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
-    const { getByRole, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByRole, getByTestId } = renderWithTheme(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}
         vpcId={3}
@@ -160,10 +128,7 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const createButton = getByRole('button', {
       name: 'Create Subnet',

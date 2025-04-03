@@ -4,17 +4,14 @@ import * as React from 'react';
 import { subnetFactory } from 'src/factories';
 import { vpcFactory } from 'src/factories/vpcs';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import VPCLanding from './VPCLanding';
 
-const loadingTestId = 'circle-progress';
-
 beforeAll(() => mockMatchMedia());
+
+const loadingTestId = 'circle-progress';
 
 describe('VPC Landing Table', () => {
   it('should render vpc landing table with items', async () => {
@@ -27,14 +24,12 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCLanding />
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<VPCLanding />);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     // Static text and table column headers
     getAllByText('Label');
@@ -51,14 +46,9 @@ describe('VPC Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <VPCLanding />
-    );
+    const { getByTestId, getByText } = renderWithTheme(<VPCLanding />);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(
       getByText('Create a private and isolated network')
