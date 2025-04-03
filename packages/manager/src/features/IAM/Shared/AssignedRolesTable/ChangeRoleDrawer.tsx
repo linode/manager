@@ -45,25 +45,24 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   } = useAccountUserPermissionsMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
-    if (!role || !role.resource_names || !role.resource_ids) {
+    if (!role || !role.entity_names || !role.entity_ids) {
       return [];
     }
 
-    return role.resource_names.map((name, index) => ({
+    return role.entity_names.map((name, index) => ({
       label: name,
-      value: role.resource_ids![index],
+      value: role.entity_ids![index],
     }));
   }, [role]);
 
-  // filtered roles by resource_type and access
+  // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
     if (!accountPermissions) {
       return [];
     }
 
     return getAllRoles(accountPermissions).filter(
-      (el) =>
-        el.resource_type === role?.resource_type && el.access === role?.access
+      (el) => el.entity_type === role?.entity_type && el.access === role?.access
     );
   }, [accountPermissions, role]);
 
