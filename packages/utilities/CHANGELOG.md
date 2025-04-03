@@ -8,6 +8,7 @@
 - Move `doesRegionSupportFeature` from `manager` to `utilities` package ([#11891](https://github.com/linode/manager/pull/11891))
 - Add `luxon` dependency and move related utils from `manager` to `utilities` package ([#11905](https://github.com/linode/manager/pull/11905))
 - Migrate ramda dependent utils to @linode/utilities package ([#11913](https://github.com/linode/manager/pull/11913))
+- Move `useFormattedDate` from `manager` to `utilities` package ([#11931](https://github.com/linode/manager/pull/11931))
 
 ### Removed:
 
