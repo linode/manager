@@ -11,15 +11,18 @@ const alert = alertFactory.build({ service_type: 'dbaas' });
 const confirmFunction = vi.fn();
 
 describe('Alert confirmation dialog', () => {
+  const message = `Are you sure you want to disable the alert for ${entityName}?`;
+  const title = `Disable ${alert.label} Alert?`;
   it('should show confirmation dialog', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
         isActive={true}
         isOpen={true}
+        message={message}
+        title={title}
       />
     );
 
@@ -30,14 +33,17 @@ describe('Alert confirmation dialog', () => {
     ).toBeInTheDocument();
   });
   it('should click confirm button', async () => {
+    const message = `Are you sure you want to disable the alert for ${entityName}?`;
+    const title = `Disable ${alert.label} Alert?`;
     const { getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
         isActive={true}
         isOpen={true}
+        message={message}
+        title={title}
       />
     );
 
@@ -48,14 +54,17 @@ describe('Alert confirmation dialog', () => {
     expect(confirmFunction).toBeCalledWith(alert, true);
   });
   it('should show enable text', async () => {
+    const message = `Are you sure you want to enable the alert for ${entityName}?`;
+    const title = `Enable ${alert.label} Alert?`;
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
         isActive={false}
         isOpen={true}
+        message={message}
+        title={title}
       />
     );
 
