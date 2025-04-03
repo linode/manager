@@ -1,9 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
+import { stackscriptQueries } from '@linode/queries';
 import { RebuildLinodeSchema } from '@linode/validation';
 import { boolean, number, object, string } from 'yup';
-
-import { stackscriptQueries } from 'src/queries/stackscripts';
 
 import { getIsUDFRequired } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/utilities';
 
