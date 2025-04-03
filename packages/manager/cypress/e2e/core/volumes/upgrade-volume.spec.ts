@@ -16,10 +16,14 @@ import {
   mockMigrateVolumes,
 } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 describe('volume upgrade/migration', () => {
   it('can upgrade an unattached volume to NVMe', () => {
-    const volume = volumeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const volume = volumeFactory.build({
+      region: mockRegion.id,
+    });
 
     const migrationScheduledNotification = notificationFactory.build({
       entity: { id: volume.id, type: 'volume' },
@@ -96,10 +100,14 @@ describe('volume upgrade/migration', () => {
   });
 
   it('can upgrade an attached volume from the volumes landing page', () => {
-    const linode = linodeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const linode = linodeFactory.build({
+      region: mockRegion.id,
+    });
     const volume = volumeFactory.build({
       linode_id: linode.id,
       linode_label: linode.label,
+      region: mockRegion.id,
     });
 
     const migrationScheduledNotification = notificationFactory.build({
@@ -110,6 +118,7 @@ describe('volume upgrade/migration', () => {
     mockGetVolumes([volume]).as('getVolumes');
     mockMigrateVolumes().as('migrateVolumes');
     mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetLinodeVolumes(linode.id, [volume]);
     mockGetLinodeDisks(linode.id, []);
     mockGetNotifications([migrationScheduledNotification]).as(
       'getNotifications'
@@ -142,7 +151,6 @@ describe('volume upgrade/migration', () => {
         `A Volume attached to Linode ${linode.label} will be upgraded to high-performance NVMe Block Storage.`,
         { exact: false }
       ).should('be.visible');
-
       ui.button
         .findByTitle('Enter Upgrade Queue')
         .should('be.visible')
@@ -187,10 +195,14 @@ describe('volume upgrade/migration', () => {
   });
 
   it('can upgrade an attached volume from the linode details page', () => {
-    const linode = linodeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const linode = linodeFactory.build({
+      region: mockRegion.id,
+    });
     const volume = volumeFactory.build({
       linode_id: linode.id,
       linode_label: linode.label,
+      region: mockRegion.id,
     });
 
     const migrationScheduledNotification = notificationFactory.build({

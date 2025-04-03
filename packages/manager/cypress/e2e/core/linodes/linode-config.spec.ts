@@ -26,6 +26,7 @@ import {
   interceptRebootLinode,
   mockGetLinodeDetails,
   mockGetLinodeDisks,
+  mockGetLinodeFirewalls,
   mockGetLinodeKernel,
   mockGetLinodeKernels,
   mockGetLinodeVolumes,
@@ -315,7 +316,7 @@ describe('Linode Config management', () => {
           ),
           createTestLinode(
             { booted: true },
-            { securityMethod: 'vlan_no_internet' }
+            { securityMethod: 'vlan_no_internet', waitForBoot: true }
           ),
         ]);
       };
@@ -394,7 +395,8 @@ describe('Linode Config management', () => {
 
         // Confirm toast message and that UI updates to reflect clone in progress.
         ui.toast.assertMessage(
-          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`
+          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`,
+          { timeout: LINODE_CLONE_TIMEOUT }
         );
         cy.findByText(/CLONING \(\d+%\)/).should('be.visible');
       });
@@ -729,13 +731,15 @@ describe('Linode Config management', () => {
 
       // Mock a Linode with no existing configs, then visit its details page.
       mockGetLinodeKernel(mockKernel.id, mockKernel);
-      mockGetLinodeKernels([mockKernel]);
+      mockGetLinodeKernels([mockKernel]).as('getKernels');
       mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
       mockGetLinodeDisks(mockLinode.id, []).as('getDisks');
       mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
       mockGetLinodeConfigs(mockLinode.id, []).as('getConfigs');
+      mockGetLinodeFirewalls(mockLinode.id, []);
       mockGetVPC(mockVPC).as('getVPC');
       mockGetVPCs([mockVPC]).as('getVPCs');
+      mockGetVLANs([]).as('getVLANs');
 
       cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
       cy.wait(['@getConfigs', '@getDisks', '@getLinode', '@getVolumes']);
@@ -753,8 +757,10 @@ describe('Linode Config management', () => {
         'getLinodeConfigs'
       );
 
-      // Create new config.
+      // Create new config. Wait for VLAN GET response before interacting with form.
       cy.findByText('Add Configuration').click();
+      cy.wait('@getVLANs');
+
       ui.dialog
         .findByTitle('Add Configuration')
         .should('be.visible')

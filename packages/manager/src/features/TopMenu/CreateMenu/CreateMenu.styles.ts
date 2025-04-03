@@ -6,7 +6,7 @@ import Add from 'src/assets/icons/add.svg';
 
 export const StyledHeading = styled('h3', {
   label: 'StyledHeading',
-  shouldForwardProp: omittedProps(['paddingTop']),
+  shouldForwardProp: omittedProps(['paddingTop', 'marginTop']),
 })<{ marginTop?: boolean }>(({ theme, ...props }) => ({
   '& svg': {
     height: 20,

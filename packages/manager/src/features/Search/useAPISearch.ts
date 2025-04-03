@@ -1,3 +1,4 @@
+import { useStackScriptsInfiniteQuery } from '@linode/queries';
 import { useInfiniteVolumesQuery } from '@linode/queries';
 import { useFirewallsInfiniteQuery } from '@linode/queries';
 import { useInfiniteNodebalancersQuery } from '@linode/queries';
@@ -9,7 +10,6 @@ import { useDatabasesInfiniteQuery } from 'src/queries/databases/databases';
 import { useDomainsInfiniteQuery } from 'src/queries/domains';
 import { useImagesInfiniteQuery } from 'src/queries/images';
 import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
-import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 import {
   databaseToSearchableItem,
   domainToSearchableItem,
