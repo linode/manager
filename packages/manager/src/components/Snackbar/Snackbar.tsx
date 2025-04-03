@@ -5,14 +5,35 @@ import * as React from 'react';
 
 import { CloseSnackbar } from './CloseSnackbar';
 
+import {
+  InfoOutlinedIcon,
+  TipOutlinedIcon,
+  WarningOutlinedIcon,
+  ErrorOutlinedIcon,
+  SuccessOutlinedIcon,
+} from '@linode/ui';
+
 import type { Theme } from '@mui/material/styles';
 import type { SnackbarProviderProps } from 'notistack';
 
+declare module 'notistack' {
+  interface VariantOverrides {
+    tip: true;
+  }
+}
+
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
+    '#notistack-snackbar > svg': {
+      position: 'absolute',
+      left: '14px',
+    },
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
       flexWrap: 'unset',
+      borderRadius: 0,
+      paddingLeft: theme.spacingFunction(12),
+      paddingRight: theme.spacingFunction(12),
       [theme.breakpoints.up('md')]: {
         maxWidth: '400px',
       },
@@ -25,7 +46,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
       backgroundColor: theme.notificationToast.error.backgroundColor,
       borderLeft: theme.notificationToast.error.borderLeft,
     },
-    '&.notistack-MuiContent-info': {
+    '&.notistack-MuiContent-info, &.notistack-MuiContent-tip': {
       backgroundColor: theme.notificationToast.info.backgroundColor,
       borderLeft: theme.notificationToast.info.borderLeft,
     },
@@ -36,6 +57,9 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     '&.notistack-MuiContent-warning': {
       backgroundColor: theme.notificationToast.warning.backgroundColor,
       borderLeft: theme.notificationToast.warning.borderLeft,
+    },
+    '& #notistack-snackbar + div': {
+      paddingLeft: theme.spacingFunction(12),
     },
   })
 );
@@ -50,13 +74,22 @@ export const Snackbar = (props: SnackbarProviderProps) => {
 
   return (
     <SnackbarProvider
+      iconVariant={{
+        default: <InfoOutlinedIcon />,
+        info: <InfoOutlinedIcon />,
+        tip: <TipOutlinedIcon />,
+        warning: <WarningOutlinedIcon />,
+        error: <ErrorOutlinedIcon />,
+        success: <SuccessOutlinedIcon />,
+      }}
       {...rest}
       Components={{
         default: StyledMaterialDesignContent,
-        error: StyledMaterialDesignContent,
         info: StyledMaterialDesignContent,
-        success: StyledMaterialDesignContent,
+        tip: StyledMaterialDesignContent,
         warning: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+        success: StyledMaterialDesignContent,
       }}
       action={(snackbarId) => (
         <CloseSnackbar

@@ -130,8 +130,7 @@ export const KubeConfigDisplay = (props: Props) => {
       setIsCopyTokenLoading(true);
       const { data } = await getKubeConfig();
       const token = data && data.match(/token:\s*(\S+)/);
-      if (false) {
-        // @ts-expect-error - dev
+      if (token && token[1]) {
         copy(token[1]);
       } else {
         enqueueSnackbar({

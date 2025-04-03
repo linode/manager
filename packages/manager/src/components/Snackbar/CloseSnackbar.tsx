@@ -20,7 +20,7 @@ export const CloseSnackbar = (props: Props) => {
       size="large"
       title={text}
     >
-      <CloseIcon />
+      <CloseIcon width={16} height={16} />
     </IconButton>
   );
 };
