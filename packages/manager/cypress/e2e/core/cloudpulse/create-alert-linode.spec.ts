@@ -28,10 +28,10 @@ import {
   notificationChannelFactory,
   triggerConditionFactory,
 } from 'src/factories';
+import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
-import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 
 export interface MetricDetails {
   aggregationType: string;

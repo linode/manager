@@ -8,6 +8,7 @@
  * error messages or fallback behavior when necessary.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -20,12 +21,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import {
-  accountFactory,
-  dashboardFactory,
-  regionFactory,
-  widgetFactory,
-} from 'src/factories';
+import { accountFactory, dashboardFactory, widgetFactory } from 'src/factories';
 
 import type { Flags } from 'src/featureFlags';
 

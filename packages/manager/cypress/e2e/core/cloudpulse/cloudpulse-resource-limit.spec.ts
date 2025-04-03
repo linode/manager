@@ -23,6 +23,7 @@
  * thereby validating the system's correctness and user experience.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -40,7 +41,6 @@ import {
   accountFactory,
   dashboardFactory,
   databaseFactory,
-  regionFactory,
   widgetFactory,
 } from 'src/factories';
 
