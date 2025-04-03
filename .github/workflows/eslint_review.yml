@@ -9,16 +9,7 @@ jobs:
       checks: write
     strategy:
       matrix:
-        package:
-          [
-            "linode-manager",
-            "@linode/api-v4",
-            "@linode/queries",
-            "@linode/shared",
-            "@linode/ui",
-            "@linode/utilities",
-            "@linode/validation",
-          ]
+        package: [linode-manager, api-v4, queries, shared, ui, utilities, validation]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
