@@ -142,35 +142,37 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
     <Controller
       render={({ fieldState, formState }) => (
         <Stack mt={3} spacing={2}>
-          <Typography marginBottom={1} variant="h2">
-            4. Notification Channels
-          </Typography>
+          <Typography variant="h2">4. Notification Channels</Typography>
           {(formState.isSubmitted || fieldState.isTouched) &&
             fieldState.error &&
-            fieldState.error.message?.length&& (
+            fieldState.error.message?.length && (
               <AlertListNoticeMessages
                 errorMessage={fieldState.error.message}
                 separator={MULTILINE_ERROR_SEPARATOR}
                 variant="error"
               />
             )}
-          <Stack spacing={2}>
-            {selectedNotifications.length > 0 &&
-              selectedNotifications.map((notification, id) => (
+          {selectedNotifications.length > 0 && (
+            <Stack spacing={2}>
+              {selectedNotifications.map((notification, id) => (
                 <NotificationChannelCard
                   id={id}
                   key={id}
                   notification={notification}
                 />
               ))}
-          </Stack>
+            </Stack>
+          )}
           <Button
+            sx={{
+              width:
+                notificationChannelWatcher.length === 5 ? '215px' : '190px',
+            }}
             buttonType="outlined"
             data-qa-buttons="true"
             disabled={notificationChannelWatcher.length === 5}
             onClick={handleOpenDrawer}
             size="medium"
-            sx={{ width: '215px' }}
             tooltipText="You can add up to 5 notification channels."
           >
             Add notification channel

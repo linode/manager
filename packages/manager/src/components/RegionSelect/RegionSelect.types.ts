@@ -4,9 +4,8 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from '@linode/ui';
+import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -50,6 +49,10 @@ export interface RegionSelectProps<
    * @default false
    */
   ignoreAccountAvailability?: boolean;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   regionFilter?: RegionFilterValue;
   /**
@@ -90,6 +93,10 @@ export interface RegionMultiSelectProps
    */
   ignoreAccountAvailability?: boolean;
   isClearable?: boolean;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   onChange: (ids: string[]) => void;
   regions: Region[];

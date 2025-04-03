@@ -5,6 +5,7 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import { regionFactory } from '@linode/utilities';
 import {
   EVALUATION_PERIOD_DESCRIPTION,
   METRIC_DESCRIPTION_DATA_FIELD,
@@ -36,10 +37,9 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { OPTIMISTIC_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
@@ -363,7 +363,7 @@ describe('Integration Tests for Edit Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', 'alerts/definitions');
-      ui.toast.assertMessage(OPTIMISTIC_SUCCESS_MESSAGE);
+      ui.toast.assertMessage(UPDATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText('Alert-2')

@@ -14,8 +14,8 @@ import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import {
   EDIT_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
-  OPTIMISTIC_SUCCESS_MESSAGE,
   SINGLELINE_ERROR_SEPARATOR,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -82,8 +82,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar(OPTIMISTIC_SUCCESS_MESSAGE, {
-        variant: 'info',
+      enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
+        variant: 'success',
       });
       history.push(definitionLanding);
     } catch (errors) {

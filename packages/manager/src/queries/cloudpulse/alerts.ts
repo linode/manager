@@ -86,10 +86,7 @@ export const useEditAlertDefinition = () => {
       queryClient.setQueryData<Alert[]>(allAlertsQueryKey, (oldData) => {
         return (
           oldData?.map((alert) => {
-            if (alert.id === data.id) {
-              return data;
-            }
-            return alert;
+            return alert.id === data.id ? data : alert;
           }) ?? [data]
         );
       });
