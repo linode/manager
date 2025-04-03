@@ -37,7 +37,7 @@ export const AlertsTable = ({
   services,
 }: UngroupedAlertsProps) => {
   return (
-    <React.Fragment>
+    <>
       {alerts.map((alert: Alert) => (
         <AlertTableRow
           handlers={{
@@ -50,6 +50,6 @@ export const AlertsTable = ({
           services={services}
         />
       ))}
-    </React.Fragment>
+    </>
   );
 };
