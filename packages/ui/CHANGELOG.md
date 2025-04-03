@@ -4,6 +4,7 @@
 ### Added:
 
 - Move `ListItemOption` from `manager` to `ui` package ([#11790](https://github.com/linode/manager/pull/11790))
+- A new `NewFeatureChip` component and updated BetaChip styles ([#11965](https://github.com/linode/manager/pull/11965))
 - Chevron Up Icon ([#11946](https://github.com/linode/manager/pull/11946))
 
 ### Changed:

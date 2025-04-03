@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update Radio Button component to conform to Akamai Design System specs ([#11878](https://github.com/linode/manager/pull/11878))
 - Change `GlobalFilters.tsx` and `Zoomer.tsx` to add color on hover of icon ([#11883](https://github.com/linode/manager/pull/11883))
 - Update styles to CDS for profile menu ([#11884](https://github.com/linode/manager/pull/11884))
+- Update BetaChip styles, its usage and updated BetaChip component tests ([#11965](https://github.com/linode/manager/pull/11965))
 - Add a 2-minute refetch interval in alerts.ts, add isLoading and remove isFetching in AlertDetail.tsx. ([#11945](https://github.com/linode/manager/pull/11945))
 - Disable form fields on Firewall Create page for restricted users ([#11954](https://github.com/linode/manager/pull/11954))
 
