@@ -422,6 +422,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   backgroundColor: theme.tokens.color.Neutrals.White,
                 },
               })}
+              sxFormLabel={{
+                marginLeft: -1,
+              }}
               data-testid="show_selected_only"
               disabled={!(selectedResources.length || selectedOnly)}
               onClick={() => setSelectedOnly(!selectedOnly)}
