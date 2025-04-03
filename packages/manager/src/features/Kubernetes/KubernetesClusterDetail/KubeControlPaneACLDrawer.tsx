@@ -254,11 +254,15 @@ export const KubeControlPlaneACLDrawer = (
                           );
                           setValue(
                             'acl.addresses.ipv6',
-                            aclPayload?.addresses?.ipv6
+                            aclPayload?.addresses?.ipv6?.length
+                              ? aclPayload?.addresses?.ipv6
+                              : ['']
                           );
                           setValue(
                             'acl.addresses.ipv4',
-                            aclPayload?.addresses?.ipv4
+                            aclPayload?.addresses?.ipv4?.length
+                              ? aclPayload?.addresses?.ipv4
+                              : ['']
                           );
                         }
                       }}
