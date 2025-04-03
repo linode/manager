@@ -167,7 +167,7 @@ describe('Create Alert', () => {
     mockGetLinodes(mockLinode);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels([notificationChannels]);
-    mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
+    mockCreateAlertDefinition(serviceType, mockAlerts).as(
       'createAlertDefinition'
     );
     cy.visitWithLogin('/alerts/definitions/create');
