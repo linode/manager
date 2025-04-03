@@ -81,12 +81,9 @@ export const useAclpPreference = (): AclpPreferenceObject => {
  * @param key key of the preference to be toggled
  * @param options options for the preference
  */
-export const usePreferencesToggle = (
-  key: keyof ManagerPreferences,
-  options: [
-    ManagerPreferences[keyof ManagerPreferences],
-    ManagerPreferences[keyof ManagerPreferences],
-  ]
+export const usePreferencesToggle = <K extends keyof ManagerPreferences>(
+  key: K,
+  options: [ManagerPreferences[K], ManagerPreferences[K]]
 ) => {
   const { data: preference } = usePreferences(
     (preferences: ManagerPreferences) => preferences?.[key]
@@ -99,7 +96,7 @@ export const usePreferencesToggle = (
    * @returns the toggled preference value
    */
   const toggle = () => {
-    let newPreferenceToSet: ManagerPreferences[keyof ManagerPreferences];
+    let newPreferenceToSet: ManagerPreferences[K];
 
     // if the preference is undefined, set it to false
     if (preference === undefined) {
