@@ -67,9 +67,6 @@ export const BucketDetail = (props: Props) => {
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
    */
-  // const match = useRouteMatch<MatchParams>(
-  //   '/object-storage/buckets/:clusterId/:bucketName'
-  // );
   const { enqueueSnackbar } = useSnackbar();
   const { bucketName, clusterId } = useParams({
     from: '/object-storage/buckets/$clusterId/$bucketName',
