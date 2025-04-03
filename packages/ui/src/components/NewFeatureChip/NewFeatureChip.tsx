@@ -1,12 +1,12 @@
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import { Global } from '@linode/design-language-system';
+import * as React from 'react';
 
 import { Chip } from '../Chip';
 
 import type { ChipProps } from '@mui/material';
 
-export type BetaChipProps = Omit<
+export type NewFeatureChipProps = Omit<
   ChipProps,
   | 'avatar'
   | 'clickable'
@@ -23,28 +23,31 @@ export type BetaChipProps = Omit<
 /**
  * ## Usage
  *
- * BetaChip is used when a feature is available to a limited number of users as part of a beta rollout.<br>
- * **Example:** A beta chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104#issuecomment-1309334374),
- * breadcrumbs, [banners](/docs/components-notifications-dismissible-banners--beta-banners), tabs, and/or plain text to designate beta functionality.<br>
+ * The NewFeatureChip is displayed to all users after the feature has been fully rolled out.<br>
+ * **Example:** A NewFeatureChip chip may appear in the primary navigation,
+ * breadcrumbs, banners, tabs, and/or plain text to designate new functionality and improve visibility for all the users.<br>
  * **Visual style:** bold, capitalized text; reduced height, letter spacing, and font size; solid color background.
  *
  */
-export const BetaChip = (props: BetaChipProps) => {
-  return <StyledBetaChip {...props} data-testid="betaChip" label="beta" />;
+export const NewFeatureChip = (props: NewFeatureChipProps) => {
+  return (
+    <StyledNewFeatureChip {...props} data-testid="newFeatureChip" label="new" />
+  );
 };
 
-const StyledBetaChip = styled(Chip, {
-  label: 'StyledBetaChip',
+const StyledNewFeatureChip = styled(Chip, {
+  label: 'StyledNewFeatureChip',
   shouldForwardProp: (prop) => prop !== 'color',
-})<BetaChipProps>(({ theme }) => ({
+})<NewFeatureChipProps>(({ theme }) => ({
   '& .MuiChip-label': {
     padding: 0,
   },
-  background: Global.Color.Neutrals[70],
+  background: Global.Color.Violet[70],
   color: Global.Color.Neutrals.White,
 
-  fontWeight: theme.tokens.font.FontWeight.Extrabold,
+  font: theme.font.bold,
   fontSize: '11px',
+  fontWeight: theme.tokens.font.FontWeight.Extrabold,
   lineHeight: '12px',
   height: 16,
   letterSpacing: '.22px',

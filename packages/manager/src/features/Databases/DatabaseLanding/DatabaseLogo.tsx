@@ -23,19 +23,7 @@ export const DatabaseLogo = ({ sx }: Props) => {
       sx={sx ? sx : { margin: '20px' }}
     >
       <Typography sx={{ display: 'inline-block', textAlign: 'center' }}>
-        {!isDatabasesV2GA && (
-          <BetaChip
-            sx={{
-              backgroundColor:
-                theme.palette.mode === 'light'
-                  ? theme.color.label
-                  : theme.color.grey7,
-              color:
-                theme.palette.mode === 'light' ? theme.color.white : 'primary',
-            }}
-            component="span"
-          />
-        )}
+        {!isDatabasesV2GA && <BetaChip component="span" />}
         <Typography
           sx={{
             color: theme.palette.mode === 'light' ? theme.color.headline : '',
