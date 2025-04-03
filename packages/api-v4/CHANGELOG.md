@@ -5,10 +5,24 @@
 
 - DBaaS Advanced Configurations: Add `getDatabaseEngineConfig` request to fetch all advanced configurations and updated types for advanced configs ([#11812](https://github.com/linode/manager/pull/11812))
 
+### Changed:
+
+- DBaaS Advanced Configurations: remove `engine_config` from the DatabaseEngineConfig type ([#11885](https://github.com/linode/manager/pull/11885))
+
+### Fixed:
+
+- Remove trailing slash from outgoing Linode API GET request ([#11939](https://github.com/linode/manager/pull/11939))
+
+### Removed:
+
+- DBaaS: unused functions getDatabaseType, getEngineDatabases, getDatabaseBackup ([#11909](https://github.com/linode/manager/pull/11909))
+
 ### Upcoming Features:
 
 - Add `/v4beta/nodebalancers` and `/v4/nodebalancers` endpoints for NB-VPC Integration ([#11832](https://github.com/linode/manager/pull/11832))
 - Update `ipv6` type in `CreateSubnetPayload` and rename `createSubnetSchema` to `createSubnetSchemaIPv4` ([#11896](https://github.com/linode/manager/pull/11896))
+- Update iam apis ([#11919](https://github.com/linode/manager/pull/11919))
+- Add support for IPv6 to `VPCIP` ([#11938](https://github.com/linode/manager/pull/11938))
 
 ## [2025-03-25] - v0.136.0
 

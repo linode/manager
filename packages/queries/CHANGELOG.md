@@ -5,6 +5,7 @@
 
 - `tags/` directory and migrated relevant query keys and hooks ([#11897](https://github.com/linode/manager/pull/11897))
 - `support/` directory and migrated relevant query keys and hooks ([#11904](https://github.com/linode/manager/pull/11904))
+- `stackscripts/` directory and migrated relevant query keys and hooks ([#11949](https://github.com/linode/manager/pull/11949))
 
 ### Upcoming Features:
 
