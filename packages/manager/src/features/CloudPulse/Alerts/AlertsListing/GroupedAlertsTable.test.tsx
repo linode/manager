@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { GroupedAlertsTable } from './GroupedAlerts';
+import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType } from '@linode/api-v4';

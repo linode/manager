@@ -18,7 +18,7 @@ describe('usePreferencesToggle', () => {
     queryMocks.useMutatePreferences.mockReturnValue({
       mutateAsync: vi.fn().mockResolvedValue(undefined),
     });
-    const result = usePreferencesToggle('alertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
     expect(result.preference).toBeUndefined();
   });
 
@@ -29,11 +29,11 @@ describe('usePreferencesToggle', () => {
       mutateAsync: mockMutate,
     });
 
-    const result = usePreferencesToggle('alertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
 
     const newValue = result.toggle();
     expect(newValue).toBe(true);
-    expect(mockMutate).toHaveBeenCalledWith({ alertsGroupByTag: true });
+    expect(mockMutate).toHaveBeenCalledWith({ aclpAlertsGroupByTag: true });
   });
 
   it('should toggle between options', async () => {
@@ -43,10 +43,10 @@ describe('usePreferencesToggle', () => {
       mutateAsync: mockMutate,
     });
 
-    const result = usePreferencesToggle('alertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
 
     const newValue = result.toggle();
     expect(newValue).toBe(true);
-    expect(mockMutate).toHaveBeenCalledWith({ alertsGroupByTag: true });
+    expect(mockMutate).toHaveBeenCalledWith({ aclpAlertsGroupByTag: true });
   });
 });
