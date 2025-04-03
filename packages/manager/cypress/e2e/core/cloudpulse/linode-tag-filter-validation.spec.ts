@@ -2,6 +2,7 @@
  * @file Integration Tests for CloudPulse Linode Dashboard with Dynamic Mocking.
  */
 
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -24,8 +25,6 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
-  linodeFactory,
-  regionFactory,
   widgetFactory,
 } from 'src/factories';
 

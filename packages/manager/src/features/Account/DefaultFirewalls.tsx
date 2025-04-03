@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  useAllFirewallsQuery,
   useFirewallSettingsQuery,
   useMutateFirewallSettings,
 } from '@linode/queries';
@@ -12,7 +11,6 @@ import {
   Divider,
   ErrorState,
   Notice,
-  Select,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -21,30 +19,25 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+
+import { FirewallSelect } from '../Firewalls/components/FirewallSelect';
+
 import type { UpdateFirewallSettings } from '@linode/api-v4';
 
 const DEFAULT_FIREWALL_PLACEHOLDER = 'None';
 
 export const DefaultFirewalls = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     data: firewallSettings,
     error: firewallSettingsError,
     isLoading: isLoadingFirewallSettings,
-  } = useFirewallSettingsQuery();
+  } = useFirewallSettingsQuery({ enabled: isLinodeInterfacesEnabled });
 
   const { mutateAsync: updateFirewallSettings } = useMutateFirewallSettings();
-
-  const {
-    data: firewalls,
-    error: firewallsError,
-    isLoading: isLoadingfirewalls,
-  } = useAllFirewallsQuery();
-  const firewallOptions =
-    firewalls?.map((firewall) => {
-      return { label: firewall.label, value: firewall.id };
-    }) ?? [];
 
   const values = {
     default_firewall_ids: { ...firewallSettings?.default_firewall_ids },
@@ -73,7 +66,7 @@ export const DefaultFirewalls = () => {
     }
   };
 
-  if (isLoadingFirewallSettings || isLoadingfirewalls) {
+  if (isLoadingFirewallSettings) {
     return (
       <Accordion defaultExpanded heading="Default Firewalls">
         <CircleProgress />
@@ -81,7 +74,7 @@ export const DefaultFirewalls = () => {
     );
   }
 
-  if (firewallSettingsError || firewallsError) {
+  if (firewallSettingsError) {
     return (
       <Accordion defaultExpanded heading="Default Firewalls">
         <ErrorState errorText="Unable to load your firewall settings and firewalls." />
@@ -95,115 +88,89 @@ export const DefaultFirewalls = () => {
         {errors.root?.message && (
           <Notice variant="error">{errors.root.message}</Notice>
         )}
-        <Stack>
-          <Typography>
-            Set the default firewall that is assigned to each network interface
-            type when creating a Linode. The same firewall (new or existing) can
-            be assigned to each type of interface/connection.
-          </Typography>
-          <Typography
-            sx={(theme) => ({ marginTop: theme.spacing(2) })}
-            variant="h3"
-          >
-            Linodes
-          </Typography>
-          <Controller
-            render={({ field, fieldState }) => (
-              <Select
-                onChange={(_, item) => {
-                  field.onChange(item?.value);
-                }}
-                value={
-                  firewallOptions.find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
-                errorText={fieldState.error?.message}
-                label="Configuration Profile Interfaces Firewall"
-                options={firewallOptions}
-                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
-              />
-            )}
-            control={control}
-            name="default_firewall_ids.linode"
-          />
-          <Controller
-            render={({ field, fieldState }) => (
-              <Select
-                onChange={(_, item) => {
-                  field.onChange(item?.value);
-                }}
-                value={
-                  firewallOptions.find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
-                errorText={fieldState.error?.message}
-                label="Linode Interfaces - Public Interface Firewall"
-                options={firewallOptions}
-                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
-              />
-            )}
-            control={control}
-            name="default_firewall_ids.public_interface"
-          />
-          <Controller
-            render={({ field, fieldState }) => (
-              <Select
-                onChange={(_, item) => {
-                  field.onChange(item?.value);
-                }}
-                value={
-                  firewallOptions.find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
-                errorText={fieldState.error?.message}
-                label="Linode Interfaces - VPC Interface Firewall"
-                options={firewallOptions}
-                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
-              />
-            )}
-            control={control}
-            name="default_firewall_ids.vpc_interface"
-          />
-          <Divider spacingBottom={16} spacingTop={16} />
-          <Typography variant="h3">NodeBalancers</Typography>
-          <Controller
-            render={({ field, fieldState }) => (
-              <Select
-                onChange={(_, item) => {
-                  field.onChange(item?.value);
-                }}
-                value={
-                  firewallOptions.find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
-                errorText={fieldState.error?.message}
-                label="NodeBalancers Firewall"
-                options={firewallOptions}
-                placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
-              />
-            )}
-            control={control}
-            name="default_firewall_ids.nodebalancer"
-          />
-          <Box
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
-            <Button
-              buttonType="outlined"
-              disabled={!isDirty}
-              loading={isSubmitting}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
+        <Typography sx={{ mb: 2 }}>
+          Set the default firewall that is assigned to each network interface
+          type when creating a Linode. The same firewall (new or existing) can
+          be assigned to each type of interface/connection.
+        </Typography>
+        <Stack divider={<Divider />} spacing={2}>
+          <Stack spacing={2}>
+            <Typography variant="h3">Linodes</Typography>
+            <Controller
+              render={({ field, fieldState }) => (
+                <FirewallSelect
+                  disableClearable
+                  errorText={fieldState.error?.message}
+                  hideDefaultChips
+                  label="Configuration Profile Interfaces Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
+                  placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name="default_firewall_ids.linode"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <FirewallSelect
+                  disableClearable
+                  errorText={fieldState.error?.message}
+                  hideDefaultChips
+                  label="Linode Interfaces - Public Interface Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
+                  placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name="default_firewall_ids.public_interface"
+            />
+            <Controller
+              render={({ field, fieldState }) => (
+                <FirewallSelect
+                  disableClearable
+                  errorText={fieldState.error?.message}
+                  hideDefaultChips
+                  label="Linode Interfaces - VPC Interface Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
+                  placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name="default_firewall_ids.vpc_interface"
+            />
+          </Stack>
+          <Stack spacing={2}>
+            <Typography variant="h3">NodeBalancers</Typography>
+            <Controller
+              render={({ field, fieldState }) => (
+                <FirewallSelect
+                  disableClearable
+                  errorText={fieldState.error?.message}
+                  hideDefaultChips
+                  label="NodeBalancers Firewall"
+                  onChange={(e, firewall) => field.onChange(firewall.id)}
+                  placeholder={DEFAULT_FIREWALL_PLACEHOLDER}
+                  value={field.value}
+                />
+              )}
+              control={control}
+              name="default_firewall_ids.nodebalancer"
+            />
+          </Stack>
         </Stack>
+        <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+          <Button
+            buttonType="outlined"
+            disabled={!isDirty}
+            loading={isSubmitting}
+            type="submit"
+          >
+            Save
+          </Button>
+        </Box>
       </form>
     </Accordion>
   );

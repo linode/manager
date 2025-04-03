@@ -1,4 +1,4 @@
-import { regionFactory } from '@src/factories';
+import { regionFactory } from '@linode/utilities';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { extendRegion } from 'support/util/regions';

@@ -1,3 +1,4 @@
+import { listToItemsByID } from '@linode/queries';
 import {
   Box,
   Button,
@@ -16,7 +17,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { listToItemsByID } from '@linode/queries';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';

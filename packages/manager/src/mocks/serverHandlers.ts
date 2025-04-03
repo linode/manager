@@ -6,16 +6,29 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
-import { pickRandom } from '@linode/utilities';
+import {
+  accountAvailabilityFactory,
+  dedicatedTypeFactory,
+  linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
+  linodeTypeFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
+  nodeBalancerFactory,
+  pickRandom,
+  proDedicatedTypeFactory,
+  regionAvailabilityFactory,
+  regions,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
-import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   // abuseTicketNotificationFactory,
-  accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -30,11 +43,11 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  dedicatedTypeFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -51,11 +64,6 @@ import {
   kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
-  linodeFactory,
-  linodeIPFactory,
-  linodeStatsFactory,
-  linodeTransferFactory,
-  linodeTypeFactory,
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
@@ -69,9 +77,6 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
-  nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -87,10 +92,8 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  proDedicatedTypeFactory,
   profileFactory,
   promoFactory,
-  regionAvailabilityFactory,
   securityQuestionsFactory,
   serviceTypesFactory,
   stackScriptFactory,
@@ -368,6 +371,9 @@ const databases = [
 
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
+  }),
+  http.get('*/databases/:engine/config', () => {
+    return HttpResponse.json(databaseEngineConfigFactory.build());
   }),
 ];
 

@@ -17,7 +17,7 @@ import type { Capabilities, Region } from '@linode/api-v4';
  * the `apiLabel` property.
  *
  * @see {@link https://github.com/linode/manager/pull/10740|Cloud Manager PR #10740}
- * @see {@link src/queries/regions/regions.ts}
+ * @see {@link packages/queries/src/regions/regions.ts (@linode/queries)}
  */
 export interface ExtendedRegion extends Region {
   /** Region label as defined by API v4. */

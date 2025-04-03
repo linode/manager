@@ -1,5 +1,7 @@
 import { array, object, string } from 'yup';
 
+import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
@@ -17,7 +19,6 @@ import type { Theme } from '@mui/material';
 import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
-import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
 interface AlertChipBorderProps {
   /**
@@ -71,6 +72,30 @@ export interface AlertValidationSchemaProps {
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
   serviceTypeObj: null | string;
+}
+interface HandleMultipleErrorProps<T extends FieldValues> {
+  /**
+   *  A mapping of API error field names to form field paths. Use this to redirect API errors
+   *  to specific form fields. For example, if the API returns an error for "user.name" but
+   *  your form field is called "fullName", you would map "user" to "fullName".
+   */
+  errorFieldMap: Record<string, FieldPath<T>>;
+  /**
+   * List of errors returned from the API
+   */
+  errors: APIError[];
+  /**
+   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
+   */
+  multiLineErrorSeparator: string;
+  /**
+   * React Hook Form's setError function to register errors with the form
+   */
+  setError: UseFormSetError<T>;
+  /**
+   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+   */
+  singleLineErrorSeparator: string;
 }
 
 interface HandleMultipleErrorProps<T extends FieldValues> {

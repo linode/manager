@@ -390,7 +390,10 @@ export const RebuildLinodeSchema = object({
   stackscript_id: number().optional(),
   stackscript_data: stackscript_data.notRequired(),
   booted: boolean().optional(),
-  metadata: MetadataSchema.optional(),
+  /**
+   * `metadata` is an optional object with required properties (see https://github.com/jquense/yup/issues/772)
+   */
+  metadata: MetadataSchema.optional().default(undefined),
   disk_encryption: string().oneOf(['enabled', 'disabled']).optional(),
 });
 
@@ -532,7 +535,7 @@ const BaseInterfaceIPv4AddressSchema = object({
 });
 
 const VPCInterfaceIPv4RangeSchema = object({
-  range: string().required(),
+  range: string().required('Range is required.'),
 });
 
 const PublicInterfaceRangeSchema = object({
@@ -540,7 +543,7 @@ const PublicInterfaceRangeSchema = object({
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
-  address: string().required(),
+  address: string().required('VPC IPv4 is required.'),
   primary: boolean(),
   nat_1_1_address: string().nullable(),
 });

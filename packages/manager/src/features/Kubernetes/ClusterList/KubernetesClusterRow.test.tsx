@@ -1,7 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { kubernetesClusterFactory, regionFactory } from 'src/factories';
+import { kubernetesClusterFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
