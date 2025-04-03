@@ -3,7 +3,7 @@
 
 ### Added:
 
-- DBaaS Advanced Configurations: added `getDatabaseEngineConfig` request to fetch all advanced configurations and updated types for advanced configs ([#11812](https://github.com/linode/manager/pull/11812))
+- DBaaS Advanced Configurations: Add `getDatabaseEngineConfig` request to fetch all advanced configurations and updated types for advanced configs ([#11812](https://github.com/linode/manager/pull/11812))
 
 ### Upcoming Features:
 

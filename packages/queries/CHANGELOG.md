@@ -3,8 +3,8 @@
 
 ### Added:
 
-- Created `tags/` directory and migrated relevant query keys and hooks ([#11897](https://github.com/linode/manager/pull/11897))
-- Created `support/` directory and migrated relevant query keys and hooks ([#11904](https://github.com/linode/manager/pull/11904))
+- `tags/` directory and migrated relevant query keys and hooks ([#11897](https://github.com/linode/manager/pull/11897))
+- `support/` directory and migrated relevant query keys and hooks ([#11904](https://github.com/linode/manager/pull/11904))
 
 ### Upcoming Features:
 
