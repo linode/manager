@@ -21,7 +21,7 @@ jobs:
           node-version: "20.17"
           cache: "pnpm"
       - run: pnpm install
-      - uses: abailly-akamai/action-eslint@639279bb4b825a16877a7b617937f8a09a5ab24c # v1.0.1
+      - uses: abailly-akamai/action-eslint@master
         with:
           workdir: packages/${{ matrix.package }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
