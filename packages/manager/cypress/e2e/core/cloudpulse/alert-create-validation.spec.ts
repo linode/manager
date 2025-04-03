@@ -21,7 +21,6 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
@@ -48,18 +47,6 @@ const databaseMock = databaseFactory.buildList(10, {
   region: 'us-ord',
 });
 const notificationChannels = notificationChannelFactory.buildList(6);
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'My Custom Description',
-  entity_ids: ['2'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
