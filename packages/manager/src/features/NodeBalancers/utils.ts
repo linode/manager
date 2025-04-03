@@ -19,7 +19,6 @@ import type {
   NodeBalancerConfigNode,
   Protocol,
 } from '@linode/api-v4';
-import { useIsLkeEnterpriseEnabled } from '../Kubernetes/kubeUtils';
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   address: '',
@@ -228,12 +227,4 @@ export const useIsNodebalancerVPCEnabled = () => {
   // @TODO NB-VPC: check for customer tag/account capability when it exists
 
   return { isNodebalancerVPCEnabled: flags.nodebalancerVpc ?? false };
-};
-
-/**
- * Returns true if the v4beta GET nodebalancer endpoint should be used, based on the LKE-E feature flag.
- */
-export const useNodebalancerBetaEndpoint = () => {
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  return isLkeEnterpriseLAFeatureEnabled;
 };
