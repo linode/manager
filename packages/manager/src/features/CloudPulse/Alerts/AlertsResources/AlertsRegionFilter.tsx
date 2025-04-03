@@ -1,3 +1,4 @@
+import { useIsGeckoEnabled } from '@linode/shared';
 import React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
@@ -21,6 +22,10 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
 
   const [selectedRegion, setSelectedRegion] = React.useState<Region[]>([]);
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const handleRegionChange = React.useCallback(
     (regionIds: string[]) => {
@@ -48,8 +53,8 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       }}
       currentCapability={undefined} // this is a required property, no specific capability required here
       disableSelectAll
-      flags={flags}
       isClearable
+      isGeckoLAEnabled={isGeckoLAEnabled}
       label="Select Regions"
       limitTags={1}
       onChange={handleRegionChange}

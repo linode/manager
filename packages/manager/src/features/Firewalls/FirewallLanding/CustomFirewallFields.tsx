@@ -141,11 +141,15 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio />}
+              control={<Radio disabled={_isRestrictedUser} />}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio disabled={_isRestrictedUser} />}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -164,11 +168,15 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio />}
+              control={<Radio disabled={_isRestrictedUser} />}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio disabled={_isRestrictedUser} />}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -206,6 +214,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
+            disabled={_isRestrictedUser}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple
@@ -229,6 +238,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
+            disabled={_isRestrictedUser}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple
