@@ -6,20 +6,19 @@ import { Chip } from '../Chip';
 
 import type { ChipProps } from '@mui/material';
 
-export interface BetaChipProps
-  extends Omit<
-    ChipProps,
-    | 'avatar'
-    | 'clickable'
-    | 'deleteIcon'
-    | 'disabled'
-    | 'icon'
-    | 'label'
-    | 'onDelete'
-    | 'outlineColor'
-    | 'size'
-    | 'variant'
-  > {}
+export type BetaChipProps = Omit<
+  ChipProps,
+  | 'avatar'
+  | 'clickable'
+  | 'deleteIcon'
+  | 'disabled'
+  | 'icon'
+  | 'label'
+  | 'onDelete'
+  | 'outlineColor'
+  | 'size'
+  | 'variant'
+>;
 
 /**
  * ## Usage
