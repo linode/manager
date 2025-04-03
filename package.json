@@ -4,6 +4,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.23.0",
     "concurrently": "9.1.0",
     "husky": "^9.1.6",
     "typescript": "^5.7.3",

@@ -126,7 +126,6 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
-    "@eslint/js": "^9.23.0",
     "@storybook/addon-a11y": "^8.6.7",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/addon-controls": "^8.6.7",
