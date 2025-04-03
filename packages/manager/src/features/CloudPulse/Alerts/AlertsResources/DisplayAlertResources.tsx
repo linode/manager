@@ -275,13 +275,17 @@ export const DisplayAlertResources = React.memo(
                   {!isDataLoadingError &&
                     paginatedData.map((resource, index) => {
                       const { checked, id } = resource;
-                      const boxDisabled = isCheckboxDisabled(checked);
+                      const isItemCheckboxDisabled = isCheckboxDisabled(
+                        checked
+                      );
                       return (
                         <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                           {isSelectionsNeeded && (
                             <TableCell
                               sx={{
-                                cursor: boxDisabled ? 'not-allowed' : 'auto',
+                                cursor: isItemCheckboxDisabled
+                                  ? 'not-allowed'
+                                  : 'auto',
                               }}
                             >
                               <Tooltip
@@ -293,7 +297,7 @@ export const DisplayAlertResources = React.memo(
                                   },
                                 }}
                                 title={
-                                  boxDisabled &&
+                                  isItemCheckboxDisabled &&
                                   maxSelectionCount !== undefined ? (
                                     <AlertMaxSelectionText
                                       maxSelectionCount={maxSelectionCount}
@@ -312,7 +316,7 @@ export const DisplayAlertResources = React.memo(
                                     }}
                                     checked={checked}
                                     data-testid={`select_item_${id}`}
-                                    disabled={boxDisabled}
+                                    disabled={isItemCheckboxDisabled}
                                   />
                                 </Box>
                               </Tooltip>
