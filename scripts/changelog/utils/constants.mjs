@@ -34,6 +34,7 @@ const CHANGELOG_PATHS = {
   "manager": path.join(__dirname, "../../../packages/manager/CHANGELOG.md"),
   "queries": path.join(__dirname, "../../../packages/queries/CHANGELOG.md"),
   "ui": path.join(__dirname, "../../../packages/ui/CHANGELOG.md"),
+  "shared": path.join(__dirname, "../../../packages/shared/CHANGELOG.md"),
   "utilities": path.join(__dirname, "../../../packages/utilities/CHANGELOG.md"),
   "validation": path.join(__dirname, "../../../packages/validation/CHANGELOG.md"),
 };
@@ -43,6 +44,7 @@ const CHANGESET_DIRECTORIES = {
   "manager": path.join(__dirname, "../../../packages/manager/.changeset"),
   "queries": path.join(__dirname, "../../../packages/queries/.changeset"),
   "ui": path.join(__dirname, "../../../packages/ui/.changeset"),
+  "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
   "utilities": path.join(__dirname, "../../../packages/utilities/.changeset"),
   "validation": path.join(__dirname, "../../../packages/validation/.changeset"),
 };
@@ -52,6 +54,7 @@ const PACKAGE_JSON_PATHS = {
   "manager": path.join(__dirname, "../../../packages/manager/package.json"),
   "queries": path.join(__dirname, "../../../packages/queries/package.json"),
   "ui": path.join(__dirname, "../../../packages/ui/package.json"),
+  "shared": path.join(__dirname, "../../../packages/shared/package.json"),
   "utilities": path.join(__dirname, "../../../packages/utilities/package.json"),
   "validation": path.join(__dirname, "../../../packages/validation/package.json"),
 };
