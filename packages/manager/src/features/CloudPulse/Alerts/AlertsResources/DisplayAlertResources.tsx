@@ -193,12 +193,9 @@ export const DisplayAlertResources = React.memo(
           page,
           pageSize,
         }) => {
-          const uncheckedDataCount = paginatedData.filter(
-            ({ checked }) => !checked
-          ).length;
           const isRootCheckBoxDisabled = isCheckboxDisabled(
             false,
-            uncheckedDataCount
+            paginatedData.filter(({ checked }) => !checked).length
           );
           return (
             <>
