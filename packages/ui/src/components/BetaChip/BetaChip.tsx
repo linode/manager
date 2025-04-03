@@ -48,7 +48,7 @@ const StyledBetaChip = styled(Chip, {
   lineHeight: '12px',
   height: 16,
   letterSpacing: '.22px',
-  marginLeft: theme.spacing(),
+  marginLeft: theme.spacingFunction(8),
   padding: theme.spacingFunction(4),
   textTransform: theme.tokens.font.Textcase.Uppercase,
 }));
