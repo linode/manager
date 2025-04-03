@@ -167,7 +167,7 @@ export const TextField = (props: TextFieldProps) => {
     ...textFieldProps
   } = props;
 
-  const [_value, setValue] = React.useState<Value>(value);
+  const [_value, setValue] = React.useState<Value>(value ?? '');
   const theme = useTheme();
 
   const {
@@ -177,9 +177,13 @@ export const TextField = (props: TextFieldProps) => {
     validInputId,
   } = useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
 
+  const isControlled = value !== undefined;
+
   React.useEffect(() => {
-    setValue(value);
-  }, [value]);
+    if (isControlled) {
+      setValue(value);
+    }
+  }, [value, isControlled]);
 
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
