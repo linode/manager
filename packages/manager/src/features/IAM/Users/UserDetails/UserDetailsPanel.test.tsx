@@ -10,7 +10,7 @@ import type { IamUserPermissions } from '@linode/api-v4';
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
     const user = accountUserFactory.build();
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
@@ -25,7 +25,7 @@ describe('UserDetailsPanel', () => {
 
   it("renders 'No Roles Assigned' if the user doesn't have the assigned roles", async () => {
     const user = accountUserFactory.build({ restricted: true });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
@@ -43,15 +43,15 @@ describe('UserDetailsPanel', () => {
         'linode_creator',
         'firewall_creator',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
+          type: 'linode',
           roles: ['linode_contributor', 'linode_creator'],
         },
         {
-          resource_id: 45678901,
-          resource_type: 'firewall',
+          id: 45678901,
+          type: 'firewall',
           roles: ['firewall_admin', 'firewall_creator'],
         },
       ],
@@ -73,10 +73,10 @@ describe('UserDetailsPanel', () => {
         'linode_creator',
         'linode_contributor',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
+          type: 'linode',
           roles: ['linode_contributor', 'linode_creator'],
         },
       ],
@@ -94,7 +94,7 @@ describe('UserDetailsPanel', () => {
     const user = accountUserFactory.build({
       verified_phone_number: '+17040000000',
     });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
@@ -106,7 +106,7 @@ describe('UserDetailsPanel', () => {
 
   it("renders the user's 2FA status", async () => {
     const user = accountUserFactory.build({ tfa_enabled: true });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
