@@ -14,7 +14,6 @@ import { makeResponse } from 'support/util/response';
 import type {
   Alert,
   CloudPulseMetricsResponse,
-  CreateAlertDefinitionPayload,
   Dashboard,
   MetricDefinition,
   NotificationChannel,

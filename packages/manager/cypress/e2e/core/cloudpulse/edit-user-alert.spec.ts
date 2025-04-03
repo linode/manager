@@ -30,7 +30,6 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
@@ -48,20 +47,6 @@ import type { Flags } from 'src/featureFlags';
 // Feature flag setup
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-
-// Mock alert definition
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'update-description',
-  entity_ids: ['1', '2', '3', '4', '5'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 // Mock alert details
 const alertDetails = alertFactory.build({
