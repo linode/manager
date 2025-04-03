@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { Global } from '@linode/design-language-system';
 import * as React from 'react';
 
 import { Chip } from '../Chip';
@@ -42,14 +43,16 @@ const StyledNewFeatureChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  background: theme.tokens.component.Badge.Informative.Subtle.Background,
-  color: theme.tokens.component.Badge.Pink.Subtle.Text,
+  background: Global.Color.Violet[70],
+  color: Global.Color.Neutrals.White,
 
   font: theme.font.bold,
-  fontSize: '0.625rem',
+  fontSize: '11px',
+  fontWeight: theme.tokens.font.FontWeight.Extrabold,
+  lineHeight: '12px',
   height: 16,
-  letterSpacing: '.25px',
+  letterSpacing: '.22px',
   marginLeft: theme.spacing(),
-  padding: theme.spacing(0.5),
-  textTransform: 'uppercase',
+  padding: theme.spacingFunction(4),
+  textTransform: theme.tokens.font.Textcase.Uppercase,
 }));

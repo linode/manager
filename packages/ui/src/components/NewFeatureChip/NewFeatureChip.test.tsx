@@ -7,26 +7,17 @@ import { renderWithTheme } from '../../utilities/testHelpers';
 import { NewFeatureChip } from './NewFeatureChip';
 
 describe('NewFeatureChip', () => {
-  it('renders with default color (primary)', () => {
+  it('renders with default color', () => {
     const { getByTestId } = renderWithTheme(<NewFeatureChip />);
     const newFeatureChip = getByTestId('newFeatureChip');
     expect(newFeatureChip).toBeInTheDocument();
-    expect(newFeatureChip).toHaveStyle('background-color: rgba(0, 0, 0, 0.08)');
-  });
-
-  it('renders with primary color', () => {
-    const { getByTestId } = renderWithTheme(
-      <NewFeatureChip color="secondary" />
-    );
-    const newFeatureChip = getByTestId('newFeatureChip');
-    expect(newFeatureChip).toBeInTheDocument();
-    expect(newFeatureChip).toHaveStyle('background-color: rgb(131, 131, 140)');
+    expect(newFeatureChip).toHaveStyle('background-color: rgb(114, 89, 214)');
   });
 
   it('triggers an onClick callback', () => {
     const onClickMock = vi.fn();
     const { getByTestId } = renderWithTheme(
-      <NewFeatureChip color="primary" onClick={onClickMock} />
+      <NewFeatureChip onClick={onClickMock} />
     );
     const newFeatureChip = getByTestId('newFeatureChip');
     fireEvent.click(newFeatureChip);
