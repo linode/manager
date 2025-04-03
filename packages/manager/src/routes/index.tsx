@@ -93,6 +93,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   imagesRouteTree,
   longviewRouteTree,
   nodeBalancersRouteTree,
+  objectStorageRouteTree,
   placementGroupsRouteTree,
   stackScriptsRouteTree,
   volumesRouteTree,
