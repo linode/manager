@@ -121,10 +121,6 @@ export const useEditAlertDefinition = () => {
       );
 
       queryClient.invalidateQueries({
-        queryKey: allAlertsQueryKey,
-      });
-
-      queryClient.invalidateQueries({
         queryKey: queryFactory.alerts._ctx.alertsByServiceType(
           data.service_type
         ).queryKey,
