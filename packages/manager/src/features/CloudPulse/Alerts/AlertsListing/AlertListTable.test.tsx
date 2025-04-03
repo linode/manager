@@ -10,19 +10,11 @@ import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
   useEditAlertDefinition: vi.fn(),
-  usePreferencesToggle: vi.fn().mockImplementation(() => ({
-    preference: false,
-    toggle: vi.fn().mockImplementation(() => false),
-  })),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
-}));
-
-vi.mock('src/features/CloudPulse/Utils/UserPreference', () => ({
-  usePreferencesToggle: queryMocks.usePreferencesToggle,
 }));
 
 queryMocks.useEditAlertDefinition.mockReturnValue({
@@ -37,11 +29,9 @@ describe('Alert List Table test', () => {
     const { getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
     expect(getByText('Alert Name')).toBeVisible();
@@ -55,12 +45,10 @@ describe('Alert List Table test', () => {
     const { getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[]}
-        alertsGroupedByTag={false}
         error={[{ reason: 'Error in fetching the alerts' }]}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
     expect(getByText('Error in fetching the alerts')).toBeVisible();
@@ -79,11 +67,9 @@ describe('Alert List Table test', () => {
             updated,
           }),
         ]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
     expect(getByText('Test Alert')).toBeVisible();
@@ -104,11 +90,9 @@ describe('Alert List Table test', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
 
@@ -123,11 +107,9 @@ describe('Alert List Table test', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
 
@@ -148,11 +130,9 @@ describe('Alert List Table test', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
 
@@ -174,11 +154,9 @@ describe('Alert List Table test', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
-        alertsGroupedByTag={false}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
       />
     );
 
@@ -197,12 +175,11 @@ describe('Alert List Table test', () => {
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={queryMocks.usePreferencesToggle}
+        toggleAlertsGroupedByTag={() => true}
       />
     );
     const toggleButton = getByLabelText('Toggle group by tag');
     await userEvent.click(toggleButton);
-    expect(queryMocks.usePreferencesToggle).toHaveBeenCalled();
     expect(getByText('group by tag is currently enabled')).toBeInTheDocument();
   });
 });

@@ -17,9 +17,9 @@ import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { OPTIMISTIC_SUCCESS_MESSAGE } from '../constants';
+import { AlertsTable } from './AlertsTable';
 import { AlertListingTableLabelMap } from './constants';
-import { GroupedAlertsTable } from './GroupedAlerts';
-import { AlertsTable } from './UngroupedAlerts';
+import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
 import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
@@ -32,7 +32,7 @@ export interface AlertsListTableProps {
   /**
    * The current state of the alerts grouped by tag
    */
-  alertsGroupedByTag: boolean;
+  alertsGroupedByTag?: boolean;
   /**
    * An error to display if there was an issue fetching the alerts
    */
@@ -52,7 +52,7 @@ export interface AlertsListTableProps {
   /**
    * The callback to toggle the alerts grouped by tag
    */
-  toggleAlertsGroupedByTag: () => boolean;
+  toggleAlertsGroupedByTag?: () => boolean;
 }
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const {
@@ -167,8 +167,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                             }}
                           >
                             <GroupByTagToggle
-                              isGroupedByTag={alertsGroupedByTag}
-                              toggleGroupByTag={toggleAlertsGroupedByTag}
+                              toggleGroupByTag={
+                                toggleAlertsGroupedByTag ?? (() => false)
+                              }
+                              isGroupedByTag={alertsGroupedByTag ?? false}
                             />
                           </Box>
                         </TableCell>
