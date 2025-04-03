@@ -1,5 +1,8 @@
 import { Factory } from './factoryProxy';
 
+import { NodeBalancerStats } from '@linode/api-v4/lib/nodebalancers/types';
+import { generateLinodeStatSeries } from './linodes';
+
 import type {
   NodeBalancer,
   NodeBalancerConfig,
@@ -60,5 +63,18 @@ export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<NodeBalanc
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
+  }
+);
+
+export const nodeBalancerStatsFactory = Factory.Sync.makeFactory<NodeBalancerStats>(
+  {
+    data: {
+      connections: generateLinodeStatSeries(),
+      traffic: {
+        out: generateLinodeStatSeries(),
+        in: generateLinodeStatSeries(),
+      },
+    },
+    title: 'Some fake stats',
   }
 );
