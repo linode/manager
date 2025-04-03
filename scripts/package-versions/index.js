@@ -58,7 +58,6 @@ const PACKAGE_PATHS = {
   'manager': path.resolve(root, 'packages', 'manager', 'package.json'),
   'api-v4': path.resolve(root, 'packages', 'api-v4', 'package.json'),
   'validation': path.resolve(root, 'packages', 'validation', 'package.json'),
-  'shared': path.resolve(root, 'packages', 'shared', 'package.json'),
   'ui': path.resolve(root, 'packages', 'ui', 'package.json'),
   'utilities': path.resolve(root, 'packages', 'utilities', 'package.json'),
   'queries': path.resolve(root, 'packages', 'queries', 'package.json')
@@ -75,7 +74,7 @@ const getPackagePath = (packageName) => {
   if (!PACKAGE_PATHS[packageName]) {
     throw new Error(`Invalid package name: ${packageName}`);
   }
-
+  
   return PACKAGE_PATHS[packageName];
 };
 
@@ -120,7 +119,6 @@ const [
   desiredUiVersion,
   desiredUtilitiesVersion,
   desiredQueriesVersion,
-  desiredSharedVersion,
 ] = desiredVersions;
 
 // Describes packages that should be modified by this script.

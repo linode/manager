@@ -1,10 +1,3 @@
-## [2025-04-08] - v0.63.0
-
-
-### Upcoming Features:
-
-- Update `ipv6` vpc schema validation for subnets, separate `createSubnetSchema` into `createSubnetSchemaIPv4` and `createSubnetSchemaWithIPv6` ([#11896](https://github.com/linode/manager/pull/11896))
-
 ## [2025-03-25] - v0.62.0
 
 
