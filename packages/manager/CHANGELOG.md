@@ -61,7 +61,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Move feature flag code out of Kubernetes queries file ([#11922](https://github.com/linode/manager/pull/11922))
 - Fix incorrect secret in `publish-packages` Github Action  ([#11923](https://github.com/linode/manager/pull/11923))
 - Remove hashing on Pendo account and visitor ids ([#11950](https://github.com/linode/manager/pull/11950))
-- Add a stray console log and a silly test change for intended revert ([#11952](https://github.com/linode/manager/pull/11952))
 
 ### Tests:
 
