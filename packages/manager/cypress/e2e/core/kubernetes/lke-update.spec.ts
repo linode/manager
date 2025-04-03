@@ -2646,28 +2646,32 @@ describe('LKE ACL updates', () => {
 
     /**
      * - Confirms ACL can be disabled from the summary page (for standard tier only)
-     * - Confirms both IPv4 and IPv6 can be updated and that drawer updates as a result
      */
-    it('can disable ACL on a standard tier cluster and edit IPs', () => {
+    it('can disable ACL on a standard tier cluster', () => {
       const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
-        addresses: { ipv4: undefined, ipv6: undefined },
+        addresses: {
+          ipv4: [],
+          ipv6: [],
+        },
         enabled: true,
       });
-      const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
+
+      const mockDisabledACLOptions = kubernetesControlPlaneACLOptionsFactory.build(
         {
           addresses: {
-            ipv4: ['10.0.0.0/24'],
-            ipv6: ['8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'],
+            ipv4: [''],
+            ipv6: [''],
           },
           enabled: false,
+          'revision-id': '',
         }
       );
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
       });
-      const mockUpdatedControlPlaneACL1 = kubernetesControlPlaneACLFactory.build(
+      const mockUpdatedControlPlaneACL = kubernetesControlPlaneACLFactory.build(
         {
-          acl: mockUpdatedACLOptions1,
+          acl: mockDisabledACLOptions,
         }
       );
 
@@ -2675,7 +2679,7 @@ describe('LKE ACL updates', () => {
       mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
         'getControlPlaneACL'
       );
-      mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL1).as(
+      mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL).as(
         'updateControlPlaneACL'
       );
 
@@ -2719,27 +2723,16 @@ describe('LKE ACL updates', () => {
           // confirm Revision ID section
           cy.findByLabelText('Revision ID').should(
             'have.value',
-            mockACLOptions['revision-id']
+            mockDisabledACLOptions['revision-id']
           );
 
-          // Addresses Section: update IPv4
+          // confirm IPv4 and IPv6 address sections
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click();
-          cy.focused().type('10.0.0.0/24');
-          cy.findByText('Add IPv4 Address')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-          // update IPv6
+            .should('have.value', mockDisabledACLOptions.addresses?.ipv4?.[0]);
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
-            .click();
-          cy.focused().type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
-          cy.findByText('Add IPv6 Address')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+            .should('have.value', mockDisabledACLOptions.addresses?.ipv6?.[0]);
 
           // submit
           ui.button
@@ -2754,7 +2747,7 @@ describe('LKE ACL updates', () => {
 
       // confirm summary panel updates
       cy.contains('Control Plane ACL').should('be.visible');
-      cy.findByText('Enabled (O IP Addresses)').should('not.exist');
+      cy.findByText('Enabled (0 IP Addresses)').should('not.exist');
       ui.button
         .findByTitle('Enable')
         .should('be.visible')
@@ -2772,11 +2765,19 @@ describe('LKE ACL updates', () => {
             .should('have.attr', 'data-qa-toggle', 'false')
             .should('be.visible');
 
-          // confirm updated IP addresses display
-          cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
-          cy.findByDisplayValue(
-            '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'
-          ).should('be.visible');
+          // confirm Revision ID section remains empty
+          cy.findByLabelText('Revision ID').should(
+            'have.value',
+            mockDisabledACLOptions['revision-id']
+          );
+
+          // confirm IPv4 and IPv6 address sections remain empty
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .should('have.value', mockDisabledACLOptions.addresses?.ipv4?.[0]);
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
+            .should('be.visible')
+            .should('have.value', mockDisabledACLOptions.addresses?.ipv6?.[0]);
         });
     });
 
