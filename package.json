@@ -11,11 +11,11 @@
     "@vitest/ui": "^3.0.7",
     "lint-staged": "^15.4.3",
     "eslint": "^9.23.0",
-    "eslint-config-prettier": "~8.1.0",
+    "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-cypress": "^4.2.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-perfectionist": "^4.10.1",
-    "eslint-plugin-prettier": "~5.2.5",
+    "eslint-plugin-prettier": "~5.2.6",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-sonarjs": "^3.0.2",
@@ -29,7 +29,7 @@
     "jiti": "^2.4.2"
   },
   "scripts": {
-    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
+    "lint:all": "concurrently -n manager,api-v4,validation,ui,utilities,queries,shared -c green,blue,yellow,magenta,cyan,gray,blue \"pnpm run --filter linode-manager lint\" \"pnpm run --filter @linode/api-v4 lint\" \"pnpm run --filter @linode/validation lint\" \"pnpm run --filter @linode/ui lint\" \"pnpm run --filter @linode/utilities lint\" \"pnpm run --filter @linode/queries lint\" \"pnpm run --filter @linode/shared lint\"",
     "install:all": "pnpm install --frozen-lockfile",
     "build:sdk": "pnpm run --filter @linode/api-v4 build",
     "build:validation": "pnpm run --filter @linode/validation build",

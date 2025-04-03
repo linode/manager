@@ -1,0 +1,26 @@
+name: ESLint Review
+on: [pull_request]
+jobs:
+  eslint:
+    name: ESLint Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - run: pnpm install
+      - uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd # v1.33.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: warning  # This will report both warnings and errors
+          filter_mode: added  # Only comment on new/modified lines

@@ -97,7 +97,6 @@
     "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "vite preview --port 3000 --host",
-    "lint-legacy": "eslint . --ext .js,.ts,.tsx --quiet",
     "lint": "eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",

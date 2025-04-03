@@ -235,7 +235,7 @@ export const baseConfig = [
     },
   },
 
-  // 12. Perfectionist
+  // 10. Perfectionist
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
@@ -288,7 +288,7 @@ export const baseConfig = [
     },
   },
 
-  // 13. Cloud Manager
+  // 11. Cloud Manager
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {
@@ -302,7 +302,7 @@ export const baseConfig = [
     },
   },
 
-  // 10. Unit tests, factories, mocks & stories
+  // 12. Unit tests, factories, mocks & stories
   {
     files: [
       '**/*.test.{js,ts,tsx}',
@@ -353,7 +353,7 @@ export const baseConfig = [
     },
   },
 
-  // 11. Cypress
+  // 13. Cypress
   {
     files: ['**/cypress/**/*.{js,ts,tsx}'],
     rules: {
@@ -364,7 +364,7 @@ export const baseConfig = [
     },
   },
 
-  // Tanstack Router (temporary)
+  // 14. Tanstack Router (temporary)
   {
     files: [
       // for each new features added to the migration router, add its directory here
