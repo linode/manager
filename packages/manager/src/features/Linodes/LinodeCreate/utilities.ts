@@ -1,4 +1,9 @@
-import { accountQueries, linodeQueries } from '@linode/queries';
+import {
+  accountQueries,
+  firewallQueries,
+  linodeQueries,
+  stackscriptQueries,
+} from '@linode/queries';
 import { omitProps } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
@@ -10,12 +15,12 @@ import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
+  getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
   getLinodeInterfacePayload,
 } from './Networking/utilities';
@@ -26,6 +31,7 @@ import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type {
   AccountSettings,
   CreateLinodeRequest,
+  FirewallSettings,
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
@@ -269,17 +275,6 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
-const defaultLinodeInterfaces: LinodeCreateInterface[] = [
-  {
-    default_route: null,
-    firewall_id: null,
-    public: {},
-    purpose: 'public',
-    vlan: null,
-    vpc: null,
-  },
-];
-
 /**
  * We extend the API's payload type so that we can hold some extra state
  * in the react-hook-form form.
@@ -390,16 +385,32 @@ export const defaultValues = async (
     }
   }
 
+  let firewallSettings: FirewallSettings | null = null;
+
+  if (isLinodeInterfacesEnabled) {
+    try {
+      firewallSettings = await queryClient.ensureQueryData(
+        firewallQueries.settings
+      );
+    } catch {
+      // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
+    }
+  }
+
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
+    firewall_id:
+      firewallSettings && firewallSettings.default_firewall_ids.linode
+        ? firewallSettings.default_firewall_ids.linode
+        : undefined,
     image: getDefaultImageId(params),
     interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
-    linodeInterfaces: defaultLinodeInterfaces,
+    linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

@@ -1,3 +1,4 @@
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Divider, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
@@ -16,10 +17,7 @@ import type {
   ClusterSize,
   DatabaseEngine,
   Engine,
-  MySQLReplicationType,
-  PostgresReplicationType,
   Region,
-  ReplicationCommitTypes,
 } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
 export interface DatabaseCreateValues {
@@ -31,12 +29,6 @@ export interface DatabaseCreateValues {
   engine: Engine;
   label: string;
   region: string;
-  /** @Deprecated used by rdbms-legacy PostgreSQL only */
-  replication_commit_type?: ReplicationCommitTypes;
-  /** @Deprecated used by rdbms-legacy only */
-  replication_type?: MySQLReplicationType | PostgresReplicationType;
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
-  ssl_connection?: boolean;
   type: string;
 }
 
@@ -53,6 +45,10 @@ export const DatabaseClusterData = (props: Props) => {
     globalGrantType: 'add_databases',
   });
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const labelToolTip = (
     <StyledLabelTooltip>
@@ -95,7 +91,7 @@ export const DatabaseClusterData = (props: Props) => {
           disableClearable
           disabled={isRestricted}
           errorText={errors.region}
-          flags={flags}
+          isGeckoLAEnabled={isGeckoLAEnabled}
           onChange={(e, region) => onChange('region', region.id)}
           regions={regionsData}
           value={values.region}

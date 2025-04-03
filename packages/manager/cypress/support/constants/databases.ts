@@ -344,16 +344,6 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
   },
-  // {
-  //   label: randomLabel(),
-  //   linodeType: 'g6-dedicated-16',
-  //   clusterSize: 1,
-  //   dbType: 'mongodb',
-  //   regionTypeahead: 'Atlanta',
-  //   region: 'us-southeast',
-  //   engine: 'MongoDB',
-  //   version: '4',
-  // },
   {
     clusterSize: 3,
     dbType: 'postgresql',

@@ -8,6 +8,8 @@ import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+
 import { depaginate } from './paginate';
 
 import type {
@@ -184,6 +186,7 @@ export const createTestLinode = async (
     },
     message: `Create Linode '${linode.label}' (ID ${linode.id})`,
     name: 'createTestLinode',
+    timeout: LINODE_CREATE_TIMEOUT,
   });
 
   return {

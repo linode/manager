@@ -13,12 +13,11 @@ import type { CombinedRoles } from './utilities';
 import type { IamAccountPermissions, IamUserPermissions } from '@linode/api-v4';
 
 const accountAccess = 'account_access';
-const resourceAccess = 'resource_access';
+const entityAccess = 'entity_access';
 
 const accountPermissions: IamAccountPermissions = {
   account_access: [
     {
-      resource_type: 'account',
       roles: [
         {
           description:
@@ -27,9 +26,9 @@ const accountPermissions: IamAccountPermissions = {
           permissions: ['create_linode', 'update_linode', 'update_firewall'],
         },
       ],
+      type: 'account',
     },
     {
-      resource_type: 'linode',
       roles: [
         {
           description:
@@ -38,11 +37,11 @@ const accountPermissions: IamAccountPermissions = {
           permissions: ['create_linode', 'update_linode', 'delete_linode'],
         },
       ],
+      type: 'linode',
     },
   ],
-  resource_access: [
+  entity_access: [
     {
-      resource_type: 'linode',
       roles: [
         {
           description: 'Access to update a linode instance',
@@ -50,17 +49,18 @@ const accountPermissions: IamAccountPermissions = {
           permissions: ['update_linode', 'view_linode'],
         },
       ],
+      type: 'linode',
     },
   ],
 };
 
 const userPermissions: IamUserPermissions = {
   account_access: ['account_linode_admin', 'linode_creator'],
-  resource_access: [
+  entity_access: [
     {
-      resource_id: 12345678,
-      resource_type: 'linode',
+      id: 12345678,
       roles: ['linode_contributor'],
+      type: 'linode',
     },
   ],
 };
@@ -70,20 +70,20 @@ describe('getAllRoles', () => {
     const expectedRoles = [
       {
         access: accountAccess,
+        entity_type: 'account',
         label: 'account_admin',
-        resource_type: 'account',
         value: 'account_admin',
       },
       {
         access: accountAccess,
+        entity_type: 'linode',
         label: 'account_linode_admin',
-        resource_type: 'linode',
         value: 'account_linode_admin',
       },
       {
-        access: resourceAccess,
+        access: entityAccess,
+        entity_type: 'linode',
         label: 'linode_contributor',
-        resource_type: 'linode',
         value: 'linode_contributor',
       },
     ];
@@ -99,22 +99,22 @@ describe('getRoleByName', () => {
       access: accountAccess,
       description:
         'Access to perform any supported action on all resources in the account',
+      entity_type: 'account',
       name: 'account_admin',
       permissions: ['create_linode', 'update_linode', 'update_firewall'],
-      resource_type: 'account',
     };
 
     expect(getRoleByName(accountPermissions, roleName)).toEqual(expectedRole);
   });
 
-  it('should return an object with details about this role resource_access', () => {
+  it('should return an object with details about this role entity_access', () => {
     const roleName = 'linode_contributor';
     const expectedRole = {
-      access: resourceAccess,
+      access: entityAccess,
       description: 'Access to update a linode instance',
+      entity_type: 'linode',
       name: 'linode_contributor',
       permissions: ['update_linode', 'view_linode'],
-      resource_type: 'linode',
     };
 
     expect(getRoleByName(accountPermissions, roleName)).toEqual(expectedRole);
@@ -146,30 +146,30 @@ describe('mapRolesToPermissions', () => {
         access: accountAccess,
         description:
           'Access to perform any supported action on all resources in the account',
+        entity_ids: null,
+        entity_type: 'account',
         id: 'account_admin',
         name: 'account_admin',
         permissions: ['create_linode', 'update_linode', 'update_firewall'],
-        resource_ids: null,
-        resource_type: 'account',
       },
       {
         access: accountAccess,
         description:
           'Access to perform any supported action on all linode instances in the account',
+        entity_ids: null,
+        entity_type: 'linode',
         id: 'account_linode_admin',
         name: 'account_linode_admin',
         permissions: ['create_linode', 'update_linode', 'delete_linode'],
-        resource_ids: null,
-        resource_type: 'linode',
       },
       {
-        access: resourceAccess,
+        access: entityAccess,
         description: 'Access to update a linode instance',
+        entity_ids: [12345678],
+        entity_type: 'linode',
         id: 'linode_contributor',
         name: 'linode_contributor',
         permissions: ['update_linode', 'view_linode'],
-        resource_ids: [12345678],
-        resource_type: 'linode',
       },
     ];
 
@@ -183,11 +183,11 @@ describe('updateUserRoles', () => {
   it('should return an object of updated users roles with resource access', () => {
     const expectedRoles = {
       account_access: ['account_linode_admin', 'linode_creator'],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
           roles: ['linode_admin'],
+          type: 'linode',
         },
       ],
     };
@@ -196,7 +196,7 @@ describe('updateUserRoles', () => {
     const newRole = 'linode_admin';
     expect(
       updateUserRoles({
-        access: resourceAccess,
+        access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
         newRole,
@@ -211,12 +211,12 @@ describe('deleteUserRole', () => {
 
     const expectedRoles = {
       account_access: ['account_linode_admin', 'linode_creator'],
-      resource_access: [],
+      entity_access: [],
     };
 
     expect(
       deleteUserRole({
-        access: resourceAccess,
+        access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
       })
@@ -236,23 +236,23 @@ describe('deleteUserRole', () => {
         'account_admin',
         'account_viewer',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 23456789,
-          resource_type: 'linode',
+          id: 10,
+          type: 'linode',
           roles: ['linode_viewer'],
         },
         {
-          resource_id: 45678901,
-          resource_type: 'firewall',
-          roles: ['update_firewall'],
+          id: 1,
+          type: 'firewall',
+          roles: ['firewall_admin'],
         },
       ],
     };
 
     expect(
       deleteUserRole({
-        access: resourceAccess,
+        access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
       })
@@ -264,10 +264,10 @@ describe('deleteUserRole', () => {
 
     const expectedRoles = {
       account_access: ['linode_creator'],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
+          type: 'linode',
           roles: ['linode_contributor'],
         },
       ],

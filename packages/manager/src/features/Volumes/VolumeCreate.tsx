@@ -8,7 +8,7 @@ import {
   useRegionsQuery,
   useVolumeTypesQuery,
 } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
+import { LinodeSelect, useIsGeckoEnabled } from '@linode/shared';
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { doesRegionSupportFeature } from '@linode/utilities';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
@@ -54,7 +55,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -137,6 +137,10 @@ export const VolumeCreate = () => {
   const { data: grants } = useGrants();
 
   const { data: regions } = useRegionsQuery();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
@@ -411,7 +415,7 @@ export const VolumeCreate = () => {
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
-                flags={flags}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}

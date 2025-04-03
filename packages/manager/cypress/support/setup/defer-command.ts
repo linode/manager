@@ -220,6 +220,9 @@ Cypress.Commands.add(
       return result;
     };
 
-    return cy.wrap<Promise<T>, T>(wrapPromise(), wrapOptions);
+    return cy.wrap<Promise<T>, T>(wrapPromise(), {
+      timeout: timeoutLength,
+      ...wrapOptions,
+    });
   }
 );

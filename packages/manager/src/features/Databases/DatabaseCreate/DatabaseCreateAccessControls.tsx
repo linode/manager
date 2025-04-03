@@ -12,12 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import {
-  ipFieldPlaceholder,
-  ipV6FieldPlaceholder,
-} from 'src/utilities/ipUtils';
-
-import { useIsDatabasesEnabled } from '../utilities';
+import { ipV6FieldPlaceholder } from 'src/utilities/ipUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
@@ -54,7 +49,6 @@ export const DatabaseCreateAccessControls = (props: Props) => {
   const { disabled = false, errors, ips, onBlur, onChange } = props;
   const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const handleAccessOptionChange = (_: ChangeEvent, value: AccessOption) => {
     setAccessOption(value);
@@ -68,40 +62,19 @@ export const DatabaseCreateAccessControls = (props: Props) => {
       <Typography className={classes.header} variant="h2">
         Manage Access
       </Typography>
-      {isDatabasesV2GA ? (
-        <>
-          <Typography>
-            Add IPv6 (recommended) or IPv4 addresses or ranges that should be
-            authorized to access this cluster.{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support">
-              Learn more
-            </Link>
-            .
-          </Typography>
-          <Typography className={classes.subHeader}>
-            (Note: You can modify access controls after your database cluster is
-            active.)
-          </Typography>
-        </>
-      ) : (
-        <>
-          <Typography>
-            Add any IPv4 address or range that should be authorized to access
-            this cluster.
-          </Typography>
-          <Typography>
-            By default, all public and private connections are denied.{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
-              Learn more
-            </Link>
-            .
-          </Typography>
-          <Typography className={classes.subHeader}>
-            You can add or modify access controls after your database cluster is
-            active.{' '}
-          </Typography>
-        </>
-      )}
+      <Typography>
+        Add IPv6 (recommended) or IPv4 addresses or ranges that should be
+        authorized to access this cluster.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support">
+          Learn more
+        </Link>
+        .
+      </Typography>
+      <Typography className={classes.subHeader}>
+        (Note: You can modify access controls after your database cluster is
+        active.)
+      </Typography>
+
       <Grid className={classes.container}>
         {errors &&
           errors.map((apiError: APIError) => (
@@ -111,48 +84,37 @@ export const DatabaseCreateAccessControls = (props: Props) => {
               variant="error"
             />
           ))}
-        {isDatabasesV2GA ? (
-          <RadioGroup
-            aria-label="type"
-            name="type"
-            onChange={handleAccessOptionChange}
-            value={accessOption}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="Specific"
-              disabled={disabled}
-              label="Specific Access (recommended)"
-              value="specific"
-            />
-            <MultipleIPInput
-              buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
-              className={classes.multipleIPInput}
-              disabled={accessOption === 'none' || disabled}
-              ips={ips}
-              onBlur={onBlur}
-              onChange={onChange}
-              placeholder={ipV6FieldPlaceholder}
-              title="Allowed IP Addresses or Ranges"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-dbaas-radio="None"
-              disabled={disabled}
-              label="No Access (Deny connections from all IP addresses)"
-              value="none"
-            />
-          </RadioGroup>
-        ) : (
-          <MultipleIPInput
+        <RadioGroup
+          aria-label="type"
+          name="type"
+          onChange={handleAccessOptionChange}
+          value={accessOption}
+        >
+          <FormControlLabel
+            control={<Radio />}
+            data-qa-dbaas-radio="Specific"
             disabled={disabled}
+            label="Specific Access (recommended)"
+            value="specific"
+          />
+          <MultipleIPInput
+            buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
+            className={classes.multipleIPInput}
+            disabled={accessOption === 'none' || disabled}
             ips={ips}
             onBlur={onBlur}
             onChange={onChange}
-            placeholder={ipFieldPlaceholder}
-            title="Allowed IP Address(es) or Range(s)"
+            placeholder={ipV6FieldPlaceholder}
+            title="Allowed IP Addresses or Ranges"
           />
-        )}
+          <FormControlLabel
+            control={<Radio />}
+            data-qa-dbaas-radio="None"
+            disabled={disabled}
+            label="No Access (Deny connections from all IP addresses)"
+            value="none"
+          />
+        </RadioGroup>
       </Grid>
     </Grid>
   );

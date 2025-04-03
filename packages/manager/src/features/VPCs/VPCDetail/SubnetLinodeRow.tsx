@@ -1,3 +1,8 @@
+import {
+  useAllLinodeConfigsQuery,
+  useLinodeFirewallsQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
@@ -10,11 +15,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import {
-  useAllLinodeConfigsQuery,
-  useLinodeFirewallsQuery,
-  useLinodeQuery,
-} from '@linode/queries';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
@@ -33,12 +33,16 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
+  handlePowerActionsLinode: (
+    linode: Linode,
+    action: Action,
+    subnet?: Subnet
+  ) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
-  subnet?: Subnet;
+  subnet: Subnet;
   subnetId: number;
 }
 
@@ -205,7 +209,7 @@ export const SubnetLinodeRow = (props: Props) => {
             {isRebootNeeded && (
               <InlineMenuAction
                 onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot');
+                  handlePowerActionsLinode(linode, 'Reboot', subnet);
                 }}
                 actionText="Reboot"
                 disabled={isVPCLKEEnterpriseCluster}
@@ -216,7 +220,8 @@ export const SubnetLinodeRow = (props: Props) => {
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
-                    isOffline ? 'Power On' : 'Power Off'
+                    isOffline ? 'Power On' : 'Power Off',
+                    subnet
                   );
                 }}
                 actionText={isOffline ? 'Power On' : 'Power Off'}

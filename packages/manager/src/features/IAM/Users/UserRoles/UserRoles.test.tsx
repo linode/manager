@@ -1,17 +1,25 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
 import { UserRoles } from './UserRoles';
 
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 7,
+    type: 'linode',
+  }),
+];
+
 const queryMocks = vi.hoisted(() => ({
+  useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountResources: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -24,11 +32,11 @@ vi.mock('src/queries/iam/iam', async () => {
   };
 });
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual<any>('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual<any>('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
@@ -54,8 +62,8 @@ describe('UserRoles', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
     });
 
     const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(

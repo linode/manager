@@ -2,8 +2,8 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -11,8 +11,8 @@ import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import type { ExtendedRoleMap } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
+  useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountResources: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -25,11 +25,11 @@ vi.mock('src/queries/iam/iam', async () => {
   };
 });
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual<any>('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual<any>('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
@@ -37,11 +37,11 @@ const mockRole: ExtendedRoleMap = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
+  entity_ids: null,
+  entity_type: 'account',
   id: 'account_admin',
   name: 'account_admin',
   permissions: ['create_linode', 'update_linode', 'update_firewall'],
-  resource_ids: null,
-  resource_type: 'account',
 };
 
 const props = {
@@ -73,11 +73,11 @@ describe('ChangeRoleDrawer', () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: {
         account_access: ['account_linode_admin', 'account_admin'],
-        resource_access: [
+        entity_access: [
           {
-            resource_id: 12345678,
-            resource_type: 'linode',
+            id: 12345678,
             roles: ['linode_contributor'],
+            type: 'linode',
           },
         ],
       },
@@ -87,8 +87,8 @@ describe('ChangeRoleDrawer', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountResources.mockReturnValue({
-      data: accountResourcesFactory.build(),
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: accountEntityFactory.build(),
     });
 
     const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);
@@ -118,11 +118,11 @@ describe('ChangeRoleDrawer', () => {
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({
         account_access: ['account_linode_admin', 'account_viewer'],
-        resource_access: [
+        entity_access: [
           {
-            resource_id: 12345678,
-            resource_type: 'linode',
+            id: 12345678,
             roles: ['linode_contributor'],
+            type: 'linode',
           },
         ],
       });
