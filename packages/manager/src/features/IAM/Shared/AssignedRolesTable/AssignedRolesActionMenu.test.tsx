@@ -15,21 +15,21 @@ const mockAccountRole: ExtendedRoleMap = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
+  entity_ids: null,
+  entity_type: 'account',
   id: 'account_admin',
   name: 'account_admin',
   permissions: ['create_linode', 'update_linode', 'update_firewall'],
-  resource_ids: null,
-  resource_type: 'account',
 };
 
 const mockEntityRole: ExtendedRoleMap = {
-  access: 'resource_access',
+  access: 'entity_access',
   description: 'Access to update a linode instance',
+  entity_ids: [12345678],
+  entity_type: 'linode',
   id: 'linode_contributor',
   name: 'linode_contributor',
   permissions: ['update_linode', 'view_linode'],
-  resource_ids: [12345678],
-  resource_type: 'linode',
 };
 
 describe('AssignedRolesActionMenu', () => {
