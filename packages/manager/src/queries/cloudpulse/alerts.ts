@@ -28,8 +28,29 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
-    onSuccess() {
-      queryClient.invalidateQueries(queryFactory.alerts);
+    onSuccess(newAlert) {
+      queryClient.cancelQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+
+      queryClient.setQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey,
+        (oldData) => (oldData ? [...oldData, newAlert] : [newAlert])
+      );
+
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          newAlert.service_type,
+          String(newAlert.id)
+        ).queryKey,
+        newAlert
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(
+          newAlert.service_type
+        ).queryKey,
+      });
     },
   });
 };
@@ -94,12 +115,13 @@ export const useEditAlertDefinition = () => {
         );
       });
 
-      queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+      queryClient.setQueryData<Alert>(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
           data.service_type,
           String(data.id)
         ).queryKey,
-      });
+        data
+      );
 
       queryClient.invalidateQueries({
         queryKey: allAlertsQueryKey,
