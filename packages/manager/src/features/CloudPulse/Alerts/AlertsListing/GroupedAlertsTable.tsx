@@ -115,8 +115,8 @@ export const GroupedAlertsTable = ({
                         }}
                         sx={{
                           border: 0,
-                          marginBottom: theme.spacing(2),
-                          marginTop: theme.spacing(2),
+                          marginBottom: theme.spacingFunction(16),
+                          marginTop: theme.spacingFunction(16),
                         }}
                         count={count}
                         eventCategory={`Alert Definitions Table ${tag}`}
