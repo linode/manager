@@ -3,10 +3,7 @@ import {
   linodeFactory,
   regionFactory,
 } from '@linode/utilities';
-import {
-  mockGetLinodeConfig,
-  mockGetLinodeConfigInterface,
-} from 'support/intercepts/configs';
+import { mockGetLinodeConfig } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
@@ -164,16 +161,10 @@ describe('Create Linode with VPCs', () => {
       mockLinodeConfig.id,
       mockLinodeConfig
     ).as('getLinodeConfig');
-    mockGetLinodeConfigInterface(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockInterface.id,
-      mockInterface
-    ).as('getLinodeConfigInterface');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait(['@getLinodeConfig', '@getLinodeConfigInterface']);
+    cy.wait('@getLinodeConfig');
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
   });
 
@@ -342,16 +333,9 @@ describe('Create Linode with VPCs', () => {
       mockLinodeConfig.id,
       mockLinodeConfig
     ).as('getLinodeConfig');
-    mockGetLinodeConfigInterface(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockInterface.id,
-      mockInterface
-    ).as('getLinodeConfigInterface');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait(['@getLinodeConfig', '@getLinodeConfigInterface']);
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
   });
 

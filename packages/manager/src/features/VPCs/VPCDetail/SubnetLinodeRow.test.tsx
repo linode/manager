@@ -70,14 +70,12 @@ describe('SubnetLinodeRow', () => {
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const config = linodeConfigFactory.build({
+      interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
+    });
     server.use(
       http.get('*/instances/*/configs/:configId', async () => {
-        const config = linodeConfigFactory.build();
         return HttpResponse.json(config);
-      }),
-      http.get('*/instances/*/configs/*/interfaces/*', async () => {
-        const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build();
-        return HttpResponse.json(vpcInterface);
       })
     );
 
@@ -97,7 +95,7 @@ describe('SubnetLinodeRow', () => {
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
           subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
+          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
         />
       )
     );
@@ -190,6 +188,9 @@ describe('SubnetLinodeRow', () => {
       ip_ranges: [],
       primary: true,
     });
+    const config = linodeConfigFactory.build({
+      interfaces: [vpcInterface],
+    });
     server.use(
       http.get('*/linodes/instances/:linodeId', () => {
         return HttpResponse.json(linodeFactory1);
@@ -201,12 +202,9 @@ describe('SubnetLinodeRow', () => {
           )
         );
       }),
-      http.get(
-        '*/instances/:id/configs/:configId/interfaces/:interfaceId',
-        async () => {
-          return HttpResponse.json(vpcInterface);
-        }
-      )
+      http.get('*/instances/*/configs/:configId', async () => {
+        return HttpResponse.json(config);
+      })
     );
 
     const handleUnassignLinode = vi.fn();
@@ -215,12 +213,14 @@ describe('SubnetLinodeRow', () => {
     const { getAllByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
+          subnetInterfaces={[
+            { active: true, config_id: config.id, id: vpcInterface.id },
+          ]}
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
           subnetId={0}
-          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );

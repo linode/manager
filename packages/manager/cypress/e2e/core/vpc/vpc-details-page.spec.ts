@@ -4,10 +4,7 @@ import {
   linodeFactory,
 } from '@linode/utilities';
 import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
-import {
-  mockGetLinodeConfig,
-  mockGetLinodeConfigInterface,
-} from 'support/intercepts/configs';
+import { mockGetLinodeConfig } from 'support/intercepts/configs';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
   mockCreateSubnet,
@@ -330,16 +327,10 @@ describe('VPC details page', () => {
       mockLinodeConfig.id,
       mockLinodeConfig
     ).as('getLinodeConfig');
-    mockGetLinodeConfigInterface(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockInterface.id,
-      mockInterface
-    ).as('getLinodeConfigInterface');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait(['@getLinodeConfig', '@getLinodeConfigInterface']);
+    cy.wait('@getLinodeConfig');
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
   });
 
@@ -403,16 +394,10 @@ describe('VPC details page', () => {
       mockLinodeConfig.id,
       mockLinodeConfig
     ).as('getLinodeConfig');
-    mockGetLinodeConfigInterface(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockInterface.id,
-      mockInterface
-    ).as('getLinodeConfigInterface');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait(['@getLinodeConfig', '@getLinodeConfigInterface']);
+    cy.wait('@getLinodeConfig');
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
   });
 
@@ -482,16 +467,10 @@ describe('VPC details page', () => {
       mockLinodeConfig.id,
       mockLinodeConfig
     ).as('getLinodeConfig');
-    mockGetLinodeConfigInterface(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockInterface.id,
-      mockInterface
-    ).as('getLinodeConfigInterface');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
-    cy.wait(['@getLinodeConfig', '@getLinodeConfigInterface']);
+    cy.wait('@getLinodeConfig');
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('exist');
   });
 });

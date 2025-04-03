@@ -1,5 +1,4 @@
 import {
-  useLinodeConfigInterfaceQuery,
   useLinodeConfigQuery,
   useLinodeFirewallsQuery,
   useLinodeInterfaceFirewallsQuery,
@@ -105,28 +104,20 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: linodeInterfaceLoading,
   } = useLinodeInterfaceQuery(linodeId, interfaceId ?? -1, isLinodeInterface);
 
-  const {
-    data: configInterface,
-    error: configInterfaceError,
-    isLoading: configInterfaceLoading,
-  } = useLinodeConfigInterfaceQuery(
-    linodeId,
-    configId ?? -1,
-    interfaceId,
-    !isLinodeInterface
-  );
-
   // we still need to fetch the config this interface belongs to
   // so that we can determine if we have an unrecommended configuration
-  const { data: config } = useLinodeConfigQuery(
-    linodeId,
-    configId ?? -1,
-    !isLinodeInterface
-  );
+  const {
+    data: config,
+    error: configError,
+    isLoading: configLoading,
+  } = useLinodeConfigQuery(linodeId, configId ?? -1, !isLinodeInterface);
 
+  const configInterface = config?.interfaces?.find(
+    (iface) => iface.id === interfaceId
+  );
   const interfaceData = linodeInterface ?? configInterface;
-  const interfaceError = linodeInterfaceError ?? configInterfaceError;
-  const interfaceLoading = linodeInterfaceLoading ?? configInterfaceLoading;
+  const interfaceError = linodeInterfaceError ?? configError;
+  const interfaceLoading = linodeInterfaceLoading ?? configLoading;
 
   const hasUnrecommendedSetup = isLinodeInterface
     ? isInterfaceActive && !linodeInterface?.default_route.ipv4
