@@ -24,9 +24,9 @@ export interface NewFeatureChipProps
 /**
  * ## Usage
  *
- * NewFeatureChip chips label features that are not yet part of Cloud Manager's core supported functionality.<br>
+ * The NewFeatureChip is displayed to all users after the feature has been fully rolled out.<br>
  * **Example:** A NewFeatureChip chip may appear in the primary navigation,
- * breadcrumbs, banners, tabs, and/or plain text to designate new functionality.<br>
+ * breadcrumbs, banners, tabs, and/or plain text to designate new functionality and improve visibility for all the users.<br>
  * **Visual style:** bold, capitalized text; reduced height, letter spacing, and font size; solid color background.
  *
  */
