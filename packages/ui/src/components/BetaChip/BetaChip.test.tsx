@@ -11,7 +11,7 @@ describe('BetaChip', () => {
     const { getByTestId } = renderWithTheme(<BetaChip />);
     const betaChip = getByTestId('betaChip');
     expect(betaChip).toBeInTheDocument();
-    expect(betaChip).toHaveStyle('background-color: rgba(105, 105, 112)');
+    expect(betaChip).toHaveStyle('background-color: rgb(105, 105, 112)');
   });
 
   it('triggers an onClick callback', () => {
