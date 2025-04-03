@@ -38,12 +38,16 @@ import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
+  handlePowerActionsLinode: (
+    linode: Linode,
+    action: Action,
+    subnet?: Subnet
+  ) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
-  subnet?: Subnet;
+  subnet: Subnet;
   subnetId: number;
   subnetInterfaces: SubnetLinodeInterfaceData[];
 }
@@ -119,8 +123,13 @@ export const SubnetLinodeRow = (props: Props) => {
   const interfaceError = linodeInterfaceError ?? configError;
   const interfaceLoading = linodeInterfaceLoading ?? configLoading;
 
+  // Linode Interfaces: show unrecommended notice if VPC has a nat_1_1 address but isn't the default route
   const hasUnrecommendedSetup = isLinodeInterface
-    ? isInterfaceActive && !linodeInterface?.default_route.ipv4
+    ? isInterfaceActive &&
+      linodeInterface?.vpc?.ipv4.addresses.some(
+        (address) => address.nat_1_1_address
+      ) &&
+      !linodeInterface?.default_route.ipv4
     : hasUnrecommendedConfiguration(config, subnetId);
 
   if (linodeLoading || !linode) {
@@ -252,7 +261,7 @@ export const SubnetLinodeRow = (props: Props) => {
             {isRebootNeeded && (
               <InlineMenuAction
                 onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot');
+                  handlePowerActionsLinode(linode, 'Reboot', subnet);
                 }}
                 actionText="Reboot"
                 disabled={isVPCLKEEnterpriseCluster}
@@ -263,7 +272,8 @@ export const SubnetLinodeRow = (props: Props) => {
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
-                    isOffline ? 'Power On' : 'Power Off'
+                    isOffline ? 'Power On' : 'Power Off',
+                    subnet
                   );
                 }}
                 actionText={isOffline ? 'Power On' : 'Power Off'}
