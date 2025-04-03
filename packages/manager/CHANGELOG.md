@@ -19,7 +19,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Change `GlobalFilters.tsx` and `Zoomer.tsx` to add color on hover of icon ([#11883](https://github.com/linode/manager/pull/11883))
 - Update styles to CDS for profile menu ([#11884](https://github.com/linode/manager/pull/11884))
 - Update BetaChip styles, its usage and updated BetaChip component tests ([#11965](https://github.com/linode/manager/pull/11965))
-- Add a 2-minute refetch interval in alerts.ts, add isLoading and remove isFetching in AlertDetail.tsx. ([#11945](https://github.com/linode/manager/pull/11945))
 - Disable form fields on Firewall Create page for restricted users ([#11954](https://github.com/linode/manager/pull/11954))
 
 ### Fixed:
@@ -50,7 +49,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Remove region selector from Edit VPC drawer since data center assignment cannot be changed. ([#11929](https://github.com/linode/manager/pull/11929))
 - DBaaS: deprecated types, outdated and unused code in  DatabaseCreate and DatabaseSummary ([#11909](https://github.com/linode/manager/pull/11909))
 - Move `useFormattedDate` from `manager` to `utilities` package ([#11931](https://github.com/linode/manager/pull/11931))
-- Moved stackscripts-related queries and dependencies to shared `queries` package ([#11949](https://github.com/linode/manager/pull/11949))
+- Move stackscripts-related queries and dependencies to shared `queries` package ([#11949](https://github.com/linode/manager/pull/11949))
 
 ### Tech Stories:
 
@@ -74,7 +73,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Temporarily skip Firewall end-to-end tests ([#11898](https://github.com/linode/manager/pull/11898))
 - Add tests for restricted user on database page ([#11912](https://github.com/linode/manager/pull/11912))
 - Allow Cypress Volume tests to pass against alternative environments ([#11939](https://github.com/linode/manager/pull/11939))
-- Fix test thats broken in devcloud ([#11948](https://github.com/linode/manager/pull/11948))
+- Fix create-linode-view-code-snippet.spec.ts test broken in devcloud ([#11948](https://github.com/linode/manager/pull/11948))
 - Improve stability of Linode config Cypress tests ([#11951](https://github.com/linode/manager/pull/11951))
 
 ### Upcoming Features:
@@ -99,8 +98,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - DBaaS Advanced Configurations: set up Autocomplete to display categorized options, add/remove configs, and implement a dynamic validation schema for all field types ([#11885](https://github.com/linode/manager/pull/11885))
 - Support more VPC features when using Linode Interfaces on the Linode Create page ([#11915](https://github.com/linode/manager/pull/11915))
 - Pre-select default firewalls on the Linode Create flow ([#11915](https://github.com/linode/manager/pull/11915))
-- update according to backend responses  ([#11919](https://github.com/linode/manager/pull/11919))
+- Update mock data and tests according to IAM backend response updates ([#11919](https://github.com/linode/manager/pull/11919))
 - Update `vpcIPFactory` to support IPv6 ([#11938](https://github.com/linode/manager/pull/11938))
+- Add a 2-minute refetch interval in alerts.ts, add isLoading and remove isFetching in AlertDetail.tsx. ([#11945](https://github.com/linode/manager/pull/11945))
 
 ## [2025-03-26] - v1.138.1
 
