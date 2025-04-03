@@ -14,7 +14,6 @@ import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
-  useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
@@ -41,11 +40,11 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
-    flags,
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
     isClearable,
+    isGeckoLAEnabled,
     label,
     onChange,
     placeholder,
@@ -67,7 +66,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     forcefullyShownRegionIds,
     regions,
   });
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
 
   const selectedRegions = regionOptions.filter((r) =>
     selectedIds.includes(r.id)
