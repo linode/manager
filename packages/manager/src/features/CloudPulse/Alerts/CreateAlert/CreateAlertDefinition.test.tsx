@@ -45,9 +45,9 @@ describe('AlertDefinition Create', () => {
     expect(getByLabelText('Description (optional)')).toBeVisible();
     expect(getByLabelText('Severity')).toBeVisible();
     expect(getByLabelText('Service')).toBeVisible();
-    expect(getByText('2. Resources')).toBeVisible();
+    expect(getByText('2. Entities')).toBeVisible();
     await expect(
-      getByPlaceholderText('Search for a Region or Resource')
+      getByPlaceholderText('Search for a Region or Entity')
     ).toBeInTheDocument();
     await expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
     expect(getByText('3. Criteria')).toBeVisible();

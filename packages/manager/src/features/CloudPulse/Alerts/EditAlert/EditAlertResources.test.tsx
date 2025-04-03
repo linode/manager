@@ -85,7 +85,7 @@ describe('EditAlertResources component tests', () => {
     );
 
     expect(
-      getByPlaceholderText('Search for a Region or Resource')
+      getByPlaceholderText('Search for a Region or Entity')
     ).toBeInTheDocument();
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
     expect(getByTestId('show_selected_only')).toBeInTheDocument();

@@ -34,7 +34,7 @@ const linodes = linodeFactory.buildList(3).map((value, index) => {
   };
 });
 
-const searchPlaceholder = 'Search for a Region or Resource';
+const searchPlaceholder = 'Search for a Region or Entity';
 const regionPlaceholder = 'Select Regions';
 const checkedAttribute = 'data-qa-checked';
 const cloudPulseResources: CloudPulseResources[] = linodes.map((linode) => {
@@ -147,7 +147,7 @@ describe('AlertResources component tests', () => {
     const { getByTestId } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
     );
-    const resourceColumn = getByTestId('resource'); // get the resource header column
+    const resourceColumn = getByTestId('entity'); // get the resource header column
     await userEvent.click(resourceColumn);
 
     const tableBody = getByTestId('alert_resources_content');
@@ -211,7 +211,7 @@ describe('AlertResources component tests', () => {
     );
 
     const noticeText = getByTestId('selection_notice');
-    expect(noticeText).toHaveTextContent('2 of 3 resources are selected.');
+    expect(noticeText).toHaveTextContent('2 of 3 entities are selected.');
 
     // validate it selects 3
     await userEvent.click(getByTestId('select_item_3'));
@@ -220,7 +220,7 @@ describe('AlertResources component tests', () => {
       'true'
     );
     expect(handleResourcesSelection).toHaveBeenCalledWith(['1', '2', '3']);
-    expect(noticeText).toHaveTextContent('3 of 3 resources are selected.');
+    expect(noticeText).toHaveTextContent('3 of 3 entities are selected.');
 
     // unselect 3 and test
     await userEvent.click(getByTestId('select_item_3'));

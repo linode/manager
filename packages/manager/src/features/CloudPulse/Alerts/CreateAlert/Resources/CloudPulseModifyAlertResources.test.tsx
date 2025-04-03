@@ -89,7 +89,7 @@ describe('CreateAlertResources component tests', () => {
       },
     });
     expect(
-      getByPlaceholderText('Search for a Region or Resource')
+      getByPlaceholderText('Search for a Region or Entity')
     ).toBeInTheDocument();
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
     expect(getByTestId('show_selected_only')).toBeInTheDocument();
@@ -164,15 +164,15 @@ describe('CreateAlertResources component tests', () => {
         },
         errors: {
           entity_ids: {
-            message: 'More than 2 resources selected',
+            message: 'More than 2 entities selected',
           },
         },
       },
     });
 
     expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
-    expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();
-    expect(getByText('More than 2 resources selected')).toBeInTheDocument();
+    expect(getByText('You can select up to 2 entities.')).toBeInTheDocument();
+    expect(getByText('More than 2 entities selected')).toBeInTheDocument();
     const resourceFour = getByTestId('select_item_4');
     expect(resourceFour).toBeInTheDocument();
     expect(resourceFour).toHaveAttribute('aria-disabled', 'true');
