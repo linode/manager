@@ -241,15 +241,13 @@ export const AlertListing = () => {
         </Button>
       </Box>
       <AlertsListTable
-        toggleAlertsGroupedByTag={() => {
-          return toggleAlertsGroupedByTag() ?? false;
-        }}
         alerts={getAlertsList}
         alertsGroupedByTag={preference}
         error={error ?? undefined}
         isLoading={isLoading}
         scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
+        toggleAlertsGroupedByTag={() => toggleAlertsGroupedByTag?.() ?? false}
       />
     </Stack>
   );
