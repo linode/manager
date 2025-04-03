@@ -47,7 +47,7 @@ export const getNodeBalancers = (mockState: MockState) => [
   ),
 
   http.get(
-    '*/v4beta/nodebalancers/:id',
+    '*/v4/nodebalancers/:id',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
@@ -71,15 +71,17 @@ export const getNodeBalancers = (mockState: MockState) => [
         APIErrorResponse | APIPaginatedResponse<NodeBalancerConfig>
       >
     > => {
-      const id = Number(params.id);
-      const nodeBalancer = await mswDB.get('nodeBalancers', id);
+      const nodeBalancerId = Number(params.id);
+      const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfigs = await mswDB.getAll('nodeBalancerConfigs');
 
       if (!nodeBalancer || !nodeBalancerConfigs) {
         return makeNotFoundResponse();
       }
 
-      const configs = nodeBalancerConfigs.filter((config) => config.id === id);
+      const configs = nodeBalancerConfigs.filter(
+        (config) => config.nodebalancer_id === nodeBalancerId
+      );
 
       return makePaginatedResponse({
         data: configs,
@@ -93,9 +95,9 @@ export const getNodeBalancers = (mockState: MockState) => [
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancerConfig>> => {
-      const id = Number(params.id);
+      const nodeBalancerId = Number(params.id);
       const configId = Number(params.configId);
-      const nodeBalancer = await mswDB.get('nodeBalancers', id);
+      const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
         configId
@@ -119,9 +121,9 @@ export const getNodeBalancers = (mockState: MockState) => [
         APIErrorResponse | APIPaginatedResponse<NodeBalancerConfigNode>
       >
     > => {
-      const id = Number(params.id);
+      const nodeBalancerId = Number(params.id);
       const configId = Number(params.configId);
-      const nodeBalancer = await mswDB.get('nodeBalancers', id);
+      const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
         configId
@@ -135,7 +137,9 @@ export const getNodeBalancers = (mockState: MockState) => [
       }
 
       const configNodes = nodeBalancerConfigNodes.filter(
-        (configNode) => configNode.id === id
+        (configNode) =>
+          configNode.nodebalancer_id === nodeBalancerId &&
+          configNode.config_id === configId
       );
 
       return makePaginatedResponse({
@@ -223,9 +227,8 @@ export const createNodeBalancer = (mockState: MockState) => [
         }
       }
 
-      await Promise.all(createConfigPromises);
       await Promise.all(createConfigNodePromises);
-      // might need to add config and nodes key and values like in firewalls and vpcs
+      await Promise.all(createConfigPromises);
       await mswDB.add('nodeBalancers', { ...nodeBalancer }, mockState);
 
       queueEvents({
@@ -291,11 +294,11 @@ export const createNodeBalancer = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancerConfigNode>> => {
       const nodeBalancerId = Number(params.id);
-      const nodeBalancerConfigId = Number(params.configId);
+      const configId = Number(params.configId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
-        nodeBalancerConfigId
+        configId
       );
 
       if (!nodeBalancer || !nodeBalancerConfig) {
@@ -306,7 +309,7 @@ export const createNodeBalancer = (mockState: MockState) => [
 
       const nodeBalancerConfigNode = nodeBalancerConfigNodeFactory.build({
         ...payload,
-        config_id: nodeBalancerConfigId,
+        config_id: configId,
         nodebalancer_id: nodeBalancerId,
       });
 
@@ -385,11 +388,11 @@ export const updateNodeBalancer = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
       const nodeBalancerId = Number(params.id);
-      const nodeBalancerConfigId = Number(params.configId);
+      const configId = Number(params.configId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
-        nodeBalancerConfigId
+        configId
       );
 
       if (!nodeBalancer || !nodeBalancerConfig) {
@@ -430,16 +433,16 @@ export const updateNodeBalancer = (mockState: MockState) => [
       request,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
       const nodeBalancerId = Number(params.id);
-      const nodeBalancerConfigId = Number(params.configId);
-      const nodeBalancerConfigNodeId = Number(params.nodeId);
+      const configId = Number(params.configId);
+      const nodeId = Number(params.nodeId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
-        nodeBalancerConfigId
+        configId
       );
       const nodeBalancerConfigNode = await mswDB.get(
         'nodeBalancerConfigNodes',
-        nodeBalancerConfigNodeId
+        nodeId
       );
       if (!nodeBalancer || !nodeBalancerConfig || !nodeBalancerConfigNode) {
         return makeNotFoundResponse();
@@ -537,11 +540,11 @@ export const deleteNodeBalancer = (mockState: MockState) => [
     '*/v4/nodebalancers/:id/configs/:configId',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const nodeBalancerId = Number(params.id);
-      const nodeBalancerConfigId = Number(params.configId);
+      const configId = Number(params.configId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
-        nodeBalancerConfigId
+        configId
       );
       if (!nodeBalancer || !nodeBalancerConfig) {
         return makeNotFoundResponse();
@@ -553,8 +556,8 @@ export const deleteNodeBalancer = (mockState: MockState) => [
       if (nodeBalancerConfigNodes) {
         const nodes = nodeBalancerConfigNodes.filter(
           (nodes) =>
-            nodes.config_id === nodeBalancerConfigId &&
-            nodes.nodebalancer_id === nodeBalancerId
+            nodes.nodebalancer_id === nodeBalancerId &&
+            nodes.config_id === configId
         );
         for (const node of nodes) {
           deleteConfigNodePromises.push(
@@ -563,10 +566,11 @@ export const deleteNodeBalancer = (mockState: MockState) => [
         }
       }
       await Promise.all(deleteConfigNodePromises);
-      mswDB.delete('nodeBalancerConfigs', nodeBalancerConfigId, mockState);
+      await mswDB.delete('nodeBalancerConfigs', configId, mockState);
+
       queueEvents({
         event: {
-          action: 'nodebalancer_delete',
+          action: 'nodebalancer_config_delete',
           entity: {
             id: nodeBalancerId,
             label: nodeBalancer.label,
@@ -585,16 +589,16 @@ export const deleteNodeBalancer = (mockState: MockState) => [
     '*/v4/nodebalancers/:id/configs/:configId/nodes/:nodeId',
     async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
       const nodeBalancerId = Number(params.id);
-      const nodeBalancerConfigId = Number(params.configId);
-      const nodeBalancerConfigNodeId = Number(params.nodeId);
+      const configId = Number(params.configId);
+      const nodeId = Number(params.nodeId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       const nodeBalancerConfig = await mswDB.get(
         'nodeBalancerConfigs',
-        nodeBalancerConfigId
+        configId
       );
       const nodeBalancerConfigNode = await mswDB.get(
         'nodeBalancerConfigNodes',
-        nodeBalancerConfigNodeId
+        nodeId
       );
       if (!nodeBalancer || !nodeBalancerConfig || !nodeBalancerConfigNode) {
         return makeNotFoundResponse();
@@ -607,15 +611,11 @@ export const deleteNodeBalancer = (mockState: MockState) => [
       const node = nodeBalancerConfigNodes?.filter(
         (node) =>
           node.nodebalancer_id === nodeBalancerId &&
-          node.config_id === nodeBalancerConfigId &&
-          node.id === nodeBalancerConfigNodeId
+          node.config_id === configId &&
+          node.id === nodeId
       );
       if (node) {
-        mswDB.delete(
-          'nodeBalancerConfigNodes',
-          nodeBalancerConfigNodeId,
-          mockState
-        );
+        mswDB.delete('nodeBalancerConfigNodes', nodeId, mockState);
       }
       queueEvents({
         event: {
