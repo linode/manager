@@ -90,7 +90,7 @@ const AccountLanding = () => {
     ...(showQuotasTab
       ? [
           {
-            chip: <BetaChip color="secondary" />,
+            chip: <BetaChip />,
             routeName: '/account/quotas',
             title: 'Quotas',
           },
