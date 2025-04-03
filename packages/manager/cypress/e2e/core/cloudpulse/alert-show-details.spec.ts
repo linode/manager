@@ -266,17 +266,17 @@ describe('Integration Tests for Alert Show Detail Page', () => {
     //  Validate the Resources section (Resource and Region columns)
     cy.get('[data-qa-section="Resources"]').within(() => {
       ui.heading
-        .findByText('resource')
+        .findByText('entity')
         .scrollIntoView()
         .should('be.visible')
-        .should('have.text', 'Resource');
+        .should('have.text', 'Entity');
 
       ui.heading
         .findByText('region')
         .should('be.visible')
         .should('have.text', 'Region');
 
-      cy.findByPlaceholderText('Search for a Region or Resource').should(
+      cy.findByPlaceholderText('Search for a Region or Entity').should(
         'be.visible'
       );
 
@@ -296,7 +296,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           const regionLabel = regionMap.get(db.region) || 'Unknown Region';
 
           cy.wrap(row).within(() => {
-            cy.get(`[data-qa-alert-cell="${rowNumber}_resource"]`).should(
+            cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
               'have.text',
               db.label
             );
@@ -309,10 +309,10 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         });
 
       // Sorting by Resource and Region columns
-      ui.heading.findByText('resource').should('be.visible').click();
+      ui.heading.findByText('entity').should('be.visible').click();
       verifyRowOrder(['4', '3', '2', '1']);
 
-      ui.heading.findByText('resource').should('be.visible').click();
+      ui.heading.findByText('entity').should('be.visible').click();
       verifyRowOrder(['1', '2', '3', '4']);
 
       ui.heading.findByText('region').should('be.visible').click();
@@ -322,7 +322,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       verifyRowOrder(['1', '3', '2', '4']);
 
       // Search by Resource
-      cy.findByPlaceholderText('Search for a Region or Resource')
+      cy.findByPlaceholderText('Search for a Region or Entity')
         .should('be.visible')
         .type(databases[0].label);
 
@@ -336,7 +336,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       );
 
       // Search by region
-      cy.findByPlaceholderText('Search for a Region or Resource').clear();
+      cy.findByPlaceholderText('Search for a Region or Entity').clear();
 
       ui.regionSelect.find().click().type(`${regions[0].label}{enter}`);
       ui.regionSelect.find().click();
