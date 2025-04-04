@@ -150,7 +150,7 @@ const fillMetricDetailsForSpecificRule = ({
 describe('Create Alert', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
-   * - Confirms that users can enter alert details, select resources, and configure conditions.
+   * - Confirms that users can enter alert details, select entities, and configure conditions.
    * - Confirms that the UI allows adding notification channels and setting thresholds.
    * - Confirms client-side validation when entering invalid metric values.
    * - Confirms that API interactions work correctly and return the expected responses.
@@ -214,14 +214,14 @@ describe('Create Alert', () => {
       .should('be.visible')
       .type('database-2');
 
-    // Find the table and locate the resource cell containing 'database-2', then check the corresponding checkbox
+    // Find the table and locate the entity cell containing 'database-2', then check the corresponding checkbox
     cy.get('[data-qa-alert-table="true"]') // Find the table
-      .contains('[data-qa-alert-cell*="entity"]', 'database-2') // Find resource cell
+      .contains('[data-qa-alert-cell*="entity"]', 'database-2') // Find entity cell
       .parents('tr')
       .find('[type="checkbox"]')
       .check();
 
-    // Assert resource selection notice
+    // Assert entity selection notice
     cy.findByText('1 of 10 entities are selected.');
 
     // Fill metric details for the first rule

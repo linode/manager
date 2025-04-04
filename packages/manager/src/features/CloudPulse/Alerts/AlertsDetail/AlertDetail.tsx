@@ -128,7 +128,7 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
-          data-qa-section="Resources"
+          data-qa-section="Entities"
         >
           <AlertResources
             alertClass={alertClass}
