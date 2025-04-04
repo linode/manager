@@ -48,14 +48,18 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
-      <AlertListing />
-    );
+    const {
+      getAllByLabelText,
+      getByLabelText,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(<AlertListing />);
     expect(getByText('Alert Name')).toBeInTheDocument();
     expect(getByText('Service')).toBeInTheDocument();
     expect(getByText('Status')).toBeInTheDocument();
     expect(getByText('Last Modified')).toBeInTheDocument();
     expect(getByText('Created By')).toBeInTheDocument();
+    expect(getByLabelText('Toggle group by tag')).toBeInTheDocument();
     const firstActionMenu = getAllByLabelText(
       `Action menu for Alert ${mockResponse[0].label}`
     )[0];

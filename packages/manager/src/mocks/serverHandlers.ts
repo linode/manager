@@ -2529,6 +2529,7 @@ export const handlers = [
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(36, {
         status: 'disabled',
+        tags: ['tag-3'],
         updated: '2021-10-16T04:00:00',
       }),
       ...customAlertsWithServiceType,
@@ -2536,6 +2537,7 @@ export const handlers = [
         created_by: 'user1',
         service_type: 'linode',
         status: 'in progress',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),
@@ -2543,6 +2545,7 @@ export const handlers = [
         created_by: 'user1',
         service_type: 'linode',
         status: 'failed',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),
