@@ -38,8 +38,14 @@ interface AlertConfirmationDialogProps {
    */
   isOpen: boolean;
 
+  /**
+   * Message to be displayed in the confirmation dialog
+   */
   message: string;
 
+  /**
+   * Title of the confirmation dialog
+   */
   title: string;
 }
 

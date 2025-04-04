@@ -140,126 +140,140 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   }
 
   return (
-    <OrderBy
-      data={alerts}
-      order="asc"
-      orderBy="service_type"
-      preferenceKey="alerts-landing"
-    >
-      {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-        return (
-          <Paginate data={alerts}>
-            {({
-              count,
-              data: paginatedAndOrderedAlerts,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => (
-              <>
-                <Grid2 sx={{ marginTop: 2 }}>
-                  <Table
-                    colCount={7}
-                    data-qa="alert-table"
-                    size="small"
-                    tableClass={alertsGroupedByTag ? 'MuiTable-groupByTag' : ''}
-                  >
-                    <TableHead>
-                      <TableRow>
-                        {AlertListingTableLabelMap.map((value) => (
-                          <TableSortCell
-                            handleClick={(orderBy, order) => {
-                              if (order) {
-                                handleOrderChange(orderBy, order);
-                                handlePageChange(1);
-                              }
-                            }}
-                            active={orderBy === value.label}
-                            data-qa-header={value.label}
-                            data-qa-sorting={value.label}
-                            direction={order}
-                            key={value.label}
-                            label={value.label}
-                            noWrap
-                          >
-                            {value.colName}
-                          </TableSortCell>
-                        ))}
-                        <TableCell sx={{ padding: '0 !important' }}>
-                          <Box
-                            sx={{
-                              alignItems: 'center',
-                              display: 'flex',
-                              gap: 3,
-                              justifyContent: 'flex-end',
-                              paddingRight: 1.5,
-                            }}
-                          >
-                            <GroupByTagToggle
-                              toggleGroupByTag={
-                                toggleAlertsGroupedByTag ?? (() => false)
-                              }
-                              isGroupedByTag={alertsGroupedByTag ?? false}
-                            />
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={_error}
-                        length={paginatedAndOrderedAlerts.length}
-                        loading={isLoading}
-                        loadingProps={{ columns: 6 }}
-                      />
-                      {alertsGroupedByTag ? (
-                        <GroupedAlertsTable
-                          groupedAlerts={sortGroups(groupByTags(orderedData))}
-                          handleDetails={handleDetails}
-                          handleEdit={handleEdit}
-                          handleStatusChange={handleStatusChange}
-                          services={services}
+    <>
+      <OrderBy
+        data={alerts}
+        order="asc"
+        orderBy="service_type"
+        preferenceKey="alerts-landing"
+      >
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          return (
+            <Paginate data={alerts}>
+              {({
+                count,
+                data: paginatedAndOrderedAlerts,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+              }) => (
+                <>
+                  <Grid2 sx={{ marginTop: 2 }}>
+                    <Table
+                      tableClass={
+                        alertsGroupedByTag ? 'MuiTable-groupByTag' : ''
+                      }
+                      colCount={7}
+                      data-qa="alert-table"
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          {AlertListingTableLabelMap.map((value) => (
+                            <TableSortCell
+                              handleClick={(orderBy, order) => {
+                                if (order) {
+                                  handleOrderChange(orderBy, order);
+                                  handlePageChange(1);
+                                }
+                              }}
+                              active={orderBy === value.label}
+                              data-qa-header={value.label}
+                              data-qa-sorting={value.label}
+                              direction={order}
+                              key={value.label}
+                              label={value.label}
+                              noWrap
+                            >
+                              {value.colName}
+                            </TableSortCell>
+                          ))}
+                          <TableCell sx={{ padding: '0 !important' }}>
+                            <Box
+                              sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                gap: 3,
+                                justifyContent: 'flex-end',
+                                paddingRight: 1.5,
+                              }}
+                            >
+                              <GroupByTagToggle
+                                toggleGroupByTag={
+                                  toggleAlertsGroupedByTag ?? (() => false)
+                                }
+                                isGroupedByTag={alertsGroupedByTag ?? false}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableContentWrapper
+                          error={_error}
+                          length={paginatedAndOrderedAlerts.length}
+                          loading={isLoading}
+                          loadingProps={{ columns: 6 }}
                         />
-                      ) : (
-                        <AlertsTable
-                          alerts={paginatedAndOrderedAlerts}
-                          handleDetails={handleDetails}
-                          handleEdit={handleEdit}
-                          handleStatusChange={handleStatusChange}
-                          services={services}
-                        />
-                      )}
-                    </TableBody>
-                  </Table>
-                </Grid2>
-                {!alertsGroupedByTag && (
-                  <PaginationFooter
-                    handlePageChange={(page: number) => {
-                      handlePageChange(page);
-                      requestAnimationFrame(() => {
-                        scrollToElement();
-                      });
-                    }}
-                    handleSizeChange={(pageSize) => {
-                      handlePageSizeChange(pageSize);
-                      handlePageChange(1);
-                      requestAnimationFrame(() => {
-                        scrollToElement();
-                      });
-                    }}
-                    count={count}
-                    eventCategory="Alert Definitions Table"
-                    page={page}
-                    pageSize={pageSize}
-                    sx={{ border: 0 }}
-                  />
-                )}
-              </>
-            )}
-          </Paginate>
-        );
-      }}
-    </OrderBy>
+                        {alertsGroupedByTag ? (
+                          <GroupedAlertsTable
+                            groupedAlerts={sortGroups(groupByTags(orderedData))}
+                            handleDetails={handleDetails}
+                            handleEdit={handleEdit}
+                            handleStatusChange={handleStatusChange}
+                            services={services}
+                          />
+                        ) : (
+                          <AlertsTable
+                            alerts={paginatedAndOrderedAlerts}
+                            handleDetails={handleDetails}
+                            handleEdit={handleEdit}
+                            handleStatusChange={handleStatusChange}
+                            services={services}
+                          />
+                        )}
+                      </TableBody>
+                    </Table>
+                  </Grid2>
+                  {!alertsGroupedByTag && (
+                    <PaginationFooter
+                      handlePageChange={(page: number) => {
+                        handlePageChange(page);
+                        requestAnimationFrame(() => {
+                          scrollToElement();
+                        });
+                      }}
+                      handleSizeChange={(pageSize) => {
+                        handlePageSizeChange(pageSize);
+                        handlePageChange(1);
+                        requestAnimationFrame(() => {
+                          scrollToElement();
+                        });
+                      }}
+                      count={count}
+                      eventCategory="Alert Definitions Table"
+                      page={page}
+                      pageSize={pageSize}
+                      sx={{ border: 0 }}
+                    />
+                  )}
+                </>
+              )}
+            </Paginate>
+          );
+        }}
+      </OrderBy>
+      <AlertConfirmationDialog
+        alert={selectedAlert}
+        handleCancel={handleCancel}
+        handleConfirm={handleConfirm}
+        isEnabled={isEnabled}
+        isLoading={isUpdating}
+        isOpen={isDialogOpen}
+        message={message}
+        title={title}
+      />
+    </>
   );
 });
