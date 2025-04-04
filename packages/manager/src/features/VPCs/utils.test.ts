@@ -56,7 +56,7 @@ describe('getUniqueLinodesFromSubnets', () => {
 });
 
 describe('hasUnrecommendedConfiguration function', () => {
-  it('returns true the given config has an active VPC interface and a non-VPC primary interface', () => {
+  it('returns true if the given config has an active VPC interface and a non-VPC primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({
       id: 10,
       primary: true,
