@@ -1,7 +1,7 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Filter, Params, ResourcePage } from '../types';
-import { AccountMaintenance } from './types';
+import { AccountMaintenance, MaintenancePolicy } from './types';
 
 /**
  * getAccountMaintenance
@@ -15,4 +15,16 @@ export const getAccountMaintenance = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter)
+  );
+
+/**
+ * getMaintenancePolicies
+ *
+ * Returns a list of maintenance policies that are available for Linodes in this account.
+ *
+ */
+export const getMaintenancePolicies = () =>
+  Request<MaintenancePolicy[]>(
+    setURL(`${API_ROOT}/maintenance/policies`),
+    setMethod('GET')
   );

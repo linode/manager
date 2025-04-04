@@ -9,6 +9,7 @@ import {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
+import { MaintenancePolicyId } from 'src/account';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -49,6 +50,7 @@ export interface Linode {
   watchdog_enabled: boolean;
   tags: string[];
   site_type: RegionSite;
+  maintenance_policy_id: MaintenancePolicyId;
 }
 
 export interface LinodeAlerts {
@@ -642,6 +644,11 @@ export interface CreateLinodeRequest {
    * @default 'enabled' (if the region supports LDE)
    */
   disk_encryption?: EncryptionStatus | null;
+  /**
+   * Allows customers to specify which strategy this Linode should follow during
+   * maintenance events.
+   */
+  maintenance_policy_id: MaintenancePolicyId;
 }
 
 export interface MigrateLinodeRequest {

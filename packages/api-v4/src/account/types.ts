@@ -110,7 +110,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
-  maintenance_policy_id: number;
+  maintenance_policy_id: MaintenancePolicyId;
 }
 
 export interface ActivePromotion {
@@ -568,6 +568,22 @@ export interface AccountMaintenance {
     url: string;
   };
 }
+
+export const maintenancePolicies = [
+  { id: 1, type: 'migrate' },
+  { id: 2, type: 'power on/off' },
+] as const;
+
+export type MaintenancePolicyId = typeof maintenancePolicies[number]['id'];
+
+export type MaintenancePolicyType = typeof maintenancePolicies[number]['type'];
+
+export type MaintenancePolicy = typeof maintenancePolicies[number] & {
+  name: string;
+  description: string;
+  notification_period_sec: number;
+  is_default: boolean;
+};
 
 export interface PayPalData {
   paypal_id: string;
