@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update styles to CDS for profile menu ([#11884](https://github.com/linode/manager/pull/11884))
 - Update BetaChip styles, its usage and updated BetaChip component tests ([#11965](https://github.com/linode/manager/pull/11965))
 - Disable form fields on Firewall Create page for restricted users ([#11954](https://github.com/linode/manager/pull/11954))
+- Update 'Learn more' docs link for Accelerated Compute plans ([#11970](https://github.com/linode/manager/pull/11970))
 
 ### Fixed:
 
