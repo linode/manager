@@ -113,7 +113,16 @@ const assertProcessing = (label: string, id: string) => {
  * @param label - Label to apply to uploaded image.
  */
 const uploadImage = (label: string) => {
-  const region = chooseRegion({ capabilities: ['Object Storage'] });
+  // Disallow these regions from being returned by `chooseRegion` because they do not support Machine Images:
+  // - au-mel
+  // - gb-lon
+  // - sg-sin-2
+  //
+  // See also BAC-862.
+  const region = chooseRegion({
+    capabilities: ['Object Storage'],
+    exclude: ['au-mel', 'gb-lon', 'sg-sin-2'],
+  });
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
 
