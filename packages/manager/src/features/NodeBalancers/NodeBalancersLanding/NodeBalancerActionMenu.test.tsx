@@ -5,6 +5,21 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
 
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+  useRouter: vi.fn(() => vi.fn()),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useRouter: queryMocks.useRouter,
+  };
+});
+
 const props = {
   label: 'nodebalancer-1',
   nodeBalancerId: 1,
@@ -33,6 +48,6 @@ describe('NodeBalancerActionMenu', () => {
 
     const deleteButton = getByText('Delete');
     await userEvent.click(deleteButton);
-    expect(props.toggleDialog).toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalled();
   });
 });

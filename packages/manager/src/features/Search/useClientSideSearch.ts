@@ -1,14 +1,15 @@
-import { useAllVolumesQuery } from '@linode/queries';
-import { useAllFirewallsQuery } from '@linode/queries';
-import { useAllNodeBalancersQuery } from '@linode/queries';
 import { useAllLinodesQuery } from '@linode/queries';
+import { useAllFirewallsQuery } from '@linode/queries';
+import { useAllVolumesQuery } from '@linode/queries';
+import { useAllNodeBalancersQuery } from '@linode/queries';
+import { useAllAccountStackScriptsQuery } from '@linode/queries';
 
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { useAllAccountStackScriptsQuery } from 'src/queries/stackscripts';
 import {
   bucketToSearchableItem,
   databaseToSearchableItem,
@@ -41,11 +42,12 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(enabled);
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: lkeClustersError,
     isLoading: lkeClustersLoading,
-  } = useAllKubernetesClustersQuery(enabled);
+  } = useAllKubernetesClustersQuery({ enabled, isUsingBetaEndpoint });
   const {
     data: volumes,
     error: volumesError,

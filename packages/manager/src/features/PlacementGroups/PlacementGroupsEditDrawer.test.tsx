@@ -1,7 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';

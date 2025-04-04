@@ -1,3 +1,4 @@
+import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -5,11 +6,11 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import {
   getKubeHighAvailability,
   useAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount, useRegionsQuery } from '@linode/queries';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -29,7 +30,12 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
 
-  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery({
+    id,
+    isUsingBetaEndpoint,
+  });
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(

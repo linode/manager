@@ -1,9 +1,9 @@
+import { useSupportTicketCloseMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useSupportTicketCloseMutation } from 'src/queries/support';
 
 import type { Theme } from '@mui/material/styles';
 

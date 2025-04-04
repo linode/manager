@@ -4,6 +4,7 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetAlertDefinitions,
@@ -15,12 +16,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import {
-  accountFactory,
-  alertFactory,
-  databaseFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
 
 import type { Alert, Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';

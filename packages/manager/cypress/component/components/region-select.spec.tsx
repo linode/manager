@@ -1,3 +1,4 @@
+import { accountAvailabilityFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 import { mockGetAccountAvailability } from 'support/intercepts/account';
 import { ui } from 'support/ui';
@@ -6,7 +7,6 @@ import { createSpy } from 'support/util/components';
 import { componentTests, visualTests } from 'support/util/components';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
 
 componentTests('RegionSelect', (mount) => {
   beforeEach(() => {
@@ -26,6 +26,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability="Object Storage"
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
@@ -54,6 +55,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability="Object Storage"
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
@@ -83,6 +85,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability="Object Storage"
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={[region]}
             value={undefined}
@@ -112,6 +115,7 @@ componentTests('RegionSelect', (mount) => {
             <span id="other-element">Other Element</span>
             <RegionSelect
               currentCapability="Object Storage"
+              isGeckoLAEnabled={false}
               onChange={() => {}}
               regions={[region]}
               value={undefined}
@@ -145,6 +149,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={undefined}
@@ -179,6 +184,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={regionToPreselect.id}
@@ -214,6 +220,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
@@ -241,6 +248,7 @@ componentTests('RegionSelect', (mount) => {
           <RegionSelect
             currentCapability={undefined}
             disableClearable={true}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={regionToSelect.id}
@@ -260,6 +268,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={undefined}
@@ -277,6 +286,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={spyFn}
             regions={regions}
             value={undefined}
@@ -301,6 +311,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={spyFn}
             regions={regions}
             value={regionToSelect.id}
@@ -345,6 +356,7 @@ componentTests('RegionSelect', (mount) => {
       mount(
         <RegionSelect
           currentCapability="Object Storage"
+          isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
           value={undefined}
@@ -379,6 +391,7 @@ componentTests('RegionSelect', (mount) => {
       mount(
         <RegionSelect
           currentCapability="Object Storage"
+          isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
           value={undefined}
@@ -408,6 +421,7 @@ componentTests('RegionSelect', (mount) => {
       mount(
         <RegionSelect
           currentCapability={undefined}
+          isGeckoLAEnabled={false}
           onChange={() => {}}
           regions={regions}
           value={undefined}
@@ -438,6 +452,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={undefined}
@@ -450,6 +465,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}
@@ -462,6 +478,7 @@ componentTests('RegionSelect', (mount) => {
         mount(
           <RegionSelect
             currentCapability={undefined}
+            isGeckoLAEnabled={false}
             onChange={() => {}}
             regions={regions}
             value={selectedRegion.id}

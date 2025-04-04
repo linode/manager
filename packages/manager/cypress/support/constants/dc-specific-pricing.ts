@@ -2,7 +2,7 @@
  * @file Constants related to DC-specific pricing.
  */
 
-import { linodeTypeFactory } from '@src/factories';
+import { linodeTypeFactory } from '@linode/utilities';
 
 import type { LkePlanDescription } from 'support/api/lke';
 

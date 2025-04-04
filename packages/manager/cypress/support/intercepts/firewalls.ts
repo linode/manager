@@ -38,6 +38,29 @@ export const mockGetFirewalls = (
 };
 
 /**
+ * Intercepts GET request to fetch a Linode Interface's Firewalls
+ *
+ * @param linodeId - The ID of the Linode
+ * @param interfaceId - The ID of the Linode Interface
+ * @param firewalls - The Firewalls assigned to the LinodeInterface
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeInterfaceFirewalls = (
+  linodeId: number,
+  interfaceId: number,
+  firewalls: Firewall[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(
+      `linode/instances/${linodeId}/interfaces/${interfaceId}/firewalls`
+    ),
+    paginateResponse(firewalls)
+  );
+};
+
+/**
  * Intercepts POST request to create a Firewall and mocks response.
  *
  * @param firewall - A Firewall with which to mock response.

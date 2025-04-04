@@ -1,11 +1,11 @@
 import { TextField } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import { escapeRegExp } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
-import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ProcessesGraphs } from './ProcessesGraphs';

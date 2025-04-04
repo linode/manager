@@ -1,4 +1,6 @@
-import { imageFactory, regionFactory } from 'src/factories';
+import { regionFactory } from '@linode/utilities';
+
+import { imageFactory } from 'src/factories';
 
 import { getDisabledRegions } from './Region.utils';
 

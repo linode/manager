@@ -1,4 +1,5 @@
 import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { interceptGetAccountAvailability } from 'support/intercepts/account';
 import { interceptGetAllImages } from 'support/intercepts/images';
@@ -20,7 +21,6 @@ import { randomLabel, randomPhrase, randomString } from 'support/util/random';
 import { chooseRegion, getRegionByLabel } from 'support/util/regions';
 
 import { getFilteredImagesForImageSelect } from 'src/components/ImageSelect/utilities';
-import { createLinodeRequestFactory } from 'src/factories';
 
 import type { Image } from '@linode/api-v4';
 

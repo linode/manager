@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Box, Chip, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
@@ -10,7 +11,6 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from '@linode/queries';
 
 import { UsersActionMenu } from './UsersActionMenu';
 

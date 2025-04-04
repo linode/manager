@@ -1,10 +1,9 @@
-import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useEditableLabelState } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
