@@ -347,6 +347,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     marginBottom: 0,
     padding: theme.spacingFunction(16),
   };
+  const selectionsRemaining =
+    maxSelectionCount && selectedResources
+      ? Math.max(0, maxSelectionCount - selectedResources.length)
+      : undefined;
+
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -416,6 +421,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   backgroundColor: theme.tokens.color.Neutrals.White,
                 },
               })}
+              sxFormLabel={{
+                marginLeft: -1,
+              }}
               data-testid="show_selected_only"
               disabled={!(selectedResources.length || selectedOnly)}
               onClick={() => setSelectedOnly(!selectedOnly)}
@@ -451,6 +459,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <Grid item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
+                maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />
@@ -465,6 +474,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
+            maxSelectionCount={maxSelectionCount}
+            selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
         </Grid>
