@@ -26,6 +26,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useVPCLinodeInterface } from 'src/hooks/useVPCLinodeInterface';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -75,10 +76,17 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
-  const { isVPCOnlyLinode } = useVPCConfigInterface(
+  const { isVPCOnlyLinode: isVPCOnlyLinodeConfig } = useVPCConfigInterface(
     linodeID,
     linode?.interface_generation === 'legacy_config'
   );
+
+  const { isVPCOnlyLinode: isVPCOnlyLinodeInterface } = useVPCLinodeInterface(
+    linodeID,
+    linode?.interface_generation === 'linode'
+  );
+
+  const isVPCOnlyLinode = isVPCOnlyLinodeConfig || isVPCOnlyLinodeInterface;
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
