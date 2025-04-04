@@ -3,6 +3,10 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { ObjectStorageRoute } from './ObjectStorageRoute';
 
+export interface ObjectStorageDetailSearchParams {
+  prefix?: string;
+}
+
 export const objectStorageRoute = createRoute({
   component: ObjectStorageRoute,
   getParentRoute: () => rootRoute,
@@ -13,43 +17,53 @@ const objectStorageIndexRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/ObjectStorage/ObjectStorageLanding').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
   )
 );
 
-const objectStorageBucketsRoute = createRoute({
+const objectStorageBucketsLandingRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'buckets',
 }).lazy(() =>
-  import('src/features/ObjectStorage/ObjectStorageLanding').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
   )
 );
 
-const objectStorageAccessKeysRoute = createRoute({
+const objectStorageAccessKeysLandingRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'access-keys',
 }).lazy(() =>
-  import('src/features/ObjectStorage/ObjectStorageLanding').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
   )
 );
 
 const objectStorageBucketCreateRoute = createRoute({
-  getParentRoute: () => objectStorageBucketsRoute,
-  path: 'create',
+  getParentRoute: () => objectStorageRoute,
+  path: 'buckets/create',
 }).lazy(() =>
-  import('src/features/ObjectStorage/ObjectStorageLanding').then(
+  import('./objectStorageLazyRoutes').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageAccessKeyCreateRoute = createRoute({
+  getParentRoute: () => objectStorageRoute,
+  path: 'access-keys/create',
+}).lazy(() =>
+  import('./objectStorageLazyRoutes').then(
     (m) => m.objectStorageLandingLazyRoute
   )
 );
 
 const objectStorageBucketDetailRoute = createRoute({
-  getParentRoute: () => objectStorageBucketsRoute,
-  path: '$clusterId/$bucketName',
+  getParentRoute: () => objectStorageRoute,
+  path: 'buckets/$clusterId/$bucketName',
+  validateSearch: (search: ObjectStorageDetailSearchParams) => search,
 }).lazy(() =>
-  import('src/features/ObjectStorage/BucketDetail').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.bucketDetailLandingLazyRoute
   )
 );
@@ -58,7 +72,7 @@ const objectStorageBucketDetailObjectsRoute = createRoute({
   getParentRoute: () => objectStorageBucketDetailRoute,
   path: 'objects',
 }).lazy(() =>
-  import('src/features/ObjectStorage/BucketDetail').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.bucketDetailLandingLazyRoute
   )
 );
@@ -67,7 +81,7 @@ const objectStorageBucketDetailAccessRoute = createRoute({
   getParentRoute: () => objectStorageBucketDetailRoute,
   path: 'access',
 }).lazy(() =>
-  import('src/features/ObjectStorage/BucketDetail').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.bucketDetailLandingLazyRoute
   )
 );
@@ -76,19 +90,20 @@ const objectStorageBucketSSLRoute = createRoute({
   getParentRoute: () => objectStorageBucketDetailRoute,
   path: 'ssl',
 }).lazy(() =>
-  import('src/features/ObjectStorage/BucketDetail').then(
+  import('./objectStorageLazyRoutes').then(
     (m) => m.bucketDetailLandingLazyRoute
   )
 );
 export const objectStorageRouteTree = objectStorageRoute.addChildren([
-  objectStorageIndexRoute,
-  objectStorageBucketsRoute.addChildren([
-    objectStorageBucketDetailRoute.addChildren([
-      objectStorageBucketDetailObjectsRoute,
-      objectStorageBucketDetailAccessRoute,
-      objectStorageBucketSSLRoute,
-    ]),
+  objectStorageIndexRoute.addChildren([
     objectStorageBucketCreateRoute,
+    objectStorageAccessKeyCreateRoute,
+    objectStorageBucketsLandingRoute,
+    objectStorageAccessKeysLandingRoute
   ]),
-  objectStorageAccessKeysRoute,
+  objectStorageBucketDetailRoute.addChildren([
+    objectStorageBucketDetailObjectsRoute,
+    objectStorageBucketDetailAccessRoute,
+    objectStorageBucketSSLRoute,
+  ]),
 ]);
