@@ -108,15 +108,14 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     [editAlertDefinition]
   );
 
-  let isActive = false;
+  let isEnabled = false;
 
-  let message = '';
+  const message =
+    'Are you sure you want to disable this alert for all assigned resources?';
   let title = '';
   if (isDialogOpen) {
-    isActive = selectedAlert.status !== 'disabled';
-    message =
-      'Are you sure you want to disable this alert for all assigned resources';
-    title = `${isActive ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
+    isEnabled = selectedAlert.status !== 'disabled';
+    title = `${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
   }
 
   return (
@@ -220,7 +219,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
-        isActive={isActive}
+        isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
         message={message}

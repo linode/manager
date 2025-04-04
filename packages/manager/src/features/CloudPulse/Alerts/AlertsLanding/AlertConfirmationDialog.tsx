@@ -26,7 +26,7 @@ interface AlertConfirmationDialogProps {
   /**
    * Current state of the toggle button whether active or not
    */
-  isActive: boolean;
+  isEnabled: boolean;
 
   /**
    * Loading state of the confirmation dialog
@@ -49,7 +49,7 @@ export const AlertConfirmationDialog = React.memo(
       alert,
       handleCancel,
       handleConfirm,
-      isActive,
+      isEnabled,
       isLoading = false,
       isOpen,
       message,
@@ -59,9 +59,9 @@ export const AlertConfirmationDialog = React.memo(
     const actionsPanel = (
       <ActionsPanel
         primaryButtonProps={{
-          label: isActive ? 'Disable' : 'Enable',
+          label: isEnabled ? 'Disable' : 'Enable',
           loading: isLoading,
-          onClick: () => handleConfirm(alert, isActive),
+          onClick: () => handleConfirm(alert, isEnabled),
         }}
         secondaryButtonProps={{
           disabled: isLoading,
