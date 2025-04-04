@@ -23,18 +23,20 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
+import { createAlertDefinitionFormSchema as editAlertDefinitionFormSchema } from '../CreateAlert/schemas';
+import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
   convertAlertDefinitionValues,
-  getEditSchemaWithEntityIdValidation,
+  getSchemaWithEntityIdValidation,
   handleMultipleError,
 } from '../Utils/utils';
-import { editAlertDefinitionFormSchema } from './schemas';
 
+import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   APIError,
   Alert,
   AlertServiceType,
-  EditAlertDefinitionPayload,
+  EditAlertPayloadWithService,
 } from '@linode/api-v4';
 
 export interface EditAlertProps {
@@ -60,11 +62,14 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
-  const formMethods = useForm<EditAlertDefinitionPayload>({
-    defaultValues: filteredAlertDefinitionValues,
+  const formMethods = useForm<EditAlertDefintionForm>({
+    defaultValues: {
+      ...filteredAlertDefinitionValues,
+      serviceType,
+    },
     mode: 'onBlur',
     resolver: yupResolver(
-      getEditSchemaWithEntityIdValidation(
+      getSchemaWithEntityIdValidation(
         {
           aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
           serviceTypeObj: alertDetails.service_type,
@@ -80,14 +85,20 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
+    const editPayload: EditAlertPayloadWithService = filterEditFormValues(
+      values,
+      serviceType,
+      alertDetails.severity,
+      alertId
+    );
     try {
-      await editAlert({ alertId, serviceType, ...values });
+      await editAlert(editPayload);
       enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       history.push(definitionLanding);
     } catch (errors) {
-      handleMultipleError<EditAlertDefinitionPayload>({
+      handleMultipleError<EditAlertDefintionForm>({
         errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
         errors,
         multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,

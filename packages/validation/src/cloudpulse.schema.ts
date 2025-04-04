@@ -1,6 +1,6 @@
 import { array, number, object, string } from 'yup';
 
-export const fieldErrorMessage = 'This field is required.';
+const fieldErrorMessage = 'This field is required.';
 
 export const dimensionFilters = object({
   dimension_label: string().required(fieldErrorMessage),
@@ -16,7 +16,7 @@ export const metricCriteria = object({
     .required(fieldErrorMessage)
     .positive("Enter a positive value.")
     .typeError('The value should be a number.'),
-  dimension_filters: array().of(dimensionFilters.defined()).notRequired(),
+  dimension_filters: array().of(dimensionFilters.defined()).optional(),
 });
 
 export const triggerConditionValidation = object({
@@ -57,48 +57,36 @@ export const createAlertDefinitionSchema = object({
       }
     )
     .optional(),
+  severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
-      .min(1, 'At least one metric criteria is required.'),
-  }),
+      .min(1, 'At least one metric criteria is required.').required(),
+  }).required(),
   trigger_conditions: triggerConditionValidation,
   channel_ids: array()
-    .of(number().defined())
-    .min(1, 'At least one notification channel is required.').required(),
-  entity_ids: array().of(string().defined()).defined(),
+    .of(number().required())
+    .required()
+    .min(1, 'At least one notification channel is required.'),
   tags: array().of(string().defined()).optional(),
-  severity: number().oneOf([0, 1, 2, 3])
-    .required(fieldErrorMessage),
+  entity_ids: array().of(string().defined()).optional(),
 });
 
 export const editAlertDefinitionSchema = object({
   channel_ids: array().of(number().required()).optional(),
   description: string().optional(),
-  entity_ids: array().of(string().required()).optional(),
+  entity_ids: array().of(string().defined()).optional(),
   label: string()
-    .required(fieldErrorMessage)
-    .matches(
-      /^[^*#&+:<>"?@%{}\\\/]+$/,
-      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
-    )
-    .max(100, 'Name must be 100 characters or less.')
-    .test(
-      'no-special-start-end',
-      'Name cannot start or end with a special character.',
-      (value) => {
-        return !specialStartEndRegex.test(value ?? '');
-      }
-    ).optional(),
+    .optional(),
   rule_criteria:
     object({
-      rules: array().of(metricCriteria.concat(object({
-        dimension_filters: array().of(dimensionFilters.required()).optional()
-      })).required()).required(),
-    })
-      .optional(),
+      rules: array()
+        .of(metricCriteria)
+        .min(1, 'At least one metric criteria is required.').required(),
+    }).optional().default(undefined),
   tags: array().of(string().defined()).optional(),
-  trigger_conditions: triggerConditionValidation.optional(),
+  trigger_conditions:triggerConditionValidation.optional().default(undefined),
   severity: number().oneOf([0, 1, 2, 3])
     .optional(),
+  status: string().oneOf(['enabled', 'disabled', 'in progress', 'failed']).optional(),
 })

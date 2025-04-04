@@ -1,14 +1,12 @@
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
 import { createAlertDefinitionFormSchema } from '../CreateAlert/schemas';
-import { editAlertDefinitionFormSchema } from '../EditAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
   filterAlertsByStatusAndType,
-  getCreateSchemaWithEntityIdValidation,
-  getEditSchemaWithEntityIdValidation,
+  getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
 } from './utils';
@@ -90,6 +88,71 @@ it('should correctly convert an alert definition values to the required format',
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });
+it('should combine all the API errors to the parent field and return in errorMap properly', () => {
+  const errors: APIError[] = [
+    {
+      field: 'label',
+      reason: 'Label already exists',
+    },
+    {
+      field: 'label',
+      reason: 'Label should have less than 100 character',
+    },
+    {
+      field: 'label',
+      reason: 'Label should not start with special characters',
+    },
+    { field: 'severity', reason: 'Wrong field.' },
+    {
+      field: 'rule_criteria.rules[0].aggregate_function',
+      reason: 'Must be one of avg, sum, min, max, count and no full stop',
+    },
+    {
+      field: 'rule_criteria',
+      reason: 'Must have at least one rule',
+    },
+    {
+      field: 'rule_criteria.rules[0].dimension_filters[0].values',
+      reason: 'Invalid value.',
+    },
+    {
+      field: 'rule_criteria.rules[1].dimension_filters[3].values',
+      reason: 'Invalid value.',
+    },
+  ];
+
+  const CREATE_ALERT_ERROR_FIELD_MAP = {
+    rule_criteria: 'rule_criteria.rules',
+  };
+
+  const MULTILINE_ERROR_SEPARATOR = '|';
+  const SINGLELINE_ERROR_SEPARATOR = ' ';
+
+  const setError = vi.fn();
+
+  handleMultipleError({
+    errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+    errors,
+    multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+    setError,
+    singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+  });
+
+  // Check that setError was called for each field correctly
+  expect(setError).toHaveBeenCalledWith('label', {
+    message:
+      'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
+  });
+
+  expect(setError).toHaveBeenCalledWith('severity', {
+    message: 'Wrong field.',
+  });
+
+  expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
+    message:
+      'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
+  });
+});
 
 describe('getCreateSchemaWithEntityIdValidation', () => {
   const baseSchema = createAlertDefinitionFormSchema;
@@ -103,7 +166,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
+    const schema = getSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'unknown',
@@ -114,10 +177,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
-      { ...props },
-      baseSchema
-    );
+    const schema = getSchemaWithEntityIdValidation({ ...props }, baseSchema);
 
     await expect(
       schema.pick(['entity_ids']).validate({
@@ -129,7 +189,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getCreateSchemaWithEntityIdValidation(
+    const schema = getSchemaWithEntityIdValidation(
       {
         ...props,
         serviceTypeObj: 'linode',
@@ -143,192 +203,5 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
     ).rejects.toThrow(
       "The overall number of resources assigned to an alert can't exceed 5."
     );
-  });
-  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
-    const errors: APIError[] = [
-      {
-        field: 'label',
-        reason: 'Label already exists',
-      },
-      {
-        field: 'label',
-        reason: 'Label should have less than 100 character',
-      },
-      {
-        field: 'label',
-        reason: 'Label should not start with special characters',
-      },
-      { field: 'severity', reason: 'Wrong field.' },
-      {
-        field: 'rule_criteria.rules[0].aggregate_function',
-        reason: 'Must be one of avg, sum, min, max, count and no full stop',
-      },
-      {
-        field: 'rule_criteria',
-        reason: 'Must have at least one rule',
-      },
-      {
-        field: 'rule_criteria.rules[0].dimension_filters[0].values',
-        reason: 'Invalid value.',
-      },
-      {
-        field: 'rule_criteria.rules[1].dimension_filters[3].values',
-        reason: 'Invalid value.',
-      },
-    ];
-
-    const CREATE_ALERT_ERROR_FIELD_MAP = {
-      rule_criteria: 'rule_criteria.rules',
-    };
-
-    const MULTILINE_ERROR_SEPARATOR = '|';
-    const SINGLELINE_ERROR_SEPARATOR = ' ';
-
-    const setError = vi.fn();
-
-    handleMultipleError({
-      errors,
-      errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
-      multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
-      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
-      setError,
-    });
-
-    // Check that setError was called for each field correctly
-    expect(setError).toHaveBeenCalledWith('label', {
-      message:
-        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
-    });
-
-    expect(setError).toHaveBeenCalledWith('severity', {
-      message: 'Wrong field.',
-    });
-
-    expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
-      message:
-        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
-    });
-  });
-});
-
-describe('getEditSchemaWithEntityIdValidation', () => {
-  const baseSchema = editAlertDefinitionFormSchema;
-  const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
-    { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
-    { maxResourceSelectionCount: 5, serviceType: 'linode' },
-  ];
-  const props: AlertValidationSchemaProps = {
-    aclpAlertServiceTypeConfig,
-    serviceTypeObj: 'dbaas',
-  };
-
-  it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'unknown',
-      },
-      baseSchema
-    );
-    expect(schema).toBe(baseSchema);
-  });
-
-  it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      { ...props },
-      baseSchema
-    );
-
-    await expect(
-      schema.pick(['entity_ids']).validate({
-        entity_ids: ['id1', 'id2', 'id3', 'id4'],
-      })
-    ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 3."
-    );
-  });
-
-  it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getEditSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'linode',
-      },
-      baseSchema
-    );
-
-    await expect(
-      schema.pick(['entity_ids']).validate({
-        entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
-      })
-    ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 5."
-    );
-  });
-
-  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
-    const errors: APIError[] = [
-      {
-        field: 'label',
-        reason: 'Label already exists',
-      },
-      {
-        field: 'label',
-        reason: 'Label should have less than 100 character',
-      },
-      {
-        field: 'label',
-        reason: 'Label should not start with special characters',
-      },
-      { field: 'severity', reason: 'Wrong field.' },
-      {
-        field: 'rule_criteria.rules[0].aggregate_function',
-        reason: 'Must be one of avg, sum, min, max, count and no full stop',
-      },
-      {
-        field: 'rule_criteria',
-        reason: 'Must have at least one rule',
-      },
-      {
-        field: 'rule_criteria.rules[0].dimension_filters[0].values',
-        reason: 'Invalid value.',
-      },
-      {
-        field: 'rule_criteria.rules[1].dimension_filters[3].values',
-        reason: 'Invalid value.',
-      },
-    ];
-
-    const CREATE_ALERT_ERROR_FIELD_MAP = {
-      rule_criteria: 'rule_criteria.rules',
-    };
-
-    const MULTILINE_ERROR_SEPARATOR = '|';
-    const SINGLELINE_ERROR_SEPARATOR = ' ';
-
-    const setError = vi.fn();
-
-    handleMultipleError({
-      errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
-      errors,
-      multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
-      setError,
-      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
-    });
-
-    // Check that setError was called for each field correctly
-    expect(setError).toHaveBeenCalledWith('label', {
-      message:
-        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
-    });
-
-    expect(setError).toHaveBeenCalledWith('severity', {
-      message: 'Wrong field.',
-    });
-
-    expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
-      message:
-        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
-    });
   });
 });
