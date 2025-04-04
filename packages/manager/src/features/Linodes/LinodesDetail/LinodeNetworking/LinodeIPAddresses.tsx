@@ -44,8 +44,8 @@ import type { IPTypes } from './types';
 import type {
   IPAddress,
   IPRange,
-  Interface,
   LinodeIPsResponse,
+  VPCIP,
 } from '@linode/api-v4';
 
 export const ipTableId = 'ips';
@@ -75,8 +75,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
-  const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
-    linodeID
+  const { isVPCOnlyLinode } = useVPCConfigInterface(
+    linodeID,
+    linode?.interface_generation === 'legacy_config'
   );
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
@@ -143,7 +144,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
-  const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
+  const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
     <Box>
@@ -329,51 +330,9 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
-export const vpcConfigInterfaceToDisplayRows = (
-  configInterfaceWithVPC: Interface
-) => {
-  const ipDisplay: IPDisplay[] = [];
-
-  const { ip_ranges, ipv4 } = configInterfaceWithVPC;
-  const emptyProps = {
-    gateway: '',
-    rdns: '',
-    subnetMask: '',
-  };
-
-  if (ipv4?.vpc) {
-    ipDisplay.push({
-      address: ipv4.vpc,
-      type: 'VPC – IPv4',
-      ...emptyProps,
-    });
-  }
-
-  if (ipv4?.nat_1_1) {
-    ipDisplay.push({
-      address: ipv4.nat_1_1,
-      type: 'VPC NAT – IPv4',
-      ...emptyProps,
-    });
-  }
-
-  if (ip_ranges) {
-    ip_ranges.forEach((ip_range) => {
-      ipDisplay.push({
-        address: ip_range,
-        type: 'VPC – Range – IPv4',
-        ...emptyProps,
-      });
-    });
-  }
-
-  return ipDisplay;
-};
-
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse,
-  configInterfaceWithVPC?: Interface
+  ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
@@ -396,13 +355,10 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  if (configInterfaceWithVPC) {
-    if (configInterfaceWithVPC.ipv4?.nat_1_1) {
-      // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
-      ipDisplay.shift();
-    }
-    ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
+  if (ipv4.vpc.find((vpcIp) => vpcIp.nat_1_1)) {
+    ipDisplay.shift();
   }
+  ipDisplay.push(...createVPCIPv4Display(ipv4.vpc));
 
   // IPv6 ranges and pools to display in the networking table
   ipDisplay.push(
@@ -446,6 +402,40 @@ type ipKey =
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
+};
+
+const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  const vpcIPDisplay: IPDisplay[] = [];
+  for (const ip of ips) {
+    if (ip.address_range) {
+      vpcIPDisplay.push({
+        address: ip.address_range,
+        type: 'VPC – Range – IPv4',
+        ...emptyProps,
+      });
+    }
+    if (ip.address) {
+      vpcIPDisplay.push({
+        address: ip.address,
+        type: 'VPC – IPv4',
+        ...emptyProps,
+      });
+    }
+    if (ip.nat_1_1) {
+      vpcIPDisplay.push({
+        address: ip.nat_1_1,
+        type: 'VPC NAT – IPv4',
+        ...emptyProps,
+      });
+    }
+  }
+  return vpcIPDisplay;
 };
 
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {

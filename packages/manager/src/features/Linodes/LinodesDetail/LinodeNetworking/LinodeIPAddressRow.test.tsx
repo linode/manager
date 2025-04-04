@@ -7,7 +7,6 @@ import * as React from 'react';
 
 import {
   ipResponseToDisplayRows,
-  vpcConfigInterfaceToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';

@@ -9,6 +9,7 @@ import {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
+import { VPCIP } from 'src/vpcs';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -150,6 +151,7 @@ export interface LinodeIPsResponseIPV4 {
   private: IPAddress[];
   shared: IPAddress[];
   reserved: IPAddress[];
+  vpc: VPCIP[];
 }
 
 export interface LinodeIPsResponseIPV6 {

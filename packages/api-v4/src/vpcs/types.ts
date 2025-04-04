@@ -62,15 +62,10 @@ export interface SubnetAssignedLinodeData {
   interfaces: SubnetLinodeInterfaceData[];
 }
 
-export interface VPCIP {
+export interface VPCIPv4 {
   active: boolean;
   address: string | null;
   address_range: string | null;
-  ipv6_range: string | null;
-  ipv6_is_public: boolean | null;
-  ipv6_addresses: {
-    slaac_address: string;
-  }[];
   config_id: number | null;
   gateway: string | null;
   interface_id: number;
@@ -81,4 +76,12 @@ export interface VPCIP {
   subnet_id: number;
   subnet_mask: string;
   vpc_id: number;
+}
+
+export interface VPCIP extends VPCIPv4 {
+  ipv6_range: string | null;
+  ipv6_is_public: boolean | null;
+  ipv6_addresses: {
+    slaac_address: string;
+  }[];
 }
