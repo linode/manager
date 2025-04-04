@@ -1,23 +1,26 @@
-import { Grid, TableBody, TableHead } from '@mui/material';
+import { Box } from '@linode/ui';
+import { groupByTags, sortGroups } from '@linode/utilities';
+import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
-import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
-import { AlertTableRow } from './AlertTableRow';
+import { AlertsTable } from './AlertsTable';
 import { AlertListingTableLabelMap } from './constants';
+import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
 import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
@@ -27,6 +30,10 @@ export interface AlertsListTableProps {
    * The list of alerts to display
    */
   alerts: Alert[];
+  /**
+   * The current state of the alerts grouped by tag
+   */
+  alertsGroupedByTag?: boolean;
   /**
    * An error to display if there was an issue fetching the alerts
    */
@@ -43,10 +50,22 @@ export interface AlertsListTableProps {
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
+  /**
+   * The callback to toggle the alerts grouped by tag
+   */
+  toggleAlertsGroupedByTag?: () => boolean;
 }
-
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
-  const { alerts, error, isLoading, scrollToElement, services } = props;
+  const {
+    alerts,
+    alertsGroupedByTag,
+    error,
+    isLoading,
+    scrollToElement,
+    services,
+    toggleAlertsGroupedByTag,
+  } = props;
+
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
     : undefined;
@@ -65,7 +84,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleEnableDisable = React.useCallback((alert: Alert) => {
+  const handleStatusChange = React.useCallback((alert: Alert) => {
     setSelectedAlert(alert);
     setIsDialogOpen(true);
   }, []);
@@ -121,15 +140,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   }
 
   return (
-    <>
-      <OrderBy
-        data={alerts}
-        order="asc"
-        orderBy="service_type"
-        preferenceKey="alerts-landing"
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
+    <OrderBy
+      data={alerts}
+      order="asc"
+      orderBy="service_type"
+      preferenceKey="alerts-landing"
+    >
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+        return (
+          <Paginate data={alerts}>
             {({
               count,
               data: paginatedAndOrderedAlerts,
@@ -139,12 +158,13 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
               pageSize,
             }) => (
               <>
-                <Grid
-                  sx={{
-                    marginTop: 2,
-                  }}
-                >
-                  <Table colCount={7} data-qa="alert-table" size="small">
+                <Grid2 sx={{ marginTop: 2 }}>
+                  <Table
+                    colCount={7}
+                    data-qa="alert-table"
+                    size="small"
+                    tableClass={alertsGroupedByTag ? 'MuiTable-groupByTag' : ''}
+                  >
                     <TableHead>
                       <TableRow>
                         {AlertListingTableLabelMap.map((value) => (
@@ -166,7 +186,24 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                             {value.colName}
                           </TableSortCell>
                         ))}
-                        <TableCell actionCell />
+                        <TableCell sx={{ padding: '0 !important' }}>
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              gap: 3,
+                              justifyContent: 'flex-end',
+                              paddingRight: 1.5,
+                            }}
+                          >
+                            <GroupByTagToggle
+                              toggleGroupByTag={
+                                toggleAlertsGroupedByTag ?? (() => false)
+                              }
+                              isGroupedByTag={alertsGroupedByTag ?? false}
+                            />
+                          </Box>
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -176,57 +213,53 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         loading={isLoading}
                         loadingProps={{ columns: 6 }}
                       />
-                      {paginatedAndOrderedAlerts?.map((alert) => (
-                        <AlertTableRow
-                          handlers={{
-                            handleDetails: () => handleDetails(alert),
-                            handleEdit: () => handleEdit(alert),
-                            handleEnableDisable: () =>
-                              handleEnableDisable(alert),
-                          }}
-                          alert={alert}
-                          key={alert.id}
+                      {alertsGroupedByTag ? (
+                        <GroupedAlertsTable
+                          groupedAlerts={sortGroups(groupByTags(orderedData))}
+                          handleDetails={handleDetails}
+                          handleEdit={handleEdit}
+                          handleStatusChange={handleStatusChange}
                           services={services}
                         />
-                      ))}
+                      ) : (
+                        <AlertsTable
+                          alerts={paginatedAndOrderedAlerts}
+                          handleDetails={handleDetails}
+                          handleEdit={handleEdit}
+                          handleStatusChange={handleStatusChange}
+                          services={services}
+                        />
+                      )}
                     </TableBody>
                   </Table>
-                </Grid>
-                <PaginationFooter
-                  handlePageChange={(page) => {
-                    handlePageChange(page);
-                    requestAnimationFrame(() => {
-                      scrollToElement();
-                    });
-                  }}
-                  handleSizeChange={(pageSize) => {
-                    handlePageSizeChange(pageSize);
-                    handlePageChange(1);
-                    requestAnimationFrame(() => {
-                      scrollToElement();
-                    });
-                  }}
-                  count={count}
-                  eventCategory="Alert Definitions Table"
-                  page={page}
-                  pageSize={pageSize}
-                  sx={{ border: 0 }}
-                />
+                </Grid2>
+                {!alertsGroupedByTag && (
+                  <PaginationFooter
+                    handlePageChange={(page: number) => {
+                      handlePageChange(page);
+                      requestAnimationFrame(() => {
+                        scrollToElement();
+                      });
+                    }}
+                    handleSizeChange={(pageSize) => {
+                      handlePageSizeChange(pageSize);
+                      handlePageChange(1);
+                      requestAnimationFrame(() => {
+                        scrollToElement();
+                      });
+                    }}
+                    count={count}
+                    eventCategory="Alert Definitions Table"
+                    page={page}
+                    pageSize={pageSize}
+                    sx={{ border: 0 }}
+                  />
+                )}
               </>
             )}
           </Paginate>
-        )}
-      </OrderBy>
-      <AlertConfirmationDialog
-        alert={selectedAlert}
-        handleCancel={handleCancel}
-        handleConfirm={handleConfirm}
-        isEnabled={isEnabled}
-        isLoading={isUpdating}
-        isOpen={isDialogOpen}
-        message={message}
-        title={title}
-      />
-    </>
+        );
+      }}
+    </OrderBy>
   );
 });

@@ -23,6 +23,7 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 const mockScroll = vi.fn();
+
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
     const { getByText } = renderWithTheme(
@@ -202,5 +203,21 @@ describe('Alert List Table test', () => {
     await userEvent.click(getByRole('button', { name: 'Disable' }));
 
     expect(getByText('Disabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
+  });
+
+  it('should toggle alerts grouped by tag', async () => {
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertsListTable
+        alerts={[alertFactory.build({ label: 'Test Alert' })]}
+        alertsGroupedByTag={true}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[{ label: 'Linode', value: 'linode' }]}
+        toggleAlertsGroupedByTag={() => true}
+      />
+    );
+    const toggleButton = getByLabelText('Toggle group by tag');
+    await userEvent.click(toggleButton);
+    expect(getByText('group by tag is currently enabled')).toBeInTheDocument();
   });
 });
