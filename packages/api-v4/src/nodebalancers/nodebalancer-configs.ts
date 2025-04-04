@@ -8,9 +8,13 @@ import { ResourcePage as Page, Params } from '../types';
 import {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
+  RebuildNodeBalancerConfig,
   UpdateNodeBalancerConfig,
 } from './types';
-import { combineConfigNodeAddressAndPort } from './utils';
+import {
+  combineConfigNodeAddressAndPort,
+  combineConfigNodeAddressAndPortBeta,
+} from './utils';
 
 /**
  * getNodeBalancerConfigs
@@ -99,7 +103,61 @@ export const createNodeBalancerConfigBeta = (
     setData(
       data,
       createNodeBalancerConfigSchema,
+      combineConfigNodeAddressAndPortBeta
+    )
+  );
+
+/**
+ * rebuildNodeBalancerConfig
+ *
+ * Rebuilds a NodeBalancer Config and its Nodes that you have permission to modify.
+ *
+ * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
+ * @param configId { number } The ID of the configuration profile to be updated
+ */
+export const rebuildNodeBalancerConfig = (
+  nodeBalancerId: number,
+  configId: number,
+  data: RebuildNodeBalancerConfig
+) =>
+  Request<NodeBalancerConfig>(
+    setMethod('POST'),
+    setURL(
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/rebuild`
+    ),
+    setData(
+      data,
+      createNodeBalancerConfigSchema,
       combineConfigNodeAddressAndPort
+    )
+  );
+
+/**
+ * rebuildNodeBalancerConfigBeta
+ *
+ * Rebuilds a NodeBalancer Config and its Nodes that you have permission to modify.
+ *
+ * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
+ * @param configId { number } The ID of the configuration profile to be updated
+ */
+export const rebuildNodeBalancerConfigBeta = (
+  nodeBalancerId: number,
+  configId: number,
+  data: RebuildNodeBalancerConfig
+) =>
+  Request<NodeBalancerConfig>(
+    setMethod('POST'),
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/configs/${encodeURIComponent(configId)}/rebuild`
+    ),
+    setData(
+      data,
+      createNodeBalancerConfigSchema,
+      combineConfigNodeAddressAndPortBeta
     )
   );
 

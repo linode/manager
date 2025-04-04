@@ -4,6 +4,103 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-04-08] - v1.139.0
+
+
+### Added:
+
+- Add cache update logic on edit alert query ([#11917](https://github.com/linode/manager/pull/11917))
+
+### Changed:
+
+- Update Breadcrumb component to conform to Akamai Design System specs ([#11841](https://github.com/linode/manager/pull/11841))
+- Display interface type first in Linode Network IP Addresses table ([#11865](https://github.com/linode/manager/pull/11865))
+- Update Radio Button component to conform to Akamai Design System specs ([#11878](https://github.com/linode/manager/pull/11878))
+- Change `GlobalFilters.tsx` and `Zoomer.tsx` to add color on hover of icon ([#11883](https://github.com/linode/manager/pull/11883))
+- Update styles to CDS for profile menu ([#11884](https://github.com/linode/manager/pull/11884))
+- Update BetaChip styles, its usage and updated BetaChip component tests ([#11965](https://github.com/linode/manager/pull/11965))
+- Disable form fields on Firewall Create page for restricted users ([#11954](https://github.com/linode/manager/pull/11954))
+- Update 'Learn more' docs link for Accelerated Compute plans ([#11970](https://github.com/linode/manager/pull/11970))
+
+### Fixed:
+
+- Database action menu incorrectly enabled with `read-only` grant and `Delete Cluster` button incorrectly disabled with `read/write` grant ([#11890](https://github.com/linode/manager/pull/11890))
+- Tabs keyboard navigation on some Tanstack rerouted features ([#11894](https://github.com/linode/manager/pull/11894))
+- Console errors on create menu & Linode create flow ([#11933](https://github.com/linode/manager/pull/11933))
+- PAT Token drawer logic when Child Account Access is hidden ([#11935](https://github.com/linode/manager/pull/11935))
+- Profile Menu Icon Size Inconsistency ([#11946](https://github.com/linode/manager/pull/11946))
+- Unclearable ACL IP addresses for LKE clusters ([#11947](https://github.com/linode/manager/pull/11947))
+
+### Removed:
+
+- Ramda from `Utilities` package ([#11861](https://github.com/linode/manager/pull/11861))
+- Move `ListItemOption` from `manager` to `ui` package ([#11790](https://github.com/linode/manager/pull/11790))
+- Move `regionsData` from `manager` to `utilities` package ([#11790](https://github.com/linode/manager/pull/11790))
+- Move `LinodeCreateType` to `utilities` package ([#11790](https://github.com/linode/manager/pull/11790))
+- Move `LinodeSelect` to new `shared` package ([#11844](https://github.com/linode/manager/pull/11844))
+- Legacy BetaChip component ([#11872](https://github.com/linode/manager/pull/11872))
+- Move `doesRegionSupportFeature` from `manager` to `utilities` package ([#11891](https://github.com/linode/manager/pull/11891))
+- Move Tags-related queries and dependencies to shares `queries` package ([#11897](https://github.com/linode/manager/pull/11897))
+- Move Support-related queries and dependencies to shared `queries` package ([#11904](https://github.com/linode/manager/pull/11904))
+- Move `luxon` dependent utils from `manager` to `utilities` package ([#11905](https://github.com/linode/manager/pull/11905))
+- Move ramda dependent utils ([#11913](https://github.com/linode/manager/pull/11913))
+- Move `useIsGeckoEnabled` hook out of `RegionSelect` to `@linode/shared` package ([#11918](https://github.com/linode/manager/pull/11918))
+- Remove region selector from Edit VPC drawer since data center assignment cannot be changed. ([#11929](https://github.com/linode/manager/pull/11929))
+- DBaaS: deprecated types, outdated and unused code in  DatabaseCreate and DatabaseSummary ([#11909](https://github.com/linode/manager/pull/11909))
+- Move `useFormattedDate` from `manager` to `utilities` package ([#11931](https://github.com/linode/manager/pull/11931))
+- Move stackscripts-related queries and dependencies to shared `queries` package ([#11949](https://github.com/linode/manager/pull/11949))
+
+### Tech Stories:
+
+- Make `RegionSelect` and `RegionMultiSelect` pure ([#11790](https://github.com/linode/manager/pull/11790))
+- Nodebalancer routing (Tanstack) ([#11858](https://github.com/linode/manager/pull/11858))
+- Add `FirewallSelect` component ([#11887](https://github.com/linode/manager/pull/11887))
+- Add eslint rule for deprecating mui theme.spacing  ([#11889](https://github.com/linode/manager/pull/11889))
+- Resolve Path Traversal Vulnerabilities detected from semgrep ([#11914](https://github.com/linode/manager/pull/11914))
+- Move feature flag code out of Kubernetes queries file ([#11922](https://github.com/linode/manager/pull/11922))
+- Fix incorrect secret in `publish-packages` Github Action  ([#11923](https://github.com/linode/manager/pull/11923))
+- Remove hashing on Pendo account and visitor ids ([#11950](https://github.com/linode/manager/pull/11950))
+
+### Tests:
+
+- Add HTML report generation for Cypress test results ([#11795](https://github.com/linode/manager/pull/11795))
+- Add `env:premiumPlans` test tag for tests which require premium plan availability ([#11886](https://github.com/linode/manager/pull/11886))
+- Fix Linode create end-to-end test failures against alternative environments ([#11886](https://github.com/linode/manager/pull/11886))
+- Delete redundant Linode create SSH key test ([#11886](https://github.com/linode/manager/pull/11886))
+- Add test for Add Linode Interface drawer ([#11887](https://github.com/linode/manager/pull/11887))
+- Prevent legacy regions from being used by Cypress tests ([#11892](https://github.com/linode/manager/pull/11892))
+- Temporarily skip Firewall end-to-end tests ([#11898](https://github.com/linode/manager/pull/11898))
+- Add tests for restricted user on database page ([#11912](https://github.com/linode/manager/pull/11912))
+- Allow Cypress Volume tests to pass against alternative environments ([#11939](https://github.com/linode/manager/pull/11939))
+- Fix create-linode-view-code-snippet.spec.ts test broken in devcloud ([#11948](https://github.com/linode/manager/pull/11948))
+- Improve stability of Linode config Cypress tests ([#11951](https://github.com/linode/manager/pull/11951))
+
+### Upcoming Features:
+
+- DBaaS Advanced Configurations: Add UI for existing engine options in the drawer ([#11812](https://github.com/linode/manager/pull/11812))
+- Add Default Firewalls paper to Account Settings ([#11828](https://github.com/linode/manager/pull/11828))
+- Add functionality to support the 'Assign New Roles' drawer for a single user in IAM ([#11834](https://github.com/linode/manager/pull/11834))
+- Update Firewall Devices Linode landing table to account for new interface devices ([#11842](https://github.com/linode/manager/pull/11842))
+- Add Quotas Tab Beta Chip ([#11872](https://github.com/linode/manager/pull/11872))
+- Add AlertListNoticeMessages component for handling multiple API error messages, update AddChannelListing and MetricCriteria components to display these errors, add handleMultipleError util method for aggregating, mapping the errors to fields ([#11874](https://github.com/linode/manager/pull/11874))
+- Disable query to get Linode Interface when Interface Delete dialog is closed ([#11881](https://github.com/linode/manager/pull/11881))
+- Update title for Delete Interface dialog ([#11881](https://github.com/linode/manager/pull/11881))
+- Add VPC support to the Add Network Interface Drawer ([#11887](https://github.com/linode/manager/pull/11887))
+- Add Interface Details drawer for Linode Interfaces ([#11888](https://github.com/linode/manager/pull/11888))
+- Add a new confirmation dialog for the unassigning role flow in IAM ([#11893](https://github.com/linode/manager/pull/11893))
+- Add VPC & Firewall section to LKE-E create flow ([#11901](https://github.com/linode/manager/pull/11901))
+- Update success message for create/edit/enable/disable alert at `CreateAlertDefinition.tsx`, `EditAlertDefinition.tsx`, and `AlertListTable.tsx` ([#11903](https://github.com/linode/manager/pull/11903))
+- Update Firewall Landing table to account for Linode Interface devices and Default Firewalls ([#11920](https://github.com/linode/manager/pull/11920))
+- Add Default Firewall chips to Firewall Detail page ([#11920](https://github.com/linode/manager/pull/11920))
+- Remove preselected role from Change Role drawer ([#11926](https://github.com/linode/manager/pull/11926))
+- Adjust logic for displaying encryption status on Linode Details page and encryption copy on LKE Create page ([#11930](https://github.com/linode/manager/pull/11930))
+- DBaaS Advanced Configurations: set up Autocomplete to display categorized options, add/remove configs, and implement a dynamic validation schema for all field types ([#11885](https://github.com/linode/manager/pull/11885))
+- Support more VPC features when using Linode Interfaces on the Linode Create page ([#11915](https://github.com/linode/manager/pull/11915))
+- Pre-select default firewalls on the Linode Create flow ([#11915](https://github.com/linode/manager/pull/11915))
+- Update mock data and tests according to IAM backend response updates ([#11919](https://github.com/linode/manager/pull/11919))
+- Update `vpcIPFactory` to support IPv6 ([#11938](https://github.com/linode/manager/pull/11938))
+- Add a 2-minute refetch interval in alerts.ts, add isLoading and remove isFetching in AlertDetail.tsx. ([#11945](https://github.com/linode/manager/pull/11945))
+
 ## [2025-03-26] - v1.138.1
 
 ### Fixed:

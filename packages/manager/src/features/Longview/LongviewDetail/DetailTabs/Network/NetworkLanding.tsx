@@ -1,19 +1,19 @@
+import { isToday as _isToday } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { isToday as _isToday } from 'src/utilities/isToday';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
+
+import { StyledBox } from '../Disks/Disks.styles';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
+import { NetworkGraphs } from './NetworkGraphs';
 
 import type {
   LongviewNetworkInterface,
   WithStartAndEnd,
 } from '../../../request.types';
-import { StyledBox } from '../Disks/Disks.styles';
-import { useGraphs } from '../OverviewGraphs/useGraphs';
-import { NetworkGraphs } from './NetworkGraphs';
-
 import type { APIError } from '@linode/api-v4';
-import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
 interface Props {
   clientAPIKey: string;

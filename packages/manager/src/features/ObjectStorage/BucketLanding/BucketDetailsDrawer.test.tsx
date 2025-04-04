@@ -1,4 +1,8 @@
-import { readableBytes, truncateMiddle } from '@linode/utilities';
+import {
+  readableBytes,
+  regionFactory,
+  truncateMiddle,
+} from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
@@ -7,7 +11,6 @@ import {
   objectStorageBucketFactory,
   objectStorageBucketFactoryGen2,
   profileFactory,
-  regionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
