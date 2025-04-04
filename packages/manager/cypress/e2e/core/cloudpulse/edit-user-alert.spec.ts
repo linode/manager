@@ -150,7 +150,7 @@ describe('Integration Tests for Edit Alert', () => {
     mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
       'updateDefinitions'
     );
-    mockCreateAlertDefinition(service_type, customAlertDefinition).as(
+    mockCreateAlertDefinition(service_type, alertDetails).as(
       'createAlertDefinition'
     );
     mockGetCloudPulseMetricDefinitions(service_type, metricDefinitions);
