@@ -83,7 +83,7 @@ export const CloudPulseDashboardLanding = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Dashboards" />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ width: 'inherit !important' }}>
         <Grid item xs>
           <LandingHeader
             breadcrumbProps={{ pathname: '/metrics' }}
