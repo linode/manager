@@ -5,9 +5,10 @@ import type { CannotUpgradeInterfaceReasons } from 'src/hooks/useCanUpgradeInter
 
 const UPGRADE_REASON_TO_COPY: Record<CannotUpgradeInterfaceReasons, string> = {
   isLegacyConfigOnlyAccount:
-    'Your account does not support upgrading to Linode interfaces.',
-  isLkeLinode: 'This Linode belongs to an LKE cluster.',
-  regionUnsupported: "Your Linode's region does not support Linode interfaces.",
+    'Linode Interfaces are not enabled in your account settings.',
+  isLkeLinode:
+    'Linode Interfaces are not available for LKE Cluster Linodes yet.',
+  regionUnsupported: 'Linode Interfaces are not available in this region yet.',
 };
 
 export const getUnableToUpgradeTooltipText = (
@@ -19,14 +20,24 @@ export const getUnableToUpgradeTooltipText = (
 
   return (
     <Stack>
-      <Typography>Cannot upgrade interfaces:</Typography>
-      <List sx={{ listStyleType: 'disc', pl: 3 }}>
-        {reasons.map((entity) => (
-          <ListItem disablePadding key={entity} sx={{ display: 'list-item' }}>
-            {UPGRADE_REASON_TO_COPY[entity]}
-          </ListItem>
-        ))}
-      </List>
+      {reasons.length === 1 ? (
+        <Typography>{UPGRADE_REASON_TO_COPY[reasons[0]]}</Typography>
+      ) : (
+        <>
+          <Typography>Cannot upgrade interfaces:</Typography>
+          <List sx={{ listStyleType: 'disc', pl: 3 }}>
+            {reasons.map((entity) => (
+              <ListItem
+                disablePadding
+                key={entity}
+                sx={{ display: 'list-item' }}
+              >
+                {UPGRADE_REASON_TO_COPY[entity]}
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
     </Stack>
   );
 };
