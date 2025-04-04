@@ -25,8 +25,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Database action menu incorrectly enabled with `read-only` grant and `Delete Cluster` button incorrectly disabled with `read/write` grant ([#11890](https://github.com/linode/manager/pull/11890))
 - Tabs keyboard navigation on some Tanstack rerouted features ([#11894](https://github.com/linode/manager/pull/11894))
-- Pagination for subnets in VPC Subnet table ([#11906](https://github.com/linode/manager/pull/11906))
-- IP incrementation in Subnet Create drawer ([#11906](https://github.com/linode/manager/pull/11906))
 - Console errors on create menu & Linode create flow ([#11933](https://github.com/linode/manager/pull/11933))
 - PAT Token drawer logic when Child Account Access is hidden ([#11935](https://github.com/linode/manager/pull/11935))
 - Profile Menu Icon Size Inconsistency ([#11946](https://github.com/linode/manager/pull/11946))
