@@ -21,23 +21,25 @@ export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
   });
 };
 
-export const useLinodeConfigQuery = (
-  id: number,
-  configId: number,
-  enabled = true
-) => {
+export const useLinodeConfigQuery = (options: {
+  configId: number;
+  enabled: boolean;
+  linodeId: number;
+}) => {
+  const { configId, enabled, linodeId } = options;
   return useQuery<Config, APIError[]>({
-    ...linodeQueries.linode(id)._ctx.configs._ctx.config(configId),
+    ...linodeQueries.linode(linodeId)._ctx.configs._ctx.config(configId),
     enabled,
   });
 };
 
-export const useLinodeConfigInterfaceQuery = (
-  linodeId: number,
+export const useLinodeConfigInterfaceQuery = (options: {
   configId: number,
+  enabled: boolean,
   interfaceId: number,
-  enabled = true
-) => {
+  linodeId: number,
+}) => {
+  const { configId, enabled, interfaceId, linodeId } = options;
   return useQuery<Interface, APIError[]>({
     ...linodeQueries
       .linode(linodeId)

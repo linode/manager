@@ -156,11 +156,11 @@ describe('Create Linode with VPCs', () => {
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockUpdatedSubnet]).as('getSubnets');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfig(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockLinodeConfig
-    ).as('getLinodeConfig');
+    mockGetLinodeConfig({
+      config: mockLinodeConfig,
+      configId: mockLinodeConfig.id,
+      linodeId: mockLinode.id,
+    }).as('getLinodeConfig');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
@@ -328,14 +328,15 @@ describe('Create Linode with VPCs', () => {
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockUpdatedSubnet]).as('getSubnets');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfig(
-      mockLinode.id,
-      mockLinodeConfig.id,
-      mockLinodeConfig
-    ).as('getLinodeConfig');
+    mockGetLinodeConfig({
+      config: mockLinodeConfig,
+      configId: mockLinodeConfig.id,
+      linodeId: mockLinode.id,
+    }).as('getLinodeConfig');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
+    cy.wait('@getLinodeConfig');
     cy.findByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG).should('not.exist');
   });
 

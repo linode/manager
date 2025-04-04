@@ -127,11 +127,12 @@ export const mockGetLinodeConfigs = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetLinodeConfig = (
-  linodeId: number,
-  configId: number,
-  config: Config
-): Cypress.Chainable<null> => {
+export const mockGetLinodeConfig = (inputs: {
+  config: Config;
+  configId: number;
+  linodeId: number;
+}): Cypress.Chainable<null> => {
+  const { config, configId, linodeId } = inputs;
   return cy.intercept(
     'GET',
     apiMatcher(`linode/instances/${linodeId}/configs/${configId}`),
@@ -149,12 +150,13 @@ export const mockGetLinodeConfig = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetLinodeConfigInterface = (
-  linodeId: number,
-  configId: number,
-  interfaceId: number,
-  configInterface: Interface
-): Cypress.Chainable<null> => {
+export const mockGetLinodeConfigInterface = (inputs: {
+  configId: number;
+  configInterface: Interface;
+  interfaceId: number;
+  linodeId: number;
+}): Cypress.Chainable<null> => {
+  const { configId, configInterface, interfaceId, linodeId } = inputs;
   return cy.intercept(
     'GET',
     apiMatcher(

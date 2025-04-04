@@ -23,7 +23,7 @@ import {
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
-import { hasUnrecommendedConfiguration } from '../utils';
+import { hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration } from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 
 import type {
@@ -114,7 +114,11 @@ export const SubnetLinodeRow = (props: Props) => {
     data: config,
     error: configError,
     isLoading: configLoading,
-  } = useLinodeConfigQuery(linodeId, configId ?? -1, !isLinodeInterface);
+  } = useLinodeConfigQuery({
+    configId: configId ?? -1,
+    enabled: !isLinodeInterface,
+    linodeId,
+  });
 
   const configInterface = config?.interfaces?.find(
     (iface) => iface.id === interfaceId
@@ -124,13 +128,13 @@ export const SubnetLinodeRow = (props: Props) => {
   const interfaceLoading = linodeInterfaceLoading ?? configLoading;
 
   // Linode Interfaces: show unrecommended notice if VPC has a nat_1_1 address but isn't the default route
-  const hasUnrecommendedSetup = isLinodeInterface
+  const hasUnrecommendedConfiguration = isLinodeInterface
     ? isInterfaceActive &&
       linodeInterface?.vpc?.ipv4.addresses.some(
         (address) => address.nat_1_1_address
       ) &&
       !linodeInterface?.default_route.ipv4
-    : hasUnrecommendedConfiguration(config, subnetId);
+    : _hasUnrecommendedConfiguration(config, subnetId);
 
   if (linodeLoading || !linode) {
     return (
@@ -174,7 +178,7 @@ export const SubnetLinodeRow = (props: Props) => {
   );
 
   const labelCell =
-    !isVPCLKEEnterpriseCluster && hasUnrecommendedSetup ? (
+    !isVPCLKEEnterpriseCluster && hasUnrecommendedConfiguration ? (
       <Box
         data-testid={WARNING_ICON_UNRECOMMENDED_CONFIG}
         sx={{ alignItems: 'center', display: 'flex' }}
