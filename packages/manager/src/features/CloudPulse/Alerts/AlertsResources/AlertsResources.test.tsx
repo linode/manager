@@ -147,7 +147,7 @@ describe('AlertResources component tests', () => {
     const { getByTestId } = renderWithTheme(
       <AlertResources {...alertResourcesProp} />
     );
-    const resourceColumn = getByTestId('entity'); // get the resource header column
+    const resourceColumn = getByTestId('entity'); // get the entity header column
     await userEvent.click(resourceColumn);
 
     const tableBody = getByTestId('alert_resources_content');
