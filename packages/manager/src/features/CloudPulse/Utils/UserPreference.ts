@@ -1,10 +1,10 @@
-import { useRef } from 'react';
-
 import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { useRef } from 'react';
 
 import { DASHBOARD_ID, WIDGETS } from './constants';
 
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';
+import type { ManagerPreferences } from '@linode/utilities';
 
 interface AclpPreferenceObject {
   isLoading: boolean;
@@ -73,5 +73,49 @@ export const useAclpPreference = (): AclpPreferenceObject => {
     preferences: preferences?.aclpPreference ?? {},
     updateGlobalFilterPreference,
     updateWidgetPreference,
+  };
+};
+
+/**
+ *
+ * @param key key of the preference to be toggled
+ * @param options options for the preference
+ */
+export const usePreferencesToggle = <K extends keyof ManagerPreferences>(
+  key: K,
+  options: [ManagerPreferences[K], ManagerPreferences[K]]
+) => {
+  const { data: preference } = usePreferences(
+    (preferences: ManagerPreferences) => preferences?.[key]
+  );
+
+  const { mutateAsync: updateFunction } = useMutatePreferences();
+
+  /**
+   *
+   * @returns the toggled preference value
+   */
+  const toggle = () => {
+    let newPreferenceToSet: ManagerPreferences[K];
+
+    // if the preference is undefined, set it to false
+    if (preference === undefined) {
+      newPreferenceToSet = options[1];
+    } else if (preference === options[0]) {
+      newPreferenceToSet = options[1];
+    } else {
+      newPreferenceToSet = options[0];
+    }
+
+    updateFunction({
+      [key]: newPreferenceToSet,
+    }).catch(() => null);
+
+    return newPreferenceToSet;
+  };
+
+  return {
+    preference,
+    toggle,
   };
 };
