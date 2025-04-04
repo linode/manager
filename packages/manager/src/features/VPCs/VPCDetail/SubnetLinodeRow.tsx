@@ -1,10 +1,4 @@
-import {
-  useLinodeConfigQuery,
-  useLinodeFirewallsQuery,
-  useLinodeInterfaceFirewallsQuery,
-  useLinodeInterfaceQuery,
-  useLinodeQuery,
-} from '@linode/queries';
+import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
@@ -19,6 +13,7 @@ import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
+import { useInterfaceAndFirewallDataForLinode } from '../../../hooks/useInterfaceAndFirewallDataForLinode';
 import {
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
@@ -80,52 +75,30 @@ export const SubnetLinodeRow = (props: Props) => {
     isLoading: linodeLoading,
   } = useLinodeQuery(linodeId);
 
+  /**
+   * We need to handle support for both legacy interfaces and Linode interfaces.
+   * The below hook gives us the relevant firewall and interface data depending on
+   * interface type.
+   */
   const {
-    data: attachedFirewallsConfig,
-    error: firewallsErrorConfig,
-    isLoading: firewallsLoadingConfig,
-  } = useLinodeFirewallsQuery(linodeId, !isLinodeInterface);
-
-  const {
-    data: attachedFirewallsLinodeInterface,
-    error: firewallsErrorLinodeInterface,
-    isLoading: firewallsLoadingLinodeInterface,
-  } = useLinodeInterfaceFirewallsQuery(
-    linodeId,
-    interfaceId ?? -1,
-    isLinodeInterface
-  );
-
-  const attachedFirewalls =
-    attachedFirewallsConfig ?? attachedFirewallsLinodeInterface;
-  const firewallsError = firewallsErrorConfig ?? firewallsErrorLinodeInterface;
-  const firewallsLoading =
-    firewallsLoadingConfig || firewallsLoadingLinodeInterface;
-
-  const {
-    data: linodeInterface,
-    error: linodeInterfaceError,
-    isLoading: linodeInterfaceLoading,
-  } = useLinodeInterfaceQuery(linodeId, interfaceId ?? -1, isLinodeInterface);
-
-  // we still need to fetch the config this interface belongs to
-  // so that we can determine if we have an unrecommended configuration
-  const {
-    data: config,
-    error: configError,
-    isLoading: configLoading,
-  } = useLinodeConfigQuery({
-    configId: configId ?? -1,
-    enabled: !isLinodeInterface,
+    firewallsInfo,
+    interfacesInfo,
+  } = useInterfaceAndFirewallDataForLinode({
+    configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
+    interfaceId,
+    isLinodeInterface,
     linodeId,
   });
 
-  const configInterface = config?.interfaces?.find(
-    (iface) => iface.id === interfaceId
-  );
-  const interfaceData = linodeInterface ?? configInterface;
-  const interfaceError = linodeInterfaceError ?? configError;
-  const interfaceLoading = linodeInterfaceLoading ?? configLoading;
+  const { attachedFirewalls, firewallsError, firewallsLoading } = firewallsInfo;
+  const {
+    config, // undefined if this Linode is using Linode Interfaces. Used to determine an unrecommended configuration
+    configInterface, // undefined if this Linode is using Linode Interfaces
+    interfaceData,
+    interfaceError,
+    interfaceLoading,
+    linodeInterface, // undefined if this Linode is using Config Profile Interfaces
+  } = interfacesInfo;
 
   // Linode Interfaces: show unrecommended notice if VPC has a nat_1_1 address but isn't the default route
   const hasUnrecommendedConfiguration = isLinodeInterface

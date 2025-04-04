@@ -34,10 +34,10 @@ export const useLinodeConfigQuery = (options: {
 };
 
 export const useLinodeConfigInterfaceQuery = (options: {
-  configId: number,
-  enabled: boolean,
-  interfaceId: number,
-  linodeId: number,
+  configId: number;
+  enabled: boolean;
+  interfaceId: number;
+  linodeId: number;
 }) => {
   const { configId, enabled, interfaceId, linodeId } = options;
   return useQuery<Interface, APIError[]>({
