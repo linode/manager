@@ -14,7 +14,7 @@ import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory } from 'src/factories';
 import {
-  OPTIMISTIC_SUCCESS_MESSAGE,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
   alertStatuses,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -337,7 +337,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       'Alert-1',
       'Disable',
       '@getFirstAlertDefinitions',
-      OPTIMISTIC_SUCCESS_MESSAGE
+      UPDATE_ALERT_SUCCESS_MESSAGE
     );
 
     // Enable "Alert-2"
@@ -346,7 +346,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       'Alert-2',
       'Enable',
       '@getSecondAlertDefinitions',
-      OPTIMISTIC_SUCCESS_MESSAGE
+      UPDATE_ALERT_SUCCESS_MESSAGE
     );
   });
 });

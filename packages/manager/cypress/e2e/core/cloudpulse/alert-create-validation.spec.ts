@@ -4,6 +4,7 @@
  * such as dimension filters, metrics, and notification channels.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -20,14 +21,12 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
 
@@ -48,18 +47,6 @@ const databaseMock = databaseFactory.buildList(10, {
   region: 'us-ord',
 });
 const notificationChannels = notificationChannelFactory.buildList(6);
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'My Custom Description',
-  entity_ids: ['2'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
@@ -137,7 +124,7 @@ describe('Create Alert - Error Messages Validation', () => {
     mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels(notificationChannels);
-    mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
+    mockCreateAlertDefinition(serviceType, mockAlerts).as(
       'createAlertDefinition'
     );
     cy.visitWithLogin('/alerts/definitions/create');

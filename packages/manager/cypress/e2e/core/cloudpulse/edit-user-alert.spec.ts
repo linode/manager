@@ -5,6 +5,7 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import { regionFactory } from '@linode/utilities';
 import {
   EVALUATION_PERIOD_DESCRIPTION,
   METRIC_DESCRIPTION_DATA_FIELD,
@@ -29,17 +30,15 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { OPTIMISTIC_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
@@ -48,20 +47,6 @@ import type { Flags } from 'src/featureFlags';
 // Feature flag setup
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-
-// Mock alert definition
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'update-description',
-  entity_ids: ['1', '2', '3', '4', '5'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 // Mock alert details
 const alertDetails = alertFactory.build({
@@ -150,7 +135,7 @@ describe('Integration Tests for Edit Alert', () => {
     mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
       'updateDefinitions'
     );
-    mockCreateAlertDefinition(service_type, customAlertDefinition).as(
+    mockCreateAlertDefinition(service_type, alertDetails).as(
       'createAlertDefinition'
     );
     mockGetCloudPulseMetricDefinitions(service_type, metricDefinitions);
@@ -363,7 +348,7 @@ describe('Integration Tests for Edit Alert', () => {
 
       // Verify URL redirection and toast notification
       cy.url().should('endWith', 'alerts/definitions');
-      ui.toast.assertMessage(OPTIMISTIC_SUCCESS_MESSAGE);
+      ui.toast.assertMessage(UPDATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText('Alert-2')

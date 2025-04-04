@@ -1,15 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useAddFirewallDeviceMutation,
-  useAllFirewallsQuery,
-} from '@linode/queries';
-import { ActionsPanel, Autocomplete, Stack, Typography } from '@linode/ui';
+import { useAddFirewallDeviceMutation } from '@linode/queries';
+import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { number, object } from 'yup';
 
 import { Link } from 'src/components/Link';
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
@@ -34,12 +32,6 @@ export const AddFirewallForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const entityLabel = formattedTypes[entityType] ?? entityType;
-
-  const {
-    data: firewalls,
-    error: firewallsError,
-    isLoading: firewallsLoading,
-  } = useAllFirewallsQuery();
 
   const { mutateAsync } = useAddFirewallDeviceMutation();
 
@@ -68,20 +60,15 @@ export const AddFirewallForm = (props: Props) => {
         </Typography>
         <Controller
           render={({ field, fieldState }) => (
-            <Autocomplete
-              errorText={
-                fieldState.error?.message ?? firewallsError?.[0].reason
-              }
+            <FirewallSelect
               textFieldProps={{
                 inputRef: field.ref,
               }}
+              errorText={fieldState.error?.message}
               label="Firewall"
-              loading={firewallsLoading}
-              noMarginTop
               onChange={(e, value) => field.onChange(value?.id)}
-              options={firewalls ?? []}
               placeholder="Select a Firewall"
-              value={firewalls?.find((f) => f.id === field.value) ?? null}
+              value={field.value}
             />
           )}
           control={form.control}

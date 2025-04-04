@@ -14,6 +14,7 @@ import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
   CREATE_ALERT_ERROR_FIELD_MAP,
+  CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
@@ -123,7 +124,7 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created.', {
+      enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       alertCreateExit();
