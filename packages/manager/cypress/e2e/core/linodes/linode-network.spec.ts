@@ -66,6 +66,7 @@ describe('IP Addresses', () => {
         public: [ipAddress],
         reserved: [],
         shared: [],
+        vpc: [],
       },
       ipv6: {
         global: [_ipv6Range],
