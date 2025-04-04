@@ -94,7 +94,7 @@ describe('hasUnrecommendedConfiguration function', () => {
     expect(hasUnrecommendedConfiguration(config1, subnet.id)).toBe(true);
   });
 
-  it('returns false the given config has an active VPC interface that is the primary interface', () => {
+  it('returns false if the given config has an active VPC interface that is the primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({ id: 10 });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
