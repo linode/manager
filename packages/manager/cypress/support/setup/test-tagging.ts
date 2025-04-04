@@ -19,7 +19,7 @@ const query = Cypress.env('CY_TEST_TAGS') ?? '';
  */
 Cypress.on('test:before:run', (_test: Test, _runnable: Runnable) => {
   /*
-   * Looks for the first command that does not belong in a hook and evalutes tags.
+   * Looks for the first command that does not belong in a hook and evaluates tags.
    *
    * Waiting for the first command to begin executing ensures that test context
    * is set up and that tags have been assigned to the test.
@@ -27,7 +27,13 @@ Cypress.on('test:before:run', (_test: Test, _runnable: Runnable) => {
   const commandHandler = () => {
     const context = cy.state('ctx');
     if (context && context.test?.type !== 'hook') {
-      const tags = context?.tags ?? [];
+      const tags = context?.tags ? [...context.tags] : [];
+
+      // Remove tags from context now that we've read them and can evaluate them.
+      // This prevents tags from persisting between tests in certain situations.
+      if (tags.length) {
+        context.tags = [];
+      }
 
       if (!evaluateQuery(query, tags)) {
         context.skip();

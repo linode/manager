@@ -9,7 +9,10 @@ const queryRegex = /(?:-|\+)?([^\s]+)/g;
 export type TestTag =
   // Environment-related tags.
   // Used to identify tests where certain environment-specific features are required.
+  | 'env:marketplaceApps'
+  | 'env:multipleRegions'
   | 'env:premiumPlans'
+  | 'env:stackScripts'
 
   // Feature-related tags.
   // Used to identify tests which deal with a certain feature or features.
