@@ -404,7 +404,7 @@ const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
 };
 
-const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
+export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
   const emptyProps = {
     gateway: '',
     rdns: '',
