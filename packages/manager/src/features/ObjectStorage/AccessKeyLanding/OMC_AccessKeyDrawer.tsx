@@ -90,6 +90,7 @@ export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
     'asc'
   );
 };
+
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
@@ -158,16 +159,18 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
       // If any/all permissions are 'none' or null, don't include them in the response.
       const access = values.bucket_access ?? [];
+
       const payload = limitedAccessChecked
         ? {
             ...values,
             bucket_access: access.filter(
               (thisAccess: DisplayedAccessKeyScope) =>
-                thisAccess.permissions !== 'none' &&
+                // thisAccess.permissions !== 'none' &&
                 thisAccess.permissions !== null
             ),
           }
         : { ...values, bucket_access: null };
+
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
@@ -210,6 +213,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     const bucketsInRegions = buckets?.filter(
       (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
     );
+
     formik.setFieldValue(
       'bucket_access',
       getDefaultScopes(bucketsInRegions, regionsByIdMap)

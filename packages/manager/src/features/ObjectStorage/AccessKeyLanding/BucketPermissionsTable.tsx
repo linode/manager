@@ -109,6 +109,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
           </TableCell>
         </TableRow>
       </TableHead>
+
       <TableBody>
         {mode === 'creating' && (
           <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
@@ -159,6 +160,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
             </TableCell>
           </StyledSelectAllRadioRow>
         )}
+
         {bucket_access.length === 0 ? (
           <TableRowEmpty
             message={
@@ -187,6 +189,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 <StyledBucketCell padding="checkbox">
                   {thisScope.bucket_name}
                 </StyledBucketCell>
+
                 <StyledRadioCell padding="checkbox">
                   <AccessCell
                     onChange={() =>
@@ -202,6 +205,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                     viewOnly={mode === 'viewing'}
                   />
                 </StyledRadioCell>
+
                 <StyledRadioCell padding="checkbox">
                   <AccessCell
                     onChange={() =>
@@ -217,6 +221,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                     viewOnly={mode === 'viewing'}
                   />
                 </StyledRadioCell>
+
                 <StyledRadioCell padding="checkbox">
                   <AccessCell
                     onChange={() =>

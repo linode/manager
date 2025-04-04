@@ -37,7 +37,7 @@ export const ViewPermissionsDrawer = (props: Props) => {
       title={`Permissions for ${objectStorageKey?.label}`}
       wide
     >
-      {!objectStorageKey ? null : objectStorageKey.bucket_access === null ? (
+      {!objectStorageKey ? null : objectStorageKey.limited === false ? (
         <Typography>
           This key has unlimited access to all buckets on your account.
         </Typography>
@@ -46,6 +46,7 @@ export const ViewPermissionsDrawer = (props: Props) => {
           <Typography>
             This access key has the following permissions:
           </Typography>
+
           {isObjMultiClusterEnabled ? (
             <BucketPermissionsTable
               bucket_access={objectStorageKey.bucket_access}
