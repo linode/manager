@@ -75,12 +75,12 @@ export const useInterfaceAndFirewallDataForLinode = (inputs: {
       firewallsLoading,
     },
     interfacesInfo: {
-      config,
-      configInterface,
+      config, // undefined if this Linode is using Linode Interfaces. Used to determine an unrecommended configuration
+      configInterface, // undefined if this Linode is using Linode Interfaces
       interfaceData,
       interfaceError,
       interfaceLoading,
-      linodeInterface,
+      linodeInterface, // undefined if this Linode is using Config Profile Interfaces
     },
   };
 };

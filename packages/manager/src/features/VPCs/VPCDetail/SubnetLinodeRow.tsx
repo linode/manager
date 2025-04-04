@@ -24,12 +24,12 @@ import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import type {
   APIError,
   Firewall,
+  Interface,
   Linode,
   LinodeInterface,
+  Subnet,
   SubnetLinodeInterfaceData,
 } from '@linode/api-v4';
-import type { Interface } from '@linode/api-v4/lib/linodes/types';
-import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
