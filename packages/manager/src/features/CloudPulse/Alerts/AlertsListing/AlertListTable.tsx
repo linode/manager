@@ -114,8 +114,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   let title = '';
   if (isDialogOpen) {
     isActive = selectedAlert.status !== 'disabled';
-    message =
-      'Are you sure you want to disable this alert for all assigned resources';
+    message = `Are you sure you want to ${
+      isActive ? 'disable' : 'enable'
+    } this alert for all assigned resources?`;
+
     title = `${isActive ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
   }
 
