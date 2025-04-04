@@ -1,10 +1,10 @@
 import { createStackScript } from '@linode/api-v4/lib';
 import {
   createLinodeRequestFactory,
-  imageFactory,
   linodeFactory,
   regionFactory,
-} from '@src/factories';
+} from '@linode/utilities';
+import { imageFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
@@ -176,7 +176,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using a Community StackScript.
    */
   it('rebuilds a linode from Community StackScript', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';

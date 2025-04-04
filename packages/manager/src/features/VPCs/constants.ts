@@ -70,3 +70,11 @@ export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
 
 export const ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc';
+
+// constants used for tanstack routing:
+export const VPC_LANDING_TABLE_PREFERENCE_KEY = 'vpcs';
+export const VPC_LANDING_ROUTE = '/vpcs';
+export const VPC_DETAILS_ROUTE = '/vpcs/$vpcId';
+export const VPC_CREATE_ROUTE = '/vpcs/create';
+export const SUBNET_ACTION_PATH =
+  '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';

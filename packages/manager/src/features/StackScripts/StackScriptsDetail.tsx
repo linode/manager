@@ -1,3 +1,7 @@
+import {
+  useStackScriptQuery,
+  useUpdateStackScriptMutation,
+} from '@linode/queries';
 import { useGrants, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Paper } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
@@ -9,10 +13,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript } from 'src/components/StackScript/StackScript';
-import {
-  useStackScriptQuery,
-  useUpdateStackScriptMutation,
-} from 'src/queries/stackscripts';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import {

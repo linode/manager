@@ -1,5 +1,3 @@
-import { isNullOrUndefined } from '@linode/utilities';
-
 import { shouldLoadDevTools } from 'src/dev-tools/load';
 
 import type { RegionSite } from '@linode/api-v4';
@@ -18,7 +16,7 @@ export const getStorage = (key: string, fallback?: any) => {
    * Basically, if localstorage doesn't exist,
    * return whatever we set as a fallback
    */
-  if (isNullOrUndefined(item) && fallback !== undefined) {
+  if ((item === null || item === undefined) && !!fallback) {
     return fallback;
   }
 
@@ -65,7 +63,7 @@ export type PageSize = number;
 export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
-  get: () => string;
+  get: () => any;
   set: (value: string) => void;
 }
 
@@ -158,19 +156,19 @@ export const storage: Storage = {
       set: (v) => setStorage(CODE_VERIFIER, v),
     },
     expire: {
-      get: () => getStorage(EXPIRE, ''),
+      get: () => getStorage(EXPIRE),
       set: (v) => setStorage(EXPIRE, v),
     },
     nonce: {
-      get: () => getStorage(NONCE, ''),
+      get: () => getStorage(NONCE),
       set: (v) => setStorage(NONCE, v),
     },
     scopes: {
-      get: () => getStorage(SCOPES, ''),
+      get: () => getStorage(SCOPES),
       set: (v) => setStorage(SCOPES, v),
     },
     token: {
-      get: () => getStorage(TOKEN, ''),
+      get: () => getStorage(TOKEN),
       set: (v) => setStorage(TOKEN, v),
     },
   },
@@ -262,19 +260,4 @@ export const isDevToolsEnvValid = (value: any) => {
     typeof value?.clientID === 'string' &&
     typeof value?.label === 'string'
   );
-};
-
-// Clear saved drafts from local storage
-export const clearUserInput = () => {
-  supportTicket.set(supportTicketStorageDefaults);
-  ticketReply.set({ text: '', ticketId: -1 });
-  stackScriptInProgress.set({
-    description: '',
-    id: '',
-    images: [],
-    label: '',
-    rev_note: '',
-    script: '',
-    updated: '',
-  });
 };

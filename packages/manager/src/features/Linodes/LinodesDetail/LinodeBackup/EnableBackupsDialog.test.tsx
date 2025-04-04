@@ -1,8 +1,7 @@
-import { regionFactory } from '@linode/utilities';
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
-import { linodeFactory } from 'src/factories';
 import { typeFactory } from 'src/factories/types';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';

@@ -1,13 +1,9 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
-} from '@linode/utilities';
-import {
-  linodeConfigFactory,
   linodeFactory,
-  subnetFactory,
-  vpcFactory,
-} from '@src/factories';
+} from '@linode/utilities';
+import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
@@ -15,6 +11,7 @@ import {
   mockDeleteSubnet,
   mockDeleteVPC,
   mockEditSubnet,
+  mockGetSubnet,
   mockGetSubnets,
   mockGetVPC,
   mockGetVPCs,
@@ -22,8 +19,7 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
 
@@ -182,6 +178,7 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // edit a subnet
     const mockEditedSubnet = subnetFactory.build({
@@ -206,6 +203,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .click();
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+    mockGetSubnet(mockVPC.id, mockEditedSubnet.id, mockEditedSubnet);
 
     ui.drawer
       .findByTitle('Edit Subnet')
