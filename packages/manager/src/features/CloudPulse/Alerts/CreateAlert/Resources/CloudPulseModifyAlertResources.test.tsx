@@ -140,9 +140,10 @@ describe('CreateAlertResources component tests', () => {
     expect(queryByTestId('alert_message_notice')).not.toBeInTheDocument();
   });
 
-  it('should be able to see the error notice if the forms field state has error', () => {
+  it('should be able to see the error notice if the forms field state has error', async () => {
     const {
       getAllByTestId,
+      getByTestId,
       getByText,
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: <CloudPulseModifyAlertResources name="entity_ids" />,
@@ -172,5 +173,12 @@ describe('CreateAlertResources component tests', () => {
     expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
     expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();
     expect(getByText('More than 2 resources selected')).toBeInTheDocument();
+    const resourceFour = getByTestId('select_item_4');
+    expect(resourceFour).toBeInTheDocument();
+    expect(resourceFour).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(getByText('Deselect All'));
+
+    expect(getByText('Select All')).toHaveAttribute('aria-disabled', 'true');
   });
 });
