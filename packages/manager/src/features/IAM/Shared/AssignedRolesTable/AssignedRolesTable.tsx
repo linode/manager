@@ -35,9 +35,20 @@ import {
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
+import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
-import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
-import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
+import type {
+  DrawerModes,
+  EntitiesType,
+  ExtendedRoleMap,
+  RoleMap,
+} from '../utilities';
+import type {
+  AccountAccessRole,
+  AccountAccessType,
+  EntityAccessRole,
+  RoleType,
+} from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 export const AssignedRolesTable = () => {
@@ -49,17 +60,30 @@ export const AssignedRolesTable = () => {
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+
   const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
     React.useState<boolean>(false);
+  const [drawerMode, setDrawerMode] =
+    React.useState<DrawerModes>('assign-role');
 
-  const handleChangeRole = (role: ExtendedRoleMap) => {
+  const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
+    React.useState<boolean>(false);
+
+  const handleChangeRole = (role: ExtendedRoleMap, mode: DrawerModes) => {
     setIsChangeRoleDrawerOpen(true);
     setSelectedRole(role);
+    setDrawerMode(mode);
   };
 
   const handleUnassignRole = (role: ExtendedRoleMap) => {
     setIsUnassignRoleDialogOpen(true);
     setSelectedRole(role);
+  };
+
+  const handleUpdateEntities = (role: ExtendedRoleMap, mode: DrawerModes) => {
+    setIsUpdateEntitiesDrawerOpen(true);
+    setSelectedRole(role);
+    setDrawerMode(mode);
   };
 
   const { data: accountPermissions, isLoading: accountPermissionsLoading } =
@@ -135,6 +159,7 @@ export const AssignedRolesTable = () => {
             <AssignedRolesActionMenu
               handleChangeRole={handleChangeRole}
               handleUnassignRole={handleUnassignRole}
+              handleUpdateEntities={handleUpdateEntities}
               handleViewEntities={handleViewEntities}
               role={role}
             />
@@ -167,11 +192,11 @@ export const AssignedRolesTable = () => {
             {description}{' '}
             {description.length > 150 && (
               <StyledLinkButton
+                onClick={() => setShowFullDescription((show) => !show)}
                 sx={{
                   font: theme.tokens.alias.Typography.Label.Semibold.Xs,
                   width: 'max-content',
                 }}
-                onClick={() => setShowFullDescription((show) => !show)}
               >
                 {showFullDescription ? 'Hide' : 'Expand'}
               </StyledLinkButton>
@@ -222,15 +247,16 @@ export const AssignedRolesTable = () => {
   return (
     <Grid>
       <Grid
+        container
+        direction="row"
         sx={{
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: 3,
         }}
-        container
-        direction="row"
       >
         <DebouncedSearchTextField
+          clearable
           containerProps={{
             sx: {
               marginBottom: { md: 0, xs: 2 },
@@ -238,7 +264,6 @@ export const AssignedRolesTable = () => {
               width: { md: '410px', xs: '100%' },
             },
           }}
-          clearable
           hideLabel
           label="Filter"
           onSearch={setQuery}
@@ -247,27 +272,28 @@ export const AssignedRolesTable = () => {
           value={query}
         />
         <Autocomplete
+          label="Select type"
+          onChange={(_, selected) => setEntityType(selected ?? null)}
+          options={resourceTypes}
+          placeholder="All Assigned Roles"
           textFieldProps={{
             containerProps: {
               sx: { minWidth: 250, width: { md: '250px', xs: '100%' } },
             },
             hideLabel: true,
           }}
-          label="Select type"
-          onChange={(_, selected) => setEntityType(selected ?? null)}
-          options={resourceTypes}
-          placeholder="All Assigned Roles"
           value={entityType}
         />
       </Grid>
       <CollapsibleTable
+        TableItems={memoizedTableItems}
         TableRowEmpty={
           <TableRowEmpty colSpan={5} message={'No Roles are assigned.'} />
         }
-        TableItems={memoizedTableItems}
         TableRowHead={RoleTableRowHead}
       />
       <ChangeRoleDrawer
+        mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
@@ -275,6 +301,12 @@ export const AssignedRolesTable = () => {
       <UnassignRoleConfirmationDialog
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
+        role={selectedRole}
+      />
+      <UpdateEntitiesDrawer
+        mode={drawerMode}
+        onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
+        open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}
       />
     </Grid>

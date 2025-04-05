@@ -6,8 +6,9 @@ import type { ExtendedRoleMap } from '../utilities';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  handleChangeRole: (role: ExtendedRoleMap) => void;
+  handleChangeRole: (role: ExtendedRoleMap, mode: string) => void;
   handleUnassignRole: (role: ExtendedRoleMap) => void;
+  handleUpdateEntities: (role: ExtendedRoleMap, mode: string) => void;
   handleViewEntities: (role: string) => void;
   role: ExtendedRoleMap;
 }
@@ -15,13 +16,14 @@ interface Props {
 export const AssignedRolesActionMenu = ({
   handleChangeRole,
   handleUnassignRole,
+  handleUpdateEntities,
   handleViewEntities,
   role,
 }: Props) => {
   const accountMenu: Action[] = [
     {
       onClick: () => {
-        handleChangeRole(role);
+        handleChangeRole(role, 'change-role');
       },
       title: 'Change Role',
     },
@@ -40,13 +42,13 @@ export const AssignedRolesActionMenu = ({
     },
     {
       onClick: () => {
-        // mock
+        handleUpdateEntities(role, 'update');
       },
       title: 'Update List of Entities',
     },
     {
       onClick: () => {
-        handleChangeRole(role);
+        handleChangeRole(role, 'change-role');
       },
       title: 'Change Role',
     },

@@ -6,28 +6,30 @@ import * as React from 'react';
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
 
-import type { DrawerModes, EntitiesOption } from '../utilities';
 import type {
-  EntityTypePermissions,
-  IamAccessType,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  entity_type: EntityTypePermissions;
-}
+  DrawerModes,
+  EntitiesOption,
+  ExtendedRole,
+  ExtendedRoleMap,
+} from '../utilities';
+import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
-  assignedEntities?: EntitiesOption[];
+  errorText?: string;
   mode?: DrawerModes;
-  role: ExtendedRole;
+  onChange?: (value: EntitiesOption[]) => void;
+  role: ExtendedRole | ExtendedRoleMap;
+  sx?: SxProps<Theme>;
+  value?: EntitiesOption[];
 }
 
 export const AssignedPermissionsPanel = ({
-  assignedEntities,
+  errorText,
   mode,
+  onChange,
   role,
+  sx,
+  value,
 }: Props) => {
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
@@ -45,15 +47,23 @@ export const AssignedPermissionsPanel = ({
           theme.name === 'light'
             ? theme.tokens.color.Neutrals[5]
             : theme.tokens.color.Neutrals[100],
-        marginTop: theme.spacing(1.25),
+        marginTop: theme.tokens.spacing.S8,
         padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
+        ...sx,
       }}
     >
+      <Typography
+        sx={(theme) => ({
+          font: theme.tokens.alias.Typography.Label.Bold.S,
+        })}
+      >
+        Description
+      </Typography>
       <Typography
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          marginBottom: theme.tokens.spacing.S12,
+          marginBottom: theme.tokens.spacing.S8,
           overflowWrap: 'anywhere',
           wordBreak: 'normal',
         }}
@@ -61,11 +71,11 @@ export const AssignedPermissionsPanel = ({
         {description}{' '}
         {description.length > 110 && (
           <StyledLinkButton
+            onClick={() => setShowFullDescription((show) => !show)}
             sx={{
               font: theme.tokens.alias.Typography.Label.Semibold.Xs,
               width: 'max-content',
             }}
-            onClick={() => setShowFullDescription((show) => !show)}
             type="button"
           >
             {showFullDescription ? 'Hide' : 'Expand'}
@@ -76,10 +86,22 @@ export const AssignedPermissionsPanel = ({
       {mode !== 'change-role-for-entity' && (
         <Entities
           access={role.access}
-          assignedEntities={assignedEntities ?? []}
+          errorText={errorText}
+          mode={mode}
+          onChange={(value) => onChange?.(value)}
+          // assignedEntities={assignedEntities ?? []}
           type={role.entity_type}
+          value={value || []}
         />
       )}
+      {/* // <Entities
+      //   access={role.access}
+      //   errorText={errorText}
+      //   mode={mode}
+      //   onChange={(value) => onChange?.(value)}
+      //   type={role.entity_type}
+      //   value={value || []}
+      // /> */}
     </Paper>
   );
 };
