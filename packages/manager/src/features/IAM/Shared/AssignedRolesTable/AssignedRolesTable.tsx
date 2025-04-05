@@ -35,8 +35,14 @@ import {
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
+import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
-import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
+import type {
+  DrawerModes,
+  EntitiesType,
+  ExtendedRoleMap,
+  RoleMap,
+} from '../utilities';
 import type { AccountAccessType, RoleType } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
@@ -51,19 +57,34 @@ export const AssignedRolesTable = () => {
     setIsChangeRoleDrawerOpen,
   ] = React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+  const [drawerMode, setDrawerMode] = React.useState<DrawerModes>(
+    'assign-role'
+  );
+
   const [
     isUnassignRoleDialogOpen,
     setIsUnassignRoleDialogOpen,
   ] = React.useState<boolean>(false);
+  const [
+    isUpdateEntitiesDrawerOpen,
+    setIsUpdateEntitiesDrawerOpen,
+  ] = React.useState<boolean>(false);
 
-  const handleChangeRole = (role: ExtendedRoleMap) => {
+  const handleChangeRole = (role: ExtendedRoleMap, mode: DrawerModes) => {
     setIsChangeRoleDrawerOpen(true);
     setSelectedRole(role);
+    setDrawerMode(mode);
   };
 
   const handleUnassignRole = (role: ExtendedRoleMap) => {
     setIsUnassignRoleDialogOpen(true);
     setSelectedRole(role);
+  };
+
+  const handleUpdateEntities = (role: ExtendedRoleMap, mode: DrawerModes) => {
+    setIsUpdateEntitiesDrawerOpen(true);
+    setSelectedRole(role);
+    setDrawerMode(mode);
   };
 
   const {
@@ -141,6 +162,7 @@ export const AssignedRolesTable = () => {
             <AssignedRolesActionMenu
               handleChangeRole={handleChangeRole}
               handleUnassignRole={handleUnassignRole}
+              handleUpdateEntities={handleUpdateEntities}
               handleViewEntities={handleViewEntities}
               role={role}
             />
@@ -274,6 +296,7 @@ export const AssignedRolesTable = () => {
         TableRowHead={RoleTableRowHead}
       />
       <ChangeRoleDrawer
+        mode={drawerMode}
         onClose={() => setIsChangeRoleDrawerOpen(false)}
         open={isChangeRoleDrawerOpen}
         role={selectedRole}
@@ -281,6 +304,12 @@ export const AssignedRolesTable = () => {
       <UnassignRoleConfirmationDialog
         onClose={() => setIsUnassignRoleDialogOpen(false)}
         open={isUnassignRoleDialogOpen}
+        role={selectedRole}
+      />
+      <UpdateEntitiesDrawer
+        mode={drawerMode}
+        onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
+        open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}
       />
     </Grid>

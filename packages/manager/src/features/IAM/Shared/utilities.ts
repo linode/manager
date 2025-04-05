@@ -135,7 +135,7 @@ export interface RolesType {
   value: string;
 }
 
-interface ExtendedRole extends Roles {
+export interface ExtendedRole extends Roles {
   access: IamAccessType;
   entity_type: EntityTypePermissions;
 }
@@ -426,9 +426,15 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
+    entities?: EntitiesOption[] | null;
     role: RolesType | null;
   }[];
 }
+
+export interface UpdateEntitiesFormValues {
+  entities: EntitiesOption[];
+}
+
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -494,4 +500,71 @@ export const transformedAccountEntities = (
   });
 
   return result;
+};
+
+export type DrawerModes = 'assign-role' | 'change-role' | 'update-entities';
+
+interface UpdateUserEntitiesProps {
+  assignedRoles?: IamUserPermissions;
+  entityIds: number[];
+  roleName: RoleType;
+  roleType: EntityTypePermissions;
+}
+
+export const updateUserEntities = ({
+  assignedRoles,
+  entityIds,
+  roleName,
+  roleType,
+}: UpdateUserEntitiesProps): IamUserPermissions => {
+  if (!assignedRoles) {
+    return {
+      account_access: [],
+      entity_access: [],
+    };
+  }
+
+  const { entity_access } = assignedRoles;
+
+  const entityIdsSet = new Set(entityIds);
+
+  const updatedEntityAccess = entity_access.map((entity) => {
+    const isInEntityIds = entityIdsSet.has(entity.id);
+
+    if (!isInEntityIds) {
+      // Remove the role if the entity is not in entityIds but has the role
+      return {
+        ...entity,
+        roles: entity.roles.filter((role) => role !== roleName),
+      };
+    }
+
+    // Return the entity unchanged if no updates are needed
+    return entity;
+  });
+
+  // Add new entities for entityIds that don't exist in entity_access
+  entityIds.forEach((id) => {
+    const existingEntity = updatedEntityAccess.find(
+      (entity) => entity.id === id
+    );
+
+    if (!existingEntity) {
+      updatedEntityAccess.push({
+        id,
+        roles: [roleName],
+        type: roleType,
+      });
+    }
+  });
+
+  // Filter out entities with empty roles
+  const filteredEntityAccess = updatedEntityAccess.filter(
+    (entity) => entity.roles.length > 0
+  );
+
+  return {
+    ...assignedRoles,
+    entity_access: filteredEntityAccess,
+  };
 };

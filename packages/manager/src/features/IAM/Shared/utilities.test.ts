@@ -6,6 +6,7 @@ import {
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
+  updateUserEntities,
   updateUserRoles,
 } from './utilities';
 
@@ -239,13 +240,13 @@ describe('deleteUserRole', () => {
       entity_access: [
         {
           id: 10,
-          type: 'linode',
           roles: ['linode_viewer'],
+          type: 'linode',
         },
         {
           id: 1,
-          type: 'firewall',
           roles: ['firewall_admin'],
+          type: 'firewall',
         },
       ],
     };
@@ -267,8 +268,8 @@ describe('deleteUserRole', () => {
       entity_access: [
         {
           id: 12345678,
-          type: 'linode',
           roles: ['linode_contributor'],
+          type: 'linode',
         },
       ],
     };
@@ -278,6 +279,123 @@ describe('deleteUserRole', () => {
         access: accountAccess,
         assignedRoles: userPermissions,
         initialRole,
+      })
+    ).toEqual(expectedRoles);
+  });
+});
+
+describe('updateUserEntities', () => {
+  it('should return the same object of users roles with entity access', () => {
+    const expectedRoles = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      entity_access: [
+        {
+          id: 2,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+      ],
+    };
+
+    const roleName = 'linode_contributor';
+    const entityIds = [2, 1];
+    const roleType = 'linode';
+    expect(
+      updateUserEntities({
+        assignedRoles: userPermissions,
+        entityIds,
+        roleName,
+        roleType,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with entity access', () => {
+    const userPermissions: IamUserPermissions = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      entity_access: [
+        {
+          id: 2,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1,
+          roles: ['linode_contributor', 'linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    };
+    const roleName = 'linode_contributor';
+    const entityIds = [2];
+    const expectedRoles = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      entity_access: [
+        {
+          id: 2,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1,
+          roles: ['linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    };
+
+    const roleType = 'linode';
+    expect(
+      updateUserEntities({
+        assignedRoles: userPermissions,
+        entityIds,
+        roleName,
+        roleType,
+      })
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with entity access', () => {
+    const userPermissions: IamUserPermissions = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      entity_access: [
+        {
+          id: 2,
+          roles: ['linode_contributor'],
+          type: 'linode',
+        },
+        {
+          id: 1,
+          roles: ['linode_contributor', 'linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    };
+    const roleName = 'linode_contributor';
+    const entityIds = [1];
+    const roleType = 'linode';
+    const expectedRoles = {
+      account_access: ['account_linode_admin', 'linode_creator'],
+      entity_access: [
+        {
+          id: 1,
+          roles: ['linode_contributor', 'linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    };
+
+    expect(
+      updateUserEntities({
+        assignedRoles: userPermissions,
+        entityIds,
+        roleName,
+        roleType,
       })
     ).toEqual(expectedRoles);
   });

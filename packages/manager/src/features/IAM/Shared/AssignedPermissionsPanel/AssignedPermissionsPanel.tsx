@@ -6,24 +6,31 @@ import * as React from 'react';
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
 
-import type { EntitiesOption } from '../utilities';
 import type {
-  EntityTypePermissions,
-  IamAccessType,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  entity_type: EntityTypePermissions;
-}
+  DrawerModes,
+  EntitiesOption,
+  ExtendedRole,
+  ExtendedRoleMap,
+} from '../utilities';
+import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
-  assignedEntities?: EntitiesOption[];
-  role: ExtendedRole;
+  errorText?: string;
+  mode: DrawerModes;
+  onChange?: (value: EntitiesOption[]) => void;
+  role: ExtendedRole | ExtendedRoleMap;
+  sx?: SxProps<Theme>;
+  value?: EntitiesOption[];
 }
 
-export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
+export const AssignedPermissionsPanel = ({
+  errorText,
+  mode,
+  onChange,
+  role,
+  sx,
+  value,
+}: Props) => {
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   const theme = useTheme();
@@ -42,8 +49,19 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
             : theme.tokens.color.Neutrals[100],
         marginTop: theme.spacing(1.25),
         padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
+        ...sx,
       }}
     >
+      {mode === 'update-entities' && (
+        <Typography
+          sx={{
+            font: theme.tokens.alias.Typography.Heading.S,
+            marginBottom: theme.tokens.spacing.S2,
+          }}
+        >
+          {role.name}
+        </Typography>
+      )}
       <Typography
         sx={{
           display: 'flex',
@@ -70,8 +88,11 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
       <Permissions permissions={role.permissions} />
       <Entities
         access={role.access}
-        assignedEntities={assignedEntities ?? []}
+        errorText={errorText}
+        mode={mode}
+        onChange={(value) => onChange?.(value)}
         type={role.entity_type}
+        value={value || []}
       />
     </Paper>
   );

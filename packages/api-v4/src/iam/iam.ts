@@ -35,9 +35,9 @@ export const updateUserPermissions = (
 ) =>
   Request<IamUserPermissions>(
     setURL(
-      `${BETA_API_ROOT}/iam/role-permissions/users/${encodeURIComponent(
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
         username
-      )}`
+      )}/role-permissions`
     ),
     setMethod('PUT'),
     setData(data)

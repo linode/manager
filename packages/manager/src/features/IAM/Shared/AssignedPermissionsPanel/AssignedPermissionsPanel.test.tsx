@@ -7,16 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
 
-import type {
-  EntityTypePermissions,
-  IamAccessType,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  entity_type: EntityTypePermissions;
-}
+import type { ExtendedRole } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -65,7 +56,10 @@ const mockEntities = [
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
     const { getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockAccountAcceessRole}
+      />
     );
     expect(
       getByText(
@@ -78,7 +72,10 @@ describe('AssignedPermissionsPanel', () => {
 
   it('does not render Autocomplete when the access is an account', () => {
     const { getByText, queryAllByRole } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockAccountAcceessRole}
+      />
     );
     const autocomplete = queryAllByRole('combobox');
 
@@ -95,7 +92,10 @@ describe('AssignedPermissionsPanel', () => {
       data: makeResourcePage(mockEntities),
     });
     const { getAllByRole, getAllByTestId, getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockEntitiesAcceessRole}
+      />
     );
 
     const permissions = getAllByTestId('permission');
@@ -118,7 +118,10 @@ describe('AssignedPermissionsPanel', () => {
       data: makeResourcePage(mockEntities),
     });
     const { getAllByRole, getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockEntitiesAcceessRole}
+      />
     );
 
     // Verify comboboxes exist
@@ -130,7 +133,10 @@ describe('AssignedPermissionsPanel', () => {
 
   it('shows all permissions', () => {
     const { getAllByTestId } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockEntitiesAcceessRole}
+      />
     );
 
     // All chips should now be visible
@@ -138,5 +144,17 @@ describe('AssignedPermissionsPanel', () => {
     expect(visibleChips.length).toBe(
       mockEntitiesAcceessRole.permissions.length
     );
+  });
+
+  it('displays the role name when mode is "update-entities"', () => {
+    const { getByText } = renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="update-entities"
+        role={mockEntitiesAcceessRole}
+      />
+    );
+
+    // Verify that the role name is displayed
+    expect(getByText(mockEntitiesAcceessRole.name)).toBeInTheDocument();
   });
 });
