@@ -46,6 +46,7 @@ import type {
   InterfaceGenerationType,
   Linode,
   LinodeCapabilities,
+  LinodeInterface,
   Subnet,
   VPC,
 } from '@linode/api-v4';
@@ -64,12 +65,12 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export interface BodyProps {
-  configInterfaceWithVPC?: Interface;
   encryptionStatus: EncryptionStatus | undefined;
   firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
   interfaceGeneration: InterfaceGenerationType | undefined;
+  interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
@@ -88,12 +89,12 @@ export interface BodyProps {
 
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
-    configInterfaceWithVPC,
     encryptionStatus,
     firewalls,
     gbRAM,
     gbStorage,
     interfaceGeneration,
+    interfaceWithVPC,
     ipv4,
     ipv6,
     isLKELinode,
@@ -128,6 +129,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+  const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
+
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -391,18 +394,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            {configInterfaceWithVPC?.ipv4?.vpc && (
+            {vpcIPv4 && (
               <StyledIPv4Box>
                 <StyledIPv4Label data-testid="vpc-ipv4">
                   VPC IPv4
                 </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <CopyTooltip
-                    copyableText
-                    text={configInterfaceWithVPC.ipv4.vpc}
-                  />
+                  <CopyTooltip copyableText text={vpcIPv4} />
                   <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                    <StyledCopyTooltip text={vpcIPv4} />
                   </Box>
                 </StyledIPv4Item>
               </StyledIPv4Box>
@@ -511,4 +511,20 @@ export const getSubnetsString = (data: Subnet[]) => {
   return data.length > 3
     ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
     : firstThreeSubnetsString;
+};
+
+export const getVPCIPv4 = (
+  interfaceWithVPC: Interface | LinodeInterface | undefined
+) => {
+  if (interfaceWithVPC) {
+    if ('purpose' in interfaceWithVPC) {
+      return interfaceWithVPC.ipv4?.vpc;
+    } else {
+      return interfaceWithVPC.vpc?.ipv4?.addresses.find(
+        (address) => address.primary
+      )?.address;
+    }
+  }
+
+  return undefined;
 };

@@ -17,7 +17,7 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
@@ -325,6 +325,14 @@ describe('getSubnetsString function', () => {
       'first-subnet, second-subnet, third-subnet, plus 5 more.'
     );
   });
+});
+
+describe('getVPCIPv4 function', () => {
+  it('gets the VPC IPv4 for a config interface VPC', () => {});
+
+  it('gets the VPC IPv4 for a Linode Interface VPC', () => {});
+
+  it('returns undefined if the given interface is undefined', () => {});
 });
 
 const accountCapabilitiesWithoutVPC: AccountCapability[] = [

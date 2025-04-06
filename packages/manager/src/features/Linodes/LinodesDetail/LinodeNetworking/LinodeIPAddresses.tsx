@@ -25,8 +25,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
-import { useVPCLinodeInterface } from 'src/hooks/useVPCLinodeInterface';
+import { useVPCInterface } from 'src/hooks/useVPCInterface';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -76,17 +75,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
-  const { isVPCOnlyLinode: isVPCOnlyLinodeConfig } = useVPCConfigInterface(
-    linodeID,
-    linode?.interface_generation === 'legacy_config'
-  );
-
-  const { isVPCOnlyLinode: isVPCOnlyLinodeInterface } = useVPCLinodeInterface(
-    linodeID,
-    linode?.interface_generation === 'linode'
-  );
-
-  const isVPCOnlyLinode = isVPCOnlyLinodeConfig || isVPCOnlyLinodeInterface;
+  const { isVPCOnlyLinode } = useVPCInterface({
+    isLinodeInterface: linode?.interface_generation === 'linode',
+    linodeId: linodeID,
+  });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -363,6 +355,7 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
+  // // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
   if (ipv4.vpc.find((vpcIp) => vpcIp.nat_1_1)) {
     ipDisplay.shift();
   }
