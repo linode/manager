@@ -351,7 +351,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
           }}
           container
           direction="column"
@@ -416,9 +416,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-              1
-            )} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
+              16
+            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 2,
             },
@@ -486,7 +486,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     sx={(theme) => ({
                       backgroundColor: theme.color.tagButtonBg,
                       color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
+                      marginLeft: theme.spacingFunction(4),
                     })}
                     component="span"
                     label="UPGRADE"

@@ -30,7 +30,6 @@ export const useVPCInterface = (inputs: {
     vpcLinodeIsAssignedToConfig ?? vpcLinodeIsAssignedToInterface;
 
   return {
-    configInterfaceWithVPC, // // undefined if this Linode is using Linode Interfaces
     configs, // undefined if this Linode is using Linode Interfaces
     interfaceWithVPC: linodeInterfaceWithVPC ?? configInterfaceWithVPC,
     isVPCOnlyLinode,

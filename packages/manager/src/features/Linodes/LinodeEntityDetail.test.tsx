@@ -1,5 +1,9 @@
 import { queryClientFactory } from '@linode/queries';
-import { linodeFactory } from '@linode/utilities';
+import {
+  linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
+  linodeInterfaceFactoryVPC,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -328,11 +332,19 @@ describe('getSubnetsString function', () => {
 });
 
 describe('getVPCIPv4 function', () => {
-  it('gets the VPC IPv4 for a config interface VPC', () => {});
+  it('gets the VPC IPv4 for a config interface VPC that has an IPv4', () => {
+    expect(getVPCIPv4(linodeConfigInterfaceFactoryWithVPC.build())).toBe(
+      '10.0.0.0'
+    );
+  });
 
-  it('gets the VPC IPv4 for a Linode Interface VPC', () => {});
+  it('gets the VPC IPv4 for a Linode Interface VPC', () => {
+    expect(getVPCIPv4(linodeInterfaceFactoryVPC.build())).toBe('10.0.0.0');
+  });
 
-  it('returns undefined if the given interface is undefined', () => {});
+  it('returns undefined if the given interface is undefined', () => {
+    expect(getVPCIPv4(undefined)).toBe(undefined)
+  });
 });
 
 const accountCapabilitiesWithoutVPC: AccountCapability[] = [
