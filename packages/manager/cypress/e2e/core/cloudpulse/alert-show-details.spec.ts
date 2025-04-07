@@ -263,7 +263,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         .should('have.text', 'consecutive occurrences.');
     });
     //  Validate the Resources section (Resource and Region columns)
-    cy.get('[data-qa-section="Entities"]').within(() => {
+    cy.get('[data-qa-section="Resources"]').within(() => {
       ui.heading
         .findByText('entity')
         .scrollIntoView()
@@ -307,7 +307,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           });
         });
 
-      // Sorting by Resource and Region columns
+      // Sorting by entity and Region columns
       ui.heading.findByText('entity').should('be.visible').click();
       verifyRowOrder(['4', '3', '2', '1']);
 
@@ -320,7 +320,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       ui.heading.findByText('region').should('be.visible').click();
       verifyRowOrder(['1', '3', '2', '4']);
 
-      // Search by Resource
+      // Search by Entity
       cy.findByPlaceholderText('Search for a Region or Entity')
         .should('be.visible')
         .type(databases[0].label);

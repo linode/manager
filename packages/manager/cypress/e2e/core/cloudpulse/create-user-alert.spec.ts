@@ -150,7 +150,7 @@ const fillMetricDetailsForSpecificRule = ({
 describe('Create Alert', () => {
   /*
    * - Confirms that users can navigate from the Alert Listings page to the Create Alert page.
-   * - Confirms that users can enter alert details, select entities, and configure conditions.
+   * - Confirms that users can enter alert details, select resources, and configure conditions.
    * - Confirms that the UI allows adding notification channels and setting thresholds.
    * - Confirms client-side validation when entering invalid metric values.
    * - Confirms that API interactions work correctly and return the expected responses.

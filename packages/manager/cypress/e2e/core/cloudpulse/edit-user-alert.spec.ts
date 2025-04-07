@@ -194,7 +194,7 @@ describe('Integration Tests for Edit Alert', () => {
       .find('[type="checkbox"]')
       .should('be.checked');
 
-    // Verify alert resource selection count message
+    // Verify alert entity selection count message
     cy.get('[data-testid="selection_notice"]').should(
       'contain',
       '1 of 5 entities are selected.'
