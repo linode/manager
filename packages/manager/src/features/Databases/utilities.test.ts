@@ -604,7 +604,7 @@ describe('findConfigItem', () => {
     example: 600,
     maximum: 86400,
     minimum: 600,
-    restart_cluster: false,
+    requires_restart: false,
     type: 'integer',
   };
 
@@ -614,7 +614,7 @@ describe('findConfigItem', () => {
     example: 10,
     maximum: 3600,
     minimum: 2,
-    restart_cluster: false,
+    requires_restart: false,
     type: 'integer',
   };
   it('should return the correct ConfigurationItem for a given targetKey', () => {
@@ -653,7 +653,7 @@ describe('convertExistingConfigsToArray', () => {
       label: 'connect_timeout',
       maximum: 3600,
       minimum: 2,
-      restart_cluster: false,
+      requires_restart: false,
       type: 'integer',
       value: 10,
     },
@@ -666,7 +666,7 @@ describe('convertExistingConfigsToArray', () => {
       maxLength: 100,
       minLength: 2,
       pattern: '^([-+][\\d:]*|[\\w/]*)$',
-      restart_cluster: false,
+      requires_restart: false,
       type: 'string',
       value: '+03:00',
     },
@@ -678,7 +678,7 @@ describe('convertExistingConfigsToArray', () => {
       label: 'binlog_retention_period',
       maximum: 86400,
       minimum: 600,
-      restart_cluster: false,
+      requires_restart: false,
       type: 'integer',
       value: 600,
     },

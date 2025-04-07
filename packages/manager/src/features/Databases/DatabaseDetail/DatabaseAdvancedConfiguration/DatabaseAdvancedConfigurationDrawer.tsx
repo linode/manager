@@ -68,9 +68,9 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const configurations = convertEngineConfigToOptions(databaseConfig);
 
-  const existingConfigsArray = convertExistingConfigsToArray(
-    existingConfigurations,
-    databaseConfig
+  const existingConfigsArray = useMemo(
+    () => convertExistingConfigsToArray(existingConfigurations, databaseConfig),
+    [existingConfigurations, databaseConfig]
   );
 
   const {
@@ -81,6 +81,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     watch,
   } = useForm<FormValues>({
     defaultValues: { configs: existingConfigsArray },
+    mode: 'onBlur',
     resolver: yupResolver(
       createDynamicAdvancedConfigSchema(
         configurations
@@ -96,10 +97,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const configs = watch('configs');
 
   useEffect(() => {
-    if (databaseConfig) {
+    if (databaseConfig && open) {
       reset({ configs: existingConfigsArray });
     }
-  }, [databaseConfig]);
+  }, [databaseConfig, open, reset, existingConfigsArray]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -109,7 +110,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     (config) => !usedConfigs.has(config.label)
   );
 
-  const hasRestartCluster = fields.some((item) => item.restart_cluster);
+  const hasRestartCluster = fields.some((item) => item.requires_restart);
 
   const handleAddConfiguration = (config: ConfigurationOption | null) => {
     if (!config || usedConfigs.has(config.label)) {
@@ -140,7 +141,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       engine_config: formatConfigPayload(formData.configs, configurations),
     };
     await updateDatabase(payload).then(() => {
-      onClose();
+      handleClose();
       enqueueSnackbar('Advanced Configuration settings saved', {
         variant: 'success',
       });
@@ -150,7 +151,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title="Advanced Configuration"
     >
@@ -208,6 +209,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
                   configItem={config}
                   engine={engine}
                   errorText={fieldState.error?.message}
+                  onBlur={field.onBlur}
                   onChange={field.onChange}
                   onRemove={() => handleRemoveConfig(index)}
                 />
