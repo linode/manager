@@ -149,7 +149,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
-            <Paginate data={alerts}>
+            <Paginate data={orderedData}>
               {({
                 count,
                 data: paginatedAndOrderedAlerts,
