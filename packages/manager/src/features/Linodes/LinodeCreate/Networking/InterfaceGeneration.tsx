@@ -55,6 +55,7 @@ export const InterfaceGeneration = () => {
       <RadioGroup
         aria-labelledby="interface-generation"
         onChange={field.onChange}
+        sx={{ mb: '0px !important' }}
         value={field.value ?? 'legacy_config'}
       >
         <FormControlLabel

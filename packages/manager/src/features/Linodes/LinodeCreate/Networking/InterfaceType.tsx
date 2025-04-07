@@ -17,8 +17,8 @@ interface Props {
 export const InterfaceType = ({ index }: Props) => {
   const {
     control,
-    setValue,
     getFieldState,
+    setValue,
   } = useFormContext<LinodeCreateFormValues>();
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
