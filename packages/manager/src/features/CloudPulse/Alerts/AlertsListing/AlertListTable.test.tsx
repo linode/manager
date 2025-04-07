@@ -87,7 +87,12 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -99,12 +104,22 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable')); // click the enable button to enable alert
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
+
     expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -116,6 +131,11 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable')); // click the enable button to enable alert
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
+
     expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
@@ -127,7 +147,12 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -140,6 +165,10 @@ describe('Alert List Table test', () => {
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable'));
 
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
+
     expect(getByText('Enabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while enabling an alert
   });
 
@@ -151,7 +180,12 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -163,6 +197,10 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable'));
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
 
     expect(getByText('Disabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
   });
