@@ -44,10 +44,12 @@ export const LinodeInterface = ({ index }: Props) => {
           variant="error"
         />
       )}
-      <InterfaceType index={index} />
+      <Stack spacing={1}>
+        <InterfaceType index={index} />
+        <InterfaceGeneration />
+      </Stack>
       {interfaceType === 'vlan' && <VLAN index={index} />}
       {interfaceType === 'vpc' && <VPC index={index} />}
-      <InterfaceGeneration />
       {interfaceGeneration === 'linode' && <InterfaceFirewall index={index} />}
     </Stack>
   );
