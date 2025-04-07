@@ -4,13 +4,14 @@ import {
 } from '@linode/queries';
 import { useSnackbar } from 'notistack';
 
-interface Options {
+interface AllocateIPv6Options {
   interfaceId: number;
   linodeId: number;
+  prefix: '/56' | '/64';
 }
 
-export const useAllocateIPv6Range = (options: Options) => {
-  const { interfaceId, linodeId } = options;
+export const useAllocateIPv6Range = (options: AllocateIPv6Options) => {
+  const { interfaceId, linodeId, prefix } = options;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -33,7 +34,7 @@ export const useAllocateIPv6Range = (options: Options) => {
     }
   );
 
-  const onAllocate = (prefix: '/56' | '/64') => {
+  const onAllocate = () => {
     if (!linodeInterface) {
       enqueueSnackbar(
         'Unable to allocate IP because we could not fetch the interface in the first place.',
@@ -59,7 +60,12 @@ export const useAllocateIPv6Range = (options: Options) => {
   return { isAllocating: isPending, onAllocate };
 };
 
-export const useAllocatePublicIPv4 = (options: Options) => {
+interface AllocateIPv4Options {
+  interfaceId: number;
+  linodeId: number;
+}
+
+export const useAllocatePublicIPv4 = (options: AllocateIPv4Options) => {
   const { interfaceId, linodeId } = options;
 
   const { enqueueSnackbar } = useSnackbar();

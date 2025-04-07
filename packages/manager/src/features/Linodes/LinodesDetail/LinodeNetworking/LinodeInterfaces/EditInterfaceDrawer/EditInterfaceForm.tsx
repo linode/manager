@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   CircleProgress,
+  Divider,
   ErrorState,
   Notice,
   Stack,
@@ -18,8 +19,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { getLinodeInterfaceType } from '../utilities';
 import { DefaultRoute } from './PublicInterface/DefaultRoute';
+import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
 import { PublicIPv4Addresses } from './PublicInterface/PublicIPv4Addresses';
-import { PublicIPv6Ranges } from './PublicInterface/PublicIPv6Ranges';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
@@ -87,16 +88,16 @@ export const EditInterfaceForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Stack spacing={2}>
+        <Stack divider={<Divider />} spacing={2}>
           <DefaultRoute linodeInterface={linodeInterface} />
           {interfaceType === 'Public' && (
-            <>
+            <Stack divider={<Divider />} spacing={2}>
               <PublicIPv4Addresses
                 interfaceId={interfaceId}
                 linodeId={linodeId}
               />
-              <PublicIPv6Ranges interfaceId={interfaceId} linodeId={linodeId} />
-            </>
+              <IPv6Ranges interfaceId={interfaceId} linodeId={linodeId} />
+            </Stack>
           )}
           {interfaceType === 'VPC' && (
             <Notice
@@ -110,23 +111,23 @@ export const EditInterfaceForm = (props: Props) => {
               variant="warning"
             />
           )}
-          <Stack direction="row" justifyContent="flex-end" spacing={1}>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button
-              disabled={!form.formState.isDirty}
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-            <Button
-              buttonType="primary"
-              disabled={!form.formState.isDirty}
-              loading={form.formState.isSubmitting}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Stack>
+        </Stack>
+        <Stack direction="row" justifyContent="flex-end" mt={2} spacing={1}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button
+            disabled={!form.formState.isDirty}
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+          <Button
+            buttonType="primary"
+            disabled={!form.formState.isDirty}
+            loading={form.formState.isSubmitting}
+            type="submit"
+          >
+            Save
+          </Button>
         </Stack>
       </form>
     </FormProvider>
