@@ -2,7 +2,7 @@
  * @file Integration Tests for the CloudPulse Alerts Show Detail Page.
  *
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
- * It ensures that all alert details, criteria, and entity information are displayed correctly.
+ * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
 import { capitalize, regionFactory } from '@linode/utilities';
 import {
@@ -90,7 +90,7 @@ const verifyRowOrder = (expectedIds: string[]) => {
   });
 };
 /**
- * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
+ * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
 
 describe('Integration Tests for Alert Show Detail Page', () => {
@@ -262,8 +262,8 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         .should('be.visible')
         .should('have.text', 'consecutive occurrences.');
     });
-    //  Validate the entity section (Entity and Region columns)
-    cy.get('[data-qa-section="Resources"]').within(() => {
+    //  Validate the Resources section (Resource and Region columns)
+    cy.get('[data-qa-section="Entities"]').within(() => {
       ui.heading
         .findByText('entity')
         .scrollIntoView()
@@ -283,7 +283,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       cy.get('[data-qa-alert-row]').should('have.length', 4);
 
-      // Validate entity-region mapping for each row in the table
+      // Validate resource-region mapping for each row in the table
 
       const regionMap = new Map(regions.map((r) => [r.id, r.label]));
 
@@ -307,7 +307,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           });
         });
 
-      // Sorting by Entity and Region columns
+      // Sorting by Resource and Region columns
       ui.heading.findByText('entity').should('be.visible').click();
       verifyRowOrder(['4', '3', '2', '1']);
 
@@ -320,7 +320,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       ui.heading.findByText('region').should('be.visible').click();
       verifyRowOrder(['1', '3', '2', '4']);
 
-      // Search by Entity
+      // Search by Resource
       cy.findByPlaceholderText('Search for a Region or Entity')
         .should('be.visible')
         .type(databases[0].label);
