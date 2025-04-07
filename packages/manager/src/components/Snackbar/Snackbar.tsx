@@ -16,6 +16,7 @@ import {
 import type { Theme } from '@mui/material/styles';
 import type { SnackbarProviderProps } from 'notistack';
 
+// Add override for "tip" variant which is Akamai specific and not built into Notistack
 declare module 'notistack' {
   interface VariantOverrides {
     tip: true;

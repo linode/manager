@@ -1,5 +1,4 @@
-import { IconButton } from '@linode/ui';
-import { CloseIcon } from '@linode/ui';
+import { CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
 
 interface Props {
