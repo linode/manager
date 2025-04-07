@@ -44,29 +44,33 @@ beforeEach(() => {
 
 describe('RolesTable', () => {
   it('renders no roles when roles array is empty', () => {
-    renderWithTheme(<RolesTable roles={[]} />);
+    const { getByText, getByTestId } = renderWithTheme(
+      <RolesTable roles={[]} />
+    );
 
-    expect(screen.getByTestId('roles-table')).toBeInTheDocument();
-    expect(screen.getByText('No items to display.')).toBeInTheDocument();
+    expect(getByTestId('roles-table')).toBeInTheDocument();
+    expect(getByText('No items to display.')).toBeInTheDocument();
   });
 
   it('renders roles correctly when roles array is provided', () => {
-    renderWithTheme(<RolesTable roles={mockRoles} />);
+    const { getByText, getByTestId, getAllByRole } = renderWithTheme(
+      <RolesTable roles={mockRoles} />
+    );
 
-    expect(screen.getByTestId('roles-table')).toBeInTheDocument();
-    expect(screen.getByText('Account volume admin')).toBeInTheDocument();
+    expect(getByTestId('roles-table')).toBeInTheDocument();
+    expect(getAllByRole('combobox').length).toEqual(1);
+    expect(getByText('Account volume admin')).toBeInTheDocument();
   });
 
   it('filters roles to warranted results based on search input', async () => {
     renderWithTheme(<RolesTable roles={mockRoles} />);
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     fireEvent.change(searchInput, { target: { value: 'Account' } });
-    // await userEvent.type(searchInput, 'Account');
 
     await waitFor(() => {
       expect(screen.getByTestId('roles-table')).toBeInTheDocument();
       expect(searchInput.value).toBe('Account');
-      // TODO - figure out why these tests fail
+      // TODO - if there is a way to pierce the shadow DOM, we can check these results, but these tests fail currently
       // expect(screen.getByText('Account')).toBeInTheDocument();
       // expect(screen.queryByText('Database')).not.toBeInTheDocument();
       // expect(screen.getByText('No items to display.')).not.toBeInTheDocument();

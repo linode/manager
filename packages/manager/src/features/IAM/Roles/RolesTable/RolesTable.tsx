@@ -1,6 +1,6 @@
-import { Button, SelectOption, Select } from '@linode/ui';
+import { Button, Select } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import {
   Table,
@@ -19,6 +19,7 @@ import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTab
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
 import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
 
+import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
 import type { RoleMap } from 'src/features/IAM/Shared/utilities';
 
@@ -94,7 +95,7 @@ export const RolesTable = ({ roles }: Props) => {
     setRows(filteredRows);
   };
 
-  const handleChangeEntityTypeFilter = (_: any, entityType: SelectOption) => {
+  const handleChangeEntityTypeFilter = (_: never, entityType: SelectOption) => {
     setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
     const filteredRows = getFilteredRows(filterString, entityType?.value);
     setRows(filteredRows);
@@ -107,32 +108,42 @@ export const RolesTable = ({ roles }: Props) => {
 
   return (
     <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-      <Box
-        sx={(theme) => ({
-          display: 'flex',
+      <Grid
+        sx={() => ({
           justifyContent: 'space-between',
-          marginBottom: theme.spacing(2),
         })}
+        container
+        direction="row"
+        spacing={2}
       >
-        <DebouncedSearchTextField
-          clearable
-          debounceTime={250}
-          hideLabel
-          label="Search"
-          onSearch={handleTextFilter}
-          placeholder="Search"
-          sx={{ width: 320 }}
-          value={filterString}
-        />
-        <Select
-          hideLabel
-          label="Select type"
-          onChange={handleChangeEntityTypeFilter}
-          options={filterableOptions}
-          placeholder="All Roles"
-          sx={{ minWidth: 250 }}
-          value={filterableEntityType}
-        />
+        <Grid
+          sx={() => ({
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+          })}
+          container
+          direction="row"
+        >
+          <DebouncedSearchTextField
+            clearable
+            debounceTime={250}
+            hideLabel
+            label="Search"
+            onSearch={handleTextFilter}
+            placeholder="Search"
+            sx={{ width: 320 }}
+            value={filterString}
+          />
+          <Select
+            hideLabel
+            label="Select type"
+            onChange={handleChangeEntityTypeFilter}
+            options={filterableOptions}
+            placeholder="All Roles"
+            sx={{ minWidth: 250 }}
+            value={filterableEntityType}
+          />
+        </Grid>
         <Button
           tooltipText={
             selectedRows.length === 0
@@ -145,7 +156,7 @@ export const RolesTable = ({ roles }: Props) => {
         >
           Assign Selected Roles
         </Button>
-      </Box>
+      </Grid>
 
       <Table data-testid="roles-table">
         <TableHead>
