@@ -508,10 +508,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     />
                     {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
                       <TooltipIcon
-                        sxTooltipIcon={(theme) => ({
-                          padding: theme.spacingFunction(8),
-                        })}
                         status="help"
+                        sxTooltipIcon={{ padding: 0 }}
                         text={unableToUpgradeTooltipText}
                       />
                     )}
