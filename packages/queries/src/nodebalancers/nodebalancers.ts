@@ -68,10 +68,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
         queryFn: () => getNodeBalancerFirewalls(id),
         queryKey: null,
       },
-      nodebalancer: () => ({
-        queryFn: (useBetaEndpoint) =>
-          useBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
-        queryKey: ['v4'],
+      nodebalancer: (isUsingBetaEndpoint: boolean = false) => ({
+        queryFn: () =>
+          isUsingBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
+        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
       }),
       stats: {
         queryFn: () => getNodeBalancerStats(id),
@@ -122,9 +122,15 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (id: number, enabled = true) => {
+export const useNodeBalancerQuery = (
+  id: number,
+  enabled = true,
+  isUsingBetaEndpoint = false
+) => {
   return useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries.nodebalancer(id)._ctx.nodebalancer(),
+    ...nodebalancerQueries
+      .nodebalancer(id)
+      ._ctx.nodebalancer(isUsingBetaEndpoint),
     enabled,
   });
 };
