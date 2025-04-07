@@ -34,7 +34,6 @@ export * from './oauth';
 export * from './objectStorage';
 export * from './placementGroups';
 export * from './preferences';
-export * from './profile';
 export * from './promotionalOffer';
 export * from './stackscripts';
 export * from './statusPage';
