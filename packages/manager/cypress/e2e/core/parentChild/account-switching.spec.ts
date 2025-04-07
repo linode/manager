@@ -1,8 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import {
   accountFactory,
   appTokenFactory,
   paymentMethodFactory,
-  profileFactory,
 } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
