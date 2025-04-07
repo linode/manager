@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { omittedProps } from '../../utilities';
-import { Tooltip } from '../Tooltip';
+import { Tooltip, TooltipProps } from '../Tooltip';
 
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -53,6 +53,10 @@ export interface ButtonProps extends _ButtonProps {
   tooltipAnalyticsEvent?: () => void;
   /** Tooltip text */
   tooltipText?: string;
+  /**
+   * Optional props passed to the tooltip
+   */
+  TooltipProps?: Partial<TooltipProps>;
 }
 
 const StyledButton = styled(_Button, {
@@ -83,6 +87,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       sxEndIcon,
       tooltipAnalyticsEvent,
       tooltipText,
+      TooltipProps,
       ...rest
     },
     ref
@@ -134,6 +139,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           id="button-tooltip"
           onClick={handleTooltipAnalytics}
           title={tooltipText}
+          {...TooltipProps}
         >
           {button}
         </Tooltip>

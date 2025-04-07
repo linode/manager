@@ -43,6 +43,9 @@ export const InterfaceGeneration = () => {
     <Box>
       <ShowMoreExpansion
         ButtonProps={{
+          TooltipProps: {
+            placement: 'right',
+          },
           alwaysShowTooltip: disabled,
           tooltipText: disabledReason,
         }}
