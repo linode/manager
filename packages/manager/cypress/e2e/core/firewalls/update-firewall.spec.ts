@@ -167,7 +167,8 @@ const createLinodeAndFirewall = async (
 };
 
 authenticate();
-// why is this skipped?
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
 describe.skip('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
