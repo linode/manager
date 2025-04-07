@@ -25,7 +25,7 @@ describe('Edit Alert Landing tests', () => {
 
     expect(
       getByText(
-        'An error occurred while loading the alerts definitions and resources. Please try again later.'
+        'An error occurred while loading the alerts definitions and entities. Please try again later.'
       )
     ).toBeInTheDocument();
 

@@ -135,7 +135,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     isEnabled = selectedAlert.status !== 'disabled';
     message = `Are you sure you want to ${
       isEnabled ? 'disable' : 'enable'
-    } this alert for all assigned resources?`;
+    } this alert for all assigned entities?`;
     title = `${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
   }
 
