@@ -85,7 +85,7 @@ export const AlertConfirmationDialog = React.memo(
         open={isOpen}
         title={title}
       >
-        <Typography variant="subtitle1">{message}</Typography>
+        <Typography variant="subtitle2">{message}</Typography>
       </ConfirmationDialog>
     );
   }
