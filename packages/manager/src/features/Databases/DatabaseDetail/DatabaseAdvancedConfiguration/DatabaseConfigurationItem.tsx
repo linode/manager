@@ -27,12 +27,13 @@ interface Props {
   configItem?: ConfigurationOption;
   engine: string;
   errorText: string | undefined;
+  onBlur?: () => void;
   onChange: (config: ConfigValue) => void;
   onRemove?: (label: string) => void;
 }
 
 export const DatabaseConfigurationItem = (props: Props) => {
-  const { configItem, engine, errorText, onChange, onRemove } = props;
+  const { configItem, engine, errorText, onBlur, onChange, onRemove } = props;
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
@@ -82,6 +83,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(Number(e.target.value))}
           type="number"
           value={Number(configItem.value)}
@@ -101,6 +103,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(e.target.value)}
           placeholder={String(configItem.example)}
           type="text"
@@ -126,7 +129,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
         >
           {`${engine}.${configLabel}`}
         </Typography>
-        {configItem?.restart_cluster && (
+        {configItem?.requires_restart && (
           <StyledChip color="warning" label="restarts service" size="small" />
         )}
         {configItem?.description && (
