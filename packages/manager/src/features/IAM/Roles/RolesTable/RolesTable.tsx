@@ -1,3 +1,5 @@
+import { Button, SelectOption, Select } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {
@@ -15,6 +17,7 @@ import React, { useState } from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
+import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
 
 import type { Order } from 'akamai-cds-react-components/Table';
 import type { RoleMap } from 'src/features/IAM/Shared/utilities';
@@ -26,6 +29,23 @@ interface Props {
 export const RolesTable = ({ roles }: Props) => {
   const [rows, setRows] = useState(roles);
 
+  // Filter string for the search bar
+  const [filterString, setFilterString] = React.useState('');
+
+  // Get just the list of entity types from this list of roles, to be used in the selection filter
+  const ALL_ROLES_OPTION: SelectOption = {
+    label: 'All Roles',
+    value: 'all',
+  };
+  const filterableOptions = [ALL_ROLES_OPTION];
+  mapEntityTypesForSelect(roles, ' Roles').forEach((et) =>
+    filterableOptions.push(et)
+  );
+  const [
+    filterableEntityType,
+    setFilterableEntityType,
+  ] = useState<SelectOption | null>(ALL_ROLES_OPTION);
+
   const [sort, setSort] = useState<
     { column: string; order: Order } | undefined
   >(undefined);
@@ -33,7 +53,9 @@ export const RolesTable = ({ roles }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
 
   const areAllSelected = () => {
-    return rows.length === selectedRows.length && !!selectedRows.length;
+    return (
+      !!rows && rows.length === selectedRows.length && !!selectedRows.length
+    );
   };
 
   const handleSort = (event: CustomEvent, column: string) => {
@@ -52,28 +74,44 @@ export const RolesTable = ({ roles }: Props) => {
     }
   };
 
-  const handleFilter = (filterString: string) => {
-    const filteredRows = roles.filter((r) =>
-        r.name.includes(filterString) ||
-        r.description.includes(filterString) ||
-        r.access.includes(filterString)
+  const getFilteredRows = (
+    text: string,
+    entityTypeVal = ALL_ROLES_OPTION.value
+  ) => {
+    return roles.filter(
+      (r) =>
+        (entityTypeVal === ALL_ROLES_OPTION.value ||
+          entityTypeVal === r.entity_type) &&
+        (r.name.includes(text) ||
+          r.description.includes(text) ||
+          r.access.includes(text))
     );
+  };
+
+  const handleTextFilter = (fs: string) => {
+    setFilterString(fs);
+    const filteredRows = getFilteredRows(fs, filterableEntityType?.value);
     setRows(filteredRows);
   };
 
-  const prettyPrintAccess = (access: string) => {
-    return access.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const handleChangeEntityTypeFilter = (_: any, entityType: SelectOption) => {
+    setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
+    const filteredRows = getFilteredRows(filterString, entityType?.value);
+    setRows(filteredRows);
+  };
+
+  const handleAssignSelectedRoles = () => {
+    // Logic to assign selected roles
+    // console.log('Assigning roles:', selectedRows);
   };
 
   return (
     <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-
       <Box
         sx={(theme) => ({
-          alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',
-          marginBottom: theme.spacing(2)
+          marginBottom: theme.spacing(2),
         })}
       >
         <DebouncedSearchTextField
@@ -81,14 +119,35 @@ export const RolesTable = ({ roles }: Props) => {
           debounceTime={250}
           hideLabel
           label="Search"
-          onSearch={handleFilter}
+          onSearch={handleTextFilter}
           placeholder="Search"
           sx={{ width: 320 }}
-          value=""
+          value={filterString}
         />
+        <Select
+          hideLabel
+          label="Select type"
+          onChange={handleChangeEntityTypeFilter}
+          options={filterableOptions}
+          placeholder="All Roles"
+          sx={{ minWidth: 250 }}
+          value={filterableEntityType}
+        />
+        <Button
+          tooltipText={
+            selectedRows.length === 0
+              ? 'You must select some roles to assign them.'
+              : undefined
+          }
+          buttonType="primary"
+          disabled={selectedRows.length === 0}
+          onClick={() => handleAssignSelectedRoles()}
+        >
+          Assign Selected Roles
+        </Button>
       </Box>
 
-      <Table>
+      <Table data-testid="roles-table">
         <TableHead>
           <TableRow
             headerborder
@@ -120,38 +179,46 @@ export const RolesTable = ({ roles }: Props) => {
             >
               Description
             </TableHeaderCell>
-            <TableHeaderCell style={{ minWidth: '5%' }}></TableHeaderCell>
+            <TableHeaderCell style={{ minWidth: '5%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
-          {!rows.length && (
+          {!rows?.length && (
             <TableRow>
-              <TableCell>
-                No items to display.
-              </TableCell>
+              <TableCell>No items to display.</TableCell>
             </TableRow>
           )}
-          {rows && rows.map((roleRow) => (
-            <TableRow
-              expandable
-              hoverable
-              key={roleRow.name}
-              rowborder
-              select={(event) => handleSelect(event, roleRow)}
-              selectable
-              selected={selectedRows.includes(roleRow)}
-            >
-              <TableCell style={{ minWidth: '26%' }}>{roleRow.name}</TableCell>
-              <TableCell style={{ minWidth: '12%' }}>{prettyPrintAccess(roleRow.access)}</TableCell>
-              <TableCell style={{ minWidth: '45%' }}>{roleRow.description}</TableCell>
-              <TableCell style={{ minWidth: '5%' }}>
-                <RolesTableActionMenu></RolesTableActionMenu>
-              </TableCell>
-              <TableRowExpanded slot="expanded" style={{ width: '100%', padding: 0, marginBottom: 12 }}>
-                <RolesTableExpandedRow permissions={roleRow.permissions}></RolesTableExpandedRow>
-              </TableRowExpanded>
-            </TableRow>
-          ))}
+          {rows &&
+            rows.map((roleRow) => (
+              <TableRow
+                expandable
+                hoverable
+                key={roleRow.name}
+                rowborder
+                select={(event) => handleSelect(event, roleRow)}
+                selectable
+                selected={selectedRows.includes(roleRow)}
+              >
+                <TableCell style={{ minWidth: '26%' }}>
+                  {roleRow.name}
+                </TableCell>
+                <TableCell style={{ minWidth: '12%' }}>
+                  {capitalizeAllWords(roleRow.access, '_')}
+                </TableCell>
+                <TableCell style={{ minWidth: '45%' }}>
+                  {roleRow.description}
+                </TableCell>
+                <TableCell style={{ minWidth: '5%' }}>
+                  <RolesTableActionMenu />
+                </TableCell>
+                <TableRowExpanded
+                  slot="expanded"
+                  style={{ marginBottom: 12, padding: 0, width: '100%' }}
+                >
+                  <RolesTableExpandedRow permissions={roleRow.permissions} />
+                </TableRowExpanded>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </Paper>

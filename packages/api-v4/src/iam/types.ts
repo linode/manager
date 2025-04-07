@@ -14,12 +14,14 @@ export type EntityTypePermissions =
 export type AccountAccessType =
   | 'account_admin'
   | 'account_linode_admin'
+  | 'account_volume_admin'
   | 'account_viewer'
   | 'firewall_creator'
   | 'linode_contributor'
   | 'linode_creator';
 
 export type RoleType =
+  | 'database_admin'
   | 'firewall_admin'
   | 'firewall_creator'
   | 'linode_contributor'
