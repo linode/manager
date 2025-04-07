@@ -62,6 +62,21 @@ export const getNodeBalancers = (mockState: MockState) => [
   ),
 
   http.get(
+    '*/v4beta/nodebalancers/:id',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
+      const id = Number(params.id);
+      const nodeBalancer = await mswDB.get('nodeBalancers', id);
+      if (!nodeBalancer) {
+        return makeNotFoundResponse();
+      }
+
+      return makeResponse(nodeBalancer);
+    }
+  ),
+
+  http.get(
     '*/v4/nodebalancers/:id/configs',
     async ({
       params,
