@@ -18,20 +18,10 @@ interface MonitorTableContentProps {
   loading: boolean;
   monitors: ManagedServiceMonitor[];
   openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
 }
 
 export const MonitorTableContent = (props: MonitorTableContentProps) => {
-  const {
-    error,
-    issues,
-    loading,
-    monitors,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-  } = props;
+  const { error, issues, loading, monitors, openDialog } = props;
 
   if (loading) {
     return <TableRowLoading columns={4} />;
@@ -59,8 +49,6 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
           key={`service-monitor-row-${idx}`}
           monitor={monitor}
           openDialog={openDialog}
-          openHistoryDrawer={openHistoryDrawer}
-          openMonitorDrawer={openMonitorDrawer}
         />
       ))}
     </>

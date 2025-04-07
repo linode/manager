@@ -7,10 +7,8 @@ import { MonitorActionMenu, MonitorActionMenuProps } from './MonitorActionMenu';
 
 const props: MonitorActionMenuProps = {
   label: 'this-monitor',
-  monitorID: 1,
+  monitorId: 1,
   openDialog: vi.fn(),
-  openHistoryDrawer: vi.fn(),
-  openMonitorDrawer: vi.fn(),
   status: 'disabled',
 };
 

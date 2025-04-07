@@ -13,6 +13,7 @@ import {
   getManagedIssues,
   getManagedStats,
   getSSHPubKey,
+  getServiceMonitor,
   getServices,
   updateContact,
   updateCredential,
@@ -20,17 +21,16 @@ import {
   updatePassword,
   updateServiceMonitor,
 } from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { getAll } from '@linode/utilities';
-
 import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
   queryPresets,
 } from '@linode/queries';
+import { getAll } from '@linode/utilities';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { extendIssues } from './helpers';
 
 import type { ExtendedIssue } from './types';
@@ -87,6 +87,10 @@ const managedQueries = createQueryKeys('managed', {
     queryFn: getAllLinodeSettings,
     queryKey: null,
   },
+  monitor: (id: number) => ({
+    queryFn: () => getServiceMonitor(id),
+    queryKey: [id],
+  }),
   monitors: {
     queryFn: getAllMonitors,
     queryKey: null,
@@ -120,9 +124,17 @@ export const useAllManagedCredentialsQuery = () =>
 export const useAllManagedContactsQuery = () =>
   useQuery<ManagedContact[], APIError[]>(managedQueries.contacts);
 
-export const useAllManagedIssuesQuery = () =>
+export const useAllManagedIssuesQuery = (primaryId?: number | string) =>
   useQuery<ExtendedIssue[], APIError[]>({
     ...managedQueries.issues,
+    enabled: Boolean(primaryId),
+    refetchInterval: 20000,
+  });
+
+export const useGetMonitorQuery = (id: number, enabled: boolean = true) =>
+  useQuery<ManagedServiceMonitor, APIError[]>({
+    ...managedQueries.monitor(id),
+    enabled,
     refetchInterval: 20000,
   });
 

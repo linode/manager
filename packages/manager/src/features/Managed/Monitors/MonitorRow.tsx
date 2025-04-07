@@ -22,18 +22,10 @@ interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
 }
 
 export const MonitorRow = (props: MonitorRowProps) => {
-  const {
-    issues,
-    monitor,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-  } = props;
+  const { issues, monitor, openDialog } = props;
 
   const Icon = statusIconMap[monitor.status];
 
@@ -51,12 +43,12 @@ export const MonitorRow = (props: MonitorRowProps) => {
     >
       <StyledTableCell data-qa-monitor-label>
         <Grid
-          container
-          spacing={2}
-          wrap="nowrap"
           sx={{
             alignItems: 'center',
           }}
+          container
+          spacing={2}
+          wrap="nowrap"
         >
           <StyledGrid>
             <Icon height={30} width={30} />
@@ -66,12 +58,12 @@ export const MonitorRow = (props: MonitorRowProps) => {
       </StyledTableCell>
       <TableCell data-qa-monitor-status>
         <Grid
-          container
-          direction="row"
-          spacing={1}
           sx={{
             alignItems: 'center',
           }}
+          container
+          direction="row"
+          spacing={1}
         >
           <Grid>
             <ConditionalTypography>
@@ -101,10 +93,8 @@ export const MonitorRow = (props: MonitorRowProps) => {
       <TableCell actionCell>
         <ActionMenu
           label={monitor.label}
-          monitorID={monitor.id}
+          monitorId={monitor.id}
           openDialog={openDialog}
-          openHistoryDrawer={openHistoryDrawer}
-          openMonitorDrawer={openMonitorDrawer}
           status={monitor.status}
         />
       </TableCell>

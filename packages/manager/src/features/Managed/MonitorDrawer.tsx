@@ -21,9 +21,11 @@ import type {
   ServiceType,
 } from '@linode/api-v4/lib/managed';
 import type { SelectOption } from '@linode/ui';
+
 export interface MonitorDrawerProps {
   credentials: ManagedCredential[];
   groups: string[];
+  isFetching?: boolean;
   label?: string;
   mode: 'create' | 'edit';
   monitor?: ManagedServiceMonitor;
@@ -104,7 +106,16 @@ const emptyInitialValues = {
 } as ManagedServicePayload;
 
 const MonitorDrawer = (props: MonitorDrawerProps) => {
-  const { credentials, groups, mode, monitor, onClose, onSubmit, open } = props;
+  const {
+    credentials,
+    groups,
+    isFetching,
+    mode,
+    monitor,
+    onClose,
+    onSubmit,
+    open,
+  } = props;
 
   const credentialOptions = getCredentialOptions(credentials);
   const groupOptions = getGroupsOptions(groups);
@@ -127,6 +138,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={titleMap[mode]}

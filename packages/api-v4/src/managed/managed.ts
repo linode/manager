@@ -111,6 +111,17 @@ export const getLinodeSettings = (params?: Params, filters?: Filter) =>
   );
 
 /**
+ * getServiceMonitor
+ *
+ * Returns a Managed Service Monitor by ID.
+ */
+export const getServiceMonitor = (serviceId: number) =>
+  Request<ManagedServiceMonitor>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/managed/services/${encodeURIComponent(serviceId)}`)
+  );
+
+/**
  * createServiceMonitor
  *
  * Creates a Managed Service Monitor

@@ -47,6 +47,15 @@ export const ManagedLanding = () => {
       <DocumentTitleSegment segment="Managed" />
       <ProductInformationBanner bannerLocation="Managed" />
       <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Managed',
+              position: 1,
+            },
+          ],
+          pathname: '/managed',
+        }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service"
         entity="Managed"
         extraActions={<SupportWidget />}

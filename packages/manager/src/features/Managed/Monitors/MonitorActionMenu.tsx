@@ -1,6 +1,7 @@
 import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -18,10 +19,8 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface MonitorActionMenuProps {
   label: string;
-  monitorID: number;
+  monitorId: number;
   openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
   status: MonitorStatus;
 }
 
@@ -29,21 +28,14 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
-
-  const {
-    label,
-    monitorID,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-    status,
-  } = props;
+  const navigate = useNavigate();
+  const { label, monitorId, openDialog, status } = props;
 
   const { mutateAsync: enableServiceMonitor } = useEnableMonitorMutation(
-    monitorID
+    monitorId
   );
   const { mutateAsync: disableServiceMonitor } = useDisableMonitorMutation(
-    monitorID
+    monitorId
   );
 
   const handleError = (message: string, error: APIError[]) => {
@@ -54,13 +46,19 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        openHistoryDrawer(monitorID, label);
+        navigate({
+          params: { monitorId },
+          to: `/managed/monitors/$monitorId/issues`,
+        });
       },
       title: 'View Issue History',
     },
     {
       onClick: () => {
-        openMonitorDrawer(monitorID, 'edit');
+        navigate({
+          params: { monitorId },
+          to: `/managed/monitors/$monitorId/edit`,
+        });
       },
       title: 'Edit',
     },
@@ -95,7 +93,7 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
         },
     {
       onClick: () => {
-        openDialog(monitorID, label);
+        openDialog(monitorId, label);
       },
       title: 'Delete',
     },
