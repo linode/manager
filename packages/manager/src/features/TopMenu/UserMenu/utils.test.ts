@@ -1,8 +1,8 @@
-import { UserType } from '@linode/api-v4';
-
-import { profileFactory } from 'src/factories';
+import { profileFactory } from '@linode/utilities';
 
 import { getCompanyNameOrEmail } from './utils';
+
+import type { UserType } from '@linode/api-v4';
 
 const MOCK_COMPANY_NAME = 'Test Company, LLC';
 

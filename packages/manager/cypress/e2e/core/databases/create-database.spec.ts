@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 import {
   databaseConfigurations,
   mockDatabaseEngineTypes,
@@ -25,7 +26,6 @@ import {
   databaseFactory,
   eventFactory,
   grantsFactory,
-  profileFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';

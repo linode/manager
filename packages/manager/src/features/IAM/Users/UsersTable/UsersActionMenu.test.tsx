@@ -1,7 +1,7 @@
+import { profileFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsersActionMenu } from './UsersActionMenu';

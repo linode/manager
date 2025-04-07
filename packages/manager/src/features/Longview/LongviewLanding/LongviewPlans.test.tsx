@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 import {
   screen,
   waitFor,
@@ -10,16 +11,12 @@ import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { accountSettingsFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
-import { profileFactory } from 'src/factories/profile';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  LONGVIEW_FREE_ID,
-  LongviewPlans,
-  LongviewPlansProps,
-  formatPrice,
-} from './LongviewPlans';
+import { LONGVIEW_FREE_ID, LongviewPlans, formatPrice } from './LongviewPlans';
+
+import type { LongviewPlansProps } from './LongviewPlans';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 

@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAccessKeys } from 'support/intercepts/object-storage';
@@ -5,7 +6,6 @@ import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
 import { accountFactory, objectStorageKeyFactory } from 'src/factories';
-import { profileFactory } from 'src/factories/profile';
 
 describe('Object Storage gen2 access keys tests', () => {
   /**

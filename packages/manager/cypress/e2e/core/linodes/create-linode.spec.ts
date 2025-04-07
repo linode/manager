@@ -5,6 +5,7 @@
 import {
   linodeFactory,
   linodeTypeFactory,
+  profileFactory,
   regionFactory,
 } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
@@ -34,7 +35,6 @@ import {
   accountFactory,
   accountUserFactory,
   grantsFactory,
-  profileFactory,
 } from 'src/factories';
 
 let username: string;

@@ -1,7 +1,7 @@
+import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { TimeInterval } from 'src/utilities/formatDate';
