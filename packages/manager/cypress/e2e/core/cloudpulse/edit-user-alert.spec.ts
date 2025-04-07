@@ -291,6 +291,10 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
     cy.get('[data-qa-notice="true"]')
       .find('button')
+      .contains('Deselect All')
+      .click();
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
       .contains('Select All')
       .click();
 
