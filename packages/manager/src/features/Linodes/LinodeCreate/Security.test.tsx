@@ -1,8 +1,12 @@
-import { regionFactory } from '@linode/utilities';
+import {
+  profileFactory,
+  regionFactory,
+  sshKeyFactory,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountFactory, profileFactory, sshKeyFactory } from 'src/factories';
+import { accountFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
