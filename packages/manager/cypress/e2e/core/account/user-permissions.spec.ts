@@ -1,4 +1,4 @@
-import { profileFactory } from '@src/factories';
+import { profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';

@@ -5,4 +5,5 @@ export * from './linodes';
 export * from './linodeConfigInterface';
 export * from './linodeInterface';
 export * from './nodebalancer';
+export * from './profile';
 export * from './regions';

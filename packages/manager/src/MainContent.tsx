@@ -123,7 +123,6 @@ const Kubernetes = React.lazy(() =>
     default: module.Kubernetes,
   }))
 );
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
@@ -365,10 +364,6 @@ export const MainContent = () => {
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
                             <Route component={Managed} path="/managed" />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />

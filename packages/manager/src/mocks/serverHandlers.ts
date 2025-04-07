@@ -19,8 +19,10 @@ import {
   nodeBalancerFactory,
   pickRandom,
   proDedicatedTypeFactory,
+  profileFactory,
   regionAvailabilityFactory,
   regions,
+  securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
@@ -92,9 +94,7 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  profileFactory,
   promoFactory,
-  securityQuestionsFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,

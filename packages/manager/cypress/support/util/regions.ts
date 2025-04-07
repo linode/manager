@@ -236,6 +236,11 @@ interface ChooseRegionOptions {
    * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
    */
   regions?: Region[];
+
+  /**
+   * Array of region IDs to exclude from results, in addition to `disallowedRegionIds` regions.
+   */
+  exclude?: string[];
 }
 
 /**
@@ -289,6 +294,10 @@ const resolveSearchRegions = (
 ): Region[] => {
   const requiredCapabilities = options?.capabilities ?? [];
   const overrideRegion = getOverrideRegion();
+  const allDisallowedRegionIds = [
+    ...disallowedRegionIds,
+    ...(options?.exclude ?? []),
+  ];
 
   // If the user has specified an override region for this run, it takes precedent
   // over any other specified criteria.
@@ -303,7 +312,7 @@ const resolveSearchRegions = (
         )}`
       );
     }
-    if (disallowedRegionIds.includes(overrideRegion.id)) {
+    if (allDisallowedRegionIds.includes(overrideRegion.id)) {
       throw new Error(
         `Override region ${overrideRegion.id} (${overrideRegion.label}) is disallowed for testing due to capacity limitations.`
       );
@@ -314,7 +323,7 @@ const resolveSearchRegions = (
   const capableRegions = regionsWithCapabilities(
     options?.regions ?? regions,
     requiredCapabilities
-  ).filter((region: Region) => !disallowedRegionIds.includes(region.id));
+  ).filter((region: Region) => !allDisallowedRegionIds.includes(region.id));
 
   if (!capableRegions.length) {
     throw new Error(

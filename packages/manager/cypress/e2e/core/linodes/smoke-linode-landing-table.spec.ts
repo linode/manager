@@ -1,6 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { linodeFactory } from '@linode/utilities';
-import { profileFactory, userPreferencesFactory } from '@src/factories';
+import {
+  linodeFactory,
+  profileFactory,
+  userPreferencesFactory,
+} from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
