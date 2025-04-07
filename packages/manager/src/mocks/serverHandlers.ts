@@ -219,34 +219,9 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const database1 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 1,
-      label: 'database-instance-1',
-    });
-    const database2 = databaseInstanceFactory.build({
-      cluster_size: 2,
-      id: 2,
-      label: 'database-instance-2',
-    });
-    const database3 = databaseInstanceFactory.build({
-      cluster_size: 3,
-      id: 3,
-      label: 'database-instance-3',
-    });
-    const database4 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 4,
-      label: 'database-instance-4',
-    });
-    const database5 = databaseInstanceFactory.build({
-      cluster_size: 1,
-      id: 5,
-      label: 'database-instance-5',
-    });
-
-    const databases = [database1, database2, database3, database4, database5];
-    return HttpResponse.json(makeResourcePage(databases));
+    return HttpResponse.json(
+      makeResourcePage(databaseInstanceFactory.buildList(101))
+    );
   }),
 
   http.get('*/databases/types', () => {
@@ -2454,27 +2429,27 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-    http.post(
-      '*/monitor/services/:service_type/alert-definitions',
-      async ({ request }) => {
-  
-        const types: AlertDefinitionType[] = ['system', 'user'];
-        const status: AlertStatusType[] = ['enabled', 'disabled'];
-        const severity: AlertSeverityType[] = [0, 1, 2, 3];
-        const users = ['user1', 'user2', 'user3'];
-        const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-        const reqBody = await request.json();
-        const response = alertFactory.build({
-          ...(reqBody as CreateAlertDefinitionPayload),
-          created_by: pickRandom(users),
-          service_type: pickRandom(serviceTypes),
-          severity: pickRandom(severity),
-          status: pickRandom(status),
-          type: pickRandom(types),
-          updated_by: pickRandom(users),
-        });
-        return HttpResponse.json(response);
-  }),
+  http.post(
+    '*/monitor/services/:service_type/alert-definitions',
+    async ({ request }) => {
+      const types: AlertDefinitionType[] = ['system', 'user'];
+      const status: AlertStatusType[] = ['enabled', 'disabled'];
+      const severity: AlertSeverityType[] = [0, 1, 2, 3];
+      const users = ['user1', 'user2', 'user3'];
+      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+      const reqBody = await request.json();
+      const response = alertFactory.build({
+        ...(reqBody as CreateAlertDefinitionPayload),
+        created_by: pickRandom(users),
+        service_type: pickRandom(serviceTypes),
+        severity: pickRandom(severity),
+        status: pickRandom(status),
+        type: pickRandom(types),
+        updated_by: pickRandom(users),
+      });
+      return HttpResponse.json(response);
+    }
+  ),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
