@@ -165,7 +165,7 @@ describe('Create Alert', () => {
     mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels([notificationChannels]);
-    mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
+    mockCreateAlertDefinition(serviceType, mockAlerts).as(
       'createAlertDefinition'
     );
   });
