@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - PAT Token drawer logic when Child Account Access is hidden ([#11935](https://github.com/linode/manager/pull/11935))
 - Profile Menu Icon Size Inconsistency ([#11946](https://github.com/linode/manager/pull/11946))
 - Unclearable ACL IP addresses for LKE clusters ([#11947](https://github.com/linode/manager/pull/11947))
+- DBaaS Advanced Configuration: drawer shows outdated config values after save and reopen ([#11979](https://github.com/linode/manager/pull/11979))
 
 ### Removed:
 

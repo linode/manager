@@ -8,6 +8,7 @@
 ### Changed:
 
 - DBaaS Advanced Configurations: remove `engine_config` from the DatabaseEngineConfig type ([#11885](https://github.com/linode/manager/pull/11885))
+- DBaaS Advanced Configurations: rename `restart_cluster` to `requires_restart` to align with the API response ([#11979](https://github.com/linode/manager/pull/11979))
 
 ### Fixed:
 
