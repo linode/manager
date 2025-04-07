@@ -123,7 +123,6 @@ const Kubernetes = React.lazy(() =>
     default: module.Kubernetes,
   }))
 );
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
@@ -298,8 +297,8 @@ export const MainContent = () => {
                     isNarrowViewport
                       ? '100%'
                       : isPageScrollable
-                      ? '100vh'
-                      : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+                        ? '100vh'
+                        : `calc(100vh - ${TOPMENU_HEIGHT}px)`
                   }
                   position="sticky"
                   top={0}
@@ -320,9 +319,9 @@ export const MainContent = () => {
                     marginLeft: isNarrowViewport
                       ? 0
                       : desktopMenuIsOpen ||
-                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                      ? SIDEBAR_COLLAPSED_WIDTH
-                      : SIDEBAR_WIDTH,
+                          (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                        ? SIDEBAR_COLLAPSED_WIDTH
+                        : SIDEBAR_WIDTH,
                   }}
                 >
                   <MainContentBanner />
@@ -365,10 +364,6 @@ export const MainContent = () => {
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
                             <Route component={Managed} path="/managed" />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />

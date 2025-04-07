@@ -177,7 +177,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using a Community StackScript.
    */
   it('rebuilds a linode from Community StackScript', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
