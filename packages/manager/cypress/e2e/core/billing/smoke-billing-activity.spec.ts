@@ -1,5 +1,5 @@
 import { getProfile } from '@linode/api-v4';
-import { profileFactory } from '@src/factories';
+import { profileFactory } from '@linode/utilities';
 import { formatDate } from '@src/utilities/formatDate';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
