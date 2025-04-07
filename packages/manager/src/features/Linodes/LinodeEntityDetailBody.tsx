@@ -493,12 +493,12 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <span style={{ paddingLeft: '8px' }}>
+                  <span>
                     <Chip
                       sx={(theme) => ({
                         backgroundColor: theme.color.tagButtonBg,
                         color: theme.tokens.color.Neutrals[80],
-                        marginLeft: theme.spacingFunction(4),
+                        marginLeft: theme.spacingFunction(12),
                       })}
                       component="span"
                       disabled={!canUpgradeInterfaces}
@@ -508,8 +508,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     />
                     {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
                       <TooltipIcon
+                        sxTooltipIcon={(theme) => ({
+                          padding: theme.spacingFunction(8),
+                        })}
                         status="help"
-                        sxTooltipIcon={{ paddingLeft: 0 }}
                         text={unableToUpgradeTooltipText}
                       />
                     )}
