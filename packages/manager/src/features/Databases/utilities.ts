@@ -456,6 +456,6 @@ export const getDefaultConfigValue = (config: ConfigurationOption) => {
     : isConfigStringWithEnum(config)
     ? config.enum?.[0] ?? ''
     : config?.type === 'number' || config?.type === 'integer'
-    ? 0
+    ? config.minimum ?? 0
     : '';
 };
