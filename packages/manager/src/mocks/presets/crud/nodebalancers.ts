@@ -1,6 +1,7 @@
 import {
   createNodeBalancer,
   deleteNodeBalancer,
+  getNodeBalancerFirewalls,
   getNodeBalancerStats,
   getNodeBalancerTypes,
   getNodeBalancers,
@@ -18,6 +19,7 @@ export const nodeBalancerCrudPreset: MockPresetCrud = {
     getNodeBalancerStats,
     updateNodeBalancer,
     deleteNodeBalancer,
+    getNodeBalancerFirewalls,
   ],
   id: 'nodebalancers:crud',
   label: 'NodeBalancers CRUD',

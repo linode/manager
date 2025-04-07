@@ -7,7 +7,7 @@ import {
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { nodeBalancerTypeFactory } from 'src/factories';
+import { firewallDeviceFactory, nodeBalancerTypeFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -18,6 +18,8 @@ import {
 import { mswDB } from '../../../indexedDB';
 
 import type {
+  Firewall,
+  FirewallDeviceEntityType,
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
@@ -47,7 +49,7 @@ export const getNodeBalancers = (mockState: MockState) => [
   ),
 
   http.get(
-    '*/v4/nodebalancers/:id',
+    '*/v4beta/nodebalancers/:id',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
@@ -199,16 +201,68 @@ export const createNodeBalancer = (mockState: MockState) => [
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
       const payload = await request.clone().json();
       const configPayload = payload?.configs;
-      delete payload?.configs;
+      const firewallIdPaylaod = payload?.firewall_id;
 
-      const createConfigPromises = [];
-      const createConfigNodePromises = [];
+      delete payload?.configs;
+      delete payload?.firewall_id;
 
       const nodeBalancer = nodeBalancerFactory.build({
         ...payload,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
+
+      if (firewallIdPaylaod) {
+        const firewall = await mswDB.get('firewalls', firewallIdPaylaod);
+        if (firewall) {
+          const entity = {
+            id: nodeBalancer.id,
+            label: nodeBalancer.label,
+            type: 'nodebalancer' as FirewallDeviceEntityType,
+            url: `/nodebalancer/${nodeBalancer.id}`,
+          };
+          const updatedFirewall = {
+            ...firewall,
+            entities: [...firewall.entities, entity],
+          };
+
+          const firewallDevice = firewallDeviceFactory.build({
+            created: DateTime.now().toISO(),
+            entity,
+            updated: DateTime.now().toISO(),
+          });
+
+          await mswDB.add(
+            'firewallDevices',
+            [firewall.id, firewallDevice],
+            mockState
+          );
+
+          await mswDB.update(
+            'firewalls',
+            firewall.id,
+            updatedFirewall,
+            mockState
+          );
+
+          queueEvents({
+            event: {
+              action: 'firewall_device_add',
+              entity: {
+                id: firewall.id,
+                label: firewall.label,
+                type: 'firewallDevice',
+                url: `/v4beta/networking/firewalls/${firewall.id}/nodebalancers`,
+              },
+            },
+            mockState,
+            sequence: [{ status: 'notification' }],
+          });
+        }
+      }
+
+      const createConfigPromises = [];
+      const createConfigNodePromises = [];
 
       if (configPayload) {
         for (const config of configPayload as NodeBalancerConfig[]) {
@@ -682,6 +736,39 @@ export const getNodeBalancerStats = (mockState: MockState) => [
       const mockStats = nodeBalancerStatsFactory.build();
 
       return makeResponse(mockStats);
+    }
+  ),
+];
+
+export const getNodeBalancerFirewalls = (mockState: MockState) => [
+  http.get(
+    '*/v4/nodebalancers/:id/firewalls',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Firewall>>
+    > => {
+      const id = Number(params.id);
+      const nodeBalancer = mockState.nodeBalancers.find(
+        (stateNodeBalancer) => stateNodeBalancer.id === id
+      );
+      const allFirewalls = await mswDB.getAll('firewalls');
+
+      if (!nodeBalancer || !allFirewalls) {
+        return makeNotFoundResponse();
+      }
+
+      const nodeBalancerFirewalls = allFirewalls.filter((firewall) =>
+        firewall.entities.some(
+          (entity) => entity.id === id && entity.type === 'nodebalancer'
+        )
+      );
+
+      return makePaginatedResponse({
+        data: nodeBalancerFirewalls,
+        request,
+      });
     }
   ),
 ];
