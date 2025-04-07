@@ -97,10 +97,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const configs = watch('configs');
 
   useEffect(() => {
-    if (existingConfigsArray && open) {
+    if (existingConfigsArray) {
       reset({ configs: existingConfigsArray });
     }
-  }, [open, existingConfigsArray]);
+  }, [existingConfigsArray]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
