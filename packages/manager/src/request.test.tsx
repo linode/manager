@@ -1,8 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
-import { profileFactory } from './factories';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
 
