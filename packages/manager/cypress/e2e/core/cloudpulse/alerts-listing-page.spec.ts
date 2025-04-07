@@ -326,6 +326,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         });
 
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
+      ui.button.findByTitle(action).should('be.visible').click();
 
       cy.wait(alias).then(({ response }) => {
         ui.toast.assertMessage(successMessage);
