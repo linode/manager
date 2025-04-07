@@ -128,7 +128,7 @@ export const AlertDetail = () => {
             ...getAlertBoxStyles(theme),
             overflow: 'auto',
           }}
-          data-qa-section="Entities"
+          data-qa-section="Resources"
           maxHeight={sectionMaxHeight}
         >
           <AlertResources

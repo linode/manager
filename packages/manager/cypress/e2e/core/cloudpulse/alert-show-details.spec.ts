@@ -263,7 +263,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         .should('have.text', 'consecutive occurrences.');
     });
     //  Validate the entity section (Entity and Region columns)
-    cy.get('[data-qa-section="Entities"]').within(() => {
+    cy.get('[data-qa-section="Resources"]').within(() => {
       ui.heading
         .findByText('entity')
         .scrollIntoView()
