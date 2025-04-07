@@ -1,6 +1,6 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
-import type { Config, Subnet, VPC } from '@linode/api-v4';
+import type { Config, LinodeInterface, Subnet, VPC } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -12,6 +12,20 @@ export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
     });
   }
   return linodes.length;
+};
+
+// Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route
+export const hasUnrecommendedConfigurationLinodeInterface = (
+  linodeInterface: LinodeInterface | undefined,
+  isInterfaceActive: boolean
+) => {
+  return (
+    isInterfaceActive &&
+    linodeInterface?.vpc?.ipv4.addresses.some(
+      (address) => address.nat_1_1_address
+    ) &&
+    !linodeInterface?.default_route.ipv4
+  );
 };
 
 export const hasUnrecommendedConfiguration = (

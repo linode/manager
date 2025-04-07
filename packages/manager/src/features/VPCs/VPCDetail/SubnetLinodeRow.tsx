@@ -18,7 +18,10 @@ import {
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
-import { hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration } from '../utils';
+import {
+  hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
+  hasUnrecommendedConfigurationLinodeInterface,
+} from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 
 import type {
@@ -100,13 +103,11 @@ export const SubnetLinodeRow = (props: Props) => {
     linodeInterface, // undefined if this Linode is using Config Profile Interfaces
   } = interfacesInfo;
 
-  // Linode Interfaces: show unrecommended notice if VPC has a nat_1_1 address but isn't the default route
   const hasUnrecommendedConfiguration = isLinodeInterface
-    ? isInterfaceActive &&
-      linodeInterface?.vpc?.ipv4.addresses.some(
-        (address) => address.nat_1_1_address
-      ) &&
-      !linodeInterface?.default_route.ipv4
+    ? hasUnrecommendedConfigurationLinodeInterface(
+        linodeInterface,
+        isInterfaceActive
+      )
     : _hasUnrecommendedConfiguration(config, subnetId);
 
   if (linodeLoading || !linode) {

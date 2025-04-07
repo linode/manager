@@ -1,6 +1,7 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
@@ -12,6 +13,7 @@ import {
 import {
   getUniqueLinodesFromSubnets,
   hasUnrecommendedConfiguration,
+  hasUnrecommendedConfigurationLinodeInterface,
 } from './utils';
 
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
@@ -127,5 +129,85 @@ describe('hasUnrecommendedConfiguration function', () => {
     });
 
     expect(hasUnrecommendedConfiguration(config2, subnet.id)).toBe(false);
+  });
+});
+
+describe('hasUnrecommendedConfigurationLinodeInterface function', () => {
+  it('returns false if the given interface is not active', () => {
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(
+        linodeInterfaceFactoryVPC.build(),
+        false
+      )
+    ).toBe(false);
+  });
+
+  it('returns false if the given interface is active and the default route', () => {
+    const vpcInterfaceWithNat = linodeInterfaceFactoryVPC.build({
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              nat_1_1_address: '172.65.28.10',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    const vpcInterfaceWithoutNat = linodeInterfaceFactoryVPC.build();
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithNat, true)
+    ).toBe(false);
+
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithoutNat, true)
+    ).toBe(false);
+  });
+
+  it('returns true if the given active VPC interface is not the default route but has a nat_1_1 address', () => {
+    const vpcInterfaceWithNat = linodeInterfaceFactoryVPC.build({
+      default_route: { ipv4: undefined },
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              nat_1_1_address: '172.65.28.10',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithNat, true)
+    ).toEqual(true);
+  });
+
+  it('returns false if the given active VPC interface is not the default route and has no nat_1_1 address', () => {
+    const vpcInterfaceWithoutNat = linodeInterfaceFactoryVPC.build({
+      default_route: { ipv4: undefined },
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithoutNat, true)
+    ).toEqual(false);
   });
 });
