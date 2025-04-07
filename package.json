@@ -46,7 +46,7 @@
     "package-versions": "pnpm run --filter @linode/scripts package-versions",
     "junit:summary": "pnpm run --filter @linode/scripts --silent junit:summary",
     "generate-tod": "pnpm run --filter @linode/scripts --silent generate-tod",
-    "clean": "rm -rf node_modules && rm -rf packages/manager/node_modules && rm -rf packages/api-v4/node_modules && rm -rf packages/validation/node_modules && rm -rf packages/api-v4/lib && rm -rf packages/validation/lib && rm -rf packages/ui/node_modules && rm -rf packages/utilities/node_modules && rm -rf packages/shared/node_modules && rm -rf packages/queries/node_modules && rm -rf packages/search/node_modules",
+    "clean": "concurrently \"rm -rf node_modules\" \"pnpm -r exec rm -rf node_modules lib dist\" \"pnpm store prune\"",
     "prepare": "husky"
   },
   "resolutions": {
