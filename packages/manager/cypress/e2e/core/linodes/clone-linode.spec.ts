@@ -31,6 +31,7 @@ import {
   mockGetLinodeVolumes,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
@@ -306,9 +307,10 @@ describe('clone linode', () => {
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during clone flow', () => {
-    const initialRegion = getRegionById('us-west');
-    const newRegion = getRegionById('us-east');
-
+    const mockRegions = [getRegionById('us-west'), getRegionById('us-east')];
+    mockGetRegions(mockRegions).as('getRegions');
+    const initialRegion = mockRegions[0];
+    const newRegion = mockRegions[1];
     const mockLinode = linodeFactory.build({
       region: initialRegion.id,
       type: dcPricingMockLinodeTypes[0].id,
@@ -323,7 +325,7 @@ describe('clone linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     cy.visitWithLogin(getLinodeCloneUrl(mockLinode));
-    cy.wait(['@getLinode', '@getLinodes', '@getLinodeTypes']);
+    cy.wait(['@getRegions', '@getLinode', '@getLinodes', '@getLinodeTypes']);
 
     // Confirm there is a docs link to the pricing page.
     cy.findByText(dcPricingDocsLabel)
