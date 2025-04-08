@@ -333,7 +333,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .click();
         });
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
-      ui.button.findByTitle(action).should('be.visible').click();
 
       // verify dialog title
       cy.get('[data-qa-drawer-title]')
