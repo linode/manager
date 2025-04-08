@@ -117,8 +117,8 @@ export const DatabaseDetail = () => {
       chip: flags.dbaasV2MonitorMetrics?.beta ? (
         <BetaChip color="secondary" />
       ) : null,
-      routeName: `/databases/${engine}/${id}/monitor`,
-      title: 'Monitor',
+      routeName: `/databases/${engine}/${id}/metrics`,
+      title: 'Metrics',
     });
   }
 

@@ -2,9 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ActionsPanel,
   Button,
+  CircleProgress,
   Divider,
   Drawer,
   Notice,
+  Stack,
   Typography,
 } from '@linode/ui';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
@@ -64,7 +66,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
-  const { data: databaseConfig } = useDatabaseEngineConfig(engine, true);
+  const { data: databaseConfig, isLoading } = useDatabaseEngineConfig(
+    engine,
+    true
+  );
 
   const configurations = convertEngineConfigToOptions(databaseConfig);
 
@@ -201,6 +206,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           </Grid>
         </Grid>
         <Divider spacingBottom={20} spacingTop={24} />
+        {isLoading && (
+          <Stack alignItems="center" height="100%" justifyContent="center">
+            <CircleProgress size="sm" />
+          </Stack>
+        )}
+        {!isLoading && configs.length === 0 && (
+          <Typography align="center">
+            No advanced configurations have been added.
+          </Typography>
+        )}
         {configs.map((config, index) => (
           <Controller
             render={({ field, fieldState }) => {
@@ -219,11 +234,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             name={`configs.${index}.value`}
           />
         ))}
-        {configs.length === 0 && (
-          <Typography align="center">
-            No advanced configurations have been added.
-          </Typography>
-        )}
         <Divider spacingBottom={20} spacingTop={24} />
         <ActionsPanel
           primaryButtonProps={{
