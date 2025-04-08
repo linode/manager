@@ -188,26 +188,26 @@ describe('Create Alert', () => {
     ui.autocomplete.findByLabel('Severity').should('be.visible').type('Severe');
     ui.autocompletePopper.findByTitle('Severe').should('be.visible').click();
 
-    // Search for Resource
-    cy.findByPlaceholderText('Search for a Region or Resource')
+    // Search for Entity
+    cy.findByPlaceholderText('Search for a Region or Entity')
       .should('be.visible')
       .type('linode-resource');
 
-    // Search for Resource
+    // Search for Entity
     cy.findByPlaceholderText('Select Tags').should('be.visible').type('tag-2');
 
-    // Find the table and locate the resource cell containing 'database-2', then check the corresponding checkbox
+    // Find the table and locate the entity cell containing 'database-2', then check the corresponding checkbox
     cy.get('[data-qa-alert-table="true"]') // Find the table
-      .contains('[data-qa-alert-cell*="resource"]', 'linode-resource') // Find resource cell
+      .contains('[data-qa-alert-cell*="entity"]', 'linode-resource') // Find resource cell
       .parents('tr')
       .find('[type="checkbox"]')
       .check();
 
     // Verify that all available headers are displayed in the resource table.
 
-    ui.heading.findByText('resource').should('be.visible');
+    ui.heading.findByText('entity').should('be.visible');
     ui.heading
-      .findByText('resource')
+      .findByText('entity')
       .should('have.attr', 'aria-sort', 'ascending');
     ui.heading.findByText('region').should('be.visible');
     ui.heading
@@ -217,7 +217,7 @@ describe('Create Alert', () => {
     ui.heading.findByText('tags').should('have.attr', 'aria-sort', 'ascending');
 
     // Assert resource selection notice
-    cy.findByText('1 of 10 resources are selected.');
+    cy.findByText('1 of 10 entities are selected.');
 
     // Fill metric details for the first rule
     const cpuUsageMetricDetails = {

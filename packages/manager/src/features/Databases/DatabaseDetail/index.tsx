@@ -256,18 +256,18 @@ export const DatabaseDetail = () => {
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
-          <SafeTabPanel index={5}>
+          {isAdvancedConfigEnabled && (
+            <SafeTabPanel index={5}>
+              <DatabaseAdvancedConfiguration database={database} />
+            </SafeTabPanel>
+          )}
+          <SafeTabPanel index={6}>
             <DatabaseAlert
               entityId={String(database.id)}
               entityName={database.label}
               serviceType="dbaas"
             />
           </SafeTabPanel>
-          {isAdvancedConfigEnabled && (
-            <SafeTabPanel index={tabs.length - 1}>
-              <DatabaseAdvancedConfiguration database={database} />
-            </SafeTabPanel>
-          )}
         </TabPanels>
       </Tabs>
       {isDefault && <DatabaseLogo />}

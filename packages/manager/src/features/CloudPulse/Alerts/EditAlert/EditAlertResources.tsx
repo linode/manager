@@ -64,12 +64,12 @@ export const EditAlertResources = (props: EditAlertProps) => {
         setShowConfirmation(false);
         // on success land on the alert definition list page and show a success snackbar
         history.push(definitionLanding);
-        showSnackbar('Alert resources successfully updated.', 'success');
+        showSnackbar('Alert entities successfully updated.', 'success');
       })
       .catch(() => {
         setShowConfirmation(false);
         showSnackbar(
-          'Error while updating the resources. Try again later.',
+          'Error while updating the entities. Try again later.',
           'error'
         );
       });
