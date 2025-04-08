@@ -6,7 +6,7 @@ import Add from 'src/assets/icons/add.svg';
 
 export const StyledHeading = styled('h3', {
   label: 'StyledHeading',
-  shouldForwardProp: omittedProps(['paddingTop']),
+  shouldForwardProp: omittedProps(['paddingTop', 'marginTop']),
 })<{ marginTop?: boolean }>(({ theme, ...props }) => ({
   '& svg': {
     height: 20,
@@ -14,7 +14,7 @@ export const StyledHeading = styled('h3', {
     width: 20,
   },
   alignItems: 'center',
-  color: theme.tokens.content.Text.Secondary.Default,
+  color: theme.tokens.alias.Content.Text.Secondary.Default,
   display: 'flex',
   fontSize: theme.tokens.font.FontSize.Xxxs,
   fontWeight: theme.tokens.font.FontWeight.Extrabold,
@@ -23,7 +23,7 @@ export const StyledHeading = styled('h3', {
   margin: 0,
   padding: '8px 14px',
   textTransform: theme.tokens.font.Textcase.Uppercase,
-  backgroundColor: theme.tokens.background.Normal,
+  backgroundColor: theme.tokens.alias.Background.Normal,
   [theme.breakpoints.up('lg')]: {
     marginTop: `${props.marginTop ? '12px' : ''}`,
     padding: `8px 16px 6px 16px`,
@@ -33,7 +33,7 @@ export const StyledHeading = styled('h3', {
 export const StyledMenuItem = styled(MenuItem, {
   label: 'StyledMenuItem',
 })(({ theme }) => ({
-  backgroundColor: theme.tokens.background.Normal,
+  backgroundColor: theme.tokens.alias.Background.Normal,
   padding: '8px 14px',
   // We have to do this because in packages/manager/src/index.css we force underline links
   textDecoration: 'none !important',
@@ -46,7 +46,7 @@ export const StyledMenuItem = styled(MenuItem, {
 export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
-  backgroundColor: theme.tokens.background.Normal,
+  backgroundColor: theme.tokens.alias.Background.Normal,
   maxHeight: 500,
   padding: `${theme.spacing(1)} 0`,
   [theme.breakpoints.down('lg')]: {
@@ -73,7 +73,7 @@ export const StyledMenuList = styled(MenuList, {
 export const StyledLinkTypography = styled(Typography, {
   label: 'StyledLinkTypography',
 })(({ theme }) => ({
-  color: theme.tokens.content.Text.Primary.Default,
+  color: theme.tokens.alias.Content.Text.Primary.Default,
   fontSize: theme.tokens.font.FontSize.S,
   fontWeight: theme.tokens.font.FontWeight.Bold,
   lineHeight: theme.tokens.font.LineHeight.Xs,

@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/preview-api": "^8.6.7",
     "@storybook/react": "^8.6.7",

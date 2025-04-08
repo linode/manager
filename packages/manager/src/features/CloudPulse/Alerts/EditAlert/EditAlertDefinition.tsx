@@ -11,6 +11,12 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import {
+  CREATE_ALERT_ERROR_FIELD_MAP as EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+} from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
@@ -22,10 +28,12 @@ import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
   convertAlertDefinitionValues,
   getSchemaWithEntityIdValidation,
+  handleMultipleError,
 } from '../Utils/utils';
 
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
+  APIError,
   Alert,
   AlertServiceType,
   EditAlertPayloadWithService,
@@ -84,20 +92,24 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     );
     try {
       await editAlert(editPayload);
-      enqueueSnackbar('Alert successfully updated.', {
+      enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       history.push(definitionLanding);
     } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
-            variant: 'error',
-          });
-          setError('root', { message: error.reason });
-        }
+      handleMultipleError<EditAlertDefintionForm>({
+        errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
+        errors,
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
+
+      const rootError = errors.find((error: APIError) => !error.field);
+      if (rootError) {
+        enqueueSnackbar(`Editing alert failed: ${rootError.reason}`, {
+          variant: 'error',
+        });
       }
     }
   });

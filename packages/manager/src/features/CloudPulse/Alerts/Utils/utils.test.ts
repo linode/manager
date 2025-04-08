@@ -8,10 +8,15 @@ import {
   filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
+  handleMultipleError,
 } from './utils';
 
 import type { AlertValidationSchemaProps } from './utils';
-import type { Alert, EditAlertPayloadWithService } from '@linode/api-v4';
+import type {
+  APIError,
+  Alert,
+  EditAlertPayloadWithService,
+} from '@linode/api-v4';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
 
 it('test getServiceTypeLabel method', () => {
@@ -136,5 +141,70 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
     ).rejects.toThrow(
       "The overall number of resources assigned to an alert can't exceed 5."
     );
+  });
+  it('should combine all the API errors to the parent field and return in errorMap properly', () => {
+    const errors: APIError[] = [
+      {
+        field: 'label',
+        reason: 'Label already exists',
+      },
+      {
+        field: 'label',
+        reason: 'Label should have less than 100 character',
+      },
+      {
+        field: 'label',
+        reason: 'Label should not start with special characters',
+      },
+      { field: 'severity', reason: 'Wrong field.' },
+      {
+        field: 'rule_criteria.rules[0].aggregate_function',
+        reason: 'Must be one of avg, sum, min, max, count and no full stop',
+      },
+      {
+        field: 'rule_criteria',
+        reason: 'Must have at least one rule',
+      },
+      {
+        field: 'rule_criteria.rules[0].dimension_filters[0].values',
+        reason: 'Invalid value.',
+      },
+      {
+        field: 'rule_criteria.rules[1].dimension_filters[3].values',
+        reason: 'Invalid value.',
+      },
+    ];
+
+    const CREATE_ALERT_ERROR_FIELD_MAP = {
+      rule_criteria: 'rule_criteria.rules',
+    };
+
+    const MULTILINE_ERROR_SEPARATOR = '|';
+    const SINGLELINE_ERROR_SEPARATOR = ' ';
+
+    const setError = vi.fn();
+
+    handleMultipleError({
+      errors,
+      errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+      multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      setError,
+    });
+
+    // Check that setError was called for each field correctly
+    expect(setError).toHaveBeenCalledWith('label', {
+      message:
+        'Label already exists. Label should have less than 100 character. Label should not start with special characters.',
+    });
+
+    expect(setError).toHaveBeenCalledWith('severity', {
+      message: 'Wrong field.',
+    });
+
+    expect(setError).toHaveBeenCalledWith('rule_criteria.rules', {
+      message:
+        'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
+    });
   });
 });

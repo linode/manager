@@ -1,9 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { profileFactory, userPreferencesFactory } from '@src/factories';
+import {
+  linodeFactory,
+  profileFactory,
+  userPreferencesFactory,
+} from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
-import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { authenticate } from 'support/api/authentication';
 import { mockGetUser } from 'support/intercepts/account';
@@ -74,7 +77,7 @@ describe('linode landing checks', () => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
     cy.intercept('GET', apiMatcher('profile')).as('getProfile');
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
+    cy.intercept('GET', apiMatcher('linode/instances*'), (req) => {
       req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });

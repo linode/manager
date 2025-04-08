@@ -146,9 +146,12 @@ module.exports = {
         'src/features/Firewalls/**/*',
         'src/features/Images/**/*',
         'src/features/Longview/**/*',
+        'src/features/NodeBalancers/**/*',
+        'src/features/ObjectStorage/**/*',
         'src/features/PlacementGroups/**/*',
         'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',
+        'src/features/VPCs/**/*',
       ],
       rules: {
         'no-restricted-imports': [
@@ -241,6 +244,7 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-createLinode': 'off',
+    '@linode/cloud-manager/no-mui-theme-spacing': 'warn',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

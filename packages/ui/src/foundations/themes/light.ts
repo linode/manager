@@ -1,25 +1,19 @@
 import {
-  Accent,
   Action,
+  Alias,
   Background,
   Border,
-  BorderRadius,
   Button,
-  Calendar,
-  Chart,
   Color,
+  Component,
   Content,
   Dropdown,
-  Elevation,
   Font,
-  GlobalFooter,
   GlobalHeader,
   Interaction,
   NotificationToast,
-  Radius,
   Search,
   Select,
-  SideNavigation,
   Spacing,
   Table,
   TextField,
@@ -596,7 +590,37 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: Color.Neutrals[40],
+          '&:active': {
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
+          '&:hover': {
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+          },
+          // Checked
+          '&.Mui-checked': {
+            color: Component.Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Component.Checkbox.Indeterminated.Default.Background,
+          },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
+          },
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },
@@ -1130,25 +1154,35 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '& $checked': {
-            color: primaryColors.main,
+          '&:active': {
+            color: theme.tokens.component.RadioButton.Active.Active.Border,
+          },
+          '&.Mui-checked': {
+            color: theme.tokens.component.RadioButton.Active.Default.Border,
+            '&:active': {
+              color: theme.tokens.component.RadioButton.Active.Active.Border,
+            },
           },
           '& .defaultFill': {
             fill: theme.color.white,
             transition: theme.transitions.create(['fill']),
           },
+          '& svg circle': {
+            fill: Color.Neutrals.White,
+          },
           '&.Mui-disabled': {
             '& .defaultFill': {
               fill: Color.Neutrals[5],
             },
-            color: `${Color.Neutrals[40]} !important`,
-            fill: `${Color.Neutrals[5]} !important`,
-            pointerEvents: 'none',
-          },
-          '&.MuiRadio-root': {
-            '.MuiSvgIcon-fontSizeMedium': {
-              fontSize: '20px',
+            '&:not(.Mui-checked) svg circle': {
+              fill: Color.Neutrals[20],
             },
+            '&:not(.Mui-checked)': {
+              color:
+                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+            },
+            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
+            pointerEvents: 'none',
           },
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
@@ -1159,10 +1193,10 @@ export const lightTheme: ThemeOptions = {
             '& .defaultFill': {
               fill: theme.color.white,
             },
-            color: theme.palette.primary.main,
-            fill: theme.color.white,
+            color: theme.tokens.component.RadioButton.Active.Hover.Border,
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
           },
-          color: Color.Neutrals[40],
+          color: theme.tokens.alias.Action.Neutral,
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
@@ -1214,7 +1248,7 @@ export const lightTheme: ThemeOptions = {
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          fontSize: 24,
+          fontSize: 20,
         },
       },
     },
@@ -1799,27 +1833,11 @@ export const lightTheme: ThemeOptions = {
   spacingFunction,
   textColors,
   tokens: {
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    borderRadius: BorderRadius,
-    calendar: Calendar,
-    chart: Chart,
+    alias: Alias,
     color: Color,
-    content: Content,
-    dropdown: Dropdown,
-    elevation: Elevation,
+    component: Component,
     font: Font,
-    footer: GlobalFooter,
-    header: GlobalHeader,
-    interaction: Interaction,
-    radius: Radius,
-    search: Search,
-    sideNavigation: SideNavigation,
     spacing: Spacing,
-    table: Table,
-    typography: Typography,
   },
   typography: {
     body1: {

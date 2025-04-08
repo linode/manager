@@ -35,8 +35,9 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
           <Typography variant="h2">Advanced Configuration</Typography>
           <Typography sx={{ mb: 1, mt: 1 }}>
             Advanced parameters to configure your database cluster.{' '}
-            {/* TODO: update link when it's ready */}
-            <Link to={''}>Learn more.</Link>
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters">
+              Learn more.
+            </Link>
           </Typography>
         </Grid>
         <Button
@@ -69,7 +70,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
                 </React.Fragment>
               ))
             ) : (
-              <React.Fragment key={`${key}`}>
+              <React.Fragment key={key}>
                 <Grid size={{ lg: 4, md: 4, xs: 5 }}>
                   <StyledLabelTypography>{`${engine}.${key}`}</StyledLabelTypography>
                 </Grid>

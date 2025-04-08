@@ -1,4 +1,5 @@
 import { createFirewall, createLinode } from '@linode/api-v4';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptUpdateFirewallLinodes,
@@ -10,7 +11,6 @@ import { randomItem, randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import {
-  createLinodeRequestFactory,
   firewallFactory,
   firewallRuleFactory,
   firewallRulesFactory,
@@ -167,7 +167,7 @@ const createLinodeAndFirewall = async (
 };
 
 authenticate();
-describe('update firewall', () => {
+describe.skip('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });

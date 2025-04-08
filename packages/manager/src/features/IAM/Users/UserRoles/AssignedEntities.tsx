@@ -54,8 +54,11 @@ export const AssignedEntities = ({
     >
       <Chip
         sx={{
-          backgroundColor: theme.tokens.color.Ultramarine[20],
-          color: theme.tokens.content.Text.Primary.Default,
+          backgroundColor:
+            theme.name === 'light'
+              ? theme.tokens.color.Ultramarine[20]
+              : theme.tokens.color.Neutrals.Black,
+          color: theme.tokens.alias.Content.Text.Primary.Default,
         }}
         data-testid="entities"
         deleteIcon={<CloseIcon />}
@@ -83,7 +86,10 @@ export const AssignedEntities = ({
         <Box
           sx={{
             aligIitems: 'center',
-            backgroundColor: theme.tokens.color.Ultramarine[20],
+            backgroundColor:
+              theme.name === 'light'
+                ? theme.tokens.color.Ultramarine[20]
+                : theme.tokens.color.Neutrals.Black,
             borderRadius: 1,
             display: 'flex',
             height: '20px',
@@ -94,8 +100,8 @@ export const AssignedEntities = ({
           <Tooltip placement="top" title="Click to View All Entities">
             <Button
               sx={{
-                color: theme.tokens.content.Text.Primary.Default,
-                font: theme.tokens.typography.Label.Regular.Xs,
+                color: theme.tokens.alias.Content.Text.Primary.Default,
+                font: theme.tokens.alias.Typography.Label.Regular.Xs,
                 padding: 0,
               }}
               onClick={() => onButtonClick(roleName)}

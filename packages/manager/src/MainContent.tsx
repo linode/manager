@@ -1,3 +1,9 @@
+import {
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+  useProfile,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -24,12 +30,6 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import {
-  useMutatePreferences,
-  usePreferences,
-  useAccountSettings,
-  useProfile,
-} from '@linode/queries';
 
 import { useIsPageScrollable } from './components/PrimaryNav/utils';
 import { ENABLE_MAINTENANCE_MODE } from './constants';
@@ -123,14 +123,10 @@ const Kubernetes = React.lazy(() =>
     default: module.Kubernetes,
   }))
 );
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
   }))
-);
-const NodeBalancers = React.lazy(
-  () => import('src/features/NodeBalancers/NodeBalancers')
 );
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
@@ -160,7 +156,6 @@ const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
-const VPC = React.lazy(() => import('src/features/VPCs'));
 
 const CloudPulseMetrics = React.lazy(() =>
   import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
@@ -368,15 +363,7 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            <Route
-                              component={NodeBalancers}
-                              path="/nodebalancers"
-                            />
                             <Route component={Managed} path="/managed" />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />
@@ -389,7 +376,6 @@ export const MainContent = () => {
                             {isDatabasesEnabled && (
                               <Route component={Databases} path="/databases" />
                             )}
-                            <Route component={VPC} path="/vpcs" />
                             {isACLPEnabled && (
                               <Route
                                 component={CloudPulseMetrics}

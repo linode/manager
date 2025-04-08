@@ -1,22 +1,21 @@
 import {
-  Accent,
   Action,
+  Alias,
   Background,
   Badge,
   Border,
   Button,
-  Calendar,
+  Component,
   Color,
+  Font,
   Content,
   Dropdown,
-  Elevation,
-  GlobalFooter,
   GlobalHeader,
   Interaction,
   NotificationToast,
   Search,
   Select,
-  SideNavigation,
+  Spacing,
   Table,
   TextField,
   Typography,
@@ -383,6 +382,29 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           backgroundColor: Color.Neutrals[50],
+        },
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
+          },
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },
@@ -758,6 +780,7 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: theme.palette.primary.main,
           },
+          padding: '10px 10px',
         }),
       },
     },
@@ -1035,21 +1058,11 @@ export const darkTheme: ThemeOptions = {
   },
   textColors: customDarkModeOptions.textColors,
   tokens: {
-    // No need to add global tokens here, as they will be inherited from light.ts
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    calendar: Calendar,
-    content: Content,
-    dropdown: Dropdown,
-    elevation: Elevation,
-    footer: GlobalFooter,
-    interaction: Interaction,
-    search: Search,
-    sideNavigation: SideNavigation,
-    table: Table,
-    typography: Typography,
+    alias: Alias,
+    color: Color,
+    component: Component,
+    font: Font,
+    spacing: Spacing,
   },
   typography: {
     body1: {

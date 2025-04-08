@@ -29,7 +29,7 @@ export interface AlertRouteParams {
 export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
+  const { data: alertDetails, isError, isLoading } = useAlertDefinitionQuery(
     alertId,
     serviceType
   );
@@ -54,7 +54,7 @@ export const AlertDetail = () => {
   const nonSuccessBoxHeight = '600px';
   const sectionMaxHeight = '785px';
 
-  if (isFetching) {
+  if (isLoading) {
     return (
       <>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
@@ -159,6 +159,7 @@ export const StyledPlaceholder = styled(Placeholder, {
   h1: {
     fontSize: theme.spacing(2),
   },
+  padding: 0,
   svg: {
     maxHeight: theme.spacing(10),
   },
@@ -171,10 +172,10 @@ export const StyledAlertChip = styled(Chip, {
   borderRadius?: string;
 }>(({ borderRadius, theme }) => ({
   '& .MuiChip-label': {
-    color: theme.tokens.content.Text.Primary.Default,
+    color: theme.tokens.alias.Content.Text.Primary.Default,
     marginRight: theme.spacing(1),
   },
-  backgroundColor: theme.tokens.background.Normal,
+  backgroundColor: theme.tokens.alias.Background.Normal,
   borderRadius: borderRadius || 0,
   height: theme.spacing(3),
 }));
@@ -182,6 +183,6 @@ export const StyledAlertChip = styled(Chip, {
 export const StyledAlertTypography = styled(Typography, {
   label: 'StyledAlertTypography',
 })(({ theme }) => ({
-  color: theme.tokens.content.Text.Primary.Default,
+  color: theme.tokens.alias.Content.Text.Primary.Default,
   fontSize: theme.typography.body1.fontSize,
 }));

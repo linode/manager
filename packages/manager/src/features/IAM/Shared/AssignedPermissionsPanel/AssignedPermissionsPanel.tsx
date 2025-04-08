@@ -8,14 +8,14 @@ import { Permissions } from '../Permissions/Permissions';
 
 import type { EntitiesOption } from '../utilities';
 import type {
+  EntityTypePermissions,
   IamAccessType,
-  ResourceTypePermissions,
   Roles,
 } from '@linode/api-v4/lib/iam/types';
 
 interface ExtendedRole extends Roles {
   access: IamAccessType;
-  resource_type: ResourceTypePermissions;
+  entity_type: EntityTypePermissions;
 }
 
 interface Props {
@@ -57,7 +57,7 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
         {description.length > 110 && (
           <StyledLinkButton
             sx={{
-              font: theme.tokens.typography.Label.Semibold.Xs,
+              font: theme.tokens.alias.Typography.Label.Semibold.Xs,
               width: 'max-content',
             }}
             onClick={() => setShowFullDescription((show) => !show)}
@@ -71,7 +71,7 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
       <Entities
         access={role.access}
         assignedEntities={assignedEntities ?? []}
-        type={role.resource_type}
+        type={role.entity_type}
       />
     </Paper>
   );
