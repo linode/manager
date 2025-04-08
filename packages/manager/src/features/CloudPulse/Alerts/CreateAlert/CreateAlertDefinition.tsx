@@ -16,7 +16,7 @@ import {
   CREATE_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
-  CREATE_ALERT_SUCCESS_MESSAGE
+  CREATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import {
   enhanceValidationSchemaWithEntityIdValidation,
