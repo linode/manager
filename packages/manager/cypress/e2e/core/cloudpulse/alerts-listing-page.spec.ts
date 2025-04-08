@@ -63,10 +63,14 @@ const mockAlerts = [
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
   }),
 ];
-interface AlertToggleOptions {
+
+interface AlertActionOptions {
   action: 'Disable' | 'Enable';
   alertName: string;
   alias: string;
+}
+
+interface AlertToggleOptions extends AlertActionOptions {
   confirmationText: string;
   successMessage: string;
 }
@@ -353,7 +357,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       });
     };
     // Disable "Alert-1"
-    const actions: Array<Partial<AlertToggleOptions>> = [
+    const actions: Array<AlertActionOptions> = [
       {
         action: 'Disable',
         alertName: 'Alert-1',
