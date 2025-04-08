@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -9,6 +9,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
+import { MULTILINE_ERROR_SEPARATOR } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
   getAlertResourceFilterProps,
   getFilteredResources,
@@ -17,7 +19,6 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -126,6 +127,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = useRegionsQuery();
 
   const flags = useFlags();
+  const theme = useTheme();
 
   // Validate launchDarkly region ids with the ids from regionOptions prop
   const supportedRegionIds = getSupportedRegionIds(
@@ -336,7 +338,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
-
+  const noticeStyles: React.CSSProperties = {
+    alignItems: 'center',
+    backgroundColor: theme.tokens.alias.Background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacingFunction(16),
+  };
   return (
     <Stack gap={2}>
       {!hideLabel && (
@@ -415,13 +425,24 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Grid>
         )}
         {errorText?.length && (
-          <AlertsNoticeMessage text={errorText} variant="error" />
+          <Grid item xs={12}>
+            <AlertListNoticeMessages
+              errorMessage={errorText}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
+              variant="error"
+            />
+          </Grid>
         )}
         {maxSelectionCount !== undefined && (
-          <AlertsNoticeMessage
-            text={`You can select up to ${maxSelectionCount} resources.`}
-            variant="warning"
-          />
+          <Grid item xs={12}>
+            <AlertListNoticeMessages
+              errorMessage={`You can select up to ${maxSelectionCount} resources.`}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
+              variant="warning"
+            />
+          </Grid>
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&

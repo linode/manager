@@ -1,13 +1,14 @@
-import { createLazyRoute } from '@tanstack/react-router';
-import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllAccountMaintenanceQuery,
   useAllLinodesQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { createLazyRoute } from '@tanstack/react-router';
+import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { storage } from 'src/utilities/storage';
@@ -54,8 +55,12 @@ export const LinodesLandingWrapper = React.memo(() => {
     {},
     PENDING_MAINTENANCE_FILTER
   );
+  const flags = useFlags();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const [regionFilter, setRegionFilter] = React.useState<
     RegionFilter | undefined

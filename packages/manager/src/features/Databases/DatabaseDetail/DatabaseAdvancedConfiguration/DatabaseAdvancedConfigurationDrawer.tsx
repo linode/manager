@@ -1,12 +1,43 @@
-import { ActionsPanel, Divider, Drawer, Notice, Typography } from '@linode/ui';
-import React, { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  ActionsPanel,
+  Button,
+  Divider,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
+import { createDynamicAdvancedConfigSchema } from '@linode/validation';
+import Grid from '@mui/material/Grid2';
+import { enqueueSnackbar } from 'notistack';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
+import {
+  useDatabaseEngineConfig,
+  useDatabaseMutation,
+} from 'src/queries/databases/databases';
 
+import {
+  convertEngineConfigToOptions,
+  convertExistingConfigsToArray,
+  findConfigItem,
+  formatConfigPayload,
+  getDefaultConfigValue,
+} from '../../utilities';
+import { DatabaseConfigurationItem } from './DatabaseConfigurationItem';
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
 
-import type { Database, DatabaseInstance } from '@linode/api-v4';
+import type { ConfigurationOption } from './DatabaseConfigurationSelect';
+import type {
+  Database,
+  DatabaseInstance,
+  UpdateDatabasePayload,
+} from '@linode/api-v4';
+import type { SubmitHandler } from 'react-hook-form';
+import type { ObjectSchema } from 'yup';
 
 interface Props {
   database: Database | DatabaseInstance;
@@ -14,44 +45,182 @@ interface Props {
   open: boolean;
 }
 
+interface FormValues {
+  configs: ConfigurationOption[];
+}
+
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { database, onClose, open } = props;
+  const { engine, engine_config: existingConfigurations, id } = database;
 
-  const [selectedConfig, setSelectedConfig] = useState('');
+  const [
+    selectedConfig,
+    setSelectedConfig,
+  ] = useState<ConfigurationOption | null>(null);
 
-  // const engineConfigs = database.engine_config;
-  // Placeholder for engine configurations (currently set to 'undefined' as the UI is not ready yet).
-  // The implementation will be updated in the second PR after UI work is completed.
-  const engineConfigs = undefined;
+  const {
+    error: updateDatabaseError,
+    isPending: isUpdating,
+    mutateAsync: updateDatabase,
+  } = useDatabaseMutation(engine, id);
+
+  const { data: databaseConfig } = useDatabaseEngineConfig(engine, true);
+
+  const configurations = convertEngineConfigToOptions(databaseConfig);
+
+  const existingConfigsArray = useMemo(
+    () => convertExistingConfigsToArray(existingConfigurations, databaseConfig),
+    [existingConfigurations, databaseConfig]
+  );
+
+  const {
+    control,
+    formState: { isDirty },
+    handleSubmit,
+    reset,
+    watch,
+  } = useForm<FormValues>({
+    defaultValues: { configs: existingConfigsArray },
+    mode: 'onBlur',
+    resolver: yupResolver(
+      createDynamicAdvancedConfigSchema(
+        configurations
+      ) as ObjectSchema<FormValues>
+    ),
+  });
+
+  const { fields, prepend, remove } = useFieldArray({
+    control,
+    name: 'configs',
+  });
+
+  const configs = watch('configs');
+
+  useEffect(() => {
+    if (existingConfigsArray) {
+      reset({ configs: existingConfigsArray });
+    }
+  }, [existingConfigsArray]);
+
+  const usedConfigs = useMemo(
+    () => new Set(fields.map((config) => config.label)),
+    [fields]
+  );
+  const availableConfigurations = configurations.filter(
+    (config) => !usedConfigs.has(config.label)
+  );
+
+  const hasRestartCluster = fields.some((item) => item.requires_restart);
+
+  const handleAddConfiguration = (config: ConfigurationOption | null) => {
+    if (!config || usedConfigs.has(config.label)) {
+      return;
+    }
+    const item = findConfigItem(databaseConfig, String(config.label));
+    prepend({
+      ...item,
+      category: config?.category ?? '',
+      isNew: true,
+      label: config?.label ?? '',
+      value: getDefaultConfigValue(config),
+    });
+
+    setSelectedConfig(null);
+  };
+
+  const handleRemoveConfig = (index: number) => {
+    remove(index);
+    reset(watch(), { keepDirty: true });
+  };
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+    const payload: UpdateDatabasePayload = {
+      engine_config: formatConfigPayload(formData.configs, configurations),
+    };
+    await updateDatabase(payload).then(() => {
+      handleClose();
+      enqueueSnackbar('Advanced Configuration settings saved', {
+        variant: 'success',
+      });
+    });
+  };
+
   return (
     <Drawer
       NotFoundComponent={NotFound}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title="Advanced Configuration"
     >
+      {Boolean(updateDatabaseError) && (
+        <Notice spacingBottom={16} spacingTop={16} variant="error">
+          {updateDatabaseError?.[0].reason}
+        </Notice>
+      )}
       <Typography>
         Advanced parameters to configure your database cluster.
       </Typography>
-      <Link to="">Learn more.</Link>
+      <Link to="https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters">
+        Learn more.
+      </Link>
 
-      <Notice important top={24} variant="info">
+      <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
         <Typography>
           There is no way to reset advanced configuration options to default.
           Options that you add cannot be removed. Changing or adding some
           options causes the service to restart.
         </Typography>
       </Notice>
-      <form>
-        <DatabaseConfigurationSelect
-          configurations={[]}
-          errorText={undefined}
-          onChange={(config) => setSelectedConfig(config)}
-          value={selectedConfig}
-        />
-
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid
+          alignItems="end"
+          container
+          justifyContent="space-between"
+          size={12}
+        >
+          <Grid size={9}>
+            <DatabaseConfigurationSelect
+              configurations={availableConfigurations}
+              errorText={undefined}
+              label={selectedConfig?.label ?? ''}
+              onChange={(config) => setSelectedConfig(config)}
+            />
+          </Grid>
+          <Grid size={2}>
+            <Button
+              buttonType="primary"
+              disabled={!selectedConfig}
+              onClick={() => handleAddConfiguration(selectedConfig)}
+              sx={{ minWidth: 'auto', width: '70px' }}
+            >
+              Add
+            </Button>
+          </Grid>
+        </Grid>
         <Divider spacingBottom={20} spacingTop={24} />
-        {!engineConfigs && (
+        {configs.map((config, index) => (
+          <Controller
+            render={({ field, fieldState }) => {
+              return (
+                <DatabaseConfigurationItem
+                  configItem={config}
+                  engine={engine}
+                  errorText={fieldState.error?.message}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  onRemove={() => handleRemoveConfig(index)}
+                />
+              );
+            }}
+            control={control}
+            key={config.label}
+            name={`configs.${index}.value`}
+          />
+        ))}
+        {configs.length === 0 && (
           <Typography align="center">
             No advanced configurations have been added.
           </Typography>
@@ -59,12 +228,14 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         <Divider spacingBottom={20} spacingTop={24} />
         <ActionsPanel
           primaryButtonProps={{
-            label: 'Save and Restart Service',
+            disabled: !isDirty,
+            label: hasRestartCluster ? 'Save and Restart Service' : 'Save',
+            loading: isUpdating,
             type: 'submit',
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
         />
       </form>
