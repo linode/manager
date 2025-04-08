@@ -104,14 +104,16 @@ export const EditImageDrawer = (props: Props) => {
         />
       )}
 
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Lock />
-        <Typography
-          sx={(theme) => ({ color: theme.textColors.textAccessTable })}
-        >
-          Encrypted
-        </Typography>
-      </Stack>
+      {image?.capabilities?.includes('distributed-sites') && (
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Lock />
+          <Typography
+            sx={(theme) => ({ color: theme.textColors.textAccessTable })}
+          >
+            Encrypted
+          </Typography>
+        </Stack>
+      )}
 
       <Controller
         render={({ field, fieldState }) => (
