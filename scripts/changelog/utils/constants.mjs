@@ -47,6 +47,7 @@ const CHANGESET_DIRECTORIES = {
   "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
   "utilities": path.join(__dirname, "../../../packages/utilities/.changeset"),
   "validation": path.join(__dirname, "../../../packages/validation/.changeset"),
+  "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
 };
 
 const PACKAGE_JSON_PATHS = {
@@ -57,6 +58,7 @@ const PACKAGE_JSON_PATHS = {
   "shared": path.join(__dirname, "../../../packages/shared/package.json"),
   "utilities": path.join(__dirname, "../../../packages/utilities/package.json"),
   "validation": path.join(__dirname, "../../../packages/validation/package.json"),
+  "shared": path.join(__dirname, "../../../packages/shared/package.json"),
 };
 
 export const changelogPath = (linodePackage) => {

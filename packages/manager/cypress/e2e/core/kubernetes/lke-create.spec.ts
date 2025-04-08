@@ -1291,8 +1291,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    // TODO: revert me before we release on 4/8!
-    cy.contains('Tier').should('not.exist');
+    cy.contains('Cluster Tier').should('not.exist');
   });
 
   describe('shows the LKE-E flow with the feature flag on', () => {
