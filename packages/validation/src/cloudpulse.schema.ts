@@ -14,7 +14,7 @@ const metricCriteria = object({
   operator: string().required(fieldErrorMessage),
   threshold: number()
     .required(fieldErrorMessage)
-    .positive("Enter a positive value.")
+    .positive('Enter a positive value.')
     .typeError('The value should be a number.'),
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
