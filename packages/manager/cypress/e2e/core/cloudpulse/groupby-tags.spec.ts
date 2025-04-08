@@ -35,21 +35,31 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-
+const tagSequence = ['LinodeTags', 'dbaasTags'];
 const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
 
 const mockAlerts = Array.from(
   { length: 5 },
   (_, index): Alert => {
+    // Check if this alert should have empty tags
     const isEmptyTags = index % 3 === 0;
+
+    // Get status and serviceType by cycling through the lists
     const status = statusList[index % statusList.length];
     const serviceType = serviceTypes[index % serviceTypes.length];
+
+    // Set tags - empty if isEmptyTags is true, else pick from tagSequence and add 'bothTags'
     const tags = isEmptyTags
       ? []
-      : [index % 2 === 0 ? 'LinodeTags' : 'dbaasTags', 'bothTags'];
-    const primaryTag = isEmptyTags ? 'noTags' : tags[0];
-    const label = `${isEmptyTags ? 'noTags' : primaryTag}-${index}`;
+      : [tagSequence[index % tagSequence.length], 'bothTags'];
 
+    // Determine primaryTag - 'noTags' if tags are empty, else use the first tag
+    const primaryTag = isEmptyTags ? 'noTags' : tags[0];
+
+    // Generate label based on primaryTag and index
+    const label = `${primaryTag}-${index}`;
+
+    // Build and return the alert using the factory
     return alertFactory.build({
       created_by: primaryTag,
       entity_ids: ['1', '2', '3', '4', '5'],
@@ -62,28 +72,28 @@ const mockAlerts = Array.from(
   }
 );
 
-// Define the tag names used for filtering
-const linode = 'LinodeTags';
-const dbaas = 'dbaasTags';
-
 // Filter alerts that have both evenTags and oddTags
 const bothTags: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(linode) && alert.tags.includes(dbaas)
+  (alert) =>
+    alert.tags.includes('LinodeTags') && alert.tags.includes('dbaasTags')
 );
 
 // Filter alerts that only have evenTags and do NOT include oddTags
 const linodeTags: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(linode) && !alert.tags.includes(dbaas)
+  (alert) =>
+    alert.tags.includes('LinodeTags') && !alert.tags.includes('dbaasTags')
 );
 
 // Filter alerts that only have oddTags and do NOT include evenTags
 const dbaasTags: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(dbaas) && !alert.tags.includes(linode)
+  (alert) =>
+    alert.tags.includes('LinodeTags') && !alert.tags.includes('LinodeTags')
 );
 
 // Filter alerts that do NOT include either evenTags or oddTags
 const noTags: Alert[] = mockAlerts.filter(
-  (alert) => !alert.tags.includes(linode) && !alert.tags.includes(dbaas)
+  (alert) =>
+    !alert.tags.includes('LinodeTags') && !alert.tags.includes('dbaasTags')
 );
 
 describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts Listing Page', () => {
