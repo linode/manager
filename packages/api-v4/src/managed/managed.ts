@@ -270,6 +270,17 @@ export const updateLinodeSettings = (
   );
 
 /**
+ * getManagedContact
+ *
+ * Returns a Managed Contact by ID.
+ */
+export const getManagedContact = (contactId: number) =>
+  Request<ManagedContact>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`)
+  );
+
+/**
  * getManagedContacts
  *
  * Returns a paginated list of Managed Contacts on your Account.

@@ -179,7 +179,7 @@ export const CredentialList = () => {
           <Button
             buttonType="primary"
             onClick={() => navigate({ to: '/managed/credentials/add' })}
-            sx={{ mb: 2 }}
+            sx={{ mb: 1 }}
           >
             Add Credential
           </Button>

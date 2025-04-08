@@ -162,6 +162,43 @@ const managedContactsRoute = createRoute({
   import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
 );
 
+const managedContactsAddRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  path: 'contacts/add',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
+const managedContactsEditRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ contactId }: { contactId: string }) => ({
+      contactId: Number(contactId),
+    }),
+    stringify: ({ contactId }: { contactId: number }) => ({
+      contactId: String(contactId),
+    }),
+  },
+  path: 'contacts/$contactId/edit',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
+const managedContactsDeleteRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ contactId }: { contactId: string }) => ({
+      contactId: Number(contactId),
+    }),
+    stringify: ({ contactId }: { contactId: number }) => ({
+      contactId: String(contactId),
+    }),
+  },
+  path: 'contacts/$contactId/delete',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
 export const managedRouteTree = managedRoute.addChildren([
   managedIndexRoute,
   managedSummaryRoute,
@@ -177,4 +214,7 @@ export const managedRouteTree = managedRoute.addChildren([
   managedCredentialsEditRoute,
   managedCredentialsDeleteRoute,
   managedContactsRoute,
+  managedContactsAddRoute,
+  managedContactsEditRoute,
+  managedContactsDeleteRoute,
 ]);

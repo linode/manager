@@ -10,6 +10,7 @@ import {
   getCredential,
   getCredentials,
   getLinodeSettings,
+  getManagedContact,
   getManagedContacts,
   getManagedIssues,
   getManagedStats,
@@ -72,6 +73,10 @@ const _getAllIssues = () =>
 const getAllIssues = () => _getAllIssues().then((data) => extendIssues(data));
 
 const managedQueries = createQueryKeys('managed', {
+  contact: (id: number) => ({
+    queryFn: () => getManagedContact(id),
+    queryKey: [id],
+  }),
   contacts: {
     queryFn: getAllContacts,
     queryKey: null,
@@ -137,6 +142,12 @@ export const useAllManagedCredentialsQuery = () =>
 
 export const useAllManagedContactsQuery = () =>
   useQuery<ManagedContact[], APIError[]>(managedQueries.contacts);
+
+export const useManagedContactQuery = (id: number, enabled: boolean = true) =>
+  useQuery<ManagedContact, APIError[]>({
+    ...managedQueries.contact(id),
+    enabled,
+  });
 
 export const useAllManagedIssuesQuery = (primaryId?: number | string) =>
   useQuery<ExtendedIssue[], APIError[]>({
