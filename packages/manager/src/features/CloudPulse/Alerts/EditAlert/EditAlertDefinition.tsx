@@ -12,7 +12,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
-  EDIT_ALERT_ERROR_FIELD_MAP,
+  CREATE_ALERT_ERROR_FIELD_MAP as EDIT_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,

@@ -359,7 +359,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
       .required()
       .max(
         maxSelectionCount,
-        `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+        `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
       ),
   });
 };
