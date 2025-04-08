@@ -1,7 +1,10 @@
 import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
+import { NO_PERMISSIONS_TEXT } from 'src/features/IAM/Shared/constants';
 
 import { useCalculateHiddenItems } from '../utilities';
 import {
@@ -14,17 +17,14 @@ import {
 } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
-import { useTheme } from '@mui/material/styles';
 
 type Props = {
   noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
-const DEFAULT_NO_PERMISSIONS_MESSAGE = 'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.';
-
 export const Permissions = ({
-  noPermissionsMessage = DEFAULT_NO_PERMISSIONS_MESSAGE,
+  noPermissionsMessage = NO_PERMISSIONS_TEXT,
   permissions,
 }: Props) => {
   const theme = useTheme();
@@ -75,20 +75,21 @@ export const Permissions = ({
 
       <StyledContainer>
         <StyledClampedContent ref={containerRef} showAll={showAll}>
-          {!permissions.length && (
-            <Typography sx={{margin: theme.spacing(1)}}>
+          {!permissions.length ? (
+            <Typography sx={{ margin: theme.spacing(1) }}>
               {noPermissionsMessage}
             </Typography>
+          ) : (
+            permissions.map((permission: PermissionType, index: number) => (
+              <StyledPermissionItem
+                data-testid="permission"
+                key={permission}
+                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
+              >
+                {permission}
+              </StyledPermissionItem>
+            ))
           )}
-          {!!permissions.length && permissions.map((permission: PermissionType, index: number) => (
-            <StyledPermissionItem
-              data-testid="permission"
-              key={permission}
-              ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
-            >
-              {permission}
-            </StyledPermissionItem>
-          ))}
         </StyledClampedContent>
 
         {(numHiddenItems > 0 || showAll) && (

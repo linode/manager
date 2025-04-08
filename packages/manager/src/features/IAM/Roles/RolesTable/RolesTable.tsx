@@ -194,12 +194,11 @@ export const RolesTable = ({ roles }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {!rows?.length && (
+          {!rows?.length ? (
             <TableRow>
               <TableCell>No items to display.</TableCell>
             </TableRow>
-          )}
-          {rows &&
+          ) : (
             rows.map((roleRow) => (
               <TableRow
                 expandable
@@ -229,7 +228,8 @@ export const RolesTable = ({ roles }: Props) => {
                   <RolesTableExpandedRow permissions={roleRow.permissions} />
                 </TableRowExpanded>
               </TableRow>
-            ))}
+            ))
+          )}
         </TableBody>
       </Table>
     </Paper>
