@@ -142,9 +142,7 @@ it('test getResourceSelectionProperties method', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
-    expect(JSON.stringify(xFilter)).toEqual(
-      '{"+and":[{"region":"us-east"}],"+or":[]}'
-    );
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
     expect(label).toEqual(name);
   }
 });
@@ -176,7 +174,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
-    expect(JSON.stringify(xFilter)).toEqual('{"+and":[],"+or":[]}');
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
     expect(label).toEqual(name);
   }
 });
@@ -303,7 +301,7 @@ it('test buildXfilter method', () => {
 
     result = buildXFilter(resourceSelectionConfig, {});
 
-    expect(JSON.stringify(result)).toEqual('{"+and":[],"+or":[]}');
+    expect(JSON.stringify(result)).toEqual('{"+and":[]}');
   }
 });
 

@@ -313,8 +313,10 @@ export const buildXFilter = (
       }
     });
   }
-
-  return { '+and': filters, '+or': orCondition };
+  if (orCondition.length) {
+    return { '+and': filters, '+or': orCondition };
+  }
+  return { '+and': filters };
 };
 
 /**
