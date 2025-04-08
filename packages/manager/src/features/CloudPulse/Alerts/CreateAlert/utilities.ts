@@ -39,6 +39,13 @@ export const filterFormValues = (
   };
 };
 
+/**
+ * @param formValues The formValues submitted in the edit alert definition page
+ * @param serviceType The service type associated with the alert
+ * @param defaultSeverityType The severity type initially associated with the alert
+ * @param alertId The id of the alert
+ * @returns The edit alert payload filtered from the form properties.
+ */
 export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: AlertServiceType,
@@ -60,7 +67,7 @@ export const filterEditFormValues = (
     entity_ids: entityIds,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     serviceType,
-    severity,
+    severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
   };
 };

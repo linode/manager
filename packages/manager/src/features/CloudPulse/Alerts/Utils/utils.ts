@@ -296,7 +296,7 @@ export const processMetricCriteria = (
 };
 
 /**
- * @param props The props required foe the max selection count calculation
+ * @param props The props required for the max selection count calculation
  * @param createSchema The schema in which the entity id max validation will be added
  * @returns The updated schema with entity id max validation based on max selection count
  */
@@ -330,7 +330,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
       .required()
       .max(
         maxSelectionCount,
-        `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+        `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
       ),
   });
 };

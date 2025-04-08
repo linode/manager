@@ -89,7 +89,7 @@ it('should correctly convert an alert definition values to the required format',
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });
 
-describe('getCreateSchemaWithEntityIdValidation', () => {
+describe('getSchemaWithEntityIdValidation', () => {
   const baseSchema = createAlertDefinitionFormSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
@@ -112,17 +112,14 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getSchemaWithEntityIdValidation(
-      { ...props },
-      baseSchema
-    );
+    const schema = getSchemaWithEntityIdValidation({ ...props }, baseSchema);
 
     await expect(
       schema.pick(['entity_ids']).validate({
         entity_ids: ['id1', 'id2', 'id3', 'id4'],
       })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 3."
+      "The overall number of entities assigned to an alert can't exceed 3."
     );
   });
 
@@ -139,7 +136,7 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
       })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 5."
+      "The overall number of entities assigned to an alert can't exceed 5."
     );
   });
   it('should combine all the API errors to the parent field and return in errorMap properly', () => {
@@ -185,11 +182,11 @@ describe('getCreateSchemaWithEntityIdValidation', () => {
     const setError = vi.fn();
 
     handleMultipleError({
-      errors,
       errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+      errors,
       multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
-      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
       setError,
+      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
     });
 
     // Check that setError was called for each field correctly

@@ -150,9 +150,7 @@ export const CreateAlertDefinition = () => {
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
     setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
-    setValue('entity_ids', [], {
-      shouldValidate: true,
-    });
+    setValue('entity_ids', []);
     setValue('trigger_conditions', triggerConditionInitialValues);
   }, [setValue]);
 

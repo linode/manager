@@ -80,11 +80,12 @@ export const editAlertDefinitionSchema = object({
     .optional(),
   rule_criteria:
     object({
-      rules: array().of(metricCriteria.required())
+      rules: array()
+        .of(metricCriteria)
         .min(1, 'At least one metric criteria is required.').required(),
-    }).optional(),
+    }).optional().default(undefined),
   tags: array().of(string().defined()).optional(),
-  trigger_conditions: triggerConditionValidation.optional(),
+  trigger_conditions: triggerConditionValidation.optional().default(undefined),
   severity: number().oneOf([0, 1, 2, 3])
     .optional(),
   status: string().oneOf(['enabled', 'disabled', 'in progress', 'failed']).optional(),
