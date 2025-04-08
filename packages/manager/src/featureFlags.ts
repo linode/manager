@@ -135,6 +135,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
+  mtctt2025: boolean;
   nodebalancerVpc: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -150,7 +151,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
-  tiktokMTCPlans: boolean;
   tpaProviders: Provider[];
   udp: boolean;
 }
