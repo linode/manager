@@ -108,18 +108,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     [editAlertDefinition]
   );
 
-  let isEnabled = false;
-
-  let message = '';
-  let title = '';
-  if (isDialogOpen) {
-    isEnabled = selectedAlert.status !== 'disabled';
-    message = `Are you sure you want to ${
-      isEnabled ? 'disable' : 'enable'
-    } this alert definition?`;
-
-    title = `${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
-  }
+  const isEnabled = selectedAlert.status !== 'disabled';
 
   return (
     <>
@@ -219,14 +208,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         )}
       </OrderBy>
       <AlertConfirmationDialog
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
-        message={message}
-        title={title}
       />
     </>
   );

@@ -26,7 +26,6 @@ describe('Alert confirmation dialog', () => {
         isEnabled={true}
         isOpen={true}
         message={messages.disableMessage}
-        title={messages.disableTitle}
       />
     );
 
@@ -43,7 +42,6 @@ describe('Alert confirmation dialog', () => {
         isEnabled={true}
         isOpen={true}
         message={messages.disableMessage}
-        title={messages.disableTitle}
       />
     );
 
@@ -62,7 +60,6 @@ describe('Alert confirmation dialog', () => {
         isEnabled={false}
         isOpen={true}
         message={messages.enableMessage}
-        title={messages.enableTitle}
       />
     );
 
