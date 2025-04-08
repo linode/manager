@@ -1,5 +1,6 @@
 import {
   IconButton,
+  Notice,
   Stack,
   TextField,
   TooltipIcon,
@@ -20,7 +21,10 @@ interface Props {
 }
 
 export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
-  const { control } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<LinodeCreateFormValues>();
 
   const { append, fields, remove } = useFieldArray({
     control,
@@ -30,6 +34,15 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
   return (
     <Stack>
       <Stack spacing={1}>
+        {errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv4?.ranges
+          ?.message && (
+          <Notice variant="error">
+            {
+              errors?.linodeInterfaces?.[interfaceIndex]?.vpc?.ipv4?.ranges
+                ?.message
+            }
+          </Notice>
+        )}
         {fields.map((field, index) => (
           <Stack
             alignItems="flex-start"
