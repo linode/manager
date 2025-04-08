@@ -2,6 +2,7 @@ import {
   createLinodeRequestFactory,
   linodeConfigInterfaceFactory,
   linodeFactory,
+  regionFactory,
 } from '@linode/utilities';
 import {
   VLANFactory,
@@ -43,7 +44,7 @@ import {
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
+import { chooseRegion, extendRegion } from 'support/util/regions';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -307,7 +308,24 @@ describe('clone linode', () => {
    * - Confirms that notice is shown when selecting a region with a different price structure.
    */
   it('shows DC-specific pricing information during clone flow', () => {
-    const mockRegions = [getRegionById('us-west'), getRegionById('us-east')];
+    const mockRegions = [
+      extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes'],
+          country: 'us',
+          id: 'us-west',
+          label: 'Fremont, CA',
+        })
+      ),
+      extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes'],
+          country: 'us',
+          id: 'us-east',
+          label: 'Newark, NJ',
+        })
+      ),
+    ];
     mockGetRegions(mockRegions).as('getRegions');
     const initialRegion = mockRegions[0];
     const newRegion = mockRegions[1];
