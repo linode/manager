@@ -57,7 +57,7 @@ export const EditInterfaceForm = (props: Props) => {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
-      // onClose();
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
