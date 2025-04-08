@@ -7,6 +7,7 @@ import {
   deleteServiceMonitor,
   disableServiceMonitor,
   enableServiceMonitor,
+  getCredential,
   getCredentials,
   getLinodeSettings,
   getManagedContacts,
@@ -75,6 +76,10 @@ const managedQueries = createQueryKeys('managed', {
     queryFn: getAllContacts,
     queryKey: null,
   },
+  credential: (id: number) => ({
+    queryFn: () => getCredential(id),
+    queryKey: [id],
+  }),
   credentials: {
     queryFn: getAllCredentials,
     queryKey: null,
@@ -109,6 +114,15 @@ export const useManagedSSHKey = () =>
   useQuery<ManagedSSHPubKey, APIError[]>({
     ...managedQueries.sshKey,
     ...queryPresets.oneTimeFetch,
+  });
+
+export const useManagedCredentialQuery = (
+  id: number,
+  enabled: boolean = true
+) =>
+  useQuery<ManagedCredential, APIError[]>({
+    ...managedQueries.credential(id),
+    enabled,
   });
 
 export const useAllLinodeSettingsQuery = () =>

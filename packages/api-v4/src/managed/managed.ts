@@ -149,6 +149,19 @@ export const updateServiceMonitor = (
   );
 
 /**
+ * getCredential
+ *
+ * Returns a Managed Credential by ID.
+ */
+export const getCredential = (credentialId: number) =>
+  Request<ManagedCredential>(
+    setMethod('GET'),
+    setURL(
+      `${API_ROOT}/managed/credentials/${encodeURIComponent(credentialId)}`
+    )
+  );
+
+/**
  * getCredentials
  *
  * Returns a paginated list of Managed Credentials for your account.

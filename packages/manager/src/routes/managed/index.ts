@@ -118,6 +118,43 @@ const managedCredentialsRoute = createRoute({
   import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
 );
 
+const managedCredentialsAddRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  path: 'credentials/add',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
+const managedCredentialsEditRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ credentialId }: { credentialId: string }) => ({
+      credentialId: Number(credentialId),
+    }),
+    stringify: ({ credentialId }: { credentialId: number }) => ({
+      credentialId: String(credentialId),
+    }),
+  },
+  path: 'credentials/$credentialId/edit',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
+const managedCredentialsDeleteRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ credentialId }: { credentialId: string }) => ({
+      credentialId: Number(credentialId),
+    }),
+    stringify: ({ credentialId }: { credentialId: number }) => ({
+      credentialId: String(credentialId),
+    }),
+  },
+  path: 'credentials/$credentialId/delete',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
 const managedContactsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'contacts',
@@ -136,5 +173,8 @@ export const managedRouteTree = managedRoute.addChildren([
   managedSSHAccessRoute,
   managedSSHAccessEditRoute,
   managedCredentialsRoute,
+  managedCredentialsAddRoute,
+  managedCredentialsEditRoute,
+  managedCredentialsDeleteRoute,
   managedContactsRoute,
 ]);
