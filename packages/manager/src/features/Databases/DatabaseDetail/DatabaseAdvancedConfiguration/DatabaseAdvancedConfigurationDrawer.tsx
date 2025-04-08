@@ -2,9 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ActionsPanel,
   Button,
+  CircleProgress,
   Divider,
   Drawer,
   Notice,
+  Stack,
   Typography,
 } from '@linode/ui';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
@@ -51,7 +53,7 @@ interface FormValues {
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const { database, onClose, open } = props;
-  const { engine, engine_config: existingConfigurations, id } = database;
+  const { engine, engine_config: existingConfiguration, id } = database;
 
   const [
     selectedConfig,
@@ -64,13 +66,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
-  const { data: databaseConfig } = useDatabaseEngineConfig(engine, true);
+  const { data: databaseConfig, isLoading } = useDatabaseEngineConfig(
+    engine,
+    true
+  );
 
   const configurations = convertEngineConfigToOptions(databaseConfig);
 
-  const existingConfigsArray = convertExistingConfigsToArray(
-    existingConfigurations,
-    databaseConfig
+  const existingConfigurations = useMemo(
+    () => convertExistingConfigsToArray(existingConfiguration, databaseConfig),
+    [existingConfiguration, databaseConfig]
   );
 
   const {
@@ -80,7 +85,8 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     reset,
     watch,
   } = useForm<FormValues>({
-    defaultValues: { configs: existingConfigsArray },
+    defaultValues: { configs: existingConfigurations },
+    mode: 'onBlur',
     resolver: yupResolver(
       createDynamicAdvancedConfigSchema(
         configurations
@@ -96,10 +102,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const configs = watch('configs');
 
   useEffect(() => {
-    if (databaseConfig) {
-      reset({ configs: existingConfigsArray });
+    if (existingConfigurations.length > 0) {
+      reset({ configs: existingConfigurations });
     }
-  }, [databaseConfig]);
+  }, [existingConfigurations]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -109,7 +115,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     (config) => !usedConfigs.has(config.label)
   );
 
-  const hasRestartCluster = fields.some((item) => item.restart_cluster);
+  const hasRestartCluster = fields.some((item) => item.requires_restart);
 
   const handleAddConfiguration = (config: ConfigurationOption | null) => {
     if (!config || usedConfigs.has(config.label)) {
@@ -140,7 +146,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       engine_config: formatConfigPayload(formData.configs, configurations),
     };
     await updateDatabase(payload).then(() => {
-      onClose();
+      handleClose();
       enqueueSnackbar('Advanced Configuration settings saved', {
         variant: 'success',
       });
@@ -150,7 +156,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       title="Advanced Configuration"
     >
@@ -200,14 +206,24 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           </Grid>
         </Grid>
         <Divider spacingBottom={20} spacingTop={24} />
+        {isLoading && (
+          <Stack alignItems="center" height="100%" justifyContent="center">
+            <CircleProgress size="sm" />
+          </Stack>
+        )}
+        {!isLoading && configs.length === 0 && (
+          <Typography align="center">
+            No advanced configurations have been added.
+          </Typography>
+        )}
         {configs.map((config, index) => (
           <Controller
             render={({ field, fieldState }) => {
               return (
                 <DatabaseConfigurationItem
                   configItem={config}
-                  engine={engine}
                   errorText={fieldState.error?.message}
+                  onBlur={field.onBlur}
                   onChange={field.onChange}
                   onRemove={() => handleRemoveConfig(index)}
                 />
@@ -218,11 +234,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             name={`configs.${index}.value`}
           />
         ))}
-        {configs.length === 0 && (
-          <Typography align="center">
-            No advanced configurations have been added.
-          </Typography>
-        )}
         <Divider spacingBottom={20} spacingTop={24} />
         <ActionsPanel
           primaryButtonProps={{

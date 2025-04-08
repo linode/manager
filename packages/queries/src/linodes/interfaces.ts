@@ -44,12 +44,15 @@ export const useLinodeInterfaceQuery = (
 
 export const useLinodeInterfaceFirewallsQuery = (
   linodeId: number,
-  interfaceId: number
+  interfaceId: number,
+  enabled: boolean = true
 ) => {
-  return useQuery<ResourcePage<Firewall>, APIError[]>(
-    linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interface(interfaceId)
-      ._ctx.firewalls
-  );
+  return useQuery<ResourcePage<Firewall>, APIError[]>({
+    ...linodeQueries
+      .linode(linodeId)
+      ._ctx.interfaces._ctx.interface(interfaceId)._ctx.firewalls,
+    enabled,
+  });
 };
 
 export const useCreateLinodeInterfaceMutation = (linodeId: number) => {

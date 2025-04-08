@@ -1,3 +1,4 @@
+import { Subnet } from '@linode/api-v4';
 import * as React from 'react';
 
 import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
@@ -5,10 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
-import type { Subnet } from '@linode/api-v4';
-
 const props = {
-  isFetching: false,
   onClose: vi.fn(),
   open: true,
   subnet: {
