@@ -184,8 +184,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 export const useKubernetesClusterQuery = ({
   enabled = true,
   id = -1,
-  options = {},
   isUsingBetaEndpoint = false,
+  options = {},
 }) => {
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(isUsingBetaEndpoint),
@@ -215,8 +215,8 @@ export const useKubernetesClustersInfiniteQuery = (
 interface KubernetesClustersQueryOptions {
   enabled: boolean;
   filter: Filter;
-  params: Params;
   isUsingBetaEndpoint: boolean;
+  params: Params;
 }
 
 export const useKubernetesClustersQuery = ({
