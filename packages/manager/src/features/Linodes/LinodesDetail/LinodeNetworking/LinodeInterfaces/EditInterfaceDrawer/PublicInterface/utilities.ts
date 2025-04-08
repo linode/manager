@@ -114,3 +114,50 @@ export const useAllocatePublicIPv4 = (options: AllocateIPv4Options) => {
 
   return { isAllocating: isPending, onAllocate };
 };
+
+
+export const useMakeIPv4Primary = (options: AllocateIPv4Options) => {
+  const { interfaceId, linodeId } = options;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { data: linodeInterface } = useLinodeInterfaceQuery(
+    linodeId,
+    interfaceId
+  );
+
+  const { isPending, mutate } = useUpdateLinodeInterfaceMutation(
+    linodeId,
+    interfaceId,
+    {
+      onError(error) {
+        enqueueSnackbar(error[0].reason, { variant: 'error' });
+      },
+      onSuccess() {
+        enqueueSnackbar('Primary IPv4 address updated successfully', {
+          variant: 'success',
+        });
+      },
+    }
+  );
+
+  const onMakePrimary = (address: string) => {
+    if (!linodeInterface || !linodeInterface.public) {
+      enqueueSnackbar(
+        'Unable to make address primary because we could not fetch the interface in the first place.',
+        { variant: 'error' }
+      );
+      return;
+    }
+
+    const updatedInterface = structuredClone(linodeInterface);
+
+    for (let i = 0; i < updatedInterface.public!.ipv4.addresses.length; i++) {
+      updatedInterface.public!.ipv4.addresses[i].primary = updatedInterface.public!.ipv4.addresses[i].address === address;
+    }
+
+    mutate(updatedInterface);
+  };
+
+  return { isPending, onMakePrimary };
+};

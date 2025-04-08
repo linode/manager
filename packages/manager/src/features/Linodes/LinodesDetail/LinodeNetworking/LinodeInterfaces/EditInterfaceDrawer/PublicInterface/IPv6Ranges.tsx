@@ -1,101 +1,81 @@
-import {
-  Box,
-  CloseIcon,
-  IconButton,
-  Notice,
-  Stack,
-  TextField,
-  Typography,
-} from '@linode/ui';
+import { Box, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
 
 import { useAllocateIPv6Range } from './utilities';
 
-import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
+import type { LinodeInterface } from '@linode/api-v4';
 
 interface Props {
-  interfaceId: number;
   linodeId: number;
+  linodeInterface: LinodeInterface;
 }
 
 export const IPv6Ranges = (props: Props) => {
-  const {
-    control,
-    formState: { errors, isDirty },
-  } = useFormContext<ModifyLinodeInterfacePayload>();
+  const { linodeId, linodeInterface } = props;
 
   const {
     isAllocating: isAllocating56,
     onAllocate: onAllocate56,
-  } = useAllocateIPv6Range({ ...props, prefix: '/56' });
+  } = useAllocateIPv6Range({
+    interfaceId: linodeInterface.id,
+    linodeId,
+    prefix: '/56',
+  });
+
   const {
     isAllocating: isAllocating64,
     onAllocate: onAllocate64,
-  } = useAllocateIPv6Range({ ...props, prefix: '/64' });
-
-  const { fields, remove } = useFieldArray({
-    control,
-    name: 'public.ipv6.ranges',
+  } = useAllocateIPv6Range({
+    interfaceId: linodeInterface.id,
+    linodeId,
+    prefix: '/64',
   });
 
   return (
     <Stack spacing={1.5}>
       <Typography variant="h3">IPv6 Ranges</Typography>
-      {errors.public?.ipv6?.ranges?.message && (
-        <Notice text={errors.public?.ipv6?.ranges?.message} variant="error" />
-      )}
-      {fields.length === 0 ? (
-        <Typography>No IPv6 ranges assigned.</Typography>
-      ) : (
-        <Stack spacing={1}>
-          {fields.map((field, index) => (
-            <Stack
-              alignItems="flex-start"
-              direction="row"
-              key={field.id}
-              spacing={0.5}
-            >
-              <Controller
-                render={({ field, fieldState }) => (
-                  <TextField
-                    containerProps={{ sx: { flexGrow: 1 } }}
-                    errorText={fieldState.error?.message}
-                    hideLabel
-                    label={`IPv6 Range ${index}`}
-                    noMarginTop
-                    onChange={field.onChange}
-                    value={field.value}
-                  />
-                )}
-                control={control}
-                name={`public.ipv6.ranges.${index}.range`}
-              />
-              <IconButton onClick={() => remove(index)} sx={{ p: 1 }}>
-                <CloseIcon />
-              </IconButton>
-            </Stack>
+      <Typography>
+        IPv6 addresses are allocated as ranges, which you can choose to
+        distribute and further route yourself.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-ipv6-on-linode#additional-ipv6-addresses">
+          Learn mode.
+        </Link>
+      </Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>IPv4 Address</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {linodeInterface.public?.ipv6.ranges.map(({ range }) => (
+            <TableRow key={range}>
+              <TableCell>{range}</TableCell>
+              <TableCell actionCell>
+                <InlineMenuAction actionText="Delete" />
+              </TableCell>
+            </TableRow>
           ))}
-        </Stack>
-      )}
-      <Stack justifyContent="flex-start" spacing={1}>
+        </TableBody>
+      </Table>
+      <Stack spacing={1}>
         <Box>
-          <LinkButton
-            isDisabled={isDirty}
-            isLoading={isAllocating56}
-            onClick={onAllocate56}
-          >
+          <LinkButton isLoading={isAllocating56} onClick={onAllocate56}>
             Add IPv6 /56 Range
           </LinkButton>
         </Box>
         <Box>
-          <LinkButton
-            isDisabled={isDirty}
-            isLoading={isAllocating64}
-            onClick={onAllocate64}
-          >
+          <LinkButton isLoading={isAllocating64} onClick={onAllocate64}>
             Add IPv6 /64 Range
           </LinkButton>
         </Box>

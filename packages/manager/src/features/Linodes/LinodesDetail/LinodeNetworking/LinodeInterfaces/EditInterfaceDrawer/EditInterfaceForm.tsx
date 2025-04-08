@@ -18,9 +18,8 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { getLinodeInterfaceType } from '../utilities';
-import { DefaultRoute } from './PublicInterface/DefaultRoute';
+import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
-import { PublicIPv4Addresses } from './PublicInterface/PublicIPv4Addresses';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
@@ -85,20 +84,22 @@ export const EditInterfaceForm = (props: Props) => {
 
   const interfaceType = getLinodeInterfaceType(linodeInterface);
 
+  if (interfaceType === 'Public') {
+    return (
+      <Stack divider={<Divider />} spacing={3}>
+        <PublicIPv4Addresses
+          linodeId={linodeId}
+          linodeInterface={linodeInterface}
+        />
+        <IPv6Ranges linodeId={linodeId} linodeInterface={linodeInterface} />
+      </Stack>
+    );
+  }
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack divider={<Divider />} spacing={2}>
-          <DefaultRoute linodeInterface={linodeInterface} />
-          {interfaceType === 'Public' && (
-            <Stack divider={<Divider />} spacing={2}>
-              <PublicIPv4Addresses
-                interfaceId={interfaceId}
-                linodeId={linodeId}
-              />
-              <IPv6Ranges interfaceId={interfaceId} linodeId={linodeId} />
-            </Stack>
-          )}
           {interfaceType === 'VPC' && (
             <Notice
               text="TODO: Support editing a VPC interface"
