@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, Typography } from '@linode/ui';
+import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -17,11 +17,12 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -35,6 +36,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
@@ -113,6 +115,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const location = useLocation();
   const history = useHistory();
 
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -128,6 +134,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+  const {
+    canUpgradeInterfaces,
+    unableToUpgradeReasons,
+  } = useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
+
+  const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
+    unableToUpgradeReasons
+  );
+
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -141,10 +156,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const linodeAssociatedSubnets = vpcLinodeIsAssignedTo?.subnets.filter(
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
-
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -416,9 +427,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-              1
-            )} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
+              16
+            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 2,
             },
@@ -482,17 +493,27 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <Chip
-                    sx={(theme) => ({
-                      backgroundColor: theme.color.tagButtonBg,
-                      color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
-                    })}
-                    component="span"
-                    label="UPGRADE"
-                    onClick={openUpgradeInterfacesDialog}
-                    size="small"
-                  />
+                  <span>
+                    <Chip
+                      sx={(theme) => ({
+                        backgroundColor: theme.color.tagButtonBg,
+                        color: theme.tokens.color.Neutrals[80],
+                        marginLeft: theme.spacingFunction(12),
+                      })}
+                      component="span"
+                      disabled={!canUpgradeInterfaces}
+                      label="UPGRADE"
+                      onClick={openUpgradeInterfacesDialog}
+                      size="small"
+                    />
+                    {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
+                      <TooltipIcon
+                        status="help"
+                        sxTooltipIcon={{ padding: 0 }}
+                        text={unableToUpgradeTooltipText}
+                      />
+                    )}
+                  </span>
                 </Box>
               )}
             </StyledListItem>
