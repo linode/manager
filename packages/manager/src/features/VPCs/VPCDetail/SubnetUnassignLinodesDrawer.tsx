@@ -35,7 +35,6 @@ import type {
 } from '@linode/api-v4';
 
 interface Props {
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   singleLinodeToBeUnassigned?: Linode;
@@ -50,14 +49,7 @@ interface ConfigInterfaceAndLinodeData extends Linode {
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
-  ({
-    isFetching,
-    onClose,
-    open,
-    singleLinodeToBeUnassigned,
-    subnet,
-    vpcId,
-  }: Props) => {
+  ({ onClose, open, singleLinodeToBeUnassigned, subnet, vpcId }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const subnetId = subnet?.id;
@@ -290,7 +282,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           subnet?.ipv4 ?? subnet?.ipv6
         })`}
         NotFoundComponent={NotFound}
-        isFetching={isFetching}
         onClose={handleOnClose}
         open={open}
       >

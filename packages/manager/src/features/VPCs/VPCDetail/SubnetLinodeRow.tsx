@@ -36,16 +36,12 @@ import type {
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
 interface Props {
-  handlePowerActionsLinode: (
-    linode: Linode,
-    action: Action,
-    subnet?: Subnet
-  ) => void;
+  handlePowerActionsLinode: (linode: Linode, action: Action) => void;
   handleUnassignLinode: (linode: Linode, subnet?: Subnet) => void;
   hover?: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linodeId: number;
-  subnet: Subnet;
+  subnet?: Subnet;
   subnetId: number;
   subnetInterfaces: SubnetLinodeInterfaceData[];
 }
@@ -239,7 +235,7 @@ export const SubnetLinodeRow = (props: Props) => {
             {isRebootNeeded && (
               <InlineMenuAction
                 onClick={() => {
-                  handlePowerActionsLinode(linode, 'Reboot', subnet);
+                  handlePowerActionsLinode(linode, 'Reboot');
                 }}
                 actionText="Reboot"
                 disabled={isVPCLKEEnterpriseCluster}
@@ -250,8 +246,7 @@ export const SubnetLinodeRow = (props: Props) => {
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
-                    isOffline ? 'Power On' : 'Power Off',
-                    subnet
+                    isOffline ? 'Power On' : 'Power Off'
                   );
                 }}
                 actionText={isOffline ? 'Power On' : 'Power Off'}
