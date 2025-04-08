@@ -84,7 +84,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleStatusChange = React.useCallback((alert: Alert) => {
+  const handleStatusChange = (alert: Alert) => {
     setSelectedAlert(alert);
     setIsDialogOpen(true);
   };
