@@ -1,9 +1,3 @@
-import {
-  useAllLinodeConfigsQuery,
-  useBootLinodeMutation,
-  useRebootLinodeMutation,
-  useShutdownLinodeMutation,
-} from '@linode/queries';
 import { ActionsPanel, Autocomplete, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -11,6 +5,12 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import {
+  useAllLinodeConfigsQuery,
+  useBootLinodeMutation,
+  useRebootLinodeMutation,
+  useShutdownLinodeMutation,
+} from '@linode/queries';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
 
@@ -18,7 +18,6 @@ export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
 interface Props {
   action: Action;
-  isFetching?: boolean;
   isOpen: boolean;
   linodeId: number | undefined;
   linodeLabel?: string | undefined;
@@ -37,7 +36,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isFetching, isOpen, linodeId, linodeLabel, onClose } = props;
+  const { action, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
 
   const {
@@ -140,7 +139,6 @@ export const PowerActionsDialog = (props: Props) => {
         />
       }
       error={error?.[0].reason}
-      isFetching={isFetching}
       onClose={handleOnClose}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
@@ -172,15 +170,15 @@ export const PowerActionsDialog = (props: Props) => {
           autoHighlight
           disablePortal={false}
           errorText={configsError?.[0].reason}
-          helperText="If no value is selected, the last booted config will be used."
           label="Config"
           loading={configsLoading}
           onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
           options={configOptions}
+          helperText="If no value is selected, the last booted config will be used."
         />
       )}
       {props.action === 'Power Off' && (
-        <Notice spacingBottom={0} variant="warning">
+        <Notice variant="warning" spacingBottom={0}>
           <Typography>
             <strong>Note: </strong>Powered down Linodes will still accrue
             charges. See the&nbsp;

@@ -34,6 +34,7 @@ const CHANGELOG_PATHS = {
   "manager": path.join(__dirname, "../../../packages/manager/CHANGELOG.md"),
   "queries": path.join(__dirname, "../../../packages/queries/CHANGELOG.md"),
   "ui": path.join(__dirname, "../../../packages/ui/CHANGELOG.md"),
+  "shared": path.join(__dirname, "../../../packages/shared/CHANGELOG.md"),
   "utilities": path.join(__dirname, "../../../packages/utilities/CHANGELOG.md"),
   "validation": path.join(__dirname, "../../../packages/validation/CHANGELOG.md"),
 };
@@ -45,6 +46,7 @@ const CHANGESET_DIRECTORIES = {
   "ui": path.join(__dirname, "../../../packages/ui/.changeset"),
   "utilities": path.join(__dirname, "../../../packages/utilities/.changeset"),
   "validation": path.join(__dirname, "../../../packages/validation/.changeset"),
+  "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
 };
 
 const PACKAGE_JSON_PATHS = {
@@ -54,6 +56,7 @@ const PACKAGE_JSON_PATHS = {
   "ui": path.join(__dirname, "../../../packages/ui/package.json"),
   "utilities": path.join(__dirname, "../../../packages/utilities/package.json"),
   "validation": path.join(__dirname, "../../../packages/validation/package.json"),
+  "shared": path.join(__dirname, "../../../packages/shared/package.json"),
 };
 
 export const changelogPath = (linodePackage) => {

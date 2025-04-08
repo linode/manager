@@ -6,7 +6,6 @@ import { SubnetEditDrawer } from './SubnetEditDrawer';
 
 describe('SubnetEditDrawer', () => {
   const props = {
-    isFetching: false,
     onClose: vi.fn(),
     open: true,
     vpcId: 1,

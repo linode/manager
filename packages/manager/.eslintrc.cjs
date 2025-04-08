@@ -151,7 +151,6 @@ module.exports = {
         'src/features/PlacementGroups/**/*',
         'src/features/StackScripts/**/*',
         'src/features/Volumes/**/*',
-        'src/features/VPCs/**/*',
       ],
       rules: {
         'no-restricted-imports': [
