@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { ManagedRoute } from './ManagedRoute';
@@ -16,6 +16,9 @@ const managedRoute = createRoute({
 });
 
 const managedIndexRoute = createRoute({
+  beforeLoad: () => {
+    throw redirect({ to: '/managed/summary' });
+  },
   getParentRoute: () => managedRoute,
   path: '/',
 }).lazy(() =>

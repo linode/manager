@@ -149,10 +149,9 @@ export const useManagedContactQuery = (id: number, enabled: boolean = true) =>
     enabled,
   });
 
-export const useAllManagedIssuesQuery = (primaryId?: number | string) =>
+export const useAllManagedIssuesQuery = () =>
   useQuery<ExtendedIssue[], APIError[]>({
     ...managedQueries.issues,
-    enabled: Boolean(primaryId),
     refetchInterval: 20000,
   });
 
