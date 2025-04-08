@@ -96,6 +96,21 @@ const managedSSHAccessRoute = createRoute({
   import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
 );
 
+const managedSSHAccessEditRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ linodeId }: { linodeId: string }) => ({
+      linodeId: Number(linodeId),
+    }),
+    stringify: ({ linodeId }: { linodeId: number }) => ({
+      linodeId: String(linodeId),
+    }),
+  },
+  path: 'ssh-access/$linodeId/edit',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
 const managedCredentialsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'credentials',
@@ -119,6 +134,7 @@ export const managedRouteTree = managedRoute.addChildren([
   managedMonitorsEditRoute,
   managedMonitorsDeleteRoute,
   managedSSHAccessRoute,
+  managedSSHAccessEditRoute,
   managedCredentialsRoute,
   managedContactsRoute,
 ]);

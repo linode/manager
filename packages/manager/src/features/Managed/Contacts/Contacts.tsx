@@ -32,7 +32,7 @@ import ContactTableContact from './ContactsTableContent';
 import type { ManagedContactGroup, Mode } from './common';
 import type { ManagedContact } from '@linode/api-v4/lib/managed';
 
-const Contacts = () => {
+export const Contacts = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -231,8 +231,6 @@ const Contacts = () => {
     </>
   );
 };
-
-export default Contacts;
 
 /**
  * Generate groups from a list of Managed Contacts.

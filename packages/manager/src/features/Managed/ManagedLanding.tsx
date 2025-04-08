@@ -13,14 +13,26 @@ import { useTabs } from 'src/hooks/useTabs';
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
-const Contacts = React.lazy(() => import('./Contacts/Contacts'));
+const Contacts = React.lazy(() =>
+  import('./Contacts/Contacts').then((module) => ({
+    default: module.Contacts,
+  }))
+);
 const Monitors = React.lazy(() =>
   import('./Monitors/MonitorTable').then((module) => ({
     default: module.MonitorTable,
   }))
 );
-const SSHAccess = React.lazy(() => import('./SSHAccess/SSHAccess'));
-const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
+const SSHAccess = React.lazy(() =>
+  import('./SSHAccess/SSHAccess').then((module) => ({
+    default: module.SSHAccess,
+  }))
+);
+const CredentialList = React.lazy(() =>
+  import('./Credentials/CredentialList').then((module) => ({
+    default: module.CredentialList,
+  }))
+);
 
 export const ManagedLanding = () => {
   const { handleTabChange, tabIndex, tabs } = useTabs([
@@ -91,5 +103,3 @@ export const ManagedLanding = () => {
     </React.Fragment>
   );
 };
-
-export default ManagedLanding;

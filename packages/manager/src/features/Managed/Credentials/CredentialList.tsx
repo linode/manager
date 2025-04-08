@@ -295,5 +295,3 @@ export const CredentialList = () => {
     </>
   );
 };
-
-export default CredentialList;

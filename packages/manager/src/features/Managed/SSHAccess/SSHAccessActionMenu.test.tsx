@@ -13,7 +13,6 @@ const props: SSHAccessActionMenuProps = {
   isEnabled: true,
   linodeId: 1,
   linodeLabel: 'label',
-  openDrawer: mockOpenDrawer,
 };
 
 describe('SSH Access Action Menu', () => {
