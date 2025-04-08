@@ -152,6 +152,7 @@ export interface Flags {
   taxes: Taxes;
   tpaProviders: Provider[];
   udp: boolean;
+  vmHostMaintenance: BetaFeatureFlag;
 }
 
 interface MarketplaceAppOverride {

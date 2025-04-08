@@ -44,6 +44,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
   },
+  {
+    flag: 'vmHostMaintenance',
+    label: 'VM Host Maintenance Policy',
+  },
 ];
 
 interface RenderFlagItemProps {
