@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@linode/ui';
-import React from 'react';
+import React, { useState } from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { Table } from 'src/components/Table';
@@ -9,7 +8,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
+import { DeleteIPv6Dialog } from './DeleteIPv6Dialog';
+import { IPv6RangeRow } from './IPv6RangeRow';
 import { useAllocateIPv6Range } from './utilities';
 
 import type { LinodeInterface } from '@linode/api-v4';
@@ -21,6 +23,8 @@ interface Props {
 
 export const IPv6Ranges = (props: Props) => {
   const { linodeId, linodeInterface } = props;
+
+  const [selectedRange, setSelectedRange] = useState<string>();
 
   const {
     isAllocating: isAllocating56,
@@ -58,13 +62,18 @@ export const IPv6Ranges = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {linodeInterface.public?.ipv6.ranges.length === 0 && (
+            <TableRowEmpty
+              colSpan={2}
+              message="No IPv6 ranges are assigned to this interface."
+            />
+          )}
           {linodeInterface.public?.ipv6.ranges.map(({ range }) => (
-            <TableRow key={range}>
-              <TableCell>{range}</TableCell>
-              <TableCell actionCell>
-                <InlineMenuAction actionText="Delete" />
-              </TableCell>
-            </TableRow>
+            <IPv6RangeRow
+              key={range}
+              onDelete={() => setSelectedRange(range)}
+              range={range}
+            />
           ))}
         </TableBody>
       </Table>
@@ -80,6 +89,13 @@ export const IPv6Ranges = (props: Props) => {
           </LinkButton>
         </Box>
       </Stack>
+      <DeleteIPv6Dialog
+        interfaceId={linodeInterface.id}
+        linodeId={linodeId}
+        onClose={() => setSelectedRange(undefined)}
+        open={selectedRange !== undefined}
+        range={selectedRange}
+      />
     </Stack>
   );
 };
