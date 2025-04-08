@@ -39,10 +39,17 @@ export const filterFormValues = (
   };
 };
 
+/**
+ * @param formValues The formValues submitted in the edit alert definition page
+ * @param serviceType The service type associated with the alert
+ * @param defaultSeverityType The severity type initially associated with the alert
+ * @param alertId The id of the alert
+ * @returns The edit alert payload filtered from the form properties.
+ */
 export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: AlertServiceType,
-  severityType: AlertSeverityType,
+  defaultSeverityType: AlertSeverityType,
   alertId: number
 ): EditAlertPayloadWithService => {
   const values = omitProps(formValues, [
@@ -53,7 +60,7 @@ export const filterEditFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
-  const severity = formValues.severity ?? severityType;
+  const severity = formValues.severity ?? defaultSeverityType;
   return {
     ...values,
     alertId,
