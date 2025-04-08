@@ -9,41 +9,40 @@ import {
 } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Grid2';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
+import {
+  useCreateMonitorMutation,
+  useUpdateMonitorMutation,
+} from 'src/queries/managed/managed';
+import {
+  handleFieldErrors,
+  handleGeneralErrors,
+} from 'src/utilities/formikErrorUtils';
 
 import type {
+  APIError,
   ManagedCredential,
   ManagedServiceMonitor,
   ManagedServicePayload,
   ServiceType,
-} from '@linode/api-v4/lib/managed';
+} from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
+import type { FormikBag } from 'formik';
+
+export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
 export interface MonitorDrawerProps {
   credentials: ManagedCredential[];
   groups: string[];
   isFetching?: boolean;
-  label?: string;
-  mode: 'create' | 'edit';
   monitor?: ManagedServiceMonitor;
-  onClose: () => void;
-  onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
   open: boolean;
   successMsg?: string;
 }
-
-export const modes = {
-  CREATING: 'create',
-  EDITING: 'edit',
-};
-
-const titleMap = {
-  [modes.CREATING]: 'Add Monitor',
-  [modes.EDITING]: 'Edit Monitor',
-};
 
 const typeOptions: SelectOption<ServiceType>[] = [
   {
@@ -105,20 +104,20 @@ const emptyInitialValues = {
   timeout: 10,
 } as ManagedServicePayload;
 
-const MonitorDrawer = (props: MonitorDrawerProps) => {
-  const {
-    credentials,
-    groups,
-    isFetching,
-    mode,
-    monitor,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
-
+export const MonitorDrawer = (props: MonitorDrawerProps) => {
+  const { credentials, groups, isFetching, monitor, open } = props;
+  const { monitorId } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const credentialOptions = getCredentialOptions(credentials);
   const groupOptions = getGroupsOptions(groups);
+
+  const isEditing = match.routeId === '/managed/monitors/$monitorId/edit';
+
+  const { mutateAsync: updateServiceMonitor } = useUpdateMonitorMutation(
+    monitorId ?? -1
+  );
+  const { mutateAsync: createServiceMonitor } = useCreateMonitorMutation();
 
   /**
    * We only care about the fields in the form. Previously unfilled optional
@@ -135,17 +134,55 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
 
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
+  const submitMonitorForm = (
+    values: ManagedServicePayload,
+    { setErrors, setStatus, setSubmitting }: FormikProps
+  ) => {
+    const _success = () => {
+      setSubmitting(false);
+      navigate({ to: '/managed/monitors' });
+    };
+
+    const _error = (e: APIError[]) => {
+      const defaultMessage = `Unable to ${
+        isEditing ? 'update' : 'create'
+      } this Monitor. Please try again later.`;
+      const mapErrorToStatus = (generalError: string) =>
+        setStatus({ generalError });
+
+      setSubmitting(false);
+      handleFieldErrors(setErrors, e);
+      handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+      setSubmitting(false);
+    };
+
+    // Clear drawer error state
+    setStatus(undefined);
+
+    // eslint-disable-next-line no-unused-expressions
+    isEditing
+      ? updateServiceMonitor({ ...values, timeout: +values.timeout })
+          .then(_success)
+          .catch(_error)
+      : createServiceMonitor({
+          ...values,
+          timeout: +values.timeout,
+        })
+          .then(_success)
+          .catch(_error);
+  };
+
   return (
     <Drawer
       NotFoundComponent={NotFound}
       isFetching={isFetching}
-      onClose={onClose}
+      onClose={() => navigate({ to: '/managed/monitors' })}
       open={open}
-      title={titleMap[mode]}
+      title={isEditing ? 'Edit Monitor' : 'Add Monitor'}
     >
       <Formik
         initialValues={initialValues}
-        onSubmit={onSubmit}
+        onSubmit={submitMonitorForm}
         validateOnBlur={false}
         validateOnChange={false}
         validationSchema={createServiceMonitorSchema}
@@ -179,7 +216,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 name="label"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                required={mode === modes.CREATING}
+                required={!isEditing}
                 value={values.label}
               />
 
@@ -219,7 +256,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                       setFieldValue('service_type', item.value)
                     }
                     textFieldProps={{
-                      required: mode === modes.CREATING,
+                      required: !isEditing,
                     }}
                     data-qa-add-service-type
                     errorText={errors.service_type}
@@ -248,7 +285,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     name="timeout"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required={mode === modes.CREATING}
+                    required={!isEditing}
                     type="number"
                     value={values.timeout}
                   />
@@ -263,7 +300,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                 name="address"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                required={mode === modes.CREATING}
+                required={!isEditing}
                 tooltipText={helperText.url}
                 value={values.address}
               />
@@ -316,14 +353,14 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               <ActionsPanel
                 primaryButtonProps={{
                   'data-testid': 'submit',
-                  label: mode === 'create' ? 'Add Monitor' : 'Save Changes',
+                  label: isEditing ? 'Save Changes' : 'Add Monitor',
                   loading: isSubmitting,
                   onClick: () => handleSubmit(),
                 }}
                 secondaryButtonProps={{
                   'data-testid': 'cancel',
                   label: 'Cancel',
-                  onClick: onClose,
+                  onClick: () => navigate({ to: '/managed/monitors' }),
                 }}
               />
             </form>
@@ -333,5 +370,3 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
     </Drawer>
   );
 };
-
-export default MonitorDrawer;

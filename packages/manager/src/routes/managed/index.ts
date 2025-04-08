@@ -74,6 +74,21 @@ const managedMonitorsEditRoute = createRoute({
   import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
 );
 
+const managedMonitorsDeleteRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  params: {
+    parse: ({ monitorId }: { monitorId: string }) => ({
+      monitorId: Number(monitorId),
+    }),
+    stringify: ({ monitorId }: { monitorId: number }) => ({
+      monitorId: String(monitorId),
+    }),
+  },
+  path: '/monitors/$monitorId/delete',
+}).lazy(() =>
+  import('./managedLazyRoutes').then((m) => m.managedLandingLazyRoute)
+);
+
 const managedSSHAccessRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'ssh-access',
@@ -102,6 +117,7 @@ export const managedRouteTree = managedRoute.addChildren([
   managedMonitorsAddRoute,
   managedMonitorsIssuesRoute,
   managedMonitorsEditRoute,
+  managedMonitorsDeleteRoute,
   managedSSHAccessRoute,
   managedCredentialsRoute,
   managedContactsRoute,

@@ -14,7 +14,11 @@ import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));
-const Monitors = React.lazy(() => import('./Monitors/MonitorTable'));
+const Monitors = React.lazy(() =>
+  import('./Monitors/MonitorTable').then((module) => ({
+    default: module.MonitorTable,
+  }))
+);
 const SSHAccess = React.lazy(() => import('./SSHAccess/SSHAccess'));
 const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
 

@@ -20,7 +20,6 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 export interface MonitorActionMenuProps {
   label: string;
   monitorId: number;
-  openDialog: (id: number, label: string) => void;
   status: MonitorStatus;
 }
 
@@ -29,7 +28,7 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { label, monitorId, openDialog, status } = props;
+  const { monitorId, status } = props;
 
   const { mutateAsync: enableServiceMonitor } = useEnableMonitorMutation(
     monitorId
@@ -93,7 +92,10 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
         },
     {
       onClick: () => {
-        openDialog(monitorId, label);
+        navigate({
+          params: { monitorId },
+          to: `/managed/monitors/$monitorId/delete`,
+        });
       },
       title: 'Delete',
     },
@@ -121,5 +123,3 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
     </>
   );
 };
-
-export default MonitorActionMenu;

@@ -5,7 +5,7 @@ import * as React from 'react';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
 
-import ActionMenu from './MonitorActionMenu';
+import { MonitorActionMenu } from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 import {
   StyledGrid,
@@ -21,11 +21,10 @@ import type { ExtendedIssue } from 'src/queries/managed/types';
 interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
-  openDialog: (id: number, label: string) => void;
 }
 
 export const MonitorRow = (props: MonitorRowProps) => {
-  const { issues, monitor, openDialog } = props;
+  const { issues, monitor } = props;
 
   const Icon = statusIconMap[monitor.status];
 
@@ -91,10 +90,9 @@ export const MonitorRow = (props: MonitorRowProps) => {
         <Typography>{monitor.address}</Typography>
       </TableCell>
       <TableCell actionCell>
-        <ActionMenu
+        <MonitorActionMenu
           label={monitor.label}
           monitorId={monitor.id}
-          openDialog={openDialog}
           status={monitor.status}
         />
       </TableCell>

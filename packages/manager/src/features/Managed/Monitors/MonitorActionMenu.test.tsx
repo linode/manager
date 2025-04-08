@@ -3,12 +3,13 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { MonitorActionMenu, MonitorActionMenuProps } from './MonitorActionMenu';
+import { MonitorActionMenu } from './MonitorActionMenu';
+
+import type { MonitorActionMenuProps } from './MonitorActionMenu';
 
 const props: MonitorActionMenuProps = {
   label: 'this-monitor',
   monitorId: 1,
-  openDialog: vi.fn(),
   status: 'disabled',
 };
 
