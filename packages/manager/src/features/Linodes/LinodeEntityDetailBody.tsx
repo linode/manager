@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, Typography } from '@linode/ui';
+import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -15,7 +15,9 @@ import {
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -34,7 +36,8 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
+import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
@@ -112,6 +115,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const location = useLocation();
   const history = useHistory();
 
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -127,6 +134,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+  const {
+    canUpgradeInterfaces,
+    unableToUpgradeReasons,
+  } = useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
+
+  const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
+    unableToUpgradeReasons
+  );
+
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -141,10 +157,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
-
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -154,10 +166,16 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { data: cluster } = useKubernetesClusterQuery(
-    linodeLkeClusterId ?? -1,
-    Boolean(linodeLkeClusterId)
-  );
+  const {
+    isAPLAvailabilityLoading,
+    isUsingBetaEndpoint,
+  } = useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
+    id: linodeLkeClusterId ?? -1,
+    isUsingBetaEndpoint,
+  });
 
   return (
     <>
@@ -242,36 +260,33 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 )}
               </Box>
             </Grid>
-            {(isDiskEncryptionFeatureEnabled || regionSupportsDiskEncryption) &&
-              encryptionStatus && (
-                <Grid>
-                  <Box
-                    alignItems="center"
-                    data-testid={encryptionStatusTestId}
-                    display="flex"
-                    flexDirection="row"
-                  >
-                    <EncryptedStatus
-                      regionSupportsDiskEncryption={
-                        regionSupportsDiskEncryption
-                      }
-                      /**
-                       * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                       * explaining how LDE can be enabled on LKE-E node pools.
-                       * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                       */
-                      tooltipText={
-                        isLKELinode && cluster?.tier === 'enterprise'
-                          ? undefined
-                          : isLKELinode
-                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
-                      }
-                      encryptionStatus={encryptionStatus}
-                    />
-                  </Box>
-                </Grid>
-              )}
+            {isDiskEncryptionFeatureEnabled && encryptionStatus && (
+              <Grid>
+                <Box
+                  alignItems="center"
+                  data-testid={encryptionStatusTestId}
+                  display="flex"
+                  flexDirection="row"
+                >
+                  <EncryptedStatus
+                    /**
+                     * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
+                     * explaining how LDE can be enabled on LKE-E node pools.
+                     * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
+                     */
+                    tooltipText={
+                      isLKELinode && cluster?.tier === 'enterprise'
+                        ? undefined
+                        : isLKELinode
+                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                    }
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+                  />
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </Grid>
 
@@ -291,7 +306,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     variant="body1"
                   >
                     <HashLink
-                      to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                      to={`/linodes/${linodeId}/networking#${ipTableId}`}
                     >
                       View all IP Addresses
                     </HashLink>
@@ -412,9 +427,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-              1
-            )} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
+              16
+            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 2,
             },
@@ -478,17 +493,27 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <Chip
-                    sx={(theme) => ({
-                      backgroundColor: theme.color.tagButtonBg,
-                      color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
-                    })}
-                    component="span"
-                    label="UPGRADE"
-                    onClick={openUpgradeInterfacesDialog}
-                    size="small"
-                  />
+                  <span>
+                    <Chip
+                      sx={(theme) => ({
+                        backgroundColor: theme.color.tagButtonBg,
+                        color: theme.tokens.color.Neutrals[80],
+                        marginLeft: theme.spacingFunction(12),
+                      })}
+                      component="span"
+                      disabled={!canUpgradeInterfaces}
+                      label="UPGRADE"
+                      onClick={openUpgradeInterfacesDialog}
+                      size="small"
+                    />
+                    {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
+                      <TooltipIcon
+                        status="help"
+                        sxTooltipIcon={{ padding: 0 }}
+                        text={unableToUpgradeTooltipText}
+                      />
+                    )}
+                  </span>
                 </Box>
               )}
             </StyledListItem>

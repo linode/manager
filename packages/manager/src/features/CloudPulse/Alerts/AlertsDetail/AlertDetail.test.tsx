@@ -1,9 +1,8 @@
-import { regionFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import React from 'react';
 
 import {
   alertFactory,
-  linodeFactory,
   notificationChannelFactory,
   serviceTypesFactory,
 } from 'src/factories/';
@@ -106,7 +105,7 @@ describe('AlertDetail component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(<AlertDetail />);

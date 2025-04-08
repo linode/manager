@@ -1,4 +1,5 @@
-import { imageFactory, linodeFactory } from '@src/factories';
+import { linodeFactory } from '@linode/utilities';
+import { imageFactory } from '@src/factories';
 import { mockGetAllImages } from 'support/intercepts/images';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
