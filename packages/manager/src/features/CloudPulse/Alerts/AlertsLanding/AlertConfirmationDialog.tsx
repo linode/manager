@@ -42,11 +42,6 @@ interface AlertConfirmationDialogProps {
    * Message to be displayed in the confirmation dialog
    */
   message: string;
-
-  /**
-   * Title of the confirmation dialog
-   */
-  title: string;
 }
 
 export const AlertConfirmationDialog = React.memo(
@@ -59,7 +54,6 @@ export const AlertConfirmationDialog = React.memo(
       isLoading = false,
       isOpen,
       message,
-      title,
     } = props;
 
     const actionsPanel = (
@@ -83,7 +77,7 @@ export const AlertConfirmationDialog = React.memo(
         data-testid="confirmation-dialog"
         onClose={handleCancel}
         open={isOpen}
-        title={title}
+        title={`${isEnabled ? 'Disable' : 'Enable'} ${alert.label} Alert?`}
       >
         <Typography variant="subtitle2">{message}</Typography>
       </ConfirmationDialog>

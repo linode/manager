@@ -84,10 +84,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleStatusChange = React.useCallback((alert: Alert) => {
+  const handleStatusChange = (alert: Alert) => {
     setSelectedAlert(alert);
     setIsDialogOpen(true);
-  }, []);
+  };
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
@@ -127,17 +127,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     [editAlertDefinition]
   );
 
-  let isEnabled = false;
-
-  let message = '';
-  let title = '';
-  if (isDialogOpen) {
-    isEnabled = selectedAlert.status !== 'disabled';
-    message = `Are you sure you want to ${
-      isEnabled ? 'disable' : 'enable'
-    } this alert for all assigned entities?`;
-    title = `${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
-  }
+  const isEnabled = selectedAlert.status !== 'disabled';
 
   return (
     <>
@@ -265,14 +255,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </OrderBy>
       <AlertConfirmationDialog
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
-        message={message}
-        title={title}
       />
     </>
   );
