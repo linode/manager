@@ -57,7 +57,7 @@ export const IPv6Ranges = (props: Props) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>IPv4 Address</TableCell>
+            <TableCell>IPv6 Range</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
