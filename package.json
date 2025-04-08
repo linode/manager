@@ -30,7 +30,7 @@
     "jiti": "^2.4.2"
   },
   "scripts": {
-    "lint:all": "concurrently -n manager,api-v4,validation,ui,utilities,queries,shared -c green,blue,yellow,magenta,cyan,gray,blue \"pnpm run --filter linode-manager lint\" \"pnpm run --filter @linode/api-v4 lint\" \"pnpm run --filter @linode/validation lint\" \"pnpm run --filter @linode/ui lint\" \"pnpm run --filter @linode/utilities lint\" \"pnpm run --filter @linode/queries lint\" \"pnpm run --filter @linode/shared lint\"",
+    "lint:all": "pnpm -r --parallel lint",
     "install:all": "pnpm install --frozen-lockfile",
     "build:sdk": "pnpm run --filter @linode/api-v4 build",
     "build:validation": "pnpm run --filter @linode/validation build",

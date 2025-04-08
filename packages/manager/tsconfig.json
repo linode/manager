@@ -44,7 +44,5 @@
   "include": [
     "src",
     "package.json",
-    "eslint.config.ts",
-    "eslint.d.ts"
   ]
 }
