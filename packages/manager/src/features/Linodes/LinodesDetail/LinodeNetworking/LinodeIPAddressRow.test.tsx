@@ -1,8 +1,10 @@
-import { linodeConfigInterfaceFactoryWithVPC } from '@linode/utilities';
+import {
+  linodeConfigInterfaceFactoryWithVPC,
+  linodeIPFactory,
+} from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeIPFactory } from 'src/factories/linodes';
 import {
   ipResponseToDisplayRows,
   vpcConfigInterfaceToDisplayRows,
@@ -133,10 +135,10 @@ describe('ipResponseToDisplayRows', () => {
     );
 
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'Public – IPv4')
     ).toBeUndefined();
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC IPv4 – NAT')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC NAT – IPv4')
     ).toBeDefined();
   });
 });

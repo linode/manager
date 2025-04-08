@@ -1,9 +1,11 @@
+import {
+  updateTagsSuggestionsData,
+  useAllTagsQuery,
+  useProfile,
+} from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-
-import { useProfile } from '@linode/queries';
-import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 
 interface AddTagProps {
   addTag: (tag: string) => Promise<void>;

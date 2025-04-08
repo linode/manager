@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectLinodeCard } from './SelectLinodeCard';

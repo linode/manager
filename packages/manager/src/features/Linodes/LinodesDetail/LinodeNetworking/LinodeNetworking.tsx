@@ -36,7 +36,9 @@ export const LinodeNetworking = () => {
     <Stack spacing={2}>
       <LinodeNetworkingSummaryPanel linodeId={id} />
       {showFirewallsTable && <LinodeFirewalls linodeID={id} />}
-      {showInterfacesTable && <LinodeInterfaces linodeId={id} />}
+      {showInterfacesTable && (
+        <LinodeInterfaces linodeId={id} regionId={linode.region} />
+      )}
       <LinodeIPAddresses linodeID={id} />
     </Stack>
   );

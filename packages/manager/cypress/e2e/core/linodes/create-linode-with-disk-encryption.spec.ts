@@ -1,9 +1,9 @@
 import {
-  accountFactory,
   linodeFactory,
   linodeTypeFactory,
   regionFactory,
-} from '@src/factories';
+} from '@linode/utilities';
+import { accountFactory } from '@src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {

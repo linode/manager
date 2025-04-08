@@ -1,4 +1,5 @@
 import { queryClientFactory } from '@linode/queries';
+import { linodeFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -6,7 +7,6 @@ import {
   accountFactory,
   firewallFactory,
   kubernetesClusterFactory,
-  linodeFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
   vpcFactory,

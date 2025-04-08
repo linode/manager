@@ -8,26 +8,32 @@ import {
 import { Paper, Typography } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 export const SummaryPanel = () => {
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
+    Number(id)
+  );
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
+    Number(id)
+  );
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
@@ -36,17 +42,20 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
-  const { status: clusterStatus } = useKubernetesClusterQuery(
-    nodebalancer?.lke_cluster?.id ?? -1,
-    nodebalancer && Boolean(nodebalancer.lke_cluster),
-    {
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: nodebalancer && Boolean(nodebalancer.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    options: {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       retry: false,
-    }
-  );
+    },
+    isUsingBetaEndpoint,
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];

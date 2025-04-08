@@ -1,6 +1,5 @@
 import { CreditCardSchema } from '@linode/validation';
 import { Settings } from 'luxon';
-import { take, takeLast } from 'ramda';
 
 import {
   formatExpiry,
@@ -9,7 +8,7 @@ import {
 } from './creditCard';
 
 const currentYear = new Date().getFullYear();
-const currentYearFirstTwoDigits = take(2, String(currentYear));
+const currentYearFirstTwoDigits = String(currentYear).slice(0, 2);
 
 describe('isCreditCardExpired', () => {
   describe('given today is 01/01/2019', () => {
@@ -89,7 +88,7 @@ describe('credit card expiry date parsing and validation', () => {
       data: {
         card_number: '1111111111111111',
         cvv: '123',
-        expiry: `09/${takeLast(2, String(currentYear + 19))}`,
+        expiry: `09/${String(currentYear + 19).slice(-2)}`,
       },
       result: true,
     },
@@ -97,7 +96,7 @@ describe('credit card expiry date parsing and validation', () => {
       data: {
         card_number: '1111111111111111',
         cvv: '123',
-        expiry: `09/${takeLast(2, String(currentYear + 1))}`,
+        expiry: `09/${String(currentYear + 1).slice(-2)}`,
       },
       result: true,
     },
@@ -108,8 +107,8 @@ describe('credit card expiry date parsing and validation', () => {
         // We also use currentYear to make sure this test does not fail in many
         // years down the road.
         cvv: '123',
-        // Using takeLast to simulate a user entering the year in a 2 digit format.
-        expiry: `09/${takeLast(2, String(currentYear + 21))}`,
+        // Using slice() to simulate a user entering the year in a 2 digit format.
+        expiry: `09/${String(currentYear + 21).slice(-2)}`,
       },
       result: 'Expiry too far in the future.',
     },

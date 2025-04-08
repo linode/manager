@@ -1,10 +1,10 @@
+import { useRegionsQuery } from '@linode/queries';
 import { List, ListItem, Notice, Typography } from '@linode/ui';
+import { regionsWithFeature } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
-import { useRegionsQuery } from '@linode/queries';
-import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import type { Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';

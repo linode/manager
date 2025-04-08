@@ -87,6 +87,7 @@ export const KubeControlPlaneACLDrawer = (
     handleSubmit,
     reset,
     setError,
+    setValue,
     watch,
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: aclData,
@@ -99,8 +100,12 @@ export const KubeControlPlaneACLDrawer = (
     values: {
       acl: {
         addresses: {
-          ipv4: aclPayload?.addresses?.ipv4 ?? [''],
-          ipv6: aclPayload?.addresses?.ipv6 ?? [''],
+          ipv4: aclPayload?.addresses?.ipv4?.length
+            ? aclPayload?.addresses?.ipv4
+            : [''],
+          ipv6: aclPayload?.addresses?.ipv6?.length
+            ? aclPayload?.addresses?.ipv6
+            : [''],
         },
         enabled: aclPayload?.enabled ?? false,
         'revision-id': aclPayload?.['revision-id'] ?? '',
@@ -150,12 +155,12 @@ export const KubeControlPlaneACLDrawer = (
       acl: {
         enabled: acl.enabled,
         'revision-id': acl['revision-id'],
-        ...((ipv4.length > 0 || ipv6.length > 0) && {
+        ...{
           addresses: {
-            ...(ipv4.length > 0 && { ipv4 }),
-            ...(ipv6.length > 0 && { ipv6 }),
+            ipv4,
+            ipv6,
           },
-        }),
+        },
       },
     };
 
@@ -233,10 +238,37 @@ export const KubeControlPlaneACLDrawer = (
                       checked={
                         isEnterpriseCluster ? true : field.value ?? false
                       }
+                      onChange={() => {
+                        setValue('acl.enabled', !field.value, {
+                          shouldDirty: true,
+                        });
+                        // Disabling ACL should clear the revision-id and any addresses (see LKE-6205).
+                        if (!acl.enabled) {
+                          setValue('acl.revision-id', '');
+                          setValue('acl.addresses.ipv6', ['']);
+                          setValue('acl.addresses.ipv4', ['']);
+                        } else {
+                          setValue(
+                            'acl.revision-id',
+                            aclPayload?.['revision-id']
+                          );
+                          setValue(
+                            'acl.addresses.ipv6',
+                            aclPayload?.addresses?.ipv6?.length
+                              ? aclPayload?.addresses?.ipv6
+                              : ['']
+                          );
+                          setValue(
+                            'acl.addresses.ipv4',
+                            aclPayload?.addresses?.ipv4?.length
+                              ? aclPayload?.addresses?.ipv4
+                              : ['']
+                          );
+                        }
+                      }}
                       disabled={isEnterpriseCluster}
                       name="ipacl-checkbox"
                       onBlur={field.onBlur}
-                      onChange={field.onChange}
                     />
                   }
                   label="Enable Control Plane ACL"
@@ -260,6 +292,7 @@ export const KubeControlPlaneACLDrawer = (
               <Controller
                 render={({ field, fieldState }) => (
                   <TextField
+                    disabled={!acl.enabled}
                     errorText={fieldState.error?.message}
                     label="Revision ID"
                     onBlur={field.onBlur}
@@ -290,6 +323,7 @@ export const KubeControlPlaneACLDrawer = (
               render={({ field }) => (
                 <MultipleNonExtendedIPInput
                   buttonText="Add IPv4 Address"
+                  disabled={!acl.enabled}
                   ipErrors={errors.acl?.addresses?.ipv4}
                   isLinkStyled
                   nonExtendedIPs={field.value ?? ['']}
@@ -306,6 +340,7 @@ export const KubeControlPlaneACLDrawer = (
                 render={({ field }) => (
                   <MultipleNonExtendedIPInput
                     buttonText="Add IPv6 Address"
+                    disabled={!acl.enabled}
                     ipErrors={errors.acl?.addresses?.ipv6}
                     isLinkStyled
                     nonExtendedIPs={field.value ?? ['']}

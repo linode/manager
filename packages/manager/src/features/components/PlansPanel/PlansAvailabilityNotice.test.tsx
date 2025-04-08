@@ -1,7 +1,6 @@
-import { formatPlanTypes } from '@linode/utilities';
+import { formatPlanTypes, regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';

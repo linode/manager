@@ -6,6 +6,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 vi.mock('src/hooks/useRestrictedGlobalGrantCheck');
 
 // Note: An integration test confirming the helper text and enabled Create NodeBalancer button already exists, so we're just checking for a disabled create button here

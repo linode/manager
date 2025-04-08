@@ -4,6 +4,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import NodeBalancerCreate from './NodeBalancerCreate';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 // Note: see nodeblaancers-create-in-complex-form.spec.ts for an e2e test of this flow
 describe('NodeBalancerCreate', () => {
   it('renders all parts of the NodeBalancerCreate page', () => {

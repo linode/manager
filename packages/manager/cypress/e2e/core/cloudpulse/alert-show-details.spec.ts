@@ -4,7 +4,7 @@
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and resource information are displayed correctly.
  */
-import { capitalize } from '@linode/utilities';
+import { capitalize, regionFactory } from '@linode/utilities';
 import {
   aggregationTypeMap,
   dimensionOperatorTypeMap,
@@ -28,7 +28,6 @@ import {
   alertRulesFactory,
   databaseFactory,
   notificationChannelFactory,
-  regionFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 

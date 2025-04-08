@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import 'cypress-file-upload';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -22,7 +23,6 @@ import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
-  regionFactory,
 } from 'src/factories';
 
 import type { ObjectStorageEndpoint } from '@linode/api-v4';

@@ -12,16 +12,18 @@ import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
 import { VLANInterface } from './VLANInterface';
+import { VPCInterface } from './VPCInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
 
 interface Props {
   linodeId: number;
   onClose: () => void;
+  regionId: string;
 }
 
 export const AddInterfaceForm = (props: Props) => {
-  const { linodeId, onClose } = props;
+  const { linodeId, onClose, regionId } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
@@ -76,6 +78,9 @@ export const AddInterfaceForm = (props: Props) => {
           )}
           <InterfaceType />
           {selectedInterfacePurpose === 'vlan' && <VLANInterface />}
+          {selectedInterfacePurpose === 'vpc' && (
+            <VPCInterface regionId={regionId} />
+          )}
           <InterfaceFirewall />
           <Actions onClose={onClose} />
         </Stack>

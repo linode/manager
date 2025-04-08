@@ -7,7 +7,7 @@ import type {
   FormStepEvent,
   LinodeCreateFormEventOptions,
 } from './types';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+import type { LinodeCreateType } from '@linode/utilities';
 
 /**
  * Form Events

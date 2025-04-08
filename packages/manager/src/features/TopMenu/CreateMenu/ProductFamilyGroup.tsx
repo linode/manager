@@ -1,5 +1,4 @@
-import { Stack } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

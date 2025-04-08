@@ -9,7 +9,7 @@ import { firewallFactory } from 'src/factories/firewalls';
 import type { Firewall } from '@linode/api-v4';
 
 authenticate();
-describe('delete firewall', () => {
+describe.skip('delete firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });

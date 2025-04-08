@@ -1,13 +1,13 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
+import { regionFactory } from '@linode/utilities';
 import {
   accountFactory,
   accountSettingsFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
   profileFactory,
-  regionFactory,
 } from '@src/factories';
 import {
   mockGetAccount,
@@ -17,10 +17,10 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
+  mockGetAccessKeys,
   mockGetBuckets,
   mockGetClusters,
 } from 'support/intercepts/object-storage';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';

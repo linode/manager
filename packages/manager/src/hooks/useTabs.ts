@@ -1,4 +1,4 @@
-import { useMatchRoute } from '@tanstack/react-router';
+import { useMatchRoute, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import type { LinkProps } from '@tanstack/react-router';
@@ -35,6 +35,7 @@ export interface Tab {
  * since Reach Tabs maintains its own index state.
  */
 export function useTabs<T extends Tab>(tabs: T[]) {
+  const navigate = useNavigate();
   const matchRoute = useMatchRoute();
 
   // Filter out hidden tabs
@@ -55,10 +56,15 @@ export function useTabs<T extends Tab>(tabs: T[]) {
     return index === -1 ? 0 : index;
   }, [visibleTabs, matchRoute]);
 
-  // Simple handler to satisfy Reach Tabs props
-  const handleTabChange = React.useCallback(() => {
-    // No-op - navigation is handled by Tanstack Router `Link`
-  }, []);
+  const handleTabChange = React.useCallback(
+    (index: number) => {
+      const tab = visibleTabs[index];
+      if (tab) {
+        navigate({ to: tab.to });
+      }
+    },
+    [visibleTabs, navigate]
+  );
 
   return {
     handleTabChange,

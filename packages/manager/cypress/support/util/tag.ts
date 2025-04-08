@@ -7,6 +7,10 @@ const queryRegex = /(?:-|\+)?([^\s]+)/g;
  * Allowed test tags.
  */
 export type TestTag =
+  // Environment-related tags.
+  // Used to identify tests where certain environment-specific features are required.
+  | 'env:premiumPlans'
+
   // Feature-related tags.
   // Used to identify tests which deal with a certain feature or features.
   | 'feat:linodes'
