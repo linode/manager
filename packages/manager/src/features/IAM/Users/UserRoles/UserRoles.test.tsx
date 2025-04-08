@@ -41,7 +41,7 @@ vi.mock('src/queries/entities/entities', async () => {
 });
 
 describe('UserRoles', () => {
-  it('should display no roles text if there are roles assigned to user', async () => {
+  it('should display no roles text if no roles are assigned to user', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: userPermissionsFactory.build({
         account_access: [],
@@ -56,7 +56,7 @@ describe('UserRoles', () => {
     expect(getByText(NO_ASSIGNED_ROLES_TEXT)).toBeInTheDocument();
   });
 
-  it('should display table if there are no entity access roles assigned to user', async () => {
+  it('should display table if no entity access roles are assigned to user', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: userPermissionsFactory.build({
         account_access: ['account_admin'],
@@ -80,7 +80,7 @@ describe('UserRoles', () => {
     expect(getByText('account_admin')).toBeInTheDocument();
   });
 
-  it('should display table if there are no account access roles assigned to user', async () => {
+  it('should display table if no account access roles are assigned to user', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: userPermissionsFactory.build({
         account_access: [],
