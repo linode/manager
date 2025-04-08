@@ -28,7 +28,6 @@ import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-const now = new Date();
 
 const statusList: AlertStatusType[] = [
   'enabled',
@@ -43,14 +42,13 @@ const mockAlerts = Array.from(
   { length: 5 },
   (_, index): Alert => {
     const isEmptyTags = index % 3 === 0;
-    const tags = isEmptyTags
-      ? []
-      : [index % 2 === 0 ? 'evenTags' : 'oddTags', 'bothTags'];
-    const primaryTag = isEmptyTags ? 'noTags' : tags[0];
-    const label = `${isEmptyTags ? 'noTags' : primaryTag}-${index}`;
-    const updated = new Date(now.getTime() - index * 3600 * 1000).toISOString();
     const status = statusList[index % statusList.length];
     const serviceType = serviceTypes[index % serviceTypes.length];
+    const tags = isEmptyTags
+      ? []
+      : [index % 2 === 0 ? 'LinodeTags' : 'dbaasTags', 'bothTags'];
+    const primaryTag = isEmptyTags ? 'noTags' : tags[0];
+    const label = `${isEmptyTags ? 'noTags' : primaryTag}-${index}`;
 
     return alertFactory.build({
       created_by: primaryTag,
@@ -60,33 +58,32 @@ const mockAlerts = Array.from(
       status,
       tags,
       type: 'user',
-      updated,
     });
   }
 );
 
 // Define the tag names used for filtering
-const evenTag = 'evenTags';
-const oddTag = 'oddTags';
+const linode = 'LinodeTags';
+const dbaas = 'dbaasTags';
 
 // Filter alerts that have both evenTags and oddTags
 const bothTags: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(evenTag) && alert.tags.includes(oddTag)
+  (alert) => alert.tags.includes(linode) && alert.tags.includes(dbaas)
 );
 
 // Filter alerts that only have evenTags and do NOT include oddTags
-const evenOnly: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(evenTag) && !alert.tags.includes(oddTag)
+const linodeTags: Alert[] = mockAlerts.filter(
+  (alert) => alert.tags.includes(linode) && !alert.tags.includes(dbaas)
 );
 
 // Filter alerts that only have oddTags and do NOT include evenTags
-const oddOnly: Alert[] = mockAlerts.filter(
-  (alert) => alert.tags.includes(oddTag) && !alert.tags.includes(evenTag)
+const dbaasTags: Alert[] = mockAlerts.filter(
+  (alert) => alert.tags.includes(dbaas) && !alert.tags.includes(linode)
 );
 
 // Filter alerts that do NOT include either evenTags or oddTags
 const noTags: Alert[] = mockAlerts.filter(
-  (alert) => !alert.tags.includes(evenTag) && !alert.tags.includes(oddTag)
+  (alert) => !alert.tags.includes(linode) && !alert.tags.includes(dbaas)
 );
 
 describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts Listing Page', () => {
@@ -129,46 +126,49 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
     // Validate tag headers are displayed correctly
 
     cy.get('[data-qa-tag-header="bothTags"]').should('have.text', 'bothTags');
-    cy.get('[data-qa-tag-header="evenTags"]').should('have.text', 'evenTags');
-    cy.get('[data-qa-tag-header="oddTags"]').should('have.text', 'oddTags');
+    cy.get('[data-qa-tag-header="LinodeTags"]').should(
+      'have.text',
+      'LinodeTags'
+    );
+    cy.get('[data-qa-tag-header="dbaasTags"]').should('have.text', 'dbaasTags');
     cy.get('[data-qa-tag-header="No Tags"]').should('have.text', 'No Tags');
 
     // Validate that all alerts are rendered and visible in their respective tag groups
 
     cy.get('[data-qa="alert-table"]').within(() => {
-      const allAlerts = [...bothTags, ...evenOnly, ...oddOnly, ...noTags];
-      allAlerts.forEach((alert) => {
-        cy.findAllByLabelText(alert.label)
+      const allAlerts = [...bothTags, ...linodeTags, ...dbaasTags, ...noTags];
+      allAlerts.forEach(({ label }) => {
+        cy.findAllByLabelText(label)
           .should('exist')
           .should('be.visible')
           .each(($el) => {
-            cy.wrap($el).should('be.visible').and('have.text', alert.label);
+            cy.wrap($el).should('have.text', label);
           });
       });
     });
     // Search for a specific label within grouped alerts
-    cy.findByPlaceholderText('Search for Alerts').type('oddTags-1');
+    cy.findByPlaceholderText('Search for Alerts').type('dbaasTags-1');
 
     // Verify only matching alerts are visible
 
-    const expectedAlerts = [...bothTags, ...oddOnly].filter((alert) =>
-      alert.label.includes('oddTags-1')
+    const expectedAlerts = [...bothTags, ...dbaasTags].filter(({ label }) =>
+      label.includes('dbaasTags-1')
     );
 
-    expectedAlerts.forEach((alert) => {
-      cy.findAllByLabelText(alert.label)
+    expectedAlerts.forEach(({ label }) => {
+      cy.findAllByLabelText(label)
         .should('exist')
         .should('be.visible')
         .each(($el) => {
-          cy.wrap($el).should('have.text', alert.label);
+          cy.wrap($el).should('have.text', label);
         });
     });
 
     // Ensure alerts that don't match the query are not displayed
 
-    const nonMatchingAlerts = [...evenOnly, ...noTags];
-    nonMatchingAlerts.forEach((alert) => {
-      cy.findAllByLabelText(alert.label).should('not.exist');
+    const nonMatchingAlerts = [...linodeTags, ...noTags];
+    nonMatchingAlerts.forEach(({ label }) => {
+      cy.findAllByLabelText(label).should('not.exist');
     });
 
     // Clear the search input to reset the table
@@ -183,13 +183,10 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
       .should('be.visible')
       .type('Databases{enter}');
 
-    // Confirm dropdown selection is registered
-    cy.focused().click();
-
     // Verify filtered alerts are shown under correct tag headers
     const labelToTagsMap = {
+      'dbaasTags-1': ['bothTags', 'dbaasTags'],
       'noTags-3': ['No Tags'],
-      'oddTags-1': ['bothTags', 'oddTags'],
     };
     cy.get('[data-qa="alert-table"]').within(() => {
       Object.entries(labelToTagsMap).forEach(([label]) => {
@@ -200,6 +197,8 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
           });
       });
     });
+    // evenTags should not be visible
+    cy.get('[data-qa-tag-header="LinodeTags"]').should('not.exist');
 
     // Toggle back to ungrouped view
 
@@ -212,8 +211,8 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
     ui.tooltip.findByText('Group by tag').should('be.visible');
     // Ensure tag headers are no longer visible
     cy.get('[data-qa-tag-header="bothTags"]').should('not.exist');
-    cy.get('[data-qa-tag-header="evenTags"]').should('not.exist');
-    cy.get('[data-qa-tag-header="oddTags"]').should('not.exist');
+    cy.get('[data-qa-tag-header="LinodeTags"]').should('not.exist');
+    cy.get('[data-qa-tag-header="dbaasTags"]').should('not.exist');
     cy.get('[data-qa-tag-header="No Tags"]').should('not.exist');
   });
 });
