@@ -202,7 +202,7 @@ export const ImageUpload = () => {
             </Typography>
             <Typography>
               Custom images are{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#upload-an-image-file">
                 encrypted
               </Link>{' '}
               and billed monthly at $0.10/GB. An uploaded image file needs to
