@@ -1,7 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory, profileFactory } from 'src/factories';
+import { accountFactory } from 'src/factories';
 import { ChildAccountList } from 'src/features/Account/SwitchAccounts/ChildAccountList';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';

@@ -2,6 +2,7 @@
  * @file Integration tests for Managed navigation.
  */
 
+import { userPreferencesFactory } from '@linode/utilities';
 import {
   managedAccount,
   nonManagedAccount,
@@ -26,7 +27,6 @@ import {
   managedIssueFactory,
   monitorFactory,
 } from 'src/factories/managed';
-import { userPreferencesFactory } from 'src/factories/profile';
 
 import type { UserPreferences } from '@linode/api-v4';
 

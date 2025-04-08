@@ -4,27 +4,27 @@ import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
-import { useAccountResources } from 'src/queries/resources/resources';
+import { useAccountEntities } from 'src/queries/entities/entities';
 
-import { placeholderMap } from '../utilities';
+import { placeholderMap, transformedAccountEntities } from '../utilities';
 
 import type { EntitiesOption } from '../utilities';
 import type {
+  AccountEntity,
+  EntityType,
+  EntityTypePermissions,
   IamAccessType,
-  IamAccountResource,
-  Resource,
-  ResourceType,
-  ResourceTypePermissions,
 } from '@linode/api-v4/lib/iam/types';
 
 interface Props {
   access: IamAccessType;
   assignedEntities?: EntitiesOption[];
-  type: ResourceType | ResourceTypePermissions;
+  type: EntityType | EntityTypePermissions;
 }
 
 export const Entities = ({ access, assignedEntities, type }: Props) => {
-  const { data: resources } = useAccountResources();
+  const { data: entities } = useAccountEntities();
+
   const theme = useTheme();
 
   const [selectedEntities, setSelectedEntities] = React.useState<
@@ -38,12 +38,12 @@ export const Entities = ({ access, assignedEntities, type }: Props) => {
   }, [assignedEntities]);
 
   const memoizedEntities = React.useMemo(() => {
-    if (access !== 'resource_access' || !resources) {
+    if (access !== 'entity_access' || !entities) {
       return [];
     }
-    const typeResources = getEntitiesByType(type, resources);
-    return typeResources ? transformedEntities(typeResources.resources) : [];
-  }, [resources, access, type]);
+    const typeEntities = getEntitiesByType(type, entities.data);
+    return typeEntities ? transformedEntities(typeEntities) : [];
+  }, [entities, access, type]);
 
   if (access === 'account_access') {
     return (
@@ -86,24 +86,24 @@ export const Entities = ({ access, assignedEntities, type }: Props) => {
   );
 };
 
-const getPlaceholder = (type: ResourceType | ResourceTypePermissions): string =>
+const getPlaceholder = (type: EntityType | EntityTypePermissions): string =>
   placeholderMap[type] || 'Select';
 
-const transformedEntities = (entities: Resource[]): EntitiesOption[] => {
+const transformedEntities = (
+  entities: { id: number; label: string }[]
+): EntitiesOption[] => {
   return entities.map((entity) => ({
-    label: entity.name,
+    label: entity.label,
     value: entity.id,
   }));
 };
 
 const getEntitiesByType = (
-  roleResourceType: ResourceType | ResourceTypePermissions,
-  resources: IamAccountResource
-): IamAccountResource | undefined => {
-  const entitiesArray: IamAccountResource[] = Object.values(resources);
+  roleEntityType: EntityType | EntityTypePermissions,
+  entities: AccountEntity[]
+): Pick<AccountEntity, 'id' | 'label'>[] | undefined => {
+  const entitiesMap = transformedAccountEntities(entities);
 
-  // Find the first matching entity by resource_type
-  return entitiesArray.find(
-    (item: IamAccountResource) => item.resource_type === roleResourceType
-  );
+  // Find the first matching entity by type
+  return entitiesMap.get(roleEntityType as EntityType);
 };

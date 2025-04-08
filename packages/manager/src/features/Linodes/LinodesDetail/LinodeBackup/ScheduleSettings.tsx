@@ -12,13 +12,11 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import { initWindows } from '@linode/utilities';
+import { getUserTimezone, initWindows } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 interface Props {
   isReadOnly: boolean;

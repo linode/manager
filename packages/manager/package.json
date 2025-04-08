@@ -58,7 +58,6 @@
     "he": "^1.2.0",
     "immer": "^9.0.6",
     "ipaddr.js": "^1.9.1",
-    "js-sha256": "^0.11.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "launchdarkly-react-client-sdk": "3.0.10",
@@ -215,7 +214,7 @@
     "redux-mock-store": "^1.5.3",
     "storybook": "^8.6.7",
     "storybook-dark-mode": "4.0.1",
-    "vite": "^6.2.2",
+    "vite": "^6.2.5",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [

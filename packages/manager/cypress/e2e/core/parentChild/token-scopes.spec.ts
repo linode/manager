@@ -1,8 +1,5 @@
-import {
-  accountFactory,
-  appTokenFactory,
-  profileFactory,
-} from '@src/factories';
+import { profileFactory } from '@linode/utilities';
+import { accountFactory, appTokenFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
 import {

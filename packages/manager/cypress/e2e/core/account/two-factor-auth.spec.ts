@@ -2,6 +2,7 @@
  * @file Integration tests for account two-factor authentication functionality.
  */
 
+import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
 import {
   mockConfirmTwoFactorAuth,
   mockDisableTwoFactorAuth,
@@ -16,11 +17,6 @@ import {
   randomNumber,
   randomString,
 } from 'support/util/random';
-
-import {
-  profileFactory,
-  securityQuestionsFactory,
-} from 'src/factories/profile';
 
 import type { SecurityQuestionsData } from '@linode/api-v4';
 

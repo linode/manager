@@ -14,11 +14,11 @@ const mockRole: ExtendedRoleMap = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
+  entity_ids: null,
+  entity_type: 'account',
   id: 'account_admin',
   name: 'account_admin',
   permissions: ['create_linode', 'update_linode', 'update_firewall'],
-  resource_ids: null,
-  resource_type: 'account',
 };
 
 const props = {
