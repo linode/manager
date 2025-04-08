@@ -7,8 +7,11 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type {
+  AlertServiceType,
+  AlertSeverityType,
   CreateAlertDefinitionPayload,
   DimensionFilter,
+  EditAlertPayloadWithService,
   MetricCriteria,
   TriggerCondition,
 } from '@linode/api-v4';
@@ -19,8 +22,6 @@ export const filterFormValues = (
 ): CreateAlertDefinitionPayload => {
   const values = omitProps(formValues, [
     'serviceType',
-    'region',
-    'engineType',
     'severity',
     'rule_criteria',
     'trigger_conditions',
@@ -33,6 +34,39 @@ export const filterFormValues = (
     ...values,
     entity_ids: entityIds,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
+    severity,
+    trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
+  };
+};
+
+/**
+ * @param formValues The formValues submitted in the edit alert definition page
+ * @param serviceType The service type associated with the alert
+ * @param defaultSeverityType The severity type initially associated with the alert
+ * @param alertId The id of the alert
+ * @returns The edit alert payload filtered from the form properties.
+ */
+export const filterEditFormValues = (
+  formValues: CreateAlertDefinitionForm,
+  serviceType: AlertServiceType,
+  defaultSeverityType: AlertSeverityType,
+  alertId: number
+): EditAlertPayloadWithService => {
+  const values = omitProps(formValues, [
+    'serviceType',
+    'rule_criteria',
+    'trigger_conditions',
+  ]);
+  const entityIds = formValues.entity_ids;
+  const rules = formValues.rule_criteria.rules;
+  const triggerConditions = formValues.trigger_conditions;
+  const severity = formValues.severity ?? defaultSeverityType;
+  return {
+    ...values,
+    alertId,
+    entity_ids: entityIds,
+    rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
+    serviceType,
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
   };

@@ -10,7 +10,6 @@ import type {
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
-  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
@@ -325,42 +324,42 @@ export const processMetricCriteria = (
   );
 };
 
-export const getCreateSchemaWithEntityIdValidation = (
+/**
+ * @param props The props required foe the max selection count calculation
+ * @param createSchema The schema in which the entity id max validation will be added
+ * @returns The updated schema with entity id max validation based on max selection count
+ */
+export const getSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps,
   createSchema: ObjectSchema<CreateAlertDefinitionForm>
 ): ObjectSchema<CreateAlertDefinitionForm> => {
   const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
+
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
+    return createSchema;
+  }
+
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    ({ serviceType }) => serviceTypeObj === serviceType
+    (config) => config && serviceTypeObj === config.serviceType
   )?.maxResourceSelectionCount;
 
-  return maxSelectionCount === undefined
+  return !maxSelectionCount
     ? createSchema
     : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
 };
 
-export const getEditSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  editSchema: ObjectSchema<EditAlertDefinitionPayload>
-): ObjectSchema<EditAlertDefinitionPayload> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
-  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    ({ serviceType }) => serviceTypeObj === serviceType
-  )?.maxResourceSelectionCount;
-
-  return maxSelectionCount === undefined
-    ? editSchema
-    : editSchema.concat(getEntityIdWithMax(maxSelectionCount));
-};
-
+/**
+ * @param maxSelectionCount The max selection count that needs to be applied for entity_id property
+ * @returns The entity_ids prop with max validation based on the max selection count passed
+ */
 const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
-      .of(string().required())
-      .defined()
+      .of(string().defined())
+      .required()
       .max(
         maxSelectionCount,
-        `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+        `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
       ),
   });
 };
