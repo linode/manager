@@ -1,6 +1,8 @@
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { AccountMaintenance, Linode } from '@linode/api-v4';
+import { isFeatureEnabledV2 } from '@linode/utilities';
+import { useAccount } from '@linode/queries';
 
 export interface Maintenance {
   when: null | string;
@@ -42,11 +44,14 @@ export const addMaintenanceToLinodes = (
  */
 export const useIsLinodeInterfacesEnabled = () => {
   const flags = useFlags();
-
-  // @TODO Linode Interfaces - check for customer tag when it exists
+  const { data: account } = useAccount();
 
   return {
-    isLinodeInterfacesEnabled: flags.linodeInterfaces?.enabled ?? false,
+    isLinodeInterfacesEnabled: isFeatureEnabledV2(
+      'Linode Interfaces',
+      flags.linodeInterfaces?.enabled ?? false,
+      account?.capabilities ?? []
+    ),
   };
 };
 
