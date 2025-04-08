@@ -65,10 +65,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleEnableDisable = React.useCallback((alert: Alert) => {
+  const handleEnableDisable = (alert: Alert) => {
     setSelectedAlert(alert);
     setIsDialogOpen(true);
-  }, []);
+  };
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
