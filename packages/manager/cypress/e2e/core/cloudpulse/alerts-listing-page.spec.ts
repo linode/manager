@@ -353,7 +353,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       });
     };
     // Disable "Alert-1"
-    const actions: Array<Partial<AlertToggleOption>> = [
+    const actions: Array<Partial<AlertToggleOptions>> = [
       {
         action: 'Disable',
         alertName: 'Alert-1',
