@@ -21,7 +21,7 @@ export const hasUnrecommendedConfigurationLinodeInterface = (
 ) => {
   return (
     isInterfaceActive &&
-    linodeInterface?.vpc?.ipv4.addresses.some(
+    linodeInterface?.vpc?.ipv4?.addresses.some(
       (address) => address.nat_1_1_address
     ) &&
     !linodeInterface?.default_route.ipv4

@@ -305,7 +305,7 @@ const getSubnetLinodeIPv4CellString = (
   if ('purpose' in interfaceData) {
     return getIPv4LinkForConfigInterface(interfaceData);
   } else {
-    const primaryIPv4 = interfaceData.vpc?.ipv4.addresses.find(
+    const primaryIPv4 = interfaceData.vpc?.ipv4?.addresses.find(
       (address) => address.primary
     )?.address;
     return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
@@ -347,7 +347,7 @@ const getIPRangesCellContents = (
       interfaceData?.ip_ranges ?? []
     );
   } else {
-    const linodeInterfaceVPCRanges = interfaceData.vpc?.ipv4.ranges.map(
+    const linodeInterfaceVPCRanges = interfaceData.vpc?.ipv4?.ranges.map(
       (range) => range.range
     );
     return determineNoneSingleOrMultipleWithChip(
