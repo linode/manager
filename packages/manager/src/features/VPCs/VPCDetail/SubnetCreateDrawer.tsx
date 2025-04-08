@@ -61,12 +61,12 @@ export const SubnetCreateDrawer = (props: Props) => {
     setError,
     watch,
   } = useForm<CreateSubnetPayload>({
-    defaultValues: {
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchemaIPv4),
+    values: {
       ipv4: recommendedIPv4,
       label: '',
     },
-    mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchemaIPv4),
   });
 
   const ipv4 = watch('ipv4');

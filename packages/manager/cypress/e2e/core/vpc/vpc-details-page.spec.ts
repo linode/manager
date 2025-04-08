@@ -11,6 +11,7 @@ import {
   mockDeleteSubnet,
   mockDeleteVPC,
   mockEditSubnet,
+  mockGetSubnet,
   mockGetSubnets,
   mockGetVPC,
   mockGetVPCs,
@@ -177,6 +178,7 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // edit a subnet
     const mockEditedSubnet = subnetFactory.build({
@@ -201,6 +203,7 @@ describe('VPC details page', () => {
       .should('be.visible')
       .click();
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+    mockGetSubnet(mockVPC.id, mockEditedSubnet.id, mockEditedSubnet);
 
     ui.drawer
       .findByTitle('Edit Subnet')

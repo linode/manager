@@ -43,8 +43,8 @@ export const SubnetNode = (props: Props) => {
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
-          sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
           size={showRemoveButton ? 11 : 12}
+          sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
         >
           <Controller
             render={({ field, fieldState }) => (

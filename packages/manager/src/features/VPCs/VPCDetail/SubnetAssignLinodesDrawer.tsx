@@ -57,6 +57,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
 interface SubnetAssignLinodesDrawerProps {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -73,7 +74,7 @@ interface LinodeAndConfigData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -413,6 +414,7 @@ export const SubnetAssignLinodesDrawer = (
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
     >
@@ -444,12 +446,17 @@ export const SubnetAssignLinodesDrawer = (
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
-          sx={{ marginBottom: '8px' }}
+          sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
           value={values.selectedLinode?.id || null}
         />
         {values.selectedLinode?.id && (
           <>
-            <Box alignItems="center" display="flex" flexDirection="row">
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              sx={(theme) => ({ marginLeft: theme.spacingFunction(2) })}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -477,7 +484,7 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
-                sx={{ marginBottom: '8px' }}
+                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
                 value={values.chosenIP}
               />
             )}
@@ -511,11 +518,11 @@ export const SubnetAssignLinodesDrawer = (
               linodeConfigs.length === 1) && (
               <AssignIPRanges
                 sx={{
-                  marginBottom: theme.spacing(),
+                  marginBottom: theme.spacingFunction(8),
                   marginTop:
                     linodeConfigs.length > 1
-                      ? theme.spacing(2)
-                      : theme.spacing(),
+                      ? theme.spacingFunction(16)
+                      : theme.spacingFunction(8),
                 }}
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}

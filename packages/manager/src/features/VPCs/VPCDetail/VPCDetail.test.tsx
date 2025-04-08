@@ -1,32 +1,63 @@
-import { fireEvent } from '@testing-library/react';
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import VPCDetail from './VPCDetail';
+
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(() => vi.fn()),
+  useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
+  };
+});
 
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
 
 describe('VPC Detail Summary section', () => {
+  beforeEach(() => {
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/vpcs/1',
+    });
+    queryMocks.useParams.mockReturnValue({
+      vpcId: 1,
+    });
+  });
+
   it('should display number of subnets and linodes, region, id, creation and update dates', async () => {
-    const vpcFactory1 = vpcFactory.build({ id: 100 });
+    const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
     server.use(
       http.get('*/vpcs/:vpcId', () => {
         return HttpResponse.json(vpcFactory1);
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<VPCDetail />);
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     getAllByText('Subnets');
     getAllByText('Linodes');
@@ -55,9 +86,14 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<VPCDetail />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     getByText('Description');
     getByText(vpcFactory1.description);
@@ -70,9 +106,14 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getByTestId, queryByText } = renderWithTheme(<VPCDetail />);
+    const { queryByTestId, queryByText } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
@@ -87,9 +128,14 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getAllByRole, getByTestId } = renderWithTheme(<VPCDetail />);
+    const { getAllByRole, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     const readMoreButton = getAllByRole('button')[2];
     expect(readMoreButton.innerHTML).toBe('Read More');
@@ -109,11 +155,16 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <VPCDetail />
-    );
+    const {
+      getByRole,
+      getByText,
+      queryByTestId,
+    } = await renderWithThemeAndRouter(<VPCDetail />);
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
 
     expect(
       getByText(
