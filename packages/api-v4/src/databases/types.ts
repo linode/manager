@@ -60,7 +60,7 @@ export interface ConfigurationItem {
   pattern?: string;
   type?: string | [string, null] | string[];
   enum?: string[];
-  restart_cluster?: boolean;
+  requires_restart?: boolean;
 }
 
 export type ConfigValue = number | string | boolean;
