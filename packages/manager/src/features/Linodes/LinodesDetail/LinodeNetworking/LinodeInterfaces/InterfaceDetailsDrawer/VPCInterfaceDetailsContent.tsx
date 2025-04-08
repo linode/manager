@@ -39,7 +39,7 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
         <MaskableText
           isToggleable
           key={range.range}
-          text={`${range.range} (Range)'}`}
+          text={`${range.range} (Range)`}
         />
       ))}
     </>

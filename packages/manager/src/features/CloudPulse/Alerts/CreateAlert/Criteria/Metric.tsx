@@ -263,8 +263,10 @@ export const Metric = (props: MetricCriteriaProps) => {
                     data-qa-metric-threshold={`${name}-threshold`}
                     data-qa-threshold="threshold"
                     data-testid="threshold"
+                    disabled={!metricWatcher}
                     errorText={fieldState.error?.message}
                     label="Threshold"
+                    max={Number.MAX_SAFE_INTEGER}
                     min={0}
                     name={`${name}.threshold`}
                     noMarginTop
