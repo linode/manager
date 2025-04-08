@@ -178,4 +178,34 @@ describe('Alert Listing', () => {
       expect(queryByText(alert2.label)).not.toBeInTheDocument();
     });
   });
+
+  it('should show the banner and disable the create button when the user has reached the maximum allowed user alerts', async () => {
+    const userAlerts = alertFactory.buildList(50, { type: 'user' });
+    const systemAlerts = alertFactory.buildList(10, { type: 'system' });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
+      data: [...userAlerts, ...systemAlerts],
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    const { getByRole, getByText } = renderWithTheme(<AlertListing />);
+
+    const bannerText =
+      'You have reached maximum number of metrics created per account.';
+
+    expect(getByText(bannerText)).toBeVisible();
+    const createButton = getByRole('button', { name: 'Create Alert' });
+
+    expect(createButton).toBeDisabled();
+    userEvent.hover(createButton);
+    await waitFor(() => {
+      expect(
+        getByText(
+          'You have reached your limit of definitions for this account.'
+        )
+      ).toBeVisible();
+    });
+  });
 });
