@@ -34,6 +34,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
+  { flag: 'tiktokMTCPlans', label: 'TikTok MTC Plans' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },

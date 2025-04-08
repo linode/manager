@@ -150,6 +150,7 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
+  tiktokMTCPlans: boolean;
   tpaProviders: Provider[];
   udp: boolean;
 }
