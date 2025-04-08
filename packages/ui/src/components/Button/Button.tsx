@@ -52,7 +52,7 @@ export interface ButtonProps extends _ButtonProps {
   /** Tooltip analytics event */
   tooltipAnalyticsEvent?: () => void;
   /** Tooltip text */
-  tooltipText?: string;
+  tooltipText?: string | JSX.Element;
 }
 
 const StyledButton = styled(_Button, {

@@ -155,16 +155,6 @@ export const useSubnetsQuery = (
     placeholderData: keepPreviousData,
   });
 
-export const useSubnetQuery = (
-  vpcId: number,
-  subnetId: number,
-  enabled: boolean = true
-) =>
-  useQuery<Subnet, APIError[]>({
-    ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.subnet(subnetId),
-    enabled,
-  });
-
 export const useCreateSubnetMutation = (vpcId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], CreateSubnetPayload>({
