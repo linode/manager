@@ -183,8 +183,7 @@ export interface ConfigInterfaceIPv4 {
   nat_1_1?: string | null;
 }
 
-// IPv6
-export interface SLAAC {
+export interface IPv6SLAAC {
   range: string;
   address: string;
 }
@@ -193,7 +192,7 @@ export interface ConfigInterfaceIPv6Range {
   range?: string;
 }
 export interface ConfigInterfaceIPv6 {
-  slaac?: SLAAC[];
+  slaac?: IPv6SLAAC[];
   ranges?: ConfigInterfaceIPv6Range[];
   is_public?: boolean;
 }
@@ -297,7 +296,7 @@ export interface LinodeInterfaces {
 }
 
 export interface LinodeInterfaceIPv6 {
-  slaac: SLAAC[];
+  slaac: IPv6SLAAC[];
   ranges: {
     range: string;
   }[];

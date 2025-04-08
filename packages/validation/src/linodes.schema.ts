@@ -1,5 +1,5 @@
 import { array, boolean, lazy, mixed, number, object, string } from 'yup';
-// We must use a default export for ipaddr.js so our packages node compatability
+// We must use a default export for ipaddr.js so our packages node compatibility
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
 import { vpcsValidateIP } from './vpcs.schema';
@@ -33,6 +33,24 @@ const test_vpcsValidateIP = (value?: string | null) => {
     value,
     shouldHaveIPMask: false,
     mustBeIPMask: false,
+  });
+};
+
+const validateIPv6PrefixLengthIs64 = (value?: string | null) => {
+  if (value === undefined || value === null) {
+    return false;
+  }
+
+  if (value === 'auto') {
+    // Do not fail the test for "auto" values as those are valid
+    return true;
+  }
+
+  return vpcsValidateIP({
+    value,
+    shouldHaveIPMask: true,
+    mustBeIPMask: false,
+    checkIPv6PrefixLengthIs64: true,
   });
 };
 
@@ -119,11 +137,23 @@ const ipv4ConfigInterface = object().when('purpose', {
 });
 
 const slaacSchema = object().shape({
-  range: string().required(),
+  range: string()
+    .required()
+    .test({
+      name: 'IPv6 prefix length',
+      message: 'Must be a /64 IPv6 network CIDR',
+      test: (value) => validateIPv6PrefixLengthIs64(value),
+    }),
 });
 
-const ipv6ConfigInterfaceRangesSchema = object({
-  range: string().optional(),
+const IPv6ConfigInterfaceRangesSchema = object({
+  range: string()
+    .optional()
+    .test({
+      name: 'IPv6 prefix length',
+      message: 'Must be a /64 IPv6 network CIDR',
+      test: (value) => validateIPv6PrefixLengthIs64(value),
+    }),
 });
 
 const ipv6ConfigInterface = object().when('purpose', {
@@ -139,7 +169,7 @@ const ipv6ConfigInterface = object().when('purpose', {
             test: (value) =>
               !value ? true : value?.length === 0 || value?.length === 1,
           }),
-        ranges: array().of(ipv6ConfigInterfaceRangesSchema),
+        ranges: array().of(IPv6ConfigInterfaceRangesSchema),
         is_public: boolean(),
       })
       .notRequired()
@@ -599,6 +629,10 @@ const VPCInterfaceIPv4RangeSchema = object({
   range: string().required('Range is required.'),
 });
 
+const VPCInterfaceIPv6RangeSchema = object({
+  range: string().test((value) => validateIPv6PrefixLengthIs64(value)),
+});
+
 const PublicInterfaceRangeSchema = object({
   range: string().required().nullable(),
 });
@@ -623,6 +657,11 @@ export const CreateVPCInterfaceSchema = object({
   ipv4: object({
     addresses: array().of(CreateVPCInterfaceIpv4AddressSchema),
     ranges: array().of(VPCInterfaceIPv4RangeSchema),
+  }).notRequired(),
+  ipv6: object({
+    slaac: array().of(slaacSchema),
+    ranges: array().of(VPCInterfaceIPv6RangeSchema),
+    is_public: boolean(),
   }).notRequired(),
 });
 
@@ -666,6 +705,10 @@ const ModifyVlanInterfaceSchema = object({
   .notRequired()
   .nullable();
 
+const ModifyVPCInterfaceIPv6RangeSchema = object({
+  range: string().notRequired().nullable(),
+});
+
 export const ModifyLinodeInterfaceSchema = object({
   default_route: object({
     ipv4: boolean().nullable(),
@@ -681,6 +724,19 @@ export const ModifyLinodeInterfaceSchema = object({
         .notRequired()
         .nullable(),
       ranges: array().of(VPCInterfaceIPv4RangeSchema).nullable(),
+    })
+      .notRequired()
+      .nullable(),
+    ipv6: object({
+      slaac: array()
+        .of(ModifyVPCInterfaceIPv6RangeSchema)
+        .notRequired()
+        .nullable(),
+      ranges: array()
+        .of(ModifyVPCInterfaceIPv6RangeSchema)
+        .notRequired()
+        .nullable(),
+      is_public: boolean().notRequired().nullable(),
     })
       .notRequired()
       .nullable(),
