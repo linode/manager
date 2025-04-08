@@ -5,6 +5,7 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
+
 vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
@@ -16,12 +17,29 @@ vi.mock('@linode/queries', async (importOriginal) => ({
 }));
 
 const queryMocks = vi.hoisted(() => ({
+  useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
+  useGetCloudPulseMetricDefinitionsByServiceType: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
 }));
 
+vi.mock('src/queries/cloudpulse/services', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/services');
+  return {
+    ...actual,
+    useCloudPullMetricDefinitionsByServiceType:
+      queryMocks.useGetCloudPulseMetricDefinitionsByServiceType,
+    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+  };
+});
+
 beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
+  queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+    data: [],
+    isError: false,
+    isLoading: false,
+  });
   queryMocks.useResourcesQuery.mockReturnValue({
     data: [],
     isError: false,
@@ -31,6 +49,12 @@ beforeEach(() => {
     data: [],
     isError: false,
     isFetching: false,
+  });
+  queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+    data: { data: [{ label: 'Linode', service_type: 'linode' }] },
+    isError: false,
+    isLoading: false,
+    status: 'success',
   });
 });
 
@@ -72,36 +96,71 @@ describe('AlertDefinition Create', () => {
     expect(specificInput).toHaveAttribute('value', 'text');
   });
 
-  it('should render client side validation errors', async () => {
+  queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+    data: {
+      data: [
+        {
+          available_aggregate_functions: ['min'],
+          dimensions: [],
+          is_alertable: true,
+          label: 'CPU utilization',
+          metric: 'system_cpu_utilization_percent',
+          metric_type: 'gauge',
+          scrape_interval: '2m',
+          unit: 'percent',
+        },
+      ],
+    },
+  });
+  it('should render client side validation errors for threshold and trigger occurences text field', async () => {
+    const user = userEvent.setup();
+    const container = renderWithTheme(<CreateAlertDefinition />);
+
+    const serviceTypeInput = container.getByPlaceholderText('Select a Service');
+    await user.click(serviceTypeInput);
+
+    await user.click(container.getByText('Linode'));
+
+    const dataFieldContainer = container.getByPlaceholderText(
+      'Select a Data Field'
+    );
+
+    await user.click(dataFieldContainer);
+    await user.click(container.getByText('CPU utilization'));
+
+    const submitButton = container.getByText('Submit');
+
+    await user.click(submitButton);
+
+    expect(container.getAllByText('Enter a positive value.').length).toBe(2);
+
+    const thresholdInput = container.getByLabelText('Threshold');
+    const triggerOccurrences = container.getByTestId('trigger-occurences');
+    await user.clear(thresholdInput);
+    await user.clear(within(triggerOccurrences).getByTestId('textfield-input'));
+    await user.click(submitButton!);
+
+    expect(container.getAllByText('The value should be a number.').length).toBe(
+      2
+    );
+  });
+
+  it('should render the client side validation error messages for the form', async () => {
     const errorMessage = 'This field is required.';
     const user = userEvent.setup();
     const container = renderWithTheme(<CreateAlertDefinition />);
-    const input = container.getByLabelText('Threshold');
+
+    const submitButton = container.getByText('Submit');
+
     await user.click(
       container.getByRole('button', { name: 'Add dimension filter' })
     );
-    const submitButton = container.getByText('Submit');
+
     await user.click(submitButton!);
-    expect(container.getAllByText('This field is required.').length).toBe(11);
+    expect(container.getAllByText(errorMessage).length).toBe(11);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
-
-    await user.clear(input);
-    await user.type(input, '-3');
-    await userEvent.click(submitButton!);
-
-    expect(
-      await container.findByText("The value can't be negative.")
-    ).toBeVisible();
-
-    await user.clear(input);
-    await user.type(input, 'sdgf');
-    await userEvent.click(submitButton!);
-
-    expect(
-      await container.findByText('The value should be a number.')
-    ).toBeInTheDocument();
 
     expect(
       await container.findByText(
