@@ -333,6 +333,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .click();
         });
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
+      ui.button.findByTitle(action).should('be.visible').click();
 
       // verify dialog title
       cy.get('[data-qa-drawer-title]')
@@ -380,7 +381,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         action,
         alertName,
         alias,
-        confirmationText: `Are you sure you want to ${action.toLowerCase()} this alert for all assigned entities?`,
+        confirmationText: `Are you sure you want to ${action.toLowerCase()} this alert definition?`,
         successMessage: UPDATE_ALERT_SUCCESS_MESSAGE,
       });
     });
