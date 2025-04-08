@@ -599,6 +599,7 @@ describe('formatConfigValue', () => {
 describe('findConfigItem', () => {
   const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
   const expectedConfig = {
+    category: 'other',
     description:
       'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
     example: 600,
@@ -609,6 +610,7 @@ describe('findConfigItem', () => {
   };
 
   const expectedNestedConfig = {
+    category: 'mysql',
     description:
       'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
     example: 10,
@@ -646,7 +648,7 @@ describe('convertExistingConfigsToArray', () => {
 
   const expectedOptions: ConfigurationOption[] = [
     {
-      category: '',
+      category: 'mysql',
       description:
         'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
       example: 10,
@@ -658,7 +660,7 @@ describe('convertExistingConfigsToArray', () => {
       value: 10,
     },
     {
-      category: '',
+      category: 'mysql',
       description:
         "Default server time zone as an offset from UTC (from -12:00 to +12:00), a time zone name, or 'SYSTEM' to use the MySQL server default.",
       example: '+03:00',
@@ -671,7 +673,7 @@ describe('convertExistingConfigsToArray', () => {
       value: '+03:00',
     },
     {
-      category: '',
+      category: 'other',
       description:
         'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
       example: 600,

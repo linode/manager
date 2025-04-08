@@ -25,7 +25,6 @@ import type { ConfigValue } from '@linode/api-v4';
 
 interface Props {
   configItem?: ConfigurationOption;
-  engine: string;
   errorText: string | undefined;
   onBlur?: () => void;
   onChange: (config: ConfigValue) => void;
@@ -33,7 +32,7 @@ interface Props {
 }
 
 export const DatabaseConfigurationItem = (props: Props) => {
-  const { configItem, engine, errorText, onBlur, onChange, onRemove } = props;
+  const { configItem, errorText, onBlur, onChange, onRemove } = props;
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
@@ -127,7 +126,9 @@ export const DatabaseConfigurationItem = (props: Props) => {
             mr: 0.5,
           })}
         >
-          {`${engine}.${configLabel}`}
+          {configItem?.category === 'other'
+            ? configLabel
+            : `${configItem?.category}.${configLabel}`}
         </Typography>
         {configItem?.requires_restart && (
           <StyledChip color="warning" label="restarts service" size="small" />

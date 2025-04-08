@@ -51,7 +51,7 @@ interface FormValues {
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const { database, onClose, open } = props;
-  const { engine, engine_config: existingConfigurations, id } = database;
+  const { engine, engine_config: existingConfiguration, id } = database;
 
   const [
     selectedConfig,
@@ -68,9 +68,9 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const configurations = convertEngineConfigToOptions(databaseConfig);
 
-  const existingConfigsArray = useMemo(
-    () => convertExistingConfigsToArray(existingConfigurations, databaseConfig),
-    [existingConfigurations, databaseConfig]
+  const existingConfigurations = useMemo(
+    () => convertExistingConfigsToArray(existingConfiguration, databaseConfig),
+    [existingConfiguration, databaseConfig]
   );
 
   const {
@@ -80,7 +80,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     reset,
     watch,
   } = useForm<FormValues>({
-    defaultValues: { configs: existingConfigsArray },
+    defaultValues: { configs: existingConfigurations },
     mode: 'onBlur',
     resolver: yupResolver(
       createDynamicAdvancedConfigSchema(
@@ -97,10 +97,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const configs = watch('configs');
 
   useEffect(() => {
-    if (existingConfigsArray) {
-      reset({ configs: existingConfigsArray });
+    if (existingConfigurations.length > 0) {
+      reset({ configs: existingConfigurations });
     }
-  }, [existingConfigsArray]);
+  }, [existingConfigurations]);
 
   const usedConfigs = useMemo(
     () => new Set(fields.map((config) => config.label)),
@@ -207,7 +207,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
               return (
                 <DatabaseConfigurationItem
                   configItem={config}
-                  engine={engine}
                   errorText={fieldState.error?.message}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
