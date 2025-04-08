@@ -87,7 +87,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const handleStatusChange = React.useCallback((alert: Alert) => {
     setSelectedAlert(alert);
     setIsDialogOpen(true);
-  }, []);
+  };
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
