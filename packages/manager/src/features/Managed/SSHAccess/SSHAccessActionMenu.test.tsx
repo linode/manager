@@ -7,13 +7,24 @@ import { SSHAccessActionMenu } from './SSHAccessActionMenu';
 
 import type { SSHAccessActionMenuProps } from './SSHAccessActionMenu';
 
-const mockOpenDrawer = vi.fn();
-
 const props: SSHAccessActionMenuProps = {
   isEnabled: true,
   linodeId: 1,
   linodeLabel: 'label',
 };
+
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 describe('SSH Access Action Menu', () => {
   it('should include basic actions', async () => {
@@ -44,6 +55,11 @@ describe('SSH Access Action Menu', () => {
       wrapWithTheme(<SSHAccessActionMenu {...props} />)
     );
     fireEvent.click(getByText('Edit'));
-    expect(mockOpenDrawer).toHaveBeenCalledWith(1);
+    expect(navigate).toHaveBeenCalledWith({
+      params: {
+        linodeId: 1,
+      },
+      to: '/managed/ssh-access/$linodeId/edit',
+    });
   });
 });

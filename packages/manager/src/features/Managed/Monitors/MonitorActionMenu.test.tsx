@@ -13,6 +13,18 @@ const props: MonitorActionMenuProps = {
   status: 'disabled',
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 describe('Monitor action menu', () => {
   it('should include basic Monitor actions', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
