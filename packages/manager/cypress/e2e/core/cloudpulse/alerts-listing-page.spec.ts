@@ -335,7 +335,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         .should('be.visible')
         .should('have.text', `${action} ${alertName} Alert?`);
 
-      cy.get('[data-qa-drawer="true"]')
+      cy.get('[data-qa-drawer]')
         .find('h6')
         .should('be.visible')
         .should('have.text', confirmationText);
@@ -353,11 +353,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       });
     };
     // Disable "Alert-1"
-    const actions: Array<{
-      action: 'Disable' | 'Enable';
-      alertName: string;
-      alias: string;
-    }> = [
+    const actions: Array<Partial<AlertToggleOption>> = [
       {
         action: 'Disable',
         alertName: 'Alert-1',
