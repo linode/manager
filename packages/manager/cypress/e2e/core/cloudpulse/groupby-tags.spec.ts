@@ -35,26 +35,25 @@ const statusList: AlertStatusType[] = [
   'in progress',
   'failed',
 ];
-const tagSequence = ['LinodeTags', 'dbaasTags'];
 const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+
+const tagSequence = ['LinodeTags', 'dbaasTags', 'bothTags', 'noTags'];
 
 const mockAlerts = Array.from(
   { length: 5 },
   (_, index): Alert => {
-    // Check if this alert should have empty tags
-    const isEmptyTags = index % 3 === 0;
+    // Get tag directly from tagSequence, wrapping around if needed
+    const tag = tagSequence[index % tagSequence.length];
+
+    // If tag is 'noTags', use empty tags array
+    const tags = tag === 'noTags' ? [] : [tag, 'bothTags'];
 
     // Get status and serviceType by cycling through the lists
     const status = statusList[index % statusList.length];
     const serviceType = serviceTypes[index % serviceTypes.length];
 
-    // Set tags - empty if isEmptyTags is true, else pick from tagSequence and add 'bothTags'
-    const tags = isEmptyTags
-      ? []
-      : [tagSequence[index % tagSequence.length], 'bothTags'];
-
     // Determine primaryTag - 'noTags' if tags are empty, else use the first tag
-    const primaryTag = isEmptyTags ? 'noTags' : tags[0];
+    const primaryTag = tags.length === 0 ? 'noTags' : tags[0];
 
     // Generate label based on primaryTag and index
     const label = `${primaryTag}-${index}`;
@@ -62,7 +61,6 @@ const mockAlerts = Array.from(
     // Build and return the alert using the factory
     return alertFactory.build({
       created_by: primaryTag,
-      entity_ids: ['1', '2', '3', '4', '5'],
       label,
       service_type: serviceType,
       status,
