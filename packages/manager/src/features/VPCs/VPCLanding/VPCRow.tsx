@@ -1,4 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -9,6 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useRegionsQuery } from '@linode/queries';
 
 import { getIsVPCLKEEnterpriseCluster } from '../utils';
 
