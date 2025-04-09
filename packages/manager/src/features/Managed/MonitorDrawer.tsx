@@ -159,23 +159,24 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
     // Clear drawer error state
     setStatus(undefined);
 
-    // eslint-disable-next-line no-unused-expressions
-    isEditing
-      ? updateServiceMonitor({ ...values, timeout: +values.timeout })
-          .then(_success)
-          .catch(_error)
-      : createServiceMonitor({
-          ...values,
-          timeout: +values.timeout,
-        })
-          .then(_success)
-          .catch(_error);
+    if (isEditing) {
+      updateServiceMonitor({ ...values, timeout: +values.timeout })
+        .then(_success)
+        .catch(_error);
+    } else {
+      createServiceMonitor({
+        ...values,
+        timeout: +values.timeout,
+      })
+        .then(_success)
+        .catch(_error);
+    }
   };
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={() => navigate({ to: '/managed/monitors' })}
       open={open}
       title={isEditing ? 'Edit Monitor' : 'Add Monitor'}
@@ -221,12 +222,20 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Select
+                clearable
+                data-qa-add-consultation-group
+                errorText={errors.consultation_group}
+                label="Contact Group"
+                onBlur={handleBlur}
                 onChange={(_, item: SelectOption<ServiceType>) =>
                   setFieldValue(
                     'consultation_group',
                     item === null ? '' : item.value
                   )
                 }
+                options={groupOptions}
+                placeholder="Select a group..."
+                searchable
                 textFieldProps={{
                   tooltipText: helperText.consultation_group,
                 }}
@@ -234,14 +243,6 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
                   values.consultation_group || '',
                   groupOptions
                 )}
-                clearable
-                data-qa-add-consultation-group
-                errorText={errors.consultation_group}
-                label="Contact Group"
-                onBlur={handleBlur}
-                options={groupOptions}
-                placeholder="Select a group..."
-                searchable
               />
 
               <Grid container spacing={2}>
@@ -252,17 +253,17 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
                   }}
                 >
                   <Select
-                    onChange={(_, item: SelectOption<ServiceType>) =>
-                      setFieldValue('service_type', item.value)
-                    }
-                    textFieldProps={{
-                      required: !isEditing,
-                    }}
                     data-qa-add-service-type
                     errorText={errors.service_type}
                     label="Monitor Type"
                     onBlur={handleBlur}
+                    onChange={(_, item: SelectOption<ServiceType>) =>
+                      setFieldValue('service_type', item.value)
+                    }
                     options={typeOptions}
+                    textFieldProps={{
+                      required: !isEditing,
+                    }}
                     value={getValueFromItem(values.service_type, typeOptions)}
                   />
                 </Grid>
@@ -273,14 +274,14 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
                   }}
                 >
                   <TextField
+                    data-qa-add-timeout
+                    error={!!errors.timeout}
+                    errorText={errors.timeout}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">seconds</InputAdornment>
                       ),
                     }}
-                    data-qa-add-timeout
-                    error={!!errors.timeout}
-                    errorText={errors.timeout}
                     label="Response Timeout"
                     name="timeout"
                     onBlur={handleBlur}
@@ -327,12 +328,18 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
                 value={values.notes}
               />
               <Autocomplete
-                onChange={(_, items: SelectOption<number>[] | null) => {
+                data-qa-add-credentials
+                errorText={errors.credentials}
+                label="Credentials"
+                multiple
+                onBlur={handleBlur}
+                onChange={(_, items: null | SelectOption<number>[]) => {
                   setFieldValue(
                     'credentials',
                     items?.map((thisItem) => thisItem.value) || []
                   );
                 }}
+                options={credentialOptions}
                 placeholder={
                   values?.credentials?.length === 0 ? 'None Required' : ''
                 }
@@ -343,12 +350,6 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
                   values.credentials || [],
                   credentialOptions
                 )}
-                data-qa-add-credentials
-                errorText={errors.credentials}
-                label="Credentials"
-                multiple
-                onBlur={handleBlur}
-                options={credentialOptions}
               />
               <ActionsPanel
                 primaryButtonProps={{
