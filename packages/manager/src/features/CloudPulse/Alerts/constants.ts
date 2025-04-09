@@ -4,7 +4,6 @@ import type {
   AlertStatusType,
   ChannelType,
   DimensionFilterOperatorType,
-  EditAlertDefinitionPayload,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
