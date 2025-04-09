@@ -179,8 +179,12 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              Custom images are billed monthly at $0.10/GB. The disk you target
-              for an image needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. The disk you target for an image
+              needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
                 requirements
               </Link>

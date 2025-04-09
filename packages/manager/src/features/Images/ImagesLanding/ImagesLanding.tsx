@@ -25,6 +25,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -482,9 +483,13 @@ export const ImagesLanding = () => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            These are images you manually uploaded or captured from an existing
-            compute instance disk. You can deploy an image to a compute instance
-            in any region.
+            These are{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+              encrypted
+            </Link>{' '}
+            images you manually uploaded or captured from an existing compute
+            instance disk. You can deploy an image to a compute instance in any
+            region.
           </Typography>
         </div>
         <Table>
