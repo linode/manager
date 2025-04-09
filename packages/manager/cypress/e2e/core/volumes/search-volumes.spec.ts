@@ -46,8 +46,8 @@ describe('Search Volumes', () => {
 
         // Search for the first volume by label, confirm it's the only one shown.
         cy.findByPlaceholderText('Search Volumes').type(volume1.label);
-        expect(cy.findByText(volume1.label).should('be.visible'));
-        expect(cy.findByText(volume2.label).should('not.exist'));
+        cy.findByText(volume1.label).should('be.visible');
+        cy.findByText(volume2.label).should('not.exist');
 
         // Clear search, confirm both volumes are shown.
         cy.findByTestId('clear-volumes-search').click();

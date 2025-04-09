@@ -2453,21 +2453,19 @@ describe('LKE ACL updates', () => {
         addresses: { ipv4: ['10.0.3.0/24'], ipv6: undefined },
         enabled: false,
       });
-      const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockUpdatedACLOptions1 =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: { ipv4: ['10.0.0.0/24'], ipv6: undefined },
           enabled: true,
           'revision-id': mockRevisionId,
-        }
-      );
+        });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
       });
-      const mockUpdatedControlPlaneACL1 = kubernetesControlPlaneACLFactory.build(
-        {
+      const mockUpdatedControlPlaneACL1 =
+        kubernetesControlPlaneACLFactory.build({
           acl: mockUpdatedACLOptions1,
-        }
-      );
+        });
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
@@ -2548,8 +2546,8 @@ describe('LKE ACL updates', () => {
         .click();
 
       // update mocks
-      const mockUpdatedACLOptions2 = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockUpdatedACLOptions2 =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: {
             ipv4: ['10.0.0.0/24'],
             ipv6: [
@@ -2559,13 +2557,11 @@ describe('LKE ACL updates', () => {
           },
           enabled: true,
           'revision-id': mockRevisionId,
-        }
-      );
-      const mockUpdatedControlPlaneACL2 = kubernetesControlPlaneACLFactory.build(
-        {
+        });
+      const mockUpdatedControlPlaneACL2 =
+        kubernetesControlPlaneACLFactory.build({
           acl: mockUpdatedACLOptions2,
-        }
-      );
+        });
       mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL2).as(
         'updateControlPlaneACL'
       );
@@ -2656,16 +2652,15 @@ describe('LKE ACL updates', () => {
         enabled: true,
       });
 
-      const mockDisabledACLOptions = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockDisabledACLOptions =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: {
             ipv4: [''],
             ipv6: [''],
           },
           enabled: false,
           'revision-id': '',
-        }
-      );
+        });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
       });

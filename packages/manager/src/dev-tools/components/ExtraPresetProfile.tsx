@@ -35,9 +35,8 @@ export const ExtraPresetProfile = ({
     }),
     ...customProfileData,
   }));
-  const [isEditingCustomProfile, setIsEditingCustomProfile] = React.useState(
-    false
-  );
+  const [isEditingCustomProfile, setIsEditingCustomProfile] =
+    React.useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<
