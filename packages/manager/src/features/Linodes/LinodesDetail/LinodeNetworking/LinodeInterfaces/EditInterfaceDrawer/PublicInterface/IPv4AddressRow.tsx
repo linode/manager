@@ -32,12 +32,14 @@ export const IPv4AddressRow = (props: Props) => {
         </Stack>
       </TableCell>
       <TableCell actionCell>
-        <InlineMenuAction
-          actionText="Make Primary"
-          disabled={primary}
-          loading={isPending}
-          onClick={() => onMakePrimary(address)}
-        />
+        {!primary && (
+          <InlineMenuAction
+            actionText="Make Primary"
+            disabled={primary}
+            loading={isPending}
+            onClick={() => onMakePrimary(address)}
+          />
+        )}
         <InlineMenuAction actionText="Delete" onClick={onDelete} />
       </TableCell>
     </TableRow>
