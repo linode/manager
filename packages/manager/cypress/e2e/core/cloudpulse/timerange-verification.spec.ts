@@ -1,7 +1,7 @@
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -29,7 +29,6 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  profileFactory,
   widgetFactory,
 } from 'src/factories';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';

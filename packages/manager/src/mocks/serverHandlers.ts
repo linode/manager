@@ -19,8 +19,10 @@ import {
   nodeBalancerFactory,
   pickRandom,
   proDedicatedTypeFactory,
+  profileFactory,
   regionAvailabilityFactory,
   regions,
+  securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
@@ -92,9 +94,7 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  profileFactory,
   promoFactory,
-  securityQuestionsFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -299,8 +299,8 @@ const databases = [
         params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : params.engine === 'postgresql'
-          ? pickRandom(possiblePostgresReplicationTypes)
-          : (undefined as any);
+            ? pickRandom(possiblePostgresReplicationTypes)
+            : (undefined as any);
       db.ssl_connection = true;
     }
     const database = databaseFactory.build(db);
@@ -2075,8 +2075,8 @@ export const handlers = [
       type: 'payment_due',
     });
 
-    const blockStorageMigrationScheduledNotification = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotification =
+      notificationFactory.build({
         body: 'Your volumes in us-east will be upgraded to NVMe.',
         entity: {
           id: 20,
@@ -2091,11 +2091,10 @@ export const handlers = [
         type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
         when: '2021-09-30T04:00:00',
-      }
-    );
+      });
 
-    const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotificationUnattached =
+      notificationFactory.build({
         body: 'Your volume will be upgraded to NVMe.',
         entity: {
           id: 30,
@@ -2110,8 +2109,7 @@ export const handlers = [
         type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
         when: '2021-09-30T04:00:00',
-      }
-    );
+      });
 
     const blockStorageMigrationImminentNotification = notificationFactory.build(
       {
@@ -2365,7 +2363,7 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        id: Number(params.placementGroupId) ?? -1,
+        id: Number(params.placementGroupId) || -1,
         label: 'pg-1',
         members: [
           {
@@ -2421,7 +2419,7 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      id: Number(params.placementGroupId) ?? -1,
+      id: Number(params.placementGroupId) || -1,
       label: 'pg-1',
       members: [
         {

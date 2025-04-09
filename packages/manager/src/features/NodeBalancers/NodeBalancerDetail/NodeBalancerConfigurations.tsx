@@ -769,7 +769,7 @@ class NodeBalancerConfigurations extends React.Component<
                 /* All of the Nodes are new since the config was just created */
                 return this.createNode(idx, nodeIdx);
               }
-              return new Promise((resolve) => resolve(true));
+              return Promise.resolve(true);
             });
 
             /* Set the success message if all of the requests succeed */
@@ -893,7 +893,7 @@ class NodeBalancerConfigurations extends React.Component<
       if (node.modifyStatus === 'update') {
         return this.updateNode(idx, nodeIdx);
       }
-      return new Promise((resolve) => resolve(undefined));
+      return Promise.resolve(undefined);
     });
 
     /* Set the success message if all of the requests succeed */

@@ -222,6 +222,9 @@ describe('Metric component tests', () => {
         ),
         useFormOptions: {
           defaultValues: {
+            rule_criteria: {
+              rules: [mockData[0]],
+            },
             serviceType: 'linode',
           },
         },
