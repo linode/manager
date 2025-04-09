@@ -4,8 +4,9 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
-import { Config } from '@linode/api-v4';
 import { makeResponse } from 'support/util/response';
+
+import type { Config, Interface } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch all configs for a given linode.
@@ -102,7 +103,7 @@ export const mockDeleteLinodeConfigInterface = (
  * Mocks GET request to retrieve Linode configs.
  *
  * @param linodeId - ID of Linode for mocked request.
- * @param configs - a list of Linode configswith which to mocked response.
+ * @param configs - a list of Linode configs with which to mocked response.
  *
  * @returns Cypress chainable.
  */
@@ -114,6 +115,54 @@ export const mockGetLinodeConfigs = (
     'GET',
     apiMatcher(`linode/instances/${linodeId}/configs*`),
     paginateResponse(configs)
+  );
+};
+
+/**
+ * Mocks GET request to retrieve a Linode Config
+ *
+ * @param linodeId - ID of Linode for mocked request.
+ * @param configId - ID of Config for mocked request.
+ * @param config - the config with which to mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeConfig = (inputs: {
+  config: Config;
+  configId: number;
+  linodeId: number;
+}): Cypress.Chainable<null> => {
+  const { config, configId, linodeId } = inputs;
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/configs/${configId}`),
+    config
+  );
+};
+
+/**
+ * Mocks GET request to retrieve an interface of a Linode config
+ *
+ * @param linodeId - ID of Linode for mocked request.
+ * @param configId - ID of Config for mocked request.
+ * @param linodeId - ID of Config Interface for mocked request.
+ * @param configInterface - the interface with which to mocked response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeConfigInterface = (inputs: {
+  configId: number;
+  configInterface: Interface;
+  interfaceId: number;
+  linodeId: number;
+}): Cypress.Chainable<null> => {
+  const { configId, configInterface, interfaceId, linodeId } = inputs;
+  return cy.intercept(
+    'GET',
+    apiMatcher(
+      `linode/instances/${linodeId}/configs/${configId}/interfaces/${interfaceId}`
+    ),
+    configInterface
   );
 };
 

@@ -25,14 +25,14 @@ import type { ConfigValue } from '@linode/api-v4';
 
 interface Props {
   configItem?: ConfigurationOption;
-  engine: string;
   errorText: string | undefined;
+  onBlur?: () => void;
   onChange: (config: ConfigValue) => void;
   onRemove?: (label: string) => void;
 }
 
 export const DatabaseConfigurationItem = (props: Props) => {
-  const { configItem, engine, errorText, onChange, onRemove } = props;
+  const { configItem, errorText, onBlur, onChange, onRemove } = props;
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
@@ -82,6 +82,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(Number(e.target.value))}
           type="number"
           value={Number(configItem.value)}
@@ -101,6 +102,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(e.target.value)}
           placeholder={String(configItem.example)}
           type="text"
@@ -124,9 +126,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
             mr: 0.5,
           })}
         >
-          {`${engine}.${configLabel}`}
+          {configItem?.category === 'other'
+            ? configLabel
+            : `${configItem?.category}.${configLabel}`}
         </Typography>
-        {configItem?.restart_cluster && (
+        {configItem?.requires_restart && (
           <StyledChip color="warning" label="restarts service" size="small" />
         )}
         {configItem?.description && (
