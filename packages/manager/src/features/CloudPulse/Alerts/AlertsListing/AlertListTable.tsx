@@ -206,24 +206,24 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           loading={isLoading}
                           loadingProps={{ columns: 6 }}
                         />
-                        {alertsGroupedByTag ? (
-                          <GroupedAlertsTable
-                            groupedAlerts={sortGroups(groupByTags(orderedData))}
-                            handleDetails={handleDetails}
-                            handleEdit={handleEdit}
-                            handleStatusChange={handleStatusChange}
-                            services={services}
-                          />
-                        ) : (
-                          <AlertsTable
-                            alerts={paginatedAndOrderedAlerts}
-                            handleDetails={handleDetails}
-                            handleEdit={handleEdit}
-                            handleStatusChange={handleStatusChange}
-                            services={services}
-                          />
-                        )}
                       </TableBody>
+                      {alertsGroupedByTag ? (
+                        <GroupedAlertsTable
+                          groupedAlerts={sortGroups(groupByTags(orderedData))}
+                          handleDetails={handleDetails}
+                          handleEdit={handleEdit}
+                          handleStatusChange={handleStatusChange}
+                          services={services}
+                        />
+                      ) : (
+                        <AlertsTable
+                          alerts={paginatedAndOrderedAlerts}
+                          handleDetails={handleDetails}
+                          handleEdit={handleEdit}
+                          handleStatusChange={handleStatusChange}
+                          services={services}
+                        />
+                      )}
                     </Table>
                   </Grid2>
                   {!alertsGroupedByTag && (
