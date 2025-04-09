@@ -16,7 +16,7 @@ import {
   CREATE_ALERT_ERROR_FIELD_MAP,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
-  CREATE_ALERT_SUCCESS_MESSAGE
+  CREATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
 import {
   enhanceValidationSchemaWithEntityIdValidation,
@@ -151,16 +151,9 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [
-      {
-        aggregate_function: null,
-        dimension_filters: [],
-        metric: null,
-        operator: null,
-        threshold: 0,
-      },
-    ]);
+    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
     setValue('entity_ids', []);
+    setValue('trigger_conditions', triggerConditionInitialValues);
   }, [setValue]);
 
   React.useEffect(() => {
