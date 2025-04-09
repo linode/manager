@@ -391,9 +391,9 @@ describe('Linode Interfaces', () => {
       const requestPayload = xhr.request.body;
 
       // Confirm that request payload includes VPC interface only
-      expect(requestPayload['public']).to.be.null;
+      expect(requestPayload['public']).to.equal(null);
       expect(requestPayload['vpc']['subnet_id']).to.equal(selectedSubnet.id);
-      expect(requestPayload['vlan']).to.null;
+      expect(requestPayload['vlan']).to.equal(null);
     });
 
     ui.toast.assertMessage('Successfully added network interface.');
