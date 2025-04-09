@@ -47,7 +47,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
               </Link>
             </Typography>
           </MaskableText>
-
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>

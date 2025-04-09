@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
@@ -14,7 +15,6 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import NodeActionMenu from './NodeActionMenu';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import styled from '@emotion/styled';
 
 export interface NodeRow {
   instanceId?: number;
@@ -63,8 +63,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeStatus === 'not_ready'
       ? 'other'
       : nodeReadyAndInstanceRunning
-      ? 'active'
-      : 'inactive';
+        ? 'active'
+        : 'inactive';
 
   const displayLabel = label ?? typeLabel;
 

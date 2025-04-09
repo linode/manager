@@ -65,10 +65,10 @@ export const DomainRecordTable = (props: DomainRecordTableProps) => {
                         >
                           {title === 'Email' || title === 'IP Address' ? (
                             <MaskableText
+                              isToggleable
                               length={
                                 title === 'IP Address' ? 'ipv6' : undefined
                               }
-                              isToggleable
                               text={data.toString()}
                             >
                               <>{render(data)}</>
