@@ -53,10 +53,12 @@ const mockAlerts = Array.from(
 );
 
 // Categorize alerts based on tag combinations in a single pass
-const categorizedAlerts = new Map<string, Alert[]>();
+const categorizedAlerts = new Map();
+
 mockAlerts.forEach((alert) => {
-  const hasLinode = alert.tags.includes('LinodeTags');
-  const hasDBaaS = alert.tags.includes('DBaaSTags');
+  const { tags } = alert;
+  const hasLinode = tags.includes('LinodeTags');
+  const hasDBaaS = tags.includes('DBaaSTags');
 
   const key =
     hasLinode && hasDBaaS
@@ -70,7 +72,8 @@ mockAlerts.forEach((alert) => {
   if (!categorizedAlerts.has(key)) {
     categorizedAlerts.set(key, []);
   }
-  categorizedAlerts.get(key)!.push(alert);
+
+  categorizedAlerts.get(key).push(alert);
 });
 
 describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts Listing Page', () => {
