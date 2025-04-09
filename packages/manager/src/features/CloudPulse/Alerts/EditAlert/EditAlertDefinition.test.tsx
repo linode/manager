@@ -7,6 +7,7 @@ import { Router } from 'react-router-dom';
 import { alertFactory, notificationChannelFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { EditAlertDefinition } from './EditAlertDefinition';
 
 const queryMocks = vi.hoisted(() => ({
@@ -23,6 +24,7 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  Element.prototype.scrollIntoView = vi.fn();
   queryMocks.useEditAlertDefinition.mockReturnValue({
     mutateAsync: vi.fn().mockResolvedValue({}),
     reset: vi.fn(),
@@ -40,13 +42,13 @@ describe('EditAlertDefinition component', () => {
   it(
     'renders the components of the form',
     async () => {
-      const {
-        findByPlaceholderText,
-        getByLabelText,
-        getByText,
-      } = renderWithTheme(
-        <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
-      );
+      const { findByPlaceholderText, getByLabelText, getByText } =
+        renderWithTheme(
+          <EditAlertDefinition
+            alertDetails={alertDetails}
+            serviceType="linode"
+          />
+        );
       expect(getByText('1. General Information')).toBeVisible();
       expect(getByLabelText('Name')).toBeVisible();
       expect(getByLabelText('Description (optional)')).toBeVisible();
@@ -76,7 +78,7 @@ describe('EditAlertDefinition component', () => {
       const push = vi.fn();
       const history = createMemoryHistory();
       history.push = push;
-      history.push('/monitor/alerts/definitions/edit/linode/1');
+      history.push('/alerts/definitions/edit/linode/1');
       const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
       const { getByPlaceholderText, getByText } = renderWithTheme(
         <Router history={history}>
@@ -88,8 +90,8 @@ describe('EditAlertDefinition component', () => {
       );
       const descriptionValue = 'Updated Description';
       const nameValue = 'Updated Label';
-      const nameInput = getByPlaceholderText('Enter Name');
-      const descriptionInput = getByPlaceholderText('Enter Description');
+      const nameInput = getByPlaceholderText('Enter a Name');
+      const descriptionInput = getByPlaceholderText('Enter a Description');
       await userEvent.clear(nameInput);
       await userEvent.clear(descriptionInput);
       await userEvent.type(nameInput, nameValue);
@@ -100,10 +102,10 @@ describe('EditAlertDefinition component', () => {
 
       await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
 
-      expect(push).toHaveBeenLastCalledWith('/monitor/alerts/definitions');
+      expect(push).toHaveBeenLastCalledWith('/alerts/definitions');
       await waitFor(() => {
         expect(
-          getByText('Alert successfully updated.') // validate whether snackbar is displayed properly
+          getByText(UPDATE_ALERT_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly
         ).toBeInTheDocument();
       });
     },

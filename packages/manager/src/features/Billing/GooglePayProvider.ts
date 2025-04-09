@@ -10,7 +10,7 @@ import { VariantType } from 'notistack';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
@@ -24,9 +24,7 @@ let googlePaymentInstance: GooglePayment;
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    resolve({ transactionState: 'SUCCESS' });
-  });
+  return Promise.resolve({ transactionState: 'SUCCESS' });
 };
 
 export const initGooglePaymentInstance = async (
@@ -61,14 +59,13 @@ const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
     return Promise.reject(unableToOpenGPayError);
   }
 
-  const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
-    {
+  const paymentDataRequest =
+    await googlePaymentInstance.createPaymentDataRequest({
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
-    }
-  );
+    });
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
@@ -89,9 +86,8 @@ const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
 
   const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
 
-  const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
-    paymentData
-  );
+  const { nonce: realNonce } =
+    await googlePaymentInstance.parseResponse(paymentData);
 
   // Use the real nonce (real money) when the Google Merchant ID is provided and
   // the Google Pay environment is set to production.

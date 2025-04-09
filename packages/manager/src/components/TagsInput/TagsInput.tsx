@@ -1,11 +1,14 @@
+import {
+  updateTagsSuggestionsData,
+  useAllTagsQuery,
+  useProfile,
+} from '@linode/queries';
 import { Autocomplete, Chip } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
 
-import { useProfile } from 'src/queries/profile/profile';
-import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -57,15 +60,8 @@ export interface TagsInputProps {
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const {
-    disabled,
-    hideLabel,
-    label,
-    noMarginTop,
-    onChange,
-    tagError,
-    value,
-  } = props;
+  const { disabled, hideLabel, label, noMarginTop, onChange, tagError, value } =
+    props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
@@ -86,13 +82,26 @@ export const TagsInput = (props: TagsInputProps) => {
     const newTag = { label: inputValue, value: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
-    if (inputValue.length < 3 || inputValue.length > 50) {
-      setErrors([
-        {
-          field: 'label',
-          reason: 'Length must be 3-50 characters',
-        },
-      ]);
+    const errors = [];
+
+    inputValue = inputValue.trim();
+
+    if (inputValue === '') {
+      errors.push({
+        field: 'label',
+        reason: 'Tag cannot be an empty',
+      });
+    }
+
+    if (inputValue.length < 1 || inputValue.length > 50) {
+      errors.push({
+        field: 'label',
+        reason: 'Length must be 1-50 characters',
+      });
+    }
+
+    if (errors.length > 0) {
+      setErrors(errors);
     } else {
       setErrors([]);
       onChange(updatedSelectedTags);

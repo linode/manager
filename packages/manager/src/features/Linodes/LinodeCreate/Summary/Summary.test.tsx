@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { imageFactory, regionFactory, typeFactory } from 'src/factories';
+import { imageFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -203,35 +204,33 @@ describe('Linode Create Summary', () => {
   });
 
   it('should render a summary item for an attached VLAN', async () => {
-    const {
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <Summary />,
-      useFormOptions: {
-        defaultValues: {
-          interfaces: [
-            {},
-            {
-              label: 'my-vlan',
-              purpose: 'vlan',
-            },
-          ],
+    const { getByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: {
+            interfaces: [
+              {},
+              {
+                label: 'my-vlan',
+                purpose: 'vlan',
+              },
+            ],
+          },
         },
-      },
-    });
+      });
 
     expect(getByText('VLAN Attached')).toBeVisible();
   });
 
   it('should render "Encrypted" if disk encryption is enabled', async () => {
-    const {
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <Summary />,
-      useFormOptions: {
-        defaultValues: { disk_encryption: 'enabled' },
-      },
-    });
+    const { getByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: { disk_encryption: 'enabled' },
+        },
+      });
 
     expect(getByText('Encrypted')).toBeVisible();
   });
@@ -247,20 +246,19 @@ describe('Linode Create Summary', () => {
       })
     );
 
-    const {
-      findByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <Summary />,
-      useFormOptions: {
-        defaultValues: {
-          region: 'fake-region',
-          stackscript_data: {
-            cluster_size: 5,
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: {
+            region: 'fake-region',
+            stackscript_data: {
+              cluster_size: 5,
+            },
+            type: type.id,
           },
-          type: type.id,
         },
-      },
-    });
+      });
 
     await findByText(`5 Nodes - $10/month $2.50/hr`);
   });

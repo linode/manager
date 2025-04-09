@@ -1,9 +1,9 @@
 import { Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
@@ -54,10 +54,10 @@ export const Graphs = React.memo((props: GraphProps) => {
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
-  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
-    iFree,
-    iTotal,
-  ]);
+  const _inodes = React.useMemo(
+    () => formatINodes(iFree, iTotal),
+    [iFree, iTotal]
+  );
 
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */

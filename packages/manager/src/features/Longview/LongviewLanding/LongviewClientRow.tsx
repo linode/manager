@@ -1,3 +1,4 @@
+import { useGrants } from '@linode/queries';
 import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -5,7 +6,6 @@ import { compose } from 'recompose';
 
 import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
-import { useGrants } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { CPUGauge } from './Gauges/CPU';
@@ -48,12 +48,10 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
     updateLongviewClient,
   } = props;
 
-  const {
-    authed,
-    lastUpdated,
-    lastUpdatedError,
-  } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
-    props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
+  const { authed, lastUpdated, lastUpdatedError } = useClientLastUpdated(
+    clientAPIKey,
+    (_lastUpdated) =>
+      props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );
 
   const { data: grants } = useGrants();

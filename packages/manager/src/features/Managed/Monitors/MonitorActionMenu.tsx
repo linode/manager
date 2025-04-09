@@ -1,3 +1,4 @@
+import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -10,7 +11,6 @@ import {
   useEnableMonitorMutation,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { splitAt } from 'src/utilities/splitAt';
 
 import type { MonitorStatus } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -39,12 +39,10 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
     status,
   } = props;
 
-  const { mutateAsync: enableServiceMonitor } = useEnableMonitorMutation(
-    monitorID
-  );
-  const { mutateAsync: disableServiceMonitor } = useDisableMonitorMutation(
-    monitorID
-  );
+  const { mutateAsync: enableServiceMonitor } =
+    useEnableMonitorMutation(monitorID);
+  const { mutateAsync: disableServiceMonitor } =
+    useDisableMonitorMutation(monitorID);
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);

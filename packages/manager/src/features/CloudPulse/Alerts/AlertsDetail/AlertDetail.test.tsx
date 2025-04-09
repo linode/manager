@@ -1,10 +1,9 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import React from 'react';
 
 import {
   alertFactory,
-  linodeFactory,
   notificationChannelFactory,
-  regionFactory,
   serviceTypesFactory,
 } from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -46,8 +45,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('src/queries/regions/regions', () => ({
-  ...vi.importActual('src/queries/regions/regions'),
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -106,7 +105,7 @@ describe('AlertDetail component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(<AlertDetail />);
@@ -132,8 +131,5 @@ describe('AlertDetail component tests', () => {
 const validateBreadcrumbs = (link: HTMLElement) => {
   expect(link).toBeInTheDocument();
   expect(link).toHaveTextContent('Definitions');
-  expect(link.closest('a')).toHaveAttribute(
-    'href',
-    '/monitor/alerts/definitions'
-  );
+  expect(link.closest('a')).toHaveAttribute('href', '/alerts/definitions');
 };

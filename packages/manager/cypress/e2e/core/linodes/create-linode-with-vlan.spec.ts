@@ -1,17 +1,19 @@
-import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
   randomLabel,
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockCreateLinode } from 'support/intercepts/linodes';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { chooseRegion } from 'support/util/regions';
+
+import { VLANFactory } from 'src/factories';
 
 describe('Create Linode with VLANs', () => {
   beforeEach(() => {
@@ -36,11 +38,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([mockVlan]);
@@ -123,11 +125,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([]);

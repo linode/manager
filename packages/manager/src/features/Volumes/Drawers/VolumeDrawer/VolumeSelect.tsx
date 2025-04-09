@@ -1,7 +1,6 @@
+import { useInfiniteVolumesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   disabled?: boolean;
@@ -27,18 +26,14 @@ export const VolumeSelect = (props: Props) => {
       }
     : {};
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-  } = useInfiniteVolumesQuery({
-    ...searchFilter,
-    ...(region ? { region } : {}),
-    '+order': 'asc',
-    // linode_id: null,  <- if the API let us, we would do this
-    '+order_by': 'label',
-  });
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useInfiniteVolumesQuery({
+      ...searchFilter,
+      ...(region ? { region } : {}),
+      '+order': 'asc',
+      // linode_id: null,  <- if the API let us, we would do this
+      '+order_by': 'label',
+    });
 
   const options = data?.pages
     .flatMap((page) => page.data)

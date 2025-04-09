@@ -1,22 +1,31 @@
-import { CreateLinodeRequest, Linode } from '@linode/api-v4';
-import { ui } from 'support/ui';
-import { randomString, randomLabel } from 'support/util/random';
-import { authenticate } from 'support/api/authentication';
 import { createStackScript } from '@linode/api-v4/lib';
+import {
+  createLinodeRequestFactory,
+  linodeFactory,
+  regionFactory,
+} from '@linode/utilities';
+import { imageFactory } from '@src/factories';
+import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
+import {
+  interceptRebuildLinode,
+  mockGetLinodeDetails,
+  mockRebuildLinode,
+  mockRebuildLinodeError,
+} from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import {
   interceptGetStackScript,
   interceptGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { chooseRegion } from 'support/util/regions';
-import {
-  interceptRebuildLinode,
-  mockGetLinodeDetails,
-  mockRebuildLinodeError,
-} from 'support/intercepts/linodes';
 import { createTestLinode } from 'support/util/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import type { CreateLinodeRequest, Linode } from '@linode/api-v4';
 
 /**
  * Creates a Linode and StackScript.
@@ -73,7 +82,7 @@ const findRebuildDialog = (linodeLabel: string) => {
  */
 const assertPasswordComplexity = (
   desiredPassword: string,
-  passwordStrength: 'Weak' | 'Fair' | 'Good'
+  passwordStrength: 'Fair' | 'Good' | 'Weak'
 ) => {
   cy.findByLabelText('Root Password').should('be.visible').clear();
   cy.focused().type(desiredPassword);
@@ -94,6 +103,7 @@ const submitRebuild = () => {
 };
 
 // Error message that is displayed when desired password is not strong enough.
+// eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const passwordComplexityError = 'Password does not meet strength requirement.';
 
 authenticate();
@@ -167,7 +177,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using a Community StackScript.
    */
   it('rebuilds a linode from Community StackScript', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
@@ -238,22 +248,22 @@ describe('rebuild linode', () => {
 
     // Create a StackScript to rebuild a Linode.
     const linodeRequest = createLinodeRequestFactory.build({
-      label: randomLabel(),
-      region: region,
       image: 'linode/alpine3.18',
+      label: randomLabel(),
+      region,
       root_pass: randomString(16),
     });
 
     const stackScriptRequest = {
-      label: randomLabel(),
-      description: randomString(),
-      ordinal: 0,
-      logo_url: '',
-      images: ['linode/alpine3.18'],
-      deployments_total: 0,
       deployments_active: 0,
+      deployments_total: 0,
+      description: randomString(),
+      images: ['linode/alpine3.18'],
       is_public: false,
+      label: randomLabel(),
+      logo_url: '',
       mine: true,
+      ordinal: 0,
       rev_note: '',
       script: '#!/bin/bash\n\necho "Hello, world!"',
       user_defined_fields: [],
@@ -338,5 +348,70 @@ describe('rebuild linode', () => {
       cy.wait('@rebuildLinode');
       cy.findByText(mockErrorMessage);
     });
+  });
+
+  it('can rebuild a Linode reusing existing user data', () => {
+    const region = regionFactory.build({ capabilities: ['Metadata'] });
+    const linode = linodeFactory.build({
+      region: region.id,
+      // has_user_data: true - add this when we add the type to make this test more realistic
+    });
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      is_public: true,
+    });
+
+    mockRebuildLinode(linode.id, linode).as('rebuildLinode');
+    mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetRegions([region]);
+    mockGetAllImages([image]);
+    mockGetImage(image.id, image);
+
+    cy.visitWithLogin(`/linodes/${linode.id}?rebuild=true`);
+
+    findRebuildDialog(linode.label).within(() => {
+      // Select an Image
+      ui.autocomplete.findByLabel('Image').should('be.visible').click();
+      ui.autocompletePopper
+        .findByTitle(image.label, { exact: false })
+        .should('be.visible')
+        .click();
+
+      // Type a root password
+      assertPasswordComplexity(rootPassword, 'Good');
+
+      // Open the User Data accordion
+      ui.accordionHeading.findByTitle('Add User Data').scrollIntoView().click();
+
+      // Verify the reuse checkbox is not checked by default and check it
+      cy.findByLabelText(
+        `Reuse user data previously provided for ${linode.label}`
+      )
+        .should('not.be.checked')
+        .click();
+
+      // Verify the checkbox becomes checked
+      cy.findByLabelText(
+        `Reuse user data previously provided for ${linode.label}`
+      ).should('be.checked');
+
+      // Type to confirm
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.focused().type(linode.label);
+
+      submitRebuild();
+    });
+
+    cy.wait('@rebuildLinode').then((xhr) => {
+      // Confirm that metadata is NOT in the payload.
+      // If we omit metadata from the payload, the API will reuse previously provided userdata.
+      expect(xhr.request.body.metadata).to.equal(undefined);
+
+      // Verify other expected values are in the request
+      expect(xhr.request.body.image).to.equal(image.id);
+      expect(xhr.request.body.root_pass).to.be.a('string');
+    });
+
+    ui.toast.assertMessage('Linode rebuild started.');
   });
 });

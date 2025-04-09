@@ -1,9 +1,14 @@
-import { Checkbox, CircleProgress, Notice, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Checkbox,
+  CircleProgress,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
   localStorageWarning,
@@ -47,9 +52,8 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
   const [checked, setChecked] = React.useState(false);
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const { classes } = useStyles();

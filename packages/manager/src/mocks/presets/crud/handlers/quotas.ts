@@ -1,7 +1,6 @@
-import { pickRandom } from '@linode/utilities';
+import { pickRandom, regions } from '@linode/utilities';
 import { http } from 'msw';
 
-import { regions } from 'src/__data__/regionsData';
 import { objectStorageEndpointsFactory } from 'src/factories/objectStorage';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 import {
@@ -122,7 +121,7 @@ const mockS3Endpoints = mockQuotas['object-storage'].map((quota) =>
 
 export const getS3Endpoint = () => [
   http.get(
-    '*/v4/object-storage/endpoints',
+    '*/v4*/object-storage/endpoints',
     async ({
       request,
     }): Promise<
@@ -140,7 +139,7 @@ export const getS3Endpoint = () => [
 
 export const getQuotas = () => [
   http.get(
-    '*/v4/:service/quotas',
+    '*/v4*/:service/quotas',
     async ({
       params,
       request,
@@ -167,7 +166,7 @@ export const getQuotas = () => [
   ),
 
   http.get(
-    '*/v4/:service/quotas/:id',
+    '*/v4*/:service/quotas/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Quota>> => {
       const quota = mockQuotas[params.service as QuotaType].find(
         ({ quota_id }) => quota_id === +params.id
@@ -182,7 +181,7 @@ export const getQuotas = () => [
   ),
 
   http.get(
-    '*/v4/:service/quotas/:id/usage',
+    '*/v4*/:service/quotas/:id/usage',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
@@ -205,18 +204,18 @@ export const getQuotas = () => [
                   used: 45,
                 })
               );
-            case 'Shared CPU':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  used: 24,
-                })
-              );
             case 'GPU':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
                   used: 3,
+                })
+              );
+            case 'Shared CPU':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 24,
                 })
               );
             case 'VPU':
@@ -243,13 +242,6 @@ export const getQuotas = () => [
           );
         case 'object-storage':
           switch (quota.quota_name) {
-            case 'Total Capacity':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  used: 100_000_000_000_000,
-                })
-              );
             case 'Number of Buckets':
               return makeResponse(
                 quotaUsageFactory.build({
@@ -264,6 +256,13 @@ export const getQuotas = () => [
                   used: 10_000_000,
                 })
               );
+            case 'Total Capacity':
+              return makeResponse(
+                quotaUsageFactory.build({
+                  quota_limit: quota.quota_limit,
+                  used: 100_000_000_000_000,
+                })
+              );
             default:
               makeResponse(
                 quotaUsageFactory.build({
@@ -272,9 +271,12 @@ export const getQuotas = () => [
                 })
               );
           }
+          break;
         default:
           return makeNotFoundResponse();
       }
+
+      return makeNotFoundResponse();
     }
   ),
 ];

@@ -5,7 +5,7 @@ import {
   PaymentResponse,
 } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   amount: 5,
@@ -60,11 +60,10 @@ export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
     'Your payment has been processed but we encountered an error releasing your resources.',
 });
 
-export const creditPaymentResponseFactory = Factory.Sync.makeFactory<PaymentResponse>(
-  {
+export const creditPaymentResponseFactory =
+  Factory.Sync.makeFactory<PaymentResponse>({
     date: '2020-01-01T12:00:00',
     id: Factory.each((i) => i),
     usd: 10,
     warnings: warningFactory.buildList(1),
-  }
-);
+  });

@@ -1,8 +1,8 @@
+import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
@@ -36,7 +36,9 @@ export const LinodeNetworking = () => {
     <Stack spacing={2}>
       <LinodeNetworkingSummaryPanel linodeId={id} />
       {showFirewallsTable && <LinodeFirewalls linodeID={id} />}
-      {showInterfacesTable && <LinodeInterfaces linodeId={id} />}
+      {showInterfacesTable && (
+        <LinodeInterfaces linodeId={id} regionId={linode.region} />
+      )}
       <LinodeIPAddresses linodeID={id} />
     </Stack>
   );

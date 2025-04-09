@@ -11,8 +11,7 @@ import { PARENT_USER } from 'src/features/Account/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountUsers, useProfile } from '@linode/queries';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
@@ -24,9 +23,8 @@ import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const theme = useTheme();
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const { data: profile } = useProfile();
@@ -46,7 +44,12 @@ export const UsersLanding = () => {
   };
 
   // Since this query is disabled for restricted users, use isInitialLoading.
-  const { data: users, error, isInitialLoading, refetch } = useAccountUsers({
+  const {
+    data: users,
+    error,
+    isInitialLoading,
+    refetch,
+  } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -80,8 +83,8 @@ export const UsersLanding = () => {
       ? 6
       : 5
     : matchesSmDown
-    ? 3
-    : 4;
+      ? 3
+      : 4;
 
   // "last login" column omitted for proxy table.
   const proxyNumCols = matchesLgUp ? 4 : numCols;

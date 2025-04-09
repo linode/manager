@@ -1,10 +1,7 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
-import {
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 
 import {
   getLinodesFromAllPlacementGroups,
@@ -21,8 +18,8 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/account/account', () => {
-  const actual = vi.importActual('src/queries/account/account');
+vi.mock('@linode/queries', () => {
+  const actual = vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,

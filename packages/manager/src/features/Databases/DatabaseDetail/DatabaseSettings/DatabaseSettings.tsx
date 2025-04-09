@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -16,7 +17,6 @@ import {
   isDefaultDatabase,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
@@ -58,24 +58,16 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     : DELETE_CLUSTER_TEXT;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [
-    isResetRootPasswordDialogOpen,
-    setIsResetRootPasswordDialogOpen,
-  ] = React.useState(false);
-  const [
-    isSuspendClusterDialogOpen,
-    setIsSuspendClusterDialogOpen,
-  ] = React.useState(false);
+  const [isResetRootPasswordDialogOpen, setIsResetRootPasswordDialogOpen] =
+    React.useState(false);
+  const [isSuspendClusterDialogOpen, setIsSuspendClusterDialogOpen] =
+    React.useState(false);
 
-  const [
-    isUpgradeVersionDialogOpen,
-    setIsUpgradeVersionDialogOpen,
-  ] = React.useState(false);
+  const [isUpgradeVersionDialogOpen, setIsUpgradeVersionDialogOpen] =
+    React.useState(false);
 
-  const [
-    isReviewUpdatesDialogOpen,
-    setIsReviewUpdatesDialogOpen,
-  ] = React.useState(false);
+  const [isReviewUpdatesDialogOpen, setIsReviewUpdatesDialogOpen] =
+    React.useState(false);
 
   const onResetRootPassword = () => {
     setIsResetRootPasswordDialogOpen(true);
@@ -148,7 +140,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           <DatabaseSettingsMenuItem
             buttonText="Delete Cluster"
             descriptiveText={deleteClusterCopy}
-            disabled={Boolean(profile?.restricted)}
+            disabled={disabled}
             onClick={onDeleteCluster}
             sectionTitle="Delete the Cluster"
           />

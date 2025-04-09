@@ -1,10 +1,10 @@
+import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
-import { profileFactory } from 'src/factories/profile';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

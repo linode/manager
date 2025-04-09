@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.7.0",
+  "version": "0.9.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -45,10 +45,9 @@
     ]
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.7",
-    "@storybook/addon-actions": "^8.3.0",
-    "@storybook/preview-api": "^8.3.0",
-    "@storybook/react": "^8.3.0",
+    "@storybook/addon-actions": "^8.6.7",
+    "@storybook/preview-api": "^8.6.7",
+    "@storybook/react": "^8.6.7",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
@@ -56,13 +55,6 @@
     "@types/luxon": "3.4.2",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^7.1.0",
-    "eslint-config-prettier": "~8.1.0",
-    "eslint-plugin-prettier": "~3.3.1",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "prettier": "~2.2.1",
     "vite-plugin-svgr": "^3.2.0"
   }
 }

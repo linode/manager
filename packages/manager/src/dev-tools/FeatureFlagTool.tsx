@@ -20,6 +20,7 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  */
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
@@ -39,6 +40,14 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  {
+    flag: 'linodeCloneFirewall',
+    label: 'Linode Clone Firewall',
+  },
+  {
+    flag: 'vmHostMaintenance',
+    label: 'VM Host Maintenance Policy',
+  },
 ];
 
 interface RenderFlagItemProps {
@@ -205,7 +214,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button onClick={resetFlags}>Reset to LD DEV Defaults</button>
+          <button className="dev-tools-button" onClick={resetFlags}>
+            Reset to LD DEV Defaults
+          </button>
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
+import { useMutateProfile, useProfile } from '@linode/queries';
 import {
+  ActionsPanel,
   Autocomplete,
   Box,
   Button,
@@ -8,17 +10,15 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { Profile } from '@linode/api-v4/lib/profile';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -118,11 +118,10 @@ export const LishSettings = () => {
       });
   };
 
-  const onPublicKeyChange = (idx: number) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAuthorizedKeys(set(lensPath([idx]), e.target.value));
-  };
+  const onPublicKeyChange =
+    (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAuthorizedKeys(set(lensPath([idx]), e.target.value));
+    };
 
   const onPublicKeyRemove = (idx: number) => () => {
     setAuthorizedKeys(remove(idx, 1, authorizedKeys));

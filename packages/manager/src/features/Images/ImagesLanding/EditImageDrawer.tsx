@@ -1,13 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
+import Lock from 'src/assets/icons/lock.svg';
+import { Stack, Typography } from '@linode/ui';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
@@ -30,18 +31,13 @@ export const EditImageDrawer = (props: Props) => {
     tags: image?.tags,
   };
 
-  const {
-    control,
-    formState,
-    handleSubmit,
-    reset,
-    setError,
-  } = useForm<UpdateImagePayload>({
-    defaultValues,
-    mode: 'onBlur',
-    resolver: yupResolver(updateImageSchema),
-    values: defaultValues,
-  });
+  const { control, formState, handleSubmit, reset, setError } =
+    useForm<UpdateImagePayload>({
+      defaultValues,
+      mode: 'onBlur',
+      resolver: yupResolver(updateImageSchema),
+      values: defaultValues,
+    });
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 
@@ -64,8 +60,8 @@ export const EditImageDrawer = (props: Props) => {
         for (const error of errors) {
           if (
             error.field === 'label' ||
-            error.field == 'description' ||
-            error.field == 'tags'
+            error.field === 'description' ||
+            error.field === 'tags'
           ) {
             setError(error.field, { message: error.reason });
           } else {
@@ -82,6 +78,7 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}
@@ -100,6 +97,17 @@ export const EditImageDrawer = (props: Props) => {
           text={formState.errors.root.message}
           variant="error"
         />
+      )}
+
+      {image?.capabilities?.includes('distributed-sites') && (
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Lock />
+          <Typography
+            sx={(theme) => ({ color: theme.textColors.textAccessTable })}
+          >
+            Encrypted
+          </Typography>
+        </Stack>
       )}
 
       <Controller

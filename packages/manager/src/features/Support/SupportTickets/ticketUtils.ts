@@ -1,8 +1,8 @@
 import { getTickets } from '@linode/api-v4/lib/support';
+import { isFeatureEnabled } from '@linode/utilities';
 
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -89,10 +89,9 @@ export const formatDescription = (
   ticketType: TicketType
 ) => {
   type customFieldTuple = [string, string | undefined];
-  const customFields: customFieldTuple[] = Object.entries(
-    values
-  ).filter(([key, _value]: customFieldTuple) =>
-    TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP[ticketType]?.includes(key)
+  const customFields: customFieldTuple[] = Object.entries(values).filter(
+    ([key, _value]: customFieldTuple) =>
+      TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP[ticketType]?.includes(key)
   );
 
   // If there are no custom fields, just return the initial description.

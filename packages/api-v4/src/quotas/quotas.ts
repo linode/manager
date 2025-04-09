@@ -1,5 +1,5 @@
 import { Filter, Params, ResourcePage as Page } from 'src/types';
-import { API_ROOT } from '../constants';
+import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Quota, QuotaType, QuotaUsage } from './types';
 
@@ -12,7 +12,10 @@ import { Quota, QuotaType, QuotaUsage } from './types';
  * @param id { number } the quota ID to look up.
  */
 export const getQuota = (type: QuotaType, id: number) =>
-  Request<Quota>(setURL(`${API_ROOT}/${type}/quotas/${id}`), setMethod('GET'));
+  Request<Quota>(
+    setURL(`${BETA_API_ROOT}/${type}/quotas/${id}`),
+    setMethod('GET'),
+  );
 
 /**
  * getQuotas
@@ -26,13 +29,13 @@ export const getQuota = (type: QuotaType, id: number) =>
 export const getQuotas = (
   type: QuotaType,
   params: Params = {},
-  filter: Filter = {}
+  filter: Filter = {},
 ) =>
   Request<Page<Quota>>(
-    setURL(`${API_ROOT}/${type}/quotas`),
+    setURL(`${BETA_API_ROOT}/${type}/quotas`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -45,6 +48,6 @@ export const getQuotas = (
  */
 export const getQuotaUsage = (type: QuotaType, id: number) =>
   Request<QuotaUsage>(
-    setURL(`${API_ROOT}/${type}/quotas/${id}/usage`),
-    setMethod('GET')
+    setURL(`${BETA_API_ROOT}/${type}/quotas/${id}/usage`),
+    setMethod('GET'),
   );

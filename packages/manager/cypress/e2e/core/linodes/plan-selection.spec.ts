@@ -1,20 +1,20 @@
 // TODO: Cypress
-// Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
-import { ui } from 'support/ui';
 import {
-  accountFactory,
   linodeTypeFactory,
-  regionFactory,
   regionAvailabilityFactory,
-} from '@src/factories';
+  regionFactory,
+} from '@linode/utilities';
+import { accountFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import {
-  mockGetRegions,
-  mockGetRegionAvailability,
-} from 'support/intercepts/regions';
-import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
+// Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
+import { ui } from 'support/ui';
 
 const mockRegions = [
   regionFactory.build({
@@ -26,71 +26,71 @@ const mockRegions = [
 
 const mockDedicatedLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-1',
     label: 'dedicated-1',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-2',
     label: 'dedicated-2',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-3',
     label: 'dedicated-3',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-4',
     label: 'dedicated-4',
-    class: 'dedicated',
   }),
 ];
 
 const mockSharedLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-1',
     label: 'shared-1',
-    class: 'standard',
   }),
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-2',
     label: 'shared-2',
-    class: 'standard',
   }),
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-3',
     label: 'shared-3',
-    class: 'standard',
   }),
 ];
 
 const mockHighMemoryLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'highmem',
     id: 'highmem-1',
     label: 'highmem-1',
-    class: 'highmem',
   }),
 ];
 
 const mockGPUType = [
   linodeTypeFactory.build({
+    class: 'gpu',
     id: 'gpu-1',
     label: 'gpu-1',
-    class: 'gpu',
   }),
   linodeTypeFactory.build({
+    class: 'gpu',
     id: 'gpu-2',
     label: 'gpu-2 Ada',
-    class: 'gpu',
   }),
 ];
 
 const mockAcceleratedType = [
   linodeTypeFactory.build({
+    class: 'accelerated',
     id: 'accelerated-1',
     label: 'accelerated-1',
-    class: 'accelerated',
   }),
 ];
 
@@ -104,23 +104,23 @@ const mockLinodeTypes = [
 
 const mockRegionAvailability = [
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'dedicated-3',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'dedicated-4',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'highmem-1',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
-    plan: 'shared-3',
     available: false,
+    plan: 'shared-3',
     region: 'us-east',
   }),
 ];
@@ -370,9 +370,9 @@ describe('displays specific linode plans for GPU', () => {
     );
     mockAppendFeatureFlags({
       gpuv2: {
-        transferBanner: true,
-        planDivider: true,
         egressBanner: true,
+        planDivider: true,
+        transferBanner: true,
       },
     }).as('getFeatureFlags');
   });
@@ -418,9 +418,9 @@ describe('displays specific kubernetes plans for GPU', () => {
     );
     mockAppendFeatureFlags({
       gpuv2: {
-        transferBanner: true,
-        planDivider: true,
         egressBanner: true,
+        planDivider: true,
+        transferBanner: true,
       },
     }).as('getFeatureFlags');
   });

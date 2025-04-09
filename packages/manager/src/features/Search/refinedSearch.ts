@@ -4,7 +4,8 @@ import searchString from 'search-string';
 
 import type { SearchField, SearchableItem } from './search.interfaces';
 
-export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
+export const COMPRESSED_IPV6_REGEX =
+  /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips', 'value'];
 
 // =============================================================================
@@ -36,9 +37,8 @@ export const refinedSearch = (
   // wrap this in a try/catch.
   try {
     const binaryTree = logicQueryParser.parse(formattedQuery);
-    const queryJSON: QueryJSON = logicQueryParser.utils.binaryTreeToQueryJson(
-      binaryTree
-    );
+    const queryJSON: QueryJSON =
+      logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
 
     // 3. Test the parsed query against each item.
     const results: SearchableItem[] = [];
@@ -164,7 +164,9 @@ export const doesSearchTermMatchItemField = (
 ): boolean => {
   const flattenedItem = flattenSearchableItem(item);
 
-  const fieldValue = ensureValueIsString(flattenedItem[field]);
+  const fieldValue = ensureValueIsString(
+    flattenedItem[field as keyof typeof flattenedItem]
+  );
 
   // Handle numeric comparison (e.g., for the "value" field to search linode by id)
   if (typeof fieldValue === 'number') {
@@ -186,8 +188,17 @@ export const flattenSearchableItem = (item: SearchableItem) => ({
   ...item.data,
 });
 
-export const ensureValueIsString = (value: any[] | string): string =>
-  Array.isArray(value) ? value.join(' ') : value ? value : '';
+export const ensureValueIsString = (
+  value: any[] | number | string | undefined
+): string => {
+  if (Array.isArray(value)) {
+    return value.join(' ');
+  }
+  if (value) {
+    return String(value);
+  }
+  return '';
+};
 
 export const getQueryInfo = (parsedQuery: any) => {
   // getParsedQuery() always includes an object called `excluded`. If search

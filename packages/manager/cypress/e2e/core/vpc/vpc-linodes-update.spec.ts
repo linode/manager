@@ -3,31 +3,31 @@
  */
 
 import {
-  mockGetSubnets,
-  mockCreateSubnet,
-  mockGetVPC,
-  mockGetVPCs,
-} from 'support/intercepts/vpc';
-import {
-  subnetFactory,
-  vpcFactory,
+  linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
-  linodeConfigFactory,
-  LinodeConfigInterfaceFactoryWithVPC,
-} from '@src/factories';
-import { ui } from 'support/ui';
-import { randomNumber, randomLabel } from 'support/util/random';
-import { mockGetLinodes } from 'support/intercepts/linodes';
-import {
-  mockCreateLinodeConfigInterfaces,
-  mockGetLinodeConfigs,
-  mockDeleteLinodeConfigInterface,
-} from 'support/intercepts/configs';
+} from '@linode/utilities';
+import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
 import {
   vpcAssignLinodeRebootNotice,
   vpcUnassignLinodeRebootNotice,
 } from 'support/constants/vpc';
-import { VPC, Linode, Config } from '@linode/api-v4';
+import {
+  mockCreateLinodeConfigInterfaces,
+  mockDeleteLinodeConfigInterface,
+  mockGetLinodeConfigs,
+} from 'support/intercepts/configs';
+import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockCreateSubnet,
+  mockGetSubnet,
+  mockGetSubnets,
+  mockGetVPC,
+  mockGetVPCs,
+} from 'support/intercepts/vpc';
+import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
+
+import type { Config, Linode, VPC } from '@linode/api-v4';
 
 describe('VPC assign/unassign flows', () => {
   let mockVPCs: VPC[];
@@ -100,10 +100,8 @@ describe('VPC assign/unassign flows', () => {
       .findByTitle('Create Subnet')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet Label')
-          .should('be.visible')
-          .click()
-          .type(mockSubnet.label);
+        cy.findByText('Subnet Label').should('be.visible').click();
+        cy.focused().type(mockSubnet.label);
 
         cy.findByTestId('create-subnet-drawer-button')
           .should('be.visible')
@@ -112,6 +110,8 @@ describe('VPC assign/unassign flows', () => {
       });
 
     cy.wait(['@createSubnet', '@getVPC', '@getSubnets', '@getLinodes']);
+
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // confirm that newly created subnet should now appear on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');
@@ -144,11 +144,9 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByLabelText('Linode')
-          .should('be.visible')
-          .click()
-          .type(mockLinode.label)
-          .should('have.value', mockLinode.label);
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(mockLinode.label);
+        cy.focused().should('have.value', mockLinode.label);
 
         ui.autocompletePopper
           .findByTitle(mockLinode.label)
@@ -211,9 +209,9 @@ describe('VPC assign/unassign flows', () => {
       subnets: [mockSubnet],
     });
 
-    const vpcInterface = LinodeConfigInterfaceFactoryWithVPC.build({
-      vpc_id: mockVPC.id,
+    const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       subnet_id: mockSubnet.id,
+      vpc_id: mockVPC.id,
     });
     const mockLinodeConfig = linodeConfigFactory.build({
       interfaces: [vpcInterface],
@@ -235,6 +233,8 @@ describe('VPC assign/unassign flows', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
+
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
 
     // unassign a linode to the subnet
     ui.actionMenu
@@ -266,10 +266,8 @@ describe('VPC assign/unassign flows', () => {
           'getLinodeConfigs'
         );
 
-        cy.findByLabelText('Linodes')
-          .should('be.visible')
-          .click()
-          .type(mockLinode.label);
+        cy.findByLabelText('Linodes').should('be.visible').click();
+        cy.focused().type(mockLinode.label);
 
         ui.autocompletePopper
           .findByTitle(mockLinode.label)
@@ -290,10 +288,8 @@ describe('VPC assign/unassign flows', () => {
         mockGetLinodeConfigs(mockSecondLinode.id, [mockLinodeConfig]).as(
           'getLinodeConfigs'
         );
-        cy.findByText('Linodes')
-          .should('be.visible')
-          .click()
-          .type(mockSecondLinode.label);
+        cy.findByText('Linodes').should('be.visible').click();
+        cy.focused().type(mockSecondLinode.label);
         cy.findByText(mockSecondLinode.label).should('be.visible').click();
         cy.wait('@getLinodeConfigs');
 

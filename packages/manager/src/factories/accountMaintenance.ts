@@ -1,11 +1,10 @@
 import { pickRandom, randomDate } from '@linode/utilities';
-
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 
-export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMaintenance>(
-  {
+export const accountMaintenanceFactory =
+  Factory.Sync.makeFactory<AccountMaintenance>({
     entity: Factory.each((id) =>
       pickRandom([
         {
@@ -40,5 +39,4 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
     when: Factory.each(() => randomDate().toISOString()),
-  }
-);
+  });

@@ -1,7 +1,4 @@
-import {
-  createKubeClusterSchema,
-  createKubeEnterpriseClusterSchema,
-} from '@linode/validation/lib/kubernetes.schema';
+import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -32,7 +29,7 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/lke/clusters`)
+    setURL(`${API_ROOT}/lke/clusters`),
   );
 
 /**
@@ -45,7 +42,7 @@ export const getKubernetesClustersBeta = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${BETA_API_ROOT}/lke/clusters`)
+    setURL(`${BETA_API_ROOT}/lke/clusters`),
   );
 
 /**
@@ -56,7 +53,7 @@ export const getKubernetesClustersBeta = (params?: Params, filters?: Filter) =>
 export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`),
   );
 
 /**
@@ -67,7 +64,7 @@ export const getKubernetesCluster = (clusterID: number) =>
 export const getKubernetesClusterBeta = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+    setURL(`${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`),
   );
 
 /**
@@ -79,7 +76,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
   return Request<KubernetesCluster>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
-    setData(data, createKubeClusterSchema)
+    setData(data, createKubeClusterSchema),
   );
 };
 
@@ -97,12 +94,7 @@ export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
   return Request<KubernetesCluster>(
     setMethod('POST'),
     setURL(`${BETA_API_ROOT}/lke/clusters`),
-    setData(
-      data,
-      data.tier === 'enterprise'
-        ? createKubeEnterpriseClusterSchema
-        : createKubeClusterSchema
-    )
+    setData(data, createKubeClusterSchema),
   );
 };
 
@@ -113,12 +105,12 @@ export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
  */
 export const updateKubernetesCluster = (
   clusterID: number,
-  data: Partial<KubernetesCluster>
+  data: Partial<KubernetesCluster>,
 ) =>
   Request<KubernetesCluster>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`),
-    setData(data)
+    setData(data),
   );
 
 /**
@@ -129,7 +121,7 @@ export const updateKubernetesCluster = (
 export const deleteKubernetesCluster = (clusterID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`),
   );
 
 /**
@@ -144,8 +136,8 @@ export const getKubeConfig = (clusterId: number) =>
   Request<KubeConfigResponse>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`
-    )
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`,
+    ),
   );
 
 /**
@@ -159,8 +151,8 @@ export const resetKubeConfig = (clusterId: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`
-    )
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterId)}/kubeconfig`,
+    ),
   );
 
 /** getKubernetesVersions
@@ -174,7 +166,7 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
-    setURL(`${API_ROOT}/lke/versions`)
+    setURL(`${API_ROOT}/lke/versions`),
   );
 
 /** getKubernetesTieredVersionsBeta
@@ -186,13 +178,13 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
 export const getKubernetesTieredVersionsBeta = (
   tier: string,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<KubernetesTieredVersion>>(
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
-    setURL(`${BETA_API_ROOT}/lke/tiers/${encodeURIComponent(tier)}/versions`)
+    setURL(`${BETA_API_ROOT}/lke/tiers/${encodeURIComponent(tier)}/versions`),
   );
 
 /** getKubernetesVersion
@@ -204,7 +196,7 @@ export const getKubernetesTieredVersionsBeta = (
 export const getKubernetesVersion = (versionID: string) =>
   Request<KubernetesVersion>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/versions/${encodeURIComponent(versionID)}`)
+    setURL(`${API_ROOT}/lke/versions/${encodeURIComponent(versionID)}`),
   );
 
 /** getKubernetesTieredVersionBeta
@@ -215,15 +207,15 @@ export const getKubernetesVersion = (versionID: string) =>
 
 export const getKubernetesTieredVersionBeta = (
   tier: string,
-  versionID: string
+  versionID: string,
 ) =>
   Request<KubernetesTieredVersion>(
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/lke/tiers/${encodeURIComponent(
-        tier
-      )}/versions/${encodeURIComponent(versionID)}`
-    )
+        tier,
+      )}/versions/${encodeURIComponent(versionID)}`,
+    ),
   );
 
 /** getKubernetesClusterEndpoint
@@ -235,15 +227,15 @@ export const getKubernetesTieredVersionBeta = (
 export const getKubernetesClusterEndpoints = (
   clusterID: number,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/api-endpoints`
-    )
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/api-endpoints`,
+    ),
   );
 
 /** getKubernetesClusterDashboard
@@ -255,8 +247,8 @@ export const getKubernetesClusterDashboard = (clusterID: number) =>
   Request<KubernetesDashboardResponse>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/dashboard`
-    )
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/dashboard`,
+    ),
   );
 
 /** recycleClusterNodes
@@ -268,7 +260,7 @@ export const getKubernetesClusterDashboard = (clusterID: number) =>
 export const recycleClusterNodes = (clusterID: number) =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/recycle`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/recycle`),
   );
 
 /**
@@ -280,7 +272,7 @@ export const getKubernetesTypes = (params?: Params) =>
   Request<Page<PriceType>>(
     setURL(`${API_ROOT}/lke/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -292,7 +284,7 @@ export const getKubernetesTypesBeta = (params?: Params) =>
   Request<Page<PriceType>>(
     setURL(`${BETA_API_ROOT}/lke/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -305,9 +297,9 @@ export const getKubernetesClusterControlPlaneACL = (clusterId: number) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterId
-      )}/control_plane_acl`
-    )
+        clusterId,
+      )}/control_plane_acl`,
+    ),
   );
 
 /**
@@ -317,14 +309,14 @@ export const getKubernetesClusterControlPlaneACL = (clusterId: number) =>
  */
 export const updateKubernetesClusterControlPlaneACL = (
   clusterID: number,
-  data: Partial<KubernetesControlPlaneACLPayload>
+  data: Partial<KubernetesControlPlaneACLPayload>,
 ) =>
   Request<KubernetesControlPlaneACLPayload>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/control_plane_acl`
+        clusterID,
+      )}/control_plane_acl`,
     ),
-    setData(data)
+    setData(data),
   );

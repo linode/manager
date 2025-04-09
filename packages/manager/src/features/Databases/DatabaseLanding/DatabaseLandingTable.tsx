@@ -21,7 +21,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
 
 import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
-import type { Order } from 'src/hooks/useOrder';
+import type { Order } from '@linode/utilities';
 
 const preferenceKey = 'databases';
 
@@ -49,23 +49,17 @@ const DatabaseLandingTable = ({
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
   const pagination = usePagination(1, preferenceKey, dbPlatformType);
 
-  const [
-    selectedDatabase,
-    setSelectedDatabase,
-  ] = React.useState<DatabaseInstance>({} as DatabaseInstance);
+  const [selectedDatabase, setSelectedDatabase] =
+    React.useState<DatabaseInstance>({} as DatabaseInstance);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [
-    isResetPasswordsDialogOpen,
-    setIsResetPasswordsDialogOpen,
-  ] = React.useState(false);
+  const [isResetPasswordsDialogOpen, setIsResetPasswordsDialogOpen] =
+    React.useState(false);
   const [
     isManageAccessControlsDialogOpen,
     setIsManageAccessControlsDialogOpen,
   ] = React.useState(false);
-  const [
-    isSuspendClusterDialogOpen,
-    setIsSuspendClusterDialogOpen,
-  ] = React.useState(false);
+  const [isSuspendClusterDialogOpen, setIsSuspendClusterDialogOpen] =
+    React.useState(false);
 
   const handleManageAccessControls = (database: DatabaseInstance) => {
     setSelectedDatabase(database);
@@ -94,7 +88,12 @@ const DatabaseLandingTable = ({
 
   return (
     <>
-      <Table sx={{ marginTop: '10px' }}>
+      <Table
+        sx={{ marginTop: '10px' }}
+        aria-label={`List of ${
+          isNewDatabase ? 'New' : 'Legacy'
+        } Database Clusters`}
+      >
         <TableHead>
           <TableRow>
             <TableSortCell

@@ -1,3 +1,7 @@
+import {
+  useStackScriptQuery,
+  useStackScriptsInfiniteQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Box,
@@ -27,10 +31,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrder } from 'src/hooks/useOrder';
-import {
-  useStackScriptQuery,
-  useStackScriptsInfiniteQuery,
-} from 'src/queries/stackscripts';
 
 import {
   getGeneratedLinodeLabel,
@@ -81,25 +81,18 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
-  const {
-    data: stackscript,
-    isLoading: isSelectedStackScriptLoading,
-  } = useStackScriptQuery(
-    params.stackScriptID ?? -1,
-    hasPreselectedStackScript
-  );
+  const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
+    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
 
   const filter =
     type === 'Community'
       ? communityStackScriptFilter
       : accountStackScriptFilter;
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const {
     data,

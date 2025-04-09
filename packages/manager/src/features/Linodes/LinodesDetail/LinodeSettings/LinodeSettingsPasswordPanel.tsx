@@ -1,18 +1,15 @@
-import { Accordion, Notice, Select } from '@linode/ui';
+import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskChangePasswordMutation,
-} from 'src/queries/linodes/disks';
-import {
   useLinodeChangePasswordMutation,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -124,7 +121,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
         {!isBareMetalInstance ? (
           <Select
             onChange={(_, item) =>
-              setSelectedDiskId(Number(item?.value) ?? null)
+              setSelectedDiskId(Number(item?.value) || null)
             }
             value={
               diskOptions?.find((item) => item.value === selectedDiskId) ?? null

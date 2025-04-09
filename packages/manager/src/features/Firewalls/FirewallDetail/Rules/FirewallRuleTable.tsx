@@ -200,10 +200,10 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                     width: smDown
                       ? '65%'
                       : mdDown
-                      ? '50%'
-                      : lgDown
-                      ? '32%'
-                      : '26%',
+                        ? '50%'
+                        : lgDown
+                          ? '32%'
+                          : '26%',
                   }}
                 >
                   Label
@@ -335,8 +335,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     },
     ':focus': {
       backgroundColor: isActive
-        ? theme.tokens.background.Neutralsubtle
-        : theme.tokens.background.Normal,
+        ? theme.tokens.alias.Background.Neutralsubtle
+        : theme.tokens.alias.Background.Normal,
     },
     cursor: isActive ? 'grabbing' : 'grab',
     position: 'relative',

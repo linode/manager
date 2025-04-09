@@ -1,17 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, TextField } from '@linode/ui';
+import {
+  useGrants,
+  useProfile,
+  useUpdateSubnetMutation,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
+import { NotFound } from 'src/components/NotFound';
 
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -22,7 +25,7 @@ const IP_HELPER_TEXT =
   'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
-  const { onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, vpcId } = props;
 
   const {
     isPending,
@@ -73,7 +76,13 @@ export const SubnetEditDrawer = (props: Props) => {
     (vpcPermissions?.permissions === 'read_only' || grants?.vpc.length === 0);
 
   return (
-    <Drawer onClose={handleDrawerClose} open={open} title="Edit Subnet">
+    <Drawer
+      NotFoundComponent={NotFound}
+      isFetching={isFetching}
+      onClose={handleDrawerClose}
+      open={open}
+      title="Edit Subnet"
+    >
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}

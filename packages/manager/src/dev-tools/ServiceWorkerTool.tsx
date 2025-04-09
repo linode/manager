@@ -52,13 +52,10 @@ export const ServiceWorkerTool = () => {
   const loadedSeeders = getSeeders(dbSeeders);
   const loadedSeedsCountMap = getSeedsCountMap();
   const loadedPresetsMap = getExtraPresetsMap();
-  const [
-    baselinePreset,
-    setBaselinePreset,
-  ] = React.useState<MockPresetBaselineId>(loadedBaselinePreset);
-  const [extraPresets, setExtraPresets] = React.useState<string[]>(
-    loadedExtraPresets
-  );
+  const [baselinePreset, setBaselinePreset] =
+    React.useState<MockPresetBaselineId>(loadedBaselinePreset);
+  const [extraPresets, setExtraPresets] =
+    React.useState<string[]>(loadedExtraPresets);
   const [customAccountData, setCustomAccountData] = React.useState<
     Account | null | undefined
   >(getCustomAccountData());
@@ -348,7 +345,7 @@ export const ServiceWorkerTool = () => {
             >
               Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
               <button
-                className="small right-align"
+                className="dev-tools-button small right-align"
                 disabled={!isCrudPreset}
                 onClick={() => seederHandlers.removeAll()}
               >
@@ -390,19 +387,23 @@ export const ServiceWorkerTool = () => {
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           <button
+            className="dev-tools-button"
             disabled={saveState.mocksCleared}
             onClick={globalHandlers.resetAll}
           >
             Reset all (Store, Seeds & Presets)
           </button>
           <button
+            className="dev-tools-button"
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={globalHandlers.discardChanges}
           >
             Discard Changes
           </button>
           <button
-            className={saveState.hasUnsavedChanges ? 'green' : ''}
+            className={`dev-tools-button ${
+              saveState.hasUnsavedChanges ? 'green' : ''
+            }`}
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={globalHandlers.applyChanges}
           >

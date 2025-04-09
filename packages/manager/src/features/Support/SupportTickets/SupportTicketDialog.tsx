@@ -1,7 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { useCreateSupportTicketMutation } from '@linode/queries';
 import {
   Accordion,
+  ActionsPanel,
   Autocomplete,
   Box,
   Dialog,
@@ -9,18 +11,15 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { reduceAsync } from '@linode/utilities';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
@@ -156,8 +155,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const newPrefilledTitle = _prefilledTitle
     ? _prefilledTitle
     : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
-    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
-    : undefined;
+      ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+      : undefined;
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
@@ -211,8 +210,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
-    .current;
+  const debouncedSave = React.useRef(
+    debounce(500, false, saveFormData)
+  ).current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage

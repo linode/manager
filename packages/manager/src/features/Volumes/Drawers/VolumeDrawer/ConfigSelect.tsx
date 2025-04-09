@@ -1,7 +1,7 @@
 import { Autocomplete, FormControl } from '@linode/ui';
 import * as React from 'react';
 
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useAllLinodeConfigsQuery } from '@linode/queries';
 
 interface Props {
   disabled?: boolean;
@@ -15,16 +15,8 @@ interface Props {
 }
 
 export const ConfigSelect = React.memo((props: Props) => {
-  const {
-    error,
-    linodeId,
-    name,
-    onBlur,
-    onChange,
-    value,
-    width,
-    ...rest
-  } = props;
+  const { error, linodeId, name, onBlur, onChange, value, width, ...rest } =
+    props;
 
   const { data: configs, error: configsError } = useAllLinodeConfigsQuery(
     linodeId ?? -1,
@@ -52,7 +44,7 @@ export const ConfigSelect = React.memo((props: Props) => {
     >
       <Autocomplete
         errorText={
-          error ?? configsError
+          (error ?? configsError)
             ? 'An error occurred while retrieving configs for this Linode.'
             : undefined
         }

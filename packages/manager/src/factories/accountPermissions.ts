@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { IamAccess, IamAccountPermissions } from '@linode/api-v4';
 
@@ -20,7 +20,6 @@ const createResourceRoles = (
     viewer = [],
   }: CreateResourceRoles
 ) => ({
-  resource_type: resourceType,
   roles: [
     accountAdmin.length > 0
       ? {
@@ -58,13 +57,13 @@ const createResourceRoles = (
         }
       : null,
   ].filter(Boolean),
+  type: resourceType,
 });
 
-export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPermissions>(
-  {
+export const accountPermissionsFactory =
+  Factory.Sync.makeFactory<IamAccountPermissions>({
     account_access: [
       {
-        resource_type: 'account',
         roles: [
           {
             description:
@@ -308,6 +307,7 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
             ],
           },
         ],
+        type: 'account',
       },
       createResourceRoles('linode', {
         accountAdmin: [
@@ -465,7 +465,7 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         creator: ['create_nodebalancer', 'list_nodebalancers'],
       }) as IamAccess,
     ],
-    resource_access: [
+    entity_access: [
       createResourceRoles('linode', {
         admin: [
           'allocate_ip',
@@ -670,7 +670,11 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         ],
         viewer: ['view_volume'],
       }) as IamAccess,
-
+      createResourceRoles('firewall', {
+        admin: ['create_firewall', 'update_firewall', 'view_firewall'],
+        contributor: ['view_firewall', 'update_firewall'],
+        viewer: ['view_firewall'],
+      }) as IamAccess,
       createResourceRoles('nodebalancer', {
         admin: [
           'add_nodebalancer_config_node',
@@ -716,5 +720,4 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         ],
       }) as IamAccess,
     ],
-  }
-);
+  });

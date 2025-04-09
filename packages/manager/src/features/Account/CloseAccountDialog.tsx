@@ -1,4 +1,5 @@
 import { cancelAccount } from '@linode/api-v4/lib/account';
+import { useProfile } from '@linode/queries';
 import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import {
   CANCELLATION_DATA_LOSS_WARNING,
   CANCELLATION_DIALOG_TITLE,
 } from 'src/features/Account/constants';
-import { useProfile } from 'src/queries/profile/profile';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -19,9 +19,8 @@ interface Props {
 }
 
 const CloseAccountDialog = ({ closeDialog, open }: Props) => {
-  const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
-    false
-  );
+  const [isClosingAccount, setIsClosingAccount] =
+    React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
   const history = useHistory();
@@ -82,7 +81,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         type: 'AccountSetting',
       }}
       typographyStyleSx={(theme) => ({
-        borderTop: `1px solid ${theme.tokens.border.Normal}`,
+        borderTop: `1px solid ${theme.tokens.alias.Border.Normal}`,
         marginBottom: theme.tokens.spacing.S8,
         marginTop: theme.tokens.spacing.S16,
         paddingTop: theme.tokens.spacing.S16,
@@ -104,7 +103,7 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       <StyledNoticeWrapper>
         <Notice
           sx={(theme) => ({
-            border: `1px solid ${theme.tokens.action.Negative.Default}`,
+            border: `1px solid ${theme.tokens.alias.Action.Negative.Default}`,
           })}
           important
           spacingBottom={12}

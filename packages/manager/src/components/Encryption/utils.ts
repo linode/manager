@@ -1,5 +1,6 @@
+import { useAccount } from '@linode/queries';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 
 import {
   ENCRYPT_DISK_DISABLED_REBUILD_DISTRIBUTED_REGION_REASON,
@@ -25,9 +26,8 @@ export const useIsDiskEncryptionFeatureEnabled = (): {
     return { isDiskEncryptionFeatureEnabled: false };
   }
 
-  const hasAccountCapability = account?.capabilities?.includes(
-    'Disk Encryption'
-  );
+  const hasAccountCapability =
+    account?.capabilities?.includes('Disk Encryption');
 
   const isFeatureFlagEnabled = flags.linodeDiskEncryption;
 

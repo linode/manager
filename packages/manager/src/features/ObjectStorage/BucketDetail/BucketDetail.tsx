@@ -1,15 +1,15 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { Box } from '@linode/ui';
-import { getQueryParamFromQueryString } from '@linode/utilities';
+import { useAccount } from '@linode/queries';
+import { ActionsPanel, Box } from '@linode/ui';
+import { isFeatureEnabledV2, truncateMiddle } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams, useSearch } from '@tanstack/react-router';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
@@ -21,7 +21,6 @@ import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import {
   getObjectBucketObjectsQueryKey,
   objectStorageQueries,
@@ -29,9 +28,7 @@ import {
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { truncateMiddle } from 'src/utilities/truncate';
 
 import { deleteObject as _deleteObject } from '../requests';
 import {
@@ -54,19 +51,14 @@ import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 
 import type {
-  ObjectStorageClusterID,
   ObjectStorageEndpointTypes,
   ObjectStorageObject,
   ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { InfiniteData } from '@tanstack/react-query';
 
-interface MatchParams {
-  bucketName: string;
-  clusterId: ObjectStorageClusterID;
-}
 interface Props {
-  endpointType: ObjectStorageEndpointTypes;
+  endpointType: ObjectStorageEndpointTypes | undefined;
 }
 
 export const BucketDetail = (props: Props) => {
@@ -75,15 +67,13 @@ export const BucketDetail = (props: Props) => {
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
    */
-  const match = useRouteMatch<MatchParams>(
-    '/object-storage/buckets/:clusterId/:bucketName'
-  );
-  const location = useLocation();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const bucketName = match?.params.bucketName || '';
-  const clusterId = match?.params.clusterId || '';
-  const prefix = getQueryParamFromQueryString(location.search, 'prefix');
+  const { bucketName, clusterId } = useParams({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
+  const { prefix = '' } = useSearch({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
   const queryClient = useQueryClient();
 
   const flags = useFlags();
@@ -113,27 +103,18 @@ export const BucketDetail = (props: Props) => {
     isFetchingNextPage,
     isLoading,
   } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
-  const [
-    isCreateFolderDrawerOpen,
-    setIsCreateFolderDrawerOpen,
-  ] = React.useState(false);
+  const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
+    React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
-  const [
-    deleteObjectDialogOpen,
-    setDeleteObjectDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = React.useState<ObjectStorageObject>();
-  const [
-    objectDetailDrawerOpen,
-    setObjectDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [deleteObjectLoading, setDeleteObjectLoading] = React.useState<boolean>(
-    false
-  );
+  const [deleteObjectDialogOpen, setDeleteObjectDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedObject, setSelectedObject] =
+    React.useState<ObjectStorageObject>();
+  const [objectDetailDrawerOpen, setObjectDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [deleteObjectLoading, setDeleteObjectLoading] =
+    React.useState<boolean>(false);
 
   const handleDownload = async (objectName: string) => {
     try {

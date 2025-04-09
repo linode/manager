@@ -1,17 +1,15 @@
+import { convertBytesToTarget, readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import {
-  convertBytesToTarget,
-  readableBytes,
-} from 'src/utilities/unitConversions';
 
-import { Stat } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { Stat } from '../../../request.types';
+import type { GraphProps } from './types';
 
 export const MemoryGraph = (props: GraphProps) => {
   const {
@@ -45,12 +43,10 @@ export const MemoryGraph = (props: GraphProps) => {
   const swap = data.Memory?.swap.used ?? [];
 
   // Determine the unit based on the largest value
-  const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
-    buffers,
-    cache,
-    used,
-    swap,
-  ]);
+  const unit = React.useMemo(
+    () => getMaxUnit([buffers, cache, used, swap]),
+    [buffers, cache, used, swap]
+  );
 
   return (
     <LongviewLineGraph

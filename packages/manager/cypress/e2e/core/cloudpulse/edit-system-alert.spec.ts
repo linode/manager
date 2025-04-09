@@ -4,6 +4,7 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetAlertDefinitions,
@@ -15,12 +16,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import {
-  accountFactory,
-  alertFactory,
-  databaseFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
 
 import type { Alert, Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
@@ -88,7 +84,7 @@ describe('Integration Tests for Edit Alert', () => {
 
   it('should navigate from the Alert Definitions List page to the Edit Alert page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -113,7 +109,7 @@ describe('Integration Tests for Edit Alert', () => {
 
   it('should correctly display and update the details of the alert in the edit alert page', () => {
     // Navigate to the Edit Alert page
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
 
     cy.wait(['@getAlertDefinitions', '@getDatabases']);
 
@@ -131,7 +127,7 @@ describe('Integration Tests for Edit Alert', () => {
         ui.button.findByTitle('Select All').should('be.visible').click();
 
         ui.button
-          .findByTitle('Unselect All')
+          .findByTitle('Deselect All')
           .should('be.visible')
           .should('be.enabled');
       });
@@ -194,14 +190,8 @@ describe('Integration Tests for Edit Alert', () => {
       .click();
 
     cy.wait('@updateDefinitions').then(({ request, response }) => {
-      const {
-        created_by,
-        description,
-        severity,
-        status,
-        type,
-        updated_by,
-      } = alertDetails;
+      const { created_by, description, severity, status, type, updated_by } =
+        alertDetails;
 
       expect(response).to.have.property('statusCode', 200);
 
@@ -272,7 +262,7 @@ describe('Integration Tests for Edit Alert', () => {
       expect(tags).to.include('tag2');
 
       // Validate navigation
-      cy.url().should('endWith', '/monitor/alerts/definitions');
+      cy.url().should('endWith', '/alerts/definitions');
 
       // Confirm toast notification appears
       ui.toast.assertMessage('Alert resources successfully updated.');

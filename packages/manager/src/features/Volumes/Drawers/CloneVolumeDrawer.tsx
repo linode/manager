@@ -1,18 +1,25 @@
-import { Box, Checkbox, Notice, TextField, Typography } from '@linode/ui';
+import {
+  useCloneVolumeMutation,
+  useGrants,
+  useVolumeTypesQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Box,
+  Checkbox,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
-import {
-  useCloneVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -42,9 +49,8 @@ export const CloneVolumeDrawer = (props: Props) => {
   const { data: grants } = useGrants();
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   // Even if a restricted user has the ability to create Volumes, they
   // can't clone a Volume they only have read only permission on.
@@ -91,6 +97,7 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

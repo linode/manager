@@ -8,7 +8,7 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
@@ -42,13 +42,8 @@ interface ActionConfig {
 }
 
 export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
-  const {
-    inListView,
-    linodeId,
-    linodeRegion,
-    linodeStatus,
-    linodeType,
-  } = props;
+  const { inListView, linodeId, linodeRegion, linodeStatus, linodeType } =
+    props;
 
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];

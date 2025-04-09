@@ -1,4 +1,5 @@
 import { Box, Button } from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -6,7 +7,6 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
@@ -22,11 +22,8 @@ export const Actions = () => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const {
-    formState,
-    getValues,
-    trigger,
-  } = useFormContext<LinodeCreateFormValues>();
+  const { formState, getValues, trigger } =
+    useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',

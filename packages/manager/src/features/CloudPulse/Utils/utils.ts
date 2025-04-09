@@ -1,7 +1,8 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
+
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type {
   APIError,

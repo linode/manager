@@ -19,12 +19,12 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
@@ -172,7 +172,7 @@ export const CloneLanding = () => {
 
   // The configs we know about in our configSelection state.
   const configsInState = configs.filter((eachConfig) =>
-    state.configSelection.hasOwnProperty(eachConfig.id)
+    Object.prototype.hasOwnProperty.call(state.configSelection, eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
@@ -183,7 +183,7 @@ export const CloneLanding = () => {
 
   // The disks we know about in our diskSelection state.
   const disksInState = disks.filter((eachDisk) =>
-    state.diskSelection.hasOwnProperty(eachDisk.id)
+    Object.prototype.hasOwnProperty.call(state.diskSelection, eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(

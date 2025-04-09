@@ -1,0 +1,45 @@
+{
+  "name": "@linode/queries",
+  "version": "0.2.0",
+  "description": "Linode Utility functions library",
+  "main": "src/index.js",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
+  "author": "Linode",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linode/manager/tree/develop/packages/queries"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "tsc -w --preserveWatchOutput",
+    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
+    "typecheck": "tsc",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "prettier --write",
+      "eslint --ext .js,.ts,.tsx --quiet"
+    ]
+  },
+  "dependencies": {
+    "@linode/api-v4": "workspace:*",
+    "@linode/utilities": "workspace:*",
+    "@lukemorales/query-key-factory": "^1.3.4",
+    "@tanstack/react-query": "5.51.24",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.1.0",
+    "@testing-library/jest-dom": "~6.4.2",
+    "@testing-library/react": "~16.0.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.18"
+  }
+}

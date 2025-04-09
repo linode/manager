@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 
@@ -25,8 +25,8 @@ export const DeleteUserPanel = ({ user }: Props) => {
     profile?.username === user.username
       ? 'You can\u{2019}t delete the currently active user.'
       : isProxyUserProfile
-      ? `You can\u{2019}t delete a ${PARENT_USER}.`
-      : undefined;
+        ? `You can\u{2019}t delete a ${PARENT_USER}.`
+        : undefined;
 
   return (
     <Paper>

@@ -1,18 +1,17 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   Notice,
   Toggle,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { capitalize, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useBucketAccess,
   useObjectAccess,
@@ -96,12 +95,12 @@ export const AccessSelect = React.memo((props: Props) => {
       const _acl =
         variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
       const cors_enabled = isUpdateObjectStorageBucketAccessPayload(data)
-        ? data.cors_enabled ?? false
+        ? (data.cors_enabled ?? false)
         : true;
       return { acl: _acl as ACLType, cors_enabled };
     }
     return { acl: 'private' as ACLType, cors_enabled: true };
-  }, [bucketAccessData, objectAccessData, , variant]);
+  }, [bucketAccessData, objectAccessData, variant]);
 
   const {
     control,
@@ -130,8 +129,9 @@ export const AccessSelect = React.memo((props: Props) => {
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
-  const aclLabel = _options.find((option) => option.value === selectedACL)
-    ?.label;
+  const aclLabel = _options.find(
+    (option) => option.value === selectedACL
+  )?.label;
   const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
   const errorText =
@@ -229,8 +229,8 @@ export const AccessSelect = React.memo((props: Props) => {
                 bucketAccessIsFetching || objectAccessIsFetching
                   ? 'Loading access...'
                   : field.value
-                  ? 'CORS Enabled'
-                  : 'CORS Disabled'
+                    ? 'CORS Enabled'
+                    : 'CORS Disabled'
               }
               style={{ display: 'block', marginTop: 16 }}
             />

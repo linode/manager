@@ -1,12 +1,11 @@
-import { useTheme } from '@mui/material/styles';
+import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -68,16 +67,15 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   return (
     <Grid
+      sx={{
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'space-between',
+        paddingY: 0,
+      }}
       container
       direction="row"
       spacing={2}
-      sx={{
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flex: 1,
-        paddingX: 1,
-        paddingY: 0,
-      }}
     >
       <Grid
         size={{
@@ -138,15 +136,15 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         </StyledBox>
       </Grid>
       <Grid
+        size={{
+          lg: 4,
+          xs: 12,
+        }}
         sx={{
           [theme.breakpoints.down('lg')]: {
             display: 'flex',
             justifyContent: 'flex-start',
           },
-        }}
-        size={{
-          lg: 4,
-          xs: 12,
         }}
       >
         <TagCell

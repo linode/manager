@@ -91,14 +91,11 @@ export const NodePoolsDisplay = (props: Props) => {
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
-  const [
-    isLabelsAndTaintsDrawerOpen,
-    setIsLabelsAndTaintsDrawerOpen,
-  ] = useState(false);
+  const [isLabelsAndTaintsDrawerOpen, setIsLabelsAndTaintsDrawerOpen] =
+    useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
-  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
-    false
-  );
+  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] =
+    useState(false);
   const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
   const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
 
@@ -144,9 +141,13 @@ export const NodePoolsDisplay = (props: Props) => {
   } = useDefaultExpandedNodePools(clusterID, _pools);
 
   const regionSupportsDiskEncryption =
-    regionsData
+    (regionsData
       .find((regionDatum) => regionDatum.id === clusterRegionId)
-      ?.capabilities.includes('Disk Encryption') ?? false;
+      ?.capabilities.includes('Disk Encryption') ||
+      regionsData
+        .find((regionDatum) => regionDatum.id === clusterRegionId)
+        ?.capabilities.includes('LA Disk Encryption')) ??
+    false;
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;

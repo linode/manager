@@ -64,8 +64,8 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
     props.max === 0 && props.value === 0
       ? 1 // if they're both actually 0, make sure we have a full grey gauge
       : props.max - props.value < 0
-      ? 0
-      : props.max - props.value;
+        ? 0
+        : props.max - props.value;
 
   const graphDatasets = [
     {
@@ -106,6 +106,7 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
     // we use a reference to access it.
     // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (graphRef.current) {
+      // eslint-disable-next-line sonarjs/constructor-for-side-effects
       new Chart(graphRef.current.getContext('2d'), {
         data: {
           datasets: graphDatasets,

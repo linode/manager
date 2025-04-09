@@ -1,21 +1,21 @@
+import { linodeFactory } from '@linode/utilities';
+import { linodeDiskFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
+  dcPricingCurrentPriceLabel,
+  dcPricingMockLinodeTypes,
+  dcPricingNewPriceLabel,
+} from 'support/constants/dc-specific-pricing';
+import {
+  mockGetLinodeDetails,
   mockGetLinodeDisks,
+  mockGetLinodeType,
   mockGetLinodeVolumes,
   mockMigrateLinode,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
-import { linodeFactory } from '@src/factories';
-import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { getRegionById } from 'support/util/regions';
-import {
-  dcPricingMockLinodeTypes,
-  dcPricingCurrentPriceLabel,
-  dcPricingNewPriceLabel,
-} from 'support/constants/dc-specific-pricing';
-import { mockGetLinodeType } from 'support/intercepts/linodes';
-import { linodeDiskFactory } from '@src/factories';
 
 authenticate();
 describe('Migrate linodes', () => {
@@ -107,9 +107,10 @@ describe('Migrate linodes', () => {
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
     )!;
-    const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
-      (regionPrice) => regionPrice.id === initialRegion.id
-    )!;
+    const currentBackupPrice =
+      dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
+        (regionPrice) => regionPrice.id === initialRegion.id
+      )!;
     cy.get('[data-testid="current-price-panel"]').within(() => {
       cy.findByText(`$${currentPrice.monthly!.toFixed(2)}`).should(
         'be.visible'
@@ -122,9 +123,10 @@ describe('Migrate linodes', () => {
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
     )!;
-    const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
-      (regionPrice) => regionPrice.id === newRegion.id
-    )!;
+    const newBackupPrice =
+      dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
+        (regionPrice) => regionPrice.id === newRegion.id
+      )!;
     cy.get('[data-testid="new-price-panel"]').within(() => {
       cy.findByText(`$${newPrice.monthly!.toFixed(2)}`).should('be.visible');
       cy.findByText(`$${newPrice.hourly}`).should('be.visible');

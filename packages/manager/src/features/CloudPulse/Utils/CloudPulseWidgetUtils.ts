@@ -1,6 +1,5 @@
 import { Alias } from '@linode/design-language-system';
-
-import { getMetrics } from 'src/utilities/statMetrics';
+import { getMetrics } from '@linode/utilities';
 
 import {
   convertValueToUnit,
@@ -163,15 +162,8 @@ interface GraphData {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
-  const {
-    flags,
-    label,
-    metricsList,
-    resources,
-    serviceType,
-    status,
-    unit,
-  } = props;
+  const { flags, label, metricsList, resources, serviceType, status, unit } =
+    props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
@@ -236,21 +228,19 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
 
   const maxUnit = generateMaxUnit(legendRowsData, unit);
   const dimensions = Object.entries(dimension)
-    .map(
-      ([timestamp, resource]): DataSet => {
-        const rolledUpData = Object.entries(resource).reduce(
-          (oldValue, newValue) => {
-            return {
-              ...oldValue,
-              [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
-            };
-          },
-          {}
-        );
+    .map(([timestamp, resource]): DataSet => {
+      const rolledUpData = Object.entries(resource).reduce(
+        (oldValue, newValue) => {
+          return {
+            ...oldValue,
+            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+          };
+        },
+        {}
+      );
 
-        return { timestamp: Number(timestamp), ...rolledUpData };
-      }
-    )
+      return { timestamp: Number(timestamp), ...rolledUpData };
+    })
     .sort(
       (dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp
     );
@@ -274,7 +264,7 @@ export const generateMaxUnit = (
 ) => {
   const maxValue = Math.max(
     0,
-    ...legendRowsData?.map((row) => row?.data.max ?? 0)
+    ...legendRowsData.map((row) => row?.data.max ?? 0)
   );
 
   return generateUnitByBaseUnit(maxValue, unit);

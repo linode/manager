@@ -1,8 +1,4 @@
-import {
-  firewallDeviceFactory,
-  firewallFactory,
-  nodeBalancerFactory,
-} from 'src/factories';
+import { nodeBalancerFactory } from '@linode/utilities';
 import {
   mockAddFirewallDevice,
   mockGetFirewalls,
@@ -12,6 +8,8 @@ import {
   mockGetNodeBalancerFirewalls,
 } from 'support/intercepts/nodebalancers';
 import { ui } from 'support/ui';
+
+import { firewallDeviceFactory, firewallFactory } from 'src/factories';
 
 describe('Firewalls', () => {
   it('allows the user to assign a Firewall from the NodeBalancer settings page', () => {

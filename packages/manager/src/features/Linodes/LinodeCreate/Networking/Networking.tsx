@@ -1,32 +1,40 @@
+import { useFirewallSettingsQuery } from '@linode/queries';
 import {
   Button,
   Divider,
+  Notice,
   Paper,
   PlusSignIcon,
   Stack,
   Typography,
 } from '@linode/ui';
 import React from 'react';
-import { useFieldArray, useWatch } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { Firewall } from './Firewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
 import { LinodeInterface } from './LinodeInterface';
+import { getDefaultInterfacePayload } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Networking = () => {
-  const { append, fields, remove } = useFieldArray<
-    LinodeCreateFormValues,
-    'linodeInterfaces'
-  >({
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<LinodeCreateFormValues>();
+
+  const { data: firewallSettings } = useFirewallSettingsQuery();
+
+  const { append, fields, remove } = useFieldArray({
+    control,
     name: 'linodeInterfaces',
   });
 
-  const interfaceGeneration = useWatch<
-    LinodeCreateFormValues,
-    'interface_generation'
-  >({ name: 'interface_generation' });
+  const interfaceGeneration = useWatch({
+    control,
+    name: 'interface_generation',
+  });
 
   return (
     <Paper>
@@ -38,22 +46,18 @@ export const Networking = () => {
         >
           <Typography variant="h2">Networking</Typography>
           <Button
-            onClick={() =>
-              append({
-                default_route: null,
-                firewall_id: null,
-                public: {},
-                purpose: 'public',
-                vlan: null,
-                vpc: null,
-              })
-            }
+            onClick={() => {
+              append(getDefaultInterfacePayload('public', firewallSettings));
+            }}
             buttonType="outlined"
             endIcon={<PlusSignIcon height="12px" width="12px" />}
           >
             Add Another Interface
           </Button>
         </Stack>
+        {errors.linodeInterfaces?.message && (
+          <Notice text={errors.linodeInterfaces.message} variant="error" />
+        )}
         <InterfaceGeneration />
         {fields.map((field, index) => (
           <LinodeInterface

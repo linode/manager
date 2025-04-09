@@ -1,8 +1,8 @@
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
+import ChevronDownIcon from '../../assets/icons/chevron-down.svg';
+import CloseIcon from '../../assets/icons/close.svg';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { InputAdornment } from '../InputAdornment';
@@ -23,7 +23,7 @@ export interface EnhancedAutocompleteProps<
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 > extends Omit<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
@@ -67,9 +67,9 @@ export const Autocomplete = <
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 >(
-  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
+  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
 ) => {
   const {
     clearOnBlur,
@@ -136,7 +136,7 @@ export const Autocomplete = <
                     <>
                       {loading && (
                         <InputAdornment position="end">
-                          <CircleProgress size="sm" />
+                          <CircleProgress noPadding size="xs" />
                         </InputAdornment>
                       )}
                       {textFieldProps?.InputProps?.endAdornment}
@@ -183,7 +183,7 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      popupIcon={<KeyboardArrowDownIcon />}
+      popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       value={value}
       {...rest}
       onChange={(e, value, reason, details) => {
@@ -191,7 +191,7 @@ export const Autocomplete = <
           if (details?.option === selectAllOption) {
             if (isSelectAllActive) {
               if (typeof value === typeof []) {
-                onChange(e, ([] as T[]) as typeof value, reason, details);
+                onChange(e, [] as T[] as typeof value, reason, details);
               }
             } else {
               if (typeof value === typeof options) {

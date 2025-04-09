@@ -5,6 +5,7 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
+import { regionFactory } from '@linode/utilities';
 import {
   EVALUATION_PERIOD_DESCRIPTION,
   METRIC_DESCRIPTION_DATA_FIELD,
@@ -29,16 +30,15 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
@@ -47,20 +47,6 @@ import type { Flags } from 'src/featureFlags';
 // Feature flag setup
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-
-// Mock alert definition
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'update-description',
-  entity_ids: ['1', '2', '3', '4', '5'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 // Mock alert details
 const alertDetails = alertFactory.build({
@@ -149,7 +135,7 @@ describe('Integration Tests for Edit Alert', () => {
     mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
       'updateDefinitions'
     );
-    mockCreateAlertDefinition(service_type, customAlertDefinition).as(
+    mockCreateAlertDefinition(service_type, alertDetails).as(
       'createAlertDefinition'
     );
     mockGetCloudPulseMetricDefinitions(service_type, metricDefinitions);
@@ -187,7 +173,7 @@ describe('Integration Tests for Edit Alert', () => {
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Verify form fields
@@ -218,7 +204,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(0, {
       aggregationType: 'Average',
       dataField: 'CPU Utilization',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 
@@ -226,7 +212,7 @@ describe('Integration Tests for Edit Alert', () => {
     assertRuleValues(1, {
       aggregationType: 'Average',
       dataField: 'Memory Usage',
-      operator: '==',
+      operator: '=',
       threshold: '1000',
     });
 
@@ -276,7 +262,7 @@ describe('Integration Tests for Edit Alert', () => {
   });
 
   it('successfully updated alert details and verified that the API request matches the expected test data.', () => {
-    cy.visitWithLogin(`/monitor/alerts/definitions/edit/${service_type}/${id}`);
+    cy.visitWithLogin(`/alerts/definitions/edit/${service_type}/${id}`);
     cy.wait('@getAlertDefinitions');
 
     // Make changes to alert form
@@ -288,6 +274,10 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocomplete.findByLabel('Severity').clear();
     ui.autocomplete.findByLabel('Severity').type('Info');
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
+      .contains('Deselect All')
+      .click();
     cy.get('[data-qa-notice="true"]')
       .find('button')
       .contains('Select All')
@@ -361,8 +351,8 @@ describe('Integration Tests for Edit Alert', () => {
       expect(request.body.rule_criteria.rules[1].threshold).to.equal(1000);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'monitor/alerts/definitions');
-      ui.toast.assertMessage('Alert successfully updated.');
+      cy.url().should('endWith', 'alerts/definitions');
+      ui.toast.assertMessage(UPDATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText('Alert-2')

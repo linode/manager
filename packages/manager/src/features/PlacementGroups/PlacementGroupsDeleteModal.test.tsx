@@ -1,12 +1,13 @@
+import { linodeFactory } from '@linode/utilities';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory, placementGroupFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDeleteModal } from './PlacementGroupsDeleteModal';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const preference: ManagerPreferences['type_to_confirm'] = true;
 
@@ -18,19 +19,12 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
-  return {
-    ...actual,
-    usePreferences: queryMocks.usePreferences,
-  };
-});
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useDeletePlacementGroup: queryMocks.useDeletePlacementGroup,
+    usePreferences: queryMocks.usePreferences,
   };
 });
 

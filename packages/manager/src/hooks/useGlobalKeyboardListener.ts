@@ -1,11 +1,8 @@
+import { isOSMac } from '@linode/utilities';
 import React from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { getNextThemeValue } from 'src/utilities/theme';
-import { isOSMac } from 'src/utilities/userAgent';
 
 export const useGlobalKeyboardListener = () => {
   const { data: theme } = usePreferences((preferences) => preferences?.theme);
@@ -39,7 +36,6 @@ export const useGlobalKeyboardListener = () => {
      * Allow an Easter egg for toggling the theme with
      * a key combination
      */
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     document.addEventListener('keydown', keyboardListener);
     return () => {
       document.removeEventListener('keydown', keyboardListener);

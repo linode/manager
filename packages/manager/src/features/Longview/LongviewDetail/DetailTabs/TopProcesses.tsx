@@ -1,4 +1,5 @@
 import { Box, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
 import { StyledLink } from './TopProcesses.styles';
@@ -40,23 +40,19 @@ export const TopProcesses = React.memo((props: Props) => {
     topProcessesLoading,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedTopProcessStat>({
-    data: extendTopProcesses(topProcessesData),
-    initialRoute: {
-      defaultOrder: {
-        order: 'desc',
-        orderBy: 'cpu',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<ExtendedTopProcessStat>({
+      data: extendTopProcesses(topProcessesData),
+      initialRoute: {
+        defaultOrder: {
+          order: 'desc',
+          orderBy: 'cpu',
+        },
+        from: '/longview/clients/$id/overview',
       },
-      from: '/longview/clients/$id/overview',
-    },
-    preferenceKey: 'top-processes',
-    prefix: 'top-processes',
-  });
+      preferenceKey: 'top-processes',
+      prefix: 'top-processes',
+    });
 
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
     ? 'There was an error getting Top Processes.'

@@ -1,3 +1,4 @@
+import { useAccountSettings, useProfile } from '@linode/queries';
 import {
   Accordion,
   Box,
@@ -12,9 +13,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useAccountSettings } from 'src/queries/account/settings';
 import { useCancelObjectStorageMutation } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
 
 export const ObjectStorageSettings = () => {
   const { data: profile } = useProfile();
@@ -29,9 +28,8 @@ export const ObjectStorageSettings = () => {
 
   const username = profile?.username;
 
-  const [isCancelDialogOpen, setIsCancelDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCancelDialogOpen, setIsCancelDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleCloseCancelDialog = () => {
     setIsCancelDialogOpen(false);

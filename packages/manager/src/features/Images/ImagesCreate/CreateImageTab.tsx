@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+  useGrants,
+  useRegionsQuery,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   Button,
@@ -20,15 +27,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 
@@ -142,9 +144,8 @@ export const CreateImageTab = () => {
   /**
    * The 'Object Storage' capability indicates a region can store images
    */
-  const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
-    'Object Storage'
-  );
+  const linodeRegionSupportsImageStorage =
+    selectedLinodeRegion?.capabilities.includes('Object Storage');
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -177,8 +178,12 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              Custom images are billed monthly at $0.10/GB. The disk you target
-              for an image needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. The disk you target for an image
+              needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
                 requirements
               </Link>

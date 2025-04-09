@@ -1,4 +1,4 @@
-import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -41,7 +41,7 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.metadata) {
     configStr += `    metadata:\n      user_data: "${config.metadata?.user_data}"\n`;
   }
-  if (config.hasOwnProperty('private_ip')) {
+  if (Object.prototype.hasOwnProperty.call(config, 'private_ip')) {
     configStr += `    private_ip: ${config.private_ip}\n`;
   }
   if (config.authorized_users && config.authorized_users.length > 0) {

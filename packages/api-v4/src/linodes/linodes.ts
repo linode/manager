@@ -25,7 +25,7 @@ import { CreateLinodeRequest, Linode, LinodeLishData } from './types';
 export const getLinode = (linodeId: number) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -38,7 +38,7 @@ export const getLinode = (linodeId: number) =>
 export const getLinodeLish = (linodeId: number) =>
   Request<LinodeLishData>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -52,15 +52,15 @@ export const getLinodeLish = (linodeId: number) =>
 export const getLinodeVolumes = (
   linodeId: number,
   params: Params = {},
-  filter: Filter = {}
+  filter: Filter = {},
 ) =>
   Request<Page<Volume>>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/volumes`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/volumes`,
     ),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -72,10 +72,10 @@ export const getLinodeVolumes = (
  */
 export const getLinodes = (params?: Params, filter?: Filter) =>
   Request<Page<Linode>>(
-    setURL(`${API_ROOT}/linode/instances/`),
+    setURL(`${API_ROOT}/linode/instances`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -92,7 +92,7 @@ export const createLinode = (data: CreateLinodeRequest) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances`),
     setMethod('POST'),
-    setData(data, CreateLinodeSchema)
+    setData(data, CreateLinodeSchema),
   );
 
 /**
@@ -108,7 +108,7 @@ export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('PUT'),
-    setData(values, UpdateLinodeSchema)
+    setData(values, UpdateLinodeSchema),
   );
 
 /**
@@ -121,7 +121,7 @@ export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
 export const deleteLinode = (linodeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -137,10 +137,10 @@ export const deleteLinode = (linodeId: number) =>
 export const changeLinodePassword = (linodeId: number, root_pass: string) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/password`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/password`,
     ),
     setData({ root_pass }),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -152,13 +152,13 @@ export const changeLinodePassword = (linodeId: number, root_pass: string) =>
 export const getLinodeFirewalls = (
   linodeId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<Firewall>>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/firewalls`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/firewalls`,
     ),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );

@@ -1,3 +1,4 @@
+import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -16,7 +17,6 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
@@ -87,7 +87,10 @@ const LinodesDetailNavigation = () => {
   ].filter((thisTab) => !thisTab.hidden);
 
   const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
+    return (
+      Boolean(matchPath(p, { path: location.pathname })) ||
+      location.pathname.includes(p)
+    );
   };
 
   const getIndex = () => {

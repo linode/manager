@@ -36,9 +36,8 @@ export const ExtraPresetAccount = ({
     ...accountFactory.build(),
     ...customAccountData,
   }));
-  const [isEditingCustomAccount, setIsEditingCustomAccount] = React.useState(
-    false
-  );
+  const [isEditingCustomAccount, setIsEditingCustomAccount] =
+    React.useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -118,7 +117,7 @@ export const ExtraPresetAccount = ({
         {isEnabled && (
           <div>
             <button
-              className="small"
+              className="dev-tools-button small"
               onClick={() => setIsEditingCustomAccount(true)}
             >
               edit
@@ -176,6 +175,7 @@ export const ExtraPresetAccount = ({
               <label>
                 Capabilities
                 <select
+                  className="dt-select"
                   multiple
                   name="capabilities"
                   onChange={handleInputChange}
@@ -324,6 +324,7 @@ export const ExtraPresetAccount = ({
               <label>
                 Billing Source
                 <select
+                  className="dt-select"
                   name="billing_source"
                   onChange={handleInputChange}
                   value={formData.billing_source}
@@ -355,7 +356,7 @@ export const ExtraPresetAccount = ({
                 />
               </label>
             </FieldWrapper>
-            <button className="button" type="submit">
+            <button className="dev-tools-button" type="submit">
               Save
             </button>
           </form>

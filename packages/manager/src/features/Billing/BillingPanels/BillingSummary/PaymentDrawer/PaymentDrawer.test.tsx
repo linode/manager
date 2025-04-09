@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { paymentFactory } from 'src/factories/billing';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';

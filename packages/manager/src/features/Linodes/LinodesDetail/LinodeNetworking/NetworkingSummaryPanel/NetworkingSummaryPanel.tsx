@@ -1,10 +1,11 @@
+import { useLinodeQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { DNSResolvers } from './DNSResolvers';
 import { NetworkTransfer } from './NetworkTransfer';
@@ -15,10 +16,14 @@ interface Props {
 }
 
 export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
+  const flags = useFlags();
+  const theme = useTheme();
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeId);
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
-  const theme = useTheme();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   if (!linode) {
     return null;

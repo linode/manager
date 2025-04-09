@@ -1,3 +1,5 @@
+import { useAllFirewallsQuery, useGrants } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   FormControlLabel,
@@ -8,14 +10,11 @@ import {
 } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 
@@ -142,11 +141,15 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio />}
+              control={<Radio disabled={_isRestrictedUser} />}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio disabled={_isRestrictedUser} />}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -165,11 +168,15 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio />}
+              control={<Radio disabled={_isRestrictedUser} />}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio disabled={_isRestrictedUser} />}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -207,6 +214,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
+            disabled={_isRestrictedUser}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple
@@ -230,6 +238,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
+            disabled={_isRestrictedUser}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple

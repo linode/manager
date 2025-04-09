@@ -174,10 +174,7 @@ const ruleEditorReducer = (
 
       lastRevision.errors.push(action.error);
       return;
-
     case 'UNDO':
-      lastRevision = last(draft[action.idx]);
-
       draft[action.idx].pop();
 
       // If there's nothing left on the stack, we need to actually remove this revisionList.

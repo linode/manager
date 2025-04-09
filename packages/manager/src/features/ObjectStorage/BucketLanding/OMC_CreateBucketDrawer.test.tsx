@@ -19,22 +19,19 @@ describe('OMC_CreateBucketDrawer', () => {
   });
 
   it('should render the drawer', () => {
-    const {
-      getByTestId,
-      getByText,
-      queryByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <OMC_CreateBucketDrawer {...props} />,
-      options: {
-        flags: {
-          objMultiCluster: true,
-          objectStorageGen2: { enabled: true },
+    const { getByTestId, getByText, queryByText } =
+      renderWithThemeAndHookFormContext({
+        component: <OMC_CreateBucketDrawer {...props} />,
+        options: {
+          flags: {
+            objMultiCluster: true,
+            objectStorageGen2: { enabled: true },
+          },
         },
-      },
-    });
+      });
 
     expect(getByTestId('drawer-title')).toBeVisible();
-    expect(getByText('Label')).toBeVisible();
+    expect(getByText('Bucket Name')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
     expect(getByText('Cancel')).toBeVisible();
     expect(getByTestId('create-bucket-button')).toBeVisible();

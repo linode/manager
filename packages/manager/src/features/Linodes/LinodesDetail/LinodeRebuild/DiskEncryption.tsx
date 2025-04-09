@@ -1,3 +1,4 @@
+import { useRegionQuery } from '@linode/queries';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -7,7 +8,6 @@ import {
   getRebuildDiskEncryptionDescription,
   useIsDiskEncryptionFeatureEnabled,
 } from 'src/components/Encryption/utils';
-import { useRegionQuery } from 'src/queries/regions/regions';
 
 import type { RebuildLinodeFormValues } from './utils';
 
@@ -24,14 +24,17 @@ export const DiskEncryption = (props: Props) => {
   const { data: region } = useRegionQuery(linodeRegion);
 
   const isLinodeInDistributedRegion = region?.site_type === 'distributed';
+
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
   const regionSupportsDiskEncryption =
-    region?.capabilities.includes('Disk Encryption') ?? false;
+    (region?.capabilities.includes('Disk Encryption') ||
+      region?.capabilities.includes('LA Disk Encryption')) ??
+    false;
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
-  if (!isDiskEncryptionFeatureEnabled && !regionSupportsDiskEncryption) {
+  if (!isDiskEncryptionFeatureEnabled) {
     return null;
   }
 

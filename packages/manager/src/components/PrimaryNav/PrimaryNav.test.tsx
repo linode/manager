@@ -1,14 +1,14 @@
+import { queryClientFactory } from '@linode/queries';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
 
+import type { ManagerPreferences } from '@linode/utilities';
 import type { Flags } from 'src/featureFlags';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const props = {
   closeMenu: vi.fn(),
@@ -28,8 +28,8 @@ describe('PrimaryNav', () => {
     usePreferences: vi.fn().mockReturnValue({}),
   }));
 
-  vi.mock('src/queries/profile/preferences', async () => {
-    const actual = await vi.importActual('src/queries/profile/preferences');
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
     return {
       ...actual,
       usePreferences: queryMocks.usePreferences,
@@ -43,12 +43,8 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const {
-      findByTestId,
-      getByTestId,
-      queryByTestId,
-      rerender,
-    } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
+    const { findByTestId, getByTestId, queryByTestId, rerender } =
+      renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(
@@ -206,7 +202,46 @@ describe('PrimaryNav', () => {
     expect(databaseNavItem).toBeVisible();
   });
 
-  it('should show Monitor menu item if the user has the account capability', async () => {
+  it('should show Metrics and Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag has any of the properties true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      aclp: {
+        beta: true,
+        enabled: true,
+      },
+      aclpAlerting: {
+        alertDefinitions: true,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
+
+    const { findAllByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
+    const betaChip = await findAllByTestId('betaChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(betaChip).toHaveLength(2);
+  });
+
+  it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
     const account = accountFactory.build({
       capabilities: ['Akamai Cloud Pulse'],
     });
@@ -220,16 +255,66 @@ describe('PrimaryNav', () => {
     const flags = {
       aclp: {
         beta: false,
-        enabled: true,
+        enabled: false,
+      },
+      aclpAlerting: {
+        alertDefinitions: true,
+        notificationChannels: true,
+        recentActivity: true,
       },
     };
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
+    const { queryByTestId, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = queryByText('Metrics');
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+
+    expect(monitorMetricsDisplayItem).toBeNull();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
+  });
+
+  it('should not show Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag does not have any of the properties true', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
     });
 
-    const monitorNavItem = await findByText('Monitor');
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
 
-    expect(monitorNavItem).toBeVisible();
+    const flags = {
+      aclp: {
+        beta: true,
+        enabled: true,
+      },
+      aclpAlerting: {
+        alertDefinitions: false,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
+
+    const { findByTestId, findByText, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics'); // Metrics should be visible
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+    const betaChip = await findByTestId('betaChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(betaChip).toBeVisible();
   });
 });

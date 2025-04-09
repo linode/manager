@@ -1,5 +1,6 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { Button } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import { debounce } from 'throttle-debounce';
 
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { uploadObject } from '../../../features/ObjectStorage/requests';
 import { FileUpload } from '../FileUpload';
@@ -300,16 +300,15 @@ export const ObjectUploader = React.memo((props: Props) => {
   );
 });
 
-export const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: AxiosProgressEvent) => {
-  dispatch({
-    data: {
-      percentComplete:
-        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
-    },
-    filesToUpdate: [fileName],
-    type: 'UPDATE_FILES',
-  });
-};
+export const onUploadProgressFactory =
+  (dispatch: (value: ObjectUploaderAction) => void, fileName: string) =>
+  (progressEvent: AxiosProgressEvent) => {
+    dispatch({
+      data: {
+        percentComplete:
+          (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+      },
+      filesToUpdate: [fileName],
+      type: 'UPDATE_FILES',
+    });
+  };

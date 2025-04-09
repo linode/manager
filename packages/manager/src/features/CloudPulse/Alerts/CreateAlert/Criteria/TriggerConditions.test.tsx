@@ -53,7 +53,7 @@ describe('Trigger Conditions', () => {
     const evaluationPeriodToolTip = within(evaluationPeriodContainer).getByRole(
       'button',
       {
-        name: 'Choose how often you intend to evaluate the alert condition.',
+        name: 'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
       }
     );
     const pollingIntervalContainer = container.getByTestId(
@@ -62,8 +62,7 @@ describe('Trigger Conditions', () => {
     const pollingIntervalToolTip = within(pollingIntervalContainer).getByRole(
       'button',
       {
-        name:
-          'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
+        name: 'Choose how often you intend to evaluate the alert condition.',
       }
     );
     expect(evaluationPeriodToolTip).toBeInTheDocument();
@@ -71,8 +70,8 @@ describe('Trigger Conditions', () => {
   });
 
   it('should render the Evaluation Period component with options happy path and select an option', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <TriggerConditions
             maxScrapingInterval={0}
@@ -84,14 +83,14 @@ describe('Trigger Conditions', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const evaluationPeriodContainer = container.getByTestId(
       EvaluationPeriodTestId
     );
-    const evaluationPeriodInput = within(
-      evaluationPeriodContainer
-    ).getByRole('button', { name: 'Open' });
+    const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
 
     user.click(evaluationPeriodInput);
 
@@ -118,8 +117,8 @@ describe('Trigger Conditions', () => {
   });
 
   it('should render the Polling Interval component with options happy path and select an option', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <TriggerConditions
             maxScrapingInterval={0}
@@ -131,14 +130,14 @@ describe('Trigger Conditions', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const pollingIntervalContainer = container.getByTestId(
       PollingIntervalTestId
     );
-    const pollingIntervalInput = within(
-      pollingIntervalContainer
-    ).getByRole('button', { name: 'Open' });
+    const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
 
     user.click(pollingIntervalInput);
 
@@ -181,9 +180,10 @@ describe('Trigger Conditions', () => {
     const evaluationPeriodContainer = container.getByTestId(
       EvaluationPeriodTestId
     );
-    const evaluationPeriodInput = within(
-      evaluationPeriodContainer
-    ).getByRole('button', { name: 'Open' });
+    const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
 
     user.click(evaluationPeriodInput);
 
@@ -194,9 +194,10 @@ describe('Trigger Conditions', () => {
     const pollingIntervalContainer = container.getByTestId(
       PollingIntervalTestId
     );
-    const pollingIntervalInput = within(
-      pollingIntervalContainer
-    ).getByRole('button', { name: 'Open' });
+    const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
     user.click(pollingIntervalInput);
     expect(
       screen.queryByText(pollingIntervalOptions.linode[0].label)

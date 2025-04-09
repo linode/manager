@@ -1,17 +1,19 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  mockGetBucketAccess,
   mockGetBucketsForRegion,
   mockGetObjectStorageEndpoints,
-  mockGetBucketAccess,
 } from 'support/intercepts/object-storage';
+
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
-  regionFactory,
 } from 'src/factories';
-import { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
+
+import type { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 describe('Object Storage Gen 2 bucket details tabs', () => {
   beforeEach(() => {
@@ -64,9 +66,8 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
        * - Confirms the SSL/TLS tab appears
        */
       it(`does not hide the CORS toggle and SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
+        const { mockBucket, mockEndpoint } =
+          createMocksBasedOnEndpointType(endpoint);
         const { cluster, label } = mockBucket;
 
         mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
@@ -107,9 +108,8 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
        * - Confirms the SSL/TLS tab is hidden
        */
       it(`hides the CORS toggle and SSL/TLS tab for for buckets with an ${endpoint} endpoint`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
+        const { mockBucket, mockEndpoint } =
+          createMocksBasedOnEndpointType(endpoint);
         const { cluster, label } = mockBucket;
 
         mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');

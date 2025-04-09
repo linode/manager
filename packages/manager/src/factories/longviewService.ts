@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import {
   LongviewPort,
@@ -22,11 +22,10 @@ export const longviewServiceFactory = Factory.Sync.makeFactory<LongviewService>(
   }
 );
 
-export const longviewPortsResponseFactory = Factory.Sync.makeFactory<LongviewPortsResponse>(
-  {
+export const longviewPortsResponseFactory =
+  Factory.Sync.makeFactory<LongviewPortsResponse>({
     Ports: {
       active: longviewPortFactory.buildList(2),
       listening: longviewServiceFactory.buildList(2),
     },
-  }
-);
+  });

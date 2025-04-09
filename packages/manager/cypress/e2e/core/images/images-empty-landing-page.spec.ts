@@ -1,13 +1,13 @@
-import { ui } from 'support/ui';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { profileFactory } from '@src/factories';
+import { profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockGetAllImages } from 'support/intercepts/images';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
 describe('Images empty landing page', () => {
@@ -67,15 +67,15 @@ describe('Images empty landing page', () => {
   it('checks restricted user has no access to create Image on Image landing page', () => {
     // object to create a mockProfile for non-restricted user
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     // object to create a mockUser for non-restricted user
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     // object to create a mockGrants for non-restricted user

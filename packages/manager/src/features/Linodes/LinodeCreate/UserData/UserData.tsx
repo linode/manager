@@ -5,7 +5,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { UserDataHeading } from './UserDataHeading';
 
@@ -39,10 +39,10 @@ export const UserData = () => {
     );
   };
 
-  const region = useMemo(() => regions?.find((r) => r.id === regionId), [
-    regions,
-    regionId,
-  ]);
+  const region = useMemo(
+    () => regions?.find((r) => r.id === regionId),
+    [regions, regionId]
+  );
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',

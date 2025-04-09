@@ -1,9 +1,9 @@
+import { profileFactory } from '@linode/utilities';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-import { profileFactory } from 'src/factories';
 import { paymentMethodFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -25,8 +25,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useGrants: queryMocks.useGrants,

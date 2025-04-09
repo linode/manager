@@ -134,6 +134,15 @@ export interface NodeBalancerStats {
   };
 }
 
+export interface NodebalancerVpcConfig {
+  id: number;
+  nodebalancer_id: number;
+  vpc_id: number;
+  subnet_id: number;
+  ipv4_range: string | null;
+  ipv6_range: string | null;
+}
+
 export interface CreateNodeBalancerConfig {
   port?: number;
   /**
@@ -181,9 +190,12 @@ export interface CreateNodeBalancerConfig {
   cipher_suite?: 'recommended' | 'legacy' | 'none';
   ssl_cert?: string;
   ssl_key?: string;
+  nodes?: CreateNodeBalancerConfigNode[];
 }
 
 export type UpdateNodeBalancerConfig = CreateNodeBalancerConfig;
+
+export type RebuildNodeBalancerConfig = CreateNodeBalancerConfig;
 
 export interface CreateNodeBalancerConfigNode {
   address: string;
@@ -193,9 +205,11 @@ export interface CreateNodeBalancerConfigNode {
    */
   mode?: NodeBalancerConfigNodeMode;
   weight?: number;
+  subnet_id?: number;
 }
 
-export type UpdateNodeBalancerConfigNode = Partial<CreateNodeBalancerConfigNode>;
+export type UpdateNodeBalancerConfigNode =
+  Partial<CreateNodeBalancerConfigNode>;
 
 export interface NodeBalancerConfigNode {
   address: string;
@@ -206,6 +220,7 @@ export interface NodeBalancerConfigNode {
   nodebalancer_id: number;
   status: 'unknown' | 'UP' | 'DOWN';
   weight: number;
+  vpc_config_id?: number | null;
 }
 
 export interface NodeBalancerConfigNodeWithPort extends NodeBalancerConfigNode {
@@ -232,4 +247,9 @@ export interface CreateNodeBalancerPayload {
   configs: CreateNodeBalancerConfig[];
   firewall_id?: number;
   tags?: string[];
+  vpcs?: {
+    subnet_id: number;
+    ipv4_range: string;
+    ipv6_range?: string;
+  }[];
 }

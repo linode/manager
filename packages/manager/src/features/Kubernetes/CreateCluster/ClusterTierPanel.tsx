@@ -1,10 +1,10 @@
+import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { useAccount } from 'src/queries/account/account';
 
 import { CLUSTER_TIER_DOCS_LINK } from '../constants';
 import {
@@ -56,22 +56,14 @@ export const ClusterTierPanel = (props: Props) => {
         marginTop={2}
       >
         <SelectionCard
-          subheadings={[
-            'Small to medium deployments',
-            'Up to 250 nodes, 1000 pods',
-            'Shared control plane',
-          ]}
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
           heading="LKE"
           onClick={() => handleClusterTierSelection('standard')}
+          subheadings={[StandardSubheadings]}
+          sxCardBase={{ padding: '16px' }}
         />
         <SelectionCard
-          subheadings={[
-            'Large deployments',
-            'Up to 500 nodes, 5000 pods',
-            'Dedicated HA control plane',
-          ]}
           tooltip={
             isLkeEnterpriseSelectionDisabled && !isUserRestricted
               ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
@@ -81,9 +73,27 @@ export const ClusterTierPanel = (props: Props) => {
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           heading="LKE Enterprise"
           onClick={() => handleClusterTierSelection('enterprise')}
+          subheadings={[EnterpriseSubheadings]}
+          sxCardBase={{ padding: '16px' }}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
     </Stack>
   );
 };
+
+const StandardSubheadings = (
+  <Typography sx={{ marginTop: '4px' }}>
+    Small to medium deployments <br />
+    Up to 250 nodes, 1000 pods <br />
+    Shared control plane <br />
+  </Typography>
+);
+
+const EnterpriseSubheadings = (
+  <Typography sx={{ marginTop: '4px' }}>
+    Large deployments <br />
+    Up to 500 nodes, 5000 pods <br />
+    Dedicated HA control plane <br />
+  </Typography>
+);

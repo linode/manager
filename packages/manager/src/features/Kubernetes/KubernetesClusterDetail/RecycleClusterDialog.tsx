@@ -1,8 +1,7 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { MULTI_NODE_POD_RECYCLE_WARNING } from 'src/features/Kubernetes/constants';
@@ -20,9 +19,8 @@ export const RecycleClusterDialog = (props: Props) => {
   const { clusterId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isPending, mutateAsync } = useRecycleClusterMutation(
-    clusterId
-  );
+  const { error, isPending, mutateAsync } =
+    useRecycleClusterMutation(clusterId);
 
   const onSubmit = () => {
     mutateAsync().then(() => {

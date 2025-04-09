@@ -1,4 +1,4 @@
-import { imageFactory, linodeFactory, regionFactory } from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
 import {
   mockCreateLinode,
@@ -9,6 +9,8 @@ import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { imageFactory } from 'src/factories';
 
 describe('Create Linode with user data', () => {
   /*
@@ -111,15 +113,15 @@ describe('Create Linode with user data', () => {
       region: linodeRegion.id,
     });
     const mockImage = imageFactory.build({
-      id: `linode/${randomLabel()}`,
-      label: randomLabel(),
-      created_by: 'linode',
-      is_public: true,
-      vendor: 'Debian',
       // `cloud-init` is omitted from Image capabilities.
       capabilities: [],
+      created_by: 'linode',
       // null eol so that the image is not deprecated
       eol: null,
+      id: `linode/${randomLabel()}`,
+      is_public: true,
+      label: randomLabel(),
+      vendor: 'Debian',
     });
 
     mockGetImage(mockImage.id, mockImage);

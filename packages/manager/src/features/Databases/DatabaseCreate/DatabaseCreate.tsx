@@ -1,12 +1,6 @@
-import {
-  BetaChip,
-  CircleProgress,
-  Divider,
-  ErrorState,
-  Notice,
-  Paper,
-} from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
+import { useRegionsQuery } from '@linode/queries';
+import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
+import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -28,7 +22,6 @@ import {
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -37,24 +30,14 @@ import {
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import {
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
-} from '../constants';
+import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
-import {
-  determineReplicationCommitType,
-  determineReplicationType,
-} from './utilities';
 
 import type {
   ClusterSize,
-  ComprehensiveReplicationType,
   CreateDatabasePayload,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
@@ -65,11 +48,6 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DatabaseCreate = () => {
   const history = useHistory();
-  const {
-    isDatabasesV2Beta,
-    isDatabasesV2Enabled,
-    isDatabasesV2GA,
-  } = useIsDatabasesEnabled();
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
@@ -90,7 +68,7 @@ const DatabaseCreate = () => {
     error: typesError,
     isLoading: typesLoading,
   } = useDatabaseTypesQuery({
-    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+    platform: 'rdbms-default',
   });
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -108,9 +86,7 @@ const DatabaseCreate = () => {
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
       allowEmptyAddress: true,
-      errorMessage: isDatabasesV2GA
-        ? ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT
-        : ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
+      errorMessage: ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
     });
 
     if (validatedIps.some((ip) => ip.error)) {
@@ -177,13 +153,6 @@ const DatabaseCreate = () => {
     type: '',
   };
 
-  if (!isDatabasesV2Enabled) {
-    // TODO (UIE-8214) remove POST GA
-    initialValues.replication_commit_type = undefined; // specific to Postgres
-    initialValues.replication_type = 'none' as ComprehensiveReplicationType;
-    initialValues.ssl_connection = true;
-  }
-
   const {
     errors,
     handleSubmit,
@@ -209,19 +178,8 @@ const DatabaseCreate = () => {
         'cluster_size',
         values.cluster_size < 1 ? 3 : values.cluster_size
       );
-      if (!isDatabasesV2Enabled) {
-        // TODO (UIE-8214) remove POST GA
-        setFieldValue(
-          'replication_type',
-          determineReplicationType(values.cluster_size, values.engine)
-        );
-        setFieldValue(
-          'replication_commit_type',
-          determineReplicationCommitType(values.engine)
-        );
-      }
     }
-  }, [setFieldValue, values.cluster_size, values.engine, isDatabasesV2Enabled]);
+  }, [setFieldValue, values.cluster_size, values.engine]);
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
 
@@ -273,15 +231,11 @@ const DatabaseCreate = () => {
 
   const handleNodeChange = (size: ClusterSize | undefined) => {
     setFieldValue('cluster_size', size);
-    if (!isDatabasesV2Enabled) {
-      // TODO (UIE-8214) remove POST GA
-      setFieldValue('replication_type', size === 1 ? 'none' : 'semi_synch');
-    }
   };
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
-      <form onSubmit={handleSubmit} ref={formRef}>
+      <form onSubmit={handleSubmit} ref={formRef} data-testid="db-create-form">
         <LandingHeader
           breadcrumbProps={{
             crumbOverrides: [
@@ -290,14 +244,6 @@ const DatabaseCreate = () => {
                 position: 1,
               },
             ],
-            labelOptions: {
-              suffixComponent: isDatabasesV2Beta ? (
-                <BetaChip
-                  component="span"
-                  sx={{ marginLeft: '6px', marginTop: '4px' }}
-                />
-              ) : null,
-            },
             pathname: location.pathname,
           }}
           title="Create"
@@ -372,15 +318,13 @@ const DatabaseCreate = () => {
             onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
           />
         </Paper>
-        {isDatabasesV2GA && (
-          <Paper sx={{ marginTop: 2 }}>
-            <DatabaseSummarySection
-              currentClusterSize={values.cluster_size}
-              currentEngine={selectedEngine}
-              currentPlan={selectedPlan}
-            />
-          </Paper>
-        )}
+        <Paper sx={{ marginTop: 2 }}>
+          <DatabaseSummarySection
+            currentClusterSize={values.cluster_size}
+            currentEngine={selectedEngine}
+            currentPlan={selectedPlan}
+          />
+        </Paper>
         <StyledBtnCtn>
           <StyledTypography>
             Your database node(s) will take approximately 15-30 minutes to
@@ -395,7 +339,7 @@ const DatabaseCreate = () => {
             Create Database Cluster
           </StyledCreateBtn>
         </StyledBtnCtn>
-        {isDatabasesV2Enabled && <DatabaseLogo />}
+        <DatabaseLogo />
       </form>
     </>
   );

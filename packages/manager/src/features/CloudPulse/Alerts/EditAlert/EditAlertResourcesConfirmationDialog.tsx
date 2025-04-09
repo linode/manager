@@ -1,10 +1,9 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { ActionPanelProps } from 'src/components/ActionsPanel/ActionsPanel';
+import type { ActionPanelProps } from '@linode/ui';
 
 interface AlertResourcesConfirmDialogProps {
   /**
@@ -30,12 +29,8 @@ interface AlertResourcesConfirmDialogProps {
 
 export const EditAlertResourcesConfirmDialog = React.memo(
   (props: AlertResourcesConfirmDialogProps) => {
-    const {
-      isApiResponsePending,
-      onClose,
-      onConfirm,
-      openConfirmationDialog,
-    } = props;
+    const { isApiResponsePending, onClose, onConfirm, openConfirmationDialog } =
+      props;
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {
@@ -61,7 +56,7 @@ export const EditAlertResourcesConfirmDialog = React.memo(
       >
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Body,
+            font: theme.tokens.alias.Typography.Body,
           })}
           variant="body1"
         >

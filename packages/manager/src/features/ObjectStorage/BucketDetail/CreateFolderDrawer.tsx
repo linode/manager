@@ -1,9 +1,8 @@
-import { TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useCreateObjectUrlMutation } from 'src/queries/object-storage/queries';
 
 interface Props {
@@ -77,7 +76,12 @@ export const CreateFolderDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create Folder">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Create Folder"
+    >
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={formik.errors.name ?? error?.[0]?.reason}

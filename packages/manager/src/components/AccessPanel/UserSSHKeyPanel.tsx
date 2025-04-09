@@ -1,4 +1,6 @@
+import { useAccountUsers, useProfile, useSSHKeysQuery } from '@linode/queries';
 import { Box, Button, Checkbox, Typography } from '@linode/ui';
+import { truncateAndJoinList } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -12,9 +14,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
@@ -58,16 +57,11 @@ interface Props {
 export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const {
-    authorizedUsers,
-    disabled,
-    headingVariant,
-    setAuthorizedUsers,
-  } = props;
+  const { authorizedUsers, disabled, headingVariant, setAuthorizedUsers } =
+    props;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
 
   const pagination = usePagination(1);
 

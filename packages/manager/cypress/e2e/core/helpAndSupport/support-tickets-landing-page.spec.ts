@@ -1,3 +1,4 @@
+import { linodeConfigInterfaceFactory, linodeFactory } from '@linode/utilities';
 import { mockGetLinodeConfigs } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -19,10 +20,8 @@ import {
 } from 'support/util/random';
 
 import {
-  LinodeConfigInterfaceFactory,
   entityFactory,
   linodeConfigFactory,
-  linodeFactory,
   supportTicketFactory,
   volumeFactory,
 } from 'src/factories';
@@ -188,7 +187,7 @@ describe('support tickets landing page', () => {
       label: `${randomLabel()}-linode`,
     });
     const mockVolume = volumeFactory.build();
-    const mockPublicConfigInterface = LinodeConfigInterfaceFactory.build({
+    const mockPublicConfigInterface = linodeConfigInterfaceFactory.build({
       ipam_address: null,
       purpose: 'public',
     });

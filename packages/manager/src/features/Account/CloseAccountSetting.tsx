@@ -1,8 +1,7 @@
+import { useProfile } from '@linode/queries';
 import { Accordion, Button } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-
-import { useProfile } from 'src/queries/profile/profile';
 
 import CloseAccountDialog from './CloseAccountDialog';
 import {

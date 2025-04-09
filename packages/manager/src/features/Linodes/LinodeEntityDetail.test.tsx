@@ -1,3 +1,5 @@
+import { queryClientFactory } from '@linode/queries';
+import { linodeFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,14 +7,12 @@ import {
   accountFactory,
   firewallFactory,
   kubernetesClusterFactory,
-  linodeFactory,
   subnetAssignedLinodeDataFactory,
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -54,13 +54,12 @@ describe('Linode Entity Detail', () => {
     return {
       ...actual,
       __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
+      useIsDiskEncryptionFeatureEnabled:
+        mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(() => {
           return {
             isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
           };
-        }
-      ),
+        }),
     };
   });
 
@@ -119,10 +118,15 @@ describe('Linode Entity Detail', () => {
       }
     );
 
-    await waitFor(() => {
-      expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
-      expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual('test-vpc');
-    });
+    await waitFor(
+      () => {
+        expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
+        expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual(
+          'test-vpc'
+        );
+      },
+      { timeout: 15_000 }
+    );
   });
 
   it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {

@@ -1,14 +1,12 @@
+import { linodeTypeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
 import {
   accountBetaFactory,
   kubeLinodeFactory,
-  linodeTypeFactory,
-  nodePoolFactory,
-} from 'src/factories';
-import {
   kubernetesEnterpriseTierVersionFactory,
   kubernetesVersionFactory,
+  nodePoolFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
@@ -27,9 +25,8 @@ import type {
 } from '@linode/api-v4';
 
 const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
-const mockKubernetesEnterpriseVersions = kubernetesEnterpriseTierVersionFactory.buildList(
-  1
-);
+const mockKubernetesEnterpriseVersions =
+  kubernetesEnterpriseTierVersionFactory.buildList(1);
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
@@ -39,18 +36,11 @@ const queryMocks = vi.hoisted(() => ({
   useKubernetesVersionQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/account/account', () => {
-  const actual = vi.importActual('src/queries/account/account');
+vi.mock('@linode/queries', () => {
+  const actual = vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,
-  };
-});
-
-vi.mock('src/queries/account/betas', () => {
-  const actual = vi.importActual('src/queries/account/betas');
-  return {
-    ...actual,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
   };
 });

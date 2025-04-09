@@ -141,7 +141,22 @@ export const createVPC = (mockState: MockState) => [
         );
       }
 
-      await Promise.all(createSubnetPromises);
+      // afterwards, we have to update our newly created VPC with the recently created subnets
+      // so that all subnet IDs match back
+      const returnedSubnets = await Promise.all(createSubnetPromises);
+      const actualSubnets = returnedSubnets.map(
+        (subnetFromDB) => subnetFromDB[1]
+      );
+
+      await mswDB.update(
+        'vpcs',
+        createdVPC.id,
+        {
+          ...createdVPC,
+          subnets: actualSubnets,
+        },
+        mockState
+      );
 
       queueEvents({
         event: {

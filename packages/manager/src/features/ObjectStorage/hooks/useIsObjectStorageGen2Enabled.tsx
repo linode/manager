@@ -1,6 +1,7 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 /**
  * Hook to determine if the Object Storage Gen2 feature should be visible to the user.

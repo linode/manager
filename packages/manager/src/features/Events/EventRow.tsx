@@ -9,7 +9,7 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import {
   formatProgressEvent,
@@ -38,11 +38,8 @@ export const EventRow = (props: EventRowProps) => {
     return null;
   }
 
-  const {
-    progressEventDate,
-    progressEventDuration,
-    showProgress,
-  } = formatProgressEvent(event);
+  const { progressEventDate, progressEventDuration, showProgress } =
+    formatProgressEvent(event);
 
   return (
     <TableRow data-qa-event-row data-testid={action}>

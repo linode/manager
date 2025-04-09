@@ -1,5 +1,8 @@
-import { Region } from '@linode/api-v4';
-import { linodeFactory, linodeTypeFactory, regionFactory } from 'src/factories';
+import {
+  linodeFactory,
+  linodeTypeFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
@@ -13,6 +16,8 @@ import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
+
+import type { Region } from '@linode/api-v4';
 
 describe('Create Linode in Distributed Region', () => {
   /*
@@ -28,9 +33,9 @@ describe('Create Linode in Distributed Region', () => {
     const mockRegion = extendRegion(regionFactory.build(mockRegionOptions));
     const mockLinodeTypes = [
       linodeTypeFactory.build({
+        class: 'nanode',
         id: 'nanode-edge-1',
         label: 'Nanode 1GB',
-        class: 'nanode',
       }),
     ];
     const mockLinode = linodeFactory.build({

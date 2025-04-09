@@ -1,4 +1,10 @@
 import {
+  useAccount,
+  useMutateAccountAgreements,
+  useRegionsQuery,
+} from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   ErrorState,
@@ -7,12 +13,14 @@ import {
   Stack,
   TextField,
 } from '@linode/ui';
+import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -29,32 +37,27 @@ import {
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
-import {
-  reportAgreementSigningError,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import {
   kubernetesQueries,
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
 import { ClusterTierPanel } from './ClusterTierPanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
@@ -73,6 +76,11 @@ import type {
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const CreateCluster = () => {
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { classes } = useStyles();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -86,9 +94,10 @@ export const CreateCluster = () => {
   const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
+  const [selectedTier, setSelectedTier] =
+    React.useState<KubernetesTier>('standard');
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
   const formValues = React.useMemo(() => {
     return {
@@ -153,6 +162,8 @@ export const CreateCluster = () => {
   React.useEffect(() => {
     setValue('k8s_version', versions[0]?.label);
   }, [versions]);
+  // LKE-E does not support APL at this time.
+  const isAPLSupported = showAPL && selectedTier === 'standard';
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -194,20 +205,18 @@ export const CreateCluster = () => {
 
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
-  const {
-    mutateAsync: createKubernetesClusterBeta,
-  } = useCreateKubernetesClusterBetaMutation();
+  const { mutateAsync: createKubernetesClusterBeta } =
+    useCreateKubernetesClusterBetaMutation();
 
-  const {
-    isLkeEnterpriseLAFeatureEnabled,
-    isLkeEnterpriseLAFlagEnabled,
-  } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
+    useIsLkeEnterpriseEnabled();
 
-  const createCluster = (formData: CreateKubeClusterPayload): Promise<void> => {
+  const createCluster = async (
+    formData: CreateKubeClusterPayload
+  ): Promise<void> => {
     const {
       apl_enabled,
       control_plane,
@@ -254,7 +263,7 @@ export const CreateCluster = () => {
       region,
     };
 
-    if (apl_enabled) {
+    if (isAPLSupported) {
       payload = { ...payload, apl_enabled };
     }
 
@@ -264,11 +273,23 @@ export const CreateCluster = () => {
 
     // Choose the correct function to create the cluster
     const createClusterFn =
-      apl_enabled || isLkeEnterpriseLAFeatureEnabled
+      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
-    return createClusterFn(payload)
+    // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
+    if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
+      try {
+        await createKubeClusterWithRequiredACLSchema.validate(payload, {
+          abortEarly: false,
+        });
+      } catch ({ errors }) {
+        setErrors([{ field: 'control_plane', reason: errors[0] }]);
+        scrollErrorIntoViewV2(formContainerRef);
+      }
+    }
+
+    createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
@@ -372,47 +393,47 @@ export const CreateCluster = () => {
             )}
             {isCreateClusterRestricted && (
               <Notice
+                important
+                sx={{ marginBottom: 2 }}
                 text={getRestrictedResourceText({
                   action: 'create',
                   isSingular: false,
                   resourceType: 'LKE Clusters',
                 })}
-                important
-                sx={{ marginBottom: 2 }}
                 variant="error"
               />
             )}
             <Paper data-qa-label-header>
               <Controller
+                control={control}
+                name="label"
                 render={({ field }) => (
                   <TextField
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      field.onChange(e.target.value);
-                    }}
                     data-qa-label-input
                     disabled={isCreateClusterRestricted}
                     errorText={errorMap.label}
                     label="Cluster Label"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      field.onChange(e.target.value);
+                    }}
                     value={field.value || ''}
                   />
                 )}
-                control={control}
-                name="label"
               />
 
               {isLkeEnterpriseLAFlagEnabled && (
                 <>
-                  <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
+                  <Divider sx={{ marginBottom: 3, marginTop: 4 }} />
                   <Controller
-                    render={({}) => (
+                    control={control}
+                    name="tier"
+                    render={() => (
                       <ClusterTierPanel
                         handleClusterTierSelection={handleClusterTierSelection}
                         isUserRestricted={isCreateClusterRestricted}
                         selectedTier={selectedTier}
                       />
                     )}
-                    control={control}
-                    name="tier"
                   />
                 </>
               )}
@@ -420,6 +441,8 @@ export const CreateCluster = () => {
               <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <Controller
+                    control={control}
+                    name="region"
                     render={({ field }) => (
                       <RegionSelect
                         {...field}
@@ -429,9 +452,16 @@ export const CreateCluster = () => {
                             ? 'Kubernetes Enterprise'
                             : 'Kubernetes'
                         }
+                        // disableClearable
+                        disabled={isCreateClusterRestricted}
+                        errorText={errorMap.region}
+                        isGeckoLAEnabled={isGeckoLAEnabled}
                         isOptionEqualToValue={(option, value) =>
                           option.id === value.id
                         }
+                        onChange={(_, region) => field.onChange(region?.id)}
+                        ref={null}
+                        regions={regionsData}
                         textFieldProps={{
                           helperText: <RegionHelperText mb={2} />,
                           helperTextPosition: 'top',
@@ -442,16 +472,8 @@ export const CreateCluster = () => {
                             ? 'Only regions that support LKE Enterprise clusters are listed.'
                             : undefined
                         }
-                        disableClearable
-                        disabled={isCreateClusterRestricted}
-                        errorText={errorMap.region}
-                        onChange={(_, region) => field.onChange(region.id)}
-                        ref={null}
-                        regions={regionsData}
                       />
                     )}
-                    control={control}
-                    name="region"
                   />
                 </Stack>
                 <StyledDocsLinkContainer
@@ -467,28 +489,28 @@ export const CreateCluster = () => {
               <StyledStackWithTabletBreakpoint>
                 <Stack>
                   <Controller
+                    control={control}
+                    name="k8s_version"
                     render={() => (
                       <Autocomplete
-                        onChange={(_, selected) => {
-                          setValue('k8s_version', selected?.value);
-                        }}
-                        value={
-                          versions.find(
-                            (v) => v.value === getValues('k8s_version')
-                          ) ?? null
-                        }
                         disableClearable={!!getValues('k8s_version')}
                         disabled={isCreateClusterRestricted}
                         errorText={errorMap.k8s_version}
                         label="Kubernetes Version"
                         loading={isLoadingVersions}
+                        onChange={(_, selected) => {
+                          setValue('k8s_version', selected?.value);
+                        }}
                         options={versions}
                         placeholder={' '}
                         sx={{ minWidth: 416 }}
+                        value={
+                          versions.find(
+                            (v) => v.value === getValues('k8s_version')
+                          ) ?? null
+                        }
                       />
                     )}
-                    control={control}
-                    name="k8s_version"
                   />
                 </Stack>
                 <StyledDocsLinkContainer
@@ -506,8 +528,11 @@ export const CreateCluster = () => {
                   <StyledStackWithTabletBreakpoint>
                     <Stack>
                       <Controller
+                        control={control}
+                        name="apl_enabled"
                         render={({ field }) => (
                           <ApplicationPlatform
+                            isSectionDisabled={!isAPLSupported}
                             setAPL={(value) => {
                               field.onChange(value);
                               setValue('control_plane.acl.enabled', value);
@@ -520,17 +545,22 @@ export const CreateCluster = () => {
                             }}
                           />
                         )}
-                        control={control}
-                        name="apl_enabled"
                       />
                     </Stack>
                   </StyledStackWithTabletBreakpoint>
                 </>
               )}
-              <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+              <Divider
+                sx={{
+                  marginBottom: selectedTier === 'enterprise' ? 3 : 1,
+                  marginTop: showAPL ? 1 : 4,
+                }}
+              />
               {showHighAvailability && selectedTier !== 'enterprise' && (
                 <Box data-testid="ha-control-plane">
                   <Controller
+                    control={control}
+                    name="control_plane.high_availability"
                     render={() => (
                       <HAControlPlane
                         highAvailabilityPrice={
@@ -538,26 +568,39 @@ export const CreateCluster = () => {
                             ? UNKNOWN_PRICE
                             : highAvailabilityPrice
                         }
-                        setHighAvailability={(value) =>
-                          setValue('control_plane.high_availability', value)
-                        }
                         isAPLEnabled={aplEnabled}
                         isErrorKubernetesTypes={isErrorKubernetesTypes}
                         isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                         selectedRegionId={getValues('region')}
+                        setHighAvailability={(value) =>
+                          setValue('control_plane.high_availability', value)
+                        }
                       />
                     )}
-                    control={control}
-                    name="control_plane.high_availability"
                   />
                 </Box>
               )}
+              {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
               {showControlPlaneACL && (
                 <>
-                  {selectedTier !== 'enterprise' && <Divider />}
+                  <Divider
+                    sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+                  />
                   <Controller
+                    control={control}
+                    name="control_plane.acl"
                     render={() => (
                       <ControlPlaneACLPane
+                        enableControlPlaneACL={controlPlaneACL}
+                        errorText={errorMap.control_plane}
+                        handleIsAcknowledgementChecked={() =>
+                          setIsACLAcknowledgementChecked(
+                            !isACLAcknowledgementChecked
+                          )
+                        }
+                        isAcknowledgementChecked={isACLAcknowledgementChecked}
+                        selectedTier={selectedTier as KubernetesTier}
+                        setControlPlaneACL={setControlPlaneACL}
                         updateFor={[
                           getValues('control_plane.acl.addresses.ipv4'),
                           getValues('control_plane.acl.addresses.ipv6'),
@@ -565,27 +608,31 @@ export const CreateCluster = () => {
                           errorMap,
                           controlPlaneACL,
                         ]}
-                        enableControlPlaneACL={controlPlaneACL}
-                        errorText={errorMap.control_plane}
-                        selectedTier={selectedTier as KubernetesTier}
-                        setControlPlaneACL={setControlPlaneACL}
                       />
                     )}
-                    control={control}
-                    name="control_plane.acl"
                   />
                 </>
               )}
               <Divider sx={{ marginBottom: 4 }} />
               <Controller
+                control={control}
+                name="node_pools"
                 render={() => (
                   <NodePoolPanel
                     addNodePool={(nodePool: Partial<KubeNodePoolResponse>) => {
                       addPool(nodePool);
                     }}
+                    apiError={errorMap.node_pools}
+                    hasSelectedRegion={hasSelectedRegion}
+                    isAPLEnabled={aplEnabled}
+                    isPlanPanelDisabled={isPlanPanelDisabled}
                     isSelectedRegionEligibleForPlan={
                       isSelectedRegionEligibleForPlan
                     }
+                    regionsData={regionsData}
+                    selectedRegionId={selectedRegion}
+                    selectedTier={selectedTier as KubernetesTier}
+                    types={typesData || []}
                     typesError={
                       typesError
                         ? getAPIErrorOrDefault(
@@ -594,19 +641,9 @@ export const CreateCluster = () => {
                           )[0].reason
                         : undefined
                     }
-                    apiError={errorMap.node_pools}
-                    hasSelectedRegion={hasSelectedRegion}
-                    isAPLEnabled={aplEnabled}
-                    isPlanPanelDisabled={isPlanPanelDisabled}
-                    regionsData={regionsData}
-                    selectedRegionId={selectedRegion}
-                    selectedTier={selectedTier as KubernetesTier}
-                    types={typesData || []}
                     typesLoading={typesLoading}
                   />
                 )}
-                control={control}
-                name="node_pools"
               />
             </Paper>
           </Grid>
@@ -615,11 +652,22 @@ export const CreateCluster = () => {
             data-testid="kube-checkout-bar"
           >
             <KubeCheckoutBar
+              createCluster={onSubmit}
+              enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
+              hasAgreed={hasAgreed}
+              highAvailability={getValues('control_plane.high_availability')}
               highAvailabilityPrice={
                 isErrorKubernetesTypes || !highAvailabilityPrice
                   ? UNKNOWN_PRICE
                   : highAvailabilityPrice
               }
+              pools={nodePool as KubeNodePoolResponse[]}
+              region={getValues('region')}
+              regionsData={regionsData}
+              removePool={removePool}
+              showHighAvailability={showHighAvailability}
+              submitting={isSubmitting}
+              toggleHasAgreed={toggleHasAgreed}
               updateFor={[
                 hasAgreed,
                 highAvailability,
@@ -633,17 +681,6 @@ export const CreateCluster = () => {
                 createCluster,
                 classes,
               ]}
-              createCluster={onSubmit}
-              enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
-              hasAgreed={hasAgreed}
-              highAvailability={getValues('control_plane.high_availability')}
-              pools={nodePool as KubeNodePoolResponse[]}
-              region={getValues('region')}
-              regionsData={regionsData}
-              removePool={removePool}
-              showHighAvailability={showHighAvailability}
-              submitting={isSubmitting}
-              toggleHasAgreed={toggleHasAgreed}
               updatePool={updatePool}
             />
           </Grid>

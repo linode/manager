@@ -259,7 +259,9 @@ const applyAdditionalFilter = (
  * This methods scrolls to the given HTML Element
  * @param scrollToElement The HTML Element to which we need to scroll
  */
-export const scrollToElement = (scrollToElement: HTMLDivElement | null) => {
+export const scrollToElement = (
+  scrollToElement: HTMLButtonElement | HTMLDivElement | null
+) => {
   if (scrollToElement) {
     window.scrollTo({
       behavior: 'smooth',

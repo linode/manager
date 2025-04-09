@@ -13,7 +13,10 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory } from 'src/factories';
-import { alertStatuses } from 'src/features/CloudPulse/Alerts/constants';
+import {
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+  alertStatuses,
+} from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Alert } from '@linode/api-v4';
@@ -60,6 +63,17 @@ const mockAlerts = [
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
   }),
 ];
+
+interface AlertActionOptions {
+  action: 'Disable' | 'Enable';
+  alertName: string;
+  alias: string;
+}
+
+interface AlertToggleOptions extends AlertActionOptions {
+  confirmationText: string;
+  successMessage: string;
+}
 
 /**
  * @description
@@ -132,7 +146,7 @@ const validateAlertDetails = (alert: Alert) => {
       .and(
         'have.attr',
         'href',
-        `/monitor/alerts/definitions/detail/${service_type}/${id}`
+        `/alerts/definitions/detail/${service_type}/${id}`
       );
     cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
       .should('be.visible')
@@ -164,7 +178,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
   });
 
@@ -196,12 +210,11 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
   it('should validate UI elements and alert details', () => {
     // Validate navigation links and buttons
-    cy.findByText('Alerts')
-      .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts');
+    cy.findByText('Alerts').should('be.visible');
+
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/monitor/alerts/definitions');
+      .and('have.attr', 'href', '/alerts/definitions');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers
@@ -303,12 +316,13 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     };
 
     // Function to toggle an alert's status
-    const toggleAlertStatus = (
-      alertName: string,
-      action: 'Disable' | 'Enable',
-      alias: string,
-      successMessage: string
-    ) => {
+    const toggleAlertStatus = ({
+      action,
+      alertName,
+      alias,
+      confirmationText,
+      successMessage,
+    }: AlertToggleOptions) => {
       cy.findByText(alertName)
         .should('be.visible')
         .closest('tr')
@@ -318,29 +332,48 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .should('be.visible')
             .click();
         });
-
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
 
-      cy.wait(alias).then(({ response }) => {
+      // verify dialog title
+      ui.dialog
+        .findByTitle(`${action} ${alertName} Alert?`)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(confirmationText).should('be.visible');
+          ui.button
+            .findByTitle(action)
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(alias).then(() => {
         ui.toast.assertMessage(successMessage);
       });
     };
     // Disable "Alert-1"
-    searchAlert('Alert-1');
-    toggleAlertStatus(
-      'Alert-1',
-      'Disable',
-      '@getFirstAlertDefinitions',
-      'Alert disabled'
-    );
+    const actions: Array<AlertActionOptions> = [
+      {
+        action: 'Disable',
+        alertName: 'Alert-1',
+        alias: '@getFirstAlertDefinitions',
+      },
+      {
+        action: 'Enable',
+        alertName: 'Alert-2',
+        alias: '@getSecondAlertDefinitions',
+      },
+    ];
 
-    // Enable "Alert-2"
-    searchAlert('Alert-2');
-    toggleAlertStatus(
-      'Alert-2',
-      'Enable',
-      '@getSecondAlertDefinitions',
-      'Alert enabled'
-    );
+    actions.forEach(({ action, alertName, alias }) => {
+      searchAlert(alertName);
+      toggleAlertStatus({
+        action,
+        alertName,
+        alias,
+        confirmationText: `Are you sure you want to ${action.toLowerCase()} this alert definition?`,
+        successMessage: UPDATE_ALERT_SUCCESS_MESSAGE,
+      });
+    });
   });
 });

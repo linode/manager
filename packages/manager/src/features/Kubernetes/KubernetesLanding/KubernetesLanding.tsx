@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -23,11 +24,11 @@ import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay'
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useProfile } from 'src/queries/profile/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
+import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
@@ -72,14 +73,11 @@ export const KubernetesLanding = () => {
   const { push } = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ClusterDialogState>(defaultDialogState);
 
-  const [
-    upgradeDialog,
-    setUpgradeDialogState,
-  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
+  const [upgradeDialog, setUpgradeDialogState] =
+    React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -98,18 +96,19 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { data, error, isLoading } = useKubernetesClustersQuery(
-    {
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { data, error, isLoading } = useKubernetesClustersQuery({
+    enabled: !isRestricted,
+    filter,
+    params: {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter,
-    !isRestricted
-  );
+    isUsingBetaEndpoint,
+  });
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const openUpgradeDialog = (
     clusterID: number,

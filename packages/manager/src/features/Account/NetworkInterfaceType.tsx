@@ -1,3 +1,4 @@
+import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
 import {
   Accordion,
   BetaChip,
@@ -7,14 +8,11 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountSettings,
-  useMutateAccountSettings,
-} from 'src/queries/account/settings';
 
 import type {
   AccountSettings,
@@ -27,26 +25,28 @@ type InterfaceSettingValues = Pick<
   'interfaces_for_new_linodes'
 >;
 
-const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] = [
-  {
-    label: 'Configuration Profile Interfaces but allow Linode Interfaces',
-    value: 'legacy_config_default_but_linode_allowed',
-  },
-  {
-    label: 'Linode Interfaces but allow Configuration Profile Interfaces',
-    value: 'linode_default_but_legacy_config_allowed',
-  },
-  {
-    label: 'Configuration Profile Interfaces Only',
-    value: 'legacy_config_only',
-  },
-  {
-    label: 'Linode Interfaces Only',
-    value: 'linode_only',
-  },
-];
+const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] =
+  [
+    {
+      label: 'Configuration Profile Interfaces but allow Linode Interfaces',
+      value: 'legacy_config_default_but_linode_allowed',
+    },
+    {
+      label: 'Linode Interfaces but allow Configuration Profile Interfaces',
+      value: 'linode_default_but_legacy_config_allowed',
+    },
+    {
+      label: 'Configuration Profile Interfaces Only',
+      value: 'legacy_config_only',
+    },
+    {
+      label: 'Linode Interfaces Only',
+      value: 'linode_only',
+    },
+  ];
 
 export const NetworkInterfaceType = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
@@ -70,6 +70,9 @@ export const NetworkInterfaceType = () => {
   const onSubmit = async (values: InterfaceSettingValues) => {
     try {
       await updateAccountSettings(values);
+      enqueueSnackbar('Network Interface type settings updated.', {
+        variant: 'success',
+      });
     } catch (error) {
       setError('interfaces_for_new_linodes', { message: error[0].reason });
     }
@@ -79,7 +82,7 @@ export const NetworkInterfaceType = () => {
     <Accordion
       defaultExpanded
       heading="Network Interface Type"
-      headingChip={<BetaChip color="primary" />}
+      headingChip={<BetaChip />}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>

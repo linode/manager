@@ -1,6 +1,6 @@
+import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -41,45 +41,41 @@ describe('VPC', () => {
       })
     );
 
-    const {
-      findByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <VPC />,
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <VPC />,
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByText('VPC is not available in the selected region.');
   });
 
   it('renders a subnet select if a VPC is selected', async () => {
-    const {
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <VPC />,
-      useFormOptions: {
-        defaultValues: {
-          interfaces: [{ vpc_id: 4 }, {}, {}],
-          region: 'fake-region',
+    const { getByLabelText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <VPC />,
+        useFormOptions: {
+          defaultValues: {
+            interfaces: [{ vpc_id: 4 }, {}, {}],
+            region: 'fake-region',
+          },
         },
-      },
-    });
+      });
 
     expect(getByLabelText('Subnet')).toBeVisible();
   });
 
   it('renders VPC IPv4, NAT checkboxes, and IP Ranges inputs when a subnet is selected', async () => {
-    const {
-      getByLabelText,
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <VPC />,
-      useFormOptions: {
-        defaultValues: {
-          interfaces: [{ subnet_id: 5, vpc_id: 4 }, {}, {}],
-          region: 'fake-region',
+    const { getByLabelText, getByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <VPC />,
+        useFormOptions: {
+          defaultValues: {
+            interfaces: [{ subnet_id: 5, vpc_id: 4 }, {}, {}],
+            region: 'fake-region',
+          },
         },
-      },
-    });
+      });
 
     expect(
       getByLabelText(
@@ -95,21 +91,20 @@ describe('VPC', () => {
   });
 
   it('should check the VPC IPv4 if a "ipv4.vpc" is null/undefined', async () => {
-    const {
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <VPC />,
-      useFormOptions: {
-        defaultValues: {
-          interfaces: [
-            { ipv4: { vpc: undefined }, subnet_id: 5, vpc_id: 4 },
-            {},
-            {},
-          ],
-          region: 'fake-region',
+    const { getByLabelText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <VPC />,
+        useFormOptions: {
+          defaultValues: {
+            interfaces: [
+              { ipv4: { vpc: undefined }, subnet_id: 5, vpc_id: 4 },
+              {},
+              {},
+            ],
+            region: 'fake-region',
+          },
         },
-      },
-    });
+      });
 
     expect(
       getByLabelText(
@@ -119,17 +114,20 @@ describe('VPC', () => {
   });
 
   it('should uncheck the VPC IPv4 if a "ipv4.vpc" is a string value and show the VPC IP TextField', async () => {
-    const {
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <VPC />,
-      useFormOptions: {
-        defaultValues: {
-          interfaces: [{ ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 }, {}, {}],
-          region: 'fake-region',
+    const { getByLabelText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <VPC />,
+        useFormOptions: {
+          defaultValues: {
+            interfaces: [
+              { ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 },
+              {},
+              {},
+            ],
+            region: 'fake-region',
+          },
         },
-      },
-    });
+      });
 
     expect(
       getByLabelText(

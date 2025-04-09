@@ -1,6 +1,6 @@
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -29,8 +29,8 @@ const props = {
   zip: '19106',
 };
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useGrants: queryMocks.useGrants,

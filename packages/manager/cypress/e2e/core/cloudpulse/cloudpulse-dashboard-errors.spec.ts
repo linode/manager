@@ -1,6 +1,7 @@
 /**
  * @file Error Handling Tests for CloudPulse Dashboard.
  */
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -32,7 +33,6 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  regionFactory,
   widgetFactory,
 } from 'src/factories';
 
@@ -134,7 +134,7 @@ describe('Tests for API error handling', () => {
       'Internal Server Error'
     ).as('getMetricDefinitions');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -196,7 +196,7 @@ describe('Tests for API error handling', () => {
     // Mocking an error response for the 'fetchServices' API request.
     mockGetCloudPulseServicesError('Internal Server Error').as('fetchServices');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait('@fetchServices');
@@ -211,7 +211,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseTokenError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -277,7 +277,7 @@ describe('Tests for API error handling', () => {
       'fetchDashboard'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -294,7 +294,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseDashboardError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -358,7 +358,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseRegionsError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -388,7 +388,7 @@ describe('Tests for API error handling', () => {
       'getDatabaseInstancesError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);

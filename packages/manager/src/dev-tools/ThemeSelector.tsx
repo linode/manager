@@ -5,7 +5,7 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 export const MOCK_THEME_STORAGE_KEY = 'devTools/theme';
 
-import type { ThemeChoice } from 'src/utilities/theme';
+import type { ThemeChoice } from '@linode/utilities';
 
 export const ThemeSelector = () => {
   const [mockTheme, setMockTheme] = React.useState<ThemeChoice>('system');
@@ -34,7 +34,11 @@ export const ThemeSelector = () => {
         </p>
       </Grid>
       <Grid size={12}>
-        <select onChange={handleSetTheme} value={mockTheme}>
+        <select
+          className="dt-select"
+          onChange={handleSetTheme}
+          value={mockTheme}
+        >
           <option value="system">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>

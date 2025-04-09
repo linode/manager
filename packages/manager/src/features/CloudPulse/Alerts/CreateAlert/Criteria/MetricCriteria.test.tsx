@@ -129,39 +129,7 @@ describe('MetricCriteriaField', () => {
   });
 
   it('renders the initial metric field without the delete-icon', async () => {
-    const {
-      getByTestId,
-      queryByTestId,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <MetricCriteriaField
-          name="rule_criteria.rules"
-          serviceType="linode"
-          setMaxInterval={vi.fn()}
-        />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          rule_criteria: {
-            rules: [mockData.data[0]],
-          },
-        },
-      },
-    });
-    expect(getByTestId('rule_criteria.rules.0-id')).toBeInTheDocument();
-    await waitFor(() =>
-      expect(queryByTestId('clear-icon')).not.toBeInTheDocument()
-    );
-  });
-
-  it('handles error state while fetching metric definitions', async () => {
-    // Mock the API to simulate error state
-    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
-      data: undefined,
-      isError: true,
-      isLoading: false,
-      status: 'error',
-    }),
+    const { getByTestId, queryByTestId } =
       renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <MetricCriteriaField
@@ -178,16 +146,22 @@ describe('MetricCriteriaField', () => {
           },
         },
       });
-    expect(
-      await screen.findByText('Error in fetching the data.')
-    ).toBeInTheDocument();
+    expect(getByTestId('rule_criteria.rules.0-id')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(queryByTestId('clear-icon')).not.toBeInTheDocument()
+    );
   });
 
-  it('adds and removes metric fields dynamically', async () => {
-    const {
-      getByTestId,
-      queryByTestId,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+  it('handles error state while fetching metric definitions', async () => {
+    // Mock the API to simulate error state
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+      status: 'error',
+    });
+
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <MetricCriteriaField
           name="rule_criteria.rules"
@@ -203,6 +177,29 @@ describe('MetricCriteriaField', () => {
         },
       },
     });
+    expect(
+      await screen.findByText('Error in fetching the data.')
+    ).toBeInTheDocument();
+  });
+
+  it('adds and removes metric fields dynamically', async () => {
+    const { getByTestId, queryByTestId } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: (
+          <MetricCriteriaField
+            name="rule_criteria.rules"
+            serviceType="linode"
+            setMaxInterval={vi.fn()}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            rule_criteria: {
+              rules: [mockData.data[0]],
+            },
+          },
+        },
+      });
     const ruleCriteriaID = 'rule_criteria.rules.1-id';
     await user.click(screen.getByRole('button', { name: 'Add metric' }));
     expect(getByTestId(ruleCriteriaID)).toBeInTheDocument();
@@ -244,5 +241,38 @@ describe('MetricCriteriaField', () => {
     });
 
     expect(setMaxInterval).toBeCalledWith(firstOptionConvertedTime);
+  });
+  it('displays tooltip when the button is disabled', async () => {
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: (
+          <MetricCriteriaField
+            name="rule_criteria.rules"
+            serviceType="linode"
+            setMaxInterval={vi.fn()}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            rule_criteria: {
+              rules: [
+                mockData.data[0],
+                mockData.data[0],
+                mockData.data[1],
+                mockData.data[1],
+                mockData.data[0],
+              ],
+            },
+          },
+        },
+      });
+
+    const addButton = screen.getByRole('button', {
+      name: 'Add metric',
+    });
+
+    expect(addButton).toBeDisabled();
+    await userEvent.hover(addButton);
+    await findByText('You can add up to 5 metrics.');
   });
 });

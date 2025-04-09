@@ -1,5 +1,10 @@
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamsFromQueryString,
+  scrollErrorIntoView,
+  useEditableLabelState,
+} from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -8,18 +13,12 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
 import {
   sendEditBreadcrumbEvent,
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
@@ -65,9 +64,8 @@ export const LinodeDetailHeader = () => {
 
   const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    matchedLinodeId
-  );
+  const { mutateAsync: updateLinode } =
+    useLinodeUpdateMutation(matchedLinodeId);
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -86,9 +84,8 @@ export const LinodeDetailHeader = () => {
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
     queryParams.migrate === 'true'
   );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] =
+    React.useState(false);
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
   const history = useHistory();
@@ -115,11 +112,8 @@ export const LinodeDetailHeader = () => {
     setEnableBackupsDialogOpen(false);
   };
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
     try {

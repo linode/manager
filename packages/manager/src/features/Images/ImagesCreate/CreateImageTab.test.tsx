@@ -1,13 +1,9 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  imageFactory,
-  linodeDiskFactory,
-  linodeFactory,
-  regionFactory,
-} from 'src/factories';
+import { imageFactory, linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
@@ -114,12 +110,8 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByText,
-      queryByText,
-    } = await renderWithThemeAndRouter(<CreateImageTab />);
+    const { findByText, getByLabelText, getByText, queryByText } =
+      await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -204,11 +196,8 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      queryByText,
-    } = await renderWithThemeAndRouter(<CreateImageTab />);
+    const { findByText, getByLabelText, queryByText } =
+      await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 

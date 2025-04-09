@@ -1,3 +1,4 @@
+import { readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
@@ -13,7 +14,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { StyledDiv } from './ProcessesTable.styles';
 
@@ -40,22 +40,18 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
     setSelectedProcess,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedProcess>({
-    data: processesData,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'name',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<ExtendedProcess>({
+      data: processesData,
+      initialRoute: {
+        defaultOrder: {
+          order: 'asc',
+          orderBy: 'name',
+        },
+        from: '/longview/clients/$id/processes',
       },
-      from: '/longview/clients/$id/processes',
-    },
-    preferenceKey: 'lv-detail-processes',
-  });
+      preferenceKey: 'lv-detail-processes',
+    });
 
   return (
     <Table

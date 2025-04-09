@@ -8,9 +8,11 @@ import { Link } from 'src/components/Link';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import {
+  useNotificationsQuery,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
@@ -49,77 +51,76 @@ const formatNotificationForDisplay = (
   id: `notification-${idx}`,
 });
 
-export const useFormattedNotifications = (): NotificationCenterNotificationsItem[] => {
-  const notificationContext = React.useContext(_notificationContext);
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+export const useFormattedNotifications =
+  (): NotificationCenterNotificationsItem[] => {
+    const notificationContext = React.useContext(_notificationContext);
+    const { dismissNotifications, hasDismissedNotifications } =
+      useDismissibleNotifications();
 
-  const { data: regions } = useRegionsQuery();
-  const { data: profile } = useProfile();
-  const { data: notifications } = useNotificationsQuery();
+    const { data: regions } = useRegionsQuery();
+    const { data: profile } = useProfile();
+    const { data: notifications } = useNotificationsQuery();
 
-  const volumeMigrationScheduledIsPresent = notifications?.some(
-    (notification) =>
-      notification.type === ('volume_migration_scheduled' as NotificationType)
-  );
-
-  const dayOfMonth = DateTime.local().day;
-
-  const handleClose = () => {
-    dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
-    notificationContext.closeMenu();
-  };
-
-  const filteredNotifications = notifications?.filter((thisNotification) => {
-    /**
-     * Don't show balance overdue notifications at the beginning of the month
-     * to avoid causing anxiety if an automatic payment takes time to process.
-     * This is a temporary hack; customers can have their payment grace period extended
-     * to more than 3 days, and using this method also means that if you're more than
-     * a month overdue the notification will disappear for three days.
-     *
-     * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
-     */
-    return (
-      !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
-      !['volume_migration_imminent', 'volume_migration_scheduled'].includes(
-        thisNotification.type
-      )
+    const volumeMigrationScheduledIsPresent = notifications?.some(
+      (notification) =>
+        notification.type === ('volume_migration_scheduled' as NotificationType)
     );
-  });
 
-  if (volumeMigrationScheduledIsPresent && filteredNotifications) {
-    filteredNotifications.push({
-      body: null,
-      entity: null,
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
-      message:
-        'You have pending volume migrations. Check the maintenance page for more details.',
-      severity: 'major',
-      type: 'volume_migration_scheduled',
-      until: null,
-      when: null,
+    const dayOfMonth = DateTime.local().day;
+
+    const handleClose = () => {
+      dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
+      notificationContext.closeMenu();
+    };
+
+    const filteredNotifications = notifications?.filter((thisNotification) => {
+      /**
+       * Don't show balance overdue notifications at the beginning of the month
+       * to avoid causing anxiety if an automatic payment takes time to process.
+       * This is a temporary hack; customers can have their payment grace period extended
+       * to more than 3 days, and using this method also means that if you're more than
+       * a month overdue the notification will disappear for three days.
+       *
+       * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
+       */
+      return (
+        !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
+        !['volume_migration_imminent', 'volume_migration_scheduled'].includes(
+          thisNotification.type
+        )
+      );
     });
-  }
 
-  return (
-    filteredNotifications?.map((notification, idx) =>
-      formatNotificationForDisplay(
-        interceptNotification(
-          notification,
+    if (volumeMigrationScheduledIsPresent && filteredNotifications) {
+      filteredNotifications.push({
+        body: null,
+        entity: null,
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        message:
+          'You have pending volume migrations. Check the maintenance page for more details.',
+        severity: 'major',
+        type: 'volume_migration_scheduled',
+        until: null,
+        when: null,
+      });
+    }
+
+    return (
+      filteredNotifications?.map((notification, idx) =>
+        formatNotificationForDisplay(
+          interceptNotification(
+            notification,
+            handleClose,
+            regions ?? [],
+            profile
+          ),
+          idx,
           handleClose,
-          regions ?? [],
-          profile
-        ),
-        idx,
-        handleClose,
-        !hasDismissedNotifications([notification], 'notificationMenu')
-      )
-    ) ?? []
-  );
-};
+          !hasDismissedNotifications([notification], 'notificationMenu')
+        )
+      ) ?? []
+    );
+  };
 
 /**
  * This function intercepts the notification for further processing and formatting. Depending on the notification type,

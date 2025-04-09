@@ -1,4 +1,5 @@
-import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { accountFactory, databaseTypeFactory } from 'src/factories';
@@ -7,15 +8,14 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseCreate from './DatabaseCreate';
-
 const loadingTestId = 'circle-progress';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -79,7 +79,7 @@ describe('Database Create', () => {
 
     // update node pricing if a plan is selected
     const radioBtn = getAllByText('Nanode 1 GB')[0];
-    fireEvent.click(radioBtn);
+    await userEvent.click(radioBtn);
     expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
     expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
   });
@@ -94,59 +94,28 @@ describe('Database Create', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-    });
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // default to $0 if no plan is selected
-    const nodeRadioBtns = getByTestId('database-nodes');
-    expect(nodeRadioBtns).toHaveTextContent('$0/month $0/hr');
-
-    // update node pricing if a plan is selected
-    const radioBtn = getAllByText('Nanode 1 GB')[0];
-    fireEvent.click(radioBtn);
-    expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
-    expect(nodeRadioBtns).not.toHaveTextContent('$100/month $0.15/hr');
-    expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
-  });
-
-  it('should display the correct nodes for account with Managed Databases V2', async () => {
-    server.use(
-      http.get('*/account', () => {
-        const account = accountFactory.build({
-          capabilities: ['Managed Databases Beta'],
-        });
-        return HttpResponse.json(account);
-      })
+    const { getAllByRole, getAllByText, getByTestId } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+        MemoryRouter: { initialEntries: ['/databases/create'] },
+      }
     );
 
-    const flags = {
-      dbaasV2: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-      flags,
-    });
-
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
+    const sharedTab = getAllByRole('tab')[1];
+    await userEvent.click(sharedTab);
     // default to $0 if no plan is selected
     const nodeRadioBtns = getByTestId('database-nodes');
     expect(nodeRadioBtns).toHaveTextContent('$0/month $0/hr');
 
     // update node pricing if a plan is selected
-    const radioBtn = getAllByText('Nanode 1 GB')[0];
-    fireEvent.click(radioBtn);
+    const radioBtn = getAllByText('Linode 2 GB')[0];
+
+    await userEvent.click(radioBtn);
     expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
-    expect(nodeRadioBtns).toHaveTextContent('$100/month $0.15/hr');
+    expect(nodeRadioBtns).not.toHaveTextContent('$100/month $0.15/hr');
     expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
   });
 

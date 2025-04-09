@@ -1,5 +1,6 @@
+import { useRegionsQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
+import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -13,8 +14,6 @@ import {
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import type { Region } from '@linode/api-v4';
 import type {
@@ -57,8 +56,8 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
     database.cluster_size === 1
       ? 'Primary (1 Node)'
       : database.cluster_size > 2
-      ? `Primary (+${database.cluster_size - 1} Nodes)`
-      : `Primary (+${database.cluster_size - 1} Node)`;
+        ? `Primary (+${database.cluster_size - 1} Nodes)`
+        : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: '4px',
@@ -73,7 +72,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <StyledGridContainer container spacing={0} sx={{ md: 11 }}>
+      <StyledGridContainer container size={{ md: 11 }} spacing={0}>
         <Grid
           size={{
             lg: 1,
@@ -131,7 +130,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         >
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid sx={{ lg: 2, md: 4, xs: 8 }}>
+        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -189,7 +188,6 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             convertMegabytesTo(type.disk, true)
           )}
         </StyledValueGrid>
-        s
       </StyledGridContainer>
     </>
   );

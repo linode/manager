@@ -1,23 +1,21 @@
+import { linodeFactory } from '@linode/utilities';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  linodeFactory,
-  firewallFactory,
-  firewallTemplateFactory,
-} from 'src/factories';
+  mockCreateFirewall,
+  mockCreateFirewallError,
+  mockGetFirewalls,
+  mockGetTemplate,
+} from 'support/intercepts/firewalls';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
-import {
-  mockGetFirewalls,
-  mockCreateFirewall,
-  mockGetTemplate,
-  mockCreateFirewallError,
-} from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+
+import { firewallFactory, firewallTemplateFactory } from 'src/factories';
 
 describe('Create Linode with Firewall', () => {
   beforeEach(() => {

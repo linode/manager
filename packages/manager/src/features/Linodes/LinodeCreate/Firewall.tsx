@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Paper, Stack, Typography } from '@linode/ui';
+import { Box, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -7,11 +7,11 @@ import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/Ge
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import { useLinodeCreateQueryParams } from './utilities';
@@ -27,8 +27,6 @@ export const Firewall = () => {
     'firewall_id'
   >({ name: 'firewall_id' });
 
-  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
@@ -43,9 +41,6 @@ export const Firewall = () => {
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
-
-  const selectedFirewall =
-    firewalls?.find((firewall) => firewall.id === field.value) ?? null;
 
   const onChange = (firewallId: number | undefined) => {
     if (firewallId !== undefined) {
@@ -98,7 +93,7 @@ export const Firewall = () => {
             />
           )}
         <Stack spacing={1.5}>
-          <Autocomplete
+          <FirewallSelect
             onChange={(e, firewall) => {
               onChange(firewall?.id);
               if (!firewall?.id) {
@@ -118,14 +113,11 @@ export const Firewall = () => {
               }
             }}
             disabled={isLinodeCreateRestricted}
-            errorText={fieldState.error?.message ?? error?.[0].reason}
+            errorText={fieldState.error?.message}
             label="Assign Firewall"
-            loading={isLoading}
-            noMarginTop
             onBlur={field.onBlur}
-            options={firewalls ?? []}
             placeholder="None"
-            value={selectedFirewall}
+            value={field.value}
           />
           <Box>
             <LinkButton

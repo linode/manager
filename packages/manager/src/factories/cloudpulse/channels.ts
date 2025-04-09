@@ -1,9 +1,9 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { NotificationChannel } from '@linode/api-v4';
 
-export const notificationChannelFactory = Factory.Sync.makeFactory<NotificationChannel>(
-  {
+export const notificationChannelFactory =
+  Factory.Sync.makeFactory<NotificationChannel>({
     alerts: [
       {
         id: Number(Factory.each((i) => i)),
@@ -28,5 +28,4 @@ export const notificationChannelFactory = Factory.Sync.makeFactory<NotificationC
     type: 'custom',
     updated_at: new Date().toISOString(),
     updated_by: 'user1',
-  }
-);
+  });

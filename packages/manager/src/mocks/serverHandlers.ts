@@ -6,16 +6,31 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
-import { pickRandom } from '@linode/utilities';
+import {
+  accountAvailabilityFactory,
+  dedicatedTypeFactory,
+  linodeFactory,
+  linodeIPFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
+  linodeTypeFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
+  nodeBalancerFactory,
+  pickRandom,
+  proDedicatedTypeFactory,
+  profileFactory,
+  regionAvailabilityFactory,
+  regions,
+  securityQuestionsFactory,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
-import { regions } from 'src/__data__/regionsData';
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   // abuseTicketNotificationFactory,
-  accountAvailabilityFactory,
   accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -30,11 +45,11 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
+  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  dedicatedTypeFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -51,11 +66,6 @@ import {
   kubernetesVersionFactory,
   linodeConfigFactory,
   linodeDiskFactory,
-  linodeFactory,
-  linodeIPFactory,
-  linodeStatsFactory,
-  linodeTransferFactory,
-  linodeTypeFactory,
   lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
@@ -69,9 +79,6 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
-  nodeBalancerFactory,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -87,11 +94,7 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
-  proDedicatedTypeFactory,
-  profileFactory,
   promoFactory,
-  regionAvailabilityFactory,
-  securityQuestionsFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -113,8 +116,8 @@ import { getStorage } from 'src/utilities/storage';
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 import type {
@@ -296,8 +299,8 @@ const databases = [
         params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : params.engine === 'postgresql'
-          ? pickRandom(possiblePostgresReplicationTypes)
-          : (undefined as any);
+            ? pickRandom(possiblePostgresReplicationTypes)
+            : (undefined as any);
       db.ssl_connection = true;
     }
     const database = databaseFactory.build(db);
@@ -369,6 +372,9 @@ const databases = [
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
   }),
+  http.get('*/databases/:engine/config', () => {
+    return HttpResponse.json(databaseEngineConfigFactory.build());
+  }),
 ];
 
 const vpc = [
@@ -429,14 +435,27 @@ const iam = [
   http.get('*/iam/role-permissions', () => {
     return HttpResponse.json(accountPermissionsFactory.build());
   }),
-  http.get('*/iam/role-permissions/users/:username', () => {
+  http.get('*/iam/users/:username/role-permissions', () => {
     return HttpResponse.json(userPermissionsFactory.build());
   }),
 ];
 
-const resources = [
-  http.get('*/v4*/resources', () => {
-    return HttpResponse.json(accountResourcesFactory.build());
+const entities = [
+  http.get('*/v4*/entities', () => {
+    const entity1 = accountEntityFactory.buildList(10, {
+      type: 'linode',
+    });
+    const entity2 = accountEntityFactory.build({
+      type: 'image',
+    });
+    const entity3 = accountEntityFactory.build({
+      id: 1,
+      label: 'firewall-1',
+      type: 'firewall',
+    });
+    const entities = [...entity1, entity2, entity3];
+
+    return HttpResponse.json(makeResourcePage(entities));
   }),
 ];
 
@@ -2056,8 +2075,8 @@ export const handlers = [
       type: 'payment_due',
     });
 
-    const blockStorageMigrationScheduledNotification = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotification =
+      notificationFactory.build({
         body: 'Your volumes in us-east will be upgraded to NVMe.',
         entity: {
           id: 20,
@@ -2072,11 +2091,10 @@ export const handlers = [
         type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
         when: '2021-09-30T04:00:00',
-      }
-    );
+      });
 
-    const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
-      {
+    const blockStorageMigrationScheduledNotificationUnattached =
+      notificationFactory.build({
         body: 'Your volume will be upgraded to NVMe.',
         entity: {
           id: 30,
@@ -2091,8 +2109,7 @@ export const handlers = [
         type: 'volume_migration_scheduled' as NotificationType,
         until: '2021-10-16T04:00:00',
         when: '2021-09-30T04:00:00',
-      }
-    );
+      });
 
     const blockStorageMigrationImminentNotification = notificationFactory.build(
       {
@@ -2346,7 +2363,7 @@ export const handlers = [
       }
 
       const response = placementGroupFactory.build({
-        id: Number(params.placementGroupId) ?? -1,
+        id: Number(params.placementGroupId) || -1,
         label: 'pg-1',
         members: [
           {
@@ -2402,7 +2419,7 @@ export const handlers = [
     }
 
     const response = placementGroupFactory.build({
-      id: Number(params.placementGroupId) ?? -1,
+      id: Number(params.placementGroupId) || -1,
       label: 'pg-1',
       members: [
         {
@@ -2474,6 +2491,7 @@ export const handlers = [
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
       const serviceType = params.serviceType;
+      alertFactory.resetSequenceNumber();
       return HttpResponse.json({
         data: [
           ...alertFactory.buildList(20, {
@@ -2523,6 +2541,20 @@ export const handlers = [
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
       ...customAlertsWithServiceType,
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'in progress',
+        type: 'user',
+        updated_by: 'user1',
+      }),
+      ...alertFactory.buildList(2, {
+        created_by: 'user1',
+        service_type: 'linode',
+        status: 'failed',
+        type: 'user',
+        updated_by: 'user1',
+      }),
     ];
     return HttpResponse.json(makeResourcePage(alerts));
   }),
@@ -2567,7 +2599,7 @@ export const handlers = [
   ),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
-      makeResourcePage(notificationChannelFactory.buildList(3))
+      makeResourcePage(notificationChannelFactory.buildList(7))
     );
   }),
   http.get('*/monitor/services', () => {
@@ -2900,5 +2932,5 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...iam,
-  ...resources,
+  ...entities,
 ];

@@ -1,5 +1,12 @@
-import { Box, CircleProgress, Paper, Tooltip, Typography } from '@linode/ui';
-import { IconButton } from '@linode/ui';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
+  Box,
+  CircleProgress,
+  IconButton,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -7,17 +14,15 @@ import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
-import {
-  MIN_PAGE_SIZE,
-  PaginationFooter,
-  getMinimumPageSizeForNumberOfItems,
-} from 'src/components/PaginationFooter/PaginationFooter';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 
 import {
@@ -96,7 +101,12 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     return acc;
   }, 0);
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const flags = useFlags();
+
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   if (display === 'grid') {
     return (
@@ -135,7 +145,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     ':hover': {
                       color: theme.tokens.color.Brand[60],
                     },
-                    color: theme.tokens.table.HeaderNested.Icon,
+                    color: theme.tokens.component.Table.HeaderNested.Icon,
                   })}
                   aria-describedby={groupByDescriptionId}
                   aria-label="Toggle group by tag"

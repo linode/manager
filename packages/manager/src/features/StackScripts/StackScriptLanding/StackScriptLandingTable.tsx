@@ -1,7 +1,16 @@
+import {
+  useStackScriptQuery,
+  useStackScriptsInfiniteQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
+import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -18,8 +27,8 @@ import {
   accountStackScriptFilter,
   communityStackScriptFilter,
 } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
-import { useOrder } from 'src/hooks/useOrder';
-import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
 import { StackScriptsEmptyLandingState } from '../StackScriptBase/StackScriptsEmptyLandingPage';
@@ -36,6 +45,14 @@ interface Props {
 
 export const StackScriptLandingTable = (props: Props) => {
   const { type } = props;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams({
+    strict: false,
+  });
+  const { query } = useSearch({
+    from: '/stackscripts',
+  });
 
   const filter =
     type === 'community'
@@ -47,23 +64,32 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
-  const history = useHistory();
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
-  const queryParams = new URLSearchParams(history.location.search);
-  const query = queryParams.get('query') ?? '';
-
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder,
+      from:
+        type === 'account'
+          ? '/stackscripts/account'
+          : '/stackscripts/community',
+    },
+    preferenceKey:
+      type === 'account'
+        ? 'stackscripts-landing-account'
+        : 'stackscripts-landing-community',
   });
 
-  const { handleOrderChange, order, orderBy } = useOrder(defaultOrder);
-
-  const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
-  const [isMakePublicDialogOpen, setIsMakePublicDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { data: selectedStackScript, isFetching: isFetchingStackScript } =
+    useDialogData({
+      enabled: !!id,
+      paramKey: 'id',
+      queryHook: useStackScriptQuery,
+      redirectToOnNotFound: '/stackscripts/account',
+    });
 
   const {
     data,
@@ -103,14 +129,10 @@ export const StackScriptLandingTable = (props: Props) => {
     return <StackScriptsEmptyLandingState />;
   }
 
-  const selectedStackScript = selectedStackScriptId
-    ? stackscripts?.find((s) => s.id === selectedStackScriptId)
-    : undefined;
-
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
-        InputProps={
+        inputSlotProps={
           searchParseError
             ? {
                 endAdornment: (
@@ -124,8 +146,23 @@ export const StackScriptLandingTable = (props: Props) => {
             : {}
         }
         onSearch={(value) => {
-          queryParams.set('query', value);
-          history.push({ search: queryParams.toString() });
+          if (!value) {
+            navigate({
+              search: undefined,
+              to:
+                type === 'account'
+                  ? '/stackscripts/account'
+                  : '/stackscripts/community',
+            });
+          } else {
+            navigate({
+              search: { query: value },
+              to:
+                type === 'account'
+                  ? '/stackscripts/account'
+                  : '/stackscripts/community',
+            });
+          }
         }}
         clearable
         hideLabel
@@ -135,7 +172,7 @@ export const StackScriptLandingTable = (props: Props) => {
         placeholder="Search by Label, Username, or Description"
         tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
-        value={query}
+        value={query ?? ''}
       />
       <Table aria-label="List of StackScripts">
         <TableHead>
@@ -183,12 +220,16 @@ export const StackScriptLandingTable = (props: Props) => {
             <StackScriptRow
               handlers={{
                 onDelete: () => {
-                  setSelectedStackScriptId(stackscript.id);
-                  setIsDeleteDialogOpen(true);
+                  navigate({
+                    params: { id: stackscript.id },
+                    to: `/stackscripts/account/$id/delete`,
+                  });
                 },
                 onMakePublic: () => {
-                  setSelectedStackScriptId(stackscript.id);
-                  setIsMakePublicDialogOpen(true);
+                  navigate({
+                    params: { id: stackscript.id },
+                    to: `/stackscripts/account/$id/make-public`,
+                  });
                 },
               }}
               key={stackscript.id}
@@ -218,13 +259,23 @@ export const StackScriptLandingTable = (props: Props) => {
       </Table>
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptMakePublicDialog
-        onClose={() => setIsMakePublicDialogOpen(false)}
-        open={isMakePublicDialogOpen}
+        onClose={() => {
+          navigate({
+            to: `/stackscripts`,
+          });
+        }}
+        isFetching={isFetchingStackScript}
+        open={location.pathname.includes('make-public')}
         stackscript={selectedStackScript}
       />
       <StackScriptDeleteDialog
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        onClose={() => {
+          navigate({
+            to: `/stackscripts`,
+          });
+        }}
+        isFetching={isFetchingStackScript}
+        open={location.pathname.includes('delete')}
         stackscript={selectedStackScript}
       />
     </Stack>

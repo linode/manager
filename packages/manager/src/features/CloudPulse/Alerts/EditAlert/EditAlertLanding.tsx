@@ -17,22 +17,23 @@ import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 const overrides = [
   {
     label: 'Definitions',
-    linkTo: '/monitor/alerts/definitions',
+    linkTo: '/alerts/definitions',
     position: 1,
   },
   {
     label: 'Edit',
-    linkTo: `/monitor/alerts/definitions/edit`,
+    linkTo: `/alerts/definitions/edit`,
     position: 2,
   },
 ];
 
 export const EditAlertLanding = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    alertId,
-    serviceType
-  );
+  const {
+    data: alertDetails,
+    isError,
+    isFetching,
+  } = useAlertDefinitionQuery(alertId, serviceType);
   const pathname = '/Definition/Edit';
 
   if (isFetching) {

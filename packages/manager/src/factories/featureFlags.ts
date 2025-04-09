@@ -1,9 +1,9 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type { ProductInformationBannerFlag } from 'src/featureFlags';
 
-export const productInformationBannerFactory = Factory.Sync.makeFactory<ProductInformationBannerFlag>(
-  {
+export const productInformationBannerFactory =
+  Factory.Sync.makeFactory<ProductInformationBannerFlag>({
     bannerLocation: 'Object Storage',
     decoration: {
       important: 'true',
@@ -14,5 +14,4 @@ export const productInformationBannerFactory = Factory.Sync.makeFactory<ProductI
     // safe
     message:
       'Store critical data and media files with S3-Compatible Object Storage. <a target="_blank" href="https://techdocs.akamai.com/cloud-computing/docs/object-storage">New Availability: Atlanta</a>',
-  }
-);
+  });

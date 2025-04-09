@@ -1,15 +1,19 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  getQueryParamsFromQueryString,
+  plansNoticesUtils,
+} from '@linode/utilities';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  getIsDistributedRegion,
+  isDistributedRegionSupported,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
 
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
@@ -84,7 +88,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search

@@ -1,10 +1,9 @@
-import { Typography } from '@linode/ui';
+import { useLinodeRemoveRangeMutation } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLinodeRemoveRangeMutation } from 'src/queries/linodes/networking';
 
 import type { IPRange } from '@linode/api-v4';
 

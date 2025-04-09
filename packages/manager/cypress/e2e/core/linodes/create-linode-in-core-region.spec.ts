@@ -1,4 +1,4 @@
-import { linodeFactory, regionFactory } from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import {

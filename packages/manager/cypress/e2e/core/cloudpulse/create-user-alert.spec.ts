@@ -2,6 +2,7 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -26,9 +27,9 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
-  regionFactory,
   triggerConditionFactory,
 } from 'src/factories';
+import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
@@ -164,14 +165,14 @@ describe('Create Alert', () => {
     mockGetDatabases(databaseMock);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels([notificationChannels]);
-    mockCreateAlertDefinition(serviceType, customAlertDefinition).as(
+    mockCreateAlertDefinition(serviceType, mockAlerts).as(
       'createAlertDefinition'
     );
   });
 
   it('should navigate to the Create Alert page from the Alert Listings page', () => {
     // Navigate to the alert definitions list page with login
-    cy.visitWithLogin('/monitor/alerts/definitions');
+    cy.visitWithLogin('/alerts/definitions');
 
     // Wait for the alert definitions list API call to complete
     cy.wait('@getAlertDefinitionsList');
@@ -183,18 +184,18 @@ describe('Create Alert', () => {
       .click();
 
     // Verify the URL ends with the expected details page path
-    cy.url().should('endWith', 'monitor/alerts/definitions/create');
+    cy.url().should('endWith', '/alerts/definitions/create');
   });
 
   it('should successfully create a new alert', () => {
-    cy.visitWithLogin('monitor/alerts/definitions/create');
+    cy.visitWithLogin('/alerts/definitions/create');
 
     // Enter Name and Description
-    cy.findByPlaceholderText('Enter Name')
+    cy.findByPlaceholderText('Enter a Name')
       .should('be.visible')
       .type(customAlertDefinition.label);
 
-    cy.findByPlaceholderText('Enter Description')
+    cy.findByPlaceholderText('Enter a Description')
       .should('be.visible')
       .type(customAlertDefinition.description ?? '');
 
@@ -227,7 +228,7 @@ describe('Create Alert', () => {
     const cpuUsageMetricDetails = {
       aggregationType: 'Average',
       dataField: 'CPU Utilization',
-      operator: '==',
+      operator: '=',
       ruleIndex: 0,
       threshold: '1000',
     };
@@ -273,7 +274,7 @@ describe('Create Alert', () => {
     const memoryUsageMetricDetails = {
       aggregationType: 'Average',
       dataField: 'Memory Usage',
-      operator: '==',
+      operator: '=',
       ruleIndex: 1,
       threshold: '1000',
     };
@@ -404,8 +405,8 @@ describe('Create Alert', () => {
       expect(request.body.channel_ids).to.include(1);
 
       // Verify URL redirection and toast notification
-      cy.url().should('endWith', 'monitor/alerts/definitions');
-      ui.toast.assertMessage('Alert successfully created');
+      cy.url().should('endWith', '/alerts/definitions');
+      ui.toast.assertMessage(CREATE_ALERT_SUCCESS_MESSAGE);
 
       // Confirm that Alert is listed on landing page with expected configuration.
       cy.findByText(label)

@@ -9,7 +9,7 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -47,7 +47,7 @@ export const Referrals = () => {
     return <CircleProgress />;
   }
 
-  const { completed, credit, pending, total, url } = profile?.referrals;
+  const { completed, credit, pending, total, url } = profile.referrals;
   const allowReferral = Boolean(url);
 
   return (

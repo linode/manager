@@ -1,20 +1,21 @@
+import { useUpdateStackScriptMutation } from '@linode/queries';
 import { Button, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUpdateStackScriptMutation } from 'src/queries/stackscripts';
 
 import type { StackScript } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   stackscript: StackScript | undefined;
 }
 
 export const StackScriptMakePublicDialog = (props: Props) => {
-  const { onClose, open, stackscript } = props;
+  const { isFetching, onClose, open, stackscript } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { error, isPending, mutate } = useUpdateStackScriptMutation(
@@ -45,6 +46,7 @@ export const StackScriptMakePublicDialog = (props: Props) => {
         </Stack>
       }
       error={error?.[0].reason}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={`Make StackScript ${stackscript?.label ?? ''} Public?`}

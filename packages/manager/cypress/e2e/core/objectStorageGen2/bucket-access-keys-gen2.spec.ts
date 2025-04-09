@@ -1,10 +1,11 @@
+import { profileFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetAccessKeys } from 'support/intercepts/object-storage';
-import { accountFactory, objectStorageKeyFactory } from 'src/factories';
-import { profileFactory } from 'src/factories/profile';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+
+import { accountFactory, objectStorageKeyFactory } from 'src/factories';
 
 describe('Object Storage gen2 access keys tests', () => {
   /**
@@ -28,27 +29,27 @@ describe('Object Storage gen2 access keys tests', () => {
 
     const mockAccessKey1 = objectStorageKeyFactory.build({
       regions: [
-        { id: 'us-east', s3_endpoint: 'us-east.com', endpoint_type: 'E3' },
+        { endpoint_type: 'E3', id: 'us-east', s3_endpoint: 'us-east.com' },
       ],
     });
 
     const mockAccessKey2 = objectStorageKeyFactory.build({
       regions: [
         {
+          endpoint_type: 'E3',
           id: 'us-southeast',
           s3_endpoint: 'us-southeast.com',
-          endpoint_type: 'E3',
         },
-        { id: 'in-maa', s3_endpoint: 'in-maa.com', endpoint_type: 'E2' },
-        { id: 'us-mia', s3_endpoint: 'us-mia.com', endpoint_type: 'E1' },
-        { id: 'it-mil', s3_endpoint: 'it-mil.com', endpoint_type: 'E0' },
+        { endpoint_type: 'E2', id: 'in-maa', s3_endpoint: 'in-maa.com' },
+        { endpoint_type: 'E1', id: 'us-mia', s3_endpoint: 'us-mia.com' },
+        { endpoint_type: 'E0', id: 'it-mil', s3_endpoint: 'it-mil.com' },
       ],
     });
 
     mockGetAccessKeys([mockAccessKey1, mockAccessKey2]).as(
       'getObjectStorageAccessKeys'
-    ),
-      cy.visitWithLogin('/object-storage/access-keys');
+    );
+    cy.visitWithLogin('/object-storage/access-keys');
 
     cy.wait(['@getFeatureFlags', '@getAccount', '@getObjectStorageAccessKeys']);
 

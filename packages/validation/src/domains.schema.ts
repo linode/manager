@@ -7,8 +7,9 @@ export const importZoneSchema = object({
 
 const domainSchemaBase = object().shape({
   domain: string().matches(
+    // eslint-disable-next-line sonarjs/slow-regex
     /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
-    'Domain is not valid.'
+    'Domain is not valid.',
   ),
   status: mixed().oneOf(['disabled', 'active', 'edit_mode', 'has_errors']),
   tags: array(),
@@ -29,8 +30,9 @@ export const createDomainSchema = domainSchemaBase.shape({
   domain: string()
     .required('Domain is required.')
     .matches(
+      // eslint-disable-next-line sonarjs/slow-regex
       /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
-      'Domain is not valid.'
+      'Domain is not valid.',
     ),
   tags: array().of(string()),
   type: mixed().required().oneOf(['master', 'slave']),
