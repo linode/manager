@@ -1,37 +1,48 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
 
+import type { IamAccountResource } from '@linode/api-v4/lib/resources/types';
+
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
+  useAccountResources: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
+vi.mock('src/queries/resources/resources', async () => {
+  const actual = await vi.importActual('src/queries/resources/resources');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAccountResources: queryMocks.useAccountResources,
   };
 });
 
-const mockEntities = [
-  accountEntityFactory.build({
-    id: 7,
-    type: 'linode',
-  }),
-  accountEntityFactory.build({
-    id: 1,
-    label: 'firewall-1',
-    type: 'firewall',
-  }),
+const mockResources: IamAccountResource[] = [
+  {
+    resource_type: 'linode',
+    resources: [
+      {
+        id: 23456789,
+        name: 'linode-uk-123',
+      },
+      {
+        id: 456728,
+        name: 'db-us-southeast1',
+      },
+    ],
+  },
+  {
+    resource_type: 'image',
+    resources: [
+      { id: 3, name: 'image-1' },
+      { id: 4, name: 'image-2' },
+    ],
+  },
 ];
 
-describe('Entities', () => {
+describe('Resources', () => {
   it('renders correct data when it is an account access and type is an account', () => {
     const { getByText, queryAllByRole } = renderWithTheme(
       <Entities access="account_access" type="account" />
@@ -62,13 +73,11 @@ describe('Entities', () => {
     expect(autocomplete[0]).toBeUndefined();
   });
 
-  it('renders correct data when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
-    });
+  it('renders correct data when it is a resources access', () => {
+    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
 
     const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="entity_access" type="image" />
+      <Entities access="resource_access" type="image" />
     );
 
     expect(getByText('Entities')).toBeInTheDocument();
@@ -80,13 +89,11 @@ describe('Entities', () => {
     expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
   });
 
-  it('renders correct options in Autocomplete dropdown when it is an entity access', () => {
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
-    });
+  it('renders correct options in Autocomplete dropdown when it is a resources access', () => {
+    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
 
     const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="entity_access" type="firewall" />
+      <Entities access="resource_access" type="image" />
     );
 
     expect(getByText('Entities')).toBeInTheDocument();
@@ -94,17 +101,18 @@ describe('Entities', () => {
     const autocomplete = getAllByRole('combobox')[0];
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
-    expect(getByText('firewall-1')).toBeInTheDocument();
+    expect(getByText('image-1')).toBeInTheDocument();
+    expect(getByText('image-2')).toBeInTheDocument();
   });
 
-  it('updates selected options when Autocomplete value changes when it is an entity access', () => {
+  it('updates selected options when Autocomplete value changes when it is a resources access', () => {
     const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="entity_access" type="linode" />
+      <Entities access="resource_access" type="linode" />
     );
 
     const autocomplete = getAllByRole('combobox')[0];
-    fireEvent.change(autocomplete, { target: { value: 'linode7' } });
+    fireEvent.change(autocomplete, { target: { value: 'linode-uk-123' } });
     fireEvent.keyDown(autocomplete, { key: 'Enter' });
-    expect(getByText('test-1')).toBeInTheDocument();
+    expect(getByText('linode-uk-123')).toBeInTheDocument();
   });
 });

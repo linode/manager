@@ -1,7 +1,7 @@
 import { Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { StyledTypography } from './PlansPanel.styles';
 import { getRegionsWithCapability } from './utils';

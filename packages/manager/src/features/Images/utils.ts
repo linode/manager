@@ -1,4 +1,4 @@
-import { useGrants, useProfile } from '@linode/queries';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { Event, Image, Linode } from '@linode/api-v4';
 
@@ -13,9 +13,9 @@ export const useImageAndLinodeGrantCheck = () => {
   // Restricted users need read_write on the Linode they're trying to Imagize
   // (in addition to the global add_images grant).
   const permissionedLinodes = profile?.restricted
-    ? (grants?.linode
+    ? grants?.linode
         .filter((thisGrant) => thisGrant.permissions === 'read_write')
-        .map((thisGrant) => thisGrant.id) ?? [])
+        .map((thisGrant) => thisGrant.id) ?? []
     : null;
 
   return { canCreateImage, permissionedLinodes };

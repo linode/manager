@@ -7,7 +7,7 @@ import {
   updateLongviewClient as update,
 } from '@linode/api-v4/lib/longview';
 
-import { getAll } from '@linode/utilities';
+import { getAll } from 'src/utilities/getAll';
 
 import { createRequestThunk } from '../store.helpers';
 import {

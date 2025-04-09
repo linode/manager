@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { MainContentBanner } from './MainContentBanner';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 describe('MainContentBanner', () => {
   const mainContentBanner = {

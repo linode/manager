@@ -2,10 +2,10 @@ import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
-export const longviewSubscriptionFactory =
-  Factory.Sync.makeFactory<LongviewSubscription>({
+export const longviewSubscriptionFactory = Factory.Sync.makeFactory<LongviewSubscription>(
+  {
     clients_included: Factory.each((i) => i),
     id: Factory.each((i) => `longview-${i}`),
     label: Factory.each((i) => `Longview Pro ${i} Pack`),
@@ -13,10 +13,11 @@ export const longviewSubscriptionFactory =
       hourly: 0.03,
       monthly: 200,
     },
-  });
+  }
+);
 
-export const longviewActivePlanFactory =
-  Factory.Sync.makeFactory<ActiveLongviewPlan>({
+export const longviewActivePlanFactory = Factory.Sync.makeFactory<ActiveLongviewPlan>(
+  {
     clients_included: 100,
     id: 'longview-3',
     label: 'Longview Pro 3 pack',
@@ -24,4 +25,5 @@ export const longviewActivePlanFactory =
       hourly: 0.03,
       monthly: 20,
     },
-  });
+  }
+);

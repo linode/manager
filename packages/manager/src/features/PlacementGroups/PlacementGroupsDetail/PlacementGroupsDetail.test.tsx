@@ -1,7 +1,10 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetail } from './PlacementGroupsDetail';
@@ -14,13 +17,19 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
+  return {
+    ...actual,
+    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
+  };
+});
+
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual('src/queries/linodes/linodes');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
-    usePlacementGroupQuery: queryMocks.usePlacementGroupQuery,
-    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -30,6 +39,14 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
+  };
+});
+
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
+  return {
+    ...actual,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 

@@ -1,6 +1,7 @@
-import { Box, Button, Stack, Typography } from '@linode/ui';
+import { Box } from '@linode/ui';
+import { Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { DimensionFilterField } from './DimensionFilterField';
 
@@ -30,8 +31,6 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
     control,
     name,
   });
-
-  const dimensionFilterWatcher = useWatch({ control, name });
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
@@ -59,12 +58,11 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             value: null,
           })
         }
+        buttonType="secondary"
         compactX
         data-qa-buttons="true"
-        disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
         size="small"
-        sx={{ justifyContent: 'start', width: '160px' }}
-        tooltipText="You can add up to 5 dimension filters."
+        sx={{ justifyContent: 'start', width: '150px' }}
       >
         Add dimension filter
       </Button>

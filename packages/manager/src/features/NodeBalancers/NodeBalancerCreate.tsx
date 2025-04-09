@@ -1,15 +1,5 @@
 import {
-  useAccountAgreements,
-  useMutateAccountAgreements,
-  useNodeBalancerTypesQuery,
-  useNodebalancerCreateMutation,
-  useProfile,
-  useRegionsQuery,
-} from '@linode/queries';
-import { useIsGeckoEnabled } from '@linode/shared';
-import {
   Accordion,
-  ActionsPanel,
   Box,
   Button,
   Notice,
@@ -18,13 +8,14 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from '@tanstack/react-router';
+import { createLazyRoute } from '@tanstack/react-router';
 import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -38,21 +29,29 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/account/agreements';
+import {
+  useNodeBalancerTypesQuery,
+  useNodebalancerCreateMutation,
+} from 'src/queries/nodebalancers';
+import { useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import {
-  DOCS_LINK_LABEL_DC_PRICING,
-  PRICE_ERROR_TOOLTIP_TEXT,
-} from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
-import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
@@ -99,12 +98,6 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
-  const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(
-    flags.gecko2?.enabled,
-    flags.gecko2?.la
-  );
-  const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -116,19 +109,26 @@ const NodeBalancerCreate = () => {
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
-  const [nodeBalancerFields, setNodeBalancerFields] =
-    React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+  const history = useHistory();
 
-  const [hasSignedAgreement, setHasSignedAgreement] =
-    React.useState<boolean>(false);
+  const [
+    nodeBalancerFields,
+    setNodeBalancerFields,
+  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [deleteConfigConfirmDialog, setDeleteConfigConfirmDialog] =
-    React.useState<{
-      errors?: APIError[];
-      idxToDelete?: number;
-      open: boolean;
-      submitting: boolean;
-    }>(defaultDeleteConfigConfirmDialogState);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
+
+  const [
+    deleteConfigConfirmDialog,
+    setDeleteConfigConfirmDialog,
+  ] = React.useState<{
+    errors?: APIError[];
+    idxToDelete?: number;
+    open: boolean;
+    submitting: boolean;
+  }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
@@ -159,15 +159,16 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
 
-  const removeNodeBalancerConfigNode =
-    (configIdx: number) => (nodeIdx: number) =>
-      setNodeBalancerFields((prev) => {
-        const newConfigs = [...prev.configs];
-        newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
-          (_, idx) => idx !== nodeIdx
-        );
-        return { ...prev, configs: newConfigs };
-      });
+  const removeNodeBalancerConfigNode = (configIdx: number) => (
+    nodeIdx: number
+  ) =>
+    setNodeBalancerFields((prev) => {
+      const newConfigs = [...prev.configs];
+      newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
+        (_, idx) => idx !== nodeIdx
+      );
+      return { ...prev, configs: newConfigs };
+    });
 
   const setNodeValue = (
     cidx: number,
@@ -302,10 +303,7 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        navigate({
-          params: { id: String(nodeBalancer.id) },
-          to: '/nodebalancers/$id/summary',
-        });
+        history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
@@ -352,7 +350,7 @@ const NodeBalancerCreate = () => {
   };
 
   const onConfigValueChange = <
-    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors,
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors
   >(
     configId: number,
     key: Key,
@@ -432,9 +430,8 @@ const NodeBalancerCreate = () => {
     selectedRegionId: nodeBalancerFields.region ?? '',
   });
 
-  const regionLabel = regions?.find(
-    (r) => r.id === nodeBalancerFields.region
-  )?.label;
+  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
+    ?.label;
 
   const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
@@ -545,7 +542,6 @@ const NodeBalancerCreate = () => {
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}
-              isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}
@@ -578,9 +574,9 @@ const NodeBalancerCreate = () => {
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
-          const onChange =
-            (key: keyof NodeBalancerConfigFieldsWithStatus) => (value: any) =>
-              onConfigValueChange(idx, key, value);
+          const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
+            value: any
+          ) => onConfigValueChange(idx, key, value);
 
           return (
             <Accordion
@@ -741,9 +737,9 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom =
-  (p1: (number | string)[]) => (p2: (number | string)[]) =>
-    lensPath([...p1, ...p2]);
+export const lensFrom = (p1: (number | string)[]) => (
+  p2: (number | string)[]
+) => lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;
@@ -810,5 +806,11 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     ];
   }, []);
 };
+
+export const nodeBalancerCreateLazyRoute = createLazyRoute(
+  '/nodebalancers/create'
+)({
+  component: NodeBalancerCreate,
+});
 
 export default NodeBalancerCreate;

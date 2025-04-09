@@ -1,17 +1,12 @@
-import {
-  ActionsPanel,
-  CircleProgress,
-  Drawer,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import { isNumber, pluralize } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -51,8 +46,13 @@ const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
-  const { kubernetesClusterId, kubernetesRegionId, nodePool, onClose, open } =
-    props;
+  const {
+    kubernetesClusterId,
+    kubernetesRegionId,
+    nodePool,
+    onClose,
+    open,
+  } = props;
   const { classes } = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -66,8 +66,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     isPending,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
-  const [resizeNodePoolError, setResizeNodePoolError] =
-    React.useState<string>('');
+  const [resizeNodePoolError, setResizeNodePoolError] = React.useState<string>(
+    ''
+  );
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -105,10 +106,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getLinodeRegionPrice(
-    planType,
-    kubernetesRegionId
-  )?.monthly;
+  const pricePerNode = getLinodeRegionPrice(planType, kubernetesRegionId)
+    ?.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -126,7 +125,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}

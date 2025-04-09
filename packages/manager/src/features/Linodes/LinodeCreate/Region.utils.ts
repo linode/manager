@@ -1,5 +1,5 @@
 import type { Image, Region } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface DisabledRegionOptions {
   regions: Region[];

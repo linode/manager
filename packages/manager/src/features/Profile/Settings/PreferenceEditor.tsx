@@ -2,7 +2,10 @@ import { Box, Button, Dialog, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 import type { DialogProps } from '@linode/ui';
 

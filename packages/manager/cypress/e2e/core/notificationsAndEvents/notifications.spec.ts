@@ -1,21 +1,20 @@
+import { Notification } from '@linode/api-v4';
 import { notificationFactory } from '@src/factories/notification';
 import { mockGetNotifications } from 'support/intercepts/events';
 
-import type { Notification } from '@linode/api-v4';
-
 const notifications: Notification[] = [
   notificationFactory.build({
-    severity: 'critical',
     type: 'migration_scheduled',
+    severity: 'critical',
   }),
-  notificationFactory.build({ severity: 'major', type: 'migration_pending' }),
-  notificationFactory.build({ severity: 'minor', type: 'reboot_scheduled' }),
-  notificationFactory.build({ severity: 'critical', type: 'outage' }),
-  notificationFactory.build({ severity: 'minor', type: 'ticket_important' }),
-  notificationFactory.build({ severity: 'critical', type: 'ticket_abuse' }),
-  notificationFactory.build({ severity: 'major', type: 'notice' }),
-  notificationFactory.build({ severity: 'minor', type: 'maintenance' }),
-  notificationFactory.build({ severity: 'critical', type: 'promotion' }),
+  notificationFactory.build({ type: 'migration_pending', severity: 'major' }),
+  notificationFactory.build({ type: 'reboot_scheduled', severity: 'minor' }),
+  notificationFactory.build({ type: 'outage', severity: 'critical' }),
+  notificationFactory.build({ type: 'ticket_important', severity: 'minor' }),
+  notificationFactory.build({ type: 'ticket_abuse', severity: 'critical' }),
+  notificationFactory.build({ type: 'notice', severity: 'major' }),
+  notificationFactory.build({ type: 'maintenance', severity: 'minor' }),
+  notificationFactory.build({ type: 'promotion', severity: 'critical' }),
 ];
 
 describe('verify notification types and icons', () => {

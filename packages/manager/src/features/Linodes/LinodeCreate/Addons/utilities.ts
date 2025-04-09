@@ -1,9 +1,7 @@
-import type { LinodeCreateFormValues } from '../utilities';
-
 interface BackupsEnabledOptions {
   accountBackupsEnabled: boolean | undefined;
   isDistributedRegion: boolean;
-  value: LinodeCreateFormValues['backups_enabled'];
+  value: boolean | undefined;
 }
 
 export const getBackupsEnabledValue = (options: BackupsEnabledOptions) => {
@@ -15,7 +13,7 @@ export const getBackupsEnabledValue = (options: BackupsEnabledOptions) => {
     return true;
   }
 
-  if (options.value === undefined || options.value === null) {
+  if (options.value === undefined) {
     return false;
   }
 

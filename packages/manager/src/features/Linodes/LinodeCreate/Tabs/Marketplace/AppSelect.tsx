@@ -1,4 +1,3 @@
-import { useMarketplaceAppsQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -11,6 +10,7 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';
@@ -46,11 +46,11 @@ export const AppSelect = (props: Props) => {
         )}
         <Stack direction="row" flexWrap="wrap" gap={1}>
           <DebouncedSearchTextField
+            InputProps={{ sx: { maxWidth: 'unset !important' } }}
             containerProps={{ flexGrow: 1 }}
             disabled={isLoading}
             fullWidth
             hideLabel
-            inputSlotProps={{ sx: { maxWidth: 'unset !important' } }}
             label="Search marketplace"
             loading={isLoading}
             noMarginTop

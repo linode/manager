@@ -1,5 +1,5 @@
-import { mockGetVolumes } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
+import { mockGetVolumes } from 'support/intercepts/volumes';
 
 describe('confirms Volumes landing page empty state is shown when no Volumes exist', () => {
   /*

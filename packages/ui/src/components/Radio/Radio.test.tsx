@@ -12,13 +12,10 @@ describe('Radio', () => {
 
     const radio = screen.getByRole('radio');
     expect(radio).toBeInTheDocument();
-
-    const notFilled = screen.container.querySelector('#radio-inner');
+    const notFilled = screen.container.querySelector('[id="Oval-2"]');
     expect(notFilled).not.toBeInTheDocument();
-
     fireEvent.click(radio);
-
-    const filled = screen.container.querySelector('#radio-inner');
+    const filled = screen.container.querySelector('[id="Oval-2"]');
     expect(filled).toBeInTheDocument();
   });
 

@@ -1,5 +1,4 @@
 import { Button } from '@linode/ui';
-import { useDialog, useOpenClose } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -15,6 +14,8 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDialog } from 'src/hooks/useDialog';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useAllManagedContactsQuery,
   useDeleteContactMutation,
@@ -35,8 +36,12 @@ import type { ManagedContact } from '@linode/api-v4/lib/managed';
 const Contacts = () => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, dataUpdatedAt, error, isLoading } =
-    useAllManagedContactsQuery();
+  const {
+    data,
+    dataUpdatedAt,
+    error,
+    isLoading,
+  } = useAllManagedContactsQuery();
 
   const contacts = data || [];
 
@@ -44,13 +49,19 @@ const Contacts = () => {
     null | number
   >(null);
 
-  const [contactDrawerMode, setContactDrawerMode] =
-    React.useState<Mode>('create');
+  const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
+    'create'
+  );
 
   const { mutateAsync: deleteContact } = useDeleteContactMutation();
 
-  const { closeDialog, dialog, handleError, openDialog, submitDialog } =
-    useDialog<number>((id) => deleteContact({ id: id || -1 }));
+  const {
+    closeDialog,
+    dialog,
+    handleError,
+    openDialog,
+    submitDialog,
+  } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
 
   const handleDelete = () => {
     submitDialog(dialog.entityID)

@@ -8,8 +8,7 @@ import { CopyableTextField } from './CopyableTextField';
 
 import type { CopyableTextFieldProps } from './CopyableTextField';
 
-vi.mock('@linode/utilities', async () => ({
-  ...(await vi.importActual('@linode/utilities')),
+vi.mock('@linode/utilities', () => ({
   downloadFile: vi.fn(),
 }));
 

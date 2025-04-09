@@ -1,10 +1,11 @@
-import { useProfile, useAccount } from '@linode/queries';
 import { useLDClient } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 
 import { configureErrorReportingUser } from './exceptionReporting';
+import { useAccount } from './queries/account/account';
+import { useProfile } from './queries/profile/profile';
 
 /**
  * This hook uses Linode account data to set Sentry and Launch Darkly context.
@@ -17,8 +18,9 @@ export const useSetupFeatureFlags = () => {
 
   const client = useLDClient();
 
-  const [areFeatureFlagsLoading, setAreFeatureFlagsLoading] =
-    React.useState(true);
+  const [areFeatureFlagsLoading, setAreFeatureFlagsLoading] = React.useState(
+    true
+  );
 
   const userID = profile?.uid;
   const username = profile?.username;
@@ -48,14 +50,14 @@ export const useSetupFeatureFlags = () => {
       const country = accountError
         ? 'Unknown'
         : account?.country === ''
-          ? 'Unknown'
-          : account?.country;
+        ? 'Unknown'
+        : account?.country;
 
       const taxID = accountError
         ? 'Unknown'
         : account?.tax_id === ''
-          ? 'Unknown'
-          : account?.tax_id;
+        ? 'Unknown'
+        : account?.tax_id;
       if (client && country && username && taxID) {
         client
           .identify({

@@ -1,17 +1,16 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountResourcesFactory } from 'src/factories/accountResources';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedRolesTable } from './AssignedRolesTable';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountPermissions: vi.fn().mockReturnValue({}),
+  useAccountResources: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
 }));
 
@@ -24,25 +23,13 @@ vi.mock('src/queries/iam/iam', async () => {
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+vi.mock('src/queries/resources/resources', async () => {
+  const actual = await vi.importActual<any>('src/queries/resources/resources');
   return {
     ...actual,
-    useAccountEntities: queryMocks.useAccountEntities,
+    useAccountResources: queryMocks.useAccountResources,
   };
 });
-
-const mockEntities = [
-  accountEntityFactory.build({
-    id: 7,
-    type: 'linode',
-  }),
-  accountEntityFactory.build({
-    id: 1,
-    label: 'firewall-1',
-    type: 'firewall',
-  }),
-];
 
 describe('AssignedRolesTable', () => {
   it('should display no roles text if there are no roles assigned to user', async () => {
@@ -64,8 +51,8 @@ describe('AssignedRolesTable', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAccountResources.mockReturnValue({
+      data: accountResourcesFactory.build(),
     });
 
     const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(
@@ -73,7 +60,7 @@ describe('AssignedRolesTable', () => {
     );
 
     expect(getByText('account_linode_admin')).toBeInTheDocument();
-    expect(getAllByText('All Linodes')[0]).toBeInTheDocument();
+    expect(getAllByText('All linodes')[0]).toBeInTheDocument();
 
     const actionMenuButton = getAllByLabelText('action menu')[0];
     expect(actionMenuButton).toBeInTheDocument();
@@ -92,8 +79,8 @@ describe('AssignedRolesTable', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAccountResources.mockReturnValue({
+      data: accountResourcesFactory.build(),
     });
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
@@ -117,8 +104,8 @@ describe('AssignedRolesTable', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAccountResources.mockReturnValue({
+      data: accountResourcesFactory.build(),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(
@@ -144,8 +131,8 @@ describe('AssignedRolesTable', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    queryMocks.useAccountEntities.mockReturnValue({
-      data: makeResourcePage(mockEntities),
+    queryMocks.useAccountResources.mockReturnValue({
+      data: accountResourcesFactory.build(),
     });
 
     const { getByPlaceholderText, queryByText } = renderWithTheme(

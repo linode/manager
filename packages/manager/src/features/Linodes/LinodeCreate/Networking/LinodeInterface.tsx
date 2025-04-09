@@ -5,7 +5,6 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
 import { VLAN } from './VLAN';
-import { VPC } from './VPC';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -41,21 +40,14 @@ export const LinodeInterface = ({ index, onRemove }: Props) => {
         <Typography variant="h3">Interface eth{index}</Typography>
         {index !== 0 && <Button onClick={onRemove}>Remove Interface</Button>}
       </Stack>
-      {errors.linodeInterfaces?.[index]?.message && (
+      {errors.interfaces?.[index]?.purpose?.message && (
         <Notice
-          text={errors.linodeInterfaces?.[index]?.message}
-          variant="error"
-        />
-      )}
-      {errors.linodeInterfaces?.[index]?.purpose?.message && (
-        <Notice
-          text={errors.linodeInterfaces?.[index]?.purpose?.message}
+          text={errors.interfaces?.[index]?.purpose?.message}
           variant="error"
         />
       )}
       <InterfaceType index={index} />
       {interfaceType === 'vlan' && <VLAN index={index} />}
-      {interfaceType === 'vpc' && <VPC index={index} />}
       {interfaceGeneration === 'linode' && <InterfaceFirewall index={index} />}
     </Stack>
   );

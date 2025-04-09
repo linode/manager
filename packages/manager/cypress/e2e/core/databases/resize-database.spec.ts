@@ -20,7 +20,7 @@ import { randomIp, randomNumber, randomString } from 'support/util/random';
 
 import { databaseFactory, possibleStatuses } from 'src/factories/databases';
 
-import type { DatabaseClusterConfiguration } from 'support/constants/databases';
+import type { databaseClusterConfiguration } from 'support/constants/databases';
 
 /**
  * Resizes a current database cluster to a larger plan size.
@@ -52,7 +52,7 @@ const resizeDatabase = (initialLabel: string) => {
 
 describe('Resizing existing clusters', () => {
   databaseConfigurationsResize.forEach(
-    (configuration: DatabaseClusterConfiguration) => {
+    (configuration: databaseClusterConfiguration) => {
       describe(`Resizes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster (legacy DBaaS)`, () => {
         /*
          * - Tests active database resize UI flows using mocked data.

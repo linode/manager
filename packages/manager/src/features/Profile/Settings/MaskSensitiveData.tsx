@@ -1,7 +1,10 @@
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
 
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 export const MaskSensitiveData = () => {
   const { data: isSensitiveDataMasked, isLoading } = usePreferences(

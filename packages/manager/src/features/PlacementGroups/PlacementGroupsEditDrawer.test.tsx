@@ -1,8 +1,7 @@
-import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import { placementGroupFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsEditDrawer } from './PlacementGroupsEditDrawer';
@@ -14,8 +13,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     useMutatePlacementGroup: queryMocks.useMutatePlacementGroup,

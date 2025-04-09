@@ -226,7 +226,7 @@ export const AreaChart = (props: AreaChartProps) => {
               <Typography sx={{ font: theme.font.bold }}>
                 {item.dataKey}
               </Typography>
-              <Typography marginLeft={2} sx={{ font: theme.font.bold }}>
+              <Typography sx={{ font: theme.font.bold }} marginLeft={2}>
                 {tooltipValueFormatter(item.value, unit)}
               </Typography>
             </Box>
@@ -267,11 +267,7 @@ export const AreaChart = (props: AreaChartProps) => {
 
   return (
     <>
-      <ResponsiveContainer
-        data-testid="area-chart-container"
-        height={height}
-        width={width}
-      >
+      <ResponsiveContainer height={height} width={width}>
         <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
           <CartesianGrid
             stroke={theme.color.grey7}
@@ -279,6 +275,11 @@ export const AreaChart = (props: AreaChartProps) => {
             vertical={false}
           />
           <XAxis
+            ticks={
+              xAxisTickCount
+                ? generate12HourTicks(data, timezone, xAxisTickCount)
+                : []
+            }
             dataKey="timestamp"
             domain={['dataMin', 'dataMax']}
             interval={xAxisTickCount ? 0 : 'preserveEnd'}
@@ -286,21 +287,15 @@ export const AreaChart = (props: AreaChartProps) => {
             scale="time"
             stroke={theme.color.label}
             tickFormatter={xAxisTickFormatter}
-            ticks={
-              xAxisTickCount
-                ? generate12HourTicks(data, timezone, xAxisTickCount)
-                : []
-            }
             type="number"
           />
           <YAxis
-            stroke={theme.color.label}
             tickFormatter={
               yAxisProps?.tickFormat ? yAxisProps.tickFormat : humanizeLargeData
             }
+            stroke={theme.color.label}
           />
           <Tooltip
-            content={<CustomTooltip />}
             contentStyle={{
               color: theme.tokens.color.Neutrals[70],
             }}
@@ -308,6 +303,7 @@ export const AreaChart = (props: AreaChartProps) => {
               color: theme.tokens.color.Neutrals[70],
               font: theme.font.bold,
             }}
+            content={<CustomTooltip />}
           />
           {showLegend && !legendRows && (
             <Legend
@@ -316,12 +312,12 @@ export const AreaChart = (props: AreaChartProps) => {
                   {value}
                 </span>
               )}
-              iconType="square"
               onClick={({ dataKey }) => {
                 if (dataKey) {
                   handleLegendClick(dataKey as string);
                 }
               }}
+              iconType="square"
               wrapperStyle={legendStyles}
             />
           )}
@@ -337,7 +333,7 @@ export const AreaChart = (props: AreaChartProps) => {
               dataKey={dataKey}
               dot={{ r: showDot ? dotRadius : 0 }}
               fill={color}
-              fillOpacity={variant === 'line' ? 0 : (fillOpacity ?? 1)}
+              fillOpacity={variant === 'line' ? 0 : fillOpacity ?? 1}
               hide={activeSeries.includes(dataKey)}
               isAnimationActive={false}
               key={dataKey}

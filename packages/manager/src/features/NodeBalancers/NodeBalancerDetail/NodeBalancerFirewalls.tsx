@@ -1,14 +1,8 @@
-import {
-  useAllFirewallDevicesQuery,
-  useFirewallQuery,
-  useNodeBalancersFirewallsQuery,
-} from '@linode/queries';
-import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -19,11 +13,11 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
-import { useDialogData } from 'src/hooks/useDialogData';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
-import type { Firewall } from '@linode/api-v4';
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface Props {
   nodeBalancerId: number;
@@ -31,10 +25,7 @@ interface Props {
 
 export const NodeBalancerFirewalls = (props: Props) => {
   const { nodeBalancerId } = props;
-  const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
+
   const {
     data: attachedFirewallData,
     error,
@@ -43,33 +34,27 @@ export const NodeBalancerFirewalls = (props: Props) => {
 
   const attachedFirewalls = attachedFirewallData?.data;
 
-  const isUnassignFirewallRoute =
-    match.routeId ===
-    '/nodebalancers/$id/settings/unassign-firewall/$firewallId';
+  const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
 
-  const { data: selectedFirewall, isFetching: isFetchingSelectedFirewall } =
-    useDialogData({
-      enabled: isUnassignFirewallRoute,
-      paramKey: 'firewallId',
-      queryHook: useFirewallQuery,
-      redirectToOnNotFound: '/nodebalancers/$id/settings',
-    });
+  const [
+    deviceToBeRemoved,
+    setDeviceToBeRemoved,
+  ] = React.useState<FirewallDevice>();
 
-  const { data: devices, isFetching: isFetchingDevices } = useDialogData({
-    enabled: isUnassignFirewallRoute,
-    paramKey: 'firewallId',
-    queryHook: useAllFirewallDevicesQuery,
-    redirectToOnNotFound: '/nodebalancers/$id/settings',
-  });
+  const [
+    isRemoveDeviceDialogOpen,
+    setIsRemoveDeviceDialogOpen,
+  ] = React.useState<boolean>(false);
 
-  const handleClickUnassign = (firewall: Firewall) => {
-    navigate({
-      params: {
-        firewallId: String(firewall.id),
-        id: String(nodeBalancerId),
-      },
-      to: '/nodebalancers/$id/settings/unassign-firewall/$firewallId',
-    });
+  const [
+    isAddFirewallDrawerOpen,
+    setIsAddFirewalDrawerOpen,
+  ] = React.useState<boolean>(false);
+
+  const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
+    setDeviceToBeRemoved(device);
+    setSelectedFirewall(firewall);
+    setIsRemoveDeviceDialogOpen(true);
   };
 
   const renderTableContent = () => {
@@ -87,11 +72,10 @@ export const NodeBalancerFirewalls = (props: Props) => {
 
     return attachedFirewalls.map((attachedFirewall) => (
       <NodeBalancerFirewallsRow
-        devices={devices}
         firewall={attachedFirewall}
         key={`firewall-${attachedFirewall.id}`}
-        nodeBalancerId={nodeBalancerId}
-        onClickUnassign={() => handleClickUnassign(attachedFirewall)}
+        nodeBalancerID={nodeBalancerId}
+        onClickUnassign={handleClickUnassign}
       />
     ));
   };
@@ -110,14 +94,9 @@ export const NodeBalancerFirewalls = (props: Props) => {
           to your NodeBalancer. Only inbound rules are applied to NodeBalancers.
         </Typography>
         <Button
-          onClick={() =>
-            navigate({
-              params: { id: String(nodeBalancerId) },
-              to: '/nodebalancers/$id/settings/add-firewall',
-            })
-          }
           buttonType="primary"
           disabled={attachedFirewallData && attachedFirewallData.results >= 1}
+          onClick={() => setIsAddFirewalDrawerOpen(true)}
           tooltipText="NodeBalanacers can only have one Firewall assigned."
         >
           Add Firewall
@@ -135,46 +114,22 @@ export const NodeBalancerFirewalls = (props: Props) => {
         <TableBody>{renderTableContent()}</TableBody>
       </Table>
       <RemoveDeviceDialog
-        device={devices?.find(
-          (device) =>
-            device.entity.type === 'nodebalancer' &&
-            device.entity.id === nodeBalancerId
-        )}
-        onClose={() =>
-          navigate({
-            params: { id: String(nodeBalancerId) },
-            to: '/nodebalancers/$id/settings',
-          })
-        }
-        open={
-          match.routeId ===
-          '/nodebalancers/$id/settings/unassign-firewall/$firewallId'
-        }
+        device={deviceToBeRemoved}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
-        isFetching={isFetchingDevices || isFetchingSelectedFirewall}
+        onClose={() => setIsRemoveDeviceDialogOpen(false)}
         onService
+        open={isRemoveDeviceDialogOpen}
       />
       <Drawer
-        onClose={() =>
-          navigate({
-            params: { id: String(nodeBalancerId) },
-            to: '/nodebalancers/$id/settings',
-          })
-        }
-        NotFoundComponent={NotFound}
-        open={match.routeId === '/nodebalancers/$id/settings/add-firewall'}
+        onClose={() => setIsAddFirewalDrawerOpen(false)}
+        open={isAddFirewallDrawerOpen}
         title="Add Firewall"
       >
         <AddFirewallForm
-          onCancel={() =>
-            navigate({
-              params: { id: String(nodeBalancerId) },
-              to: '/nodebalancers/$id/settings',
-            })
-          }
           entityId={nodeBalancerId}
           entityType="nodebalancer"
+          onCancel={() => setIsAddFirewalDrawerOpen(false)}
         />
       </Drawer>
     </Stack>

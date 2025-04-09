@@ -1,5 +1,4 @@
 import { uploadAttachment } from '@linode/api-v4';
-import { useSupportTicketReplyMutation } from '@linode/queries';
 import { Accordion, Notice } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { lensPath, set } from 'ramda';
@@ -7,6 +6,7 @@ import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
+import { useSupportTicketReplyMutation } from 'src/queries/support';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 

@@ -1,8 +1,11 @@
-import { profileFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountSettingsFactory } from 'src/factories';
+import {
+  accountSettingsFactory,
+  profileFactory,
+  regionFactory,
+} from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
@@ -25,11 +28,12 @@ describe('Linode Create Backups Addon', () => {
   });
 
   it('should get its value from the form context', () => {
-    const { getByRole } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Backups />,
-        useFormOptions: { defaultValues: { backups_enabled: true } },
-      });
+    const {
+      getByRole,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Backups />,
+      useFormOptions: { defaultValues: { backups_enabled: true } },
+    });
 
     const checkbox = getByRole('checkbox');
 
@@ -69,11 +73,12 @@ describe('Linode Create Backups Addon', () => {
       })
     );
 
-    const { getByRole } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Backups />,
-        useFormOptions: { defaultValues: { region: region.id } },
-      });
+    const {
+      getByRole,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Backups />,
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
 
     const checkbox = getByRole('checkbox');
 
@@ -94,10 +99,11 @@ describe('Linode Create Backups Addon', () => {
       })
     );
 
-    const { getByRole } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Backups />,
-      });
+    const {
+      getByRole,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Backups />,
+    });
 
     const checkbox = getByRole('checkbox');
 
@@ -107,13 +113,14 @@ describe('Linode Create Backups Addon', () => {
   });
 
   it('renders a warning if disk encryption is enabled and backups are enabled', async () => {
-    const { getByText } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Backups />,
-        useFormOptions: {
-          defaultValues: { backups_enabled: true, disk_encryption: 'enabled' },
-        },
-      });
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+      component: <Backups />,
+      useFormOptions: {
+        defaultValues: { backups_enabled: true, disk_encryption: 'enabled' },
+      },
+    });
 
     expect(
       getByText('Virtual Machine Backups are not encrypted.')

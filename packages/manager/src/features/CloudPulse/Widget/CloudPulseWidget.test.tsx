@@ -1,4 +1,3 @@
-import { formatPercentage } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -8,6 +7,7 @@ import {
   widgetFactory,
 } from 'src/factories';
 import * as CloudPulseWidgetUtils from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
+import { formatPercentage } from 'src/utilities/statMetrics';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseWidget } from './CloudPulseWidget';

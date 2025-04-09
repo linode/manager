@@ -13,39 +13,45 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
-  const { handleZoomToggle } = props;
+  const handleClick = (needZoomIn: boolean) => {
+    props.handleZoomToggle(needZoomIn);
+  };
 
-  if (props.zoomIn) {
+  const ToggleZoomer = () => {
+    if (props.zoomIn) {
+      return (
+        <CloudPulseTooltip placement="bottom-end" title="Minimize">
+          <IconButton
+            sx={{
+              fontSize: 'x-large',
+              padding: 0,
+            }}
+            aria-label="Zoom Out"
+            data-testid="zoom-out"
+            onClick={() => handleClick(false)}
+          >
+            <ZoomOutMap />
+          </IconButton>
+        </CloudPulseTooltip>
+      );
+    }
+
     return (
-      <CloudPulseTooltip placement="bottom-end" title="Minimize">
+      <CloudPulseTooltip placement="bottom-end" title="Maximize">
         <IconButton
           sx={{
+            fontSize: 'x-large',
             padding: 0,
           }}
-          aria-label="Zoom Out"
-          color="inherit"
-          data-testid="zoom-out"
-          onClick={() => handleZoomToggle(false)}
+          aria-label="Zoom In"
+          data-testid="zoom-in"
+          onClick={() => handleClick(true)}
         >
-          <ZoomOutMap />
+          <ZoomInMap />
         </IconButton>
       </CloudPulseTooltip>
     );
-  }
+  };
 
-  return (
-    <CloudPulseTooltip placement="bottom-end" title="Maximize">
-      <IconButton
-        sx={{
-          padding: 0,
-        }}
-        aria-label="Zoom In"
-        color="inherit"
-        data-testid="zoom-in"
-        onClick={() => handleZoomToggle(true)}
-      >
-        <ZoomInMap />
-      </IconButton>
-    </CloudPulseTooltip>
-  );
+  return <ToggleZoomer />;
 });

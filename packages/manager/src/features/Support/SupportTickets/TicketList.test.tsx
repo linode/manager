@@ -3,12 +3,10 @@ import * as React from 'react';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TicketList } from './TicketList';
-
-import type { Props } from './TicketList';
+import { Props, TicketList } from './TicketList';
 
 beforeAll(() => mockMatchMedia());
 

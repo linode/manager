@@ -2,13 +2,15 @@
  * @file Integration tests for account security questions.
  */
 
-import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
 import {
   mockGetProfile,
   mockGetSecurityQuestions,
   mockUpdateSecurityQuestions,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+
+import { securityQuestionsFactory } from 'src/factories/profile';
+import { profileFactory } from 'src/factories/profile';
 
 /**
  * Finds the "Security Questions" section on the profile auth page.

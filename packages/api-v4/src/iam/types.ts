@@ -1,39 +1,38 @@
-export type EntityTypePermissions =
-  | 'account'
-  | 'database'
-  | 'domain'
-  | 'firewall'
-  | 'image'
+export type ResourceTypePermissions =
   | 'linode'
-  | 'longview'
+  | 'firewall'
   | 'nodebalancer'
+  | 'longview'
+  | 'domain'
   | 'stackscript'
+  | 'image'
   | 'volume'
+  | 'database'
+  | 'account'
   | 'vpc';
 
 export type AccountAccessType =
-  | 'account_admin'
   | 'account_linode_admin'
-  | 'account_viewer'
-  | 'firewall_creator'
+  | 'linode_creator'
   | 'linode_contributor'
-  | 'linode_creator';
+  | 'account_admin'
+  | 'firewall_creator';
 
 export type RoleType =
-  | 'firewall_admin'
-  | 'firewall_creator'
   | 'linode_contributor'
-  | 'linode_creator'
   | 'linode_viewer'
-  | 'update_firewall';
+  | 'firewall_admin'
+  | 'linode_creator'
+  | 'update_firewall'
+  | 'firewall_creator';
 
 export interface IamUserPermissions {
   account_access: AccountAccessType[];
-  entity_access: EntityAccess[];
+  resource_access: ResourceAccess[];
 }
-export interface EntityAccess {
-  id: number;
-  type: EntityTypePermissions;
+export interface ResourceAccess {
+  resource_id: number;
+  resource_type: ResourceTypePermissions;
   roles: RoleType[];
 }
 
@@ -196,11 +195,11 @@ export type PermissionType =
 
 export interface IamAccountPermissions {
   account_access: IamAccess[];
-  entity_access: IamAccess[];
+  resource_access: IamAccess[];
 }
 
 export interface IamAccess {
-  type: EntityTypePermissions;
+  resource_type: ResourceTypePermissions;
   roles: Roles[];
 }
 

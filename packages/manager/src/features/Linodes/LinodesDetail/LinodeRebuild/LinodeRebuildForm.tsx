@@ -1,7 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import { usePreferences, useRebuildLinodeMutation } from '@linode/queries';
 import { Divider, Notice, Stack, Typography } from '@linode/ui';
-import { scrollErrorIntoView, utoa } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef, useState } from 'react';
@@ -10,6 +8,10 @@ import { useLocation } from 'react-router-dom';
 
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useRebuildLinodeMutation } from 'src/queries/linodes/linodes';
+import { usePreferences } from 'src/queries/profile/preferences';
+import { utoa } from 'src/utilities/metadata';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { StackScriptSelectionList } from '../../LinodeCreate/Tabs/StackScripts/StackScriptSelectionList';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -77,21 +79,10 @@ export const LinodeRebuildForm = (props: Props) => {
   });
 
   const onSubmit = async (values: RebuildLinodeFormValues) => {
-    /**
-     * User Data logic (see https://github.com/linode/manager/pull/8850)
-     * 1) if user data has been provided, encode it and include it in the payload
-     *    The backend will use the newly provided user data.
-     * 2) if the "Reuse User Data" checkbox is checked, remove the Metadata property from the payload
-     *    The backend will continue to use the existing user data.
-     * 3) if user data has not been provided and the Reuse User Data checkbox is not checked, send null in the payload
-     *    The backend deletes the Linode's user data. The Linode will no longer use user data.
-     */
-    if (values.metadata?.user_data) {
-      values.metadata.user_data = utoa(values.metadata.user_data);
-    } else if (values.reuseUserData) {
+    if (values.reuseUserData) {
       values.metadata = undefined;
-    } else {
-      values.metadata = { user_data: null };
+    } else if (values.metadata?.user_data) {
+      values.metadata.user_data = utoa(values.metadata.user_data);
     }
 
     // Distributed instances are encrypted by default and disk_encryption should not be included in the payload.

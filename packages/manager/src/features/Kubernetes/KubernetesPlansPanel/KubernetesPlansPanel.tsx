@@ -10,7 +10,7 @@ import {
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 

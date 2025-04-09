@@ -1,6 +1,6 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
-import type { Config, LinodeInterface, Subnet, VPC } from '@linode/api-v4';
+import type { Config, Subnet } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -14,25 +14,31 @@ export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   return linodes.length;
 };
 
-// Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route
-export const hasUnrecommendedConfigurationLinodeInterface = (
-  linodeInterface: LinodeInterface | undefined,
-  isInterfaceActive: boolean
+export const getSubnetInterfaceFromConfigs = (
+  configs: Config[],
+  subnetId: number
 ) => {
-  return (
-    isInterfaceActive &&
-    linodeInterface?.vpc?.ipv4.addresses.some(
-      (address) => address.nat_1_1_address
-    ) &&
-    !linodeInterface?.default_route.ipv4
-  );
+  for (const config of configs) {
+    if (config.interfaces) {
+      for (const linodeInterface of config.interfaces) {
+        if (
+          linodeInterface.ipv4?.vpc &&
+          linodeInterface.subnet_id === subnetId
+        ) {
+          return linodeInterface;
+        }
+      }
+    }
+  }
+
+  return undefined;
 };
 
 export const hasUnrecommendedConfiguration = (
-  config: Config | undefined,
+  configs: Config[],
   subnetId: number
 ) => {
-  if (config) {
+  for (const config of configs) {
     const configInterfaces = config.interfaces;
 
     /*
@@ -67,8 +73,3 @@ export const hasUnrecommendedConfiguration = (
 
   return false;
 };
-
-// This isn't great but will hopefully improve once we actually support editing VPCs for LKE-E
-export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
-  /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(vpc.description) &&
-  /^lke\d+/i.test(vpc.label);

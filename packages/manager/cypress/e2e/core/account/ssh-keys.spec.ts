@@ -1,4 +1,3 @@
-import { sshKeyFactory } from '@linode/utilities';
 import { sshFormatErrorMessage } from 'support/constants/account';
 import {
   mockCreateSSHKey,
@@ -9,6 +8,8 @@ import {
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
+
+import { sshKeyFactory } from 'src/factories';
 
 describe('SSH keys', () => {
   /*

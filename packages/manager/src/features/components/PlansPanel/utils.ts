@@ -1,7 +1,8 @@
-import { useAccount } from '@linode/queries';
-import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
+import { arrayToList } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -95,7 +96,7 @@ const shouldExcludePlan = (
  */
 
 export const getPlanSelectionsByPlanType = <
-  T extends BaseType & { class: LinodeTypeClass },
+  T extends BaseType & { class: LinodeTypeClass }
 >(
   types: T[],
   options: { isLKE?: boolean } = {}
@@ -117,7 +118,7 @@ export const getPlanSelectionsByPlanType = <
         plansByType['shared'].push(type);
         break;
       default:
-        if (Object.prototype.hasOwnProperty.call(plansByType, type.class)) {
+        if (plansByType.hasOwnProperty(type.class)) {
           plansByType[type.class].push(type);
         }
         break;

@@ -1,8 +1,8 @@
-import { readableBytes } from '@linode/utilities';
 import { uploadImageSchema } from '@linode/validation';
 import { mixed } from 'yup';
 
 import { sendImageUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { ImageUploadPayload } from '@linode/api-v4';
 

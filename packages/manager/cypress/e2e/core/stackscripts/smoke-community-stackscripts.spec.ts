@@ -1,4 +1,9 @@
-import { getProfile } from '@linode/api-v4';
+import type { StackScript } from '@linode/api-v4';
+import { Profile, getProfile } from '@linode/api-v4';
+
+import { stackScriptFactory } from 'src/factories';
+import { formatDate } from 'src/utilities/formatDate';
+
 import { authenticate } from 'support/api/authentication';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
@@ -12,19 +17,16 @@ import { cleanUp } from 'support/util/cleanup';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { stackScriptFactory } from 'src/factories';
-import { formatDate } from 'src/utilities/formatDate';
-
-import type { Profile, StackScript } from '@linode/api-v4';
-
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
-    created: '2019-05-23T16:21:41',
-    deployments_active: 238,
-    deployments_total: 4400,
+    id: 443929,
+    username: 'litespeed',
+    user_gravatar_id: 'f7360fb588b5f65d81ee1afe11b6c0ad',
+    label: 'OpenLiteSpeed-WordPress',
     description:
       'Blazing-fast WordPress with LSCache, 300+ times faster than regular WordPress\n\nOpenLiteSpeed is the Open Source edition of LiteSpeed Web Server Enterprise and contains all of the essential features. OLS provides enormous scalability, and an accelerated hosting platform for WordPress. \n\nWhole process maybe take up to 10 minutes to finish. ',
-    id: 443929,
+    ordinal: 0,
+    logo_url: '',
     images: [
       'linode/centos7',
       'linode/debian9',
@@ -41,47 +43,45 @@ const mockStackScripts: StackScript[] = [
       'linode/almalinux9',
       'linode/rocky9',
     ],
+    deployments_total: 4400,
+    deployments_active: 238,
     is_public: true,
-    label: 'OpenLiteSpeed-WordPress',
-    logo_url: '',
     mine: false,
-    ordinal: 0,
+    created: '2019-05-23T16:21:41',
+    updated: '2023-08-22T16:41:48',
     rev_note: 'add more OS',
     script:
       '#!/bin/bash\n### linode\n### Install OpenLiteSpeed and WordPress\nbash <( curl -sk https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Setup/wpimgsetup.sh )\n### Regenerate password for Web Admin, Database, setup Welcome Message\nbash <( curl -sk https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Cloud-init/per-instance.sh )\n### Reboot server\nreboot\n',
-    updated: '2023-08-22T16:41:48',
     user_defined_fields: [],
-    user_gravatar_id: 'f7360fb588b5f65d81ee1afe11b6c0ad',
-    username: 'litespeed',
   }),
   stackScriptFactory.build({
-    created: '2017-02-07T02:28:49',
-    deployments_active: 13,
-    deployments_total: 35469,
-    description: 'Auto setup Squid Proxy Server on Ubuntu 16.04 LTS',
     id: 68166,
-    images: ['linode/ubuntu16.04lts'],
-    is_public: true,
+    username: 'serverok',
+    user_gravatar_id: '8c2562f63286df4f8aae5babe5920ade',
     label: 'Squid Proxy Server',
-    logo_url: '',
-    mine: false,
+    description: 'Auto setup Squid Proxy Server on Ubuntu 16.04 LTS',
     ordinal: 0,
+    logo_url: '',
+    images: ['linode/ubuntu16.04lts'],
+    deployments_total: 35469,
+    deployments_active: 13,
+    is_public: true,
+    mine: false,
+    created: '2017-02-07T02:28:49',
+    updated: '2023-08-07T02:34:15',
     rev_note: 'Initial import',
     script:
       '#!/bin/bash\n# <UDF name="squid_user" Label="Proxy Username" />\n# <UDF name="squid_password" Label="Proxy Password" />\n# Squid Proxy Server\n# Author: admin@serverok.in\n# Blog: https://www.serverok.in\n\n\n/usr/bin/apt update\n/usr/bin/apt -y install apache2-utils squid3\n\n/usr/bin/htpasswd -b -c /etc/squid/passwd $SQUID_USER $SQUID_PASSWORD\n\n/bin/rm -f /etc/squid/squid.conf\n/usr/bin/touch /etc/squid/blacklist.acl\n/usr/bin/wget --no-check-certificate -O /etc/squid/squid.conf https://raw.githubusercontent.com/hostonnet/squid-proxy-installer/master/squid.conf\n\n/sbin/iptables -I INPUT -p tcp --dport 3128 -j ACCEPT\n/sbin/iptables-save\n\nservice squid restart\nupdate-rc.d squid defaults',
-    updated: '2023-08-07T02:34:15',
     user_defined_fields: [
       {
-        label: 'Proxy Username',
         name: 'squid_user',
+        label: 'Proxy Username',
       },
       {
-        label: 'Proxy Password',
         name: 'squid_password',
+        label: 'Proxy Password',
       },
     ],
-    user_gravatar_id: '8c2562f63286df4f8aae5babe5920ade',
-    username: 'serverok',
   }),
 ];
 
@@ -110,13 +110,13 @@ describe('Community Stackscripts integration tests', () => {
 
     cy.defer(getProfile, 'getting profile').then((profile: Profile) => {
       const dateFormatOptionsLanding = {
-        displayTime: false,
         timezone: profile.timezone,
+        displayTime: false,
       };
 
       const dateFormatOptionsDetails = {
-        displayTime: true,
         timezone: profile.timezone,
+        displayTime: true,
       };
 
       const updatedTimeLanding = formatDate(
@@ -137,10 +137,9 @@ describe('Community Stackscripts integration tests', () => {
 
       // Search the corresponding community stack script
       mockGetStackScripts([stackScript]).as('getFilteredStackScripts');
-      cy.findByPlaceholderText(
-        'Search by Label, Username, or Description'
-      ).click();
-      cy.focused().type(`${stackScript.label}{enter}`);
+      cy.findByPlaceholderText('Search by Label, Username, or Description')
+        .click()
+        .type(`${stackScript.label}{enter}`);
       cy.wait('@getFilteredStackScripts');
 
       // Check filtered results
@@ -190,7 +189,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that pagination works as expected.
    */
   it('pagination works with infinite scrolling', () => {
-    cy.tag('method:e2e', 'env:stackScripts');
+    cy.tag('method:e2e');
     interceptGetStackScripts().as('getStackScripts');
 
     // Fetch all public Images to later use while filtering StackScripts.
@@ -236,7 +235,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that search can filter the expected results.
    */
   it('search function filters results correctly', () => {
-    cy.tag('method:e2e', 'env:stackScripts');
+    cy.tag('method:e2e');
     const stackScript = mockStackScripts[0];
 
     interceptGetStackScripts().as('getStackScripts');
@@ -252,10 +251,9 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('tr').then((value) => {
       const rowCount = Cypress.$(value).length - 1; // Remove the table title row
 
-      cy.findByPlaceholderText(
-        'Search by Label, Username, or Description'
-      ).click();
-      cy.focused().type(`${stackScript.label}{enter}`);
+      cy.findByPlaceholderText('Search by Label, Username, or Description')
+        .click()
+        .type(`${stackScript.label}{enter}`);
       cy.get(`[data-qa-table-row="${stackScript.label}"]`).should('be.visible');
 
       cy.get('tr').its('length').should('be.lt', rowCount);
@@ -267,7 +265,6 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that the deployment flow works.
    */
   it('deploys a new linode as expected', () => {
-    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = '37239';
     const stackScriptName = 'setup-ipsec-vpn';
     const sharedKey = randomString();
@@ -288,10 +285,9 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait(['@getStackScripts', '@getPreferences']);
 
-    cy.findByPlaceholderText(
-      'Search by Label, Username, or Description'
-    ).click();
-    cy.focused().type(`${stackScriptName}{enter}`);
+    cy.findByPlaceholderText('Search by Label, Username, or Description')
+      .click()
+      .type(`${stackScriptName}{enter}`);
     cy.get(`[data-qa-table-row="${stackScriptName}"]`)
       .should('be.visible')
       .within(() => {
@@ -329,12 +325,18 @@ describe('Community Stackscripts integration tests', () => {
     );
 
     // Input VPN information
-    cy.get('[id="ipsec-pre-shared-key"]').should('be.visible').click();
-    cy.focused().type(`${sharedKey}{enter}`);
-    cy.get('[id="vpn-username"]').should('be.visible').click();
-    cy.focused().type(`${vpnUser}{enter}`);
-    cy.get('[id="vpn-password"]').should('be.visible').click();
-    cy.focused().type(`${vpnPassword}{enter}`);
+    cy.get('[id="ipsec-pre-shared-key"]')
+      .should('be.visible')
+      .click()
+      .type(`${sharedKey}{enter}`);
+    cy.get('[id="vpn-username"]')
+      .should('be.visible')
+      .click()
+      .type(`${vpnUser}{enter}`);
+    cy.get('[id="vpn-password"]')
+      .should('be.visible')
+      .click()
+      .type(`${vpnPassword}{enter}`);
 
     // Check each field should persist when moving onto another field
     cy.get('[id="ipsec-pre-shared-key"]').should('have.value', sharedKey);
@@ -342,8 +344,10 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="vpn-password"]').should('have.value', vpnPassword);
 
     // Choose an image
-    cy.findByPlaceholderText('Choose an image').should('be.visible').click();
-    cy.focused().type(image);
+    cy.findByPlaceholderText('Choose an image')
+      .should('be.visible')
+      .click()
+      .type(image);
     ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
     cy.findByText(image).should('be.visible').click();
@@ -356,8 +360,7 @@ describe('Community Stackscripts integration tests', () => {
       .click();
     // An error message shows up when no region is selected
     cy.contains('Region is required.').should('be.visible');
-    ui.regionSelect.find().click();
-    cy.focused().type(`${region.id}{enter}`);
+    ui.regionSelect.find().click().type(`${region.id}{enter}`);
 
     // Choose a plan
     ui.button
@@ -367,9 +370,11 @@ describe('Community Stackscripts integration tests', () => {
       .click();
 
     // Enter a label.
-    cy.findByText('Linode Label').should('be.visible').click();
-    cy.focused().type('{selectAll}{backspace}');
-    cy.focused().type(linodeLabel);
+    cy.findByText('Linode Label')
+      .should('be.visible')
+      .click()
+      .type('{selectAll}{backspace}')
+      .type(linodeLabel);
 
     // An error message shows up when no region is selected
     cy.contains('Plan is required.').should('be.visible');
@@ -381,8 +386,7 @@ describe('Community Stackscripts integration tests', () => {
 
     // Input root password
     // Weak or fair root password cannot rebuild the linode
-    cy.get('[id="root-password"]').clear();
-    cy.focused().type(weakPassword);
+    cy.get('[id="root-password"]').clear().type(weakPassword);
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
@@ -393,8 +397,7 @@ describe('Community Stackscripts integration tests', () => {
       'be.visible'
     );
 
-    cy.get('[id="root-password"]').clear();
-    cy.focused().type(fairPassword);
+    cy.get('[id="root-password"]').clear().type(fairPassword);
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')

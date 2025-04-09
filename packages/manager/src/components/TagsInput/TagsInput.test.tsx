@@ -62,42 +62,4 @@ describe('TagsInput', () => {
       ])
     );
   });
-
-  it('validates the input tag when the tag is empty', async () => {
-    const onChangeMock = vi.fn();
-
-    renderWithTheme(<TagsInput onChange={onChangeMock} value={[]} />);
-
-    const input = screen.getByRole('combobox');
-
-    await userEvent.type(input, ' ');
-
-    const createOption = screen.getByText('Create " "');
-    userEvent.click(createOption);
-
-    await waitFor(() => {
-      expect(screen.getByText('Tag cannot be an empty')).toBeInTheDocument();
-    });
-  });
-
-  it('validates the input tag when the tag length is between 1 and 50 characters', async () => {
-    const onChangeMock = vi.fn();
-
-    renderWithTheme(<TagsInput onChange={onChangeMock} value={[]} />);
-
-    const input = screen.getByRole('combobox');
-
-    await userEvent.type(input, 'Ta');
-
-    const createOption = screen.getByText('Create "Ta"');
-    userEvent.click(createOption);
-
-    expect(
-      screen.queryByText('Length must be 1-50 characters')
-    ).not.toBeInTheDocument();
-
-    await waitFor(() =>
-      expect(onChangeMock).toHaveBeenCalledWith([{ label: 'Ta', value: 'Ta' }])
-    );
-  });
 });

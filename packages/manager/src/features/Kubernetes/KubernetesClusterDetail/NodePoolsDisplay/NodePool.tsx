@@ -66,8 +66,8 @@ export const NodePool = (props: Props) => {
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
     poolId,
-    regionSupportsDiskEncryption,
     statusFilter,
+    regionSupportsDiskEncryption,
     tags,
     typeLabel,
   } = props;
@@ -216,7 +216,6 @@ export const NodePool = (props: Props) => {
       }
       data-qa-node-pool-id={poolId}
       data-qa-node-pool-section
-      detailProps={{ sx: { paddingBottom: 1 } }}
       expanded={accordionExpanded}
       onChange={handleAccordionClick}
       // Improve performance by unmounting large content from the DOM when collapsed

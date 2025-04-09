@@ -1,13 +1,4 @@
-import { useAccountSettings } from '@linode/queries';
-import {
-  ActionsPanel,
-  CircleProgress,
-  Drawer,
-  Notice,
-  TextField,
-  Typography,
-} from '@linode/ui';
-import { sortByString } from '@linode/utilities';
+import { CircleProgress, Notice, TextField, Typography } from '@linode/ui';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
@@ -15,10 +6,13 @@ import {
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
+import { sortByString } from 'src/utilities/sort-by';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -76,19 +70,20 @@ export interface FormState {
  * sorted by region.
  */
 
-export const sortByRegion =
-  (regionLookup: { [key: string]: Region }) =>
-  (a: DisplayedAccessKeyScope, b: DisplayedAccessKeyScope) => {
-    if (!a.region || !b.region) {
-      return 0;
-    }
+export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
+  a: DisplayedAccessKeyScope,
+  b: DisplayedAccessKeyScope
+) => {
+  if (!a.region || !b.region) {
+    return 0;
+  }
 
-    return sortByString(
-      regionLookup[a.region].label,
-      regionLookup[b.region].label,
-      'asc'
-    );
-  };
+  return sortByString(
+    regionLookup[a.region].label,
+    regionLookup[b.region].label,
+    'asc'
+  );
+};
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
@@ -103,8 +98,14 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
-    props;
+  const {
+    isRestrictedUser,
+    mode,
+    objectStorageKey,
+    onClose,
+    onSubmit,
+    open,
+  } = props;
 
   const { regionsByIdMap } = useObjectStorageRegions();
 
@@ -216,7 +217,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}

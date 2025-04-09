@@ -1,23 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useGrants, useProfile, useUpdateVPCMutation } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';
 
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
 }
 
+const REGION_HELPER_TEXT = 'Region cannot be changed during beta.';
+
 export const VPCEditDrawer = (props: Props) => {
-  const { isFetching, onClose, open, vpc } = props;
+  const { onClose, open, vpc } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -46,8 +51,8 @@ export const VPCEditDrawer = (props: Props) => {
     mode: 'onBlur',
     resolver: yupResolver(updateVPCSchema),
     values: {
-      description: vpc?.description ?? '',
-      label: vpc?.label ?? '',
+      description: vpc?.description,
+      label: vpc?.label,
     },
   });
 
@@ -68,14 +73,10 @@ export const VPCEditDrawer = (props: Props) => {
     }
   };
 
+  const { data: regionsData, error: regionsError } = useRegionsQuery();
+
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
-      onClose={handleDrawerClose}
-      open={open}
-      title="Edit VPC"
-    >
+    <Drawer onClose={handleDrawerClose} open={open} title="Edit VPC">
       {errors.root?.message && (
         <Notice text={errors.root.message} variant="error" />
       )}
@@ -118,6 +119,17 @@ export const VPCEditDrawer = (props: Props) => {
           control={control}
           name="description"
         />
+        {regionsData && (
+          <RegionSelect
+            currentCapability="VPCs"
+            disabled // the Region field will not be editable during beta
+            errorText={(regionsError && regionsError[0].reason) || undefined}
+            helperText={REGION_HELPER_TEXT}
+            onChange={() => null}
+            regions={regionsData}
+            value={vpc?.region}
+          />
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',

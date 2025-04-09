@@ -33,7 +33,7 @@ const SIZE_MAP = {
   lg: 124,
   md: 40,
   sm: 20,
-  xs: 16,
+  xs: 14,
 };
 
 /**

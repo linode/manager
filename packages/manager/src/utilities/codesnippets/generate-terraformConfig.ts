@@ -1,4 +1,4 @@
-import { getIsLegacyInterfaceArray } from '@linode/utilities';
+import { getIsLegacyInterfaceArray } from 'src/features/Linodes/LinodeCreate/utilities';
 
 import { escapeStringForCLI } from '../escapeStringForCLI';
 
@@ -100,7 +100,7 @@ export function generateTerraformConfig(config: CreateLinodeRequest): string {
   if (config.swap_size) {
     terraformConfig += `  swap_size = ${config.swap_size}\n`;
   }
-  if (Object.prototype.hasOwnProperty.call(config, 'private_ip')) {
+  if (config.hasOwnProperty('private_ip')) {
     // Checks explicitly for property existence
     terraformConfig += `  private_ip = ${config.private_ip}\n`;
   }

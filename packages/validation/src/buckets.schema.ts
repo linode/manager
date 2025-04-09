@@ -6,21 +6,21 @@ export const CreateBucketSchema = object()
   .shape(
     {
       label: string()
-        .required('Bucket name is required.')
-        .min(3, 'Bucket name must be between 3 and 63 characters.')
-        .matches(/^\S*$/, 'Bucket name must not contain spaces.')
+        .required('Label is required.')
+        .min(3, 'Label must be between 3 and 63 characters.')
+        .matches(/^\S*$/, 'Label must not contain spaces.')
         .matches(
           /^[a-z0-9].*[a-z0-9]$/,
-          'Bucket name must start and end with a lowercase letter or number.',
+          'Label must start and end with a lowercase letter or number.'
         )
         .matches(
           /^(?!.*[.-]{2})[a-z0-9.-]+$/,
-          'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.',
+          'Label must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
         )
-        .max(63, 'Bucket name must be between 3 and 63 characters.')
+        .max(63, 'Label must be between 3 and 63 characters.')
         .test(
           'unique-label',
-          'A bucket with this name already exists in your selected region',
+          'A bucket with this label already exists in your selected region',
           (value, context) => {
             const { cluster, region } = context.parent;
             const buckets = context.options.context?.buckets;
@@ -33,9 +33,9 @@ export const CreateBucketSchema = object()
             return !buckets.some(
               (bucket) =>
                 bucket.label === value &&
-                (bucket.cluster === cluster || bucket.region === region),
+                (bucket.cluster === cluster || bucket.region === region)
             );
-          },
+          }
         ),
       cluster: string().when('region', {
         is: (region: string) => !region || region.length === 0,
@@ -59,7 +59,7 @@ export const CreateBucketSchema = object()
         .optional(),
       s3_endpoint: string().optional(),
     },
-    [['cluster', 'region']],
+    [['cluster', 'region']]
   )
   .test('cors-enabled-check', 'Invalid CORS configuration.', function (value) {
     const { endpoint_type, cors_enabled } = value;

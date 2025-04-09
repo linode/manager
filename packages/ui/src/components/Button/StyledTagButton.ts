@@ -15,7 +15,7 @@ export const StyledTagButton = styled(Button, {
   shouldForwardProp: omittedProps(['panel']),
 })<{ panel?: boolean }>(({ theme, ...props }) => ({
   border: 'none',
-  color: theme.tokens.alias.Action.Neutral,
+  color: theme.tokens.action.Neutral,
   fontSize: '0.875rem',
   minHeight: 30,
   whiteSpace: 'nowrap',

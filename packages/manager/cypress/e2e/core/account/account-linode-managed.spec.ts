@@ -2,28 +2,27 @@
  * @file Integration tests for Cloud Manager account enable Linode Managed flows.
  */
 
-import { linodeFactory, profileFactory } from '@linode/utilities';
+import { profileFactory } from 'src/factories/profile';
+import { accountFactory } from 'src/factories/account';
+import { linodeFactory } from 'src/factories/linodes';
+import { chooseRegion } from 'support/util/regions';
+import { Linode } from '@linode/api-v4';
 import {
-  visitUrlWithManagedDisabled,
-  visitUrlWithManagedEnabled,
-} from 'support/api/managed';
+  mockGetAccount,
+  mockEnableLinodeManaged,
+  mockEnableLinodeManagedError,
+} from 'support/intercepts/account';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   linodeEnabledMessageText,
   linodeManagedStateMessageText,
 } from 'support/constants/account';
-import {
-  mockEnableLinodeManaged,
-  mockEnableLinodeManagedError,
-  mockGetAccount,
-} from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
-
-import { accountFactory } from 'src/factories/account';
-
-import type { Linode } from '@linode/api-v4';
+import {
+  visitUrlWithManagedDisabled,
+  visitUrlWithManagedEnabled,
+} from 'support/api/managed';
 
 describe('Account Linode Managed', () => {
   /*
@@ -34,17 +33,17 @@ describe('Account Linode Managed', () => {
   it('users can enable Linode Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      restricted: false,
       username: 'mock-user',
+      restricted: false,
     });
-    const mockLinodes = new Array(5)
-      .fill(null)
-      .map((item: null, index: number): Linode => {
+    const mockLinodes = new Array(5).fill(null).map(
+      (item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
         });
-      });
+      }
+    );
 
     mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetAccount(mockAccount).as('getAccount');
@@ -97,8 +96,8 @@ describe('Account Linode Managed', () => {
   it('restricted users cannot enable Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      restricted: true,
       username: 'mock-restricted-user',
+      restricted: true,
     });
     const errorMessage = 'Unauthorized';
 
@@ -145,8 +144,8 @@ describe('Account Linode Managed', () => {
   it('users can only open a support ticket to cancel Linode Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      restricted: false,
       username: 'mock-user',
+      restricted: false,
     });
 
     mockGetAccount(mockAccount).as('getAccount');

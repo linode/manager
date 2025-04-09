@@ -1,7 +1,7 @@
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
 
-import { useMutateProfile, useProfile } from '@linode/queries';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 export const Notifications = () => {
   const { data: profile, isLoading } = useProfile();

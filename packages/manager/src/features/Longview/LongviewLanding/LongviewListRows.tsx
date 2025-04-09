@@ -1,8 +1,8 @@
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 
 import ClientRow from './LongviewClientRow';
 
-import type { LongviewClient } from '@linode/api-v4/lib/longview';
 interface Props {
   longviewClientsData: LongviewClient[];
   openPackageDrawer: (id: number, label: string) => void;

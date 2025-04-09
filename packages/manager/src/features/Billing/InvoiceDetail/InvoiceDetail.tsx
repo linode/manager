@@ -14,9 +14,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount, useRegionsQuery } from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from '@linode/utilities';
+import { getAll } from 'src/utilities/getAll';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
@@ -40,8 +41,9 @@ export const InvoiceDetail = () => {
   );
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [pdfGenerationError, setPDFGenerationError] =
-    React.useState<any>(undefined);
+  const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
+    undefined
+  );
 
   const flags = useFlags();
 

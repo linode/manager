@@ -1,7 +1,7 @@
-import { queryClientFactory } from '@linode/queries';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { queryClientFactory } from 'src/queries/base';
 import { wrapWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { useOrderV2 } from './useOrderV2';
@@ -53,8 +53,6 @@ describe('useOrderV2', () => {
 
     await waitFor(() => {
       expect(result.current.order).toBe('desc');
-    });
-    await waitFor(() => {
       expect(result.current.orderBy).toBe('status');
     });
   });
@@ -81,8 +79,6 @@ describe('useOrderV2', () => {
 
     await waitFor(() => {
       expect(result.current.order).toBe('desc');
-    });
-    await waitFor(() => {
       expect(result.current.orderBy).toBe('size');
     });
   });
@@ -104,8 +100,6 @@ describe('useOrderV2', () => {
       expect(result.current.order).toBe(
         defaultProps.initialRoute.defaultOrder.order
       );
-    });
-    await waitFor(() => {
       expect(result.current.orderBy).toBe(
         defaultProps.initialRoute.defaultOrder.orderBy
       );
@@ -144,8 +138,6 @@ describe('useOrderV2', () => {
           to: '/',
         })
       );
-    });
-    await waitFor(() => {
       expect(mutatePreferencesMock).toHaveBeenCalledWith(
         expect.objectContaining({
           sortKeys: expect.objectContaining({
@@ -156,11 +148,7 @@ describe('useOrderV2', () => {
           }),
         })
       );
-    });
-    await waitFor(() => {
       expect(result.current.order).toBe('desc');
-    });
-    await waitFor(() => {
       expect(result.current.orderBy).toBe('size');
     });
   });

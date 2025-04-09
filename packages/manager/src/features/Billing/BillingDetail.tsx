@@ -7,11 +7,9 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-import {
-  useAccount,
-  useAllPaymentMethodsQuery,
-  useProfile,
-} from '@linode/queries';
+import { useAccount } from 'src/queries/account/account';
+import { useAllPaymentMethodsQuery } from 'src/queries/account/payment';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';

@@ -1,12 +1,4 @@
 import {
-  useAllDetailedIPv6RangesQuery,
-  useAllLinodesQuery,
-  useLinodeIPsQuery,
-  useLinodeQuery,
-  useLinodeShareIPMutation,
-} from '@linode/queries';
-import {
-  ActionsPanel,
   Button,
   CircleProgress,
   Dialog,
@@ -16,13 +8,24 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { API_MAX_PAGE_SIZE, areArraysEqual } from '@linode/utilities';
+import { areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
+import {
+  useLinodeIPsQuery,
+  useLinodeShareIPMutation,
+} from 'src/queries/linodes/networking';
+import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
@@ -84,13 +87,14 @@ const IPSharingPanel = (props: Props) => {
 
   const linodeSharedIPs = [
     ...(ips?.ipv4.shared.map((ip) => ip.address) ?? []),
-    ...sharedRanges.map((range) => `${range.range}/${range.prefix}`),
+    ...sharedRanges?.map((range) => `${range.range}/${range.prefix}`),
   ];
 
   const linodeIPs = ips?.ipv4.public.map((i) => i.address) ?? [];
 
-  const availableRangesMap: AvailableRangesMap =
-    formatAvailableRanges(availableRanges);
+  const availableRangesMap: AvailableRangesMap = formatAvailableRanges(
+    availableRanges
+  );
 
   const { data: linodes, isLoading } = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
@@ -130,7 +134,7 @@ const IPSharingPanel = (props: Props) => {
     );
 
     linodeSharedIPs.forEach((range) => {
-      if (!Object.prototype.hasOwnProperty.call(choiceLabels, range)) {
+      if (!choiceLabels.hasOwnProperty(range)) {
         choiceLabels[range] = '';
       }
     });
@@ -199,9 +203,7 @@ const IPSharingPanel = (props: Props) => {
       // the Linode it is statically routed to, then to the current Linode
       if (isStaticv6) {
         const linodeId = ipToLinodeID[currentValue][0];
-        if (
-          Object.prototype.hasOwnProperty.call(groupedUnsharedRanges, linodeId)
-        ) {
+        if (groupedUnsharedRanges.hasOwnProperty(linodeId)) {
           groupedUnsharedRanges[linodeId] = [
             ...groupedUnsharedRanges[linodeId],
             strippedIP,
@@ -235,7 +237,7 @@ const IPSharingPanel = (props: Props) => {
       return;
     }
 
-    const promises: Promise<void | {}>[] = [];
+    const promises: Promise<{} | void>[] = [];
 
     if (flags.ipv6Sharing) {
       // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
@@ -515,6 +517,11 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         }}
       >
         <Select
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-share-ip': true,
+            },
+          }}
           disabled={readOnly}
           hideLabel
           label="Select an IP"
@@ -522,11 +529,6 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           options={ipList}
           placeholder="Select an IP"
           sx={{ marginTop: 0, width: '100%' }}
-          textFieldProps={{
-            dataAttrs: {
-              'data-qa-share-ip': true,
-            },
-          }}
           value={selectedIP}
         />
       </Grid>
@@ -542,15 +544,15 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           }}
         >
           <Button
-            buttonType="outlined"
-            data-qa-remove-shared-ip
-            disabled={readOnly}
-            onClick={() => handleDelete(idx)}
             sx={{
               [theme.breakpoints.down('sm')]: {
                 margin: '-16px 0 0 -26px',
               },
             }}
+            buttonType="outlined"
+            data-qa-remove-shared-ip
+            disabled={readOnly}
+            onClick={() => handleDelete(idx)}
           >
             Remove
           </Button>

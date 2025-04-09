@@ -1,28 +1,31 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { linodeFactory } from '@linode/utilities';
-import { volumeFactory, volumeTypeFactory } from '@src/factories';
 import {
-  mockGetLinodeDetails,
-  mockGetLinodeDisks,
-  mockGetLinodeVolumes,
+  volumeFactory,
+  linodeFactory,
+  volumeTypeFactory,
+} from '@src/factories';
+import {
   mockGetLinodes,
+  mockGetLinodeDetails,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import {
   mockCreateVolume,
-  mockDetachVolume,
   mockGetVolume,
-  mockGetVolumeTypes,
-  mockGetVolumeTypesError,
   mockGetVolumes,
+  mockDetachVolume,
+  mockGetVolumeTypesError,
+  mockGetVolumeTypes,
 } from 'support/intercepts/volumes';
-import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 import {
   PRICES_RELOAD_ERROR_NOTICE_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
+
+const region = 'US, Newark, NJ';
 
 /**
  * Asserts that a volume is listed and has the expected config information.
@@ -35,7 +38,6 @@ import {
  */
 const validateBasicVolume = (
   volumeLabel: string,
-  regionLabel: string,
   attachedLinodeLabel?: string
 ) => {
   const attached = attachedLinodeLabel ?? 'Unattached';
@@ -51,7 +53,7 @@ const validateBasicVolume = (
   cy.findByText(volumeLabel)
     .closest('tr')
     .within(() => {
-      cy.findByText(regionLabel).should('be.visible');
+      cy.findByText(region).should('be.visible');
       cy.findByText(attached).should('be.visible');
     });
 };
@@ -60,14 +62,14 @@ const validateBasicVolume = (
 // This is a workaround for accounts that have volumes unrelated to tests.
 // @TODO Remove preference override when volumes are removed from test accounts.
 const preferenceOverrides = {
-  desktop_sidebar_open: false,
-  linodes_group_by_tag: false,
   linodes_view_style: 'list',
+  linodes_group_by_tag: false,
+  volumes_group_by_tag: false,
+  desktop_sidebar_open: false,
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'desc', orderBy: 'label' },
   },
-  volumes_group_by_tag: false,
 };
 
 // Local storage override to force volume table to list up to 100 items.
@@ -79,11 +81,7 @@ const localStorageOverrides = {
 
 describe('volumes', () => {
   it('creates a volume without linode from volumes page', () => {
-    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
-    const mockVolume = volumeFactory.build({
-      label: randomLabel(),
-      region: mockRegion.id,
-    });
+    const mockVolume = volumeFactory.build({ label: randomLabel() });
     const mockVolumeTypes = volumeTypeFactory.buildList(1);
 
     mockGetVolumes([]).as('getVolumes');
@@ -92,8 +90,8 @@ describe('volumes', () => {
     mockGetVolumeTypes(mockVolumeTypes).as('getVolumeTypes');
 
     cy.visitWithLogin('/volumes', {
-      localStorageOverrides,
       preferenceOverrides,
+      localStorageOverrides,
     });
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
@@ -105,23 +103,21 @@ describe('volumes', () => {
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
     cy.findByText('Label is required.').should('be.visible');
-    cy.findByLabelText('Label', { exact: false }).should('be.visible').click();
-    cy.focused().type(mockVolume.label);
+    cy.findByLabelText('Label', { exact: false })
+      .should('be.visible')
+      .click()
+      .type(mockVolume.label);
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
     cy.findByText('Must provide a region or a Linode ID.').should('be.visible');
 
-    ui.regionSelect.find().click().type(`${mockRegion.label}`);
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id)
-      .should('be.visible')
-      .click();
+    ui.regionSelect.find().click().type('newark{enter}');
 
     mockGetVolumes([mockVolume]).as('getVolumes');
     ui.button.findByTitle('Create Volume').should('be.visible').click();
     cy.wait(['@createVolume', '@getVolume', '@getVolumes']);
-    validateBasicVolume(mockVolume.label, mockRegion.label);
+    validateBasicVolume(mockVolume.label);
 
     ui.actionMenu
       .findByTitle(`Action menu for Volume ${mockVolume.label}`)
@@ -132,27 +128,23 @@ describe('volumes', () => {
   });
 
   it('creates volume from linode details', () => {
-    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
       label: randomLabel(),
-      region: mockRegion.id,
+      id: randomNumber(),
     });
     const newVolume = volumeFactory.build({
-      label: randomLabel(),
       linode_id: mockLinode.id,
-      region: mockRegion.id,
+      label: randomLabel(),
     });
 
     mockCreateVolume(newVolume).as('createVolume');
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinodeDetail');
-    mockGetLinodeDisks(mockLinode.id, []);
     mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
 
     cy.visitWithLogin('/linodes', {
-      localStorageOverrides,
       preferenceOverrides,
+      localStorageOverrides,
     });
 
     // Visit a Linode's details page.
@@ -174,8 +166,7 @@ describe('volumes', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Create and Attach Volume').should('be.visible').click();
-        cy.get('[data-qa-volume-label]').click();
-        cy.focused().type(newVolume.label);
+        cy.get('[data-qa-volume-label]').click().type(newVolume.label);
         ui.button.findByTitle('Create Volume').should('be.visible').click();
       });
 
@@ -195,24 +186,19 @@ describe('volumes', () => {
   });
 
   it('detaches attached volume', () => {
-    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
-    const mockLinode = linodeFactory.build({
-      label: randomLabel(),
-      region: mockRegion.id,
-    });
+    const mockLinode = linodeFactory.build({ label: randomLabel() });
     const mockAttachedVolume = volumeFactory.build({
       label: randomLabel(),
       linode_id: mockLinode.id,
       linode_label: mockLinode.label,
-      region: mockRegion.id,
     });
 
     mockDetachVolume(mockAttachedVolume.id).as('detachVolume');
     mockGetVolumes([mockAttachedVolume]).as('getAttachedVolumes');
     mockGetVolume(mockAttachedVolume).as('getVolume');
     cy.visitWithLogin('/volumes', {
-      localStorageOverrides,
       preferenceOverrides,
+      localStorageOverrides,
     });
     cy.wait('@getAttachedVolumes');
 
@@ -232,8 +218,10 @@ describe('volumes', () => {
       .findByTitle(`Detach Volume ${mockAttachedVolume.label}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Volume Label').should('be.visible').click();
-        cy.focused().type(mockAttachedVolume.label);
+        cy.findByLabelText('Volume Label')
+          .should('be.visible')
+          .click()
+          .type(mockAttachedVolume.label);
 
         ui.button
           .findByTitle('Detach')
@@ -247,11 +235,7 @@ describe('volumes', () => {
   });
 
   it('does not allow creation of a volume with invalid pricing from volumes landing', () => {
-    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
-    const mockVolume = volumeFactory.build({
-      label: randomLabel(),
-      region: mockRegion.id,
-    });
+    const mockVolume = volumeFactory.build({ label: randomLabel() });
 
     mockGetVolumes([]).as('getVolumes');
     mockCreateVolume(mockVolume).as('createVolume');
@@ -259,19 +243,15 @@ describe('volumes', () => {
     mockGetVolumeTypesError().as('getVolumeTypesError');
 
     cy.visitWithLogin('/volumes', {
-      localStorageOverrides,
       preferenceOverrides,
+      localStorageOverrides,
     });
 
     ui.button.findByTitle('Create Volume').should('be.visible').click();
 
     cy.url().should('endWith', 'volumes/create');
 
-    ui.regionSelect.find().click().type(mockRegion.label);
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id)
-      .should('be.visible')
-      .click();
+    ui.regionSelect.find().click().type('newark{enter}');
 
     cy.wait(['@getVolumeTypesError']);
 
@@ -286,28 +266,24 @@ describe('volumes', () => {
   });
 
   it('does not allow creation of a volume with invalid pricing from linode details', () => {
-    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
     const mockLinode = linodeFactory.build({
-      id: randomNumber(),
       label: randomLabel(),
-      region: mockRegion.id,
+      id: randomNumber(),
     });
     const newVolume = volumeFactory.build({
       label: randomLabel(),
-      region: mockRegion.id,
     });
 
     mockCreateVolume(newVolume).as('createVolume');
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinodeDetail');
-    mockGetLinodeDisks(mockLinode.id, []);
     mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
     // Mock an error response to the /types endpoint so prices cannot be calculated.
     mockGetVolumeTypesError().as('getVolumeTypesError');
 
     cy.visitWithLogin('/linodes', {
-      localStorageOverrides,
       preferenceOverrides,
+      localStorageOverrides,
     });
 
     // Visit a Linode's details page.

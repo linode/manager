@@ -17,7 +17,7 @@ type Option<T = number | string> = {
 
 export type SelectOption<
   T = number | string,
-  Nullable extends boolean = false,
+  Nullable extends boolean = false
 > = Nullable extends true
   ? AutocompleteValue<Option<T>, false, false, false>
   : Option<T>;
@@ -86,12 +86,6 @@ export interface SelectProps<T extends { label: string }>
    */
   label: string;
   /**
-   * The props for the ListItem component.
-   */
-  listItemProps?: (value: T) => {
-    dataAttributes?: Record<string, T | boolean | string>;
-  };
-  /**
    * The callback function that is invoked when the value changes.
    */
   onChange?: (_event: React.SyntheticEvent, _value: T) => void;
@@ -122,7 +116,7 @@ export interface SelectProps<T extends { label: string }>
  * For any other use-cases, use the Autocomplete component directly.
  */
 export const Select = <T extends SelectOption = SelectOption>(
-  props: SelectProps<T>,
+  props: SelectProps<T>
 ) => {
   const {
     autoFocus = false,
@@ -130,7 +124,6 @@ export const Select = <T extends SelectOption = SelectOption>(
     creatable = false,
     hideLabel = false,
     label,
-    listItemProps,
     loading = false,
     noOptionsText = 'No options available',
     onChange,
@@ -144,7 +137,7 @@ export const Select = <T extends SelectOption = SelectOption>(
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOption | null | string,
+    value: SelectOption | null | string
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
@@ -158,13 +151,13 @@ export const Select = <T extends SelectOption = SelectOption>(
         value: optionValue,
       } as T);
     } else {
-      onChange?.(event, null as unknown as T);
+      onChange?.(event, (null as unknown) as T);
     }
   };
 
   const _options = React.useMemo(
     () => getOptions({ creatable, inputValue, options }),
-    [creatable, inputValue, options],
+    [creatable, inputValue, options]
   );
 
   return (
@@ -189,7 +182,7 @@ export const Select = <T extends SelectOption = SelectOption>(
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress noPadding size="xs" />
+                    <CircleProgress size="sm" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}
@@ -219,9 +212,6 @@ export const Select = <T extends SelectOption = SelectOption>(
         return (
           <ListItem
             {...rest}
-            {...(option.create || option.noOptions
-              ? undefined
-              : listItemProps?.(option as T)?.dataAttributes)}
             sx={
               option.noOptions
                 ? {
@@ -302,13 +292,13 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     const matchingOptions = options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase()),
+        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase())
     );
 
     const exactMatch = matchingOptions.some(
       (opt) =>
         opt.label.toLowerCase() === inputValue.toLowerCase() ||
-        opt.value.toString().toLowerCase() === inputValue.toLowerCase(),
+        opt.value.toString().toLowerCase() === inputValue.toLowerCase()
     );
 
     // If there's an exact match, don't show is as a create option

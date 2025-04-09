@@ -17,10 +17,7 @@ export const UserRoles = () => {
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
-  const hasAssignedRoles = assignedRoles
-    ? !isEmpty(assignedRoles.account_access) ||
-      !isEmpty(assignedRoles.entity_access)
-    : false;
+  const hasAssignedRoles = assignedRoles ? !isEmpty(assignedRoles) : false;
 
   return (
     <>

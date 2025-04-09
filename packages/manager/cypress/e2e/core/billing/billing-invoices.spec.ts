@@ -168,15 +168,14 @@ describe('Account invoices', () => {
               // If the invoice item has a region, confirm that it is displayed
               // in the table row. Otherwise, confirm that the table cell which
               // would normally show the region is empty.
-              if (invoiceItem.region) {
-                cy.findByText(getRegionLabel(invoiceItem.region)).should(
-                  'be.visible'
-                );
-              } else {
-                cy.get('[data-qa-region]')
-                  .should('be.visible')
-                  .should('be.empty');
-              }
+              !!invoiceItem.region
+                ? cy
+                    .findByText(getRegionLabel(invoiceItem.region))
+                    .should('be.visible')
+                : cy
+                    .get('[data-qa-region]')
+                    .should('be.visible')
+                    .should('be.empty');
             });
         }
       );
@@ -199,13 +198,11 @@ describe('Account invoices', () => {
               // If the invoice item has a region, confirm that it is displayed
               // in the table row. Otherwise, confirm that "Global" is displayed
               // in the region column.
-              if (invoiceItem.region) {
-                cy.findByText(getRegionLabel(invoiceItem.region)).should(
-                  'be.visible'
-                );
-              } else {
-                cy.findByText('Global').should('be.visible');
-              }
+              !!invoiceItem.region
+                ? cy
+                    .findByText(getRegionLabel(invoiceItem.region))
+                    .should('be.visible')
+                : cy.findByText('Global').should('be.visible');
             });
         }
       );

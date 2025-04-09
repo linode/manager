@@ -1,7 +1,6 @@
-import { getNewRegionLabel } from '@linode/utilities';
 import { randomItem } from 'support/util/random';
-
 import { buildArray, shuffleArray } from './arrays';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import type { Capabilities, Region } from '@linode/api-v4';
 
@@ -17,7 +16,7 @@ import type { Capabilities, Region } from '@linode/api-v4';
  * the `apiLabel` property.
  *
  * @see {@link https://github.com/linode/manager/pull/10740|Cloud Manager PR #10740}
- * @see {@link packages/queries/src/regions/regions.ts (@linode/queries)}
+ * @see {@link src/queries/regions/regions.ts}
  */
 export interface ExtendedRegion extends Region {
   /** Region label as defined by API v4. */
@@ -32,7 +31,7 @@ export interface ExtendedRegion extends Region {
  * @returns `true` if `region` is an `ExtendedRegion` instance, `false` otherwise.
  */
 export const isExtendedRegion = (
-  region: ExtendedRegion | Region
+  region: Region | ExtendedRegion
 ): region is ExtendedRegion => {
   if ('apiLabel' in region) {
     return true;
@@ -51,13 +50,13 @@ export const isExtendedRegion = (
  * @returns `ExtendedRegion` object for `region`.
  */
 export const extendRegion = (
-  region: ExtendedRegion | Region
+  region: Region | ExtendedRegion
 ): ExtendedRegion => {
   if (!isExtendedRegion(region)) {
     return {
       ...region,
-      apiLabel: region.label,
       label: getNewRegionLabel(region),
+      apiLabel: region.label,
     };
   }
   return region;
@@ -74,14 +73,14 @@ export const getRegionFromExtendedRegion = (
   extendedRegion: ExtendedRegion
 ): Region => {
   return {
-    capabilities: extendedRegion.capabilities,
-    country: extendedRegion.country,
     id: extendedRegion.id,
     label: extendedRegion.apiLabel,
+    country: extendedRegion.country,
+    capabilities: extendedRegion.capabilities,
     placement_group_limits: extendedRegion.placement_group_limits,
+    status: extendedRegion.status,
     resolvers: extendedRegion.resolvers,
     site_type: extendedRegion.site_type,
-    status: extendedRegion.status,
   };
 };
 
@@ -100,36 +99,6 @@ const disallowedRegionIds = [
 
   // Washington, DC
   'us-iad',
-
-  // Atlanta, GA
-  'us-southeast',
-
-  // Dallas, TX
-  'us-central',
-
-  // Frankfurt, DE
-  'eu-central',
-
-  // Fremont, CA
-  'us-west',
-
-  // London, GB
-  'eu-west',
-
-  // Mumbai, IN
-  'ap-west',
-
-  // Newark, NJ
-  'us-east',
-
-  // Singapore, SG
-  'ap-south',
-
-  // Sydney, AU
-  'ap-southeast',
-
-  // Toronto, CA
-  'ca-central',
 ];
 
 /**
@@ -236,11 +205,6 @@ interface ChooseRegionOptions {
    * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
    */
   regions?: Region[];
-
-  /**
-   * Array of region IDs to exclude from results, in addition to `disallowedRegionIds` regions.
-   */
-  exclude?: string[];
 }
 
 /**
@@ -294,10 +258,6 @@ const resolveSearchRegions = (
 ): Region[] => {
   const requiredCapabilities = options?.capabilities ?? [];
   const overrideRegion = getOverrideRegion();
-  const allDisallowedRegionIds = [
-    ...disallowedRegionIds,
-    ...(options?.exclude ?? []),
-  ];
 
   // If the user has specified an override region for this run, it takes precedent
   // over any other specified criteria.
@@ -312,7 +272,7 @@ const resolveSearchRegions = (
         )}`
       );
     }
-    if (allDisallowedRegionIds.includes(overrideRegion.id)) {
+    if (disallowedRegionIds.includes(overrideRegion.id)) {
       throw new Error(
         `Override region ${overrideRegion.id} (${overrideRegion.label}) is disallowed for testing due to capacity limitations.`
       );
@@ -323,7 +283,7 @@ const resolveSearchRegions = (
   const capableRegions = regionsWithCapabilities(
     options?.regions ?? regions,
     requiredCapabilities
-  ).filter((region: Region) => !allDisallowedRegionIds.includes(region.id));
+  ).filter((region: Region) => !disallowedRegionIds.includes(region.id));
 
   if (!capableRegions.length) {
     throw new Error(

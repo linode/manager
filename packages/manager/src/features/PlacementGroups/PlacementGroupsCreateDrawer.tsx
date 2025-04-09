@@ -1,13 +1,5 @@
 import {
-  useAllPlacementGroupsQuery,
-  useCreatePlacementGroup,
-  useRegionsQuery,
-} from '@linode/queries';
-import { useIsGeckoEnabled } from '@linode/shared';
-import {
-  ActionsPanel,
   Divider,
-  Drawer,
   List,
   ListItem,
   Notice,
@@ -15,11 +7,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import {
-  getQueryParamsFromQueryString,
-  scrollErrorIntoView,
-  useFormValidateOnChange,
-} from '@linode/utilities';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -27,14 +15,21 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NotFound } from 'src/components/NotFound';
+import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useFlags } from 'src/hooks/useFlags';
+import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
+import {
+  useAllPlacementGroupsQuery,
+  useCreatePlacementGroup,
+} from 'src/queries/placementGroups';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
 import { PlacementGroupPolicyRadioGroup } from './PlacementGroupPolicyRadioGroup';
@@ -44,15 +39,15 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
+import type { LinodeCreateType } from '../Linodes/LinodeCreate/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
-import type { LinodeCreateType } from '@linode/utilities';
 import type { FormikHelpers } from 'formik';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -64,11 +59,6 @@ export const PlacementGroupsCreateDrawer = (
     open,
     selectedRegionId,
   } = props;
-  const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(
-    flags.gecko2?.enabled,
-    flags.gecko2?.la
-  );
   const { data: regions } = useRegionsQuery();
   const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegionId),
@@ -78,8 +68,10 @@ export const PlacementGroupsCreateDrawer = (
   });
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
-  const { hasFormBeenSubmitted, setHasFormBeenSubmitted } =
-    useFormValidateOnChange();
+  const {
+    hasFormBeenSubmitted,
+    setHasFormBeenSubmitted,
+  } = useFormValidateOnChange();
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -147,10 +139,8 @@ export const PlacementGroupsCreateDrawer = (
     enableReinitialize: true,
     initialValues: {
       label: '',
-      placement_group_policy:
-        'strict' as PlacementGroup['placement_group_policy'],
-      placement_group_type:
-        'anti_affinity:local' as PlacementGroup['placement_group_type'],
+      placement_group_policy: 'strict' as PlacementGroup['placement_group_policy'],
+      placement_group_type: 'anti_affinity:local' as PlacementGroup['placement_group_type'],
       region: selectedRegionId ?? '',
     },
     onSubmit: handleFormSubmit,
@@ -162,7 +152,7 @@ export const PlacementGroupsCreateDrawer = (
   const hasApiError = error?.[0]?.reason;
 
   const selectedRegion = React.useMemo(
-    () => regions?.find((region) => region.id === values.region),
+    () => regions?.find((region) => region.id == values.region),
     [regions, values.region]
   );
 
@@ -206,7 +196,6 @@ export const PlacementGroupsCreateDrawer = (
         />
       )}
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={handleDrawerClose}
         open={open}
         title="Create Placement Group"
@@ -273,7 +262,6 @@ export const PlacementGroupsCreateDrawer = (
                 disableClearable
                 disabledRegions={disabledRegions}
                 helperText={values.region && pgRegionLimitHelperText}
-                isGeckoLAEnabled={isGeckoLAEnabled}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
                 tooltipText="Only regions that support placement groups are listed."

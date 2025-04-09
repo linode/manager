@@ -1,10 +1,9 @@
+import type { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
-
-import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('create image (e2e)', () => {

@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { useAllLinodesQuery } from '@linode/queries';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { themes } from 'src/utilities/theme';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -38,11 +38,7 @@ export const CloudPulseTagsSelect = React.memo(
     } = props;
 
     const regionFilter = region ? (region as string) : undefined;
-    const {
-      data: linodesByRegion,
-      isError,
-      isLoading,
-    } = useAllLinodesQuery(
+    const { data: linodesByRegion, isError, isLoading } = useAllLinodesQuery(
       {},
       { region: regionFilter },
       !disabled && Boolean(region && resourceType)

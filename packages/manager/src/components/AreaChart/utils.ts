@@ -1,5 +1,6 @@
-import { roundTo } from '@linode/utilities';
 import { DateTime } from 'luxon';
+
+import { roundTo } from 'src/utilities/roundTo';
 
 import type { DataSet } from './AreaChart';
 import type { LinodeNetworkTimeData } from './types';

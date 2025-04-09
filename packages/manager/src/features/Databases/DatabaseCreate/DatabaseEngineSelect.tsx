@@ -40,6 +40,12 @@ export const DatabaseEngineSelect = (props: Props) => {
         if (option.engine.match(/postgresql/i)) {
           return 'PostgreSQL';
         }
+        if (option.engine.match(/mongodb/i)) {
+          return 'MongoDB';
+        }
+        if (option.engine.match(/redis/i)) {
+          return 'Redis';
+        }
         return 'Other';
       }}
       onChange={(_, selected) => {
@@ -50,13 +56,13 @@ export const DatabaseEngineSelect = (props: Props) => {
         return (
           <li {...rest} data-testid="db-engine-option" key={key}>
             <Grid
+              container
+              direction="row"
+              spacing={2}
               sx={{
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}
-              container
-              direction="row"
-              spacing={2}
             >
               <Grid className="py0">{option.flag}</Grid>
               <Grid>{option.label}</Grid>

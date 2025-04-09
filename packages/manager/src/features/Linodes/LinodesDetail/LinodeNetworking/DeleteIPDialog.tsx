@@ -1,9 +1,10 @@
-import { useLinodeIPDeleteMutation } from '@linode/queries';
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { useLinodeIPDeleteMutation } from 'src/queries/linodes/networking';
 
 interface Props {
   address: string;
@@ -16,11 +17,10 @@ export const DeleteIPDialog = (props: Props) => {
   const { address, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    error,
-    isPending,
-    mutateAsync: removeIP,
-  } = useLinodeIPDeleteMutation(linodeId, address);
+  const { error, isPending, mutateAsync: removeIP } = useLinodeIPDeleteMutation(
+    linodeId,
+    address
+  );
 
   const handleDeleteIP = async () => {
     await removeIP();

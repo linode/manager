@@ -13,7 +13,6 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 
 export interface APLProps {
-  isSectionDisabled: boolean;
   setAPL: (apl: boolean) => void;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
@@ -28,27 +27,8 @@ export const APLCopy = () => (
   </Typography>
 );
 
-const APL_UNSUPPORTED_CHIP_COPY = ' - COMING SOON';
-
 export const ApplicationPlatform = (props: APLProps) => {
-  const { isSectionDisabled, setAPL, setHighAvailability } = props;
-
-  const [isAPLChecked, setIsAPLChecked] = React.useState<boolean | undefined>(
-    isSectionDisabled ? false : undefined
-  );
-  const [isAPLNotChecked, setIsAPLNotChecked] = React.useState<
-    boolean | undefined
-  >(isSectionDisabled ? true : undefined);
-
-  /**
-   * Reset the radio buttons to the correct default state once the user toggles cluster tiers.
-   */
-  React.useEffect(() => {
-    setIsAPLChecked(isSectionDisabled ? false : undefined);
-    setIsAPLNotChecked(isSectionDisabled ? true : undefined);
-  }, [isSectionDisabled]);
-
-  const CHIP_COPY = `BETA${isSectionDisabled ? APL_UNSUPPORTED_CHIP_COPY : ''}`;
+  const { setAPL, setHighAvailability } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAPL(e.target.value === 'yes');
@@ -69,32 +49,22 @@ export const ApplicationPlatform = (props: APLProps) => {
       >
         <Box alignItems="center" display="flex" flexDirection="row">
           <Typography data-testid="apl-label">Akamai App Platform</Typography>
-          <Chip
-            color="primary"
-            data-testid="apl-beta-chip"
-            label={CHIP_COPY}
-            size="small"
-            sx={{ ml: 1 }}
-          />
+          <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
         </Box>
       </FormLabel>
       <APLCopy />
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-yes" />}
-          disabled={isSectionDisabled}
-          label="Yes, enable Akamai App Platform."
+          label={<Typography>Yes, enable Akamai App Platform.</Typography>}
           name="yes"
           value="yes"
-          checked={isAPLChecked}
         />
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-no" />}
-          disabled={isSectionDisabled}
           label="No"
           name="no"
           value="no"
-          checked={isAPLNotChecked}
         />
       </RadioGroup>
     </FormControl>

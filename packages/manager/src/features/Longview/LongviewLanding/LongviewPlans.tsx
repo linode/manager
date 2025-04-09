@@ -14,7 +14,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {

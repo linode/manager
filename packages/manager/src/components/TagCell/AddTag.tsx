@@ -1,11 +1,9 @@
-import {
-  updateTagsSuggestionsData,
-  useAllTagsQuery,
-  useProfile,
-} from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+
+import { useProfile } from 'src/queries/profile/profile';
+import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 
 interface AddTagProps {
   addTag: (tag: string) => Promise<void>;
@@ -31,9 +29,8 @@ export const AddTag = (props: AddTagProps) => {
   const createTag =
     !!accountTags &&
     !!inputValue &&
-    inputValue.trim() !== '' &&
     !accountTags.some(
-      (tag) => tag.label.toLowerCase() === inputValue.toLowerCase()
+      (tag) => tag.label.toLowerCase() == inputValue.toLowerCase()
     );
 
   const tagOptions: { displayLabel?: string; label: string }[] = [

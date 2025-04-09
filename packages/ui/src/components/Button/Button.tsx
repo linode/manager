@@ -25,10 +25,6 @@ const buttonTypeToVariant: Record<ButtonType, _ButtonProps['variant']> = {
 
 export interface ButtonProps extends _ButtonProps {
   /**
-   * Determines if tooltip for button should always be shown
-   */
-  alwaysShowTooltip?: boolean;
-  /**
    * The button variant to render
    * * @default 'secondary'
    * */
@@ -52,7 +48,7 @@ export interface ButtonProps extends _ButtonProps {
   /** Tooltip analytics event */
   tooltipAnalyticsEvent?: () => void;
   /** Tooltip text */
-  tooltipText?: string | JSX.Element;
+  tooltipText?: string;
 }
 
 const StyledButton = styled(_Button, {
@@ -73,7 +69,6 @@ const StyledButton = styled(_Button, {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      alwaysShowTooltip,
       // default to secondary as some components never define a buttonType (usually buttons with icons)
       // and we end up with the wrong styles (purple color, see #6455)
       // It would be nice to remove this default and require the prop but this fixes the issue for now.
@@ -85,9 +80,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       tooltipText,
       ...rest
     },
-    ref,
+    ref
   ) => {
-    const showTooltip = alwaysShowTooltip || (disabled && Boolean(tooltipText));
+    const showTooltip = disabled && Boolean(tooltipText);
 
     const handleTooltipAnalytics = () => {
       if (tooltipAnalyticsEvent) {
@@ -141,5 +136,5 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return button;
-  },
+  }
 );

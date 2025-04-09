@@ -1,14 +1,13 @@
-import { createLinodeRequestFactory } from '@linode/utilities';
-import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { authenticate } from 'support/api/authentication';
-import { mockGetAccountSettings } from 'support/intercepts/account';
-import { interceptDeleteLinode } from 'support/intercepts/linodes';
+import { createTestLinode } from 'support/util/linodes';
+import { createLinodeRequestFactory } from '@src/factories/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
+import { Linode } from '@linode/api-v4';
+import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { randomLabel } from 'support/util/random';
-
-import type { Linode } from '@linode/api-v4';
+import { interceptDeleteLinode } from 'support/intercepts/linodes';
+import { mockGetAccountSettings } from 'support/intercepts/account';
 
 const confirmDeletion = (linodeLabel: string) => {
   cy.url().should('endWith', '/linodes');
@@ -47,14 +46,14 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
 };
 
 const preferenceOverrides = {
-  desktop_sidebar_open: false,
-  linodes_group_by_tag: false,
   linodes_view_style: 'list',
+  linodes_group_by_tag: false,
+  volumes_group_by_tag: false,
+  desktop_sidebar_open: false,
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'asc', orderBy: 'label' },
   },
-  volumes_group_by_tag: false,
 };
 
 authenticate();

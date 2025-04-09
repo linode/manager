@@ -1,8 +1,7 @@
-import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import { placementGroupFactory, regionFactory } from 'src/factories';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -22,8 +21,8 @@ const queryMocks = vi.hoisted(() => ({
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
@@ -68,8 +67,10 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
+          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
+          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -77,8 +78,6 @@ describe('PlacementGroupSelect', () => {
               linode_id: 1,
             },
           ],
-          placement_group_policy: 'strict',
-          placement_group_type: 'affinity:local',
           region: 'ca-central',
         }),
       ],

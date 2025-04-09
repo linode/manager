@@ -1,24 +1,22 @@
-import { Box, ListItemOption, Stack } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
-// @todo: modularization - Move `Flag` component to `@linode/shared` package.
-import { Flag } from '../Flag';
+import { Flag } from 'src/components/Flag';
+import { ListItemOption } from 'src/components/ListItemOption';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import type { Region } from '@linode/api-v4';
-import type { ListItemOptionProps } from '@linode/ui';
-
-interface RegionOptionProps extends ListItemOptionProps<Region> {
-  isGeckoLAEnabled: boolean;
-}
+import type { ListItemProps } from 'src/components/ListItemOption';
 
 export const RegionOption = ({
   disabledOptions,
-  isGeckoLAEnabled,
   item,
   props,
   selected,
-}: RegionOptionProps) => {
+}: ListItemProps<Region>) => {
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+
   return (
     <ListItemOption
       disabledOptions={disabledOptions}
@@ -40,7 +38,7 @@ export const RegionOption = ({
         {item.id === 'global' ? (
           <PublicIcon
             sx={(theme) => ({
-              color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
+              color: `${theme.tokens.content.Icon.Primary.Active}`,
             })}
             className="public-icon"
           />

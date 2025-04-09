@@ -1,12 +1,12 @@
+// import { searchableItems } from 'src/__data__/searchableItems
 import searchString from 'search-string';
 
 import { searchableItems } from 'src/__data__/searchableItems';
 
-import * as RefinedSearch from './refinedSearch';
 import { COMPRESSED_IPV6_REGEX } from './refinedSearch';
-
-import type { QueryJSON } from './refinedSearch';
-import type { SearchableItem } from './search.interfaces';
+import { QueryJSON } from './refinedSearch';
+import * as RefinedSearch from './refinedSearch';
+import { SearchableItem } from './search.interfaces';
 
 const {
   areAllTrue,
@@ -197,28 +197,24 @@ describe('formatQuery', () => {
 });
 
 const mockLinode: SearchableItem = {
-  data: {
-    description: '',
-    ips: ['1234'],
-    path: '/linode/1234',
-    tags: ['my-app', 'production'],
-  },
-  entityType: 'linode',
-  label: 'my-linode',
   value: 1234,
+  label: 'my-linode',
+  entityType: 'linode',
+  data: {
+    tags: ['my-app', 'production'],
+    ips: ['1234'],
+  },
 };
 
 // Identical to above, but satisfies search queries.
 const mockLinodeMatch: SearchableItem = {
-  data: {
-    description: '',
-    ips: ['1234'],
-    path: '/linode/1234',
-    tags: ['production', 'beta', 'lab'],
-  },
-  entityType: 'linode',
-  label: 'my-2nd-linode',
   value: 1234,
+  label: 'my-2nd-linode',
+  entityType: 'linode',
+  data: {
+    tags: ['production', 'beta', 'lab'],
+    ips: ['1234'],
+  },
 };
 
 describe('recursivelyTestItem', () => {

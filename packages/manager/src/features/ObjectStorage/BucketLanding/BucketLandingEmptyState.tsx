@@ -1,5 +1,5 @@
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -15,7 +15,8 @@ import {
 import { StyledBucketIcon } from './StylesBucketIcon';
 
 export const BucketLandingEmptyState = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
+
   const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_buckets',
   });
@@ -32,7 +33,7 @@ export const BucketLandingEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create Bucket',
             });
-            navigate({ to: '/object-storage/buckets/create' });
+            history.replace('/object-storage/buckets/create');
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',

@@ -1,17 +1,9 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
-  getAllLinodeConfigs,
-  useAllLinodesQuery,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
-import {
   Autocomplete,
   Box,
   Button,
   Checkbox,
-  Drawer,
   FormControlLabel,
   FormHelperText,
   Notice,
@@ -19,20 +11,24 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { useFormattedDate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
+import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
@@ -57,7 +53,6 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
 interface SubnetAssignLinodesDrawerProps {
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -74,7 +69,7 @@ interface LinodeAndConfigData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -94,8 +89,10 @@ export const SubnetAssignLinodesDrawer = (
   // While the drawer is open, we maintain a local list of assigned Linodes.
   // This is distinct from the subnet's global list of assigned Linodes, which encompasses all assignments.
   // The local list resets to empty when the drawer is closed and reopened.
-  const [assignedLinodesAndConfigData, setAssignedLinodesAndConfigData] =
-    React.useState<LinodeAndConfigData[]>([]);
+  const [
+    assignedLinodesAndConfigData,
+    setAssignedLinodesAndConfigData,
+  ] = React.useState<LinodeAndConfigData[]>([]);
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
@@ -269,19 +266,25 @@ export const SubnetAssignLinodesDrawer = (
     return errorMap.none;
   };
 
-  const { dirty, handleSubmit, resetForm, setFieldValue, setValues, values } =
-    useFormik({
-      enableReinitialize: true,
-      initialValues: {
-        chosenIP: '',
-        ipRanges: [] as ExtendedIP[],
-        selectedConfig: null as Config | null,
-        selectedLinode: null as Linode | null,
-      },
-      onSubmit: handleAssignLinode,
-      validateOnBlur: false,
-      validateOnChange: false,
-    });
+  const {
+    dirty,
+    handleSubmit,
+    resetForm,
+    setFieldValue,
+    setValues,
+    values,
+  } = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      chosenIP: '',
+      ipRanges: [] as ExtendedIP[],
+      selectedConfig: null as Config | null,
+      selectedLinode: null as Linode | null,
+    },
+    onSubmit: handleAssignLinode,
+    validateOnBlur: false,
+    validateOnChange: false,
+  });
 
   const handleIPRangeChange = React.useCallback(
     (_ipRanges: ExtendedIP[]) => {
@@ -405,8 +408,6 @@ export const SubnetAssignLinodesDrawer = (
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
     >
@@ -438,17 +439,12 @@ export const SubnetAssignLinodesDrawer = (
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
-          sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
+          sx={{ marginBottom: '8px' }}
           value={values.selectedLinode?.id || null}
         />
         {values.selectedLinode?.id && (
           <>
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="row"
-              sx={(theme) => ({ marginLeft: theme.spacingFunction(2) })}
-            >
+            <Box alignItems="center" display="flex" flexDirection="row">
               <FormControlLabel
                 control={
                   <Checkbox
@@ -476,7 +472,7 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
-                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
+                sx={{ marginBottom: '8px' }}
                 value={values.chosenIP}
               />
             )}
@@ -510,11 +506,11 @@ export const SubnetAssignLinodesDrawer = (
               linodeConfigs.length === 1) && (
               <AssignIPRanges
                 sx={{
-                  marginBottom: theme.spacingFunction(8),
+                  marginBottom: theme.spacing(),
                   marginTop:
                     linodeConfigs.length > 1
-                      ? theme.spacingFunction(16)
-                      : theme.spacingFunction(8),
+                      ? theme.spacing(2)
+                      : theme.spacing(),
                 }}
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}

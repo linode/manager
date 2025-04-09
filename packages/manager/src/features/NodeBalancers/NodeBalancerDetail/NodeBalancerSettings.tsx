@@ -1,8 +1,4 @@
 import {
-  useNodeBalancerQuery,
-  useNodebalancerUpdateMutation,
-} from '@linode/queries';
-import {
   Accordion,
   Button,
   FormHelperText,
@@ -10,26 +6,25 @@ import {
   TextField,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import {
+  useNodeBalancerQuery,
+  useNodebalancerUpdateMutation,
+} from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
-  const { id } = useParams({
-    strict: false,
-  });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
+  const id = Number(nodeBalancerId);
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -41,27 +36,23 @@ export const NodeBalancerSettings = () => {
     error: labelError,
     isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
 
   const {
     error: throttleError,
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
+    false
+  );
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
   const [connectionThrottle, setConnectionThrottle] = React.useState(
     nodebalancer?.client_conn_throttle
   );
-
-  const { data: selectedNodeBalancer, isFetching: isFetchingNodeBalancer } =
-    useDialogData({
-      enabled: !!id,
-      paramKey: 'id',
-      queryHook: useNodeBalancerQuery,
-      redirectToOnNotFound: '/nodebalancers',
-    });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -106,7 +97,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
+        <NodeBalancerFirewalls nodeBalancerId={id} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
@@ -145,24 +136,26 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
-          onClick={() =>
-            navigate({
-              params: { id: String(id) },
-              to: '/nodebalancers/$id/settings/delete',
-            })
-          }
           buttonType="primary"
           data-testid="delete-nodebalancer"
           disabled={isNodeBalancerReadOnly}
+          onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
-        isFetching={isFetchingNodeBalancer}
-        open={match.routeId === '/nodebalancers/$id/settings/delete'}
-        selectedNodeBalancer={selectedNodeBalancer}
+        id={nodebalancer.id}
+        label={nodebalancer?.label}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
     </div>
   );
 };
+
+export const nodeBalancerSettingsLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId/settings'
+)({
+  component: NodeBalancerSettings,
+});

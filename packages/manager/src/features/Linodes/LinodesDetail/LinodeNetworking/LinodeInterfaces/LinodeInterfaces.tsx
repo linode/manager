@@ -1,35 +1,13 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
-import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
-import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
-import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
-import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
   linodeId: number;
-  regionId: string;
 }
 
-export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
-  const location = useLocation();
-  const history = useHistory();
-
-  const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedInterfaceId, setSelectedInterfaceId] = useState<number>();
-
-  const onDelete = (interfaceId: number) => {
-    setSelectedInterfaceId(interfaceId);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onShowDetails = (interfaceId: number) => {
-    setSelectedInterfaceId(interfaceId);
-    history.replace(`${location.pathname}/interfaces/${interfaceId}`);
-  };
-
+export const LinodeInterfaces = ({ linodeId }: Props) => {
   return (
     <Box>
       <Paper
@@ -43,34 +21,12 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         }}
       >
         <Typography variant="h3">Network Interfaces</Typography>
-        <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
-          Add Network Interface
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button buttonType="secondary">Interface History</Button>
+          <Button buttonType="primary">Add Network Interface</Button>
+        </Stack>
       </Paper>
-      <LinodeInterfacesTable
-        handlers={{ onDelete, onShowDetails }}
-        linodeId={linodeId}
-      />
-      <AddInterfaceDrawer
-        linodeId={linodeId}
-        onClose={() => setIsAddDrawerOpen(false)}
-        open={isAddDrawerOpen}
-        regionId={regionId}
-      />
-      <DeleteInterfaceDialog
-        interfaceId={selectedInterfaceId}
-        linodeId={linodeId}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
-      />
-      <InterfaceDetailsDrawer
-        onClose={() => {
-          history.replace(`/linodes/${linodeId}/networking`);
-        }}
-        interfaceId={selectedInterfaceId}
-        linodeId={linodeId}
-        open={location.pathname.includes('networking/interfaces')}
-      />
+      <LinodeInterfacesTable linodeId={linodeId} />
     </Box>
   );
 };

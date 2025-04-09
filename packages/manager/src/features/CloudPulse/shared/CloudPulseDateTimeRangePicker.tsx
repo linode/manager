@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 
 import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
 

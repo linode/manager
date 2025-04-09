@@ -3,13 +3,13 @@ import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import { LinkButton } from 'src/components/LinkButton';
+import { useAccountSettings } from 'src/queries/account/settings';
+import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import {
-  useAccountSettings,
-  useAllLinodesQuery,
   useMutatePreferences,
   usePreferences,
-  useProfile,
-} from '@linode/queries';
+} from 'src/queries/profile/preferences';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { BackupDrawer } from './BackupDrawer';
 

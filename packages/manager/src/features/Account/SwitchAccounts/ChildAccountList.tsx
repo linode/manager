@@ -1,5 +1,5 @@
+import { Typography } from '@linode/ui';
 import {
-  Typography,
   Box,
   Button,
   CircleProgress,
@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
-import { useChildAccountsInfiniteQuery } from '@linode/queries';
+import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
 import type { Filter, UserType } from '@linode/api-v4';
 
@@ -45,8 +45,10 @@ export const ChildAccountList = React.memo(
       ...(searchQuery && { company: { '+contains': searchQuery } }),
     };
 
-    const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
-      useState<boolean>(false);
+    const [
+      isSwitchingChildAccounts,
+      setIsSwitchingChildAccounts,
+    ] = useState<boolean>(false);
     const {
       data,
       fetchNextPage,
@@ -84,7 +86,7 @@ export const ChildAccountList = React.memo(
       return (
         <Notice variant="info">
           There are no child accounts
-          {Object.prototype.hasOwnProperty.call(filter, 'company')
+          {filter.hasOwnProperty('company')
             ? ' that match this query'
             : undefined}
           .

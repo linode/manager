@@ -7,7 +7,6 @@ import type {
   FirewallDevice,
   IPAddress,
   Linode,
-  LinodeInterface,
   Notification,
   PlacementGroup,
   Region,
@@ -126,7 +125,6 @@ export interface MockState {
   firewalls: Firewall[];
   ipAddresses: IPAddress[];
   linodeConfigs: [number, Config][];
-  linodeInterfaces: [number, LinodeInterface][];
   linodes: Linode[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];

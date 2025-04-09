@@ -1,4 +1,5 @@
-import { CloseIcon, IconButton } from '@linode/ui';
+import { IconButton } from '@linode/ui';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 interface Props {
@@ -19,7 +20,7 @@ export const CloseSnackbar = (props: Props) => {
       size="large"
       title={text}
     >
-      <CloseIcon width={16} height={16} />
+      <Close />
     </IconButton>
   );
 };

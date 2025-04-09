@@ -1,7 +1,10 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { placementGroupFactory } from 'src/factories';
+import {
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import {
   renderWithTheme,
   resizeScreenSize,

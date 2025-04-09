@@ -1,6 +1,4 @@
-import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { getUserTimezone } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -11,7 +9,9 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 import {
   StyledGraphControlsDiv,

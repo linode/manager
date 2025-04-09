@@ -1,5 +1,6 @@
-import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
+
+import { loadScript } from './useScript';
 
 /**
  * Loads the New Relic agent on mount.

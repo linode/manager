@@ -1,7 +1,6 @@
 /**
  * @file Integration Tests for CloudPulse Dbass Dashboard.
  */
-import { linodeFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -27,6 +26,8 @@ import {
   dashboardMetricFactory,
   databaseFactory,
   kubeLinodeFactory,
+  linodeFactory,
+  regionFactory,
   widgetFactory,
 } from 'src/factories';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
@@ -198,8 +199,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
 
-    // navigate to the metrics page
-    cy.visitWithLogin('/metrics');
+    // navigate to the cloudpulse page
+    cy.visitWithLogin('monitor');
 
     // Wait for the services and dashboard API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard']);

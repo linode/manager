@@ -1,15 +1,13 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
-// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
+import { Flag } from 'src/components/Flag';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-// @todo: modularization - Move `Flag` component to `@linode/shared` package.
-import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -19,7 +17,7 @@ import {
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * A specific select for regions.
@@ -31,7 +29,7 @@ import type { DisableItemOption } from '@linode/ui';
  * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = <
-  DisableClearable extends boolean | undefined = undefined,
+  DisableClearable extends boolean | undefined = undefined
 >(
   props: RegionSelectProps<DisableClearable>
 ) => {
@@ -44,7 +42,6 @@ export const RegionSelect = <
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
-    isGeckoLAEnabled,
     label,
     noMarginTop,
     onChange,
@@ -58,8 +55,12 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
-    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+
+  const {
+    data: accountAvailability,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -116,7 +117,6 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
-              isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
               key={`${region.id}-${key}`}
               props={rest}

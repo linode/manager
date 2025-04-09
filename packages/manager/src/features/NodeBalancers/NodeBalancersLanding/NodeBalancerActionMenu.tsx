@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
@@ -13,15 +13,17 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  label: string;
   nodeBalancerId: number;
+  toggleDialog: (nodeBalancerId: number, label: string) => void;
 }
 
 export const NodeBalancerActionMenu = (props: Props) => {
-  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
+  const history = useHistory();
 
-  const { nodeBalancerId } = props;
+  const { label, nodeBalancerId, toggleDialog } = props;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -32,35 +34,20 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        navigate({
-          params: {
-            id: String(nodeBalancerId),
-          },
-          to: `/nodebalancers/$id/configurations`,
-        });
+        history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
       },
       title: 'Configurations',
     },
     {
       onClick: () => {
-        navigate({
-          params: {
-            id: String(nodeBalancerId),
-          },
-          to: `/nodebalancers/$id/settings`,
-        });
+        history.push(`/nodebalancers/${nodeBalancerId}/settings`);
       },
       title: 'Settings',
     },
     {
       disabled: isNodeBalancerReadOnly,
       onClick: () => {
-        navigate({
-          params: {
-            id: String(nodeBalancerId),
-          },
-          to: `/nodebalancers/$id/delete`,
-        });
+        toggleDialog(nodeBalancerId, label);
       },
       title: 'Delete',
       tooltip: isNodeBalancerReadOnly

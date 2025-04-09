@@ -6,13 +6,9 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  useAccount,
-  useMutateAccount,
-  useNotificationsQuery,
-  useMutateProfile,
-  useProfile,
-} from '@linode/queries';
+import { useAccount, useMutateAccount } from 'src/queries/account/account';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import { StyledGrid } from './EmailBounce.styles';
 

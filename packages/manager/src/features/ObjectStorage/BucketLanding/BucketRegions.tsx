@@ -1,10 +1,7 @@
-import { useIsGeckoEnabled } from '@linode/shared';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useFlags } from 'src/hooks/useFlags';
-
 import { useIsObjectStorageGen2Enabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { WHITELISTED_REGIONS } from '../utilities';
 
@@ -20,16 +17,12 @@ interface Props {
 export const BucketRegions = (props: Props) => {
   const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
 
-  const { allRegionsError, availableStorageRegions } =
-    useObjectStorageRegions();
+  const {
+    allRegionsError,
+    availableStorageRegions,
+  } = useObjectStorageRegions();
 
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
-
-  const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(
-    flags.gecko2?.enabled,
-    flags.gecko2?.la
-  );
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
   const errorText = error || allRegionsError?.[0]?.reason;
@@ -43,7 +36,6 @@ export const BucketRegions = (props: Props) => {
       disableClearable
       disabled={disabled}
       errorText={errorText}
-      isGeckoLAEnabled={isGeckoLAEnabled}
       label="Region"
       onBlur={onBlur}
       onChange={(e, region) => onChange(region.id)}

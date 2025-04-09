@@ -1,12 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import {
-  useCloneLinodeMutation,
-  useCreateLinodeMutation,
-  useMutateAccountAgreements,
-  useProfile,
-} from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -24,24 +17,27 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
+import { useMutateAccountAgreements } from 'src/queries/account/agreements';
+import {
+  useCloneLinodeMutation,
+  useCreateLinodeMutation,
+} from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
-import {
-  useIsLinodeCloneFirewallEnabled,
-  useIsLinodeInterfacesEnabled,
-} from 'src/utilities/linodes';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
-import { LinodeCreateError } from './Error';
+import { Error } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
 import { Networking } from './Networking/Networking';
-import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
@@ -77,14 +73,12 @@ export const LinodeCreate = () => {
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
-  const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
 
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
-    defaultValues: () =>
-      defaultValues(params, queryClient, isLinodeInterfacesEnabled),
+    defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
@@ -97,8 +91,9 @@ export const LinodeCreate = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const { handleLinodeCreateAnalyticsFormError } =
-    useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
+  const {
+    handleLinodeCreateAnalyticsFormError,
+  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -109,11 +104,7 @@ export const LinodeCreate = () => {
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
-      defaultValues(
-        { ...params, type: newTab },
-        queryClient,
-        isLinodeInterfacesEnabled
-      ).then((values) => {
+      defaultValues({ ...params, type: newTab }, queryClient).then((values) => {
         // Reset the form values
         form.reset(values);
         // Update tab "type" query param. (This changes the selected tab)
@@ -158,9 +149,6 @@ export const LinodeCreate = () => {
         });
       }
     } catch (errors) {
-      if (isLinodeInterfacesEnabled) {
-        transformLegacyInterfaceErrorsToLinodeInterfaceErrors(errors);
-      }
       for (const error of errors) {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
@@ -204,7 +192,7 @@ export const LinodeCreate = () => {
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <LinodeCreateError />
+        <Error />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>
@@ -251,12 +239,8 @@ export const LinodeCreate = () => {
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}
-          {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
-            <VPC />
-          )}
-          {!isLinodeInterfacesEnabled &&
-            (params.type !== 'Clone Linode' ||
-              isLinodeCloneFirewallEnabled) && <Firewall />}
+          {!isLinodeInterfacesEnabled && <VPC />}
+          {!isLinodeInterfacesEnabled && <Firewall />}
           {!isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <VLAN />
           )}

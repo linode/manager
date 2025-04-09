@@ -2,7 +2,6 @@
  * @file Integration tests for SMS phone verification.
  */
 
-import { profileFactory } from '@linode/utilities';
 import {
   mockGetProfile,
   mockSendVerificationCode,
@@ -16,6 +15,7 @@ import {
   randomPhoneNumber,
 } from 'support/util/random';
 
+import { profileFactory } from 'src/factories/profile';
 import { getFormattedNumber } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
 
 describe('SMS phone verification', () => {

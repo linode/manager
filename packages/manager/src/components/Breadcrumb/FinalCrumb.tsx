@@ -17,8 +17,12 @@ interface Props {
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
-  const { crumb, disabledBreadcrumbEditButton, labelOptions, onEditHandlers } =
-    props;
+  const {
+    crumb,
+    disabledBreadcrumbEditButton,
+    labelOptions,
+    onEditHandlers,
+  } = props;
 
   const linkProps = labelOptions?.linkTo
     ? {
@@ -34,7 +38,6 @@ export const FinalCrumb = React.memo((props: Props) => {
         disabledBreadcrumbEditButton={disabledBreadcrumbEditButton}
         errorText={onEditHandlers.errorText}
         handleAnalyticsEvent={onEditHandlers.handleAnalyticsEvent}
-        isBreadcrumb
         onCancel={onEditHandlers.onCancel}
         onEdit={onEditHandlers.onEdit}
         text={onEditHandlers.editableTextTitle}

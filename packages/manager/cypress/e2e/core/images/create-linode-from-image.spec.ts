@@ -1,23 +1,22 @@
-import { linodeFactory } from '@linode/utilities';
-import { imageFactory } from '@src/factories';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
+import { ui } from 'support/ui';
 
 const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
-  id: 123456,
   region: region.id,
+  id: 123456,
 });
 
 const mockImage = imageFactory.build({
+  label: randomLabel(),
+  is_public: false,
   eol: null,
   id: `private/${randomNumber()}`,
-  is_public: false,
-  label: randomLabel(),
 });
 
 const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {

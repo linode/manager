@@ -1,18 +1,16 @@
-import { profileFactory } from '@linode/utilities';
-import { mockGetUser } from 'support/intercepts/account';
+import { imageFactory } from 'src/factories';
+import { ui } from 'support/ui';
 import { mockGetAllImages } from 'support/intercepts/images';
+import { profileFactory } from 'src/factories';
+import { randomLabel } from 'support/util/random';
+import { grantsFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories';
+import { mockGetUser } from 'support/intercepts/account';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-
-import { imageFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories';
-
-import type { Image } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
 
 function checkActionMenu(tableAlias: string, mockImages: any[]) {
   mockImages.forEach((image) => {
@@ -50,14 +48,14 @@ function checkActionMenu(tableAlias: string, mockImages: any[]) {
 
 describe('image landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
-    const mockImages: Image[] = new Array(3)
-      .fill(null)
-      .map((_item: null, index: number): Image => {
+    const mockImages: Image[] = new Array(3).fill(null).map(
+      (_item: null, index: number): Image => {
         return imageFactory.build({
           label: `Image ${index}`,
           tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
         });
-      });
+      }
+    );
 
     // Mock setup to display the Image landing page in an non-empty state
     mockGetAllImages(mockImages).as('getImages');
@@ -69,14 +67,14 @@ describe('image landing checks for non-empty state with restricted user', () => 
   it('checks restricted user with read access has no access to create image and can see existing images', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     const mockProfile = profileFactory.build({
-      restricted: true,
       username: randomLabel(),
+      restricted: true,
     });
 
     const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
-      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({

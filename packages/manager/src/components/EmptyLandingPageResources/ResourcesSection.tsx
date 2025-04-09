@@ -19,7 +19,7 @@ import {
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
-  LinkAnalyticsEvent,
+  linkAnalyticsEvent,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 interface ButtonProps {
@@ -62,7 +62,7 @@ interface ResourcesSectionProps {
   /**
    * The event data to be sent when the call to action is clicked
    */
-  linkAnalyticsEvent: LinkAnalyticsEvent;
+  linkAnalyticsEvent: linkAnalyticsEvent;
   /**
    * If true, the transfer display will be shown at the bottom
    * */
@@ -82,14 +82,14 @@ interface ResourcesSectionProps {
 
 const GuideLinks = (
   guides: ResourcesLinkSection,
-  linkAnalyticsEvent: LinkAnalyticsEvent
+  linkAnalyticsEvent: linkAnalyticsEvent
 ) => (
   <ResourceLinks linkAnalyticsEvent={linkAnalyticsEvent} links={guides.links} />
 );
 
 const YoutubeLinks = (
   youtube: ResourcesLinkSection,
-  linkAnalyticsEvent: LinkAnalyticsEvent
+  linkAnalyticsEvent: linkAnalyticsEvent
 ) => (
   <ResourceLinks
     linkAnalyticsEvent={linkAnalyticsEvent}

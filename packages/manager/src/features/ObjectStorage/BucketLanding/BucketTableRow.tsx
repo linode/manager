@@ -1,10 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import {
-  getRegionsByRegionId,
-  isFeatureEnabledV2,
-  readableBytes,
-} from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -16,6 +10,10 @@ import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
+import { getRegionsByRegionId } from 'src/utilities/regions';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketActionMenu } from './BucketActionMenu';
 import {
@@ -89,7 +87,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           <Typography data-qa-region variant="body1">
             {isObjMultiClusterEnabled && regionsLookup && region
               ? regionsLookup[region].label
-              : (clusterRegion?.label ?? cluster)}
+              : clusterRegion?.label ?? cluster}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>

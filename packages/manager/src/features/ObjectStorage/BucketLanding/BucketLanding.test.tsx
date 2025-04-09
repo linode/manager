@@ -11,37 +11,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
 
-const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn(() => vi.fn()),
-  useOrderV2: vi.fn().mockReturnValue({}),
-  useSearch: vi.fn(),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useNavigate: queryMocks.useNavigate,
-    useSearch: queryMocks.useSearch,
-  };
-});
-
-vi.mock('src/hooks/useOrderV2', async () => {
-  const actual = await vi.importActual('src/hooks/useOrderV2');
-  return {
-    ...actual,
-    useOrderV2: queryMocks.useOrderV2,
-  };
-});
-
 describe('ObjectStorageLanding', () => {
-  beforeAll(() => {
-    server.listen();
-    queryMocks.useSearch.mockReturnValue({
-      order: 'asc',
-      orderBy: 'label',
-    });
-  });
+  beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -152,11 +123,6 @@ describe('ObjectStorageLanding', () => {
 
   it('renders rows for each Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2);
-    queryMocks.useOrderV2.mockReturnValue({
-      order: 'asc',
-      orderBy: 'label',
-      sortedData: buckets,
-    });
 
     // Mock Clusters
     server.use(

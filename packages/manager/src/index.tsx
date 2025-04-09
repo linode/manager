@@ -1,5 +1,3 @@
-import { queryClientFactory } from '@linode/queries';
-import { getRoot } from '@linode/utilities';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
@@ -10,7 +8,7 @@ import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { SplashScreen } from 'src/components/SplashScreen';
 import 'src/exceptionReporting';
-import Logout from 'src/layouts/Logout';
+import { Logout } from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
@@ -19,6 +17,8 @@ import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
+import { queryClientFactory } from './queries/base';
+import { getRoot } from './utilities/rootManager';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -33,10 +33,16 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
-const LoginAsCustomerCallback = React.lazy(
-  () => import('src/layouts/LoginAsCustomerCallback')
+const LoginAsCustomerCallback = React.lazy(() =>
+  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
+    default: module.LoginAsCustomerCallback,
+  }))
 );
-const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+const OAuthCallback = React.lazy(() =>
+  import('src/layouts/OAuthCallback').then((module) => ({
+    default: module.OAuthCallback,
+  }))
+);
 
 const Main = () => {
   if (!navigator.cookieEnabled) {
@@ -51,11 +57,7 @@ const Main = () => {
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
-                <Route
-                  component={OAuthCallbackPage}
-                  exact
-                  path="/oauth/callback"
-                />
+                <Route component={OAuthCallback} exact path="/oauth/callback" />
                 <Route
                   component={LoginAsCustomerCallback}
                   exact
@@ -68,7 +70,7 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  hideIconVariant={false}
+                  hideIconVariant={true}
                   maxSnack={3}
                 >
                   <Switch>

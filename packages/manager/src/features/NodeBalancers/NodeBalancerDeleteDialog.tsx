@@ -1,36 +1,30 @@
-import { useNodebalancerDeleteMutation } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-
-import type { NodeBalancer } from '@linode/api-v4';
+import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
 
 interface Props {
-  isFetching: boolean;
+  id: number;
+  label: string;
+  onClose: () => void;
   open: boolean;
-  selectedNodeBalancer: NodeBalancer | undefined;
 }
 
 export const NodeBalancerDeleteDialog = ({
-  isFetching,
+  id,
+  label,
+  onClose,
   open,
-  selectedNodeBalancer,
 }: Props) => {
-  const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
-  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
-    selectedNodeBalancer?.id ?? -1
-  );
-
-  const label = selectedNodeBalancer?.label;
+  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(id);
+  const { push } = useHistory();
 
   const onDelete = async () => {
     await mutateAsync();
-    navigate({ to: '/nodebalancers' });
+    onClose();
+    push('/nodebalancers');
   };
 
   return (
@@ -41,20 +35,12 @@ export const NodeBalancerDeleteDialog = ({
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
       }}
-      onClose={
-        match.routeId === '/nodebalancers/$id/settings/delete'
-          ? () =>
-              navigate({
-                params: { id: String(selectedNodeBalancer?.id) },
-                to: '/nodebalancers/$id/settings',
-              })
-          : () => navigate({ to: '/nodebalancers' })
-      }
       errors={error ?? undefined}
       expand
       label={'NodeBalancer Label'}
-      loading={isPending || isFetching}
+      loading={isPending}
       onClick={onDelete}
+      onClose={onClose}
       open={open}
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}

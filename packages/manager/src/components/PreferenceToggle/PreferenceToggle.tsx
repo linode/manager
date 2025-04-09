@@ -1,6 +1,9 @@
-import { useMutatePreferences, usePreferences } from '@linode/queries';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 interface RenderChildrenProps<T> {
   preference: NonNullable<T>;

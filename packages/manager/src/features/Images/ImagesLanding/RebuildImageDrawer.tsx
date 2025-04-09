@@ -1,17 +1,18 @@
-import { LinodeSelect } from '@linode/shared';
-import { ActionsPanel, Divider, Drawer, Notice, Stack } from '@linode/ui';
+import { Divider, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { NotFound } from 'src/components/NotFound';
-import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
+import { Drawer } from 'src/components/Drawer';
+import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { Image } from '@linode/api-v4';
+import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 interface Props {
   image: Image | undefined;
@@ -24,8 +25,9 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, isFetching, onClose, open } = props;
 
   const history = useHistory();
-  const { permissionedLinodes: availableLinodes } =
-    useImageAndLinodeGrantCheck();
+  const {
+    permissionedLinodes: availableLinodes,
+  } = useImageAndLinodeGrantCheck();
 
   const { control, formState, handleSubmit, reset } = useForm<{
     linodeId: number;
@@ -56,7 +58,6 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

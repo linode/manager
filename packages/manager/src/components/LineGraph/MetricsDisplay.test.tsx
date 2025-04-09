@@ -1,8 +1,8 @@
-import { formatPercentage } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
 import { MetricsDisplay } from 'src/components/LineGraph/MetricsDisplay';
+import { formatPercentage } from 'src/utilities/statMetrics';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('CPUMetrics', () => {

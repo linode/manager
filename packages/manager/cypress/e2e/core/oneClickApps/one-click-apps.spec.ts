@@ -1,26 +1,24 @@
-import { linodeFactory } from '@linode/utilities';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
 import {
   interceptGetStackScripts,
   mockGetStackScript,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { ui } from 'support/ui';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import { getRandomOCAId } from 'support/util/one-click-apps';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { imageFactory } from 'src/factories';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
+import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
 
 import type { StackScript } from '@linode/api-v4';
+import { imageFactory, linodeFactory } from 'src/factories';
+import { mockGetAllImages } from 'support/intercepts/images';
 
 describe('OneClick Apps (OCA)', () => {
   it('Lists all the OneClick Apps', () => {
-    cy.tag('method:e2e', 'env:marketplaceApps');
+    cy.tag('method:e2e');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -57,7 +55,7 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   it('Can view app details of a marketplace app', () => {
-    cy.tag('method:e2e', 'env:marketplaceApps');
+    cy.tag('method:e2e');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -119,39 +117,39 @@ describe('OneClick Apps (OCA)', () => {
       }),
     ];
     const stackscript = stackScriptFactory.build({
-      created: '2019-03-08T21:13:32',
-      deployments_active: 412,
-      deployments_total: 18854,
-      description: 'Minecraft OCA',
       id: getRandomOCAId(),
-      images: ['linode/debian11', 'linode/ubuntu24.04'],
-      is_public: true,
+      username: 'linode',
+      user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
       label: 'E2E Test App',
-      logo_url: 'assets/Minecraft.svg',
-      mine: false,
+      description: 'Minecraft OCA',
       ordinal: 10,
+      logo_url: 'assets/Minecraft.svg',
+      images: ['linode/debian11', 'linode/ubuntu24.04'],
+      deployments_total: 18854,
+      deployments_active: 412,
+      is_public: true,
+      mine: false,
+      created: '2019-03-08T21:13:32',
+      updated: '2023-09-26T15:00:45',
       rev_note: 'remove maxplayers hard coded options [oca-707]',
       script: '#!/usr/bin/env bash\n',
-      updated: '2023-09-26T15:00:45',
       user_defined_fields: [
         {
-          example: 'lgsmuser',
+          name: 'username',
           label:
             "The username for the Linode's non-root admin/SSH user(must be lowercase)",
-          name: 'username',
+          example: 'lgsmuser',
         },
         {
-          example: 'S3cuReP@s$w0rd',
-          label: "The password for the Linode's non-root admin/SSH user",
           name: 'password',
+          label: "The password for the Linode's non-root admin/SSH user",
+          example: 'S3cuReP@s$w0rd',
         },
         {
-          label: 'World Name',
           name: 'levelname',
+          label: 'World Name',
         },
       ],
-      user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
-      username: 'linode',
     });
 
     const rootPassword = randomString(16);
@@ -180,7 +178,7 @@ describe('OneClick Apps (OCA)', () => {
       cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
-      // The app may be listed 2 or 3 times.
+      cy.get('[data-qa-selection-card="true"]').should('have.length', 2);
       cy.findAllByText(stackscript.label).first().should('be.visible').click();
     });
 
@@ -249,8 +247,8 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   // leave test disabled by default
-  it.skip('Validate the summaries of all the OneClick Apps', () => {
-    cy.tag('method:e2e', 'env:marketplaceApps');
+  xit('Validate the summaries of all the OneClick Apps', () => {
+    cy.tag('method:e2e');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);

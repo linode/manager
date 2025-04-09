@@ -61,7 +61,11 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       >
         {display}
         {isBeta ? (
-          <BetaChip className={`${betaChipClassName ?? ''}`} component="span" />
+          <BetaChip
+            className={`${betaChipClassName ?? ''}`}
+            color="primary"
+            component="span"
+          />
         ) : null}
       </StyledPrimaryLinkBox>
     </StyledActiveLink>

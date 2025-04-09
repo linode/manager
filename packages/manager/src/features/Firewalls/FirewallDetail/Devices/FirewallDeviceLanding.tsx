@@ -1,6 +1,7 @@
 import { Button, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 

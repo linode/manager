@@ -1,5 +1,6 @@
 import React from 'react';
 
+import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
@@ -10,6 +11,10 @@ export const determineReplicationType = (
   clusterSize: number,
   engine: string
 ) => {
+  if (/mongo/.test(engine)) {
+    return undefined;
+  }
+
   // If engine is a MySQL or Postgres one and it's a standalone DB instance
   if (clusterSize === 1) {
     return 'none';
@@ -32,13 +37,35 @@ export const determineReplicationCommitType = (engine: string) => {
   return undefined;
 };
 
+export const determineStorageEngine = (engine: string) => {
+  // 'wiredtiger' is the default.
+  if (/mongo/.test(engine)) {
+    return 'wiredtiger';
+  }
+
+  return undefined;
+};
+
+export const determineCompressionType = (engine: string) => {
+  // 'none' is the default.
+  if (/mongo/.test(engine)) {
+    return 'none';
+  }
+
+  return undefined;
+};
+
 interface EngineIconsProps {
+  mongodb: React.JSX.Element;
   mysql: React.JSX.Element;
   postgresql: React.JSX.Element;
+  redis: null;
 }
 export const engineIcons: EngineIconsProps = {
+  mongodb: <MongoDBIcon height="24" width="24" />,
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
+  redis: null,
 };
 
 export const getEngineOptions = (engines: DatabaseEngine[]) => {

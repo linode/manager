@@ -1,6 +1,5 @@
-import { Factory } from '@linode/utilities';
-
-import type { Disk } from '@linode/api-v4/lib/linodes/types';
+import { Disk } from '@linode/api-v4/lib/linodes/types';
+import Factory from 'src/factories/factoryProxy';
 
 export const linodeDiskFactory = Factory.Sync.makeFactory<Disk>({
   created: '2018-01-01',

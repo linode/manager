@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface DNSResolversProps {
   region: string;

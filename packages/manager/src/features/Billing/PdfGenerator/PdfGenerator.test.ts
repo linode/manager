@@ -1,4 +1,3 @@
-import { regionFactory } from '@linode/utilities';
 import fs from 'fs';
 import { PdfReader } from 'pdfreader';
 
@@ -7,6 +6,7 @@ import {
   invoiceFactory,
   invoiceItemFactory,
   paymentFactory,
+  regionFactory,
 } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';

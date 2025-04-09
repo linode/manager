@@ -1,5 +1,6 @@
-import { useSearch } from '@tanstack/react-router';
+import { getQueryParamFromQueryString } from '@linode/utilities';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { BucketRateLimitTable } from '../BucketLanding/BucketRateLimitTable';
 import { BucketBreadcrumb } from './BucketBreadcrumb';
@@ -18,9 +19,10 @@ interface Props {
 export const BucketProperties = React.memo((props: Props) => {
   const { bucket } = props;
   const { endpoint_type, hostname, label } = bucket;
-  const { prefix = '' } = useSearch({
-    from: '/object-storage/buckets/$clusterId/$bucketName',
-  });
+
+  const location = useLocation();
+  const history = useHistory();
+  const prefix = getQueryParamFromQueryString(location.search, 'prefix');
 
   return (
     <>

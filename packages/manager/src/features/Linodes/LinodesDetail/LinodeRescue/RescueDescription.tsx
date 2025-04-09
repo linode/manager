@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useLinodeFirewallsQuery } from '@linode/queries';
+import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 
 const rescueDescription = {
   firewallWarning:

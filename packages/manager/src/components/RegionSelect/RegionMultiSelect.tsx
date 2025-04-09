@@ -1,14 +1,11 @@
-import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
-// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
+import { Flag } from 'src/components/Flag';
+import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-// @todo: modularization - Move `Flag` component to `@linode/shared` package.
-import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -18,7 +15,7 @@ import {
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface RegionChipLabelProps {
   region: Region;
@@ -44,7 +41,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     helperText,
     ignoreAccountAvailability,
     isClearable,
-    isGeckoLAEnabled,
     label,
     onChange,
     placeholder,
@@ -56,8 +52,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
-    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const {
+    data: accountAvailability,
+    isLoading: accountAvailabilityLoading,
+  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -124,7 +122,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
-                isGeckoLAEnabled={isGeckoLAEnabled}
                 item={option}
                 key={key}
                 props={rest}

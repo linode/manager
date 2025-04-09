@@ -1,18 +1,12 @@
-import { useAccountSettings } from '@linode/queries';
-import {
-  ActionsPanel,
-  CircleProgress,
-  Drawer,
-  Notice,
-  TextField,
-  Typography,
-} from '@linode/ui';
+import { CircleProgress, Notice, TextField, Typography } from '@linode/ui';
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
@@ -80,8 +74,14 @@ export const getDefaultScopes = (
     .sort(sortByCluster);
 
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
-    props;
+  const {
+    isRestrictedUser,
+    mode,
+    objectStorageKey,
+    onClose,
+    onSubmit,
+    open,
+  } = props;
 
   const { data: accountSettings } = useAccountSettings();
 
@@ -156,7 +156,6 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}

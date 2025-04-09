@@ -1,8 +1,6 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
-  ActionsPanel,
   CircleProgress,
-  Drawer,
   ErrorState,
   IconButton,
   InputAdornment,
@@ -21,12 +19,12 @@ import { useHistory } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Drawer } from 'src/components/Drawer';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -81,7 +79,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+    border: `1px solid ${theme.tokens.border.Normal}`,
     borderBottom: 0,
     padding: theme.spacing(),
     paddingLeft: theme.spacing(1.5),
@@ -119,8 +117,9 @@ export const ImagesLanding = () => {
     globalGrantType: 'add_images',
   });
   const queryClient = useQueryClient();
-  const [dialogState, setDialogState] =
-    React.useState<ImageDialogState>(defaultDialogState);
+  const [dialogState, setDialogState] = React.useState<ImageDialogState>(
+    defaultDialogState
+  );
   const dialogStatus =
     dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
 
@@ -262,13 +261,15 @@ export const ImagesLanding = () => {
     }
   );
 
-  const { data: selectedImage, isFetching: isFetchingSelectedImage } =
-    useDialogData({
-      enabled: !!selectedImageId,
-      paramKey: 'imageId',
-      queryHook: useImageQuery,
-      redirectToOnNotFound: '/images',
-    });
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+  } = useDialogData({
+    enabled: !!selectedImageId,
+    paramKey: 'imageId',
+    queryHook: useImageQuery,
+    redirectToOnNotFound: '/images',
+  });
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
@@ -451,11 +452,8 @@ export const ImagesLanding = () => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching && <CircleProgress noPadding size="xs" />}
+              {isFetching && <CircleProgress size="sm" />}
               <IconButton
-                sx={{
-                  padding: 0,
-                }}
                 aria-label="Clear"
                 data-testid="clear-images-search"
                 onClick={resetSearch}
@@ -480,13 +478,9 @@ export const ImagesLanding = () => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            These are{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
-              encrypted
-            </Link>{' '}
-            images you manually uploaded or captured from an existing compute
-            instance disk. You can deploy an image to a compute instance in any
-            region.
+            These are images you manually uploaded or captured from an existing
+            compute instance disk. You can deploy an image to a compute instance
+            in any region.
           </Typography>
         </div>
         <Table>
@@ -656,7 +650,6 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
-        NotFoundComponent={NotFound}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}

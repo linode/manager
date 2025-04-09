@@ -1,4 +1,7 @@
+import type { VolumeRequestPayload } from '@linode/api-v4';
 import { createVolume } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptResizeVolume } from 'support/intercepts/volumes';
 import { SimpleBackoffMethod } from 'support/util/backoff';
@@ -6,11 +9,6 @@ import { cleanUp } from 'support/util/cleanup';
 import { pollVolumeStatus } from 'support/util/polling';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
-
-import type { VolumeRequestPayload } from '@linode/api-v4';
-import type { Volume } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -83,8 +81,9 @@ describe('volume resize flow', () => {
         cy.get('[data-qa-drawer="true"]')
           .should('be.visible')
           .within(() => {
-            cy.findByText('Size').click();
-            cy.focused().type(`{selectall}{backspace}${newSize}`);
+            cy.findByText('Size')
+              .click()
+              .type(`{selectall}{backspace}${newSize}`);
             cy.get('[data-qa-buttons="true"]').within(() => {
               cy.findByText('Resize Volume').should('be.visible').click();
             });

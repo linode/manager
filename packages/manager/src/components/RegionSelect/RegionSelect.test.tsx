@@ -1,7 +1,6 @@
-import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-// @todo: modularization - Replace 'testHelpers' with 'testHelpers' from the shared package once available.
+import { regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
@@ -16,14 +15,13 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    helperText: '',
-    isGeckoLAEnabled: false,
-    label: '',
     onChange: vi.fn(),
+    helperText: '',
+    label: '',
     regions,
     required: false,
-    tooltipText: '',
     value: '',
+    tooltipText: '',
     width: 100,
   };
 

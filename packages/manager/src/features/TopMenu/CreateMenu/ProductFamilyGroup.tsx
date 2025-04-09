@@ -1,7 +1,7 @@
-import { Stack, Typography } from '@linode/ui';
+import { Stack } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Link } from 'src/components/Link';
+import { Link } from 'react-router-dom';
 
 import {
   StyledHeading,
@@ -26,7 +26,7 @@ export const ProductFamilyGroup = (props: ProductFamilyGroupProps) => {
 
   return (
     <>
-      <StyledHeading marginTop={productFamily.name === 'Databases'}>
+      <StyledHeading paddingTop={productFamily.name === 'Databases'}>
         {productFamily.icon}
         {productFamily.name}
       </StyledHeading>

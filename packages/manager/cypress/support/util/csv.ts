@@ -17,7 +17,6 @@ export function parseCsv(csvContent: string): any[] {
   // Extract the headers from the first line and remove any quotes
   const headers = lines[0]
     .split(',')
-    // eslint-disable-next-line sonarjs/anchor-precedence
     .map((header) => header.trim().replace(/^"|"$/g, ''));
 
   // Map the remaining lines to objects using the headers
@@ -31,9 +30,7 @@ export function parseCsv(csvContent: string): any[] {
     // - Removes the enclosing double quotes from quoted values
     // - Replaces any escaped double quotes within quoted values with a single double quote
     const values = line
-      // eslint-disable-next-line sonarjs/slow-regex
       .match(/("([^"]|"")*"|[^",\s]+)(?=\s*,|\s*$)/g)
-      // eslint-disable-next-line sonarjs/anchor-precedence
       ?.map((value) => value.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
 
     // Create an object to represent the row

@@ -1,5 +1,4 @@
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -18,9 +17,10 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
   useLinodeTransferByDate,
-  useProfile,
-} from '@linode/queries';
+} from 'src/queries/linodes/stats';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
 import type {
@@ -91,18 +91,14 @@ export const TransferHistory = React.memo((props: Props) => {
   const decrementOffset = () =>
     setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
-  const decrementLabel = parseMonthOffset(
-    monthOffset - 1,
-    now
-  ).longHumanizedDate;
+  const decrementLabel = parseMonthOffset(monthOffset - 1, now)
+    .longHumanizedDate;
 
   const incrementOffset = () =>
     setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
 
-  const incrementLabel = parseMonthOffset(
-    monthOffset + 1,
-    now
-  ).longHumanizedDate;
+  const incrementLabel = parseMonthOffset(monthOffset + 1, now)
+    .longHumanizedDate;
 
   // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
   // Graph data from the /stats endpoint works a bit differently: when you request data for the

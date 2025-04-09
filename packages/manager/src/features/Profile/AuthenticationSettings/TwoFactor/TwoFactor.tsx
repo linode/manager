@@ -3,7 +3,8 @@ import { Notice, StyledLinkButton, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { profileQueries, useSecurityQuestions } from '@linode/queries';
+import { profileQueries } from 'src/queries/profile/profile';
+import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -212,8 +213,8 @@ export const TwoFactor = (props: TwoFactorProps) => {
               {showQRCode
                 ? 'Hide QR Code'
                 : twoFactorConfirmed
-                  ? 'Reset two-factor authentication'
-                  : 'Show QR Code'}
+                ? 'Reset two-factor authentication'
+                : 'Show QR Code'}
             </StyledLinkButton>
           </StyledCTAWrapper>
         )}

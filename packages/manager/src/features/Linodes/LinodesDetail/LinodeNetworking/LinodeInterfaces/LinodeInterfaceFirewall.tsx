@@ -1,8 +1,8 @@
-import { useLinodeInterfaceFirewallsQuery } from '@linode/queries';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
+import { useLinodeInterfaceFirewallsQuery } from 'src/queries/linodes/interfaces';
 
 interface Props {
   interfaceId: number;

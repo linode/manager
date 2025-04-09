@@ -1,23 +1,17 @@
-import {
-  useAllFirewallDevicesQuery,
-  useAllLinodesQuery,
-} from '@linode/queries';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { getLinodeIdFromInterfaceDevice } from '../../shared';
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
@@ -33,57 +27,19 @@ export interface FirewallDeviceTableProps {
 
 export const FirewallDeviceTable = React.memo(
   (props: FirewallDeviceTableProps) => {
-    const { deviceType, disabled, firewallId, handleRemoveDevice, type } =
-      props;
-
-    const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
     const {
-      data: allDevices,
-      error,
-      isLoading,
-    } = useAllFirewallDevicesQuery(firewallId);
-    const devices =
-      allDevices?.filter((device) =>
-        type === 'linode' && isLinodeInterfacesEnabled
-          ? device.entity.type !== 'nodebalancer' // include entities with type 'interface' in Linode table
-          : device.entity.type === type
-      ) || [];
+      deviceType,
+      disabled,
+      firewallId,
+      handleRemoveDevice,
+      type,
+    } = props;
 
-    const linodeInterfaceDevices =
-      type === 'linode'
-        ? allDevices?.filter((device) => device.entity.type === 'interface')
-        : [];
-
-    // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
-    // so that we can add a label to the devices for sorting and display purposes
-    const { data: linodesWithInterfaces } = useAllLinodesQuery(
-      {},
-      {},
-      isLinodeInterfacesEnabled &&
-        linodeInterfaceDevices &&
-        linodeInterfaceDevices.length > 0
+    const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
+      firewallId
     );
-
-    const updatedDevices = devices.map((device) => {
-      if (device.entity.type === 'interface') {
-        const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
-        const associatedLinode = linodesWithInterfaces?.find(
-          (linode) => linode.id === linodeId
-        );
-        return {
-          ...device,
-          entity: {
-            ...device.entity,
-            label: associatedLinode?.label ?? null,
-          },
-        };
-      } else {
-        return device;
-      }
-    });
-
-    const isLinodeRelatedDevice = type === 'linode';
+    const devices =
+      allDevices?.filter((device) => device.entity.type === type) || [];
 
     const _error = error
       ? getAPIErrorOrDefault(
@@ -100,7 +56,7 @@ export const FirewallDeviceTable = React.memo(
       orderBy,
       sortedData: sortedDevices,
     } = useOrderV2({
-      data: updatedDevices,
+      data: devices,
       initialRoute: {
         defaultOrder: {
           order: 'asc',
@@ -129,18 +85,14 @@ export const FirewallDeviceTable = React.memo(
             <TableRow>
               <TableSortCell
                 active={orderBy === 'entity:label'}
+                colSpan={2}
                 data-qa-firewall-device-linode-header
                 direction={order}
                 handleClick={handleOrderChange}
                 label={'entity:label'}
-                sx={{ width: '30%' }}
               >
                 {formattedTypes[deviceType]}
               </TableSortCell>
-              {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (
-                <TableCell>Network Interface</TableCell>
-              )}
-              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -154,7 +106,6 @@ export const FirewallDeviceTable = React.memo(
                   device={thisDevice}
                   disabled={disabled}
                   handleRemoveDevice={handleRemoveDevice}
-                  isLinodeRelatedDevice={isLinodeRelatedDevice}
                   key={`device-row-${thisDevice.id}`}
                 />
               ))}

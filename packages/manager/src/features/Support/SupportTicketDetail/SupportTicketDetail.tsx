@@ -1,11 +1,6 @@
-import {
-  useInfiniteSupportTicketRepliesQuery,
-  useProfile,
-  useSupportTicketQuery,
-} from '@linode/queries';
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -14,6 +9,11 @@ import { Waypoint } from 'react-waypoint';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { useProfile } from 'src/queries/profile/profile';
+import {
+  useInfiniteSupportTicketRepliesQuery,
+  useSupportTicketQuery,
+} from 'src/queries/support';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import { ExpandableTicketPanel } from '../ExpandableTicketPanel';

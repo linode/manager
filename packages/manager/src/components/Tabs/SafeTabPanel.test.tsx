@@ -1,8 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { Tabs } from 'src/components/Tabs/Tabs';
-
 import { SafeTabPanel } from './SafeTabPanel';
 
 vi.mock('@reach/tabs', async () => {
@@ -16,11 +14,9 @@ vi.mock('@reach/tabs', async () => {
 describe('SafeTabPanel', () => {
   it('renders children when the tab is selected', () => {
     const { getByText } = render(
-      <Tabs>
-        <SafeTabPanel index={0}>
-          <div>Child Content</div>
-        </SafeTabPanel>
-      </Tabs>
+      <SafeTabPanel index={0}>
+        <div>Child Content</div>
+      </SafeTabPanel>
     );
 
     expect(getByText('Child Content')).toBeInTheDocument();
@@ -28,11 +24,9 @@ describe('SafeTabPanel', () => {
 
   it('does not render children when the tab is not selected', () => {
     const { queryByText } = render(
-      <Tabs>
-        <SafeTabPanel index={1}>
-          <div>Child Content</div>
-        </SafeTabPanel>
-      </Tabs>
+      <SafeTabPanel index={1}>
+        <div>Child Content</div>
+      </SafeTabPanel>
     );
 
     expect(queryByText('Child Content')).toBeNull();
@@ -40,13 +34,11 @@ describe('SafeTabPanel', () => {
 
   it('renders empty when the index is null', () => {
     const { container } = render(
-      <Tabs>
-        <SafeTabPanel index={null}>
-          <div>Child Content</div>
-        </SafeTabPanel>
-      </Tabs>
+      <SafeTabPanel index={null}>
+        <div>Child Content</div>
+      </SafeTabPanel>
     );
 
-    expect(container.firstChild?.firstChild).toBeEmptyDOMElement();
+    expect(container.firstChild).toBeEmptyDOMElement();
   });
 });

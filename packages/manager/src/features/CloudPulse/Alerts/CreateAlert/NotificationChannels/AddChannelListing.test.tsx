@@ -1,5 +1,5 @@
 import { capitalize } from '@linode/utilities';
-import { waitFor, within } from '@testing-library/react';
+import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -44,15 +44,16 @@ describe('Channel Listing component', () => {
         ? mockNotificationData[0].content.email.email_addresses
         : [];
 
-    const { getByText } =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
-        useFormOptions: {
-          defaultValues: {
-            channel_ids: [mockNotificationData[0].id],
-          },
+    const {
+      getByText,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: <AddChannelListing name="channel_ids" />,
+      useFormOptions: {
+        defaultValues: {
+          channel_ids: [mockNotificationData[0].id],
         },
-      });
+      },
+    });
     expect(getByText('4. Notification Channels')).toBeVisible();
     expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
     expect(getByText(emailAddresses[0])).toBeInTheDocument();
@@ -60,15 +61,16 @@ describe('Channel Listing component', () => {
   });
 
   it('should remove the fields', async () => {
-    const { getByTestId } =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
-        useFormOptions: {
-          defaultValues: {
-            channel_ids: [mockNotificationData[0].id],
-          },
+    const {
+      getByTestId,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: <AddChannelListing name="channel_ids" />,
+      useFormOptions: {
+        defaultValues: {
+          channel_ids: [mockNotificationData[0].id],
         },
-      });
+      },
+    });
     const notificationContainer = getByTestId('notification-channel-0');
     expect(notificationContainer).toBeInTheDocument();
 
@@ -76,30 +78,5 @@ describe('Channel Listing component', () => {
     await user.click(clearButton);
 
     expect(notificationContainer).not.toBeInTheDocument();
-  });
-  it('should show tooltip when the max limit of notification channels is reached', async () => {
-    // Mock the `notificationChannelWatcher` length to simulate the max limit
-    const mockMaxLimit = 5;
-    const { getByRole, getByText } =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <AddChannelListing name="channel_ids" />,
-        useFormOptions: {
-          defaultValues: {
-            channel_ids: Array(mockMaxLimit).fill(mockNotificationData[0].id), // simulate 5 channels
-          },
-        },
-      });
-
-    const addButton = getByRole('button', {
-      name: 'Add notification channel',
-    });
-
-    expect(addButton).toBeDisabled();
-    userEvent.hover(addButton);
-    await waitFor(() =>
-      expect(
-        getByText('You can add up to 5 notification channels.')
-      ).toBeInTheDocument()
-    );
   });
 });

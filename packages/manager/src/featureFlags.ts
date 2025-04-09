@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
+import type { TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -76,7 +76,7 @@ export interface CloudPulseResourceTypeMapFlag {
   supportedRegionIds?: string;
 }
 
-interface GpuV2 {
+interface gpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
   transferBanner: boolean;
@@ -98,16 +98,9 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
-interface LimitsEvolution {
-  enabled: boolean;
-  requestForIncreaseDisabledForAll: boolean;
-  requestForIncreaseDisabledForInternalAccountsOnly: boolean;
-}
-
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -124,11 +117,10 @@ export interface Flags {
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   gecko2: GeckoFeatureFlag;
-  gpuv2: GpuV2;
+  gpuv2: gpuV2;
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
-  limitsEvolution: LimitsEvolution;
-  linodeCloneFirewall: boolean;
+  limitsEvolution: BaseFeatureFlag;
   linodeDiskEncryption: boolean;
   linodeInterfaces: BaseFeatureFlag;
   lkeEnterprise: LkeEnterpriseFlag;
@@ -152,7 +144,6 @@ export interface Flags {
   taxes: Taxes;
   tpaProviders: Provider[];
   udp: boolean;
-  vmHostMaintenance: BetaFeatureFlag;
 }
 
 interface MarketplaceAppOverride {
@@ -282,10 +273,4 @@ export interface SuppliedMaintenanceData {
 }
 export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];
-}
-
-export interface AclpAlertServiceTypeConfig {
-  maxResourceSelectionCount: number;
-  serviceType: AlertServiceType;
-  // This can be extended to have supportedRegions, supportedFilters and other tags
 }

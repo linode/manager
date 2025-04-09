@@ -1,16 +1,4 @@
 import {
-  useAllLinodeDisksQuery,
-  useAllLinodeKernelsQuery,
-  useAllVolumesQuery,
-  useLinodeConfigCreateMutation,
-  useLinodeConfigUpdateMutation,
-  useLinodeQuery,
-  useRegionsQuery,
-  vlanQueries,
-  vpcQueries,
-} from '@linode/queries';
-import {
-  ActionsPanel,
   Autocomplete,
   Box,
   Button,
@@ -29,11 +17,6 @@ import {
   Typography,
   omitProps,
 } from '@linode/ui';
-import {
-  createDevicesFromStrings,
-  createStringsFromDevices,
-  scrollErrorIntoViewV2,
-} from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -41,13 +24,9 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING } from 'src/features/Kubernetes/constants';
-import {
-  useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-} from 'src/features/Kubernetes/kubeUtils';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
 import {
@@ -55,12 +34,27 @@ import {
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
+import {
+  useLinodeConfigCreateMutation,
+  useLinodeConfigUpdateMutation,
+} from 'src/queries/linodes/configs';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useAllLinodeKernelsQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { vlanQueries } from 'src/queries/vlans';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { vpcQueries } from 'src/queries/vpcs/vpcs';
+import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
+import { createStringsFromDevices } from 'src/utilities/createStringsFromDevices';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
@@ -81,7 +75,7 @@ import type {
   Interface,
   LinodeConfigCreationData,
 } from '@linode/api-v4';
-import type { DevicesAsStrings } from '@linode/utilities';
+import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
@@ -258,20 +252,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
-
-  const { data: cluster } = useKubernetesClusterQuery({
-    enabled:
-      isLkeEnterpriseLAFeatureEnabled &&
-      Boolean(linode?.lke_cluster_id) &&
-      !isAPLAvailabilityLoading,
-    id: linode?.lke_cluster_id ?? -1,
-    isUsingBetaEndpoint,
-  });
-
   const { enqueueSnackbar } = useSnackbar();
 
   const virtModeCaptionId = React.useId();
@@ -305,8 +285,9 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const queryClient = useQueryClient();
 
-  const [deviceCounter, setDeviceCounter] =
-    React.useState(deviceCounterDefault);
+  const [deviceCounter, setDeviceCounter] = React.useState(
+    deviceCounterDefault
+  );
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
@@ -506,6 +487,7 @@ export const LinodeConfigDialog = (props: Props) => {
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
+
         /*
         If device slots are populated out of sequential order (e.g. sda and sdb are assigned
         but no others are until sdf), ascertain the last assigned slot to determine how many
@@ -1117,8 +1099,6 @@ export const LinodeConfigDialog = (props: Props) => {
                       <React.Fragment key={`${idx}-interface`}>
                         {unrecommendedConfigNoticeSelector({
                           _interface: thisInterface,
-                          isLKEEnterpriseCluster:
-                            cluster?.tier === 'enterprise',
                           primaryInterfaceIndex,
                           thisIndex: idx,
                           values,
@@ -1320,18 +1300,15 @@ const noticeForScenario = (scenarioText: string) => (
  * @param primaryInterfaceIndex the index of the primary interface
  * @param thisIndex the index of the current config interface within the `interfaces` array of the `config` object
  * @param values the values held in Formik state, having a type of `EditableFields`
- * @param isLKEEnterpriseCluster boolean indicating if the linode is associated with a LKE-E cluster
  * @returns JSX.Element | null
  */
 export const unrecommendedConfigNoticeSelector = ({
   _interface,
-  isLKEEnterpriseCluster,
   primaryInterfaceIndex,
   thisIndex,
   values,
 }: {
   _interface: ExtendedInterface;
-  isLKEEnterpriseCluster: boolean;
   primaryInterfaceIndex: null | number;
   thisIndex: number;
   values: EditableFields;
@@ -1349,10 +1326,6 @@ export const unrecommendedConfigNoticeSelector = ({
     values.interfaces &&
     values.interfaces[primaryInterfaceIndex].purpose === 'vpc';
 
-  // Return a different warning if the VPC interface was created for a LKE-E cluster
-  if (vpcInterface && isLKEEnterpriseCluster) {
-    return noticeForScenario(LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING);
-  }
   /*
    Scenario 1:
     - the interface passed in to this function is a VPC interface

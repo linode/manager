@@ -1,12 +1,12 @@
 import { createImage } from '@linode/api-v4/lib/images';
-import { authenticate } from 'support/api/authentication';
-import { interceptGetLinodeDisks } from 'support/intercepts/linodes';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
-import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 
+import { authenticate } from 'support/api/authentication';
+import { randomLabel } from 'support/util/random';
+import { cleanUp } from 'support/util/cleanup';
 import type { Image, Linode } from '@linode/api-v4';
+import { interceptGetLinodeDisks } from 'support/intercepts/linodes';
 
 authenticate();
 describe('Search Images', () => {
@@ -59,8 +59,8 @@ describe('Search Images', () => {
 
             // Search for the first image by label, confirm it's the only one shown.
             cy.findByPlaceholderText('Search Images').type(image1.label);
-            cy.contains(image1.label).should('be.visible');
-            cy.contains(image2.label).should('not.exist');
+            expect(cy.contains(image1.label).should('be.visible'));
+            expect(cy.contains(image2.label).should('not.exist'));
 
             // Clear search, confirm both images are shown.
             cy.findByTestId('clear-images-search').click();

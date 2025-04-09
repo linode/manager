@@ -65,37 +65,41 @@ describe('CloudPulse Dashboard select', () => {
 
     expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select a Dashboard')).toBeInTheDocument();
-  });
-  it('Should render dashboard select component with data', () => {
-    renderWithTheme(<CloudPulseDashboardSelect {...props} />);
+  }),
+    it('Should render dashboard select component with data', () => {
+      renderWithTheme(<CloudPulseDashboardSelect {...props} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Open' }));
 
-    expect(
-      screen.getByRole('option', { name: dashboardLabel })
-    ).toBeInTheDocument();
-  });
-  it('Should select the option on click', () => {
-    renderWithTheme(<CloudPulseDashboardSelect {...props} />);
+      expect(
+        screen.getByRole('option', { name: dashboardLabel })
+      ).toBeInTheDocument();
+    }),
+    it('Should select the option on click', () => {
+      renderWithTheme(<CloudPulseDashboardSelect {...props} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
+      fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+      fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
 
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      dashboardLabel
-    );
-  });
-  it('Should select the default value from preferences', () => {
-    renderWithTheme(
-      <CloudPulseDashboardSelect {...props} defaultValue={1} savePreferences />
-    );
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'value',
+        dashboardLabel
+      );
+    }),
+    it('Should select the default value from preferences', () => {
+      renderWithTheme(
+        <CloudPulseDashboardSelect
+          {...props}
+          defaultValue={1}
+          savePreferences
+        />
+      );
 
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      dashboardLabel
-    );
-  });
+      expect(screen.getByRole('combobox')).toHaveAttribute(
+        'value',
+        dashboardLabel
+      );
+    });
 
   it('Should show error message when only dashboard call fails', () => {
     vi.spyOn(utils, 'getAllDashboards').mockReturnValue({

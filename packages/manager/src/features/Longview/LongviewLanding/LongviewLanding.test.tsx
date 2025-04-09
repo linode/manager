@@ -9,8 +9,8 @@ import {
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import {
-  filterLongviewClientsByQuery,
   LongviewClients,
+  filterLongviewClientsByQuery,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
@@ -56,15 +56,15 @@ describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
     expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
       clients[0],
-    ]);
-    expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
-      clients
-    );
-    expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]);
-    expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]);
-    expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
-      []
-    );
+    ]),
+      expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
+        clients
+      ),
+      expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]),
+      expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]),
+      expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
+        []
+      );
   });
 
   describe('Sorting helpers', () => {
@@ -82,7 +82,11 @@ describe('Utility Functions', () => {
 
       it('should respect the optional order argument', () => {
         expect([4, 3, 5, 1, 2].sort((a, b) => sortFunc(a, b, 'asc'))).toEqual([
-          1, 2, 3, 4, 5,
+          1,
+          2,
+          3,
+          4,
+          5,
         ]);
 
         expect(

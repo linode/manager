@@ -1,12 +1,7 @@
-import {
-  useAllLinodeConfigsQuery,
-  useGrants,
-  useLinodeQuery,
-} from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
@@ -19,40 +14,24 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
+import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants } from 'src/queries/profile/profile';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
-import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './UpgradeInterfaces/constants';
-import { getUnableToUpgradeTooltipText } from './UpgradeInterfaces/utils';
 
 const LinodeConfigs = () => {
   const theme = useTheme();
-  const location = useLocation();
-  const history = useHistory();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { canUpgradeInterfaces, unableToUpgradeReasons } =
-    useCanUpgradeInterfaces(
-      linode?.lke_cluster_id,
-      linode?.region,
-      linode?.interface_generation
-    );
-
-  const unableToUpgradeTooltip = getUnableToUpgradeTooltipText(
-    unableToUpgradeReasons
-  );
-  const upgradeInterfacesTooltipText =
-    unableToUpgradeTooltip ?? DEFAULT_UPGRADE_BUTTON_HELPER_TEXT;
 
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
@@ -67,16 +46,17 @@ const LinodeConfigs = () => {
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
-  const [isLinodeConfigDialogOpen, setIsLinodeConfigDialogOpen] =
-    React.useState(false);
-  const [isDeleteConfigDialogOpen, setIsDeleteConfigDialogOpen] =
-    React.useState(false);
-  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] =
-    React.useState(false);
-
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
+  const [
+    isLinodeConfigDialogOpen,
+    setIsLinodeConfigDialogOpen,
+  ] = React.useState(false);
+  const [
+    isDeleteConfigDialogOpen,
+    setIsDeleteConfigDialogOpen,
+  ] = React.useState(false);
+  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
+    false
+  );
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -121,18 +101,6 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        {isLinodeInterfacesEnabled &&
-          linode?.interface_generation !== 'linode' && (
-            <Button
-              alwaysShowTooltip
-              buttonType="outlined"
-              disabled={isReadOnly || !canUpgradeInterfaces}
-              onClick={openUpgradeInterfacesDialog}
-              tooltipText={upgradeInterfacesTooltipText}
-            >
-              Upgrade Interfaces
-            </Button>
-          )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>

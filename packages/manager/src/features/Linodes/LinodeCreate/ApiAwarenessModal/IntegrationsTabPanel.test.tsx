@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { gettingStartedGuides as ansibleResources } from './AnsibleIntegrationResources';
@@ -31,21 +30,13 @@ vi.mock('@reach/tabs', async () => {
 
 describe('IntegrationsTabPanel', () => {
   it('Should render IntegrationsTabPanel', () => {
-    renderWithTheme(
-      <Tabs>
-        <IntegrationsTabPanel {...defaultProps} />
-      </Tabs>
-    );
+    renderWithTheme(<IntegrationsTabPanel {...defaultProps} />);
     expect(
       screen.getByPlaceholderText('Select Integration')
     ).toBeInTheDocument();
   });
   it('Should update the state correctly and render relevant resources when Ansible is selected', async () => {
-    renderWithTheme(
-      <Tabs>
-        <IntegrationsTabPanel {...defaultProps} />
-      </Tabs>
-    );
+    renderWithTheme(<IntegrationsTabPanel {...defaultProps} />);
 
     // Check initial value of the Inegrations field
     expect(screen.getByPlaceholderText('Select Integration')).toHaveValue('');
@@ -78,11 +69,7 @@ describe('IntegrationsTabPanel', () => {
     });
   });
   it('Should update the state correctly and render relevant resources when Terraform is selected', async () => {
-    renderWithTheme(
-      <Tabs>
-        <IntegrationsTabPanel {...defaultProps} />
-      </Tabs>
-    );
+    renderWithTheme(<IntegrationsTabPanel {...defaultProps} />);
 
     // Check initial value of the Inegrations field
     expect(screen.getByPlaceholderText('Select Integration')).toHaveValue('');

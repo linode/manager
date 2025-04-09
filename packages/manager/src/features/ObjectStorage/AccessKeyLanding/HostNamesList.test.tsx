@@ -1,9 +1,9 @@
-import { regionFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesList } from './HostNamesList';

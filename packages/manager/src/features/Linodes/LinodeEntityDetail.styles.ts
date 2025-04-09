@@ -1,12 +1,13 @@
 // This component was built assuming an unmodified MUI <Table />
-import { Typography as FontTypography } from '@linode/design-language-system';
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Typography as FontTypography } from '@linode/design-language-system';
+
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
+import Grid from '@mui/material/Grid2';
+import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -43,6 +44,14 @@ export const StyledColumnLabelGrid = styled(Grid, {
   color: theme.textColors.headlineStatic,
   font: theme.font.bold,
 }));
+
+export const StyledSummaryGrid = styled(Grid, { label: 'StyledSummaryGrid' })(
+  ({ theme }) => ({
+    '& p': {
+      color: theme.textColors.tableStatic,
+    },
+  })
+);
 
 export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
   ({ theme }) => ({
@@ -113,7 +122,7 @@ export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
 export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
   ({ theme }) => ({
     alignItems: 'center',
-    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
+    backgroundColor: theme.tokens.interaction.Background.Secondary,
     display: 'flex',
     font: FontTypography.Code,
     padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
@@ -122,7 +131,6 @@ export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
 
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
-    alignItems: 'center',
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
     display: 'flex',
@@ -191,7 +199,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
       fontSize: 15,
     },
     alignItems: 'center',
-    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
+    backgroundColor: theme.tokens.interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
     font: FontTypography.Code,
@@ -214,7 +222,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
     '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.alias.Interaction.Background.Secondary});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.interaction.Background.Secondary});`,
       bottom: 0,
       content: '""',
       height: '100%',

@@ -24,7 +24,7 @@ export const Footer = React.memo(() => {
           xs: 'column',
         }}
         sx={(theme) => ({
-          borderTop: `1px solid ${theme.tokens.component.GlobalFooter.Border}`,
+          borderTop: `1px solid ${theme.tokens.footer.Border}`,
           padding: `12px 16px`,
         })}
         textAlign={{
@@ -66,7 +66,7 @@ export const Footer = React.memo(() => {
         >
           <Typography
             sx={(theme) => ({
-              color: theme.tokens.alias.Content.Text.Primary.Default,
+              color: theme.tokens.content.Text.Primary.Default,
             })}
             variant="body1"
           >
@@ -84,7 +84,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     marginLeft: 0,
   },
   '&:hover': {
-    color: theme.tokens.component.GlobalFooter.Link.Hover,
+    color: theme.tokens.footer.Link.Hover,
   },
-  color: theme.tokens.component.GlobalFooter.Link.Default,
+  color: theme.tokens.footer.Link.Default,
 }));

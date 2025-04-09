@@ -1,10 +1,10 @@
-import { Box, Drawer, IconButton, Typography } from '@linode/ui';
+import { Box, IconButton, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
-import { NotFound } from 'src/components/NotFound';
+import { Drawer } from 'src/components/Drawer';
 import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
 
 interface Props {
@@ -24,7 +24,6 @@ export const KubeConfigDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       error={failureReason}
       isFetching={isFetching}
       onClose={closeDrawer}
@@ -45,8 +44,8 @@ export const KubeConfigDrawer = (props: Props) => {
         </IconButton>
       </Box>
       <CodeBlock
-        analyticsLabel="Kube Config Yaml"
         code={(data ?? '').trim()}
+        analyticsLabel="Kube Config Yaml"
         handleCopyIconClick={() => null}
         language="yaml"
       />

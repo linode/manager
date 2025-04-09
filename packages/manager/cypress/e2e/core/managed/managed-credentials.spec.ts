@@ -2,6 +2,7 @@
  * @file Integration tests for Managed credentials.
  */
 
+import { credentialFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateCredential,
@@ -12,8 +13,6 @@ import {
 } from 'support/intercepts/managed';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-
-import { credentialFactory } from 'src/factories/managed';
 
 // Message that's shown when there are no Managed credentials.
 const noCredentialsMessage = "You don't have any Credentials on your account.";

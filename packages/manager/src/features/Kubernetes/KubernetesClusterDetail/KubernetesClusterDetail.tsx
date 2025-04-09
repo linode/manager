@@ -1,4 +1,3 @@
-import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -6,15 +5,14 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
-import {
-  getKubeHighAvailability,
-  useAPLAvailability,
-} from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { APLSummaryPanel } from './APLSummaryPanel';
@@ -30,23 +28,17 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-
-  const {
-    data: cluster,
-    error,
-    isLoading,
-  } = useKubernetesClusterQuery({
-    id,
-    isUsingBetaEndpoint,
-  });
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
   const { data: regionsData } = useRegionsQuery();
 
-  const { mutateAsync: updateKubernetesCluster } =
-    useKubernetesClusterMutation(id);
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    id
+  );
 
-  const { isClusterHighlyAvailable, showHighAvailability } =
-    getKubeHighAvailability(account, cluster);
+  const {
+    isClusterHighlyAvailable,
+    showHighAvailability,
+  } = getKubeHighAvailability(account, cluster);
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);

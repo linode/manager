@@ -1,11 +1,12 @@
-import { useGrants, useProfile } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
+import { Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
+import { useNavigate } from '@tanstack/react-router';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { useImportZoneMutation } from 'src/queries/domains';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { ImportZonePayload } from '@linode/api-v4/lib/domains';
@@ -53,12 +54,7 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Import a Zone"
-    >
+    <Drawer onClose={onClose} open={open} title="Import a Zone">
       {noPermission && (
         <Notice variant="error">
           You do not have permission to create new Domains.

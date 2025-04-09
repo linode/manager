@@ -13,7 +13,7 @@ import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useTabs } from 'src/hooks/useTabs';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';

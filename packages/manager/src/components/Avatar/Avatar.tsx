@@ -4,7 +4,8 @@ import { default as _Avatar } from '@mui/material/Avatar';
 import * as React from 'react';
 
 import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
-import { usePreferences, useProfile } from '@linode/queries';
+import { usePreferences } from 'src/queries/profile/preferences';
+import { useProfile } from 'src/queries/profile/profile';
 
 import type { SxProps, Theme } from '@mui/material';
 
@@ -62,8 +63,8 @@ export const Avatar = (props: AvatarProps) => {
   const savedAvatarColor = isAkamai
     ? theme.palette.primary.dark
     : !avatarColorPreference
-      ? theme.tokens.color.Neutrals[30]
-      : avatarColorPreference;
+    ? theme.tokens.color.Neutrals[30]
+    : avatarColorPreference;
 
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 

@@ -1,4 +1,9 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import {
+  accountFactory,
+  linodeFactory,
+  placementGroupFactory,
+  regionFactory,
+} from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetLinodeDetails,
@@ -17,9 +22,6 @@ import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { accountFactory, placementGroupFactory } from 'src/factories';
-
 import type { Linode } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
@@ -69,10 +71,10 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinode = mockLinodes[0];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      is_compliant: true,
       label: randomLabel(),
-      members: [],
       region: mockPlacementGroupRegion.id,
+      members: [],
+      is_compliant: true,
     });
 
     const mockPlacementGroupWithLinode = {
@@ -188,22 +190,22 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
-      is_compliant: true,
       label: randomLabel(),
       members: [],
-      placement_group_policy: 'flexible',
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
+      placement_group_policy: 'flexible',
     });
 
     const mockPlacementGroupAfterAssignment = {
       ...mockPlacementGroup,
-      is_compliant: false,
       members: [
         {
-          is_compliant: false,
           linode_id: mockLinode.id,
+          is_compliant: false,
         },
       ],
+      is_compliant: false,
     };
 
     const complianceWarning = `Placement Group ${mockPlacementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group.`;
@@ -294,11 +296,11 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
-      is_compliant: true,
       label: randomLabel(),
       members: [],
-      placement_group_policy: 'strict',
       region: mockPlacementGroupRegion.id,
+      is_compliant: true,
+      placement_group_policy: 'strict',
     });
 
     const complianceErrorMessage = `Assignment would break Placement Group's compliance, non compliant Linode IDs: [${mockLinode.id}]`;
@@ -376,18 +378,18 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinodeRemaining = mockLinodes[1];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      is_compliant: true,
       label: randomLabel(),
-      members: mockLinodes.map((linode: Linode) => ({
-        is_compliant: true,
-        linode_id: linode.id,
-      })),
       region: mockPlacementGroupRegion.id,
+      members: mockLinodes.map((linode: Linode) => ({
+        linode_id: linode.id,
+        is_compliant: true,
+      })),
+      is_compliant: true,
     });
 
     const mockPlacementGroupAfterUnassignment = {
       ...mockPlacementGroup,
-      members: [{ is_compliant: true, linode_id: mockLinodeRemaining.id }],
+      members: [{ linode_id: mockLinodeRemaining.id, is_compliant: true }],
     };
 
     mockGetRegions(mockRegions);

@@ -19,7 +19,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
 
   const history = useHistory();
 
-  const definitionLanding = '/alerts/definitions';
+  const definitionLanding = '/monitor/alerts/definitions';
 
   const { alertDetails, serviceType } = props;
   const alertId = alertDetails.id;
@@ -27,8 +27,9 @@ export const EditAlertResources = (props: EditAlertProps) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
-  const [showConfirmation, setShowConfirmation] =
-    React.useState<boolean>(false);
+  const [showConfirmation, setShowConfirmation] = React.useState<boolean>(
+    false
+  );
 
   React.useEffect(() => {
     setSelectedResources(
@@ -112,7 +113,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
         <Box alignSelf="flex-end" display="flex" gap={1} m={3} mb={0}>
           <Button
             onClick={() => {
-              history.push('/alerts/definitions');
+              history.push('/monitor/alerts/definitions');
             }}
             data-testid="cancel-save-resources"
             variant="text"

@@ -1,11 +1,11 @@
-import { useLinodeVolumesQuery } from '@linode/queries';
 import { Checkbox, Notice, Typography } from '@linode/ui';
-import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
+import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   distributedRegionWarning?: string;

@@ -1,8 +1,8 @@
-import { authenticate } from 'support/api/authentication';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 
 authenticate();

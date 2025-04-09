@@ -19,8 +19,8 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     usePlacementGroupsQuery: queryMocks.usePlacementGroupsQuery,

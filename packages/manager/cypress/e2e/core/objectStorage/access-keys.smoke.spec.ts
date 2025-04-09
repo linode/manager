@@ -2,18 +2,17 @@
  * @file Smoke tests for crucial Object Storage Access Keys operations.
  */
 
-import { mockGetAccount } from 'support/intercepts/account';
+import { objectStorageKeyFactory } from 'src/factories/objectStorage';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateAccessKey,
   mockDeleteAccessKey,
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
-import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-
+import { ui } from 'support/ui';
 import { accountFactory } from 'src/factories';
-import { objectStorageKeyFactory } from 'src/factories/objectStorage';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -24,8 +23,8 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can create access key - smoke', () => {
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       label: randomLabel(),
+      access_key: randomString(20),
       secret_key: randomString(39),
     });
 
@@ -98,9 +97,9 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can revoke access key - smoke', () => {
     const accessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
-      id: randomNumber(1, 99999),
       label: randomLabel(),
+      id: randomNumber(1, 99999),
+      access_key: randomString(20),
       secret_key: randomString(39),
     });
 

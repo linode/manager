@@ -2,6 +2,7 @@
  * @file Integration tests for Managed monitors.
  */
 
+import { monitorFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateServiceMonitor,
@@ -13,8 +14,6 @@ import {
 } from 'support/intercepts/managed';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-
-import { monitorFactory } from 'src/factories/managed';
 
 // Message that's shown when no Managed service monitors are set up.
 const noMonitorsMessage = "You don't have any Monitors on your account.";
@@ -43,9 +42,9 @@ describe('Managed Monitors tab', () => {
 
     // Confirm that each monitor is listed and shows the correct status.
     [
-      { expectedStatus: 'Verified', label: 'OK Test Monitor' },
-      { expectedStatus: 'Pending', label: 'Pending Test Monitor' },
-      { expectedStatus: 'Failed', label: 'Problem Test Monitor' },
+      { label: 'OK Test Monitor', expectedStatus: 'Verified' },
+      { label: 'Pending Test Monitor', expectedStatus: 'Pending' },
+      { label: 'Problem Test Monitor', expectedStatus: 'Failed' },
     ].forEach((monitorInfo) => {
       cy.findByText(monitorInfo.label)
         .should('be.visible')
@@ -68,11 +67,11 @@ describe('Managed Monitors tab', () => {
     const monitorMenuLabel = 'Action menu for Monitor New Monitor';
 
     const originalMonitor = monitorFactory.build({
-      body: '200',
-      credentials: [],
       id: monitorId,
+      body: '200',
       label: originalLabel,
       status: 'ok',
+      credentials: [],
     });
 
     const newMonitor = {
@@ -158,8 +157,8 @@ describe('Managed Monitors tab', () => {
     const monitorLabel = randomLabel();
     const monitorUrl = 'https://www.example.com';
     const newMonitor = monitorFactory.build({
-      address: monitorUrl,
       label: monitorLabel,
+      address: monitorUrl,
     });
 
     mockGetServiceMonitors([]).as('getMonitors');
@@ -217,9 +216,9 @@ describe('Managed Monitors tab', () => {
     const monitorMenuLabel = `Action menu for Monitor ${monitorLabel}`;
 
     const originalMonitor = monitorFactory.build({
-      address: monitorUrl,
       id: monitorId,
       label: monitorLabel,
+      address: monitorUrl,
       status: 'ok',
     });
 

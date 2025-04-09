@@ -1,7 +1,7 @@
-import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { regionFactory } from 'src/factories';
 import {
   accountTransferFactory,
   accountTransferNoResourceFactory,
@@ -18,10 +18,8 @@ import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
 import type { TransferDisplayDialogProps } from './TransferDisplayDialog';
 import type { RegionalNetworkUtilization } from '@linode/api-v4';
 
-const mockTransferData: RegionalNetworkUtilization =
-  accountTransferFactory.build();
-const mockTransferDataNoResource: RegionalNetworkUtilization =
-  accountTransferNoResourceFactory.build();
+const mockTransferData: RegionalNetworkUtilization = accountTransferFactory.build();
+const mockTransferDataNoResource: RegionalNetworkUtilization = accountTransferNoResourceFactory.build();
 
 export const transferDisplayDialogProps = (
   mockData: RegionalNetworkUtilization

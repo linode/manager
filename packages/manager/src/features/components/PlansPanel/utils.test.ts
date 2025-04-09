@@ -1,7 +1,7 @@
-import { regionAvailabilityFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
+import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
 
 import { PLAN_IS_CURRENTLY_UNAVAILABLE_COPY } from './constants';
@@ -23,8 +23,8 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', () => {
-  const actual = vi.importActual('@linode/queries');
+vi.mock('src/queries/account/account', () => {
+  const actual = vi.importActual('src/queries/account/account');
   return {
     ...actual,
     useAccount: queryMocks.useAccount,

@@ -1,11 +1,12 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import { PromotionalOffer } from 'src/featureFlags';
 
-export const promotionalOfferFactory =
-  Factory.Sync.makeFactory<PromotionalOffer>({
+export const promotionalOfferFactory = Factory.Sync.makeFactory<PromotionalOffer>(
+  {
     alt: 'Promotional Offer',
-    body: 'Sample promotional body. This offer is valid until January 1st. Try it out now.',
+    body:
+      'Sample promotional body. This offer is valid until January 1st. Try it out now.',
     buttons: [
       { href: '/object-storage/buckets', text: 'Try it Now', type: 'primary' },
       {
@@ -19,4 +20,5 @@ export const promotionalOfferFactory =
     footnote: 'Offer is inclusive of list price only.',
     logo: 'heavenly-bucket.svg',
     name: Factory.each((i) => `offer-${i}`),
-  });
+  }
+);

@@ -11,7 +11,8 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers, useProfile } from '@linode/queries';
+import { useAccountUsers } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -24,8 +25,9 @@ import type { Filter } from '@linode/api-v4';
 const XS_TO_SM_BREAKPOINT = 475;
 
 export const UsersLanding = () => {
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
-    React.useState<boolean>(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
+    false
+  );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
 
@@ -54,12 +56,7 @@ export const UsersLanding = () => {
   };
 
   // Since this query is disabled for restricted users, use isLoading.
-  const {
-    data: users,
-    error,
-    isFetching,
-    isLoading,
-  } = useAccountUsers({
+  const { data: users, error, isFetching, isLoading } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,

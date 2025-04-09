@@ -1,25 +1,23 @@
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import type { KubernetesCluster } from '@linode/api-v4';
 import {
-  mockGetClusterPools,
   mockGetClusters,
+  mockGetClusterPools,
   mockGetKubeconfig,
   mockGetKubernetesVersions,
   mockGetTieredKubernetesVersions,
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
-import { ui } from 'support/ui';
-import { readDownload } from 'support/util/downloads';
-import { getRegionById } from 'support/util/regions';
-
 import {
   accountFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
 } from 'src/factories';
-
-import type { KubernetesCluster } from '@linode/api-v4';
+import { getRegionById } from 'support/util/regions';
+import { readDownload } from 'support/util/downloads';
+import { ui } from 'support/ui';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('LKE landing page', () => {
   it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {

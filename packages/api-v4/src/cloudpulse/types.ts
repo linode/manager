@@ -9,7 +9,7 @@ export type DimensionFilterOperatorType =
   | 'startswith'
   | 'endswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertStatusType = 'enabled' | 'disabled' | 'in progress' | 'failed';
+export type AlertStatusType = 'enabled' | 'disabled';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'number'
@@ -328,8 +328,3 @@ export interface EditAlertPayloadWithService
 }
 
 export type AlertStatusUpdateType = 'Enable' | 'Disable';
-
-export interface EntityAlertUpdatePayload {
-  entityId: string;
-  alert: Alert;
-}

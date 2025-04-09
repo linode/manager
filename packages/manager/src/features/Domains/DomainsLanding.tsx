@@ -24,7 +24,8 @@ import {
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import { useLinodesQuery, useProfile } from '@linode/queries';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
@@ -82,11 +83,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
     ['+order_by']: orderBy,
   };
 
-  const {
-    data: domains,
-    error,
-    isLoading,
-  } = useDomainsQuery(
+  const { data: domains, error, isLoading } = useDomainsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

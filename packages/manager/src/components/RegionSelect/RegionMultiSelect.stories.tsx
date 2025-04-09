@@ -1,9 +1,9 @@
 import { Box } from '@linode/ui';
-import { regions, sortByString } from '@linode/utilities';
 import React, { useState } from 'react';
 
-// @todo: modularization - Move `SelectedRegionsList` to the `/data` directory in the `@linode/shared` package.
+import { regions } from 'src/__data__/regionsData';
 import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
+import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
 
@@ -48,7 +48,6 @@ const meta: Meta<RegionMultiSelectProps> = {
     disabled: false,
     errorText: '',
     isClearable: false,
-    isGeckoLAEnabled: false,
     label: 'Regions',
     placeholder: 'Select Regions or type to search',
     regions,

@@ -1,8 +1,9 @@
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import {
@@ -36,15 +37,17 @@ export const UpgradeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateKubernetesCluster } =
-    useKubernetesClusterMutation(clusterID);
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    clusterID
+  );
 
   const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
-  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] =
-    React.useState(false);
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
+    false
+  );
 
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);

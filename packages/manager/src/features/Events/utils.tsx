@@ -1,9 +1,9 @@
-import { formatDuration } from '@linode/utilities';
 import { Duration } from 'luxon';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import { parseAPIDate } from 'src/utilities/date';
+import { formatDuration } from 'src/utilities/formatDuration';
 
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';

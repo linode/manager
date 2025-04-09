@@ -2,13 +2,13 @@
  * @file Integration tests for Managed navigation.
  */
 
-import { userPreferencesFactory } from '@linode/utilities';
 import {
-  managedAccount,
-  nonManagedAccount,
-  visitUrlWithManagedDisabled,
-  visitUrlWithManagedEnabled,
-} from 'support/api/managed';
+  contactFactory,
+  credentialFactory,
+  managedIssueFactory,
+  monitorFactory,
+} from 'src/factories/managed';
+import { userPreferencesFactory } from 'src/factories/profile';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import {
   mockGetContacts,
@@ -20,14 +20,12 @@ import {
 } from 'support/intercepts/managed';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-
 import {
-  contactFactory,
-  credentialFactory,
-  managedIssueFactory,
-  monitorFactory,
-} from 'src/factories/managed';
-
+  managedAccount,
+  nonManagedAccount,
+  visitUrlWithManagedDisabled,
+  visitUrlWithManagedEnabled,
+} from 'support/api/managed';
 import type { UserPreferences } from '@linode/api-v4';
 
 // Array of URLs to all Managed-related pages.

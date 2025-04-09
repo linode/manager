@@ -1,7 +1,7 @@
-import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertsRegionFilter } from './AlertsRegionFilter';

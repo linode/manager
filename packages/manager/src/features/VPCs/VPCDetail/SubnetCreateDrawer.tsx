@@ -1,23 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useCreateSubnetMutation,
-  useGrants,
-  useProfile,
-  useVPCQuery,
-} from '@linode/queries';
-import {
-  ActionsPanel,
-  Drawer,
-  FormHelperText,
-  Notice,
-  Stack,
-  TextField,
-} from '@linode/ui';
-import { createSubnetSchemaIPv4 } from '@linode/validation';
+import { FormHelperText, Notice, Stack, TextField } from '@linode/ui';
+import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   RESERVED_IP_NUMBER,
@@ -25,7 +15,7 @@ import {
   getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
-import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
+import type { CreateSubnetPayload } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -44,7 +34,7 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
-    vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
+    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
   );
 
   const {
@@ -61,12 +51,12 @@ export const SubnetCreateDrawer = (props: Props) => {
     setError,
     watch,
   } = useForm<CreateSubnetPayload>({
-    mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchemaIPv4),
-    values: {
+    defaultValues: {
       ipv4: recommendedIPv4,
       label: '',
     },
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchema),
   });
 
   const ipv4 = watch('ipv4');
@@ -90,12 +80,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title={'Create Subnet'}
-    >
+    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}

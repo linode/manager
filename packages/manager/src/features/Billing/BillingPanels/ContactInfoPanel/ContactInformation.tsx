@@ -10,7 +10,8 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNotificationsQuery, usePreferences } from '@linode/queries';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import {
   BillingActionButton,
@@ -64,8 +65,10 @@ export const ContactInformation = React.memo((props: Props) => {
     focusEmail?: boolean;
   }>();
 
-  const [editContactDrawerOpen, setEditContactDrawerOpen] =
-    React.useState<boolean>(false);
+  const [
+    editContactDrawerOpen,
+    setEditContactDrawerOpen,
+  ] = React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
 

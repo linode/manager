@@ -128,7 +128,6 @@ packages/manager/test-report.xml
 **/manager/cypress/downloads/
 **/manager/cypress/results/
 **/manager/cypress/screenshots/
-**/manager/cypress/reports/
 
 packages/manager/cypress/fixtures/example.json
 

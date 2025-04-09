@@ -4,7 +4,7 @@ import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
 import type { ImageSelectVariant } from './ImageSelect';
 import type { Image, RegionSite } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * Given a Image Select "variant", this PR returns an

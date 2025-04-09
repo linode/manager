@@ -1,5 +1,4 @@
 import { deleteNodeBalancer, getNodeBalancers } from '@linode/api-v4';
-import { nodeBalancerFactory } from '@linode/utilities';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { entityTag } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
@@ -7,7 +6,7 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import { isTestLabel } from './common';
-
+import { nodeBalancerFactory } from 'src/factories';
 import type { NodeBalancer } from '@linode/api-v4';
 
 export const makeNodeBalCreateReq = (nodeBal: NodeBalancer) => {

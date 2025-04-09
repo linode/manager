@@ -1,4 +1,3 @@
-import { listToItemsByID } from '@linode/queries';
 import {
   Box,
   Button,
@@ -10,13 +9,13 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Link } from 'src/components/Link';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';

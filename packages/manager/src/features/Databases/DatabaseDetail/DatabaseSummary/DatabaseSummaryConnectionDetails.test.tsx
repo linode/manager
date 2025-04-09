@@ -22,13 +22,9 @@ const queryMocks = vi.hoisted(() => ({
   useDatabaseCredentialsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useDatabaseCredentialsQuery: queryMocks.useDatabaseCredentialsQuery,
-  };
-});
+vi.mock('src/queries/databases/databases', () => ({
+  useDatabaseCredentialsQuery: queryMocks.useDatabaseCredentialsQuery,
+}));
 
 describe('DatabaseSummaryConnectionDetails', () => {
   it('should display correctly for default db', async () => {

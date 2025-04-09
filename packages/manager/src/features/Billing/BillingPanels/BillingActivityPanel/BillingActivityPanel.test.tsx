@@ -13,20 +13,13 @@ import {
   paymentToActivityFeedItem,
   transactionDateOptions,
 } from './BillingActivityPanel';
-
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
-  return {
-    ...actual,
-    getUserTimezone: vi.fn().mockReturnValue('utc'),
-  };
-});
+vi.mock('../../../../utilities/getUserTimezone');
 
 // Mock global Date object so Transaction Date tests are deterministic.
 global.Date.now = vi.fn(() => new Date('2020-01-02T00:00:00').getTime());
 
 vi.mock('@linode/api-v4/lib/account', async () => {
-  const actual = await vi.importActual('@linode/api-v4/lib/account');
+  const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
@@ -83,10 +76,9 @@ describe('BillingActivityPanel', () => {
       <BillingActivityPanel />
     );
 
-    const transactionTypeSelect = getByLabelText('Transaction Types');
-
     // Test selecting "Invoices"
     await waitFor(() => {
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'invoice' },
       });
@@ -95,6 +87,7 @@ describe('BillingActivityPanel', () => {
 
     // Test selecting "Payments"
     await waitFor(() => {
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'payment' },
       });

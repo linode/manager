@@ -1,13 +1,13 @@
-import { ActionsPanel } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from '@linode/queries';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { ActionButtonsProps } from '@linode/ui';
+import type { ActionButtonsProps } from 'src/components/ActionsPanel/ActionsPanel';
 import type { ConfirmationDialogProps } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import type { TypeToConfirmProps } from 'src/components/TypeToConfirm/TypeToConfirm';
 

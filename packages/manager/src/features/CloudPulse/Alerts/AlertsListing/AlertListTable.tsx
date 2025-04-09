@@ -14,8 +14,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
-import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertTableRow } from './AlertTableRow';
 import { AlertListingTableLabelMap } from './constants';
 
@@ -36,26 +34,18 @@ export interface AlertsListTableProps {
    */
   isLoading: boolean;
   /**
-   * Callback to scroll to the button element on page change
-   */
-  scrollToElement: () => void;
-  /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
 }
 
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
-  const { alerts, error, isLoading, scrollToElement, services } = props;
+  const { alerts, error, isLoading, services } = props;
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error in fetching the alerts.')
     : undefined;
   const history = useHistory();
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
-
-  const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -65,20 +55,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     history.push(`${location.pathname}/edit/${serviceType}/${id}`);
   };
 
-  const handleEnableDisable = (alert: Alert) => {
-    setSelectedAlert(alert);
-    setIsDialogOpen(true);
-  };
-
-  const handleCancel = React.useCallback(() => {
-    setIsDialogOpen(false);
-  }, []);
-
-  const handleConfirm = React.useCallback(
-    (alert: Alert, currentStatus: boolean) => {
-      const toggleStatus = currentStatus ? 'disabled' : 'enabled';
-      const errorStatus = currentStatus ? 'Disabling' : 'Enabling';
-      setIsUpdating(true);
+  const handleEnableDisable = React.useCallback(
+    (alert: Alert) => {
+      const toggleStatus = alert.status === 'enabled' ? 'disabled' : 'enabled';
+      const errorStatus =
+        toggleStatus === 'disabled' ? 'Disabling' : 'Enabling';
       editAlertDefinition({
         alertId: alert.id,
         serviceType: alert.service_type,
@@ -86,138 +67,97 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       })
         .then(() => {
           // Handle success
-          enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
+          enqueueSnackbar(`Alert ${toggleStatus}`, {
             variant: 'success',
           });
         })
-        .catch((updateError: APIError[]) => {
+        .catch(() => {
           // Handle error
-          const errorResponse = getAPIErrorOrDefault(
-            updateError,
-            `${errorStatus} alert failed`
-          );
-          enqueueSnackbar(errorResponse[0].reason, {
+          enqueueSnackbar(`${errorStatus} alert failed`, {
             variant: 'error',
           });
-        })
-        .finally(() => {
-          setIsDialogOpen(false);
-          setIsUpdating(false);
         });
     },
     [editAlertDefinition]
   );
 
-  const isEnabled = selectedAlert.status !== 'disabled';
-
   return (
-    <>
-      <OrderBy
-        data={alerts}
-        order="asc"
-        orderBy="service_type"
-        preferenceKey="alerts-landing"
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              count,
-              data: paginatedAndOrderedAlerts,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => (
-              <>
-                <Grid
-                  sx={{
-                    marginTop: 2,
-                  }}
-                >
-                  <Table colCount={7} data-qa="alert-table" size="small">
-                    <TableHead>
-                      <TableRow>
-                        {AlertListingTableLabelMap.map((value) => (
-                          <TableSortCell
-                            handleClick={(orderBy, order) => {
-                              if (order) {
-                                handleOrderChange(orderBy, order);
-                                handlePageChange(1);
-                              }
-                            }}
-                            active={orderBy === value.label}
-                            data-qa-header={value.label}
-                            data-qa-sorting={value.label}
-                            direction={order}
-                            key={value.label}
-                            label={value.label}
-                            noWrap
-                          >
-                            {value.colName}
-                          </TableSortCell>
-                        ))}
-                        <TableCell actionCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={_error}
-                        length={paginatedAndOrderedAlerts.length}
-                        loading={isLoading}
-                        loadingProps={{ columns: 6 }}
-                      />
-                      {paginatedAndOrderedAlerts?.map((alert) => (
-                        <AlertTableRow
-                          handlers={{
-                            handleDetails: () => handleDetails(alert),
-                            handleEdit: () => handleEdit(alert),
-                            handleEnableDisable: () =>
-                              handleEnableDisable(alert),
-                          }}
-                          alert={alert}
-                          key={alert.id}
-                          services={services}
-                        />
+    <OrderBy
+      data={alerts}
+      order="asc"
+      orderBy="service"
+      preferenceKey="alerts-landing"
+    >
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Paginate data={orderedData}>
+          {({
+            count,
+            data: paginatedAndOrderedAlerts,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize,
+          }) => (
+            <>
+              <Grid
+                sx={{
+                  marginTop: 2,
+                }}
+              >
+                <Table colCount={7} data-qa="alert-table" size="small">
+                  <TableHead>
+                    <TableRow>
+                      {AlertListingTableLabelMap.map((value) => (
+                        <TableSortCell
+                          active={orderBy === value.label}
+                          data-qa-header={value.label}
+                          data-qa-sorting={value.label}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          key={value.label}
+                          label={value.label}
+                          noWrap
+                        >
+                          {value.colName}
+                        </TableSortCell>
                       ))}
-                    </TableBody>
-                  </Table>
-                </Grid>
-                <PaginationFooter
-                  handlePageChange={(page) => {
-                    handlePageChange(page);
-                    requestAnimationFrame(() => {
-                      scrollToElement();
-                    });
-                  }}
-                  handleSizeChange={(pageSize) => {
-                    handlePageSizeChange(pageSize);
-                    handlePageChange(1);
-                    requestAnimationFrame(() => {
-                      scrollToElement();
-                    });
-                  }}
-                  count={count}
-                  eventCategory="Alert Definitions Table"
-                  page={page}
-                  pageSize={pageSize}
-                  sx={{ border: 0 }}
-                />
-              </>
-            )}
-          </Paginate>
-        )}
-      </OrderBy>
-      <AlertConfirmationDialog
-        message={`Are you sure you want to ${
-          isEnabled ? 'disable' : 'enable'
-        } this alert definition?`}
-        alert={selectedAlert}
-        handleCancel={handleCancel}
-        handleConfirm={handleConfirm}
-        isEnabled={isEnabled}
-        isLoading={isUpdating}
-        isOpen={isDialogOpen}
-      />
-    </>
+                      <TableCell actionCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableContentWrapper
+                      error={_error}
+                      length={paginatedAndOrderedAlerts.length}
+                      loading={isLoading}
+                      loadingProps={{ columns: 6 }}
+                    />
+                    {paginatedAndOrderedAlerts?.map((alert) => (
+                      <AlertTableRow
+                        handlers={{
+                          handleDetails: () => handleDetails(alert),
+                          handleEdit: () => handleEdit(alert),
+                          handleEnableDisable: () => handleEnableDisable(alert),
+                        }}
+                        alert={alert}
+                        key={alert.id}
+                        services={services}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </Grid>
+              <PaginationFooter
+                count={count}
+                eventCategory="Alert Definitions Table"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
   );
 });

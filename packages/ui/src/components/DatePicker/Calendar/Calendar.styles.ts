@@ -13,23 +13,23 @@ export const DayBox = styled(Box, {
 })<DayBoxProps>(({ isSelected, isStartOrEnd, theme }) => ({
   '&:hover': {
     backgroundColor: !isStartOrEnd
-      ? theme.tokens.component.Calendar.HoverItem.Background
-      : theme.tokens.alias.Action.Primary.Hover,
-    border: `1px solid ${theme.tokens.component.Calendar.Border}`,
+      ? theme.tokens.calendar.HoverItem.Background
+      : theme.tokens.action.Primary.Hover,
+    border: `1px solid ${theme.tokens.calendar.Border}`,
     color: isStartOrEnd
-      ? theme.tokens.component.Calendar.SelectedItem.Text
-      : theme.tokens.component.Calendar.HoverItem.Text,
+      ? theme.tokens.calendar.SelectedItem.Text
+      : theme.tokens.calendar.HoverItem.Text,
   },
   alignItems: 'center',
   backgroundColor:
     isStartOrEnd || isSelected
-      ? theme.tokens.component.Calendar.SelectedItem.Background.Default
+      ? theme.tokens.calendar.SelectedItem.Background.Default
       : 'transparent',
   borderRadius: '50%',
   color:
     isStartOrEnd || isSelected
-      ? theme.tokens.component.Calendar.SelectedItem.Text
-      : theme.tokens.component.Calendar.Text.Default,
+      ? theme.tokens.calendar.SelectedItem.Text
+      : theme.tokens.calendar.Text.Default,
   cursor: 'pointer',
   display: 'flex',
   height: 40,

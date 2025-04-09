@@ -33,8 +33,8 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/firewalls', async () => {
+  const actual = await vi.importActual('src/queries/firewalls');
   return {
     ...actual,
     useAllFirewallDevicesQuery: queryMocks.useAllFirewallDevicesQuery,

@@ -1,8 +1,8 @@
-import { useStackScriptQuery } from '@linode/queries';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import type { RebuildLinodeFormValues } from './utils';
 import type { Image as ImageType, StackScript } from '@linode/api-v4';

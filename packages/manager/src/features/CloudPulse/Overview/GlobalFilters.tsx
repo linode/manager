@@ -1,6 +1,7 @@
 import { Box, Divider } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import { Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
@@ -35,8 +36,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleToggleAppliedFilter,
   } = props;
 
-  const { preferences, updateGlobalFilterPreference: updatePreferences } =
-    useAclpPreference();
+  const {
+    preferences,
+    updateGlobalFilterPreference: updatePreferences,
+  } = useAclpPreference();
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
@@ -111,7 +114,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             gap={2}
           >
             <CloudPulseDateTimeRangePicker
-              defaultValue={preferences?.[TIME_DURATION]}
+              defaultValue={preferences?.timeRange}
               handleStatsChange={handleTimeRangeChange}
               savePreferences
             />
@@ -122,13 +125,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                   marginTop: { md: theme.spacing(3.5) },
                 })}
                 aria-label="Refresh Dashboard Metrics"
-                color="inherit"
                 data-testid="global-refresh"
                 disabled={!selectedDashboard}
                 onClick={handleGlobalRefresh}
                 size="small"
               >
-                <Reload height="24px" width="24px" />
+                <StyledReload />
               </IconButton>
             </CloudPulseTooltip>
           </Box>
@@ -157,3 +159,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     </Grid>
   );
 });
+
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  '&:active': {
+    color: `${theme.palette.success}`,
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
+  height: '24px',
+  width: '24px',
+}));

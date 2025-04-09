@@ -1,35 +1,34 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import type { Linode } from '@linode/api-v4';
 import {
-  createLinodeRequestFactory,
-  linodeBackupsFactory,
   linodeFactory,
-} from '@linode/utilities';
-import { accountSettingsFactory } from '@src/factories';
+  linodeBackupsFactory,
+  accountSettingsFactory,
+  createLinodeRequestFactory,
+} from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { expectManagedDisabled } from 'support/api/managed';
-import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   mockGetAccountSettings,
   mockUpdateAccountSettings,
 } from 'support/intercepts/account';
 import {
-  interceptCancelLinodeBackups,
-  interceptCreateLinodeSnapshot,
-  interceptEnableLinodeBackups,
-  interceptGetLinode,
+  mockGetLinodes,
   mockEnableLinodeBackups,
   mockGetLinodeType,
   mockGetLinodeTypes,
-  mockGetLinodes,
+  interceptEnableLinodeBackups,
+  interceptGetLinode,
+  interceptCreateLinodeSnapshot,
+  interceptCancelLinodeBackups,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
+import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
 import { chooseRegion } from 'support/util/regions';
-
-import type { Linode } from '@linode/api-v4';
+import { expectManagedDisabled } from 'support/api/managed';
+import { createTestLinode } from 'support/util/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 const BackupsCancellationNote =
   'Once backups for this Linode have been canceled, you cannot re-enable them for 24 hours.';
@@ -58,10 +57,10 @@ describe('linode backups', () => {
 
     // Create a Linode that is not booted and which does not have backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
-      backups_enabled: false,
-      booted: false,
       label: randomLabel(),
       region: chooseRegion().id,
+      backups_enabled: false,
+      booted: false,
     });
 
     cy.defer(
@@ -98,7 +97,6 @@ describe('linode backups', () => {
         .should('be.visible')
         .within(() => {
           // Confirm that user is warned of additional backup charges.
-          // eslint-disable-next-line sonarjs/slow-regex
           cy.contains(/.* This will add .* to your monthly bill\./).should(
             'be.visible'
           );
@@ -168,10 +166,10 @@ describe('linode backups', () => {
     cy.tag('method:e2e');
     // Create a Linode that is not booted and which has backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
-      backups_enabled: true,
-      booted: false,
       label: randomLabel(),
       region: chooseRegion().id,
+      backups_enabled: true,
+      booted: false,
     });
 
     const snapshotName = randomLabel();
@@ -329,27 +327,27 @@ describe('"Enable Linode Backups" banner', () => {
       //
       // See `dcPricingMockLinodeTypes` exported from `support/constants/dc-specific-pricing.ts`.
       linodeFactory.build({
-        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-ord',
+        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[0].id,
       }),
       linodeFactory.build({
-        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-east',
+        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[1].id,
       }),
       linodeFactory.build({
-        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-west',
+        backups: { enabled: false },
         type: dcPricingMockLinodeTypesForBackups[2].id,
       }),
       linodeFactory.build({
-        backups: { enabled: false },
         label: randomLabel(),
         region: 'us-central',
+        backups: { enabled: false },
         type: 'g6-nanode-1',
       }),
     ];

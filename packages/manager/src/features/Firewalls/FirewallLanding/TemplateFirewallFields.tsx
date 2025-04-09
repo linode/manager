@@ -1,9 +1,9 @@
-import { useFirewallTemplatesQuery } from '@linode/queries';
 import { Select, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
+import { useFirewallTemplatesQuery } from 'src/queries/firewalls';
 
 import { PublicTemplateRules } from './PublicTemplateRules';
 import { VPCTemplateRules } from './VPCTemplateRules';

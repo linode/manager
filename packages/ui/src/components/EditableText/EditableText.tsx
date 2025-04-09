@@ -13,7 +13,7 @@ import type { TextFieldProps } from '../TextField';
 import type { Theme } from '@mui/material/styles';
 import type { PropsWithChildren } from 'react';
 
-const useStyles = makeStyles<void, 'editIcon' | 'icon' | 'breadcrumbText'>()(
+const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({
     button: {
       '&[aria-label="Save"]': {
@@ -99,12 +99,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon' | 'breadcrumbText'>()(
         textDecoration: 'underline !important',
       },
     },
-    breadcrumbText: {
-      color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
-      fontSize: '1rem !important',
-      paddingLeft: 0,
-    },
-  }),
+  })
 );
 
 interface BaseProps extends Omit<TextFieldProps, 'label'> {
@@ -140,10 +135,6 @@ interface BaseProps extends Omit<TextFieldProps, 'label'> {
    * Optional suffix to append to the text when it is not in editing mode
    */
   textSuffix?: string;
-  /**
-   * Whether this EditableText is used as a breadcrumb
-   */
-  isBreadcrumb?: boolean;
 }
 
 interface PropsWithoutLink extends BaseProps {
@@ -172,7 +163,7 @@ interface PropsWithLink extends BaseProps {
 export type EditableTextProps = PropsWithLink | PropsWithoutLink;
 
 export const EditableText = (props: EditableTextProps) => {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
@@ -182,7 +173,6 @@ export const EditableText = (props: EditableTextProps) => {
     disabledBreadcrumbEditButton,
     errorText,
     handleAnalyticsEvent,
-    isBreadcrumb,
     labelLink,
     onCancel,
     onEdit,
@@ -247,7 +237,7 @@ export const EditableText = (props: EditableTextProps) => {
   };
   const labelText = (
     <H1Header
-      className={cx(classes.root, { [classes.breadcrumbText]: isBreadcrumb })}
+      className={classes.root}
       data-qa-editable-text
       title={`${text}${textSuffix ?? ''}`}
     />
@@ -255,7 +245,7 @@ export const EditableText = (props: EditableTextProps) => {
 
   return !isEditing && !errorText ? (
     <div
-      className={cx(classes.container, classes.initial, className)}
+      className={`${classes.container} ${classes.initial} ${className}`}
       data-testid={'editable-text'}
     >
       {!!labelLink ? (
@@ -268,7 +258,7 @@ export const EditableText = (props: EditableTextProps) => {
       {/** pencil icon */}
       <Button
         aria-label={`Edit ${text}`}
-        className={cx(classes.button, classes.editIcon)}
+        className={`${classes.button} ${classes.editIcon}`}
         data-qa-edit-button
         disabled={disabledBreadcrumbEditButton}
         onClick={openEdit}
@@ -278,13 +268,11 @@ export const EditableText = (props: EditableTextProps) => {
     </div>
   ) : (
     <ClickAwayListener mouseEvent="onMouseDown" onClickAway={cancelEditing}>
-      <div className={cx(classes.container, className)} data-qa-edit-field>
+      <div className={`${classes.container} ${className}`} data-qa-edit-field>
         <TextField
           {...rest}
           inputProps={{
-            className: cx(classes.input, {
-              [classes.breadcrumbText]: isBreadcrumb,
-            }),
+            className: classes.input,
           }}
           InputProps={{ className: classes.inputRoot }}
           // eslint-disable-next-line

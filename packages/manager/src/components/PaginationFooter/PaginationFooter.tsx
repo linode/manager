@@ -1,11 +1,14 @@
-import { Box, Select } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { Box, TextField } from '@linode/ui';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { MenuItem } from 'src/components/MenuItem';
+
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { MIN_PAGE_SIZE, PAGE_SIZES } from './PaginationFooter.constants';
 
 import type { SxProps } from '@mui/material/styles';
+
+export const MIN_PAGE_SIZE = 25;
 
 export interface PaginationProps {
   count: number;
@@ -21,6 +24,8 @@ interface Props extends PaginationProps {
   handlePageChange: (page: number) => void;
   handleSizeChange: (pageSize: number) => void;
 }
+
+export const PAGE_SIZES = [MIN_PAGE_SIZE, 50, 75, 100, Infinity];
 
 const baseOptions = [
   { label: 'Show 25', value: PAGE_SIZES[0] },
@@ -64,7 +69,7 @@ export const PaginationFooter = (props: Props) => {
     <Box
       sx={{
         background: theme.bg.bgPaper,
-        border: `1px solid ${theme.tokens.component.Table.Row.Border}`,
+        border: `1px solid ${theme.tokens.table.Row.Border}`,
         borderTop: 0,
         ...sx,
       }}
@@ -83,25 +88,75 @@ export const PaginationFooter = (props: Props) => {
       )}
       {!fixedSize ? (
         <Box data-qa-pagination-page-size padding={0.5}>
-          <Select
-            listItemProps={(value) => {
-              return {
-                dataAttributes: {
-                  'data-qa-pagination-page-size-option': String(value.value),
-                },
-              };
+          <StyledTextField
+            SelectProps={{
+              MenuProps: {
+                disablePortal: true,
+              },
             }}
-            value={{
-              label: defaultPagination?.label ?? '',
-              value: defaultPagination?.value ?? '',
-            }}
+            defaultValue={defaultPagination}
             hideLabel
             label="Number of items to show"
-            onChange={(_e, value) => handleSizeChange(Number(value.value))}
-            options={finalOptions}
-          />
+            onChange={(e) => handleSizeChange(Number(e.target.value))}
+            select
+            value={pageSize}
+          >
+            {finalOptions.map((option) => (
+              <MenuItem
+                data-qa-pagination-page-size-option={option.value}
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </StyledTextField>
         </Box>
       ) : null}
     </Box>
   );
+};
+
+const StyledTextField = styled(TextField, {
+  label: 'StyledTextField',
+})(({ theme }) => ({
+  '& .MuiInput-root': {
+    backgroundColor: theme.bg.bgPaper,
+    border: '1px solid transparent',
+  },
+  '& .MuiList-root': {
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
+  '& .MuiSelect-select': {
+    border: 'none',
+  },
+  '& .MuiSvgIcon-root': {
+    margin: 0,
+    padding: 0,
+    position: 'relative',
+    top: 0,
+  },
+  '&.Mui-focused': {
+    border: `1px dotted ${theme.color.grey1}`,
+    boxShadow: 'none',
+  },
+}));
+
+/**
+ * Return the minimum page size needed to display a given number of items (`value`).
+ * Example: getMinimumPageSizeForNumberOfItems(30, [25, 50, 75]) === 50
+ */
+export const getMinimumPageSizeForNumberOfItems = (
+  numberOfItems: number,
+  pageSizes: number[] = PAGE_SIZES
+) => {
+  // Ensure the page sizes are sorted numerically.
+  const sortedPageSizes = [...pageSizes].sort((a, b) => a - b);
+
+  for (let i = 0; i < sortedPageSizes.length; i++) {
+    if (numberOfItems <= sortedPageSizes[i]) {
+      return sortedPageSizes[i];
+    }
+  }
+  return Infinity;
 };

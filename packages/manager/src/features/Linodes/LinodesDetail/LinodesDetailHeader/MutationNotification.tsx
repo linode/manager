@@ -5,11 +5,9 @@ import * as React from 'react';
 
 import { MBpsIntraDC } from 'src/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useStartLinodeMutationMutation,
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-} from '@linode/queries';
+import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 
 import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';

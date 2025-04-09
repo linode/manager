@@ -31,14 +31,14 @@ export const Radio = (props: RadioProps) => {
         <SvgIcon
           component={RadioIconRadioed}
           fontSize={props.size}
-          viewBox="0 0 20 20"
+          viewBox="0 0 25 25"
         />
       }
       icon={
         <SvgIcon
           component={RadioIcon}
           fontSize={props.size}
-          viewBox="0 0 20 20"
+          viewBox="0 0 25 25"
         />
       }
       data-qa-radio={props.checked || false}

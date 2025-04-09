@@ -1,5 +1,4 @@
 import {
-  ActionsPanel,
   Autocomplete,
   Button,
   Divider,
@@ -10,10 +9,11 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -501,12 +501,12 @@ export const NodeBalancerConfigPanel = (
           <Divider />
         </Grid>
         <Grid
+          container
+          spacing={2}
           sx={{
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}
-          container
-          spacing={2}
         >
           <StyledActionsPanel
             primaryButtonProps={

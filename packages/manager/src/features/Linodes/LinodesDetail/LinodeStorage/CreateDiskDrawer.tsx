@@ -1,12 +1,5 @@
 import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskCreateMutation,
-  useLinodeQuery,
-} from '@linode/queries';
-import {
-  ActionsPanel,
   Autocomplete,
-  Drawer,
   FormHelperText,
   InputAdornment,
   Notice,
@@ -20,10 +13,16 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeDiskCreateMutation,
+} from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -72,8 +71,9 @@ export const CreateDiskDrawer = (props: Props) => {
     id: linodeId,
   });
 
-  const { mutateAsync: createDisk, reset } =
-    useLinodeDiskCreateMutation(linodeId);
+  const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
+    linodeId
+  );
 
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
@@ -135,12 +135,7 @@ export const CreateDiskDrawer = (props: Props) => {
   ];
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Create Disk"
-    >
+    <Drawer onClose={onClose} open={open} title="Create Disk">
       <form onSubmit={formik.handleSubmit}>
         {disabled && <LinodePermissionsError />}
         <ModeSelect

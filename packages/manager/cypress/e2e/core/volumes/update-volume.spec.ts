@@ -1,13 +1,12 @@
-import { authenticate } from 'support/api/authentication';
-import { createActiveVolume } from 'support/api/volumes';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
-import { randomLabel } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
+import { Volume } from '@linode/api-v4';
 
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
-
-import type { Volume } from '@linode/api-v4';
+import { authenticate } from 'support/api/authentication';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { cleanUp } from 'support/util/cleanup';
+import { ui } from 'support/ui';
+import { createActiveVolume } from 'support/api/volumes';
 
 authenticate();
 describe('volume update flow', () => {
@@ -56,8 +55,10 @@ describe('volume update flow', () => {
         // Enter new label, click "Save Changes".
         cy.get('[data-qa-drawer="true"]').within(() => {
           cy.findByText('Edit Volume').should('be.visible');
-          cy.findByDisplayValue(volume.label).should('be.visible').click();
-          cy.focused().type(`{selectall}{backspace}${newLabel}`);
+          cy.findByDisplayValue(volume.label)
+            .should('be.visible')
+            .click()
+            .type(`{selectall}{backspace}${newLabel}`);
 
           cy.findByText('Save Changes').should('be.visible').click();
         });
@@ -122,8 +123,8 @@ describe('volume update flow', () => {
 
           cy.findByPlaceholderText('Type to choose or create a tag.')
             .should('be.visible')
-            .click();
-          cy.focused().type(`${newTags.join('{enter}')}{enter}`);
+            .click()
+            .type(`${newTags.join('{enter}')}{enter}`);
 
           cy.findByText('Save Changes').should('be.visible').click();
         });

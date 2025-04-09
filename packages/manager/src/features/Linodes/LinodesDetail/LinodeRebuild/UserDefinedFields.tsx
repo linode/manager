@@ -1,9 +1,9 @@
-import { useStackScriptQuery } from '@linode/queries';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
+import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import { UserDefinedFieldInput } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/UserDefinedFieldInput';
 import { separateUDFsByRequiredStatus } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/utilities';
@@ -28,8 +28,9 @@ export const UserDefinedFields = () => {
 
   const userDefinedFields = stackscript?.user_defined_fields;
 
-  const [requiredUDFs, optionalUDFs] =
-    separateUDFsByRequiredStatus(userDefinedFields);
+  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
+    userDefinedFields
+  );
 
   if (!stackscript || userDefinedFields?.length === 0) {
     return null;

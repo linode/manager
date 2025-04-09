@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-
-import { Link } from 'src/components/Link';
+import { Link } from 'react-router-dom';
 
 export interface Props {
   ipv4: string[];

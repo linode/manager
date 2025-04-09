@@ -1,8 +1,8 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { linodeFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertResources } from './AlertsResources';
@@ -15,8 +15,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -192,7 +192,7 @@ describe('AlertResources component tests', () => {
   it('should handle selection correctly and publish', async () => {
     const handleResourcesSelection = vi.fn();
 
-    const { getByTestId, getByText, queryByTestId } = renderWithTheme(
+    const { getByTestId, queryByTestId, getByText } = renderWithTheme(
       <AlertResources
         {...alertResourcesProp}
         alertResourceIds={['1', '2']}
@@ -254,8 +254,8 @@ describe('AlertResources component tests', () => {
     await userEvent.click(getByText('Select All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith(['1', '2', '3']);
 
-    // click deselect all in notice and test
-    await userEvent.click(getByText('Deselect All'));
+    // click unselect all in notice and test
+    await userEvent.click(getByText('Unselect All'));
     expect(handleResourcesSelection).toHaveBeenLastCalledWith([]);
   });
 });

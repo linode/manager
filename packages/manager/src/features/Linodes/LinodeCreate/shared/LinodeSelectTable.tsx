@@ -20,7 +20,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLinodesQuery } from '@linode/queries';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
@@ -146,7 +146,7 @@ export const LinodeSelectTable = (props: Props) => {
         isSearching={isFetching}
         label="Search"
         placeholder="Search"
-        value={preselectedLinodeId ? (field.value?.label ?? '') : query}
+        value={preselectedLinodeId ? field.value?.label ?? '' : query}
       />
       <Box>
         {matchesMdUp ? (

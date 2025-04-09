@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type {
   StackScript,
@@ -40,8 +40,9 @@ export const oneClickAppFactory = Factory.Sync.makeFactory<OCA>({
   website: 'https://www.linode.com',
 });
 
-export const userDefinedFieldFactory =
-  Factory.Sync.makeFactory<UserDefinedField>({
+export const userDefinedFieldFactory = Factory.Sync.makeFactory<UserDefinedField>(
+  {
     label: Factory.each((i) => `Field${i}`),
     name: Factory.each((i) => `field${i}`),
-  });
+  }
+);

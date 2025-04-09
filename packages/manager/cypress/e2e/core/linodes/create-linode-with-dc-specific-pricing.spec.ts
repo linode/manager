@@ -1,18 +1,18 @@
-import { linodeFactory } from '@linode/utilities';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
+import { linodeFactory } from '@src/factories';
 import {
+  dcPricingPlanPlaceholder,
+  dcPricingMockLinodeTypes,
   dcPricingDocsLabel,
   dcPricingDocsUrl,
-  dcPricingMockLinodeTypes,
-  dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
 import {
   mockCreateLinode,
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
 
 describe('Create Linode with DC-specific pricing', () => {
   /*
@@ -34,17 +34,15 @@ describe('Create Linode with DC-specific pricing', () => {
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
     )!;
-    const currentBackupPrice =
-      dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
-        (regionPrice) => regionPrice.id === initialRegion.id
-      )!;
+    const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === initialRegion.id
+    )!;
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
     )!;
-    const newBackupPrice =
-      dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
-        (regionPrice) => regionPrice.id === newRegion.id
-      )!;
+    const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
+      (regionPrice) => regionPrice.id === newRegion.id
+    )!;
 
     // Mock requests to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);

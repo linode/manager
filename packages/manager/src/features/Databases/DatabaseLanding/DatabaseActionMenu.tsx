@@ -3,8 +3,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -12,7 +10,6 @@ import { useIsDatabasesEnabled } from '../utilities';
 
 import type { DatabaseStatus, Engine } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import type { ActionType } from 'src/features/Account/utils';
 
 interface Props {
   databaseEngine: Engine;
@@ -66,73 +63,48 @@ export const DatabaseActionMenu = (props: Props) => {
     }
   };
 
-  const isDatabaseReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'database',
-    id: databaseId,
-  });
-
-  const getTooltipText = (action: ActionType) => {
-    return isDatabaseReadOnly
-      ? getRestrictedResourceText({
-          action,
-          isSingular: true,
-          resourceType: 'Databases',
-        })
-      : undefined;
-  };
-
   const actions: Action[] = [
     {
-      disabled:
-        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: handlers.handleManageAccessControls,
       title: 'Manage Access Controls',
-      tooltip: getTooltipText('edit'),
     },
     {
-      disabled:
-        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: handlers.handleResetPassword,
       title: 'Reset Root Password',
-      tooltip: getTooltipText('edit'),
     },
     {
-      disabled:
-        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
+      disabled: isDatabaseNotRunning || isDatabaseSuspended,
       onClick: () => {
         history.push({
           pathname: `/databases/${databaseEngine}/${databaseId}/resize`,
         });
       },
       title: 'Resize',
-      tooltip: getTooltipText('resize'),
     },
     {
-      disabled: isDatabaseNotRunning || isDatabaseReadOnly,
+      disabled: isDatabaseNotRunning,
       onClick: handlers.handleDelete,
       title: 'Delete',
-      tooltip: getTooltipText('delete'),
     },
   ];
 
   if (isDatabasesV2GA) {
     actions.unshift({
-      disabled: databaseStatus !== 'active' || isDatabaseReadOnly,
+      disabled: databaseStatus !== 'active',
       onClick: () => {
         handlers.handleSuspend();
       },
       title: 'Suspend',
-      tooltip: getTooltipText('suspend'),
     });
 
     actions.splice(4, 0, {
-      disabled: !isDatabaseSuspended || isDatabaseReadOnly,
+      disabled: !isDatabaseSuspended,
       onClick: () => {
         handleResume();
       },
       title: 'Resume',
-      tooltip: getTooltipText('resume'),
     });
   }
 

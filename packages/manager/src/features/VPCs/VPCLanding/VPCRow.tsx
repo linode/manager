@@ -1,4 +1,3 @@
-import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -7,10 +6,8 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-
-import { getIsVPCLKEEnterpriseCluster } from '../utils';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -37,11 +34,9 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
     id: vpc.id,
   });
 
-  const isVPCLKEEnterpriseCluster = getIsVPCLKEEnterpriseCluster(vpc);
-
   const actions: Action[] = [
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleEditVPC,
       title: 'Edit',
       tooltip: isVPCReadOnly
@@ -50,12 +45,10 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
     {
-      disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
+      disabled: isVPCReadOnly,
       onClick: handleDeleteVPC,
       title: 'Delete',
       tooltip: isVPCReadOnly
@@ -64,9 +57,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             isSingular: true,
             resourceType: 'VPCs',
           })
-        : isVPCLKEEnterpriseCluster
-          ? LKE_ENTERPRISE_VPC_WARNING
-          : undefined,
+        : undefined,
     },
   ];
 

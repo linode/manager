@@ -11,7 +11,8 @@ import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVers
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { useProfile, useRegionsQuery } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 

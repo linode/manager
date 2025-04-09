@@ -2,7 +2,7 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
-import { usePreferences } from '@linode/queries';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import { SortableTableHead } from './SortableTableHead';
 

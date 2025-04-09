@@ -1,7 +1,8 @@
-import { ActionsPanel, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sendSwitchAccountSessionExpiryEvent } from 'src/utilities/analytics/customEventAnalytics';
 

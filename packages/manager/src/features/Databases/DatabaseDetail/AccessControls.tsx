@@ -1,7 +1,8 @@
-import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Table } from 'src/components/Table';
@@ -88,14 +89,20 @@ export const AccessControls = (props: Props) => {
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  const [accessControlToBeRemoved, setAccessControlToBeRemoved] =
-    React.useState<null | string>(null);
+  const [
+    accessControlToBeRemoved,
+    setAccessControlToBeRemoved,
+  ] = React.useState<null | string>(null);
 
-  const [addAccessControlDrawerOpen, setAddAccessControlDrawerOpen] =
-    React.useState<boolean>(false);
+  const [
+    addAccessControlDrawerOpen,
+    setAddAccessControlDrawerOpen,
+  ] = React.useState<boolean>(false);
 
-  const { isPending: databaseUpdating, mutateAsync: updateDatabase } =
-    useDatabaseMutation(database.engine, database.id);
+  const {
+    isPending: databaseUpdating,
+    mutateAsync: updateDatabase,
+  } = useDatabaseMutation(database.engine, database.id);
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);

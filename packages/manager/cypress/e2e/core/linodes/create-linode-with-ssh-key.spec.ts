@@ -1,13 +1,15 @@
-import { linodeFactory, sshKeyFactory } from '@linode/utilities';
-import { mockGetUser, mockGetUsers } from 'support/intercepts/account';
-import { mockCreateLinode } from 'support/intercepts/linodes';
-import { mockCreateSSHKey } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
-import { linodeCreatePage } from 'support/ui/pages';
+import {
+  accountUserFactory,
+  linodeFactory,
+  sshKeyFactory,
+} from 'src/factories';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { accountUserFactory } from 'src/factories';
+import { mockGetUser, mockGetUsers } from 'support/intercepts/account';
+import { mockCreateLinode } from 'support/intercepts/linodes';
+import { linodeCreatePage } from 'support/ui/pages';
+import { ui } from 'support/ui';
+import { mockCreateSSHKey } from 'support/intercepts/profile';
 
 describe('Create Linode with SSH Key', () => {
   /*
@@ -28,8 +30,8 @@ describe('Create Linode with SSH Key', () => {
     });
 
     const mockUser = accountUserFactory.build({
-      ssh_keys: [mockSshKey.label],
       username: randomLabel(),
+      ssh_keys: [mockSshKey.label],
     });
 
     mockGetUsers([mockUser]);
@@ -88,8 +90,8 @@ describe('Create Linode with SSH Key', () => {
     });
 
     const mockUser = accountUserFactory.build({
-      ssh_keys: [],
       username: randomLabel(),
+      ssh_keys: [],
     });
 
     const mockUserWithKey = {

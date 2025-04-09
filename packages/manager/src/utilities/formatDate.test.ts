@@ -6,14 +6,7 @@ import {
 } from 'src/constants';
 
 import { formatDate, shouldHumanize } from './formatDate';
-
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
-  return {
-    ...actual,
-    getUserTimezone: vi.fn().mockReturnValue('utc'),
-  };
-});
+vi.mock('./getUserTimezone');
 
 describe('shouldHumanize', () => {
   it('should NOT humanize few days duration with day cutoff', () => {
@@ -29,7 +22,6 @@ describe('shouldHumanize', () => {
     expect(shouldHumanize(time, 'month')).toBeTruthy();
   });
 });
-
 describe('formatDate utility', () => {
   describe('Non-humanized dates', () => {
     it('should be displayed in 24-hour ISO format', () => {

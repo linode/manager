@@ -42,6 +42,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center',
     },
+    top: 2,
   },
 }));
 
@@ -52,14 +53,15 @@ export const StrengthIndicator = (props: Props) => {
 
   return (
     <Grid
-      sx={{
-        alignItems: 'center',
-        paddingLeft: 0,
-        paddingRight: 0,
-      }}
       className={classes.root}
       container
       data-qa-strength={strength}
+      spacing={1}
+      sx={{
+        alignItems: 'flex-end',
+        paddingLeft: 0,
+        paddingRight: 0,
+      }}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid className={classes.blockOuter} key={idx} size={3}>
@@ -74,7 +76,7 @@ export const StrengthIndicator = (props: Props) => {
           />
         </Grid>
       ))}
-      <Grid paddingLeft={1} size={3}>
+      <Grid className="py0" size={3}>
         <Typography
           className={classes.strengthText}
           data-qa-password-strength

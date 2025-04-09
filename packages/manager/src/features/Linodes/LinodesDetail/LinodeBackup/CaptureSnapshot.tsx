@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupSnapshotMutation } from '@linode/queries';
+import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';

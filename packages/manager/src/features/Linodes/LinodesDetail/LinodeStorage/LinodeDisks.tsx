@@ -16,11 +16,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-  useGrants,
-} from '@linode/queries';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants } from 'src/queries/profile/profile';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';

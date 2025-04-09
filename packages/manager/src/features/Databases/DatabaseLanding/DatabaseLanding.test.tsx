@@ -1,10 +1,7 @@
 import { capitalize } from '@linode/utilities';
-import {
-  screen,
-  within,
-  fireEvent,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -24,8 +21,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual('src/queries/profile/profile');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

@@ -3,27 +3,26 @@
  */
 
 import { createBucket } from '@linode/api-v4/lib/object-storage';
+import {
+  accountFactory,
+  createObjectStorageBucketFactoryLegacy,
+} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptGetNetworkUtilization,
   mockGetAccount,
 } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
-  interceptGetBucketAccess,
   interceptGetBuckets,
+  interceptGetBucketAccess,
   interceptUpdateBucketAccess,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
-
-import {
-  accountFactory,
-  createObjectStorageBucketFactoryLegacy,
-} from 'src/factories';
+import { cleanUp } from 'support/util/cleanup';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Create a bucket with the given label and cluster.
@@ -44,9 +43,9 @@ const setUpBucket = (
 ) => {
   return createBucket(
     createObjectStorageBucketFactoryLegacy.build({
+      label,
       cluster,
       cors_enabled,
-      label,
 
       // API accepts either `cluster` or `region`, but not both. Our factory
       // populates both fields, so we have to manually set `region` to `undefined`
@@ -96,17 +95,19 @@ describe('object storage end-to-end tests', () => {
 
     // Wait for loader to disappear, indicating that all buckets have been loaded.
     // Mitigates test failures stemming from M3-7833.
-    cy.findByTestId('Buckets').within(() => {
+    cy.findByLabelText('Buckets').within(() => {
       cy.findByLabelText('Content is loading').should('not.exist');
     });
 
-    ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    ui.entityHeader.find().within(() => {
+      ui.button.findByTitle('Create Bucket').should('be.visible').click();
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name (required)').click();
+        cy.findByText('Label').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${bucketRegion}{enter}`);
@@ -168,31 +169,31 @@ describe('object storage end-to-end tests', () => {
       interceptUpdateBucketAccess(bucketLabel, bucketCluster).as(
         'updateBucketAccess'
       );
-
-      // Navigate to new bucket page, upload and delete an object.
-      cy.visitWithLogin(bucketAccessPage);
-
-      cy.wait('@getBucketAccess');
-
-      // Make object public, confirm it can be accessed.
-      cy.findByLabelText('Access Control List (ACL)')
-        .should('be.visible')
-        .should('not.have.value', 'Loading access...')
-        .should('have.value', 'Private')
-        .click();
-      cy.focused().type('Public Read');
-
-      ui.autocompletePopper
-        .findByTitle('Public Read')
-        .should('be.visible')
-        .click();
-
-      ui.button.findByTitle('Save').should('be.visible').click();
-
-      // TODO Confirm that outgoing API request contains expected values.
-      cy.wait('@updateBucketAccess');
-
-      cy.findByText('Bucket access updated successfully.');
     });
+
+    // Navigate to new bucket page, upload and delete an object.
+    cy.visitWithLogin(bucketAccessPage);
+
+    cy.wait('@getBucketAccess');
+
+    // Make object public, confirm it can be accessed.
+    cy.findByLabelText('Access Control List (ACL)')
+      .should('be.visible')
+      .should('not.have.value', 'Loading access...')
+      .should('have.value', 'Private')
+      .click();
+    cy.focused().type('Public Read');
+
+    ui.autocompletePopper
+      .findByTitle('Public Read')
+      .should('be.visible')
+      .click();
+
+    ui.button.findByTitle('Save').should('be.visible').click();
+
+    // TODO Confirm that outgoing API request contains expected values.
+    cy.wait('@updateBucketAccess');
+
+    cy.findByText('Bucket access updated successfully.');
   });
 });

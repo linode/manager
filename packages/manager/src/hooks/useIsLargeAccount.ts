@@ -1,5 +1,5 @@
 import { LARGE_ACCOUNT_THRESHOLD } from 'src/constants';
-import { useLinodesQuery } from '@linode/queries';
+import { useLinodesQuery } from 'src/queries/linodes/linodes';
 
 export const useIsLargeAccount = (enabled = true) => {
   const { data: linodesData } = useLinodesQuery({}, {}, enabled);

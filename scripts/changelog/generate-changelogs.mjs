@@ -76,9 +76,9 @@ try {
             if (file === "README.md") {
               return;
             }
-            
+
             // Logic to parse the changeset file and generate the changelog content
-            const filePath = changesetDirectory(linodePackage) + path.sep + file;
+            const filePath = path.join(changesetDirectory(linodePackage), file);
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
               new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)

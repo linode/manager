@@ -1,22 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { isEmpty } from '@linode/api-v4';
-import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
+import { Paper, TextField, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
-
-import {
-  EDIT_ALERT_ERROR_FIELD_MAP,
-  MULTILINE_ERROR_SEPARATOR,
-  SINGLELINE_ERROR_SEPARATOR,
-  UPDATE_ALERT_SUCCESS_MESSAGE,
-} from '../constants';
 
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
@@ -24,19 +15,14 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import {
-  convertAlertDefinitionValues,
-  enhanceValidationSchemaWithEntityIdValidation,
-  handleMultipleError,
-} from '../Utils/utils';
+import { convertAlertDefinitionValues } from '../Utils/utils';
 import { EditAlertDefinitionFormSchema } from './schemas';
 
 import type {
-  APIError,
-  Alert,
   AlertServiceType,
   EditAlertDefinitionPayload,
 } from '@linode/api-v4';
+import type { Alert } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 export interface EditAlertProps {
@@ -60,18 +46,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
-  const flags = useFlags();
-  const editAlertSchema =
-    EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>;
   const formMethods = useForm<EditAlertDefinitionPayload>({
     defaultValues: filteredAlertDefinitionValues,
     mode: 'onBlur',
     resolver: yupResolver(
-      enhanceValidationSchemaWithEntityIdValidation({
-        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-        baseSchema: editAlertSchema,
-        serviceTypeObj: alertDetails.service_type,
-      }) as ObjectSchema<EditAlertDefinitionPayload>
+      EditAlertDefinitionFormSchema as ObjectSchema<EditAlertDefinitionPayload>
     ),
   });
 
@@ -83,28 +62,24 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
+      enqueueSnackbar('Alert successfully updated.', {
         variant: 'success',
       });
       history.push(definitionLanding);
     } catch (errors) {
-      handleMultipleError<EditAlertDefinitionPayload>({
-        errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
-        errors,
-        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
-        setError,
-        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
-      });
-
-      const rootError = errors.find((error: APIError) => !error.field);
-      if (rootError) {
-        enqueueSnackbar(`Editing alert failed: ${rootError.reason}`, {
-          variant: 'error',
-        });
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, { message: error.reason });
+        } else {
+          enqueueSnackbar(`Alert update failed: ${error.reason}`, {
+            variant: 'error',
+          });
+          setError('root', { message: error.reason });
+        }
       }
     }
   });
-  const definitionLanding = '/alerts/definitions';
+  const definitionLanding = '/monitor/alerts/definitions';
 
   const overrides = [
     {
@@ -118,16 +93,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       position: 2,
     },
   ];
-
-  const previousSubmitCount = React.useRef<number>(0);
-  React.useEffect(() => {
-    if (
-      !isEmpty(formState.errors) &&
-      formState.submitCount > previousSubmitCount.current
-    ) {
-      scrollErrorIntoView(undefined, { behavior: 'smooth' });
-    }
-  }, [formState.errors, formState.submitCount]);
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
@@ -146,7 +111,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 name="label"
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
-                placeholder="Enter a Name"
+                placeholder="Enter Name"
                 value={field.value ?? ''}
               />
             )}
@@ -162,7 +127,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 onBlur={field.onBlur}
                 onChange={(e) => field.onChange(e.target.value)}
                 optional
-                placeholder="Enter a Description"
+                placeholder="Enter Description"
                 value={field.value ?? ''}
               />
             )}

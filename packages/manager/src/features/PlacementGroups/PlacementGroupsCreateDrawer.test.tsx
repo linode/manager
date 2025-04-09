@@ -21,8 +21,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/placementGroups', async () => {
+  const actual = await vi.importActual('src/queries/placementGroups');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
@@ -80,8 +80,12 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should call the mutation when the form is submitted', async () => {
-    const { getByLabelText, getByPlaceholderText, getByRole, getByText } =
-      renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
+    const {
+      getByLabelText,
+      getByPlaceholderText,
+      getByRole,
+      getByText,
+    } = renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
 
     fireEvent.change(getByLabelText('Label'), {
       target: { value: 'my-label' },

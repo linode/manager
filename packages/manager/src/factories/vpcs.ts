@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type { VPC, VPCIP } from '@linode/api-v4';
 
@@ -19,13 +19,6 @@ export const vpcIPFactory = Factory.Sync.makeFactory<VPCIP>({
   config_id: Factory.each((i) => i),
   gateway: '192.0.2.1',
   interface_id: Factory.each((i) => i),
-  ipv6_addresses: [
-    {
-      slaac_address: '2001:DB8::0000',
-    },
-  ],
-  ipv6_is_public: null,
-  ipv6_range: null,
   linode_id: Factory.each((i) => i),
   nat_1_1: '192.0.2.97',
   prefix: 24,

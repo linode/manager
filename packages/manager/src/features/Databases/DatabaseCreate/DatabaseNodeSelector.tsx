@@ -12,6 +12,8 @@ import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.sty
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { useIsDatabasesEnabled } from '../utilities';
+
 import type {
   ClusterSize,
   DatabaseClusterSizeObject,
@@ -53,6 +55,7 @@ export const DatabaseNodeSelector = (props: Props) => {
     selectedTab,
   } = props;
 
+  const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
@@ -104,7 +107,7 @@ export const DatabaseNodeSelector = (props: Props) => {
       },
     ];
 
-    if (hasDedicated && selectedTab === 0) {
+    if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
       options.push({
         label: (
           <Typography component="div">
@@ -143,6 +146,7 @@ export const DatabaseNodeSelector = (props: Props) => {
     selectedTab,
     nodePricing,
     displayTypes,
+    isDatabasesV2Enabled,
     currentClusterSize,
     selectedClusterSize,
   ]);

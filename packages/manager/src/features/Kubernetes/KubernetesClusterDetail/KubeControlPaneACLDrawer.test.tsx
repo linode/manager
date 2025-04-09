@@ -28,8 +28,8 @@ const queryMocks = vi.hoisted(() => ({
     data: {
       acl: {
         addresses: {
-          ipv4: [],
-          ipv6: [],
+          ipv4: [''],
+          ipv6: [''],
         },
         enabled: false,
         'revision-id': '',
@@ -49,8 +49,9 @@ vi.mock('src/queries/kubernetes', async () => {
 
 describe('KubeControlPaneACLDrawer', () => {
   it('renders the drawer as expected when the cluster is migrated', async () => {
-    const { getAllByTestId, getAllByText, getByText, queryByText } =
-      renderWithTheme(<KubeControlPlaneACLDrawer {...props} />);
+    const { getAllByText, getByText, queryByText } = renderWithTheme(
+      <KubeControlPlaneACLDrawer {...props} />
+    );
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
     expect(getByText(ACL_DRAWER_STANDARD_TIER_ACL_COPY)).toBeVisible();
@@ -82,34 +83,12 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
 
-    // Confirm text input is disabled when ACL is disabled
-    const inputs = getAllByTestId('textfield-input');
-    expect(inputs).toHaveLength(3);
-    inputs.forEach((input) => {
-      expect(input).toBeDisabled();
-    });
-
     // Confirm notice does not display
     expect(
       queryByText(
         'Control Plane ACL has not yet been installed on this cluster. During installation, it may take up to 15 minutes for the access control list to be fully enforced.'
       )
     ).not.toBeInTheDocument();
-  });
-
-  it('confirms the revision ID and IP address fields are enabled when ACL is enabled', async () => {
-    const { getAllByTestId, getByText } = renderWithTheme(
-      <KubeControlPlaneACLDrawer {...props} />
-    );
-
-    const toggle = getByText('Enable Control Plane ACL');
-    await userEvent.click(toggle);
-
-    const inputs = getAllByTestId('textfield-input');
-    expect(inputs).toHaveLength(3);
-    inputs.forEach((input) => {
-      expect(input).toBeEnabled();
-    });
   });
 
   it('shows a notice and hides revision ID if cluster is not migrated', () => {

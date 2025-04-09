@@ -1,4 +1,3 @@
-import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -6,6 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { splitAt } from 'src/utilities/splitAt';
 
 import type { Domain } from '@linode/api-v4/lib/domains';
 import type { Theme } from '@mui/material/styles';

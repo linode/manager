@@ -1,8 +1,8 @@
-import { linodeFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
@@ -25,111 +25,60 @@ const ARIA_SELECTED = 'aria-selected';
 const ARIA_DISABLED = 'aria-disabled';
 
 describe('CloudPulseResourcesSelect component tests', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    linodeFactory.resetSequenceNumber();
-  });
-
-  it('renders with the correct label and placeholder', () => {
-    renderWithTheme(
+  it('should render disabled component if the the props are undefined or regions and service type does not have any resources', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    const { getByPlaceholderText, getByTestId } = renderWithTheme(
       <CloudPulseResourcesSelect
-        handleResourcesSelection={mockResourceHandler}
-        label="Resources"
-        region={'us-east'}
-        resourceType={'linode'}
-      />
-    );
-
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Select Resources')).toBeInTheDocument();
-  });
-
-  it('should render disabled component if the props are undefined or regions and service type does not have any resources', () => {
-    renderWithTheme(
-      <CloudPulseResourcesSelect
-        disabled
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={undefined}
         resourceType={undefined}
       />
     );
-
-    expect(screen.getByTestId('textfield-input')).toBeDisabled();
-  });
-
-  it('should render resources', async () => {
-    const mockLinodes = linodeFactory.buildList(2);
-
+    expect(getByTestId('resource-select')).toBeInTheDocument();
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
+  }),
+    it('should render resources happy path', () => {
+      queryMocks.useResourcesQuery.mockReturnValue({
+        data: linodeFactory.buildList(2),
+        isError: false,
+        isLoading: false,
+        status: 'success',
+      });
+      renderWithTheme(
+        <CloudPulseResourcesSelect
+          handleResourcesSelection={mockResourceHandler}
+          label="Resources"
+          region={'us-east'}
+          resourceType={'us-east'}
+        />
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+      expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+      expect(
+        screen.getByRole('option', {
+          name: 'linode-3',
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('option', {
+          name: 'linode-4',
+        })
+      ).toBeInTheDocument();
+    });
+  it('should be able to select all resources if resource selection limit is higher than number of resources', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
     });
-
-    renderWithTheme(
-      <CloudPulseResourcesSelect
-        handleResourcesSelection={mockResourceHandler}
-        label="Resources"
-        region={'us-east'}
-        resourceType={'us-east'}
-      />
-    );
-
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-
-    // Check for the actual linode labels from the mock data
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[0].label })
-    ).toBeInTheDocument();
-
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[1].label })
-    ).toBeInTheDocument();
-  });
-
-  it('should be able to select all resources if resource selection limit is higher than number of resources', async () => {
-    const mockLinodes = linodeFactory.buildList(2);
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
-    renderWithTheme(
-      <CloudPulseResourcesSelect
-        handleResourcesSelection={mockResourceHandler}
-        label="Resources"
-        region={'us-east'}
-        resourceType={'linode'}
-      />
-    );
-
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-    await userEvent.click(
-      await screen.findByRole('option', { name: SELECT_ALL })
-    );
-
-    // Check that both resources are selected
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[0].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[1].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-  });
-
-  it('should be able to deselect the selected resources', async () => {
-    const mockLinodes = linodeFactory.buildList(2);
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
@@ -138,33 +87,28 @@ describe('CloudPulseResourcesSelect component tests', () => {
         resourceType={'linode'}
       />
     );
-
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-    await userEvent.click(
-      await screen.findByRole('option', { name: SELECT_ALL })
-    );
-    await userEvent.click(
-      await screen.findByRole('option', { name: 'Deselect All' })
-    );
-
-    // Check that both resources are deselected
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(
-      await screen.findByRole('option', { name: mockLinodes[0].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'false');
+      screen.getByRole('option', {
+        name: 'linode-5',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
-      await screen.findByRole('option', { name: mockLinodes[1].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'false');
+      screen.getByRole('option', {
+        name: 'linode-6',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
 
-  it('should select multiple resources', async () => {
-    const mockLinodes = linodeFactory.buildList(3);
+  it('should be able to deselect the selected resources', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
     });
-
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
@@ -173,36 +117,66 @@ describe('CloudPulseResourcesSelect component tests', () => {
         resourceType={'linode'}
       />
     );
-
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-    userEvent.click(
-      await screen.findByRole('option', { name: mockLinodes[0].label })
-    );
-    userEvent.click(
-      await screen.findByRole('option', { name: mockLinodes[1].label })
-    );
-
-    // Check that the correct resources are selected/not selected
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
+    fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(
-      await screen.findByRole('option', { name: mockLinodes[0].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[1].label })
-    ).toHaveAttribute(ARIA_SELECTED, 'true');
-    expect(
-      await screen.findByRole('option', { name: mockLinodes[2].label })
+      screen.getByRole('option', {
+        name: 'linode-7',
+      })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
-      await screen.findByRole('option', { name: SELECT_ALL })
+      screen.getByRole('option', {
+        name: 'linode-8',
+      })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
 
+  it('should select multiple resources', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(3),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Resources"
+        region={'us-east'}
+        resourceType={'linode'}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    fireEvent.click(screen.getByRole('option', { name: 'linode-9' }));
+    fireEvent.click(screen.getByRole('option', { name: 'linode-10' }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-9',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-10',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-11',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'false');
+    expect(
+      screen.getByRole('option', {
+        name: 'Select All',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'false');
+  });
   it('Should select the default resource returned from preferences', () => {
-    const mockLinodes = linodeFactory.buildList(2);
-    const defaultId = '12';
-
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -210,7 +184,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
 
     renderWithTheme(
       <CloudPulseResourcesSelect
-        defaultValue={[defaultId]}
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
         label="Resources"
         region={'us-east'}
@@ -219,7 +193,19 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'linode-12',
+      })
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(
+      screen.getByRole('option', {
+        name: 'linode-13',
+      })
+    ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
 
   it('Should show appropriate error message on resources call failure', async () => {
@@ -229,46 +215,50 @@ describe('CloudPulseResourcesSelect component tests', () => {
       isLoading: false,
       status: 'error',
     });
-
     renderWithTheme(
       <CloudPulseResourcesSelect
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
         label="Resource"
         region={'us-east'}
         resourceType={'linode'}
+        savePreferences
       />
     );
     expect(screen.getByText('Failed to fetch Resource.')).toBeInTheDocument();
 
-    // Test with different label
+    // if the label is ABC, error message should be Failed to fetch ABC
     renderWithTheme(
       <CloudPulseResourcesSelect
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
         label="ABC"
         region={'us-east'}
         resourceType={'linode'}
+        savePreferences
       />
     );
     expect(screen.getByText('Failed to fetch ABC.')).toBeInTheDocument();
 
-    // Test with empty label
+    // if the label is empty , error message should be Failed to fetch Resources
     renderWithTheme(
       <CloudPulseResourcesSelect
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
         label=""
         region={'us-east'}
         resourceType={'linode'}
+        savePreferences
       />
     );
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
 
-  it('should handle resource selection limits correctly', async () => {
+  it('should be able to select limited resources and select/deselect all will not be available if resource are more than max resource selection limit', async () => {
     const user = userEvent.setup();
-    const mockLinodes = linodeFactory.buildList(12);
 
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
+      data: linodeFactory.buildList(12),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -284,39 +274,36 @@ describe('CloudPulseResourcesSelect component tests', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(screen.getByText('Select up to 10 Resources')).toBeInTheDocument();
 
-    // Select the first 10 resources
-    for (let i = 0; i < 10; i++) {
+    for (let i = 14; i <= 23; i++) {
       // eslint-disable-next-line no-await-in-loop
-      const option = await screen.findByRole('option', {
-        name: mockLinodes[i].label,
-      });
+      const option = await screen.findByRole('option', { name: `linode-${i}` });
       // eslint-disable-next-line no-await-in-loop
       await user.click(option);
     }
 
-    // Check we have 10 selected resources
     const selectedOptions = screen
       .getAllByRole('option')
       .filter((option) => option.getAttribute(ARIA_SELECTED) === 'true');
+
     expect(selectedOptions.length).toBe(10);
 
-    // Check that the 11th resource is disabled
-    expect(
-      screen.getByRole('option', { name: mockLinodes[10].label })
-    ).toHaveAttribute(ARIA_DISABLED, 'true');
+    const isResourceWithExceededLimit = await screen.findByRole('option', {
+      name: 'linode-24',
+    });
+    expect(isResourceWithExceededLimit).toHaveAttribute(ARIA_DISABLED, 'true');
 
-    // Check "Select All" is not available when there are more resources than the limit
     expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
   });
 
-  it('should handle "Select All" when resource count equals limit', async () => {
+  it('should be able to select all and deselect all the resources when number of resources are equal to resource limit', async () => {
     const user = userEvent.setup();
-    const mockLinodes = linodeFactory.buildList(10);
 
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: mockLinodes,
+      data: linodeFactory.buildList(10),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -335,11 +322,12 @@ describe('CloudPulseResourcesSelect component tests', () => {
     await user.click(screen.getByRole('option', { name: SELECT_ALL }));
     await user.click(screen.getByRole('option', { name: 'Deselect All' }));
 
-    // Check all resources are deselected
-    mockLinodes.forEach((linode) => {
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+
+    for (let i = 26; i <= 35; i++) {
       expect(
-        screen.getByRole('option', { name: linode.label })
+        screen.getByRole('option', { name: `linode-${i}` })
       ).toHaveAttribute(ARIA_SELECTED, 'false');
-    });
+    }
   });
 });

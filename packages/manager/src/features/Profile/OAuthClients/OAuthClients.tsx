@@ -16,7 +16,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useOAuthClientsQuery } from '@linode/queries';
+import { useOAuthClientsQuery } from 'src/queries/account/oauth';
 
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';

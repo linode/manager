@@ -1,3 +1,5 @@
+import type { ActiveLongviewPlan } from '@linode/api-v4';
+import { longviewActivePlanFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   mockGetLongviewPlan,
@@ -5,10 +7,6 @@ import {
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-
-import { longviewActivePlanFactory } from 'src/factories';
-
-import type { ActiveLongviewPlan } from '@linode/api-v4';
 
 authenticate();
 describe('longview plan', () => {

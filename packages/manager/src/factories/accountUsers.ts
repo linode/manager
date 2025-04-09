@@ -1,5 +1,5 @@
 import { User } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 export const accountUserFactory = Factory.Sync.makeFactory<User>({
   email: 'support@linode.com',

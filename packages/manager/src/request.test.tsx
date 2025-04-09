@@ -1,10 +1,10 @@
-import { profileFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import { AxiosHeaders } from 'axios';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
-
+import { profileFactory } from './factories';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
+import { getAuthToken, setAuthToken } from './utilities/authentication';
 
 import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
@@ -47,48 +47,42 @@ const error401: AxiosError<LinodeError> = {
 };
 
 describe('Expiring Tokens', () => {
-  it('should properly expire tokens if given a 401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
-    const expireToken = handleError(error401, store);
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
 
-    /**
-     * the redux state should nulled out and the function should return
-     * our original error
-     */
-    expect(store.getState().authentication).toEqual({
-      expiration: null,
-      loggedInAsCustomer: false,
-      scopes: null,
-      token: null,
+  it('should properly expire tokens if given a 401 error', async () => {
+    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
+
+    vi.stubGlobal('location', {
+      assign: vi.fn(),
     });
-    expireToken.catch((e: APIError[]) =>
+    vi.mock('src/constants', async (importOriginal) => ({
+      ...(await importOriginal()),
+      CLIENT_ID: '00000000000000000000',
+    }));
+
+    await handleError(error401, store).catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
+    );
+    await waitFor(() =>
+      expect(location.assign).toHaveBeenCalledWith(
+        expect.stringContaining('login.linode.com')
+      )
     );
   });
 
   it('should just promise reject if a non-401 error', () => {
-    store.dispatch(
-      handleStartSession({
-        expires: 'never',
-        scopes: '*',
-        token: 'helloworld',
-      })
-    );
+    setAuthToken({ expiration: 'never', scopes: '*', token: 'helloworld' });
     const expireToken = handleError(error400, store);
 
     /**
      * the redux state should nulled out and the function should return
      * our original error
      */
-    expect(store.getState().authentication).toEqual({
+    expect(getAuthToken()).toEqual({
       expiration: 'never',
-      loggedInAsCustomer: false,
       scopes: '*',
       token: 'helloworld',
     });
@@ -155,8 +149,7 @@ describe('setupInterceptors', () => {
       },
     };
 
-    const state = store.getState();
-    const token = state.authentication?.token ?? '';
+    const token = getAuthToken().token;
 
     const headers = new AxiosHeaders(config.headers);
     const hasExplicitAuthToken = headers.hasAuthorization();

@@ -1,8 +1,8 @@
-import { useMarketplaceAppsQuery } from '@linode/queries';
 import { decode } from 'he';
 
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { useFlags } from 'src/hooks/useFlags';
+import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import type { StackScript } from '@linode/api-v4';
 import type { AppCategory, OCA } from 'src/features/OneClickApps/types';

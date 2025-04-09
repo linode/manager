@@ -8,14 +8,11 @@ import { TableRow } from 'src/components/TableRow';
 
 import { LinodeInterfacesTableContent } from './LinodeInterfacesTableContent';
 
-import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
-
 interface Props {
-  handlers: InterfaceActionHandlers;
   linodeId: number;
 }
 
-export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
+export const LinodeInterfacesTable = ({ linodeId }: Props) => {
   return (
     <Table>
       <TableHead>
@@ -31,7 +28,7 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <LinodeInterfacesTableContent handlers={handlers} linodeId={linodeId} />
+        <LinodeInterfacesTableContent linodeId={linodeId} />
       </TableBody>
     </Table>
   );

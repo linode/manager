@@ -67,8 +67,8 @@ describe('Alert Row', () => {
   it('alert labels should have hyperlinks to the details page', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const history = createMemoryHistory();
-    history.push('/alerts/definitions');
-    const link = `/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
+    history.push('/monitor/alerts/definitions');
+    const link = `/monitor/alerts/definitions/detail/${alert.service_type}/${alert.id}`;
     const renderedAlert = (
       <Router history={history}>
         <AlertTableRow
@@ -142,49 +142,5 @@ describe('Alert Row', () => {
     const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(ActionMenu);
     expect(getByText('Disable')).toBeInTheDocument();
-  });
-
-  it("should disable 'Disable' action item in menu if alert has no enabled/disabled status", async () => {
-    const alert = alertFactory.build({ status: 'in progress', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertTableRow
-        handlers={{
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
-        }}
-        alert={alert}
-        services={mockServices}
-      />
-    );
-    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
-    await userEvent.click(ActionMenu);
-    expect(getByText('In Progress')).toBeInTheDocument();
-    expect(getByText('Disable').closest('li')).toHaveAttribute(
-      'aria-disabled',
-      'true'
-    );
-  });
-
-  it("should disable 'Edit' action item in menu if alert has no enabled/disabled status", async () => {
-    const alert = alertFactory.build({ status: 'in progress', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertTableRow
-        handlers={{
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
-        }}
-        alert={alert}
-        services={mockServices}
-      />
-    );
-    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
-    await userEvent.click(ActionMenu);
-    expect(getByText('In Progress')).toBeInTheDocument();
-    expect(getByText('Edit').closest('li')).toHaveAttribute(
-      'aria-disabled',
-      'true'
-    );
   });
 });

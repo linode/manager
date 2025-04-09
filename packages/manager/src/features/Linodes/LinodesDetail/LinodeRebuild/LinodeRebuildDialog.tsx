@@ -1,6 +1,7 @@
-import { useLinodeQuery } from '@linode/queries';
 import { Dialog } from '@linode/ui';
 import React from 'react';
+
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 
 import { LinodeRebuildForm } from './LinodeRebuildForm';
 
@@ -14,11 +15,10 @@ interface Props {
 export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
 
-  const {
-    data: linode,
-    error,
-    isLoading,
-  } = useLinodeQuery(linodeId ?? -1, linodeId !== undefined);
+  const { data: linode, error, isLoading } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   return (
     <Dialog

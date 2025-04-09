@@ -4,7 +4,7 @@ import React from 'react';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useAccountUsers } from '@linode/queries';
+import { useAccountUsers } from 'src/queries/account/users';
 
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';

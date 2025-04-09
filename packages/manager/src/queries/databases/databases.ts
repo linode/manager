@@ -3,7 +3,6 @@ import {
   deleteDatabase,
   getDatabaseBackups,
   getDatabaseCredentials,
-  getDatabaseEngineConfig,
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
@@ -17,13 +16,13 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
-  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets, profileQueries } from '@linode/queries';
+import { queryPresets } from '../base';
+import { profileQueries } from '../profile/profile';
 import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,
@@ -37,7 +36,6 @@ import type {
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseEngine,
-  DatabaseEngineConfig,
   DatabaseFork,
   DatabaseInstance,
   DatabaseType,
@@ -49,10 +47,6 @@ import type {
 } from '@linode/api-v4';
 
 export const databaseQueries = createQueryKeys('databases', {
-  configs: (engine: Engine) => ({
-    queryFn: () => getDatabaseEngineConfig(engine),
-    queryKey: ['configs', engine],
-  }),
   database: (engine: Engine, id: number) => ({
     contextQueries: {
       backups: {
@@ -72,11 +66,6 @@ export const databaseQueries = createQueryKeys('databases', {
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllDatabases(params, filter),
         queryKey: [params, filter],
-      }),
-      infinite: (filter: Filter) => ({
-        queryFn: ({ pageParam }) =>
-          getDatabases({ page: pageParam as number }, filter),
-        queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
@@ -122,21 +111,6 @@ export const useDatabasesQuery = (
     // @TODO Consider removing polling
     refetchInterval: 20000,
   });
-
-export const useDatabasesInfiniteQuery = (filter: Filter, enabled: boolean) => {
-  return useInfiniteQuery<ResourcePage<DatabaseInstance>, APIError[]>({
-    ...databaseQueries.databases._ctx.infinite(filter),
-    enabled,
-    getNextPageParam: ({ page, pages }) => {
-      if (page === pages) {
-        return undefined;
-      }
-      return page + 1;
-    },
-    initialPageParam: 1,
-    retry: false,
-  });
-};
 
 export const useAllDatabasesQuery = (
   enabled: boolean = true,
@@ -268,15 +242,6 @@ export const useDatabaseTypesQuery = (
 ) =>
   useQuery<DatabaseType[], APIError[]>({
     ...databaseQueries.types._ctx.all(filter),
-    enabled,
-  });
-
-export const useDatabaseEngineConfig = (
-  engine: Engine,
-  enabled: boolean = true
-) =>
-  useQuery<DatabaseEngineConfig, APIError[]>({
-    ...databaseQueries.configs(engine),
     enabled,
   });
 

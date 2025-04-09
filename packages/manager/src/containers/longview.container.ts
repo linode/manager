@@ -1,19 +1,17 @@
-import { connect } from 'react-redux';
+import { Filter, Params } from '@linode/api-v4';
+import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { InferableComponentEnhancerWithProps, connect } from 'react-redux';
 
+import { ApplicationState } from 'src/store';
+import { State } from 'src/store/longview/longview.reducer';
 import {
   deleteLongviewClient as _delete,
   createLongviewClient as create,
   getAllLongviewClients,
   updateLongviewClient as update,
 } from 'src/store/longview/longview.requests';
-
-import type { Filter, Params } from '@linode/api-v4';
-import type { LongviewClient } from '@linode/api-v4/lib/longview';
-import type { GetAllData } from '@linode/utilities';
-import type { InferableComponentEnhancerWithProps } from 'react-redux';
-import type { ApplicationState } from 'src/store';
-import type { State } from 'src/store/longview/longview.reducer';
-import type { ThunkDispatch } from 'src/store/types';
+import { ThunkDispatch } from 'src/store/types';
+import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
   createLongviewClient: (label?: string) => Promise<LongviewClient>;
@@ -63,8 +61,13 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      const { data, error, lastUpdated, loading, results } =
-        state.longviewClients;
+      const {
+        data,
+        error,
+        lastUpdated,
+        loading,
+        results,
+      } = state.longviewClients;
       if (mapStateToProps) {
         return mapStateToProps(ownProps, {
           longviewClientsData: data,

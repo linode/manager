@@ -1,13 +1,15 @@
+import { EventStatus } from '@linode/api-v4';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
+import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import {
   mockDeleteImage,
   mockGetCustomImages,
-  mockGetImage,
   mockUpdateImage,
+  mockGetImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
@@ -15,9 +17,6 @@ import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import type { EventStatus } from '@linode/api-v4';
-import type { RecPartial } from 'factory.ts';
 
 /**
  * Returns a numeric image ID from a string-based image ID.
@@ -58,17 +57,17 @@ const eventIntercept = (
     apiMatcher('account/events*'),
     makeResourcePage(
       eventFactory.buildList(1, {
-        action: 'image_upload',
         created: created ? created : DateTime.local().toISO(),
+        action: 'image_upload',
         entity: {
+          label: label,
           id: numericId,
-          label,
           type: 'image',
           url: `/v4/images/private/${numericId}`,
         },
-        message: message ? message : '',
-        secondary_entity: null,
         status,
+        secondary_entity: null,
+        message: message ? message : '',
       })
     )
   ).as('getEvent');
@@ -113,16 +112,7 @@ const assertProcessing = (label: string, id: string) => {
  * @param label - Label to apply to uploaded image.
  */
 const uploadImage = (label: string) => {
-  // Disallow these regions from being returned by `chooseRegion` because they do not support Machine Images:
-  // - au-mel
-  // - gb-lon
-  // - sg-sin-2
-  //
-  // See also BAC-862.
-  const region = chooseRegion({
-    capabilities: ['Object Storage'],
-    exclude: ['au-mel', 'gb-lon', 'sg-sin-2'],
-  });
+  const region = chooseRegion({ capabilities: ['Object Storage'] });
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
 
@@ -176,8 +166,8 @@ describe('machine image', () => {
 
     const mockImageUpdated = {
       ...mockImage,
-      description: updatedDescription,
       label: updatedLabel,
+      description: updatedDescription,
     };
 
     mockGetCustomImages([mockImage]).as('getImages');
@@ -266,7 +256,7 @@ describe('machine image', () => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
       mockGetCustomImages([
-        imageFactory.build({ id: imageId, label, status: 'available' }),
+        imageFactory.build({ label, id: imageId, status: 'available' }),
       ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);

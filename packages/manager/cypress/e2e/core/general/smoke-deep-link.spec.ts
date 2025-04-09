@@ -15,7 +15,7 @@ describe('smoke - deep links', () => {
       cy.log(`Go to ${page.name}`);
       page.goWithUI?.forEach((uiPath) => {
         cy.log(`by ${uiPath.name}`);
-        cy.findByText(uiPath.name).should('not.be.empty');
+        expect(uiPath.name).not.to.be.empty;
         uiPath.go();
         cy.url().should('be.eq', `${Cypress.config('baseUrl')}${page.url}`);
       });

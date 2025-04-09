@@ -56,7 +56,7 @@ export * from './betas';
 
 export * from './iam';
 
-export * from './entities';
+export * from './resources';
 
 export {
   baseRequest,

@@ -1,13 +1,11 @@
-import { regionFactory } from '@linode/utilities';
-
-import { ADDRESSES } from 'src/constants';
-import { invoiceItemFactory } from 'src/factories';
+import { invoiceItemFactory, regionFactory } from 'src/factories';
 
 import {
   getInvoiceRegion,
   getRemitAddress,
   invoiceCreatedAfterDCPricingLaunch,
 } from './utils';
+import { ADDRESSES } from 'src/constants';
 
 describe('getInvoiceRegion', () => {
   it('should get a formatted label given invoice items and regions', () => {

@@ -10,7 +10,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { accountQueries } from '@linode/queries';
+import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -36,12 +36,15 @@ const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
-  const [deleteDialogOpen, setDeleteDialogOpen] =
-    React.useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
+    false
+  );
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
-    React.useState<PaymentMethod | undefined>();
+  const [
+    deletePaymentMethodSelection,
+    setDeletePaymentMethodSelection,
+  ] = React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
   const queryClient = useQueryClient();
   const drawerLink = '/account/billing/add-payment-method';

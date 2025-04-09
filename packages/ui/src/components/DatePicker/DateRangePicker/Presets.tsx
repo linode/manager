@@ -11,7 +11,7 @@ interface PresetsProps {
   onPresetSelect: (
     startDate: DateTime | null,
     endDate: DateTime | null,
-    presetLabel: null | string,
+    presetLabel: null | string
   ) => void;
   selectedPreset: null | string;
 }
@@ -71,8 +71,8 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
   return (
     <Stack
       sx={(theme: Theme) => ({
-        backgroundColor: theme.tokens.component.Calendar.PresetArea.Background,
-        borderRight: `1px solid ${theme.tokens.component.Calendar.Border}`,
+        backgroundColor: theme.tokens.calendar.PresetArea.Background,
+        borderRight: `1px solid ${theme.tokens.calendar.Border}`,
         width: '134px',
       })}
       paddingLeft={1}
@@ -98,27 +98,23 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
             sx={(theme: Theme) => ({
               '&:active, &:focus': {
                 backgroundColor:
-                  theme.tokens.component.Calendar.PresetArea.ActivePeriod
-                    .Background,
-                color:
-                  theme.tokens.component.Calendar.PresetArea.ActivePeriod.Text,
+                  theme.tokens.calendar.PresetArea.ActivePeriod.Background,
+                color: theme.tokens.calendar.PresetArea.ActivePeriod.Text,
               },
               '&:hover': {
                 backgroundColor: !isSelected
-                  ? theme.tokens.component.Calendar.PresetArea.HoverPeriod
-                      .Background
+                  ? theme.tokens.calendar.PresetArea.HoverPeriod.Background
                   : '',
                 color: isSelected
-                  ? theme.tokens.component.Calendar.PresetArea.ActivePeriod.Text
-                  : theme.tokens.component.Calendar.DateRange.Text,
+                  ? theme.tokens.calendar.PresetArea.ActivePeriod.Text
+                  : theme.tokens.calendar.DateRange.Text,
               },
               backgroundColor: isSelected
-                ? theme.tokens.component.Calendar.PresetArea.ActivePeriod
-                    .Background
-                : theme.tokens.component.Calendar.PresetArea.Background,
+                ? theme.tokens.calendar.PresetArea.ActivePeriod.Background
+                : theme.tokens.calendar.PresetArea.Background,
               color: isSelected
-                ? theme.tokens.component.Calendar.PresetArea.ActivePeriod.Text
-                : theme.tokens.component.Calendar.DateRange.Text,
+                ? theme.tokens.calendar.PresetArea.ActivePeriod.Text
+                : theme.tokens.calendar.DateRange.Text,
               justifyContent: 'flex-start',
               padding: theme.spacing(),
             })}

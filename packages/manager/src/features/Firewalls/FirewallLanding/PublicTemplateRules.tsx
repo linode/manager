@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Stack, Typography } from '@linode/ui';
+import { Box, List, ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { STRENGTHEN_TEMPLATE_RULES } from './constants';
@@ -8,35 +8,37 @@ import type { Theme } from '@mui/material';
 export const PublicTemplateRules = () => {
   return (
     <>
-      <Stack marginTop={3} spacing={2}>
-        <Typography>
-          Allows for login with SSH, and regular networking control data.
-        </Typography>
-        <Typography>{STRENGTHEN_TEMPLATE_RULES}</Typography>
-        <Box
-          sx={(theme) => ({
-            backgroundColor: theme.tokens.alias.Background.Neutral,
-            padding: theme.spacingFunction(16),
-          })}
-          data-testid="public-template-info"
-        >
-          {sharedTemplateRules}
-        </Box>
-      </Stack>
+      <Typography sx={(theme) => ({ marginTop: theme.spacing(3) })}>
+        Allows for login with SSH, and regular networking control data.
+      </Typography>
+      <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+        {STRENGTHEN_TEMPLATE_RULES}
+      </Typography>
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.tokens.background.Neutral,
+          marginTop: theme.spacing(2),
+          padding: theme.spacing(2),
+        })}
+        data-testid="public-template-info"
+      >
+        {sharedTemplateRules}
+      </Box>
       {sharedTemplatePolicies}
     </>
   );
 };
 
 const templateRuleStyling = (theme: Theme) => ({
-  backgroundColor: theme.tokens.alias.Background.Neutral,
-  padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+  backgroundColor: theme.tokens.background.Neutral,
+  marginTop: theme.spacing(1),
+  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
 });
 
 export const sharedTemplateRules = (
   <>
     <Typography variant="h3">Rules</Typography>
-    <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(8) })}>
+    <Typography sx={(theme) => ({ marginTop: theme.spacing(1) })}>
       Allow Inbound SSH
     </Typography>
     <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
@@ -50,7 +52,7 @@ export const sharedTemplateRules = (
         Sources: All IPv4, IPv6
       </ListItem>
     </List>
-    <Typography sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
+    <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
       Allow Inbound ICMP
     </Typography>
     <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
@@ -65,7 +67,7 @@ export const sharedTemplateRules = (
 );
 
 export const sharedTemplatePolicies = (
-  <Stack marginTop={1} spacing={1}>
+  <>
     <Box
       sx={(theme) => ({
         ...templateRuleStyling(theme),
@@ -82,5 +84,5 @@ export const sharedTemplatePolicies = (
         Default Outbound Policy: ACCEPT
       </Typography>
     </Box>
-  </Stack>
+  </>
 );

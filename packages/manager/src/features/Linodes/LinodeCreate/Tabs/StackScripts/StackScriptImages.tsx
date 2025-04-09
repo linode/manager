@@ -1,9 +1,9 @@
-import { useStackScriptQuery } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 

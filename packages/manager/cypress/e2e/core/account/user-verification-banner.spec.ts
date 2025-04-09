@@ -1,4 +1,4 @@
-import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
+import { profileFactory, securityQuestionsFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { verificationBannerNotice } from 'support/constants/user';

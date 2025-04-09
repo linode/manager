@@ -1,4 +1,4 @@
-import { createLinodeRequestFactory } from '@linode/utilities';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
 
 import { generateCLICommand } from './generate-cli';
 
@@ -71,5 +71,17 @@ describe('generateCLICommand', () => {
   it('should parse array fields as multiple command args with the same key but diffeerent values', () => {
     expect(generatedCommand).toMatch('--authorized_users Linny');
     expect(generatedCommand).toMatch('--authorized_users Gritty');
+  });
+
+  describe('parsing of string arguments', () => {
+    it.skip('should escape strings that contain single quotes, double quotes, and forward slashes', () => {
+      const password = `@C@mplexP@ssword'"\\`;
+      const escapedPassword = `@C@mplexP@ssword\\\'\\\"\\\\\\`;
+      const linodeRequest = createLinodeRequestFactory.build({
+        root_pass: password,
+      });
+      const cliCommand = generateCLICommand(linodeRequest);
+      expect(cliCommand).toMatch(`--root_pass $'${escapedPassword}'`);
+    });
   });
 });

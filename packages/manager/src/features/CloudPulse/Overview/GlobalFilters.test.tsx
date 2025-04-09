@@ -23,23 +23,21 @@ describe('Global filters component test', () => {
   it('Should render refresh button', () => {
     const { getByTestId } = setup();
     expect(getByTestId('global-refresh')).toBeInTheDocument();
-  });
+  }),
+    it('Should show dashboard selectcomponent', () => {
+      const { getByTestId } = setup();
 
-  it('Should show dashboard selectcomponent', () => {
-    const { getByTestId } = setup();
+      expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
+    }),
+    it('Should have time range select with default value', () => {
+      const screen = setup();
 
-    expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
-  });
+      const timeRangeSelect = screen.getByTestId(timeRangeSelectId);
 
-  it('Should have time range select with default value', () => {
-    const screen = setup();
+      expect(timeRangeSelect).toBeInTheDocument();
 
-    const timeRangeSelect = screen.getByTestId(timeRangeSelectId);
-
-    expect(timeRangeSelect).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('combobox', { name: 'Time Range' })
-    ).toHaveAttribute('value', 'Last 30 Minutes');
-  });
+      expect(
+        screen.getByRole('combobox', { name: 'Time Range' })
+      ).toHaveAttribute('value', 'Last 30 Minutes');
+    });
 });

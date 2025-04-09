@@ -1,10 +1,11 @@
-import { ActionsPanel, Box, Drawer, Notice } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Box, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { VPCTopSectionContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCTopSectionContent';
@@ -50,12 +51,7 @@ export const VPCCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleDrawerClose}
-      open={open}
-      title={'Create VPC'}
-    >
+    <Drawer onClose={handleDrawerClose} open={open} title={'Create VPC'}>
       {userCannotAddVPC && CannotCreateVPCNotice}
       <FormProvider {...form}>
         <Grid>

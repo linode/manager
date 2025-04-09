@@ -1,6 +1,4 @@
-import { useClientToken } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
-import { useScript } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
@@ -11,6 +9,8 @@ import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
+import { useScript } from 'src/hooks/useScript';
+import { useClientToken } from 'src/queries/account/payment';
 
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
@@ -53,8 +53,9 @@ export const GooglePayChip = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] =
-    React.useState<boolean>(false);
+  const [initializationError, setInitializationError] = React.useState<boolean>(
+    false
+  );
 
   React.useEffect(() => {
     const init = async () => {

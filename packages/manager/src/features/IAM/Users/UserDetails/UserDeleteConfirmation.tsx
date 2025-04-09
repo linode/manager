@@ -1,9 +1,10 @@
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useAccountUserDeleteMutation } from '@linode/queries';
+import { useAccountUserDeleteMutation } from 'src/queries/account/users';
 
 interface Props {
   onClose: () => void;

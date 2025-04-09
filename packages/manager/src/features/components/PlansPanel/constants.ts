@@ -29,8 +29,9 @@ export const GPU_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 export const TRANSFER_COSTS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs';
+// TODO: accelerated plans - update to GA link (when GA launches)
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
+  'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances-beta';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,

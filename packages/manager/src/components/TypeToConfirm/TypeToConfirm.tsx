@@ -1,13 +1,13 @@
-import { usePreferences } from '@linode/queries';
 import { Checkbox, FormControlLabel, TextField, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { TextFieldProps, TypographyProps } from '@linode/ui';
-import type { Theme } from '@mui/material';
 import type { SxProps } from '@mui/material';
+import type { Theme } from '@mui/material';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;
@@ -40,9 +40,9 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     onChange,
     textFieldStyle,
     title,
-    titleVariant,
     typographyStyle,
     typographyStyleSx,
+    titleVariant,
     visible = false,
     ...rest
   } = props;

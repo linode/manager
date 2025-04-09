@@ -1,5 +1,8 @@
-import { profileFactory } from '@linode/utilities';
-import { accountFactory, appTokenFactory } from '@src/factories';
+import {
+  accountFactory,
+  appTokenFactory,
+  profileFactory,
+} from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
 import {
@@ -21,13 +24,13 @@ const mockParentAccount = accountFactory.build({
 });
 
 const mockParentProfile = profileFactory.build({
-  user_type: 'parent',
   username: randomLabel(),
+  user_type: 'parent',
 });
 
 const mockParentUser = accountUserFactory.build({
-  user_type: 'parent',
   username: mockParentProfile.username,
+  user_type: 'parent',
 });
 
 const mockChildAccount = accountFactory.build({
@@ -35,14 +38,14 @@ const mockChildAccount = accountFactory.build({
 });
 
 const mockParentAccountToken = appTokenFactory.build({
+  id: randomNumber(),
   created: DateTime.now().toISO(),
   expiry: DateTime.now().plus({ minutes: 15 }).toISO(),
-  id: randomNumber(),
   label: `${mockParentAccount.company}_proxy`,
   scopes: '*',
-  thumbnail_url: undefined,
   token: randomString(32),
   website: undefined,
+  thumbnail_url: undefined,
 });
 
 describe('Token scopes', () => {

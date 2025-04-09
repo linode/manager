@@ -1,25 +1,23 @@
-import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
-import {
-  isNumber,
-  plansNoticesUtils,
-  pluralize,
-  scrollErrorIntoViewV2,
-} from '@linode/utilities';
+import { Box, Notice, Typography } from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import { nodeWarning } from '../../constants';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
+import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
@@ -104,10 +102,8 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(
-    selectedType,
-    clusterRegionId
-  )?.monthly;
+  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
+    ?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -164,7 +160,6 @@ export const AddNodePoolDrawer = (props: Props) => {
       PaperProps={{
         sx: { maxWidth: '790px !important' },
       }}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       ref={drawerRef}

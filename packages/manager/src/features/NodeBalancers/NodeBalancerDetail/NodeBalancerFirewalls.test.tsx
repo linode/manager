@@ -9,29 +9,15 @@ const firewall = firewallFactory.build({ label: 'mock-firewall-1' });
 
 // Set up various mocks for tests
 
-const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
-  useMatch: vi.fn(() => ({})),
-  useNavigate: vi.fn(() => navigate),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useParams: vi.fn(() => ({})),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/nodebalancers', async () => {
+  const actual = await vi.importActual('src/queries/nodebalancers');
   return {
     ...actual,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useMatch: queryMocks.useMatch,
-    useNavigate: queryMocks.useNavigate,
-    useParams: queryMocks.useParams,
   };
 });
 
@@ -45,9 +31,6 @@ describe('NodeBalancerFirewalls', () => {
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewall] },
       isLoading: false,
-    });
-    queryMocks.useParams.mockReturnValue({
-      id: '1',
     });
   });
 

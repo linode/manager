@@ -1,9 +1,10 @@
-import { useAllNodeBalancersQuery } from '@linode/queries';
 import { Autocomplete, CustomPopper } from '@linode/ui';
-import { mapIdsToDevices } from '@linode/utilities';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
+
+import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
+import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
 
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -124,8 +125,8 @@ export const NodeBalancerSelect = (
         placeholder
           ? placeholder
           : multiple
-            ? 'Select NodeBalancers'
-            : 'Select a NodeBalancer'
+          ? 'Select NodeBalancers'
+          : 'Select a NodeBalancer'
       }
       renderOption={
         renderOption
@@ -142,8 +143,8 @@ export const NodeBalancerSelect = (
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
-            ? (nodebalancers?.filter(value) ?? null)
-            : (nodebalancers?.find(value) ?? null)
+            ? nodebalancers?.filter(value) ?? null
+            : nodebalancers?.find(value) ?? null
           : mapIdsToDevices<NodeBalancer>(value, nodebalancers)
       }
       ChipProps={{ deleteIcon: <CloseIcon /> }}

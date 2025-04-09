@@ -73,8 +73,8 @@ describe('Metric component tests', () => {
   });
 
   it('should render the Data Field component with options happy path and select an option', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
+      {
         component: (
           <Metric
             data={mockData}
@@ -90,11 +90,13 @@ describe('Metric component tests', () => {
             serviceType: 'linode',
           },
         },
-      });
+      }
+    );
     const dataFieldContainer = container.getByTestId('data-field');
     expect(
       within(dataFieldContainer).getByRole('button', {
-        name: 'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
+        name:
+          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
       })
     );
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
@@ -116,8 +118,8 @@ describe('Metric component tests', () => {
   });
 
   it('should render the Aggregation Type component', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
+      {
         component: (
           <Metric
             data={mockData}
@@ -136,13 +138,13 @@ describe('Metric component tests', () => {
             serviceType: 'linode',
           },
         },
-      });
+      }
+    );
 
     const aggregationTypeContainer = container.getByTestId('aggregation-type');
-    const aggregationTypeInput = within(aggregationTypeContainer).getByRole(
-      'button',
-      { name: 'Open' }
-    );
+    const aggregationTypeInput = within(
+      aggregationTypeContainer
+    ).getByRole('button', { name: 'Open' });
 
     user.click(aggregationTypeInput);
 
@@ -163,8 +165,8 @@ describe('Metric component tests', () => {
   });
 
   it('should render the Operator component', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
+      {
         component: (
           <Metric
             data={mockData}
@@ -183,7 +185,8 @@ describe('Metric component tests', () => {
             serviceType: 'linode',
           },
         },
-      });
+      }
+    );
     const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
@@ -193,7 +196,7 @@ describe('Metric component tests', () => {
     expect(
       await container.findByRole('option', { name: '>' })
     ).toBeInTheDocument();
-    expect(container.getByRole('option', { name: '=' })).toBeInTheDocument();
+    expect(container.getByRole('option', { name: '==' })).toBeInTheDocument();
     expect(container.getByRole('option', { name: '<' })).toBeInTheDocument();
     const option = await container.findByRole('option', { name: '>' });
     await user.click(option);
@@ -205,8 +208,8 @@ describe('Metric component tests', () => {
   });
 
   it('should render the Threshold component', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
+      {
         component: (
           <Metric
             data={mockData}
@@ -219,13 +222,11 @@ describe('Metric component tests', () => {
         ),
         useFormOptions: {
           defaultValues: {
-            rule_criteria: {
-              rules: [mockData[0]],
-            },
             serviceType: 'linode',
           },
         },
-      });
+      }
+    );
 
     const input = container.getByLabelText('Threshold');
     await user.clear(input);

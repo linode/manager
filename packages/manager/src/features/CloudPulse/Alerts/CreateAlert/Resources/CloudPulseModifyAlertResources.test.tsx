@@ -1,8 +1,7 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { alertFactory } from 'src/factories';
+import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { CloudPulseModifyAlertResources } from './CloudPulseModifyAlertResources';
@@ -43,8 +42,8 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
+  ...vi.importActual('src/queries/regions/regions'),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
@@ -75,16 +74,18 @@ beforeEach(() => {
 
 describe('CreateAlertResources component tests', () => {
   it('should be able to render the component on correct props and values', async () => {
-    const { getByPlaceholderText, getByTestId, queryByTestId } =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <CloudPulseModifyAlertResources name="entity_ids" />,
-        useFormOptions: {
-          defaultValues: {
-            entity_ids: [],
-            serviceType: 'linode',
-          },
+    const {
+      getByPlaceholderText,
+      getByTestId,
+    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: <CloudPulseModifyAlertResources name="entity_ids" />,
+      useFormOptions: {
+        defaultValues: {
+          entity_ids: [],
+          serviceType: 'linode',
         },
-      });
+      },
+    });
     expect(
       getByPlaceholderText('Search for a Region or Resource')
     ).toBeInTheDocument();
@@ -133,46 +134,5 @@ describe('CreateAlertResources component tests', () => {
       checkedAttribute,
       'false'
     );
-    // no error notice should be there in happy path
-    expect(queryByTestId('alert_message_notice')).not.toBeInTheDocument();
-  });
-
-  it('should be able to see the error notice if the forms field state has error', async () => {
-    const { getAllByTestId, getByTestId, getByText } =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: <CloudPulseModifyAlertResources name="entity_ids" />,
-        options: {
-          flags: {
-            aclpAlertServiceTypeConfig: [
-              {
-                maxResourceSelectionCount: 2,
-                serviceType: 'linode',
-              },
-            ],
-          },
-        },
-        useFormOptions: {
-          defaultValues: {
-            entity_ids: ['1', '2', '3'],
-            serviceType: 'linode',
-          },
-          errors: {
-            entity_ids: {
-              message: 'More than 2 resources selected',
-            },
-          },
-        },
-      });
-
-    expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
-    expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();
-    expect(getByText('More than 2 resources selected')).toBeInTheDocument();
-    const resourceFour = getByTestId('select_item_4');
-    expect(resourceFour).toBeInTheDocument();
-    expect(resourceFour).toHaveAttribute('aria-disabled', 'true');
-
-    await userEvent.click(getByText('Deselect All'));
-
-    expect(getByText('Select All')).toHaveAttribute('aria-disabled', 'true');
   });
 });

@@ -1,0 +1,68 @@
+name: Coverage Comment
+
+on:
+  workflow_run:
+    workflows: ["Code Coverage"]
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js v20.17 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+
+      - name: Download PR Number Artifact
+        uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
+        with:
+          workflow: "coverage.yml"
+          run_id: ${{ github.event.workflow_run.id }}
+          name: pr_number
+
+      - name: Download Base Coverage Artifact
+        uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
+        with:
+          workflow: "coverage.yml"
+          run_id: ${{ github.event.workflow_run.id }}
+          name: ref_code_coverage
+
+      - name: Download Current Coverage Artifact
+        uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
+        with:
+          workflow: "coverage.yml"
+          run_id: ${{ github.event.workflow_run.id }}
+          name: current_code_coverage
+
+      - name: Set PR Number Environment Variables
+        run: |
+          echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
+
+      - name: Generate Coverage Comment
+        run: |
+          base_coverage=$(cat ref_code_coverage.txt)
+          current_coverage=$(cat current_code_coverage.txt)
+          if (( $(echo "$current_coverage < $base_coverage" | bc -l) )); then
+            icon="❌" # Error icon
+          else
+            icon="✅" # Check mark icon
+          fi
+          comment_message="**Coverage Report:** $icon<br>Base Coverage: $base_coverage%<br>Current Coverage: $current_coverage%"
+          echo "Coverage: $comment_message"
+          echo "$comment_message" > updated_comment.txt
+
+      - name: Post Comment
+        uses: mshick/add-pr-comment@7c0890544fb33b0bdd2e59467fbacb62e028a096 #v2.8.1
+        with:
+          issue: ${{ env.PR_NUMBER }}
+          message-path: updated_comment.txt

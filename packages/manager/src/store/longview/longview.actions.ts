@@ -1,8 +1,8 @@
+import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
-import type { LongviewClient } from '@linode/api-v4/lib/longview';
-import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import type { GetAllData } from '@linode/utilities';
+import { GetAllData } from 'src/utilities/getAll';
 
 export const actionCreator = actionCreatorFactory(`@@manager/longview`);
 

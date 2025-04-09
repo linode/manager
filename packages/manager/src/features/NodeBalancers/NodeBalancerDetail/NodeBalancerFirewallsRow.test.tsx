@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/nodebalancers', async () => {
+  const actual = await vi.importActual('src/queries/nodebalancers');
   return {
     ...actual,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
@@ -25,9 +25,8 @@ vi.mock('@linode/queries', async () => {
 });
 
 const props = {
-  devices: [],
   firewall,
-  nodeBalancerId: 1,
+  nodeBalancerID: 1,
   onClickUnassign: vi.fn(),
 };
 

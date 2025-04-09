@@ -3,23 +3,22 @@
  */
 
 import 'cypress-file-upload';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import {
   mockCreateBucket,
   mockDeleteBucket,
   mockDeleteBucketObject,
   mockDeleteBucketObjectS3,
-  mockGetBucketObjects,
   mockGetBuckets,
+  mockGetBucketObjects,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
-import { ui } from 'support/ui';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomLabel } from 'support/util/random';
-
+import { ui } from 'support/ui';
 import { accountFactory } from 'src/factories';
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { mockGetAccount } from 'support/intercepts/account';
 
 describe('object storage smoke tests', () => {
   /*
@@ -34,16 +33,16 @@ describe('object storage smoke tests', () => {
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 
     const mockBucket = objectStorageBucketFactory.build({
+      label: bucketLabel,
       cluster: bucketCluster,
       hostname: bucketHostname,
-      label: bucketLabel,
     });
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
-      gecko2: false,
       objMultiCluster: false,
       objectStorageGen2: { enabled: false },
+      gecko2: false,
     }).as('getFeatureFlags');
 
     mockGetBuckets([]).as('getBuckets');
@@ -63,7 +62,7 @@ describe('object storage smoke tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name (required)').click();
+        cy.findByText('Label').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
         cy.focused().type(`${bucketRegion}{enter}`);
@@ -173,9 +172,9 @@ describe('object storage smoke tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({
+      label: bucketLabel,
       cluster: bucketCluster,
       hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
-      label: bucketLabel,
       objects: 0,
     });
 

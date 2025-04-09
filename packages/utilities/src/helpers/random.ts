@@ -4,7 +4,6 @@
  * @returns {T} an element of the given type
  */
 export const pickRandom = <T>(items: T[]): T => {
-  // eslint-disable-next-line sonarjs/pseudo-random
   return items[Math.floor(Math.random() * items.length)];
 };
 
@@ -16,7 +15,6 @@ export const pickRandom = <T>(items: T[]): T => {
  */
 export const randomDate = (
   start: Date = new Date(),
-  end: Date = new Date(2021, 10, 25),
+  end: Date = new Date(2021, 10, 25)
 ) =>
-  // eslint-disable-next-line sonarjs/pseudo-random
   new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));

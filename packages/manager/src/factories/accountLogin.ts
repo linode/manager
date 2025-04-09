@@ -1,5 +1,5 @@
 import { AccountLogin } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 export const accountLoginFactory = Factory.Sync.makeFactory<AccountLogin>({
   datetime: '2021-05-21T14:27:51',

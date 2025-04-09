@@ -1,26 +1,21 @@
-import {
-  accountQueries,
-  firewallQueries,
-  linodeQueries,
-  stackscriptQueries,
-} from '@linode/queries';
 import { omitProps } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isNotNullOrUndefined,
-  utoa,
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
+import { linodeQueries } from 'src/queries/linodes/linodes';
+import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
+import { utoa } from 'src/utilities/metadata';
 
 import {
-  getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
   getLinodeInterfacePayload,
 } from './Networking/utilities';
@@ -28,17 +23,15 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
+import type { LinodeCreateType } from './types';
 import type {
-  AccountSettings,
+  CreateLinodeInterfacePayload,
   CreateLinodeRequest,
-  FirewallSettings,
-  InterfaceGenerationType,
   InterfacePayload,
   Linode,
   Profile,
   StackScript,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
 
@@ -208,6 +201,25 @@ export const getLinodeCreatePayload = (
 };
 
 /**
+ * Determines if the given interfaces payload array is of legacy interface type
+ * or of the new Linode Interface type
+ * @param interfaces the interfaces to confirm
+ * @returns if interfaces is type InterfacePayload
+ *
+ * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
+ * For now, an undefined/empty interfaces array will return true to match existing behavior
+ */
+export const getIsLegacyInterfaceArray = (
+  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
+): interfaces is InterfacePayload[] => {
+  return (
+    interfaces === undefined ||
+    interfaces.length === 0 ||
+    interfaces.some((iface) => 'purpose' in iface)
+  );
+};
+
+/**
  * Transforms and orders the Linode Create "interfaces" form data.
  *
  * We need this so we can put interfaces in the correct order and omit unused interfaces.
@@ -217,7 +229,7 @@ export const getLinodeCreatePayload = (
  */
 export const getInterfacesPayload = (
   interfaces: InterfacePayload[] | undefined,
-  hasPrivateIP: LinodeCreateFormValues['backups_enabled']
+  hasPrivateIP: boolean | undefined
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
@@ -275,6 +287,17 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
+const defaultLinodeInterfaces: LinodeCreateInterface[] = [
+  {
+    default_route: null,
+    firewall_id: null,
+    public: {},
+    purpose: 'public',
+    vlan: null,
+    vpc: null,
+  },
+];
+
 /**
  * We extend the API's payload type so that we can hold some extra state
  * in the react-hook-form form.
@@ -301,12 +324,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: {
-    id: number;
-    label: string;
-    region: string;
-    type: string | null;
-  } | null;
+  linode?: Linode | null;
   /**
    * Form state for the new Linode interface
    */
@@ -337,8 +355,7 @@ export interface LinodeCreateFormContext {
  */
 export const defaultValues = async (
   params: ParsedLinodeCreateQueryParams,
-  queryClient: QueryClient,
-  isLinodeInterfacesEnabled: boolean
+  queryClient: QueryClient
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
@@ -370,48 +387,15 @@ export const defaultValues = async (
     }
   }
 
-  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
-    undefined;
-
-  if (isLinodeInterfacesEnabled) {
-    try {
-      const accountSettings = await queryClient.ensureQueryData(
-        accountQueries.settings
-      );
-      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-        accountSettings.interfaces_for_new_linodes
-      );
-    } catch (error) {
-      // silently fail because the user may be a restricted user that can't access this endpoint
-    }
-  }
-
-  let firewallSettings: FirewallSettings | null = null;
-
-  if (isLinodeInterfacesEnabled) {
-    try {
-      firewallSettings = await queryClient.ensureQueryData(
-        firewallQueries.settings
-      );
-    } catch {
-      // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
-    }
-  }
-
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
-    firewall_id:
-      firewallSettings && firewallSettings.default_firewall_ids.linode
-        ? firewallSettings.default_firewall_ids.linode
-        : undefined,
     image: getDefaultImageId(params),
-    interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
-    linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
+    linodeInterfaces: defaultLinodeInterfaces,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields
@@ -671,22 +655,4 @@ export const useHandleLinodeCreateAnalyticsFormError = (
   );
 
   return { handleLinodeCreateAnalyticsFormError };
-};
-
-export const getDefaultInterfaceGenerationFromAccountSetting = (
-  accountSetting: AccountSettings['interfaces_for_new_linodes']
-): InterfaceGenerationType | undefined => {
-  if (
-    accountSetting === 'linode_only' ||
-    accountSetting === 'linode_default_but_legacy_config_allowed'
-  ) {
-    return 'linode';
-  }
-  if (
-    accountSetting === 'legacy_config_only' ||
-    accountSetting === 'legacy_config_default_but_linode_allowed'
-  ) {
-    return 'legacy_config';
-  }
-  return undefined;
 };

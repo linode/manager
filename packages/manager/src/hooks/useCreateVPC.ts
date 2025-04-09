@@ -1,25 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import {
-  useCreateVPCMutation,
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-} from '@linode/queries';
-import {
-  getQueryParamsFromQueryString,
-  scrollErrorIntoView,
-} from '@linode/utilities';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload, VPC } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 export interface UseCreateVPCInputs {
@@ -30,8 +25,12 @@ export interface UseCreateVPCInputs {
 }
 
 export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
-  const { handleSelectVPC, onDrawerClose, pushToVPCPage, selectedRegion } =
-    inputs;
+  const {
+    handleSelectVPC,
+    onDrawerClose,
+    pushToVPCPage,
+    selectedRegion,
+  } = inputs;
 
   const previousSubmitCount = React.useRef<number>(0);
 
@@ -47,8 +46,10 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
 
-  const { isPending: isLoadingCreateVPC, mutateAsync: createVPC } =
-    useCreateVPCMutation();
+  const {
+    isPending: isLoadingCreateVPC,
+    mutateAsync: createVPC,
+  } = useCreateVPCMutation();
 
   const onCreateVPC = async (values: CreateVPCPayload) => {
     try {

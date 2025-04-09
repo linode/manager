@@ -1,5 +1,5 @@
 import { Kernel } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 export const kernelFactory = Factory.Sync.makeFactory<Kernel>({
   id: Factory.each((i) => `kernel-${i}`),

@@ -22,8 +22,7 @@ export const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
  * @returns true if a User Defined Field should be considered required
  */
 export const getIsUDFRequired = (udf: UserDefinedField) =>
-  !Object.prototype.hasOwnProperty.call(udf, 'default') ||
-  Object.prototype.hasOwnProperty.call(udf, 'required');
+  !udf.hasOwnProperty('default') || udf.hasOwnProperty('required');
 
 /**
  * Given an array of User Defined Fields, this returns an object of

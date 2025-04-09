@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { profileFactory } from '@src/factories';
 import { getProfile } from 'support/api/account';
 import { mockUpdateUsername } from 'support/intercepts/account';
 import { interceptGetProfile } from 'support/intercepts/profile';

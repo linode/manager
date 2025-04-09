@@ -1,22 +1,25 @@
-import { useMutatePreferences, usePreferences } from '@linode/queries';
-import {
-  getQueryParamsFromQueryString,
-  pathOr,
-  sortByArrayLength,
-  sortByNumber,
-  sortByString,
-  splitAt,
-  usePrevious,
-} from '@linode/utilities';
+import { getQueryParamsFromQueryString, pathOr } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { equals, sort } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { sortByUTFDate } from 'src/utilities/sortByUTFDate';
+import { usePrevious } from 'src/hooks/usePrevious';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
+import {
+  sortByArrayLength,
+  sortByNumber,
+  sortByString,
+  sortByUTFDate,
+} from 'src/utilities/sort-by';
+import { splitAt } from 'src/utilities/splitAt';
 
-import type { ManagerPreferences, Order } from '@linode/utilities';
+import type { Order } from 'src/hooks/useOrder';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export interface OrderByProps<T> extends State {
   data: T[];

@@ -1,19 +1,14 @@
-import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
-import {
-  ActionsPanel,
-  Box,
-  Checkbox,
-  Drawer,
-  Notice,
-  TextField,
-} from '@linode/ui';
+import { Box, Checkbox, Notice, TextField } from '@linode/ui';
 import { UpdateVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
+import { useGrants } from 'src/queries/profile/profile';
+import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -35,8 +30,9 @@ export const EditVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
 
-  const { isBlockStorageEncryptionFeatureEnabled } =
-    useIsBlockStorageEncryptionFeatureEnabled();
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -84,7 +80,6 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

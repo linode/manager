@@ -1,8 +1,7 @@
-import { linodeFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory } from 'src/factories';
+import { accountFactory, linodeFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 

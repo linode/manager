@@ -1,11 +1,12 @@
-import { useUnassignLinodesFromPlacementGroup } from '@linode/queries';
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useUnassignLinodesFromPlacementGroup } from 'src/queries/placementGroups';
 
 import type {
   Linode,

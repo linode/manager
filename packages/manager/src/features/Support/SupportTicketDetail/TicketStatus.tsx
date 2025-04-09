@@ -7,7 +7,7 @@ import React from 'react';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 

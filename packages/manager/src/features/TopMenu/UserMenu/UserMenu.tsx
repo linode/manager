@@ -1,23 +1,24 @@
-import { useAccount, useProfile } from '@linode/queries';
 import {
   Button,
   ChevronDownIcon,
-  ChevronUpIcon,
   Stack,
   Tooltip,
   Typography,
   omittedProps,
 } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
 import { styled, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import ChevronUp from 'src/assets/icons/chevron-up.svg';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
+import { useAccount } from 'src/queries/account/account';
+import { useProfile } from 'src/queries/profile/profile';
 import { getStorage, setStorage } from 'src/utilities/storage';
+import { truncateEnd } from 'src/utilities/truncate';
 
 import { UserMenuPopover } from './UserMenuPopover';
 import { getCompanyNameOrEmail } from './utils';
@@ -81,11 +82,9 @@ export const UserMenu = React.memo(() => {
       return undefined;
     }
     return open ? (
-      <ChevronUpIcon color={theme.tokens.component.GlobalHeader.Text.Hover} />
+      <ChevronUp color={theme.tokens.header.Text.Hover} />
     ) : (
-      <ChevronDownIcon
-        color={theme.tokens.component.GlobalHeader.Text.Default}
-      />
+      <ChevronDownIcon color={theme.tokens.header.Text.Default} />
     );
   };
 
@@ -112,7 +111,7 @@ export const UserMenu = React.memo(() => {
           >
             <Typography
               sx={{
-                font: theme.tokens.alias.Typography.Label.Semibold.S,
+                font: theme.tokens.typography.Label.Semibold.S,
               }}
             >
               {userName}
@@ -120,14 +119,12 @@ export const UserMenu = React.memo(() => {
             {companyNameOrEmail && (
               <Typography
                 letterSpacing={
-                  theme.tokens.alias.Typography.Heading.OverlineLetterSpacing
+                  theme.tokens.typography.Heading.OverlineLetterSpacing
                 }
                 sx={{
-                  font: theme.tokens.alias.Typography.Heading.Overline,
+                  font: theme.tokens.typography.Heading.Overline,
                 }}
-                textTransform={
-                  theme.tokens.alias.Typography.Heading.OverlineTextCase
-                }
+                textTransform={theme.tokens.typography.Heading.OverlineTextCase}
               >
                 {truncateEnd(companyNameOrEmail, 24)}
               </Typography>
@@ -156,29 +153,25 @@ const StyledUserMenuButton = styled(Button, {
 })<{ open: boolean }>(({ open, theme }) => ({
   '&:hover, &:focus, &:active': {
     '.MuiButton-icon svg, .MuiStack-root .MuiTypography-root': {
-      color: theme.tokens.component.GlobalHeader.Text.Hover,
+      color: theme.tokens.header.Text.Hover,
     },
-  },
-  '.MuiButton-endIcon svg': {
-    height: '16px',
-    width: '16px',
   },
   '.MuiButton-icon svg': {
     color: open
-      ? theme.tokens.component.GlobalHeader.Text.Hover
-      : theme.tokens.component.GlobalHeader.Text.Default,
+      ? theme.tokens.header.Text.Hover
+      : theme.tokens.header.Text.Default,
   },
   '.MuiButton-startIcon': {
     '.MuiAvatar-root, .MuiTypography-root': {
-      font: theme.tokens.alias.Typography.Label.Bold.S,
+      font: theme.tokens.typography.Label.Bold.S,
     },
     marginLeft: 0,
     marginRight: theme.tokens.spacing.S8,
   },
   '.MuiStack-root .MuiTypography-root': {
     color: open
-      ? theme.tokens.component.GlobalHeader.Text.Hover
-      : theme.tokens.component.GlobalHeader.Text.Default,
+      ? theme.tokens.header.Text.Hover
+      : theme.tokens.header.Text.Default,
   },
   padding: 0,
   textTransform: 'none',

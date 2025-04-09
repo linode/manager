@@ -1,7 +1,7 @@
-import { queryPresets } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
+import { queryPresets } from '../base';
 import { getAllMaintenance, getIncidents } from './requests';
 
 import type { IncidentResponse, MaintenanceResponse } from './types';

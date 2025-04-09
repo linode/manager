@@ -10,10 +10,9 @@ export const Help = () => {
   return (
     <TopMenuTooltip title="Help & Support">
       <IconButton
+        disableRipple
         accessibleAriaLabel="Help & Support"
         component={Link}
-        data-testid="top-menu-help-and-support"
-        disableRipple
         sx={topMenuIconButtonSx}
         to="/support"
       >

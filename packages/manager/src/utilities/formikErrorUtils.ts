@@ -1,5 +1,7 @@
+import { reverse } from 'ramda';
+
 import { getAPIErrorOrDefault } from './errorUtils';
-import { isNilOrEmpty } from '@linode/utilities';
+import { isNilOrEmpty } from './isNilOrEmpty';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikErrors } from 'formik';
@@ -85,13 +87,11 @@ export const handleFieldErrors = (
   callback: (error: unknown) => void,
   fieldErrors: APIError[] = []
 ) => {
-  const mappedFieldErrors = [...fieldErrors]
-    .reverse()
-    .reduce(
-      (result, { field, reason }) =>
-        field ? { ...result, [field]: reason } : result,
-      {}
-    );
+  const mappedFieldErrors = reverse(fieldErrors).reduce(
+    (result, { field, reason }) =>
+      field ? { ...result, [field]: reason } : result,
+    {}
+  );
 
   if (!isNilOrEmpty(mappedFieldErrors)) {
     return callback(mappedFieldErrors);

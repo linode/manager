@@ -9,7 +9,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -22,15 +21,16 @@ import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
-  useAllLinodeDisksQuery,
   useLinodeQuery,
   useLinodeResizeMutation,
-  usePreferences,
-  useRegionsQuery,
-} from '@linode/queries';
+} from 'src/queries/linodes/linodes';
+import { usePreferences } from 'src/queries/profile/preferences';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -171,8 +171,10 @@ export const LinodeResize = (props: Props) => {
 
   const type = types?.find((t) => t.id === linode?.type);
 
-  const [diskToResize, _shouldEnableAutoResizeDiskOption] =
-    shouldEnableAutoResizeDiskOption(disks ?? []);
+  const [
+    diskToResize,
+    _shouldEnableAutoResizeDiskOption,
+  ] = shouldEnableAutoResizeDiskOption(disks ?? []);
 
   const isSmaller = isSmallerThanCurrentPlan(
     formik.values.type,

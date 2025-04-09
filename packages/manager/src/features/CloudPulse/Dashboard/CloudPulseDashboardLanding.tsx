@@ -1,12 +1,8 @@
 import { Box, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { Redirect } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
@@ -41,8 +37,9 @@ export const CloudPulseDashboardLanding = () => {
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 
-  const [showAppliedFilters, setShowAppliedFilters] =
-    React.useState<boolean>(false);
+  const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
+    false
+  );
 
   const toggleAppliedFilter = (isVisible: boolean) => {
     setShowAppliedFilters(isVisible);
@@ -80,16 +77,9 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
   return (
-    <React.Suspense fallback={<SuspenseLoader />}>
+    <React.Fragment>
       <DocumentTitleSegment segment="Dashboards" />
-      <Grid container spacing={2} sx={{ width: 'inherit !important' }}>
-        <Grid item xs>
-          <LandingHeader
-            breadcrumbProps={{ pathname: '/metrics' }}
-            docsLabel="Docs"
-            docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
-          />
-        </Grid>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
@@ -114,11 +104,6 @@ export const CloudPulseDashboardLanding = () => {
           timeDuration={timeDuration}
         />
       </Grid>
-      <Redirect from="*" to="/metrics" />
-    </React.Suspense>
+    </React.Fragment>
   );
 };
-
-export const cloudPulseMetricsLandingLazyRoute = createLazyRoute('/metrics')({
-  component: CloudPulseDashboardLanding,
-});

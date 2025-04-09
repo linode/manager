@@ -1,16 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  ActionsPanel,
-  Autocomplete,
-  Box,
-  Drawer,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete, Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
@@ -95,15 +90,9 @@ export const AddNotificationChannelDrawer = (
     (template) => template.label === channelLabelWatcher
   );
 
-  const resetDrawer = () => {
-    handleCloseDrawer();
-    reset();
-  };
-
   return (
     <Drawer
-      NotFoundComponent={NotFound}
-      onClose={resetDrawer}
+      onClose={handleCloseDrawer}
       open={open}
       title="Add Notification Channel"
     >
@@ -119,7 +108,7 @@ export const AddNotificationChannelDrawer = (
           >
             <Typography
               sx={(theme) => ({
-                color: theme.tokens.alias.Content.Text,
+                color: theme.tokens.content.Text,
               })}
               gutterBottom
               variant="h3"
@@ -175,11 +164,6 @@ export const AddNotificationChannelDrawer = (
                         reason === 'selectOption' ? selected.label : null
                       );
                     }}
-                    slotProps={{
-                      popper: {
-                        placement: 'bottom',
-                      },
-                    }}
                     value={
                       selectedChannelTypeTemplate?.find(
                         (option) => option.label === field.value
@@ -206,13 +190,13 @@ export const AddNotificationChannelDrawer = (
                     <Typography variant="h3">To:</Typography>
                   </Grid>
                   <Grid
+                    item
+                    md="auto"
+                    xs={12}
                     sx={{
                       overflow: 'auto',
                       paddingRight: 1,
                     }}
-                    item
-                    md="auto"
-                    xs={12}
                   >
                     <RenderChannelDetails template={selectedTemplate} />
                   </Grid>
@@ -228,7 +212,7 @@ export const AddNotificationChannelDrawer = (
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: resetDrawer,
+              onClick: handleCloseDrawer,
             }}
           />
         </form>

@@ -1,15 +1,11 @@
+import { FirewallRuleType } from '@linode/api-v4/lib/firewalls/types';
+
 import {
   allIPv4,
   allIPv6,
   generateAddressesLabel,
-  getLinodeIdFromInterfaceDevice,
   predefinedFirewallFromRule,
 } from './shared';
-
-import type {
-  FirewallDeviceEntityType,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls/types';
 
 const addresses = {
   ipv4: [allIPv4],
@@ -146,24 +142,5 @@ describe('generateAddressLabel', () => {
     expect(generateAddressesLabel({ ipv4: undefined, ipv6: undefined })).toBe(
       'None'
     );
-  });
-});
-
-describe('getLinodeIdFromInterfaceDevice', () => {
-  it('returns the ID', () => {
-    const entity = {
-      id: 123,
-      label: null,
-      type: 'interface' as FirewallDeviceEntityType,
-      url: '/v4/linode/instances/123/interfaces/123',
-    };
-
-    expect(getLinodeIdFromInterfaceDevice(entity)).toEqual(123);
-    expect(
-      getLinodeIdFromInterfaceDevice({
-        ...entity,
-        url: '/v4/linode/instances/456/interfaces/123',
-      })
-    ).toEqual(456);
   });
 });

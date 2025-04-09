@@ -59,6 +59,7 @@ export const Prompt = React.memo((props: PromptProps) => {
       return;
     }
 
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [props.when, props.confirmWhenLeaving]);

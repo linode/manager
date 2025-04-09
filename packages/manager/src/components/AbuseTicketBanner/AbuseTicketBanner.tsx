@@ -1,12 +1,11 @@
-import { useNotificationsQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Link } from 'src/components/Link';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 
 const preferenceKey = 'abuse-tickets';
@@ -33,7 +32,7 @@ export const AbuseTicketBanner = () => {
 
   const href = multiple
     ? '/support/tickets'
-    : (abuseTickets[0].entity?.url ?? '');
+    : abuseTickets[0].entity?.url ?? '';
   const isViewingTicket = location.pathname.match(href);
 
   return (

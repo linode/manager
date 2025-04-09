@@ -1,5 +1,5 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4/lib/support/types';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   attachments: [],

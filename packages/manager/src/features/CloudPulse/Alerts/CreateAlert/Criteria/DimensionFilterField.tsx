@@ -69,9 +69,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
-      ? (dimensionOptions.find(
+      ? dimensionOptions.find(
           (dim) => dim.dimension_label === dimensionFieldWatcher
-        ) ?? null)
+        ) ?? null
       : null;
 
   const valueOptions = () => {
@@ -86,11 +86,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   return (
     <Grid
+      container
+      data-testid={`${name}-id`}
       sx={{
         gap: 2,
       }}
-      container
-      data-testid={`${name}-id`}
     >
       <Grid item md={3} xs={12}>
         <Controller
@@ -115,7 +115,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               label="Data Field"
               onBlur={field.onBlur}
               options={dataFieldOptions}
-              placeholder="Select a Data Field"
+              placeholder="Select a Data field"
             />
           )}
           control={control}
@@ -147,7 +147,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               label="Operator"
               onBlur={field.onBlur}
               options={dimensionOperatorOptions}
-              placeholder="Select an Operator"
             />
           )}
           control={control}

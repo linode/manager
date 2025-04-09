@@ -1,7 +1,6 @@
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
-import { profileFactory, regionFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -29,6 +28,8 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  profileFactory,
+  regionFactory,
   widgetFactory,
 } from 'src/factories';
 import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
@@ -239,7 +240,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     }).as('fetchPreferences');
     mockGetDatabases([databaseMock]);
 
-    cy.visitWithLogin('/metrics');
+    cy.visitWithLogin('monitor');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 

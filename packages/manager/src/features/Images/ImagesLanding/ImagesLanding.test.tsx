@@ -1,9 +1,8 @@
-import { profileFactory } from '@linode/utilities';
 import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { grantsFactory, imageFactory } from 'src/factories';
+import { grantsFactory, imageFactory, profileFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
@@ -252,8 +251,11 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+    const {
+      getAllByLabelText,
+      getByText,
+      queryByTestId,
+    } = await renderWithThemeAndRouter(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -391,8 +393,11 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { findAllByLabelText, getAllByLabelText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+    const {
+      findAllByLabelText,
+      getAllByLabelText,
+      queryByTestId,
+    } = await renderWithThemeAndRouter(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {

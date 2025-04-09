@@ -1,30 +1,27 @@
-import { useDeleteVPCMutation } from '@linode/queries';
-import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-
-import type { VPC } from '@linode/api-v4';
+import { useDeleteVPCMutation } from 'src/queries/vpcs/vpcs';
 
 interface Props {
-  isFetching: boolean;
+  id?: number;
+  label?: string;
   onClose: () => void;
   open: boolean;
-  vpc?: VPC;
 }
 
 export const VPCDeleteDialog = (props: Props) => {
-  const { isFetching, onClose, open, vpc } = props;
+  const { id, label, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isPending,
     mutateAsync: deleteVPC,
     reset,
-  } = useDeleteVPCMutation(vpc?.id ?? -1);
-  const navigate = useNavigate();
-  const location = useLocation();
+  } = useDeleteVPCMutation(id ?? -1);
+  const history = useHistory();
 
   React.useEffect(() => {
     if (open) {
@@ -38,8 +35,8 @@ export const VPCDeleteDialog = (props: Props) => {
         variant: 'success',
       });
       onClose();
-      if (location.pathname !== '/vpcs') {
-        navigate({ to: '/vpcs' });
+      if (history.location.pathname !== '/vpcs') {
+        history.push('/vpcs');
       }
     });
   };
@@ -48,19 +45,18 @@ export const VPCDeleteDialog = (props: Props) => {
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: vpc?.label,
+        name: label,
         primaryBtnText: 'Delete',
         type: 'VPC',
       }}
       errors={error}
       expand
-      isFetching={isFetching}
       label="VPC Label"
       loading={isPending}
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
-      title={`Delete VPC ${vpc?.label}`}
+      title={`Delete VPC ${label}`}
     />
   );
 };

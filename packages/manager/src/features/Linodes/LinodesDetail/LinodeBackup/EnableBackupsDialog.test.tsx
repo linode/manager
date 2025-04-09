@@ -1,7 +1,7 @@
-import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
+import { linodeFactory, regionFactory } from 'src/factories';
 import { typeFactory } from 'src/factories/types';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -34,11 +34,18 @@ vi.mock('src/components/Encryption/utils.ts', async () => {
   };
 });
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+vi.mock('src/queries/linodes/linodes', async () => {
+  const actual = await vi.importActual('src/queries/linodes/linodes');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
+
+vi.mock('src/queries/regions/regions', async () => {
+  const actual = await vi.importActual('src/queries/regions/regions');
+  return {
+    ...actual,
     useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
@@ -48,12 +55,6 @@ vi.mock('src/queries/types', async () => {
   return {
     ...actual,
     useTypeQuery: queryMocks.useTypeQuery,
-  };
-});
-
-const diskEncryptionEnabledMock = vi.hoisted(() => {
-  return {
-    useIsDiskEncryptionFeatureEnabled: vi.fn(),
   };
 });
 
@@ -80,24 +81,6 @@ describe('EnableBackupsDialog component', () => {
         label: 'Mock Linode Type',
       }),
     });
-  });
-
-  vi.mock('src/components/Encryption/utils.ts', async () => {
-    const actual = await vi.importActual<any>(
-      'src/components/Encryption/utils.ts'
-    );
-    return {
-      ...actual,
-      __esModule: true,
-      useIsDiskEncryptionFeatureEnabled:
-        diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-          () => {
-            return {
-              isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
-            };
-          }
-        ),
-    };
   });
 
   it('Displays the monthly backup price', async () => {
@@ -179,7 +162,25 @@ describe('EnableBackupsDialog component', () => {
     expect(getByTestId('confirm-enable-backups')).toBeDisabled();
   });
 
-  it('does not display a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled', () => {
+  it('does not display a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled and the region the linode is in does not support LDE', () => {
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linodeFactory.build({
+        id: 1,
+        label: 'Mock Linode',
+        region: 'us-east',
+        type: 'mock-linode-type',
+      }),
+    });
+
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          capabilities: [],
+          id: 'us-east',
+        }),
+      ],
+    });
+
     const { queryByText } = renderWithTheme(
       <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
     );
@@ -192,13 +193,11 @@ describe('EnableBackupsDialog component', () => {
   });
 
   it('displays a notice regarding Backups not being encrypted if the Disk Encryption feature is enabled', () => {
-    diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(
-      () => {
-        return {
-          isDiskEncryptionFeatureEnabled: true,
-        };
-      }
-    );
+    queryMocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
+      return {
+        isDiskEncryptionFeatureEnabled: true,
+      };
+    });
 
     const { queryByText } = renderWithTheme(
       <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
@@ -209,7 +208,39 @@ describe('EnableBackupsDialog component', () => {
     );
 
     expect(encryptionBackupsCaveatNotice).toBeInTheDocument();
+  });
 
-    diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockRestore();
+  it('displays a notice regarding Backups not being encrypted if the Disk Encryption feature is disabled but the region the linode is in supports LDE', () => {
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linodeFactory.build({
+        id: 1,
+        label: 'Mock Linode',
+        region: 'us-east',
+        type: 'mock-linode-type',
+      }),
+    });
+
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: [
+        regionFactory.build({
+          capabilities: ['Disk Encryption'],
+          id: 'us-east',
+        }),
+      ],
+    });
+
+    queryMocks.useIsDiskEncryptionFeatureEnabled.mockReturnValue({
+      isDiskEncryptionFeatureEnabled: false,
+    });
+
+    const { queryByText } = renderWithTheme(
+      <EnableBackupsDialog linodeId={1} onClose={vi.fn()} open={true} />
+    );
+
+    const encryptionBackupsCaveatNotice = queryByText(
+      DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY
+    );
+
+    expect(encryptionBackupsCaveatNotice).toBeInTheDocument();
   });
 });

@@ -1,4 +1,3 @@
-import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
 import { Button, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -10,6 +9,10 @@ import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/u
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import {
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from 'src/queries/linodes/linodes';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,

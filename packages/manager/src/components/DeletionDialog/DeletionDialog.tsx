@@ -1,12 +1,13 @@
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { usePreferences } from '@linode/queries';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { DialogProps } from '@linode/ui';
 
@@ -22,8 +23,16 @@ export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
 
 export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
-  const { entity, error, label, loading, onClose, onDelete, open, ...rest } =
-    props;
+  const {
+    entity,
+    error,
+    label,
+    loading,
+    onClose,
+    onDelete,
+    open,
+    ...rest
+  } = props;
 
   const { data: typeToConfirmPreference } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true

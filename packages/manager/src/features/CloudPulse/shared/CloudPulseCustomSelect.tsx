@@ -115,7 +115,6 @@ export interface CloudPulseCustomSelectProps {
 
 export enum CloudPulseSelectTypes {
   dynamic,
-  // eslint-disable-next-line sonarjs/future-reserved-words
   static,
 }
 
@@ -193,7 +192,7 @@ export const CloudPulseCustomSelect = React.memo(
       setResource(
         Array.isArray(filteredValue)
           ? [...filteredValue]
-          : (filteredValue ?? undefined)
+          : filteredValue ?? undefined
       );
     };
 
@@ -217,15 +216,15 @@ export const CloudPulseCustomSelect = React.memo(
       staticErrorText.length > 0
         ? staticErrorText
         : isError
-          ? 'Error while loading from API'
-          : '';
+        ? 'Error while loading from API'
+        : '';
 
     return (
       <Autocomplete
         options={
           type === CloudPulseSelectTypes.static
-            ? (options ?? [])
-            : (queriedResources ?? [])
+            ? options ?? []
+            : queriedResources ?? []
         }
         placeholder={
           selectedResource &&

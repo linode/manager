@@ -1,10 +1,14 @@
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import { Accordion, ActionsPanel, Notice } from '@linode/ui';
+import { Accordion, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+} from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -76,7 +80,8 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const alertSections = [
     {
-      copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+      copy:
+        'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
       error: hasErrorFor('alerts.cpu'),
       hidden: isBareMetalInstance,
@@ -102,7 +107,8 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       value: formik.values.cpu,
     },
     {
-      copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
+      copy:
+        'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
       error: hasErrorFor('alerts.io'),
       hidden: isBareMetalInstance,

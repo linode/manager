@@ -1,37 +1,30 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useAccountAgreements,
-  useAccountSettings,
-  useMutateAccountAgreements,
-  useProfile,
-} from '@linode/queries';
-import {
-  ActionsPanel,
-  Autocomplete,
-  Drawer,
-  Notice,
-  TextField,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete, Notice, TextField, Typography } from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/account/agreements';
+import { useAccountSettings } from 'src/queries/account/settings';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageTypesQuery,
 } from 'src/queries/object-storage/queries';
+import { useProfile } from 'src/queries/profile/profile';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
-import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { BucketRegions } from './BucketRegions';
@@ -43,6 +36,7 @@ import type {
   ObjectStorageEndpoint,
   ObjectStorageEndpointTypes,
 } from '@linode/api-v4';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 interface Props {
   isOpen: boolean;
@@ -225,8 +219,9 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     };
   };
 
-  const filteredEndpointOptions: EndpointOption[] | undefined =
-    filteredEndpoints?.map(createEndpointOption);
+  const filteredEndpointOptions:
+    | EndpointOption[]
+    | undefined = filteredEndpoints?.map(createEndpointOption);
 
   const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
 
@@ -288,12 +283,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -312,7 +302,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}
-              label="Bucket Name"
+              label="Label"
               onBlur={field.onBlur}
               onChange={field.onChange}
               required

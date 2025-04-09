@@ -201,23 +201,7 @@ export interface Interface {
   ip_ranges?: string[];
 }
 
-export interface InterfacePayload {
-  /**
-   * Required to specify a VLAN
-   */
-  label?: string | null;
-  purpose: InterfacePurpose;
-  /**
-   * Used for VLAN, but is optional
-   */
-  ipam_address?: string | null;
-  primary?: boolean;
-  subnet_id?: number | null;
-  vpc_id?: number | null;
-  ipv4?: ConfigInterfaceIPv4;
-  ipv6?: ConfigInterfaceIPv6;
-  ip_ranges?: string[] | null;
-}
+export type InterfacePayload = Omit<Interface, 'id' | 'active'>;
 
 export interface ConfigInterfaceOrderPayload {
   ids: number[];
@@ -543,7 +527,7 @@ export interface CreateLinodeRequest {
    * This is used to set the swap disk size for the newly-created Linode.
    * @default 512
    */
-  swap_size?: number | null;
+  swap_size?: number;
   /**
    * An Image ID to deploy the Linode Disk from.
    */
@@ -556,7 +540,7 @@ export interface CreateLinodeRequest {
    * A list of public SSH keys that will be automatically appended to the root user’s
    * `~/.ssh/authorized_keys`file when deploying from an Image.
    */
-  authorized_keys?: string[] | null;
+  authorized_keys?: string[];
   /**
    * If this field is set to true, the created Linode will automatically be enrolled in the Linode Backup service.
    * This will incur an additional charge. The cost for the Backup service is dependent on the Type of Linode deployed.
@@ -565,7 +549,7 @@ export interface CreateLinodeRequest {
    *
    * @default false
    */
-  backups_enabled?: boolean | null;
+  backups_enabled?: boolean;
   /**
    * This field is required only if the StackScript being deployed requires input data from the User for successful completion
    */
@@ -576,29 +560,29 @@ export interface CreateLinodeRequest {
    * @default true if the Linode is created with an Image or from a Backup.
    * @default false if using new Linode Interfaces and no interfaces are defined
    */
-  booted?: boolean | null;
+  booted?: boolean;
   /**
    * The Linode’s label is for display purposes only.
    * If no label is provided for a Linode, a default will be assigned.
    */
-  label?: string | null;
+  label?: string;
   /**
    * An array of tags applied to this object.
    *
    * Tags are for organizational purposes only.
    */
-  tags?: string[] | null;
+  tags?: string[];
   /**
    * If true, the created Linode will have private networking enabled and assigned a private IPv4 address.
    * @default false
    */
-  private_ip?: boolean | null;
+  private_ip?: boolean;
   /**
    * A list of usernames. If the usernames have associated SSH keys,
    * the keys will be appended to the root users `~/.ssh/authorized_keys`
    * file automatically when deploying from an Image.
    */
-  authorized_users?: string[] | null;
+  authorized_users?: string[];
   /**
    * An array of Network Interfaces to add to this Linode’s Configuration Profile.
    */
@@ -614,7 +598,7 @@ export interface CreateLinodeRequest {
    *
    * Default value on depends on interfaces_for_new_linodes field in AccountSettings object.
    */
-  interface_generation?: InterfaceGenerationType | null;
+  interface_generation?: InterfaceGenerationType;
   /**
    * Default value mirrors network_helper in AccountSettings object. Should only be
    * present when using Linode Interfaces.
@@ -628,7 +612,7 @@ export interface CreateLinodeRequest {
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */
-  metadata?: UserData | null;
+  metadata?: UserData;
   /**
    * The `id` of the Firewall to attach this Linode to upon creation.
    */
@@ -636,12 +620,12 @@ export interface CreateLinodeRequest {
   /**
    * An object that assigns this the Linode to a placement group upon creation.
    */
-  placement_group?: CreateLinodePlacementGroupPayload | null;
+  placement_group?: CreateLinodePlacementGroupPayload;
   /**
    * A property with a string literal type indicating whether the Linode is encrypted or unencrypted.
    * @default 'enabled' (if the region supports LDE)
    */
-  disk_encryption?: EncryptionStatus | null;
+  disk_encryption?: EncryptionStatus;
 }
 
 export interface MigrateLinodeRequest {

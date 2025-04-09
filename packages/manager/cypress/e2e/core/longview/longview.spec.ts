@@ -1,31 +1,29 @@
+import type { LongviewClient } from '@linode/api-v4';
 import { DateTime } from 'luxon';
+import {
+  longviewResponseFactory,
+  longviewClientFactory,
+  longviewAppsFactory,
+  longviewLatestStatsFactory,
+  longviewPackageFactory,
+} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
-  longviewAddClientButtonText,
-  longviewEmptyStateMessage,
   longviewStatusTimeout,
+  longviewEmptyStateMessage,
+  longviewAddClientButtonText,
 } from 'support/constants/longview';
 import {
   interceptFetchLongviewStatus,
+  mockGetLongviewClients,
+  mockFetchLongviewStatus,
   mockCreateLongviewClient,
   mockDeleteLongviewClient,
-  mockFetchLongviewStatus,
-  mockGetLongviewClients,
   mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
-
-import {
-  longviewAppsFactory,
-  longviewClientFactory,
-  longviewLatestStatsFactory,
-  longviewPackageFactory,
-  longviewResponseFactory,
-} from 'src/factories';
-
-import type { LongviewClient } from '@linode/api-v4';
 
 /**
  * Returns the command used to install Longview which is shown in Cloud's UI.

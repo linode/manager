@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 import type {
   Account,
@@ -73,8 +73,8 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   zip: '19106',
 });
 
-export const accountTransferFactory =
-  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
+export const accountTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
+  {
     billable: 0,
     quota: 25000, // GB
     region_transfers: [
@@ -92,12 +92,14 @@ export const accountTransferFactory =
       },
     ],
     used: 9000, // GB
-  });
+  }
+);
 
-export const accountTransferNoResourceFactory =
-  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
+export const accountTransferNoResourceFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
+  {
     billable: 0,
     quota: 0,
     region_transfers: [],
     used: 0,
-  });
+  }
+);

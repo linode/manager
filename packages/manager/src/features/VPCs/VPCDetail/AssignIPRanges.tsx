@@ -62,7 +62,6 @@ export const AssignIPRanges = (props: Props) => {
         forVPCIPv4Ranges
         ips={ipRanges}
         onChange={handleIPRangeChange}
-        // eslint-disable-next-line sonarjs/no-hardcoded-ip
         placeholder="10.0.0.0/24"
         title="" // Empty string so a title isn't displayed for each IP input
       />

@@ -1,7 +1,7 @@
-import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { NotFound } from '../NotFound';
+import { Drawer } from 'src/components/Drawer';
+
 import { TagCell } from './TagCell';
 
 export interface TagDrawerProps {
@@ -18,7 +18,6 @@ export const TagDrawer = (props: TagDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={'Tags' + (entityLabel ? ` (${entityLabel})` : '')}

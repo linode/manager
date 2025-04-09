@@ -1,16 +1,8 @@
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
-import {
-  useAccount,
-  useAllAccountInvoices,
-  useAllAccountPayments,
-  useProfile,
-  useRegionsQuery,
-} from '@linode/queries';
 import { Autocomplete, Typography } from '@linode/ui';
-import { getAll, useSet } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -40,8 +32,17 @@ import {
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useSet } from 'src/hooks/useSet';
+import { useAccount } from 'src/queries/account/account';
+import {
+  useAllAccountInvoices,
+  useAllAccountPayments,
+} from 'src/queries/account/billing';
+import { useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
 
@@ -193,11 +194,15 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [selectedTransactionType, setSelectedTransactionType] =
-    React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
+  const [
+    selectedTransactionType,
+    setSelectedTransactionType,
+  ] = React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
 
-  const [selectedTransactionDate, setSelectedTransactionDate] =
-    React.useState<TransactionDateOptions>(transactionDateOptions[3]);
+  const [
+    selectedTransactionDate,
+    setSelectedTransactionDate,
+  ] = React.useState<TransactionDateOptions>(transactionDateOptions[3]);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);

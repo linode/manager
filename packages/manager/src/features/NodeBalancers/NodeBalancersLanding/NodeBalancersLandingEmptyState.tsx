@@ -1,5 +1,5 @@
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -16,7 +16,8 @@ import {
 } from './NodeBalancersLandingEmptyStateData';
 
 export const NodeBalancerLandingEmptyState = () => {
-  const navigate = useNavigate();
+  const { push } = useHistory();
+
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
   });
@@ -35,9 +36,7 @@ export const NodeBalancerLandingEmptyState = () => {
                 category: linkAnalyticsEvent.category,
                 label: 'Create NodeBalancer',
               });
-              navigate({
-                to: '/nodebalancers/create',
-              });
+              push('/nodebalancers/create');
             },
             tooltipText: getRestrictedResourceText({
               action: 'create',

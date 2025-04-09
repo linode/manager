@@ -1,5 +1,7 @@
-import { linodeQueries, queryPresets } from '@linode/queries';
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { queryPresets } from './base';
+import { linodeQueries } from './linodes/linodes';
 
 import type { APIError, LinodeType } from '@linode/api-v4';
 import type { UseQueryOptions } from '@tanstack/react-query';

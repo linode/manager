@@ -1,61 +1,58 @@
-import {
-  linodeConfigInterfaceFactory,
-  linodeConfigInterfaceFactoryWithVPC,
-  linodeFactory,
-} from '@linode/utilities';
-import {
-  VLANFactory,
-  kernelFactory,
-  linodeConfigFactory,
-  subnetFactory,
-  vpcFactory,
-} from '@src/factories';
+import { createTestLinode } from 'support/util/linodes';
+import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
+import { cleanUp } from 'support/util/cleanup';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CLONE_TIMEOUT } from 'support/constants/linodes';
-import {
-  interceptCreateLinodeConfigs,
-  interceptDeleteLinodeConfig,
-  interceptGetLinodeConfigs,
-  interceptUpdateLinodeConfigs,
-  mockCreateLinodeConfigs,
-  mockGetLinodeConfigs,
-  mockUpdateLinodeConfigs,
-} from 'support/intercepts/configs';
+import { chooseRegion, getRegionById } from 'support/util/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import {
   interceptRebootLinode,
   mockGetLinodeDetails,
   mockGetLinodeDisks,
-  mockGetLinodeFirewalls,
-  mockGetLinodeKernel,
   mockGetLinodeKernels,
   mockGetLinodeVolumes,
+  mockGetLinodeKernel,
 } from 'support/intercepts/linodes';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import { ui } from 'support/ui';
-import { cleanUp } from 'support/util/cleanup';
+import {
+  interceptGetLinodeConfigs,
+  interceptDeleteLinodeConfig,
+  interceptCreateLinodeConfigs,
+  interceptUpdateLinodeConfigs,
+  mockGetLinodeConfigs,
+  mockCreateLinodeConfigs,
+  mockUpdateLinodeConfigs,
+} from 'support/intercepts/configs';
+import { fetchLinodeConfigs } from 'support/util/linodes';
+import {
+  kernelFactory,
+  vpcFactory,
+  linodeFactory,
+  linodeConfigFactory,
+  VLANFactory,
+  LinodeConfigInterfaceFactory,
+  LinodeConfigInterfaceFactoryWithVPC,
+  subnetFactory,
+} from '@src/factories';
+import { randomNumber, randomLabel, randomIp } from 'support/util/random';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
-import { createTestLinode, fetchLinodeConfigs } from 'support/util/linodes';
-import { randomIp, randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
-
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
 
+import type { CreateTestLinodeOptions } from 'support/util/linodes';
 import type {
   Config,
   CreateLinodeRequest,
   InterfacePurpose,
-  Kernel,
   Linode,
-  Region,
   VLAN,
+  Region,
+  Kernel,
 } from '@linode/api-v4';
-import type { CreateTestLinodeOptions } from 'support/util/linodes';
 
 /**
  * Returns a Promise that resolves to a new test Linode and its first config object.
@@ -258,7 +255,7 @@ describe('Linode Config management', () => {
         () =>
           createLinodeAndGetConfig(
             { booted: true },
-            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+            { waitForBoot: true, securityMethod: 'vlan_no_internet' }
           ),
         'Creating and booting test Linode'
       ).then(([linode, config]: [Linode, Config]) => {
@@ -316,7 +313,7 @@ describe('Linode Config management', () => {
           ),
           createTestLinode(
             { booted: true },
-            { securityMethod: 'vlan_no_internet', waitForBoot: true }
+            { securityMethod: 'vlan_no_internet' }
           ),
         ]);
       };
@@ -395,8 +392,7 @@ describe('Linode Config management', () => {
 
         // Confirm toast message and that UI updates to reflect clone in progress.
         ui.toast.assertMessage(
-          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`,
-          { timeout: LINODE_CLONE_TIMEOUT }
+          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`
         );
         cy.findByText(/CLONING \(\d+%\)/).should('be.visible');
       });
@@ -469,19 +465,19 @@ describe('Linode Config management', () => {
     // Mock config with public internet for eth0 and VLAN for eth1.
     const mockConfig: Config = linodeConfigFactory.build({
       id: randomNumber(),
+      label: randomLabel(),
+      kernel: mockKernel.id,
       interfaces: [
-        linodeConfigInterfaceFactory.build({
+        LinodeConfigInterfaceFactory.build({
           ipam_address: null,
-          label: null,
           purpose: 'public',
+          label: null,
         }),
-        linodeConfigInterfaceFactory.build({
+        LinodeConfigInterfaceFactory.build({
           label: randomLabel(),
           purpose: 'vlan',
         }),
       ],
-      kernel: mockKernel.id,
-      label: randomLabel(),
     });
 
     const mockVLANs: VLAN[] = VLANFactory.buildList(2);
@@ -502,10 +498,10 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          linodeConfigInterfaceFactoryWithVPC.build({
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
             active: false,
             label: null,
-            vpc_id: mockVPC.id,
           }),
         ],
       };
@@ -615,10 +611,10 @@ describe('Linode Config management', () => {
         ...mockConfig,
         interfaces: [
           ...mockConfigInterfaces,
-          linodeConfigInterfaceFactoryWithVPC.build({
-            active: false,
+          LinodeConfigInterfaceFactoryWithVPC.build({
             label: undefined,
             vpc_id: mockVPC.id,
+            active: false,
           }),
         ],
       };
@@ -701,9 +697,9 @@ describe('Linode Config management', () => {
       });
       const mockSubnet = subnetFactory.build({
         id: randomNumber(),
-        ipv4: `${randomIp()}/0`,
         label: randomLabel(),
         linodes: [],
+        ipv4: `${randomIp()}/0`,
       });
       const mockVPC = vpcFactory.build({
         id: randomNumber(),
@@ -716,30 +712,28 @@ describe('Linode Config management', () => {
       const mockConfigWithVpc: Config = {
         ...mockConfig,
         interfaces: [
-          linodeConfigInterfaceFactory.build({
+          LinodeConfigInterfaceFactory.build({
             ipam_address: null,
-            label: null,
             purpose: 'public',
+            label: null,
           }),
-          linodeConfigInterfaceFactoryWithVPC.build({
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
             active: false,
             label: null,
-            vpc_id: mockVPC.id,
           }),
         ],
       };
 
       // Mock a Linode with no existing configs, then visit its details page.
       mockGetLinodeKernel(mockKernel.id, mockKernel);
-      mockGetLinodeKernels([mockKernel]).as('getKernels');
+      mockGetLinodeKernels([mockKernel]);
       mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
       mockGetLinodeDisks(mockLinode.id, []).as('getDisks');
       mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
       mockGetLinodeConfigs(mockLinode.id, []).as('getConfigs');
-      mockGetLinodeFirewalls(mockLinode.id, []);
       mockGetVPC(mockVPC).as('getVPC');
       mockGetVPCs([mockVPC]).as('getVPCs');
-      mockGetVLANs([]).as('getVLANs');
 
       cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
       cy.wait(['@getConfigs', '@getDisks', '@getLinode', '@getVolumes']);
@@ -757,10 +751,8 @@ describe('Linode Config management', () => {
         'getLinodeConfigs'
       );
 
-      // Create new config. Wait for VLAN GET response before interacting with form.
+      // Create new config.
       cy.findByText('Add Configuration').click();
-      cy.wait('@getVLANs');
-
       ui.dialog
         .findByTitle('Add Configuration')
         .should('be.visible')

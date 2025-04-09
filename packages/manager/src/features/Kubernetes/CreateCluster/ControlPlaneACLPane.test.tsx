@@ -10,15 +10,13 @@ import type { ControlPlaneACLProps } from './ControlPlaneACLPane';
 const props: ControlPlaneACLProps = {
   enableControlPlaneACL: true,
   errorText: undefined,
-  handleIsAcknowledgementChecked: vi.fn(),
-  isAcknowledgementChecked: false,
   selectedTier: 'standard',
   setControlPlaneACL: vi.fn(),
 };
 
 describe('ControlPlaneACLPane', () => {
-  it('renders toggle, fields, and correct copy for a standard cluster when enableControlPlaneACL is true', () => {
-    const { getByText, queryByRole } = renderWithThemeAndHookFormContext({
+  it('renders checkbox, fields, and correct copy for a standard cluster when enableControlPlaneACL is true', () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
       component: <ControlPlaneACLPane {...props} />,
       useFormOptions: {
         defaultValues: {
@@ -45,12 +43,6 @@ describe('ControlPlaneACLPane', () => {
     expect(getByText('Add IPv4 Address')).toBeVisible();
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
-
-    // Confirm acknowledgement check is not shown for a standard tier cluster since ACL is not enforced by default.
-    const acknowledgementCheck = queryByRole('checkbox', {
-      name: /Provide an ACL later/,
-    });
-    expect(acknowledgementCheck).toBe(null);
   });
 
   it('hides IP fields when enableControlPlaneACL is false for a standard cluster', () => {
@@ -73,7 +65,7 @@ describe('ControlPlaneACLPane', () => {
     expect(queryByText('Add IPv6 Address')).not.toBeInTheDocument();
   });
 
-  it('renders correct toggle state, copy, and acknowledgement checkbox for an enterprise cluster when enableControlPlaneACL is true', () => {
+  it('renders correct toggle state and copy for an enterprise cluster when enableControlPlaneACL is true', () => {
     const { getByRole, getByText } = renderWithThemeAndHookFormContext({
       component: <ControlPlaneACLPane {...props} selectedTier="enterprise" />,
     });
@@ -85,7 +77,7 @@ describe('ControlPlaneACLPane', () => {
       )
     ).toBeVisible();
 
-    // Confirm ACL toggle is checked by default and edits are disabled.
+    // Confirm ACL is checked by default and edits are disabled.
     const toggle = getByRole('checkbox', { name: 'Enable Control Plane ACL' });
     expect(toggle).toBeChecked();
     expect(toggle).toBeDisabled();
@@ -94,13 +86,6 @@ describe('ControlPlaneACLPane', () => {
     expect(getByText('Add IPv4 Address')).toBeVisible();
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
-
-    // Confirm acknowledgement checkbox is shown.
-    const acknowledgementCheck = getByRole('checkbox', {
-      name: /Provide an ACL later/,
-    });
-    expect(acknowledgementCheck).toBeEnabled();
-    expect(acknowledgementCheck).not.toBeChecked();
   });
 
   it('calls setControlPlaneACL when clicking the toggle', async () => {
@@ -112,20 +97,6 @@ describe('ControlPlaneACLPane', () => {
     await userEvent.click(toggle);
 
     expect(props.setControlPlaneACL).toHaveBeenCalled();
-  });
-
-  it('calls handleIsAcknowledgementChecked when clicking the acknowledgement', async () => {
-    const { getByRole } = renderWithThemeAndHookFormContext({
-      component: <ControlPlaneACLPane {...props} selectedTier="enterprise" />,
-    });
-
-    // Confirm acknowledgement checkbox is shown.
-    const acknowledgementCheck = getByRole('checkbox', {
-      name: /Provide an ACL later/,
-    });
-    await userEvent.click(acknowledgementCheck);
-
-    expect(props.handleIsAcknowledgementChecked).toHaveBeenCalled();
   });
 
   it('handles IP changes', async () => {

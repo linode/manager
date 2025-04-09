@@ -1,11 +1,10 @@
-import { useGrants, useProfile } from '@linode/queries';
 import * as React from 'react';
 
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { NO_PERMISSIONS_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
+import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
 import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
-
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 interface LinodeFirewallsActionMenuProps {
   firewallID: number;
@@ -29,7 +28,7 @@ export const LinodeFirewallsActionMenu = (
   const disabledProps = !userCanModifyFirewall
     ? {
         disabled: true,
-        tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
+        tooltip: noPermissionTooltipText,
       }
     : {};
 

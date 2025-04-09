@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { maybeCastToNumber } from '@linode/utilities';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 
 import { getInitialIPs } from '../../domainUtils';
 

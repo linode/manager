@@ -1,26 +1,19 @@
-import {
-  useAllLinodeDisksQuery,
-  useAllVolumesQuery,
-  useGrants,
-  useLinodeQuery,
-  useLinodeRescueMutation,
-  useProfile,
-} from '@linode/queries';
-import {
-  ActionsPanel,
-  Button,
-  Dialog,
-  ErrorState,
-  Notice,
-  Paper,
-  clamp,
-} from '@linode/ui';
-import { usePrevious, createDevicesFromStrings } from '@linode/utilities';
+import { Button, Dialog, ErrorState, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
+import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
+import {
+  useLinodeQuery,
+  useLinodeRescueMutation,
+} from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { DeviceSelection } from './DeviceSelection';
@@ -28,7 +21,7 @@ import { RescueDescription } from './RescueDescription';
 
 import type { ExtendedDisk } from './DeviceSelection';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { DevicesAsStrings } from '@linode/utilities';
+import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 interface Props {
   linodeId: number | undefined;
@@ -142,8 +135,9 @@ export const StandardRescueDialog = (props: Props) => {
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
-  const [rescueDevices, setRescueDevices] =
-    React.useState<DevicesAsStrings>(deviceMap);
+  const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
+    deviceMap
+  );
 
   const { checkForNewEvents } = useEventsPollingActions();
 

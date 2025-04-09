@@ -46,10 +46,7 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    Object.prototype.hasOwnProperty.call(
-      transitionActionMap,
-      recentEvent.action
-    ) &&
+    transitionActionMap.hasOwnProperty(recentEvent.action) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );

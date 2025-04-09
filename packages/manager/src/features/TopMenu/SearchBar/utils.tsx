@@ -11,8 +11,7 @@ export const createFinalOptions = (
 ): SearchResultItem[] => {
   const redirectOption: ExtendedSearchableItem = {
     data: {
-      description: '',
-      path: `/search?query=${searchText}`,
+      searchText,
     },
     icon: <ManageSearchIcon />,
     label: `View search results page for "${searchText}"`,
@@ -20,19 +19,11 @@ export const createFinalOptions = (
   };
 
   const loadingResults: ExtendedSearchableItem = {
-    data: {
-      description: '',
-      path: '',
-    },
     label: 'Loading results...',
     value: 'info',
   };
 
   const searchError: ExtendedSearchableItem = {
-    data: {
-      description: '',
-      path: '',
-    },
     label: 'Error retrieving search results',
     value: 'error',
   };
@@ -59,8 +50,7 @@ export const createFinalOptions = (
   // MORE THAN 20 RESULTS:
   const lastOption: ExtendedSearchableItem = {
     data: {
-      description: '',
-      path: `/search?query=${searchText}`,
+      searchText,
     },
     icon: <ManageSearchIcon />,
     label: `View all ${results.length} results for "${searchText}"`,

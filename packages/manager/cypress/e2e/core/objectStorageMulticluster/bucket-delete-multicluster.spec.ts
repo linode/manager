@@ -1,13 +1,12 @@
+import { randomLabel } from 'support/util/random';
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockDeleteBucket,
   mockGetBuckets,
+  mockDeleteBucket,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-
-import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 
 describe('Object Storage Multicluster Bucket delete', () => {
   /*
@@ -19,9 +18,9 @@ describe('Object Storage Multicluster Bucket delete', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({
+      label: bucketLabel,
       cluster: bucketCluster,
       hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
-      label: bucketLabel,
       objects: 0,
     });
 

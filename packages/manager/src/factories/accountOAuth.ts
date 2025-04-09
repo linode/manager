@@ -1,5 +1,5 @@
 import { OAuthClient } from '@linode/api-v4';
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
 export const oauthClientFactory = Factory.Sync.makeFactory<OAuthClient>({
   id: Factory.each((id) => String(id)),

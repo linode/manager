@@ -1,8 +1,8 @@
-import { regionFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesDrawer } from './HostNamesDrawer';
@@ -22,8 +22,7 @@ const mockS3Regions = [
   },
 ];
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('src/queries/regions/regions', () => ({
   useRegionsQuery: vi.fn(() => ({
     data: [
       ...regionFactory.buildList(1, { id: 'region1', label: 'Newark, NJ' }),

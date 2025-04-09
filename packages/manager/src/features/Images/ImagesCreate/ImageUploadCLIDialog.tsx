@@ -1,12 +1,12 @@
 import { Typography as FontTypography } from '@linode/design-language-system';
 import { Dialog, Typography } from '@linode/ui';
-import { wrapInQuotes } from '@linode/utilities';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Link } from 'src/components/Link';
 import { sendCLIClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { wrapInQuotes } from 'src/utilities/stringUtils';
 
 import type { ImageUploadFormData } from './ImageUpload.utils';
 

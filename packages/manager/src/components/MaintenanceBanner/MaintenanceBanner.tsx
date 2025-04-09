@@ -1,9 +1,10 @@
-import { useAllAccountMaintenanceQuery, useProfile } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
+import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 

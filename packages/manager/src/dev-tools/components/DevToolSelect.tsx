@@ -17,9 +17,7 @@ export const DevToolSelect = (props: DevToolsSelectProps) => {
 
   return (
     <div className="dev-tools__select" style={style}>
-      <select {...propsWithoutStyles} className="dt-select">
-        {props.children}
-      </select>
+      <select {...propsWithoutStyles}>{props.children}</select>
     </div>
   );
 };

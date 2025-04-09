@@ -3,16 +3,15 @@
  */
 
 import { getProfile } from '@linode/api-v4/lib/profile';
-import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   interceptInitiateEntityTransfer,
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
-  mockGetEntityTransfersError,
   mockInitiateEntityTransferError,
   mockReceiveEntityTransfer,
+  mockGetEntityTransfersError,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
@@ -22,15 +21,13 @@ import { pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomUuid } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { linodeFactory } from 'src/factories';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type {
-  EntityTransfer,
-  EntityTransferStatus,
-  Linode,
-  Profile,
-} from '@linode/api-v4';
+import type { EntityTransferStatus } from '@linode/api-v4';
+import type { EntityTransfer, Linode, Profile } from '@linode/api-v4';
 
 // Service transfer empty state message.
 const serviceTransferEmptyState = 'No data to display.';
@@ -498,14 +495,14 @@ describe('Account service transfers', () => {
    */
   it('can not initiate a service transfer by managed users', () => {
     // Mock Linodes to initiate a service transfer.
-    const mockLinodes = new Array(5)
-      .fill(null)
-      .map((item: null, index: number): Linode => {
+    const mockLinodes = new Array(5).fill(null).map(
+      (item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
         });
-      });
+      }
+    );
 
     mockGetLinodes(mockLinodes).as('getLinodes');
     const errorMessage = 'You cannot initiate transfers with Managed enabled.';

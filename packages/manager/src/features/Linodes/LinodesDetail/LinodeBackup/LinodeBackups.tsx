@@ -17,13 +17,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import {
-  useLinodeBackupsQuery,
-  useLinodeQuery,
-  useGrants,
-  useProfile,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
@@ -50,11 +47,10 @@ export const LinodeBackups = () => {
     linode?.type ?? '',
     Boolean(linode?.type)
   );
-  const {
-    data: backups,
-    error,
-    isLoading,
-  } = useLinodeBackupsQuery(id, Boolean(linode?.backups.enabled));
+  const { data: backups, error, isLoading } = useLinodeBackupsQuery(
+    id,
+    Boolean(linode?.backups.enabled)
+  );
 
   const doesNotHavePermission =
     Boolean(profile?.restricted) &&
@@ -64,8 +60,10 @@ export const LinodeBackups = () => {
 
   const [isRestoreDrawerOpen, setIsRestoreDrawerOpen] = React.useState(false);
 
-  const [isCancelBackupsDialogOpen, setIsCancelBackupsDialogOpen] =
-    React.useState(false);
+  const [
+    isCancelBackupsDialogOpen,
+    setIsCancelBackupsDialogOpen,
+  ] = React.useState(false);
 
   const [selectedBackup, setSelectedBackup] = React.useState<LinodeBackup>();
 
@@ -86,11 +84,12 @@ export const LinodeBackups = () => {
     setSelectedBackup(backup);
   };
 
-  const backupsMonthlyPrice: PriceObject['monthly'] | undefined =
-    getMonthlyBackupsPrice({
-      region: linode?.region,
-      type,
-    });
+  const backupsMonthlyPrice:
+    | PriceObject['monthly']
+    | undefined = getMonthlyBackupsPrice({
+    region: linode?.region,
+    type,
+  });
 
   if (!linode?.backups.enabled) {
     return (

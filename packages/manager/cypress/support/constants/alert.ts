@@ -41,6 +41,4 @@ export const aggregationTypeMap: Record<MetricAggregationType, string> = {
 export const statusMap: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
-  failed: 'Failed',
-  'in progress': 'In Progress',
 };

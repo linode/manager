@@ -15,12 +15,8 @@ import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
-  NodebalancerVpcConfig,
 } from './types';
-import {
-  combineNodeBalancerConfigNodeAddressAndPort,
-  combineNodeBalancerConfigNodeAddressAndPortBeta,
-} from './utils';
+import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
 import type { Firewall } from '../firewalls/types';
 
 /**
@@ -33,7 +29,7 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/nodebalancers`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
+    setXFilter(filters)
   );
 
 /**
@@ -46,7 +42,7 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
 export const getNodeBalancer = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
-    setMethod('GET'),
+    setMethod('GET')
   );
 
 /**
@@ -59,9 +55,9 @@ export const getNodeBalancer = (nodeBalancerId: number) =>
 export const getNodeBalancerBeta = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(
-      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`,
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`
     ),
-    setMethod('GET'),
+    setMethod('GET')
   );
 
 /**
@@ -75,12 +71,12 @@ export const getNodeBalancerBeta = (nodeBalancerId: number) =>
  */
 export const updateNodeBalancer = (
   nodeBalancerId: number,
-  data: Partial<NodeBalancer>,
+  data: Partial<NodeBalancer>
 ) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
     setMethod('PUT'),
-    setData(data, UpdateNodeBalancerSchema),
+    setData(data, UpdateNodeBalancerSchema)
   );
 
 /**
@@ -95,24 +91,8 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
     setData(
       data,
       NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPort,
-    ),
-  );
-
-/**
- * createNodeBalancerBeta
- *
- * Add a NodeBalancer to your account using the beta API
- */
-export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
-  Request<NodeBalancer>(
-    setMethod('POST'),
-    setURL(`${BETA_API_ROOT}/nodebalancers`),
-    setData(
-      data,
-      NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPortBeta,
-    ),
+      combineNodeBalancerConfigNodeAddressAndPort
+    )
   );
 
 /**
@@ -125,7 +105,7 @@ export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
 export const deleteNodeBalancer = (nodeBalancerId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
+    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`)
   );
 
 /**
@@ -138,9 +118,9 @@ export const deleteNodeBalancer = (nodeBalancerId: number) =>
 export const getNodeBalancerStats = (nodeBalancerId: number) => {
   return Request<NodeBalancerStats>(
     setURL(
-      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/stats`,
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/stats`
     ),
-    setMethod('GET'),
+    setMethod('GET')
   );
 };
 
@@ -153,17 +133,17 @@ export const getNodeBalancerStats = (nodeBalancerId: number) => {
 export const getNodeBalancerFirewalls = (
   nodeBalancerId: number,
   params?: Params,
-  filter?: Filter,
+  filter?: Filter
 ) =>
   Request<Page<Firewall>>(
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId,
-      )}/firewalls`,
+        nodeBalancerId
+      )}/firewalls`
     ),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params),
+    setParams(params)
   );
 
 /**
@@ -176,47 +156,5 @@ export const getNodeBalancerTypes = (params?: Params) =>
   Request<Page<PriceType>>(
     setURL(`${API_ROOT}/nodebalancers/types`),
     setMethod('GET'),
-    setParams(params),
-  );
-
-/**
- * getNodeBalancerVPCConfigsBeta
- *
- * View all VPC Config information for this NodeBalancer
- *
- * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
- */
-export const getNodeBalancerVPCConfigsBeta = (
-  nodeBalancerId: number,
-  params?: Params,
-  filter?: Filter,
-) =>
-  Request<Page<NodebalancerVpcConfig>>(
-    setURL(
-      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId,
-      )}/vpcs`,
-    ),
-    setMethod('GET'),
-    setXFilter(filter),
-    setParams(params),
-  );
-/**
- * getNodeBalancerVPCConfigBeta
- *
- * View VPC Config information for this NodeBalancer and VPC Config id
- *
- * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
- */
-export const getNodeBalancerVPCConfigBeta = (
-  nodeBalancerId: number,
-  nbVpcConfigId: number,
-) =>
-  Request<NodebalancerVpcConfig>(
-    setURL(
-      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId,
-      )}/vpcs/${encodeURIComponent(nbVpcConfigId)}`,
-    ),
-    setMethod('GET'),
+    setParams(params)
   );

@@ -1,21 +1,22 @@
-import { ListItemOption, Stack, Tooltip, Typography } from '@linode/ui';
+import { Stack, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
+import { ListItemOption } from 'src/components/ListItemOption';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { OSIcon } from '../OSIcon';
 import { isImageDeprecated } from './utilities';
 
 import type { Image } from '@linode/api-v4';
-import type { ListItemOptionProps } from '@linode/ui';
+import type { ListItemProps } from 'src/components/ListItemOption';
 
 export const ImageOption = ({
   disabledOptions,
   item,
   props,
   selected,
-}: ListItemOptionProps<Image>) => {
+}: ListItemProps<Image>) => {
   const flags = useFlags();
 
   return (

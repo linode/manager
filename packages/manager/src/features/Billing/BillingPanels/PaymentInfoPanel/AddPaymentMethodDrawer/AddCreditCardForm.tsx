@@ -1,6 +1,5 @@
 import { addPaymentMethod } from '@linode/api-v4/lib';
-import { accountQueries } from '@linode/queries';
-import { ActionsPanel, Notice, TextField } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,6 +9,8 @@ import * as React from 'react';
 import NumberFormat from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { accountQueries } from 'src/queries/account/queries';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 

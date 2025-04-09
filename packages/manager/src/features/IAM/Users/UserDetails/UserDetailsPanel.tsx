@@ -3,14 +3,15 @@ import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
 import type {
   AccountAccessType,
-  EntityAccess,
   IamUserPermissions,
+  ResourceAccess,
   RoleType,
   User,
 } from '@linode/api-v4';
@@ -33,8 +34,19 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       value: <MaskableText isToggleable text={user.email} />,
     },
     {
-      label: 'Assigned Roles',
-      value: <Typography>{assignRolesCount}</Typography>,
+      label: 'Access',
+      value:
+        assignRolesCount > 0 ? (
+          <Typography>
+            <Link to={`/iam/users/${user.username}/roles`}>
+              {`${assignRolesCount} role${
+                assignRolesCount !== 1 ? 's' : ''
+              } assigned`}
+            </Link>
+          </Typography>
+        ) : (
+          <span>No Roles Assigned</span>
+        ),
     },
     {
       label: 'Last Login Status',
@@ -140,9 +152,9 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
 const getAssignRoles = (assignedRoles: IamUserPermissions): number => {
   const accountAccessRoles = assignedRoles.account_access || [];
 
-  const resourceAccessRoles = assignedRoles.entity_access
-    ? assignedRoles.entity_access
-        .map((resource: EntityAccess) => resource.roles)
+  const resourceAccessRoles = assignedRoles.resource_access
+    ? assignedRoles.resource_access
+        .map((resource: ResourceAccess) => resource.roles)
         .flat()
     : [];
 

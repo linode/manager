@@ -20,19 +20,15 @@ export const deleteChangesets = async (linodePackage) => {
     const files = await readdir(changesetDir);
 
     for (const file of files) {
-
-      if (file === "README.md") {
-        continue;
-      }
-      
-      const filePath = changesetDir + path.sep + file;
-      
-      try {
-        await unlink(filePath);
-        console.warn("Deleted:", filePath);
-        await git.rm(filePath);
-      } catch (error) {
-        console.error("Error occurred while deleting:", filePath, error);
+      if (file !== "README.md") {
+        const filePath = path.join(changesetDir, file);
+        try {
+          await unlink(filePath);
+          console.warn(`Deleted: ${filePath}`);
+          await git.rm(filePath);
+        } catch (error) {
+          console.error(`Error occurred while deleting ${filePath}:`, error);
+        }
       }
     }
 

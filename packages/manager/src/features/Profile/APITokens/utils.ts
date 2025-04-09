@@ -53,7 +53,6 @@ export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 export const levelMap = {
   create: 2,
   delete: 2,
-  hidden: -1,
   modify: 2,
   none: 0,
   read_only: 1,
@@ -106,16 +105,13 @@ export const scopeStringToPermTuples = (
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(permRegex).reduce(
-    (map, scopeStr) => {
-      const [perm, level] = scopeStr.split(':');
-      return {
-        ...map,
-        [perm]: levelMap[level as keyof typeof levelMap],
-      };
-    },
-    defaultScopeMap(basePerms, isCreateFlow)
-  );
+  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
+    const [perm, level] = scopeStr.split(':');
+    return {
+      ...map,
+      [perm]: levelMap[level as keyof typeof levelMap],
+    };
+  }, defaultScopeMap(basePerms, isCreateFlow));
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -164,24 +160,21 @@ export const scopeStringToPermTuples = (
 
 export const allMaxPerm = (
   scopeTups: Permission[],
-  perms: typeof basePerms,
-  exclude: PermissionKey[] = []
+  perms: typeof basePerms
 ): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
 
-  const excludeSet = new Set(exclude);
-  return scopeTups.every(
-    ([key, value]) => value === levelMap.read_write || excludeSet.has(key)
+  return scopeTups.reduce(
+    (acc: boolean, [key, value]: Permission) =>
+      value === levelMap.read_write && acc,
+    true
   );
 };
 
-export const permTuplesToScopeString = (
-  scopeTups: Permission[],
-  exclude: PermissionKey[]
-): string => {
-  if (allMaxPerm(scopeTups, basePerms, exclude)) {
+export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
+  if (allMaxPerm(scopeTups, basePerms)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
@@ -245,7 +238,7 @@ export const isWayInTheFuture = (time: string) => {
  */
 export const filterPermsNameMap = <
   // We're constraining T to an array of objects with the following shape:
-  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[],
+  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[]
 >(
   permMap: typeof basePermNameMap,
   perm: T

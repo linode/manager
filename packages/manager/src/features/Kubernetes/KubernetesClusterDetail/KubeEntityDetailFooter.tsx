@@ -14,7 +14,7 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useProfile } from '@linode/queries';
+import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -59,8 +59,9 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     ? `Enabled (${pluralize('IP Address', 'IP Addresses', totalNumberIPs)})`
     : 'Enable';
 
-  const { mutateAsync: updateKubernetesCluster } =
-    useKubernetesClusterMutation(clusterId);
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    clusterId
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 

@@ -1,11 +1,5 @@
 import {
-  useCreatePersonalAccessTokenMutation,
-  useProfile,
-} from '@linode/queries';
-import {
-  ActionsPanel,
   Autocomplete,
-  Drawer,
   FormControl,
   FormHelperText,
   Notice,
@@ -16,7 +10,8 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -25,6 +20,8 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useProfile } from 'src/queries/profile/profile';
+import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -118,10 +115,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
-  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
-  const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
-
   const form = useFormik<{
     expiry: string;
     label: string;
@@ -132,10 +125,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
       const { token } = await createPersonalAccessToken({
         expiry: values.expiry,
         label: values.label,
-        scopes: permTuplesToScopeString(
-          values.scopes,
-          hideChildAccountAccessScope ? ['child_account'] : []
-        ),
+        scopes: permTuplesToScopeString(values.scopes),
       });
       onClose();
       showSecret(token ?? 'Secret not available');
@@ -163,23 +153,26 @@ export const CreateAPITokenDrawer = (props: Props) => {
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    const newScopes = form.values.scopes.map((scope): Permission => {
-      // Check the excluded scopes object to see if the current scope will have its own defaults.
-      const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
-        (excludedScope) =>
-          excludedScope.name === scope[0] &&
-          excludedScope.invalidAccessLevels.includes(value)
-      );
+    const newScopes = form.values.scopes.map(
+      (scope): Permission => {
+        // Check the excluded scopes object to see if the current scope will have its own defaults.
+        const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
+          (excludedScope) =>
+            excludedScope.name === scope[0] &&
+            excludedScope.invalidAccessLevels.includes(value)
+        );
 
-      // Set an excluded scope based on its default access level, not the given Select All value.
-      if (indexOfExcludedScope >= 0) {
-        return [
-          scope[0],
-          excludedScopesFromSelectAll[indexOfExcludedScope].defaultAccessLevel,
-        ];
+        // Set an excluded scope based on its default access level, not the given Select All value.
+        if (indexOfExcludedScope >= 0) {
+          return [
+            scope[0],
+            excludedScopesFromSelectAll[indexOfExcludedScope]
+              .defaultAccessLevel,
+          ];
+        }
+        return [scope[0], value];
       }
-      return [scope[0], value];
-    });
+    );
     form.setFieldValue('scopes', newScopes);
   };
 
@@ -190,19 +183,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
       invalidAccessLevels: [levelMap.read_only],
       name: 'vpc',
     },
-    ...(hideChildAccountAccessScope
-      ? [
-          {
-            defaultAccessLevel: levelMap.hidden,
-            invalidAccessLevels: [
-              levelMap.read_only,
-              levelMap.read_write,
-              levelMap.none,
-            ],
-            name: 'child_account',
-          },
-        ]
-      : []),
   ];
 
   const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
@@ -219,13 +199,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const allPermissions = form.values.scopes;
 
+  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
+  const hideChildAccountAccessScope =
+    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Add Personal Access Token"
-    >
+    <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}

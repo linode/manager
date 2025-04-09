@@ -1,7 +1,7 @@
 import { Button, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -43,8 +43,8 @@ export const SubnetNode = (props: Props) => {
     <Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
-          size={showRemoveButton ? 11 : 12}
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
+          size={showRemoveButton ? 11 : 12}
         >
           <Controller
             render={({ field, fieldState }) => (

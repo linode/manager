@@ -96,7 +96,7 @@ export const EnvironmentToggleTool = () => {
               window.location.reload();
             }
           }}
-          className="dev-tools-button green"
+          className="green"
           disabled={selectedOptionLabel === currentEnvLabel}
         >
           Refresh

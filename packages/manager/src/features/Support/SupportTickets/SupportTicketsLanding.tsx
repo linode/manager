@@ -12,7 +12,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { SupportTicketDialog } from './SupportTicketDialog';
-import { TicketList } from './TicketList';
+import TicketList from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { BaseQueryParams } from '@linode/utilities';

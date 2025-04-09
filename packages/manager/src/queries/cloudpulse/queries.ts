@@ -6,10 +6,11 @@ import {
   getJWEToken,
   getMetricDefinitionsByServiceType,
 } from '@linode/api-v4';
-import { getAllLinodesRequest, volumeQueries } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { databaseQueries } from '../databases/databases';
+import { getAllLinodesRequest } from '../linodes/requests';
+import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
 import {
   getAllAlertsRequest,

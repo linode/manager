@@ -1,18 +1,14 @@
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { Autocomplete, Typography } from '@linode/ui';
 import React from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
+import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
-import { NotFound } from 'src/components/NotFound';
-import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
-import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 import { useAccountPermissions } from 'src/queries/iam/iam';
 
-import { getAllRoles } from '../../Shared/utilities';
+import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { getAllRoles, getRoleByName } from '../../Shared/utilities';
 
-import type { AssignNewRoleFormValues } from '../../Shared/utilities';
+import type { RolesType } from '../../Shared/utilities';
 
 interface Props {
   onClose: () => void;
@@ -20,96 +16,60 @@ interface Props {
 }
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
-  const theme = useTheme();
+  const [
+    selectedOptions,
+    setSelectedOptions,
+  ] = React.useState<RolesType | null>(null);
 
-  const { data: accountPermissions } = useAccountPermissions();
-
-  const form = useForm<AssignNewRoleFormValues>({
-    defaultValues: {
-      roles: [{ role: null }],
-    },
-  });
-
-  const { control, handleSubmit, reset, watch } = form;
-  const { append, fields, remove } = useFieldArray({
-    control,
-    name: 'roles',
-  });
-
-  // to watch changes to this value since we're conditionally rendering "Add another role"
-  const roles = watch('roles');
+  const {
+    data: accountPermissions,
+    isLoading: accountPermissionsLoading,
+  } = useAccountPermissions();
 
   const allRoles = React.useMemo(() => {
     if (!accountPermissions) {
       return [];
     }
+
     return getAllRoles(accountPermissions);
   }, [accountPermissions]);
 
-  const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
-    // TODO - make this really do something apart from console logging - UIE-8590
-
-    // const selectedRoles = values.roles.map((r) => r.role).filter(Boolean);
-    handleClose();
-  });
-
-  const handleClose = () => {
-    reset();
-
-    onClose();
-  };
+  // Get the selected role based on the `selectedOptions`
+  const selectedRole = React.useMemo(() => {
+    if (!selectedOptions || !accountPermissions) {
+      return null;
+    }
+    return getRoleByName(accountPermissions, selectedOptions.value);
+  }, [selectedOptions, accountPermissions]);
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Assign New Roles"
-    >
-      {' '}
-      <FormProvider {...form}>
-        <form onSubmit={onSubmit}>
-          <Typography sx={{ marginBottom: 2.5 }}>
-            Select a role you want to assign to a user. Some roles require
-            selecting resources they should apply to. Configure the first role
-            and continue adding roles or save the assignment.
-            <Link to=""> Learn more about roles and permissions.</Link>
-          </Typography>
+    <Drawer onClose={onClose} open={open} title="Assign New Roles">
+      <Typography sx={{ marginBottom: 2.5 }}>
+        Select a role you want to assign to a user. Some roles require selecting
+        resources they should apply to. Configure the first role and continue
+        adding roles or save the assignment.
+        <Link to=""> Learn more about roles and permissions.</Link>
+      </Typography>
 
-          {!!accountPermissions &&
-            fields.map((field, index) => (
-              <AssignSingleRole
-                index={index}
-                key={field.id}
-                onRemove={() => remove(index)}
-                options={allRoles}
-                permissions={accountPermissions}
-              />
-            ))}
+      <Autocomplete
+        renderOption={(props, option) => (
+          <li {...props} key={option.label}>
+            {option.label}
+          </li>
+        )}
+        label="Assign New Roles"
+        loading={accountPermissionsLoading}
+        onChange={(_, value) => setSelectedOptions(value)}
+        options={allRoles}
+        placeholder="Select a Role"
+        textFieldProps={{ hideLabel: true, noMarginTop: true }}
+        value={selectedOptions}
+      />
 
-          {/* If all roles are filled, allow them to add another */}
-          {roles.length > 0 && roles.every((field) => field.role) && (
-            <StyledLinkButtonBox sx={{ marginTop: theme.tokens.spacing.S12 }}>
-              <LinkButton onClick={() => append({ role: null })}>
-                Add another role
-              </LinkButton>
-            </StyledLinkButtonBox>
-          )}
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: 'Assign',
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleClose,
-            }}
-          />
-        </form>
-      </FormProvider>
+      {selectedRole && (
+        <AssignedPermissionsPanel key={selectedRole.name} role={selectedRole} />
+      )}
     </Drawer>
   );
 };

@@ -1,21 +1,13 @@
-import { useGrants, useProfile } from '@linode/queries';
-import { useTheme } from '@mui/material/styles';
+import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import { checkIfUserCanModifyFirewall } from '../shared';
-import {
-  DEFAULT_FIREWALL_TOOLTIP_TEXT,
-  NO_PERMISSIONS_TOOLTIP_TEXT,
-} from './constants';
-
-import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
-import type { Theme } from '@mui/material/styles';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
   [index: string]: any;
@@ -28,21 +20,21 @@ interface Props extends ActionHandlers {
   firewallID: number;
   firewallLabel: string;
   firewallStatus: FirewallStatus;
-  isDefaultFirewall: boolean;
 }
+
+export const noPermissionTooltipText =
+  "You don't have permissions to modify this Firewall.";
 
 export const FirewallActionMenu = React.memo((props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     firewallID,
     firewallLabel,
     firewallStatus,
-    isDefaultFirewall,
     triggerDeleteFirewall,
     triggerDisableFirewall,
     triggerEnableFirewall,
@@ -54,15 +46,12 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     grants
   );
 
-  const disabledProps =
-    !userCanModifyFirewall || (isLinodeInterfacesEnabled && isDefaultFirewall)
-      ? {
-          disabled: true,
-          tooltip: isDefaultFirewall
-            ? DEFAULT_FIREWALL_TOOLTIP_TEXT
-            : NO_PERMISSIONS_TOOLTIP_TEXT,
-        }
-      : {};
+  const disabledProps = !userCanModifyFirewall
+    ? {
+        disabled: true,
+        tooltip: noPermissionTooltipText,
+      }
+    : {};
 
   const actions: Action[] = [
     {

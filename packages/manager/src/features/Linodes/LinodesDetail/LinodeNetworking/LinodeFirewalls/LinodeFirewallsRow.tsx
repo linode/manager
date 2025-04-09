@@ -9,7 +9,7 @@ import {
   getCountOfRules,
   getRuleString,
 } from 'src/features/Firewalls/FirewallLanding/FirewallRow';
-import { useAllFirewallDevicesQuery } from '@linode/queries';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { LinodeFirewallsActionMenu } from './LinodeFirewallsActionMenu';
 

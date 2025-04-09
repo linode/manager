@@ -42,7 +42,7 @@ type Story = StoryObj<typeof Snackbar>;
 export const Default: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: false,
+    hideIconVariant: true,
     maxSnack: 5,
   },
   render: (args) => <Template {...args} />,
@@ -58,14 +58,7 @@ function Template(args: any) {
 
 function Example() {
   const { enqueueSnackbar } = useSnackbar();
-  const variants = [
-    'default',
-    'success',
-    'warning',
-    'error',
-    'info',
-    'tip',
-  ] as const;
+  const variants = ['default', 'success', 'warning', 'error', 'info'] as const;
   const showToast = (variant: VariantType) =>
     enqueueSnackbar(
       'Toast message. This will auto destruct after five seconds.',
@@ -91,7 +84,7 @@ function Example() {
 export const WithEventMessage: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: false,
+    hideIconVariant: true,
     maxSnack: 5,
   },
   render: (args) => {
@@ -131,7 +124,7 @@ export const WithEventMessage: Story = {
 export const WithLongMessage: Story = {
   args: {
     anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-    hideIconVariant: false,
+    hideIconVariant: true,
     maxSnack: 5,
   },
   render: (args) => {

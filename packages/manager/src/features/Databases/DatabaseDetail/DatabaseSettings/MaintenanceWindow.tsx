@@ -13,15 +13,16 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Link } from 'src/components/Link';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
+
+import type { SelectOption } from '@linode/ui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   formControlDropdown: {
@@ -74,15 +75,18 @@ interface Props {
 export const MaintenanceWindow = (props: Props) => {
   const { database, disabled, timezone } = props;
 
-  const [maintenanceUpdateError, setMaintenanceUpdateError] =
-    React.useState<APIError[]>();
+  const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
+    APIError[]
+  >();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
   // "Save Changes" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
-  const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
-    React.useState<SelectOption<number>[]>([]);
+  const [
+    modifiedWeekSelectionMap,
+    setModifiedWeekSelectionMap,
+  ] = React.useState<SelectOption<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -155,17 +159,23 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const { errors, handleSubmit, isSubmitting, setFieldValue, touched, values } =
-    useFormik({
-      initialValues: {
-        day_of_week: database.updates?.day_of_week ?? 1,
-        frequency: database.updates?.frequency ?? 'weekly',
-        hour_of_day: database.updates?.hour_of_day ?? 20,
-        week_of_month: getInitialWeekOfMonth(),
-      },
-      // validationSchema: updateDatabaseSchema,
-      onSubmit: handleSaveMaintenanceWindow,
-    });
+  const {
+    errors,
+    handleSubmit,
+    isSubmitting,
+    setFieldValue,
+    touched,
+    values,
+  } = useFormik({
+    initialValues: {
+      day_of_week: database.updates?.day_of_week ?? 1,
+      frequency: database.updates?.frequency ?? 'weekly',
+      hour_of_day: database.updates?.hour_of_day ?? 20,
+      week_of_month: getInitialWeekOfMonth(),
+    },
+    // validationSchema: updateDatabaseSchema,
+    onSubmit: handleSaveMaintenanceWindow,
+  });
 
   const isLegacy = database.platform === 'rdbms-legacy';
 

@@ -2,7 +2,7 @@
  * @file Constants related to DC-specific pricing.
  */
 
-import { linodeTypeFactory } from '@linode/utilities';
+import { linodeTypeFactory } from '@src/factories';
 
 import type { LkePlanDescription } from 'support/api/lke';
 
@@ -125,8 +125,8 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
  * Subset of LKE cluster plans as shown on Cloud Manager, mapped from DC-specific pricing mock linode
  * types to ensure size is consistent with ids in the types factory.
  */
-export const dcPricingLkeClusterPlans: LkePlanDescription[] =
-  dcPricingMockLinodeTypes.map((type) => {
+export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
+  (type) => {
     return {
       nodeCount: 1,
       planName: 'Linode 2 GB',
@@ -134,7 +134,8 @@ export const dcPricingLkeClusterPlans: LkePlanDescription[] =
       tab: 'Shared CPU',
       type: 'nanode',
     };
-  });
+  }
+);
 
 export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
   '2023-10-05 00:00:00Z';

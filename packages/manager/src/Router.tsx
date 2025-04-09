@@ -1,4 +1,3 @@
-import { useAccountSettings } from '@linode/queries';
 import { QueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
@@ -8,6 +7,7 @@ import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
+import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 
 export const Router = () => {

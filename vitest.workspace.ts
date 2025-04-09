@@ -1,8 +1,7 @@
 export default [
-  "packages/api-v4",
   "packages/manager",
-  "packages/search",
-  "packages/shared",
+  "packages/api-v4",
   "packages/ui",
+  "packages/search",
   "packages/utilities",
 ];

@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { IPAddress, sortIPAddress } from './IPAddress';
 
-import type { ManagerPreferences } from '@linode/utilities';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const publicIP = '8.8.8.8';
 const publicIP2 = '45.45.45.45';
@@ -109,8 +109,8 @@ describe('IPAddress masked', () => {
     usePreferences: vi.fn().mockReturnValue({}),
   }));
 
-  vi.mock('@linode/queries', async () => {
-    const actual = await vi.importActual('@linode/queries');
+  vi.mock('src/queries/profile/preferences', async () => {
+    const actual = await vi.importActual('src/queries/profile/preferences');
     return {
       ...actual,
       usePreferences: queryMocks.usePreferences,
@@ -152,14 +152,19 @@ describe('IPAddress masked', () => {
       data: preferences,
     });
 
-    const { container, getAllByTestId, getAllByText, getByText, queryByText } =
-      renderWithTheme(
-        <IPAddress
-          ips={['8.8.8.8', '8.8.40.4']}
-          showAll={false}
-          showMore={true}
-        />
-      );
+    const {
+      container,
+      getAllByTestId,
+      getAllByText,
+      getByText,
+      queryByText,
+    } = renderWithTheme(
+      <IPAddress
+        ips={['8.8.8.8', '8.8.40.4']}
+        showAll={false}
+        showMore={true}
+      />
+    );
 
     const visibilityToggles = getAllByTestId('VisibilityTooltip');
 

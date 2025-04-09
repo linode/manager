@@ -1,4 +1,3 @@
-import { useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -7,6 +6,8 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useGrants } from 'src/queries/profile/profile';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -29,8 +30,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: notifications } = useNotificationsQuery();
   const { _isRestrictedUser, account } = useAccountManagement();
 
-  const [isPromoDialogOpen, setIsPromoDialogOpen] =
-    React.useState<boolean>(false);
+  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
+    false
+  );
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
@@ -52,8 +54,9 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { replace } = useHistory();
   const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
-  const [paymentDrawerOpen, setPaymentDrawerOpen] =
-    React.useState<boolean>(false);
+  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
+    false
+  );
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
     PaymentMethod | undefined
@@ -102,20 +105,20 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const accountBalanceText = pastDueBalance
     ? 'Payment Due'
     : balance > 0
-      ? 'Balance'
-      : balance < 0
-        ? 'Credit'
-        : 'You have no balance at this time.';
+    ? 'Balance'
+    : balance < 0
+    ? 'Credit'
+    : 'You have no balance at this time.';
 
   const sxBalance = {
     color:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod)
         ? theme.palette.text.primary
         : balance < 0
-          ? theme.color.green
-          : pastDueBalance
-            ? theme.color.red
-            : '',
+        ? theme.color.green
+        : pastDueBalance
+        ? theme.color.red
+        : '',
   };
 
   // The layout changes if there are promotions.

@@ -1,16 +1,14 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { accountQueries, useAccount, useProfile } from '@linode/queries';
+import { Typography } from '@linode/ui';
 import {
   Button,
   Divider,
-  Drawer,
   ErrorState,
   InputAdornment,
   Notice,
   Stack,
   TextField,
   TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,11 +17,14 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
+import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useAccount } from 'src/queries/account/account';
+import { accountQueries } from 'src/queries/account/queries';
+import { useProfile } from 'src/queries/profile/profile';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -102,8 +103,9 @@ export const PaymentDrawer = (props: Props) => {
     getMinimumPayment(account?.balance || 0)
   );
   const [paymentMethodId, setPaymentMethodId] = React.useState<number>(-1);
-  const [selectedCardExpired, setSelectedCardExpired] =
-    React.useState<boolean>(false);
+  const [selectedCardExpired, setSelectedCardExpired] = React.useState<boolean>(
+    false
+  );
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -237,12 +239,7 @@ export const PaymentDrawer = (props: Props) => {
   }
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Make a Payment"
-    >
+    <Drawer onClose={onClose} open={open} title="Make a Payment">
       <Stack spacing={2}>
         {isReadOnly && (
           <Notice
@@ -275,7 +272,7 @@ export const PaymentDrawer = (props: Props) => {
         ) : null}
         <TextField
           InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            startAdornment: <InputAdornment position="end">$</InputAdornment>,
           }}
           disabled={isProcessing || isReadOnly}
           label="Payment Amount"
@@ -315,8 +312,8 @@ export const PaymentDrawer = (props: Props) => {
                     paymentTooLow
                       ? `Payment amount must be at least ${minimumPayment}.`
                       : selectedCardExpired
-                        ? 'The selected card has expired.'
-                        : ''
+                      ? 'The selected card has expired.'
+                      : ''
                   }
                   status="help"
                   sxTooltipIcon={{ padding: `0px 8px` }}
@@ -418,7 +415,7 @@ const Warning = (props: WarningProps) => {
       .
     </>
   ) : (
-    (warning.detail ?? '')
+    warning.detail ?? ''
   );
   const message = (
     <>

@@ -1,9 +1,9 @@
-import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { useEditableLabelState } from '@linode/utilities';
+import { CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -11,6 +11,7 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
+import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -65,8 +66,11 @@ export const DatabaseDetail = () => {
     id,
   });
 
-  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
-    useEditableLabelState();
+  const {
+    editableLabelError,
+    resetEditableLabel,
+    setEditableLabelError,
+  } = useEditableLabelState();
 
   if (error) {
     return (
@@ -112,8 +116,8 @@ export const DatabaseDetail = () => {
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
       chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
-      routeName: `/databases/${engine}/${id}/metrics`,
-      title: 'Metrics',
+      routeName: `/databases/${engine}/${id}/monitor`,
+      title: 'Monitor',
     });
   }
 

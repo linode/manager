@@ -1,10 +1,7 @@
-import { Factory } from '@linode/utilities';
+import Factory from 'src/factories/factoryProxy';
 
-import {
-  LongviewResponse,
-  AllData,
-  LongviewPackage,
-} from 'src/features/Longview/request.types';
+import { LongviewResponse } from 'src/features/Longview/request.types';
+import { AllData, LongviewPackage } from 'src/features/Longview/request.types';
 
 import {
   longviewDiskFactory,
@@ -36,13 +33,14 @@ const longviewResponseData = () => {
   };
 };
 
-export const longviewResponseFactory =
-  Factory.Sync.makeFactory<LongviewResponse>({
+export const longviewResponseFactory = Factory.Sync.makeFactory<LongviewResponse>(
+  {
     ACTION: 'getLatestValue',
     DATA: {},
     NOTIFICATIONS: [],
     VERSION: 0.4,
-  });
+  }
+);
 
 export const longviewLatestStatsFactory = Factory.Sync.makeFactory<
   Partial<AllData>
