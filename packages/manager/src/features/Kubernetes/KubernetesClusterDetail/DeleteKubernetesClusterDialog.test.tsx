@@ -61,7 +61,7 @@ describe('Kubernetes deletion dialog', () => {
     );
     const button = getByTestId('confirm');
 
-    expect(button).toBeDisabled;
+    expect(button).toBeDisabled();
 
     await findByTestId('textfield-input');
 
