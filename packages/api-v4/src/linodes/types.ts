@@ -50,7 +50,7 @@ export interface Linode {
   watchdog_enabled: boolean;
   tags: string[];
   site_type: RegionSite;
-  maintenance_policy_id: MaintenancePolicyId;
+  maintenance_policy_id?: MaintenancePolicyId;
 }
 
 export interface LinodeAlerts {
@@ -648,7 +648,7 @@ export interface CreateLinodeRequest {
    * Allows customers to specify which strategy this Linode should follow during
    * maintenance events.
    */
-  maintenance_policy_id: MaintenancePolicyId;
+  maintenance_policy_id?: number | null;
 }
 
 export interface MigrateLinodeRequest {

@@ -394,8 +394,10 @@ export const EventActionKeys = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter',
   'linode_migrate',
+  'linode_migration',
   'linode_mutate_create',
   'linode_mutate',
+  'linode_power_on_off',
   'linode_reboot',
   'linode_rebuild',
   'linode_resize_create',
@@ -506,6 +508,8 @@ export type EventStatus =
   | 'failed'
   | 'notification';
 
+export type EventSource = 'platform' | 'user';
+
 export interface Event {
   id: number;
   action: EventAction;
@@ -524,6 +528,18 @@ export interface Event {
   username: string | null;
   secondary_entity: Entity | null;
   message: string | null;
+
+  /**
+   * Tentative fields from Host & VM Maintenance Policy project.
+   *
+   * TODO: verify final state of these fields.
+   */
+  maintenance_policy_set?: MaintenancePolicyType | null;
+  description?: string | null;
+  source?: EventSource | null;
+  not_before?: string | null;
+  start_time?: string | null;
+  complete_time?: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.
