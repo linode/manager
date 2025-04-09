@@ -45,10 +45,8 @@ export const useGetLocationsForQuotaService = (
   const { data: regions, isFetching: isFetchingRegions } = useRegionsQuery();
   // In order to get the s3 endpoints, we need to query the object storage service
   // It will only show quotas for assigned endpoints (endpoints relevant to a region a user ever created a resource in).
-  const {
-    data: s3Endpoints,
-    isFetching: isFetchingS3Endpoints,
-  } = useObjectStorageEndpoints(service === 'object-storage');
+  const { data: s3Endpoints, isFetching: isFetchingS3Endpoints } =
+    useObjectStorageEndpoints(service === 'object-storage');
 
   if (service === 'object-storage') {
     return {
@@ -57,7 +55,7 @@ export const useGetLocationsForQuotaService = (
       s3Endpoints: [
         ...[{ label: GLOBAL_QUOTA_LABEL, value: GLOBAL_QUOTA_VALUE }],
         ...(s3Endpoints ?? [])
-          ?.map((s3Endpoint) => {
+          .map((s3Endpoint) => {
             if (!s3Endpoint.s3_endpoint) {
               return null;
             }
@@ -82,7 +80,7 @@ export const useGetLocationsForQuotaService = (
 };
 
 interface GetQuotasFiltersProps {
-  location: SelectOption<Quota['region_applied']> | null;
+  location: null | SelectOption<Quota['region_applied']>;
   service: SelectOption<QuotaType>;
 }
 

@@ -17,7 +17,7 @@ import type {
 export const useAllAccountMaintenanceQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<AccountMaintenance[], APIError[]>({
     ...accountQueries.maintenance._ctx.all(params, filter),
@@ -37,6 +37,6 @@ export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
 
 export const useAccountMaintenancePoliciesQuery = () => {
   return useQuery<MaintenancePolicy[], APIError[]>(
-    accountQueries.maintenance._ctx.policies
+    accountQueries.maintenance._ctx.policies,
   );
 };
