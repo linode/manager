@@ -141,12 +141,14 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio disabled={userCannotAddFirewall} />}
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Accept"
               value="ACCEPT"
             />
             <FormControlLabel
-              control={<Radio disabled={userCannotAddFirewall} />}
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Drop"
               value="DROP"
             />
@@ -168,12 +170,14 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           >
             <FormControlLabel
-              control={<Radio disabled={userCannotAddFirewall} />}
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Accept"
               value="ACCEPT"
             />
             <FormControlLabel
-              control={<Radio disabled={userCannotAddFirewall} />}
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Drop"
               value="DROP"
             />
