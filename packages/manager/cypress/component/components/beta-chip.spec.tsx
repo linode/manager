@@ -5,23 +5,13 @@ import { componentTests, visualTests } from 'support/util/components';
 
 componentTests('BetaChip', () => {
   visualTests((mount) => {
-    it('renders "BETA" text indicator with primary color', () => {
-      mount(<BetaChip color="primary" />);
+    it('renders "BETA" text indicator', () => {
+      mount(<BetaChip />);
       cy.findByText('beta').should('be.visible');
     });
 
-    it('renders "BETA" text indicator with default color', () => {
-      mount(<BetaChip color="secondary" />);
-      cy.findByText('beta').should('be.visible');
-    });
-
-    it('passes aXe check with primary color', () => {
-      mount(<BetaChip color="primary" />);
-      checkComponentA11y();
-    });
-
-    it('passes aXe check with default color', () => {
-      mount(<BetaChip color="secondary" />);
+    it('passes aXe accessibility', () => {
+      mount(<BetaChip />);
       checkComponentA11y();
     });
   });

@@ -6,7 +6,7 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const Error = () => {
+export const LinodeCreateError = () => {
   const {
     formState: { errors },
     getValues,

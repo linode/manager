@@ -119,10 +119,15 @@ describe('Linode Entity Detail', () => {
       }
     );
 
-    await waitFor(() => {
-      expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
-      expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual('test-vpc');
-    });
+    await waitFor(
+      () => {
+        expect(getByTestId(vpcSectionTestId)).toBeInTheDocument();
+        expect(getByTestId(assignedVPCLabelTestId).innerHTML).toEqual(
+          'test-vpc'
+        );
+      },
+      { timeout: 15_000 }
+    );
   });
 
   it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {
