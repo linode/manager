@@ -1,14 +1,18 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
-import {
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+import { queryPresets } from '../base';
+import { accountQueries } from './queries';
+
+import type {
+  AccountMaintenance,
+  MaintenancePolicy,
+} from '@linode/api-v4/lib/account';
+import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
-import { queryPresets } from '../base';
-import { accountQueries } from './queries';
 
 export const useAllAccountMaintenanceQuery = (
   params: Params = {},
@@ -29,4 +33,10 @@ export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
     refetchInterval: 20000,
     refetchOnWindowFocus: 'always',
   });
+};
+
+export const useAccountMaintenancePoliciesQuery = () => {
+  return useQuery<MaintenancePolicy[], APIError[]>(
+    accountQueries.maintenance._ctx.policies
+  );
 };
