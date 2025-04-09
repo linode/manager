@@ -1,8 +1,9 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
+
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { AccountMaintenance, Linode } from '@linode/api-v4';
-import { isFeatureEnabledV2 } from '@linode/utilities';
-import { useAccount } from '@linode/queries';
 
 export interface Maintenance {
   when: null | string;
