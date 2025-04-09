@@ -26,7 +26,7 @@ export interface MaskableTextProps {
   /**
    * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
    */
-  length?: MaskableTextLength;
+  length?: MaskableTextLength | number;
   /**
    * Optional styling for the masked and unmasked Typography
    */

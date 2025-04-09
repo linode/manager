@@ -12,11 +12,13 @@ export const MASKABLE_TEXT_LENGTH_MAP: Map<
 
 export const createMaskedText = (
   plainText: string,
-  length?: MaskableTextLength
+  length?: MaskableTextLength | number
 ) => {
   // Mask a default of 12 dots, unless the prop specifies a different default or the plaintext length.
   const MASKED_TEXT_LENGTH = !length
     ? DEFAULT_MASKED_TEXT_LENGTH
+    : typeof length === 'number'
+    ? length
     : MASKABLE_TEXT_LENGTH_MAP.get(length) ?? plainText.length;
 
   return '•'.repeat(MASKED_TEXT_LENGTH);
