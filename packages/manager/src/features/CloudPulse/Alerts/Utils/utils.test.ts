@@ -97,22 +97,20 @@ describe('getSchemaWithEntityIdValidation', () => {
   ];
   const props: AlertValidationSchemaProps = {
     aclpAlertServiceTypeConfig,
+    baseSchema,
     serviceTypeObj: 'dbaas',
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = getSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'unknown',
-      },
-      baseSchema
-    );
+    const schema = getSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'unknown',
+    });
     expect(schema).toBe(baseSchema);
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = getSchemaWithEntityIdValidation({ ...props }, baseSchema);
+    const schema = getSchemaWithEntityIdValidation({ ...props });
 
     await expect(
       schema.pick(['entity_ids']).validate({
@@ -124,13 +122,10 @@ describe('getSchemaWithEntityIdValidation', () => {
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = getSchemaWithEntityIdValidation(
-      {
-        ...props,
-        serviceTypeObj: 'linode',
-      },
-      baseSchema
-    );
+    const schema = getSchemaWithEntityIdValidation({
+      ...props,
+      serviceTypeObj: 'linode',
+    });
     await expect(
       schema.pick(['entity_ids']).validate({
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],

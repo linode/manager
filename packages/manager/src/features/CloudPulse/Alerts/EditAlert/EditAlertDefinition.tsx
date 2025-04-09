@@ -68,13 +68,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
     mode: 'onBlur',
     resolver: yupResolver(
-      getSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: alertDetails.service_type,
-        },
-        editAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: editAlertDefinitionFormSchema,
+        serviceTypeObj: alertDetails.service_type,
+      })
     ),
   });
 

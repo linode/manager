@@ -69,6 +69,11 @@ export interface AlertValidationSchemaProps {
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
 
   /**
+   * The base schema which needs to be enhanced with the entity_ids validation
+   */
+  baseSchema: ObjectSchema<CreateAlertDefinitionForm>;
+
+  /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
   serviceTypeObj: null | string;
@@ -301,10 +306,9 @@ export const processMetricCriteria = (
  * @returns The updated schema with entity id max validation based on max selection count
  */
 export const getSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  baseSchema: ObjectSchema<CreateAlertDefinitionForm>
+  props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
+  const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
 
   if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
     return baseSchema;

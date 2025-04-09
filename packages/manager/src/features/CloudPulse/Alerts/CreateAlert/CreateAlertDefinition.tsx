@@ -83,13 +83,11 @@ export const CreateAlertDefinition = () => {
 
   // Default resolver
   const [validationSchema, setValidationSchema] = React.useState(
-    getSchemaWithEntityIdValidation(
-      {
-        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-        serviceTypeObj: null,
-      },
-      createAlertDefinitionFormSchema
-    )
+    getSchemaWithEntityIdValidation({
+      aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+      baseSchema: createAlertDefinitionFormSchema,
+      serviceTypeObj: null,
+    })
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -156,13 +154,11 @@ export const CreateAlertDefinition = () => {
 
   React.useEffect(() => {
     setValidationSchema(
-      getSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: serviceTypeWatcher,
-        },
-        createAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: createAlertDefinitionFormSchema,
+        serviceTypeObj: serviceTypeWatcher,
+      })
     );
   }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
