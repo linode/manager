@@ -296,7 +296,6 @@ const getSearchableFields = (role: ExtendedRoleMap): string[] => {
     String(role.id),
     role.entity_type,
     role.name,
-    role.access,
     role.description,
     ...entityNames,
     ...role.permissions,

@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
+import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
-import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { AssignNewRoleDrawer } from './AssignNewRoleDrawer';
 
 export const UserRoles = () => {
@@ -17,7 +17,10 @@ export const UserRoles = () => {
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
-  const hasAssignedRoles = assignedRoles ? !isEmpty(assignedRoles) : false;
+  const hasAssignedRoles = assignedRoles
+    ? !isEmpty(assignedRoles.account_access) ||
+      !isEmpty(assignedRoles.entity_access)
+    : false;
 
   return (
     <>
