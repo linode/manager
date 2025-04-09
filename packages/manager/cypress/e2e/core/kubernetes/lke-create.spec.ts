@@ -43,7 +43,7 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
+import { chooseRegion, extendRegion } from 'support/util/regions';
 
 import {
   accountBetaFactory,
@@ -535,8 +535,12 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
-    // In staging API, only the Dallas region is available for LKE creation
-    const dcSpecificPricingRegion = getRegionById('us-central');
+    const dcSpecificPricingRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+      })
+    );
+    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
     const clusterLabel = randomLabel();
     const clusterPlans = new Array(2)
       .fill(null)
@@ -553,7 +557,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.url().should('endWith', '/kubernetes/create');
 
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-    cy.wait(['@getLinodeTypes']);
+    cy.wait(['@getRegions', '@getLinodeTypes']);
 
     // Confirm that, without a region selected, no pricing information is displayed.
 
