@@ -2,16 +2,8 @@
  * @file Integration Tests for the CloudPulse Alerts Listing Page (Grouped by Tags).
  *
  * This spec verifies the grouping, display, and filtering behavior of alerts when grouped by tags.
- *
- * Summary:
- * - Ensures alerts are correctly grouped and displayed under their respective tag headers.
- * - Validates tag headers such as bothTags, evenTags, oddTags, and No Tags are rendered accurately.
- * - Confirms that searching by label filters the grouped alerts correctly.
- * - Checks that alerts not matching the search query are not displayed.
- * - Verifies the toggle functionality between grouped and ungrouped views.
- * - Ensures all relevant alert details (label, status, service_type, etc.) are visible and accurate.
- * - Validates that feature flags and user preferences are properly applied to the UI.
- */
+
+*/
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetAllAlertDefinitions,
@@ -37,7 +29,7 @@ const statusList: AlertStatusType[] = [
 ];
 const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
 
-const tagSequence = ['LinodeTags', 'dbaasTags', 'bothTags', 'noTags'];
+const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 
 const mockAlerts = Array.from(
   { length: 5 },
@@ -46,14 +38,14 @@ const mockAlerts = Array.from(
     const tag = tagSequence[index % tagSequence.length];
 
     // If tag is 'noTags', use empty tags array
-    const tags = tag === 'noTags' ? [] : [tag, 'bothTags'];
+    const tags = tag === 'No Tags' ? [] : [tag, 'bothTags'];
 
     // Get status and serviceType by cycling through the lists
     const status = statusList[index % statusList.length];
     const serviceType = serviceTypes[index % serviceTypes.length];
 
     // Determine primaryTag - 'noTags' if tags are empty, else use the first tag
-    const primaryTag = tags.length === 0 ? 'noTags' : tags[0];
+    const primaryTag = tags.length === 0 ? 'No Tags' : tags[0];
 
     // Generate label based on primaryTag and index
     const label = `${primaryTag}-${index}`;
@@ -71,28 +63,24 @@ const mockAlerts = Array.from(
 );
 
 // Filter alerts that have both evenTags and oddTags
-const bothTags: Alert[] = mockAlerts.filter(
-  (alert) =>
-    alert.tags.includes('LinodeTags') && alert.tags.includes('dbaasTags')
-);
-
-// Filter alerts that only have evenTags and do NOT include oddTags
-const linodeTags: Alert[] = mockAlerts.filter(
-  (alert) =>
-    alert.tags.includes('LinodeTags') && !alert.tags.includes('dbaasTags')
-);
-
-// Filter alerts that only have oddTags and do NOT include evenTags
-const dbaasTags: Alert[] = mockAlerts.filter(
-  (alert) =>
-    alert.tags.includes('LinodeTags') && !alert.tags.includes('LinodeTags')
-);
-
-// Filter alerts that do NOT include either evenTags or oddTags
-const noTags: Alert[] = mockAlerts.filter(
-  (alert) =>
-    !alert.tags.includes('LinodeTags') && !alert.tags.includes('dbaasTags')
-);
+const categorizedAlerts: Record<string, Alert[]> = {
+  DBaaSTags: mockAlerts.filter(
+    (alert) =>
+      alert.tags.includes('DBaaSTags') && !alert.tags.includes('LinodeTags')
+  ),
+  LinodeTags: mockAlerts.filter(
+    (alert) =>
+      alert.tags.includes('LinodeTags') && !alert.tags.includes('DBaaSTags')
+  ),
+  bothTags: mockAlerts.filter(
+    (alert) =>
+      alert.tags.includes('LinodeTags') && alert.tags.includes('DBaaSTags')
+  ),
+  noTags: mockAlerts.filter(
+    (alert) =>
+      !alert.tags.includes('LinodeTags') && !alert.tags.includes('DBaaSTags')
+  ),
+};
 
 describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts Listing Page', () => {
   /*
@@ -107,44 +95,33 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
   it('Displays alerts accurately grouped under their corresponding tags', () => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
-    mockGetCloudPulseServices(['linode', 'dbaas']);
+    mockGetCloudPulseServices(serviceTypes);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     mockGetUserPreferences({ aclpAlertsGroupByTag: false });
     cy.visitWithLogin('/alerts/definitions');
     cy.wait('@getAlertDefinitionsList');
     // Toggle to enable "Group by tag" view
-
     ui.button
       .findByAttribute('aria-label', 'Toggle group by tag')
       .should('be.visible')
       .click();
-
     // Confirm alert table headers are visible
-
     ui.heading.findByText('label').should('be.visible');
     ui.heading.findByText('status').should('be.visible');
     ui.heading.findByText('service_type').should('be.visible');
     ui.heading.findByText('created_by').should('be.visible');
     ui.heading.findByText('updated').should('be.visible');
-
     // Verify tooltip updates to show "Ungroup by tag"
-
     ui.tooltip.findByText('Ungroup by tag').should('be.visible');
-
     // Validate tag headers are displayed correctly
-
-    cy.get('[data-qa-tag-header="bothTags"]').should('have.text', 'bothTags');
-    cy.get('[data-qa-tag-header="LinodeTags"]').should(
-      'have.text',
-      'LinodeTags'
-    );
-    cy.get('[data-qa-tag-header="dbaasTags"]').should('have.text', 'dbaasTags');
-    cy.get('[data-qa-tag-header="No Tags"]').should('have.text', 'No Tags');
+    tagSequence.forEach((tag) => {
+      cy.get(`[data-qa-tag-header="${tag}"]`).should('have.text', tag);
+    });
 
     // Validate that all alerts are rendered and visible in their respective tag groups
-
     cy.get('[data-qa="alert-table"]').within(() => {
-      const allAlerts = [...bothTags, ...linodeTags, ...dbaasTags, ...noTags];
+      const allAlerts = Object.values(categorizedAlerts).flat();
+
       allAlerts.forEach(({ label }) => {
         cy.findAllByLabelText(label)
           .should('exist')
@@ -154,14 +131,15 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
           });
       });
     });
-    // Search for a specific label within grouped alerts
-    cy.findByPlaceholderText('Search for Alerts').type('dbaasTags-1');
 
-    // Verify only matching alerts are visible
+    // Search for a specific label
+    cy.findByPlaceholderText('Search for Alerts').type('DBaaSTags-1');
 
-    const expectedAlerts = [...bothTags, ...dbaasTags].filter(({ label }) =>
-      label.includes('dbaasTags-1')
-    );
+    // Match alerts from bothTags and DBaaSTags only
+    const expectedAlerts = [
+      ...categorizedAlerts.bothTags,
+      ...categorizedAlerts.DBaaSTags,
+    ].filter(({ label }) => label.includes('DBaaSTags-1'));
 
     expectedAlerts.forEach(({ label }) => {
       cy.findAllByLabelText(label)
@@ -172,18 +150,18 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
         });
     });
 
-    // Ensure alerts that don't match the query are not displayed
+    // Non-matching alerts (LinodeTags + noTags)
+    const nonMatchingAlerts = [
+      ...categorizedAlerts.LinodeTags,
+      ...categorizedAlerts.noTags,
+    ];
 
-    const nonMatchingAlerts = [...linodeTags, ...noTags];
     nonMatchingAlerts.forEach(({ label }) => {
       cy.findAllByLabelText(label).should('not.exist');
     });
 
     // Clear the search input to reset the table
-    cy.findByPlaceholderText('Search for Alerts')
-      .should('be.visible')
-      .and('not.be.disabled')
-      .clear();
+    cy.findByPlaceholderText('Search for Alerts').should('be.visible').clear();
 
     // Filter alerts by service type using the dropdown
 
@@ -193,8 +171,8 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
 
     // Verify filtered alerts are shown under correct tag headers
     const labelToTagsMap = {
-      'dbaasTags-1': ['bothTags', 'dbaasTags'],
-      'noTags-3': ['No Tags'],
+      'DBaaSTags-1': [categorizedAlerts.bothTags, categorizedAlerts.DBaaSTags],
+      'No Tags-3': [categorizedAlerts.noTag],
     };
     cy.get('[data-qa="alert-table"]').within(() => {
       Object.entries(labelToTagsMap).forEach(([label]) => {
@@ -207,20 +185,16 @@ describe('Integration Tests for Grouping Alerts by Tags on the CloudPulse Alerts
     });
     // evenTags should not be visible
     cy.get('[data-qa-tag-header="LinodeTags"]').should('not.exist');
-
     // Toggle back to ungrouped view
-
     ui.button
       .findByAttribute('aria-label', 'Toggle group by tag')
       .should('be.visible')
       .click();
-
     // Confirm tooltip updates to "Group by tag"
     ui.tooltip.findByText('Group by tag').should('be.visible');
     // Ensure tag headers are no longer visible
-    cy.get('[data-qa-tag-header="bothTags"]').should('not.exist');
-    cy.get('[data-qa-tag-header="LinodeTags"]').should('not.exist');
-    cy.get('[data-qa-tag-header="dbaasTags"]').should('not.exist');
-    cy.get('[data-qa-tag-header="No Tags"]').should('not.exist');
+    tagSequence.forEach((tag) => {
+      cy.get(`[data-qa-tag-header="${tag}"]`).should('not.exist');
+    });
   });
 });
