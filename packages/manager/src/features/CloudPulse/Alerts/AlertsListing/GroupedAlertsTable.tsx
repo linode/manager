@@ -83,7 +83,11 @@ export const GroupedAlertsTable = ({
               <TableBody>
                 <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
                   <TableCell colSpan={7}>
-                    <StyledTagHeader ref={tagRef} variant="h2">
+                    <StyledTagHeader
+                      data-qa-tag-header={tag}
+                      ref={tagRef}
+                      variant="h2"
+                    >
                       {tag}
                     </StyledTagHeader>
                   </TableCell>
