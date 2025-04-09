@@ -1,12 +1,12 @@
 import { Factory } from './factoryProxy';
 
-import { NodeBalancerStats } from '@linode/api-v4/lib/nodebalancers/types';
 import { generateLinodeStatSeries } from './linodes';
 
 import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
+  NodeBalancerStats,
 } from '@linode/api-v4/lib/nodebalancers/types';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
