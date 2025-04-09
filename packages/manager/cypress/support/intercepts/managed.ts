@@ -278,6 +278,23 @@ export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to fetch Managed contact and mocks response.
+ *
+ * @param contact - Contact with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetContact = (
+  contact: ManagedContact
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`managed/contacts/${contact.id}`),
+    makeResponse(contact)
+  );
+};
+
+/**
  * Intercepts GET request to fetch Managed contacts and mocks response.
  *
  * @param contacts - Contacts with which to respond.
