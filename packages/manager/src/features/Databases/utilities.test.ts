@@ -599,22 +599,24 @@ describe('formatConfigValue', () => {
 describe('findConfigItem', () => {
   const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
   const expectedConfig = {
+    category: 'other',
     description:
       'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
     example: 600,
     maximum: 86400,
     minimum: 600,
-    restart_cluster: false,
+    requires_restart: false,
     type: 'integer',
   };
 
   const expectedNestedConfig = {
+    category: 'mysql',
     description:
       'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
     example: 10,
     maximum: 3600,
     minimum: 2,
-    restart_cluster: false,
+    requires_restart: false,
     type: 'integer',
   };
   it('should return the correct ConfigurationItem for a given targetKey', () => {
@@ -646,19 +648,19 @@ describe('convertExistingConfigsToArray', () => {
 
   const expectedOptions: ConfigurationOption[] = [
     {
-      category: '',
+      category: 'mysql',
       description:
         'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
       example: 10,
       label: 'connect_timeout',
       maximum: 3600,
       minimum: 2,
-      restart_cluster: false,
+      requires_restart: false,
       type: 'integer',
       value: 10,
     },
     {
-      category: '',
+      category: 'mysql',
       description:
         "Default server time zone as an offset from UTC (from -12:00 to +12:00), a time zone name, or 'SYSTEM' to use the MySQL server default.",
       example: '+03:00',
@@ -666,19 +668,19 @@ describe('convertExistingConfigsToArray', () => {
       maxLength: 100,
       minLength: 2,
       pattern: '^([-+][\\d:]*|[\\w/]*)$',
-      restart_cluster: false,
+      requires_restart: false,
       type: 'string',
       value: '+03:00',
     },
     {
-      category: '',
+      category: 'other',
       description:
         'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
       example: 600,
       label: 'binlog_retention_period',
       maximum: 86400,
       minimum: 600,
-      restart_cluster: false,
+      requires_restart: false,
       type: 'integer',
       value: 600,
     },

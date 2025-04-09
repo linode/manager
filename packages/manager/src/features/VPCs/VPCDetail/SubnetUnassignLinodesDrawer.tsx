@@ -127,7 +127,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           const updatedConfigInterfaces = await Promise.all(
             selectedLinodes.map(async (linode) => {
               const response = await queryClient.fetchQuery(
-                linodeQueries.linode(linode.id)._ctx.configs
+                linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
               );
 
               if (response) {
