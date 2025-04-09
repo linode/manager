@@ -1,7 +1,6 @@
 import { ActionsPanel, Notice, Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { FormProvider } from 'react-hook-form';
 
@@ -77,10 +76,6 @@ const VPCCreate = () => {
     </FormProvider>
   );
 };
-
-export const vpcCreateLazyRoute = createLazyRoute('/vpcs/create')({
-  component: VPCCreate,
-});
 
 const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',

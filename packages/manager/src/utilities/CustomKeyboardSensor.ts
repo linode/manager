@@ -43,7 +43,6 @@ class Listeners {
     handler: (event: T) => void,
     options?: AddEventListenerOptions | boolean
   ) {
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     this.target?.addEventListener(eventName, handler as EventListener, options);
     this.listeners.push([eventName, handler as EventListener, options]);
   }

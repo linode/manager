@@ -172,7 +172,7 @@ export const CloneLanding = () => {
 
   // The configs we know about in our configSelection state.
   const configsInState = configs.filter((eachConfig) =>
-    state.configSelection.hasOwnProperty(eachConfig.id)
+    Object.prototype.hasOwnProperty.call(state.configSelection, eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
@@ -183,7 +183,7 @@ export const CloneLanding = () => {
 
   // The disks we know about in our diskSelection state.
   const disksInState = disks.filter((eachDisk) =>
-    state.diskSelection.hasOwnProperty(eachDisk.id)
+    Object.prototype.hasOwnProperty.call(state.diskSelection, eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(

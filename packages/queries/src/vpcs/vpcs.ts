@@ -155,6 +155,16 @@ export const useSubnetsQuery = (
     placeholderData: keepPreviousData,
   });
 
+export const useSubnetQuery = (
+  vpcId: number,
+  subnetId: number,
+  enabled: boolean = true
+) =>
+  useQuery<Subnet, APIError[]>({
+    ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.subnet(subnetId),
+    enabled,
+  });
+
 export const useCreateSubnetMutation = (vpcId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], CreateSubnetPayload>({
@@ -179,7 +189,7 @@ export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
   return useMutation<Subnet, APIError[], ModifySubnetPayload>({
     mutationFn: (data) => modifySubnet(vpcId, subnetId, data),
     onSuccess() {
-      // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
+      // Subnet updated --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
       queryClient.invalidateQueries({
         queryKey: vpcQueries.all._def,
       });
@@ -198,7 +208,8 @@ export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSubnet(vpcId, subnetId),
     onSuccess() {
-      // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
+      // Subnet deleted --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
+      // Remove the specific subnet deleted from the cache
       queryClient.invalidateQueries({
         queryKey: vpcQueries.all._def,
       });
@@ -207,6 +218,10 @@ export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
       });
       queryClient.invalidateQueries({
         queryKey: vpcQueries.vpc(vpcId).queryKey,
+      });
+      queryClient.removeQueries({
+        queryKey: vpcQueries.vpc(vpcId)._ctx.subnets._ctx.subnet(subnetId)
+          .queryKey,
       });
     },
   });
