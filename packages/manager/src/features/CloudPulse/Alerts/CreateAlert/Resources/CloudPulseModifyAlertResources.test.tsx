@@ -75,19 +75,16 @@ beforeEach(() => {
 
 describe('CreateAlertResources component tests', () => {
   it('should be able to render the component on correct props and values', async () => {
-    const {
-      getByPlaceholderText,
-      getByTestId,
-      queryByTestId,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <CloudPulseModifyAlertResources name="entity_ids" />,
-      useFormOptions: {
-        defaultValues: {
-          entity_ids: [],
-          serviceType: 'linode',
+    const { getByPlaceholderText, getByTestId, queryByTestId } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <CloudPulseModifyAlertResources name="entity_ids" />,
+        useFormOptions: {
+          defaultValues: {
+            entity_ids: [],
+            serviceType: 'linode',
+          },
         },
-      },
-    });
+      });
     expect(
       getByPlaceholderText('Search for a Region or Resource')
     ).toBeInTheDocument();
@@ -141,34 +138,31 @@ describe('CreateAlertResources component tests', () => {
   });
 
   it('should be able to see the error notice if the forms field state has error', async () => {
-    const {
-      getAllByTestId,
-      getByTestId,
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <CloudPulseModifyAlertResources name="entity_ids" />,
-      options: {
-        flags: {
-          aclpAlertServiceTypeConfig: [
-            {
-              maxResourceSelectionCount: 2,
-              serviceType: 'linode',
-            },
-          ],
-        },
-      },
-      useFormOptions: {
-        defaultValues: {
-          entity_ids: ['1', '2', '3'],
-          serviceType: 'linode',
-        },
-        errors: {
-          entity_ids: {
-            message: 'More than 2 resources selected',
+    const { getAllByTestId, getByTestId, getByText } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <CloudPulseModifyAlertResources name="entity_ids" />,
+        options: {
+          flags: {
+            aclpAlertServiceTypeConfig: [
+              {
+                maxResourceSelectionCount: 2,
+                serviceType: 'linode',
+              },
+            ],
           },
         },
-      },
-    });
+        useFormOptions: {
+          defaultValues: {
+            entity_ids: ['1', '2', '3'],
+            serviceType: 'linode',
+          },
+          errors: {
+            entity_ids: {
+              message: 'More than 2 resources selected',
+            },
+          },
+        },
+      });
 
     expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
     expect(getByText('You can select up to 2 resources.')).toBeInTheDocument();

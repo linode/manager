@@ -103,27 +103,18 @@ export const BucketDetail = (props: Props) => {
     isFetchingNextPage,
     isLoading,
   } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
-  const [
-    isCreateFolderDrawerOpen,
-    setIsCreateFolderDrawerOpen,
-  ] = React.useState(false);
+  const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
+    React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
-  const [
-    deleteObjectDialogOpen,
-    setDeleteObjectDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = React.useState<ObjectStorageObject>();
-  const [
-    objectDetailDrawerOpen,
-    setObjectDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [deleteObjectLoading, setDeleteObjectLoading] = React.useState<boolean>(
-    false
-  );
+  const [deleteObjectDialogOpen, setDeleteObjectDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedObject, setSelectedObject] =
+    React.useState<ObjectStorageObject>();
+  const [objectDetailDrawerOpen, setObjectDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [deleteObjectLoading, setDeleteObjectLoading] =
+    React.useState<boolean>(false);
 
   const handleDownload = async (objectName: string) => {
     try {
