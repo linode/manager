@@ -46,4 +46,14 @@ describe('Permissions', () => {
     const chips = getAllByTestId('permission');
     expect(chips).toHaveLength(mockPermissionsLong.length);
   });
+
+  it('renders a message when there are no permissions', () => {
+    const { getByText } = renderWithTheme(<Permissions permissions={[]} />);
+
+    expect(
+      getByText(
+        'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.'
+      )
+    ).toBeInTheDocument();
+  });
 });

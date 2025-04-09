@@ -139,4 +139,16 @@ describe('AssignedPermissionsPanel', () => {
       mockEntitiesAcceessRole.permissions.length
     );
   });
+
+  it('does not render the Entities component when mode is "change-role-for-entity"', () => {
+    const { queryByText } = renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="change-role-for-entity"
+        role={mockEntitiesAcceessRole}
+      />
+    );
+
+    // Verify that the Entities component is not rendered
+    expect(queryByText('Entities')).not.toBeInTheDocument();
+  });
 });

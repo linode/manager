@@ -11,7 +11,7 @@ export type EntityTypePermissions =
   | 'volume'
   | 'vpc';
 
-export type AccountAccessType =
+export type AccountAccessRole =
   | 'account_admin'
   | 'account_linode_admin'
   | 'account_viewer'
@@ -19,7 +19,7 @@ export type AccountAccessType =
   | 'linode_contributor'
   | 'linode_creator';
 
-export type RoleType =
+export type EntityAccessRole =
   | 'firewall_admin'
   | 'firewall_creator'
   | 'linode_contributor'
@@ -28,13 +28,13 @@ export type RoleType =
   | 'update_firewall';
 
 export interface IamUserPermissions {
-  account_access: AccountAccessType[];
+  account_access: AccountAccessRole[];
   entity_access: EntityAccess[];
 }
 export interface EntityAccess {
   id: number;
   type: EntityTypePermissions;
-  roles: RoleType[];
+  roles: EntityAccessRole[];
 }
 
 export type PermissionType =

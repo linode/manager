@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
 
-import type { EntitiesOption } from '../utilities';
+import type { DrawerModes, EntitiesOption } from '../utilities';
 import type {
   EntityTypePermissions,
   IamAccessType,
@@ -20,10 +20,15 @@ interface ExtendedRole extends Roles {
 
 interface Props {
   assignedEntities?: EntitiesOption[];
+  mode?: DrawerModes;
   role: ExtendedRole;
 }
 
-export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
+export const AssignedPermissionsPanel = ({
+  assignedEntities,
+  mode,
+  role,
+}: Props) => {
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   const theme = useTheme();
@@ -68,11 +73,13 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
         )}
       </Typography>
       <Permissions permissions={role.permissions} />
-      <Entities
-        access={role.access}
-        assignedEntities={assignedEntities ?? []}
-        type={role.entity_type}
-      />
+      {mode !== 'change-role-for-entity' && (
+        <Entities
+          access={role.access}
+          assignedEntities={assignedEntities ?? []}
+          type={role.entity_type}
+        />
+      )}
     </Paper>
   );
 };
