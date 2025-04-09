@@ -6,6 +6,8 @@ import type {
   Firewall,
   FirewallDevice,
   IPAddress,
+  KubeNodePoolResponse,
+  KubernetesCluster,
   Linode,
   LinodeInterface,
   NodeBalancer,
@@ -89,22 +91,24 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id:
-    | 'Domains'
+  id: // eslint-disable-next-line sonarjs/max-union-size
+  | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
+    | 'Kubernetes'
     | 'Linodes'
     | 'NodeBalancers'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
-    | 'VPCs'
-    | 'Volumes';
+    | 'Volumes'
+    | 'VPCs';
 };
 export type MockPresetCrudId =
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
+  | 'kubernetes:crud'
   | 'linodes:crud'
   | 'nodebalancers:crud'
   | 'placement-groups:crud'
@@ -130,6 +134,8 @@ export interface MockState {
   firewallDevices: [number, FirewallDevice][];
   firewalls: Firewall[];
   ipAddresses: IPAddress[];
+  kubernetesClusters: KubernetesCluster[];
+  kubernetesNodePools: KubeNodePoolResponse[];
   linodeConfigs: [number, Config][];
   linodeInterfaces: [number, LinodeInterface][];
   linodes: Linode[];
