@@ -1,4 +1,4 @@
-import { Tooltip, VisibilityTooltip, omittedProps } from '@linode/ui';
+import { omittedProps, Tooltip, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -25,18 +25,23 @@ export interface CopyTooltipProps {
    */
   disabled?: boolean;
   /**
+   * If true, the component is in controlled mode for text masking, meaning the parent component handles the visibility toggle.
+   * @default false
+   */
+  isMaskingControlled?: boolean;
+  /**
    * If true, the text will be masked with dots when displayed. It will still be copyable.
    * @default false
    */
   masked?: boolean;
   /**
-   * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
-   */
-  maskedTextLength?: MaskableTextLength;
-  /**
    * Callback to be executed when the icon is clicked.
    */
 
+  /**
+   * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
+   */
+  maskedTextLength?: MaskableTextLength | number;
   onClickCallback?: () => void;
   /**
    * The placement of the tooltip.
@@ -59,6 +64,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     className,
     copyableText,
     disabled,
+    isMaskingControlled,
     masked,
     maskedTextLength,
     onClickCallback,
@@ -67,7 +73,11 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   } = props;
 
   const [copied, setCopied] = React.useState<boolean>(false);
-  const [isTextMasked, setIsTextMasked] = React.useState(masked);
+  const [isTextMaskedInternally, setIsTextMaskedInternally] =
+    React.useState(masked);
+
+  // Use the parent component's state for text masking if in controlled mode; otherwise use the internal state.
+  const isTextMasked = isMaskingControlled ? masked : isTextMaskedInternally;
 
   const displayText = isTextMasked
     ? createMaskedText(text, maskedTextLength)
@@ -111,9 +121,9 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       >
         {CopyButton}
       </Tooltip>
-      {masked && (
+      {masked && !isMaskingControlled && (
         <VisibilityTooltip
-          handleClick={() => setIsTextMasked(!isTextMasked)}
+          handleClick={() => setIsTextMaskedInternally(!isTextMaskedInternally)}
           isVisible={!isTextMasked}
         />
       )}
