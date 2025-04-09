@@ -12,11 +12,6 @@ interface AlertConfirmationDialogProps {
   alert: Alert;
 
   /**
-   * Name of the selected entity
-   */
-  entityName: string;
-
-  /**
    * Handler function for cancel button
    */
   handleCancel: () => void;
@@ -31,7 +26,7 @@ interface AlertConfirmationDialogProps {
   /**
    * Current state of the toggle button whether active or not
    */
-  isActive: boolean;
+  isEnabled: boolean;
 
   /**
    * Loading state of the confirmation dialog
@@ -42,26 +37,31 @@ interface AlertConfirmationDialogProps {
    * Current state of the confirmation dialoge whether open or not
    */
   isOpen: boolean;
+
+  /**
+   * Message to be displayed in the confirmation dialog
+   */
+  message: string;
 }
 
 export const AlertConfirmationDialog = React.memo(
   (props: AlertConfirmationDialogProps) => {
     const {
       alert,
-      entityName,
       handleCancel,
       handleConfirm,
-      isActive,
+      isEnabled,
       isLoading = false,
       isOpen,
+      message,
     } = props;
 
     const actionsPanel = (
       <ActionsPanel
         primaryButtonProps={{
-          label: isActive ? 'Disable' : 'Enable',
+          label: isEnabled ? 'Disable' : 'Enable',
           loading: isLoading,
-          onClick: () => handleConfirm(alert, isActive),
+          onClick: () => handleConfirm(alert, isEnabled),
         }}
         secondaryButtonProps={{
           disabled: isLoading,
@@ -77,12 +77,9 @@ export const AlertConfirmationDialog = React.memo(
         data-testid="confirmation-dialog"
         onClose={handleCancel}
         open={isOpen}
-        title={`${isActive ? 'Disable' : 'Enable'} ${alert.label} Alert?`}
+        title={`${isEnabled ? 'Disable' : 'Enable'} ${alert.label} Alert?`}
       >
-        <Typography variant="subtitle1">
-          Are you sure you want to {isActive ? 'disable' : 'enable'} the alert
-          for {entityName}?
-        </Typography>
+        <Typography variant="subtitle2">{message}</Typography>
       </ConfirmationDialog>
     );
   }
