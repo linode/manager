@@ -41,6 +41,8 @@ export const ViewPermissionsDrawer = (props: Props) => {
         <Typography>
           This key has unlimited access to all buckets on your account.
         </Typography>
+      ) : objectStorageKey.bucket_access === null ? (
+        <Typography>This key has no permissions.</Typography>
       ) : (
         <>
           <Typography>

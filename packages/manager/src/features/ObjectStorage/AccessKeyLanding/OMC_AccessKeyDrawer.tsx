@@ -76,20 +76,19 @@ export interface FormState {
  * sorted by region.
  */
 
-export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
-  a: DisplayedAccessKeyScope,
-  b: DisplayedAccessKeyScope
-) => {
-  if (!a.region || !b.region) {
-    return 0;
-  }
+export const sortByRegion =
+  (regionLookup: { [key: string]: Region }) =>
+  (a: DisplayedAccessKeyScope, b: DisplayedAccessKeyScope) => {
+    if (!a.region || !b.region) {
+      return 0;
+    }
 
-  return sortByString(
-    regionLookup[a.region].label,
-    regionLookup[b.region].label,
-    'asc'
-  );
-};
+    return sortByString(
+      regionLookup[a.region].label,
+      regionLookup[b.region].label,
+      'asc'
+    );
+  };
 
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
@@ -105,14 +104,8 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const {
-    isRestrictedUser,
-    mode,
-    objectStorageKey,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
+  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
+    props;
 
   const { regionsByIdMap } = useObjectStorageRegions();
 
@@ -165,7 +158,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ...values,
             bucket_access: access.filter(
               (thisAccess: DisplayedAccessKeyScope) =>
-                // thisAccess.permissions !== 'none' &&
+                thisAccess.permissions !== 'none' &&
                 thisAccess.permissions !== null
             ),
           }
