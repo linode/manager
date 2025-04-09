@@ -227,7 +227,7 @@ export const createNodeBalancer = (mockState: MockState) => [
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
       const payload = await request.clone().json();
       const configPayload = payload?.configs;
-      const firewallIdPaylaod = payload?.firewall_id;
+      const firewallIdPayload = payload?.firewall_id;
 
       delete payload?.configs;
       delete payload?.firewall_id;
@@ -244,8 +244,8 @@ export const createNodeBalancer = (mockState: MockState) => [
         mockState
       );
 
-      if (firewallIdPaylaod) {
-        const firewall = await mswDB.get('firewalls', firewallIdPaylaod);
+      if (firewallIdPayload) {
+        const firewall = await mswDB.get('firewalls', firewallIdPayload);
         if (firewall) {
           const entity = {
             id: nodeBalancer.id,
