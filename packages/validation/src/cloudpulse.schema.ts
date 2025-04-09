@@ -81,9 +81,30 @@ export const createAlertDefinitionSchema = object({
 
 export const editAlertDefinitionSchema = object({
   channel_ids: array().of(number().required()).optional(),
-  description: string().optional(),
+  label: string()
+    .matches(
+      /^[^*#&+:<>"?@%{}\\\/]+$/,
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+    )
+    .max(100, 'Name must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Name cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value ?? '');
+      }
+    ).optional(),
+  description: string()
+    .max(100, 'Description must be 100 characters or less.')
+    .test(
+      'no-special-start-end',
+      'Description cannot start or end with a special character.',
+      (value) => {
+        return !specialStartEndRegex.test(value ?? '');
+      }
+    )
+    .optional(),
   entity_ids: array().of(string().defined()).optional(),
-  label: string().optional(),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)
