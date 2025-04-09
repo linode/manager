@@ -34,9 +34,11 @@ export const TablesPanel = () => {
   });
   const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
-  const { data: stats, error, isLoading } = useNodeBalancerStatsQuery(
-    nodebalancer?.id ?? -1
-  );
+  const {
+    data: stats,
+    error,
+    isLoading,
+  } = useNodeBalancerStatsQuery(nodebalancer?.id ?? -1);
 
   const statsErrorString = error
     ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason

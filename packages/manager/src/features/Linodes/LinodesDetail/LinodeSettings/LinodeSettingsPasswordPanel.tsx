@@ -121,7 +121,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
         {!isBareMetalInstance ? (
           <Select
             onChange={(_, item) =>
-              setSelectedDiskId(Number(item?.value) ?? null)
+              setSelectedDiskId(Number(item?.value) || null)
             }
             value={
               diskOptions?.find((item) => item.value === selectedDiskId) ?? null

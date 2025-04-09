@@ -581,7 +581,7 @@ describe('User permission management', () => {
     );
 
     // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
-    expect(cy.findByText('User Profile').should('not.exist'));
+    cy.findByText('User Profile').should('not.exist');
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')

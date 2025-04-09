@@ -112,9 +112,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
-  const [selectedResources, setSelectedResources] = React.useState<string[]>(
-    alertResourceIds
-  );
+  const [selectedResources, setSelectedResources] =
+    React.useState<string[]>(alertResourceIds);
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>

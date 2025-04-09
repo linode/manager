@@ -29,12 +29,10 @@ describe('Linode Create Details', () => {
   });
 
   it('renders an "Add Tags" field', () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
-      component: <Details />,
-    });
+    const { getByLabelText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <Details />,
+      });
 
     expect(getByLabelText('Add Tags')).toBeVisible();
     expect(

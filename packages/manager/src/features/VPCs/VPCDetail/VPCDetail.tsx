@@ -46,7 +46,7 @@ const VPCDetail = () => {
     error,
     isFetching: isFetchingVPC,
     isLoading,
-  } = useVPCQuery(Number(vpcId) ?? -1, Boolean(vpcId));
+  } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
   const { data: regions } = useRegionsQuery();
 
   const handleEditVPC = (vpc: VPC) => {

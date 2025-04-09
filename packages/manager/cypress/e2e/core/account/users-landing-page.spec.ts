@@ -31,13 +31,12 @@ import type { Profile } from '@linode/api-v4';
 const initTestUsers = (profile: Profile, enableChildAccountAccess: boolean) => {
   const mockProfile = profile;
 
-  const mockRestrictedParentWithoutChildAccountAccess = accountUserFactory.build(
-    {
+  const mockRestrictedParentWithoutChildAccountAccess =
+    accountUserFactory.build({
       restricted: true,
       user_type: 'parent',
       username: 'restricted-parent-user-without-child-account-access',
-    }
-  );
+    });
 
   const mockRestrictedParentWithChildAccountAccess = accountUserFactory.build({
     restricted: true,

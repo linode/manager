@@ -31,8 +31,8 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   verified_phone_number: '+15555555555',
 });
 
-export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestionsData>(
-  {
+export const securityQuestionsFactory =
+  Factory.Sync.makeFactory<SecurityQuestionsData>({
     security_questions: [
       { id: 1, question: 'In what city were you born?', response: null },
       {
@@ -127,8 +127,7 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
         response: null,
       },
     ],
-  }
-);
+  });
 
 export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
   {
@@ -150,7 +149,7 @@ export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
     },
     theme: 'light',
     type_to_confirm: true,
-  }
+  },
 );
 
 export const sshKeyFactory = Factory.Sync.makeFactory<SSHKey>({

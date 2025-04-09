@@ -117,7 +117,7 @@ export const getPlanSelectionsByPlanType = <
         plansByType['shared'].push(type);
         break;
       default:
-        if (plansByType.hasOwnProperty(type.class)) {
+        if (Object.prototype.hasOwnProperty.call(plansByType, type.class)) {
           plansByType[type.class].push(type);
         }
         break;

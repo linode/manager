@@ -1,5 +1,6 @@
 import { determineIPType } from '@linode/validation';
 
+// eslint-disable-next-line sonarjs/no-hardcoded-ip
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
 export const RESERVED_IP_NUMBER = 4;
 

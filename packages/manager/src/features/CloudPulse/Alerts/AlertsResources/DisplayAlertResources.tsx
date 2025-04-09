@@ -275,9 +275,8 @@ export const DisplayAlertResources = React.memo(
                   {!isDataLoadingError &&
                     paginatedData.map((resource, index) => {
                       const { checked, id } = resource;
-                      const isItemCheckboxDisabled = isCheckboxDisabled(
-                        checked
-                      );
+                      const isItemCheckboxDisabled =
+                        isCheckboxDisabled(checked);
                       return (
                         <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                           {isSelectionsNeeded && (

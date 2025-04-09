@@ -47,7 +47,7 @@ export const Referrals = () => {
     return <CircleProgress />;
   }
 
-  const { completed, credit, pending, total, url } = profile?.referrals;
+  const { completed, credit, pending, total, url } = profile.referrals;
   const allowReferral = Boolean(url);
 
   return (

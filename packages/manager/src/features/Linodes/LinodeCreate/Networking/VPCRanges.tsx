@@ -45,6 +45,7 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
                   label={`IP Range ${index}`}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
+                  // eslint-disable-next-line sonarjs/no-hardcoded-ip
                   placeholder="10.0.0.0/24"
                   sx={{ minWidth: 290 }}
                   value={field.value}

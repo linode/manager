@@ -59,10 +59,8 @@ export const OMC_BucketLanding = (props: Props) => {
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined

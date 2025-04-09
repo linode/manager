@@ -82,10 +82,10 @@ describe('useGetLocationsForQuotaService', () => {
   });
 
   it('should return the error for a given quota usage query', () => {
-    const quotaUsageQueries = ([
+    const quotaUsageQueries = [
       { error: [{ reason: 'Error 1' }] },
       { error: [{ reason: 'Error 2' }] },
-    ] as unknown) as UseQueryResult<QuotaUsage, Error>[];
+    ] as unknown as UseQueryResult<QuotaUsage, Error>[];
     const index = 0;
 
     const error = getQuotaError(quotaUsageQueries, index);

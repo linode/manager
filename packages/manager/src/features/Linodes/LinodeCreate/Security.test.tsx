@@ -147,13 +147,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
@@ -177,14 +176,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText, getByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Distributed Compute Instances are encrypted. This setting can not be changed.'

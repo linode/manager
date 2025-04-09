@@ -36,7 +36,7 @@ import {
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
-import { Error } from './Error';
+import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
@@ -205,7 +205,7 @@ export const LinodeCreate = () => {
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Error />
+        <LinodeCreateError />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>

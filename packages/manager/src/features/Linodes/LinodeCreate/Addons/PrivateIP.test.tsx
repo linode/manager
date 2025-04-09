@@ -24,12 +24,11 @@ describe('Linode Create Private IP Add-on', () => {
   });
 
   it('should get its value from the form context', () => {
-    const {
-      getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <PrivateIP />,
-      useFormOptions: { defaultValues: { private_ip: true } },
-    });
+    const { getByRole } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <PrivateIP />,
+        useFormOptions: { defaultValues: { private_ip: true } },
+      });
 
     const checkbox = getByRole('checkbox');
 
@@ -46,12 +45,11 @@ describe('Linode Create Private IP Add-on', () => {
       })
     );
 
-    const {
-      getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <PrivateIP />,
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { getByRole } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <PrivateIP />,
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     const checkbox = getByRole('checkbox');
 
@@ -72,11 +70,10 @@ describe('Linode Create Private IP Add-on', () => {
       })
     );
 
-    const {
-      getByRole,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <PrivateIP />,
-    });
+    const { getByRole } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <PrivateIP />,
+      });
 
     const checkbox = getByRole('checkbox');
 
