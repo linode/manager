@@ -76,7 +76,7 @@ export interface CloudPulseResourceTypeMapFlag {
   supportedRegionIds?: string;
 }
 
-interface gpuV2 {
+interface GpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
   transferBanner: boolean;
@@ -124,7 +124,7 @@ export interface Flags {
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   gecko2: GeckoFeatureFlag;
-  gpuv2: gpuV2;
+  gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
   limitsEvolution: LimitsEvolution;
@@ -152,6 +152,7 @@ export interface Flags {
   taxes: Taxes;
   tpaProviders: Provider[];
   udp: boolean;
+  vmHostMaintenance: BetaFeatureFlag;
 }
 
 interface MarketplaceAppOverride {

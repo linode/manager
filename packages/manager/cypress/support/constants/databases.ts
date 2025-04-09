@@ -9,7 +9,7 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
-export interface databaseClusterConfiguration {
+export interface DatabaseClusterConfiguration {
   clusterSize: ClusterSize;
   dbType: Engine;
   engine: string;
@@ -325,7 +325,7 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
 ];
 
 // Array of database cluster configurations for which to test creation.
-export const databaseConfigurations: databaseClusterConfiguration[] = [
+export const databaseConfigurations: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 1,
     dbType: 'mysql',
@@ -355,7 +355,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
   },
 ];
 
-export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
+export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 3,
     dbType: 'mysql',
