@@ -252,11 +252,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const {
-      getAllByLabelText,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    const { getAllByLabelText, getByText, queryByTestId } =
+      await renderWithThemeAndRouter(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -394,11 +391,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const {
-      findAllByLabelText,
-      getAllByLabelText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    const { findAllByLabelText, getAllByLabelText, queryByTestId } =
+      await renderWithThemeAndRouter(<ImagesLanding />);
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {

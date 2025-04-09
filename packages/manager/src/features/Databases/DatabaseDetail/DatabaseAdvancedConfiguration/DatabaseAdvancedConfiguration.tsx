@@ -25,7 +25,6 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
     setAdvancedConfigurationDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const engine = database.engine;
   const engineConfigs = database.engine_config;
 
   return (
@@ -62,7 +61,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
               Object.entries(value!).map(([configLabel, configValue]) => (
                 <React.Fragment key={`${key}-${configLabel}`}>
                   <Grid size={{ lg: 4, md: 4, xs: 5 }}>
-                    <StyledLabelTypography>{`${engine}.${configLabel}`}</StyledLabelTypography>
+                    <StyledLabelTypography>{`${key}.${configLabel}`}</StyledLabelTypography>
                   </Grid>
                   <StyledConfigValue size={{ lg: 8, md: 8, xs: 7 }}>
                     {formatConfigValue(String(configValue))}
@@ -72,7 +71,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
             ) : (
               <React.Fragment key={key}>
                 <Grid size={{ lg: 4, md: 4, xs: 5 }}>
-                  <StyledLabelTypography>{`${engine}.${key}`}</StyledLabelTypography>
+                  <StyledLabelTypography>{`${key}`}</StyledLabelTypography>
                 </Grid>
                 <StyledConfigValue size={{ lg: 8, md: 8, xs: 7 }}>
                   {formatConfigValue(String(value))}

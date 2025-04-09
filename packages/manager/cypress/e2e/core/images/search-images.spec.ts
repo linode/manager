@@ -59,8 +59,8 @@ describe('Search Images', () => {
 
             // Search for the first image by label, confirm it's the only one shown.
             cy.findByPlaceholderText('Search Images').type(image1.label);
-            expect(cy.contains(image1.label).should('be.visible'));
-            expect(cy.contains(image2.label).should('not.exist'));
+            cy.contains(image1.label).should('be.visible');
+            cy.contains(image2.label).should('not.exist');
 
             // Clear search, confirm both images are shown.
             cy.findByTestId('clear-images-search').click();

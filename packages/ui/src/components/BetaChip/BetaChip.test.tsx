@@ -7,25 +7,16 @@ import { renderWithTheme } from '../../utilities/testHelpers';
 import { BetaChip } from './BetaChip';
 
 describe('BetaChip', () => {
-  it('renders with default color (primary)', () => {
+  it('renders with default color', () => {
     const { getByTestId } = renderWithTheme(<BetaChip />);
     const betaChip = getByTestId('betaChip');
     expect(betaChip).toBeInTheDocument();
-    expect(betaChip).toHaveStyle('background-color: rgba(0, 0, 0, 0.08)');
-  });
-
-  it('renders with primary color', () => {
-    const { getByTestId } = renderWithTheme(<BetaChip color="secondary" />);
-    const betaChip = getByTestId('betaChip');
-    expect(betaChip).toBeInTheDocument();
-    expect(betaChip).toHaveStyle('background-color: rgb(131, 131, 140)');
+    expect(betaChip).toHaveStyle('background-color: rgb(105, 105, 112)');
   });
 
   it('triggers an onClick callback', () => {
     const onClickMock = vi.fn();
-    const { getByTestId } = renderWithTheme(
-      <BetaChip color="primary" onClick={onClickMock} />
-    );
+    const { getByTestId } = renderWithTheme(<BetaChip onClick={onClickMock} />);
     const betaChip = getByTestId('betaChip');
     fireEvent.click(betaChip);
     expect(onClickMock).toHaveBeenCalledTimes(1);
