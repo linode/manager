@@ -98,6 +98,7 @@ describe('linode backups', () => {
         .should('be.visible')
         .within(() => {
           // Confirm that user is warned of additional backup charges.
+          // eslint-disable-next-line sonarjs/slow-regex
           cy.contains(/.* This will add .* to your monthly bill\./).should(
             'be.visible'
           );

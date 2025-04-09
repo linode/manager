@@ -62,14 +62,14 @@ export const Default: Story = {
   render: (args) => <DeletionDialog {...args}>{args.children}</DeletionDialog>,
 };
 
-export const Error: Story = {
+export const DeletionDialogError: Story = {
   args: {
     error: 'There was an error deleting this Linode.',
   },
   render: (args) => <DeletionDialog {...args}>{args.children}</DeletionDialog>,
 };
 
-export const Loading: Story = {
+export const DeletionDialogLoading: Story = {
   args: {
     loading: true,
   },

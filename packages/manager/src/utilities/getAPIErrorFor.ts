@@ -1,29 +1,28 @@
-import { APIError } from '@linode/api-v4/lib/types';
-
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
-export const getAPIErrorFor = (
-  errorMap: { [index: string]: string },
-  arr: APIError[] = []
-) => (field: string): string | undefined => {
-  // Safeguard in case this function isn't called with an array.
-  if (!Array.isArray(arr)) {
-    return field === 'none' ? DEFAULT_ERROR_MESSAGE : undefined;
-  }
+import type { APIError } from '@linode/api-v4/lib/types';
 
-  let err;
+export const getAPIErrorFor =
+  (errorMap: { [index: string]: string }, arr: APIError[] = []) =>
+  (field: string): string | undefined => {
+    // Safeguard in case this function isn't called with an array.
+    if (!Array.isArray(arr)) {
+      return field === 'none' ? DEFAULT_ERROR_MESSAGE : undefined;
+    }
 
-  if (field === 'none') {
-    err = arr.find((e) => !e.hasOwnProperty('field'));
-  } else {
-    err = arr.find((e) => e.field === field);
-  }
+    let err;
 
-  if (!err) {
-    return;
-  }
+    if (field === 'none') {
+      err = arr.find((e) => !Object.prototype.hasOwnProperty.call(e, 'field'));
+    } else {
+      err = arr.find((e) => e.field === field);
+    }
 
-  return err.field && errorMap[err.field]
-    ? err.reason.replace(err.field, errorMap[err.field])
-    : err.reason;
-};
+    if (!err) {
+      return;
+    }
+
+    return err.field && errorMap[err.field]
+      ? err.reason.replace(err.field, errorMap[err.field])
+      : err.reason;
+  };

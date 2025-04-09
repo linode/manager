@@ -582,6 +582,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.focused().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
+    // eslint-disable-next-line sonarjs/slow-regex
     cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
