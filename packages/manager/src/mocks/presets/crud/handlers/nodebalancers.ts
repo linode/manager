@@ -33,6 +33,15 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
+const getNodebalancerInfo = async (id: number) => {
+  const nodeBalancer = await mswDB.get('nodeBalancers', id);
+  if (!nodeBalancer) {
+    return makeNotFoundResponse();
+  }
+
+  return makeResponse(nodeBalancer);
+};
+
 export const getNodeBalancers = (mockState: MockState) => [
   http.get(
     '*/v4/nodebalancers',
@@ -52,30 +61,16 @@ export const getNodeBalancers = (mockState: MockState) => [
     '*/v4beta/nodebalancers/:id',
     async ({
       params,
-    }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
-      const id = Number(params.id);
-      const nodeBalancer = await mswDB.get('nodeBalancers', id);
-      if (!nodeBalancer) {
-        return makeNotFoundResponse();
-      }
-
-      return makeResponse(nodeBalancer);
-    }
+    }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> =>
+      await getNodebalancerInfo(Number(params.id))
   ),
 
   http.get(
     '*/v4beta/nodebalancers/:id',
     async ({
       params,
-    }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> => {
-      const id = Number(params.id);
-      const nodeBalancer = await mswDB.get('nodeBalancers', id);
-      if (!nodeBalancer) {
-        return makeNotFoundResponse();
-      }
-
-      return makeResponse(nodeBalancer);
-    }
+    }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> =>
+      await getNodebalancerInfo(Number(params.id))
   ),
 
   http.get(
@@ -193,6 +188,37 @@ export const getNodeBalancers = (mockState: MockState) => [
   ),
 ];
 
+const createNodeBalancerConfig = async (
+  nbId: number,
+  config: NodeBalancerConfig,
+  mockState: MockState
+) => {
+  const nodeBalancerConfig = nodeBalancerConfigFactory.build({
+    ...config,
+    nodebalancer_id: nbId,
+  });
+  const nbConfigMockData = await mswDB.add(
+    'nodeBalancerConfigs',
+    nodeBalancerConfig,
+    mockState
+  );
+  if (config?.nodes) {
+    const createConfigNodePromises = [];
+    for (const configNodePayload of config?.nodes as NodeBalancerConfigNode[]) {
+      const nodeBalancerConfigNode = nodeBalancerConfigNodeFactory.build({
+        ...configNodePayload,
+        config_id: nbConfigMockData.id,
+        nodebalancer_id: nbId,
+      });
+
+      createConfigNodePromises.push(
+        mswDB.add('nodeBalancerConfigNodes', nodeBalancerConfigNode, mockState)
+      );
+    }
+    await Promise.all(createConfigNodePromises);
+  }
+};
+
 export const createNodeBalancer = (mockState: MockState) => [
   http.post(
     '*/v4/nodebalancers',
@@ -211,6 +237,12 @@ export const createNodeBalancer = (mockState: MockState) => [
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
       });
+
+      const nbMockData = await mswDB.add(
+        'nodeBalancers',
+        nodeBalancer,
+        mockState
+      );
 
       if (firewallIdPaylaod) {
         const firewall = await mswDB.get('firewalls', firewallIdPaylaod);
@@ -261,45 +293,12 @@ export const createNodeBalancer = (mockState: MockState) => [
         }
       }
 
-      const createConfigPromises = [];
-      const createConfigNodePromises = [];
+      const createConfigPromises: Promise<void>[] = configPayload?.map(
+        (config: NodeBalancerConfig) =>
+          createNodeBalancerConfig(nbMockData.id, config, mockState)
+      );
 
-      if (configPayload) {
-        for (const config of configPayload as NodeBalancerConfig[]) {
-          const nodeBalancerConfig = nodeBalancerConfigFactory.build({
-            ...config,
-            nodebalancer_id: nodeBalancer.id,
-          });
-
-          createConfigPromises.push(
-            mswDB.add('nodeBalancerConfigs', nodeBalancerConfig, mockState)
-          );
-          if (config?.nodes) {
-            for (const configNodePayload of config?.nodes as NodeBalancerConfigNode[]) {
-              const nodeBalancerConfigNode = nodeBalancerConfigNodeFactory.build(
-                {
-                  ...configNodePayload,
-                  config_id: nodeBalancerConfig.id,
-                  nodebalancer_id: nodeBalancer.id,
-                }
-              );
-
-              createConfigNodePromises.push(
-                mswDB.add(
-                  'nodeBalancerConfigNodes',
-                  nodeBalancerConfigNode,
-                  mockState
-                )
-              );
-            }
-          }
-        }
-      }
-
-      await Promise.all(createConfigNodePromises);
       await Promise.all(createConfigPromises);
-      await mswDB.add('nodeBalancers', { ...nodeBalancer }, mockState);
-
       queueEvents({
         event: {
           action: 'nodebalancer_create',
@@ -472,8 +471,8 @@ export const updateNodeBalancer = (mockState: MockState) => [
 
       const updatedNodeBalancerConfig = { ...nodeBalancerConfig, ...payload };
       await mswDB.update(
-        'nodeBalancers',
-        nodeBalancerId,
+        'nodeBalancerConfigs',
+        configId,
         updatedNodeBalancerConfig,
         mockState
       );
@@ -523,8 +522,8 @@ export const updateNodeBalancer = (mockState: MockState) => [
         ...payload,
       };
       await mswDB.update(
-        'nodeBalancers',
-        nodeBalancerId,
+        'nodeBalancerConfigNodes',
+        nodeId,
         updatedNodeBalancerConfigNode,
         mockState
       );
