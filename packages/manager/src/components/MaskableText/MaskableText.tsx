@@ -1,7 +1,7 @@
-import { Stack, VisibilityTooltip, Typography } from '@linode/ui';
+import { usePreferences } from '@linode/queries';
+import { Stack, Typography, VisibilityTooltip } from '@linode/ui';
 import * as React from 'react';
 
-import { usePreferences } from '@linode/queries';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import type { SxProps, Theme } from '@mui/material';
