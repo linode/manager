@@ -80,7 +80,7 @@ export default defineConfig({
 
   e2e: {
     experimentalRunAllSpecs: true,
-
+    // testing
     // This can be overridden using `CYPRESS_BASE_URL`.
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/core/**/*.spec.{ts,tsx}',
