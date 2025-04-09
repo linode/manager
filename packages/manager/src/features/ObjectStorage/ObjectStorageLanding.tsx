@@ -44,11 +44,8 @@ export const ObjectStorageLanding = () => {
   const match = useMatch({ strict: false });
   const [mode, setMode] = React.useState<MODE>('creating');
 
-  const {
-    _isRestrictedUser,
-    account,
-    accountSettings,
-  } = useAccountManagement();
+  const { _isRestrictedUser, account, accountSettings } =
+    useAccountManagement();
   const flags = useFlags();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(

@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 export const Default: StoryObj<RegionSelectProps> = {
   render: (args) => {
     const SelectWrapper = () => {
-      const [_, updateArgs] = useArgs();
+      const [, updateArgs] = useArgs();
       return (
         <Box sx={{ minHeight: 500 }}>
           <RegionSelect

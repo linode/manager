@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { truncate } from '@linode/utilities';
 import Algolia from 'algoliasearch';
 import * as React from 'react';
