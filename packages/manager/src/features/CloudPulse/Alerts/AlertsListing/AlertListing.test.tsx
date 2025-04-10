@@ -180,7 +180,7 @@ describe('Alert Listing', () => {
   });
 
   it('should show the banner and disable the create button when the user has reached the maximum allowed user alerts', async () => {
-    const userAlerts = alertFactory.buildList(50, { type: 'user' });
+    const userAlerts = alertFactory.buildList(100, { type: 'user' });
     const systemAlerts = alertFactory.buildList(10, { type: 'system' });
 
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
