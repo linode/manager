@@ -24,7 +24,8 @@ const searchAndSelectSx = {
   xs: '300px',
 };
 // hardcoding the value is temporary solution until something from the API side is confirmed.
-const maxAllowedAlerts = 30;
+const maxAllowedAlerts = 100;
+const maxAllowedMetrics = 100;
 
 export const AlertListing = () => {
   const { url } = useRouteMatch();
@@ -40,6 +41,15 @@ export const AlertListing = () => {
   const isAlertLimitReached =
     alerts &&
     alerts.filter((alert) => alert.type === 'user').length >= maxAllowedAlerts;
+
+  const isMetricLimitReached =
+    alerts &&
+    alerts
+      .filter((alert) => alert.type === 'user')
+      .reduce(
+        (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
+        0
+      ) >= maxAllowedMetrics;
 
   const getServicesList = React.useMemo((): Item<
     string,
@@ -154,7 +164,7 @@ export const AlertListing = () => {
   }
   return (
     <Stack spacing={2}>
-      {isAlertLimitReached && (
+      {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertListNoticeMessages
           errorMessage="You have reached maximum number of metrics created per account."
           variant="warning"
@@ -248,7 +258,7 @@ export const AlertListing = () => {
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
-          disabled={isAlertLimitReached}
+          disabled={isAlertLimitReached || isMetricLimitReached}
           ref={topRef}
           tooltipText="You have reached your limit of definitions for this account."
           variant="contained"
