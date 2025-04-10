@@ -1,8 +1,7 @@
-import { linodeTypeFactory } from '@linode/utilities';
+import { accountBetaFactory, linodeTypeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
 import {
-  accountBetaFactory,
   kubeLinodeFactory,
   kubernetesEnterpriseTierVersionFactory,
   kubernetesVersionFactory,

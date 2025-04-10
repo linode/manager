@@ -8,6 +8,8 @@
  */
 import {
   accountAvailabilityFactory,
+  accountBetaFactory,
+  betaFactory,
   dedicatedTypeFactory,
   linodeFactory,
   linodeIPFactory,
@@ -31,7 +33,6 @@ import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   // abuseTicketNotificationFactory,
-  accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
@@ -39,7 +40,6 @@ import {
   alertFactory,
   alertRulesFactory,
   appTokenFactory,
-  betaFactory,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
