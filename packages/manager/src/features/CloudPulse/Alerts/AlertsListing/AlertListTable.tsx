@@ -154,9 +154,9 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
   const handleSortClick = (
     orderBy: string,
-    order: Order,
-    handleOrderChange: (orderBy: string, order: Order) => void,
-    handlePageChange: (page: number) => void
+    handleOrderChange: (orderBy: string, order?: Order) => void,
+    handlePageChange: (page: number) => void,
+    order?: Order
   ) => {
     if (order) {
       handleOrderChange(orderBy, order);
@@ -183,12 +183,12 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 page,
                 pageSize,
               }) => {
-                const handleTableSort = (orderBy: string, order: Order) =>
+                const handleTableSort = (orderBy: string, order?: Order) =>
                   handleSortClick(
                     orderBy,
-                    order,
                     handleOrderChange,
-                    handlePageChange
+                    handlePageChange,
+                    order
                   );
 
                 return (
