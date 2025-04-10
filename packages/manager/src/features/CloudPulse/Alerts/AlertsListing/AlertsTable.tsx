@@ -41,12 +41,12 @@ export const AlertsTable = ({
     <TableBody>
       {alerts.map((alert: Alert) => (
         <AlertTableRow
+          alert={alert}
           handlers={{
             handleDetails: () => handleDetails(alert),
             handleEdit: () => handleEdit(alert),
             handleStatusChange: () => handleStatusChange(alert),
           }}
-          alert={alert}
           key={alert.id}
           services={services}
         />

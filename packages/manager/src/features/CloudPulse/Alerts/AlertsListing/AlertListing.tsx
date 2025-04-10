@@ -121,10 +121,10 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const {
-    preference,
-    toggle: toggleAlertsGroupedByTag,
-  } = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
+    'aclpAlertsGroupByTag',
+    [false, true]
+  );
 
   if (alerts && alerts.length === 0) {
     return (

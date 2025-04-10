@@ -65,6 +65,12 @@ export const GroupedAlertsTable = ({
     [tagRefs]
   );
 
+  const createAlertHandlers = (alert: Alert) => ({
+    handleDetails: () => handleDetails(alert),
+    handleEdit: () => handleEdit(alert),
+    handleStatusChange: () => handleStatusChange(alert),
+  });
+
   return (
     <>
       {groupedAlerts.map(([tag, alertsForTag]) => {
@@ -92,22 +98,24 @@ export const GroupedAlertsTable = ({
                     </StyledTagHeader>
                   </TableCell>
                 </StyledTagHeaderRow>
-                {paginatedTagAlerts.map((alert) => (
-                  <AlertTableRow
-                    handlers={{
-                      handleDetails: () => handleDetails(alert),
-                      handleEdit: () => handleEdit(alert),
-                      handleStatusChange: () => handleStatusChange(alert),
-                    }}
-                    alert={alert}
-                    key={alert.id}
-                    services={services}
-                  />
-                ))}
+                {paginatedTagAlerts.map((alert) => {
+                  const alertHandlers = createAlertHandlers(alert);
+
+                  return (
+                    <AlertTableRow
+                      alert={alert}
+                      handlers={alertHandlers}
+                      key={alert.id}
+                      services={services}
+                    />
+                  );
+                })}
                 {count > MIN_PAGE_SIZE && (
                   <TableRow>
                     <TableCell colSpan={7} sx={{ padding: 0 }}>
                       <PaginationFooter
+                        count={count}
+                        eventCategory={`Alert Definitions Table ${tag}`}
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
                           scrollToTagWithAnimation(tag);
@@ -117,6 +125,8 @@ export const GroupedAlertsTable = ({
                           handleTagPageChange(1);
                           scrollToTagWithAnimation(tag);
                         }}
+                        page={page}
+                        pageSize={pageSize}
                         sx={{
                           border: 0,
                           marginBottom:
@@ -125,10 +135,6 @@ export const GroupedAlertsTable = ({
                               : theme.spacingFunction(16),
                           marginTop: theme.spacingFunction(16),
                         }}
-                        count={count}
-                        eventCategory={`Alert Definitions Table ${tag}`}
-                        page={page}
-                        pageSize={pageSize}
                       />
                     </TableCell>
                   </TableRow>
