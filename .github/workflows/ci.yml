@@ -379,6 +379,7 @@ jobs:
       - run: pnpm dev &
       - run: npx wait-on http://localhost:3000
       - run: cp packages/manager/.env.example packages/manager/.env
+      - run: cd packages/manager
       - run: pnpm cy:run -s 'cypress/e2e/core/cloudpulse/*'
 
   publish-packages:
