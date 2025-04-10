@@ -362,7 +362,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run --filter linode-manager typecheck
 
-  cypress-tests:
+  cloudpulse-cypress:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
