@@ -20,6 +20,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -101,7 +102,6 @@ export const KubernetesLanding = () => {
 
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { data, error, isLoading } = useKubernetesClustersQuery({
-    enabled: !isRestricted,
     filter,
     isUsingBetaEndpoint,
     params: {
@@ -185,7 +185,15 @@ export const KubernetesLanding = () => {
         </DismissibleBanner>
       )}
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'LKE Clusters',
+          }),
+        }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
+        disabledCreateButton={isRestricted}
         entity="Cluster"
         onButtonClick={() => push('/kubernetes/create')}
         removeCrumbX={1}
