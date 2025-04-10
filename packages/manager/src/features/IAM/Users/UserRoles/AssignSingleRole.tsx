@@ -1,5 +1,4 @@
-import { Autocomplete, Button } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Autocomplete, Button, DeleteIcon } from '@linode/ui';
 import { Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
@@ -13,12 +12,14 @@ import type {
   AssignNewRoleFormValues,
   RolesType,
 } from 'src/features/IAM/Shared/utilities';
+// import { Delete } from '@mui/icons-material';
 
 interface Props {
   index: number;
   onRemove: (idx: number) => void;
   options: RolesType[];
   permissions: IamAccountPermissions;
+  hideDetails: boolean;
 }
 
 export const AssignSingleRole = ({
@@ -26,6 +27,7 @@ export const AssignSingleRole = ({
   onRemove,
   options,
   permissions,
+  hideDetails,
 }: Props) => {
   const theme = useTheme();
 
@@ -58,6 +60,7 @@ export const AssignSingleRole = ({
                 textFieldProps={{ hideLabel: true }}
                 value={value?.role || null}
               />
+              {value && !hideDetails && (
               {value?.role && (
                 <AssignedPermissionsPanel
                   onChange={(updatedEntities) => {
@@ -86,7 +89,7 @@ export const AssignSingleRole = ({
         }}
       >
         <Button disabled={index === 0} onClick={() => onRemove(index)}>
-          <Close />
+          <DeleteIcon />
         </Button>
       </Box>
     </Box>

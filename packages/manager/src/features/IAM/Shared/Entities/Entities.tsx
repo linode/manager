@@ -1,11 +1,20 @@
+import { isEmpty } from '@linode/api-v4';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import { Autocomplete, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
+// import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { FormLabel } from 'src/components/FormLabel';
+import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
-import { placeholderMap, transformedAccountEntities } from '../utilities';
+import {
+  getCreateLinkForEntityType,
+  placeholderMap,
+  transformedAccountEntities,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesOption } from '../utilities';
 import type {
@@ -79,6 +88,36 @@ export const Entities = ({
       sx={{ marginTop: theme.tokens.spacing.S12 }}
       value={value || []}
     />
+    <>
+      <Autocomplete
+        renderOption={(props, option) => (
+          <li {...props} key={option.label}>
+            {option.label}
+          </li>
+        )}
+        ListboxProps={{ sx: { overflowX: 'hidden' } }}
+        getOptionLabel={(option) => option.label}
+        label="Entities"
+        multiple
+        noMarginTop
+        onChange={(_, value) => setSelectedEntities(value)}
+        options={memoizedEntities}
+        placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
+        readOnly={!isEmpty(assignedEntities)}
+        sx={{ marginTop: theme.tokens.spacing.S12 }}
+        value={selectedEntities}
+      />
+      {!memoizedEntities.length && (
+        <Notice spacingTop={8} variant="warning">
+          <Typography fontSize="inherit">
+            <Link to={getCreateLinkForEntityType(type)}>
+              Create a {capitalizeAllWords(type)} Entity
+            </Link>{' '}
+            first or choose a different role to continue assignment.
+          </Typography>
+        </Notice>
+      )}
+    </>
   );
 };
 
