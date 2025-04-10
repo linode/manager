@@ -4,15 +4,14 @@ import React from 'react';
 
 import {
   ADOBE_ANALYTICS_URL,
-  APP_ROOT /* PENDO_API_KEY*/,
+  APP_ROOT /* PENDO_API_KEY */,
 } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-
-// import {
-//   ONE_TRUST_COOKIE_CATEGORIES,
-//   checkOptanonConsent,
-//   getCookie,
-// } from 'src/utilities/analytics/utils';
+import {
+  checkOptanonConsent,
+  getCookie,
+  ONE_TRUST_COOKIE_CATEGORIES,
+} from 'src/utilities/analytics/utils';
 
 declare global {
   // eslint-disable-next-line no-unused-vars
@@ -68,7 +67,7 @@ export const transformUrl = (url: string) => {
 };
 
 /**
- * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
+ * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists and OneTrust consent is present.
  * Before initialization, we load the self-hosted Pendo agent from the Adobe Launch script.
  */
 export const usePendo = () => {
@@ -79,21 +78,24 @@ export const usePendo = () => {
   const visitorId = getUniquePendoId(profile?.uid.toString());
 
   // Temporarily added for testing with the development launch script - this isn't secret; we just don't have this env var set for preview environments.
-  // TODO: Remove this before merging.
+  // TODO: Remove this before merging and uncomment the PENDO_API_KEY import.
   const PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef';
 
-  // const optanonCookie = getCookie('OptanonConsent');
-  // // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
-  // // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
-  // const hasConsentEnabled =
-  //   APP_ROOT.includes('localhost') ||
-  //   checkOptanonConsent(
-  //     optanonCookie,
-  //     ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
-  //   );
+  const optanonCookie = getCookie('OptanonConsent');
+  // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
+  // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
+  const hasConsentEnabled =
+    APP_ROOT.includes('localhost') ||
+    checkOptanonConsent(
+      optanonCookie,
+      ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
+    );
 
   React.useEffect(() => {
-    if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
+    if (ADOBE_ANALYTICS_URL && PENDO_API_KEY && hasConsentEnabled) {
+      // Adapted Pendo install script for readability
+      // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
+
       // Set up Pendo namespace and queue
       const pendo = (window['pendo'] = window['pendo'] || {});
       pendo._q = pendo._q || [];
@@ -177,5 +179,5 @@ export const usePendo = () => {
         }
       });
     }
-  }, [accountId, visitorId]);
+  }, [accountId, hasConsentEnabled, visitorId]);
 };
