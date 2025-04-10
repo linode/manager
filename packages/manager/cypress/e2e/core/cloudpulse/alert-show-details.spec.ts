@@ -132,6 +132,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
+    const searchPlaceholder = 'Search for a Region or Entity';
     cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
     cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
 
@@ -275,9 +276,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         .should('be.visible')
         .should('have.text', 'Region');
 
-      cy.findByPlaceholderText('Search for a Region or Entity').should(
-        'be.visible'
-      );
+      cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
 
       cy.findByPlaceholderText('Select Regions').should('be.visible');
 
@@ -321,7 +320,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       verifyRowOrder(['1', '3', '2', '4']);
 
       // Search by Entity
-      cy.findByPlaceholderText('Search for a Region or Entity')
+      cy.findByPlaceholderText(searchPlaceholder)
         .should('be.visible')
         .type(databases[0].label);
 
@@ -335,7 +334,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       );
 
       // Search by region
-      cy.findByPlaceholderText('Search for a Region or Entity').clear();
+      cy.findByPlaceholderText(searchPlaceholder).clear();
 
       ui.regionSelect.find().click().type(`${regions[0].label}{enter}`);
       ui.regionSelect.find().click();
