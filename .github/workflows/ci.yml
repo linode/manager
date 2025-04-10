@@ -363,25 +363,25 @@ jobs:
       - run: pnpm run --filter linode-manager typecheck
 
   cypress-tests:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-      with:
-        run_install: false
-        version: 10
-    - uses: actions/setup-node@v4
-      with:
-        node-version: "20.17"
-        cache: "pnpm"
-    - run: pnpm install --frozen-lockfile && pnpm bootstrap
-    - run: pnpm dev &
-    - run: npx wait-on http://localhost:3000
-    - run: |
-        cp packages/manager/.env.example packages/manager/.env
-        cd packages/manager
-        pnpm exec cypress install
-        pnpm cy:cloudpulse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile && pnpm bootstrap
+      - run: pnpm dev &
+      - run: npx wait-on http://localhost:3000
+      - run: |
+          cp packages/manager/.env.example packages/manager/.env
+          cd packages/manager
+          pnpm exec cypress install
+          pnpm cy:cloudpulse
 
   publish-packages:
     runs-on: ubuntu-latest
