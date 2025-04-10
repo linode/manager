@@ -20,6 +20,7 @@ import {
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
+import { VPCAvailability } from './VPCAvailability';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -47,7 +48,11 @@ export const VPC = ({ index }: Props) => {
   const regionSupportsVPCs =
     selectedRegion?.capabilities.includes('VPCs') ?? false;
 
-  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region: regionId },
   });
@@ -63,12 +68,7 @@ export const VPC = ({ index }: Props) => {
             variant="warning"
           />
         )}
-        {selectedRegion && !regionSupportsVPCs && (
-          <Notice
-            text="VPC is not available in the selected region."
-            variant="warning"
-          />
-        )}
+        {selectedRegion && !regionSupportsVPCs && <VPCAvailability />}
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
