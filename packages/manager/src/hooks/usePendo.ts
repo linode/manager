@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useAccount, useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
@@ -7,6 +6,8 @@ import {
   ADOBE_ANALYTICS_URL,
   APP_ROOT /* PENDO_API_KEY*/,
 } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
+
 // import {
 //   ONE_TRUST_COOKIE_CATEGORIES,
 //   checkOptanonConsent,
@@ -14,7 +15,9 @@ import {
 // } from 'src/utilities/analytics/utils';
 
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pendo: any;
   }
 }
@@ -65,7 +68,8 @@ export const transformUrl = (url: string) => {
 };
 
 /**
- * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists and OneTrust consent is present.
+ * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
+ * Before initialization, we load the self-hosted Pendo agent from the Adobe Launch script.
  */
 export const usePendo = () => {
   const { data: account } = useAccount();
@@ -73,6 +77,10 @@ export const usePendo = () => {
 
   const accountId = getUniquePendoId(account?.euuid);
   const visitorId = getUniquePendoId(profile?.uid.toString());
+
+  // Temporarily added for testing with the development launch script - this isn't secret; we just don't have this env var set for preview environments.
+  // TODO: Remove this before merging.
+  const PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef';
 
   // const optanonCookie = getCookie('OptanonConsent');
   // // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
@@ -84,20 +92,11 @@ export const usePendo = () => {
   //     ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
   //   );
 
-  // This URL uses a Pendo-configured CNAME (M3-8742).
-  // const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
-
-  // Temporarily added for testing with the development launch script - this isn't secret; we just don't have this env var set for preview environments.
-  const PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef';
-
   React.useEffect(() => {
     if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
-      console.log({ ADOBE_ANALYTICS_URL, PENDO_API_KEY });
-
       // Set up Pendo namespace and queue
       const pendo = (window['pendo'] = window['pendo'] || {});
       pendo._q = pendo._q || [];
-      console.log('Initial Pendo setup:', { pendo, queue: pendo._q });
 
       // Define the methods Pendo uses in a queue
       const methodNames = [
@@ -122,14 +121,10 @@ export const usePendo = () => {
         })(methodNames[index]);
       });
 
-      // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
+      // Ensure the Adobe Launch script is loaded, then initialize Pendo with metadata
       loadScript(ADOBE_ANALYTICS_URL, {
         location: 'head',
-      }).then((result) => {
-        console.log('Launch script load result:', result);
-        console.log('Pendo object before initializing:', window.pendo);
-        console.log('Pendo queue before initializing:', window.pendo._q);
-
+      }).then(() => {
         try {
           window.pendo.initialize({
             account: {
@@ -174,18 +169,12 @@ export const usePendo = () => {
               // as long as it's not one of the above reserved names.
             },
           });
-          console.log('Pendo initialized successfully');
         } catch (error) {
-          console.error('Error initializing Pendo:', error);
+          reportException(
+            'An error occurred when trying to initialize Pendo.',
+            { error }
+          );
         }
-        console.log(
-          'Pendo object after attempting initializing:',
-          window.pendo
-        );
-        console.log(
-          'Pendo queue after attempting initializing:',
-          window.pendo._q
-        );
       });
     }
   }, [accountId, visitorId]);
