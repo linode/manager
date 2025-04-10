@@ -64,7 +64,7 @@ export const EditAlertResourcesConfirmDialog = React.memo(
           })}
           variant="body1"
         >
-          You have changed the resource settings for your alert.
+          You have changed the entity settings for your alert.
           <br />
           This also updates your alert definition.
         </Typography>
