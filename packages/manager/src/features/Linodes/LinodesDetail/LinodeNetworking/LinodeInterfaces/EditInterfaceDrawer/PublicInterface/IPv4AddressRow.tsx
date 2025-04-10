@@ -46,7 +46,7 @@ export const IPv4AddressRow = (props: Props) => {
     <TableRow key={address}>
       <TableCell>
         <Stack alignItems="center" direction="row" gap={1.5}>
-          {address === 'auto' ? <i>Allocate IPv4 on save</i> : address}
+          {address === 'auto' ? <i>IP allocated on save</i> : address}
           {primary && <Chip color="primary" label="Primary" />}
           {error && <TooltipIcon status="error" text={error} />}
         </Stack>

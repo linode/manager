@@ -16,7 +16,7 @@ export const IPv6RangeRow = (props: Props) => {
     <TableRow key={range}>
       <TableCell>
         {range === '/56' || range === '/64' ? (
-          <i>Allocate {range} range on save</i>
+          <i>{range} range allocated on save</i>
         ) : (
           range
         )}
