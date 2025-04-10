@@ -21,7 +21,7 @@ const reduceEntitiesToTags = <T extends Tagged>(
   obj: Record<string, T[]>,
   entity: T
 ): Record<string, T[]> => {
-  const { tags=[] } = entity;
+  const { tags = [] } = entity;
 
   return tags.length === 0
     ? { ...obj, [NONE]: addTo(obj[NONE], entity) }
