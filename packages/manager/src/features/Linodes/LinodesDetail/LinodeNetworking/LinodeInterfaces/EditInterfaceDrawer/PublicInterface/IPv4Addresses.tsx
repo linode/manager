@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from '@linode/ui';
-import React, { useState } from 'react';
+import { Box, Notice, Stack, Typography } from '@linode/ui';
+import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
@@ -10,23 +10,15 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
-import { DeleteIPv4Dialog } from './DeleteIPv4Dialog';
 import { IPv4AddressRow } from './IPv4AddressRow';
 
-import type {
-  LinodeInterface,
-  ModifyLinodeInterfacePayload,
-} from '@linode/api-v4';
+import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
-interface Props {
-  linodeId: number;
-  linodeInterface: LinodeInterface;
-}
-
-export const PublicIPv4Addresses = ({ linodeId, linodeInterface }: Props) => {
-  const [selectedAddress, setSelectedAddress] = useState<string>();
-
-  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+export const PublicIPv4Addresses = () => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<ModifyLinodeInterfacePayload>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'public.ipv4.addresses',
@@ -35,6 +27,12 @@ export const PublicIPv4Addresses = ({ linodeId, linodeInterface }: Props) => {
   return (
     <Stack spacing={1.5}>
       <Typography variant="h3">IPv4 Addresses</Typography>
+      {errors.public?.ipv4?.addresses?.message && (
+        <Notice
+          text={errors.public?.ipv4?.addresses?.message}
+          variant="error"
+        />
+      )}
       <Table>
         <TableHead>
           <TableRow>
@@ -49,32 +47,26 @@ export const PublicIPv4Addresses = ({ linodeId, linodeInterface }: Props) => {
               message="No IPv4s assigned to this interface."
             />
           )}
-          {fields
-            // We have to client-side sort because the API's reponse order is never consistent
-            // .sort(ipv4AddressSorter)
-            .map(({ id, address, primary }, index) => (
-              <IPv4AddressRow
-                address={address}
-                index={index}
-                key={id}
-                onRemove={() => remove(index)}
-                primary={primary ?? false}
-              />
-            ))}
+          {fields.map(({ id, address, primary }, index) => (
+            <IPv4AddressRow
+              address={address}
+              index={index}
+              key={id}
+              onRemove={() => remove(index)}
+              primary={primary ?? false}
+            />
+          ))}
         </TableBody>
       </Table>
       <Box>
-        <LinkButton onClick={() => append({ address: 'auto' })}>
+        <LinkButton
+          onClick={() =>
+            append({ address: 'auto', primary: fields.length === 0 })
+          }
+        >
           Add IPv4 Address
         </LinkButton>
       </Box>
-      <DeleteIPv4Dialog
-        address={selectedAddress}
-        interfaceId={linodeInterface.id}
-        linodeId={linodeId}
-        onClose={() => setSelectedAddress(undefined)}
-        open={selectedAddress !== undefined}
-      />
     </Stack>
   );
 };

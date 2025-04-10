@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from '@linode/ui';
-import React, { useState } from 'react';
+import React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
@@ -10,38 +11,15 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
-import { DeleteIPv6Dialog } from './DeleteIPv6Dialog';
 import { IPv6RangeRow } from './IPv6RangeRow';
-import { useAllocateIPv6Range } from './utilities';
 
-import type { LinodeInterface } from '@linode/api-v4';
+import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
-interface Props {
-  linodeId: number;
-  linodeInterface: LinodeInterface;
-}
-
-export const IPv6Ranges = (props: Props) => {
-  const { linodeId, linodeInterface } = props;
-
-  const [selectedRange, setSelectedRange] = useState<string>();
-
-  const {
-    isAllocating: isAllocating56,
-    onAllocate: onAllocate56,
-  } = useAllocateIPv6Range({
-    interfaceId: linodeInterface.id,
-    linodeId,
-    prefix: '/56',
-  });
-
-  const {
-    isAllocating: isAllocating64,
-    onAllocate: onAllocate64,
-  } = useAllocateIPv6Range({
-    interfaceId: linodeInterface.id,
-    linodeId,
-    prefix: '/64',
+export const IPv6Ranges = () => {
+  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'public.ipv6.ranges',
   });
 
   return (
@@ -62,40 +40,33 @@ export const IPv6Ranges = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {linodeInterface.public?.ipv6.ranges.length === 0 && (
+          {fields.length === 0 && (
             <TableRowEmpty
               colSpan={2}
               message="No IPv6 ranges are assigned to this interface."
             />
           )}
-          {linodeInterface.public?.ipv6.ranges.map(({ range }) => (
+          {fields.map(({ id, range }, index) => (
             <IPv6RangeRow
-              key={range}
-              onDelete={() => setSelectedRange(range)}
-              range={range}
+              key={id}
+              onRemove={() => remove(index)}
+              range={range!}
             />
           ))}
         </TableBody>
       </Table>
       <Stack spacing={1}>
         <Box>
-          <LinkButton isLoading={isAllocating56} onClick={onAllocate56}>
+          <LinkButton onClick={() => append({ range: '/56' })}>
             Add IPv6 /56 Range
           </LinkButton>
         </Box>
         <Box>
-          <LinkButton isLoading={isAllocating64} onClick={onAllocate64}>
+          <LinkButton onClick={() => append({ range: '/64' })}>
             Add IPv6 /64 Range
           </LinkButton>
         </Box>
       </Stack>
-      <DeleteIPv6Dialog
-        interfaceId={linodeInterface.id}
-        linodeId={linodeId}
-        onClose={() => setSelectedRange(undefined)}
-        open={selectedRange !== undefined}
-        range={selectedRange}
-      />
     </Stack>
   );
 };

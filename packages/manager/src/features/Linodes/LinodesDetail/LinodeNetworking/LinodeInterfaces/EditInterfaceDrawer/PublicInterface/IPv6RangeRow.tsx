@@ -5,18 +5,24 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 interface Props {
-  onDelete: () => void;
+  onRemove: () => void;
   range: string;
 }
 
 export const IPv6RangeRow = (props: Props) => {
-  const { onDelete, range } = props;
+  const { onRemove, range } = props;
 
   return (
     <TableRow key={range}>
-      <TableCell>{range}</TableCell>
+      <TableCell>
+        {range === '/56' || range === '/64' ? (
+          <i>Allocate {range} range on save</i>
+        ) : (
+          range
+        )}
+      </TableCell>
       <TableCell actionCell>
-        <InlineMenuAction actionText="Delete" onClick={onDelete} />
+        <InlineMenuAction actionText="Remove" onClick={onRemove} />
       </TableCell>
     </TableRow>
   );
