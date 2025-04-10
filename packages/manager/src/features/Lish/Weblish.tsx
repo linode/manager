@@ -1,4 +1,3 @@
-/* eslint-disable scanjs-rules/call_addEventListener */
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
