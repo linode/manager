@@ -52,7 +52,7 @@ export const InterfaceGeneration = () => {
         defaultExpanded={!disabled}
         name="Network Interface Type"
       >
-        <FormControl disabled={disabled} sx={{ my: '0px !important' }}>
+        <FormControl disabled={disabled} sx={{ my: '0px !important', mx: 0.5 }}>
           <RadioGroup
             aria-labelledby="interface-generation"
             onChange={field.onChange}
