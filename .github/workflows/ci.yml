@@ -374,13 +374,18 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
+      # Do an install and bootstrap
       - run: pnpm install --frozen-lockfile && pnpm bootstrap
+      # Start the server
       - run: pnpm dev &
+      # Wait till server is up and running in 3000
       - run: npx wait-on http://localhost:3000
+      # Make the .env file ready, install cypress
       - run: |
           cp packages/manager/.env.example packages/manager/.env
           cd packages/manager
           pnpm exec cypress install
+      # Run the tests only for cloudpulse
       - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/*' --retries=0
 
   publish-packages:
