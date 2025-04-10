@@ -347,7 +347,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
             .click();
         });
 
-      cy.wait(alias).then(({}) => {
+      cy.wait(alias).then(() => {
         ui.toast.assertMessage(successMessage);
       });
     };
