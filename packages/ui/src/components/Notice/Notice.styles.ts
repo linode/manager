@@ -17,9 +17,9 @@ export const useStyles = makeStyles()((theme) => ({
   },
   important: {
     font: theme.font.normal,
-    padding: `4px ${theme.spacing(2)}`,
+    padding: `4px ${theme.spacingFunction(16)}`,
     '& p': {
-      paddingLeft: theme.spacing(2.5),
+      paddingLeft: theme.spacingFunction(20),
     },
   },
   info: {
@@ -29,17 +29,17 @@ export const useStyles = makeStyles()((theme) => ({
   },
   root: {
     '& + .notice': {
-      marginTop: `${theme.spacing()} !important`,
+      marginTop: `${theme.spacingFunction(8)} !important`,
     },
     alignItems: 'center',
     borderRadius: 1,
     '& p': {
       fontSize: theme.tokens.font.FontSize.Xs,
       lineHeight: '20px',
-      fontWeight: theme.tokens.font.FontWeight.Semibold,
+      font: theme.font.semibold,
     },
     maxWidth: '100%',
-    padding: `2px ${theme.spacing(2)}`,
+    padding: `2px ${theme.spacingFunction(16)}`,
     position: 'relative',
   },
   success: {
