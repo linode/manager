@@ -42,10 +42,15 @@ const createValidator = (key: string, field: any) => {
 
   switch (true) {
     case fieldTypes.includes('integer'):
-      return number().integer(`${key} must be a whole number`);
+      return number()
+        .transform((val, originalVal) => (originalVal === '' ? undefined : val))
+        .integer(`${key} must be a whole number`)
+        .required(`${key} is required`);
 
     case fieldTypes.includes('number'):
-      return number();
+      return number()
+        .transform((val, originalVal) => (originalVal === '' ? undefined : val))
+        .required(`${key} is required`);
 
     case fieldTypes.includes('string'):
       return string();
@@ -67,25 +72,25 @@ const applyConstraints = (validator: any, key: string, field: any) => {
   if (field.minimum !== undefined) {
     validator = validator.min(
       field.minimum,
-      `${key} must be at least ${field.minimum}`
+      `${key} must be at least ${field.minimum}`,
     );
   }
   if (field.maximum !== undefined) {
     validator = validator.max(
       field.maximum,
-      `${key} must be at most ${field.maximum}`
+      `${key} must be at most ${field.maximum}`,
     );
   }
   if (field.minLength !== undefined) {
     validator = validator.min(
       field.minLength,
-      `${key} must be at least ${field.minLength} characters`
+      `${key} must be at least ${field.minLength} characters`,
     );
   }
   if (field.maxLength !== undefined) {
     validator = validator.max(
       field.maxLength,
-      `${key} must be at most ${field.maxLength} characters`
+      `${key} must be at most ${field.maxLength} characters`,
     );
   }
   if (field.pattern) {
@@ -95,8 +100,17 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     }
     validator = validator.matches(
       new RegExp(pattern),
-      `Please ensure that ${key} follows the format ${field.example}`
+      `Please ensure that ${key} follows the format ${field.example}`,
     );
+  }
+  if (key === 'timezone') {
+    if (
+      field.value === undefined ||
+      field.value === null ||
+      field.value === ''
+    ) {
+      validator = validator.required('timezone cannot be empty');
+    }
   }
 
   return validator;
@@ -146,7 +160,7 @@ export const createDynamicAdvancedConfigSchema = (allConfigurations: any[]) => {
           const valueSchema = schemaShape[label]?.fields?.value;
           return valueSchema ? valueSchema : schema;
         }),
-      })
+      }),
     ),
   });
 };

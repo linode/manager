@@ -64,7 +64,6 @@ export const DatabaseConfigurationItem = (props: Props) => {
             <TextField {...params} label="" placeholder="Select an option" />
           )}
           disableClearable
-          filterOptions={(options) => options}
           isOptionEqualToValue={(option, value) => option.label === value.label}
           label={''}
           options={options}
@@ -83,9 +82,23 @@ export const DatabaseConfigurationItem = (props: Props) => {
           label=""
           name={configLabel}
           onBlur={onBlur}
-          onChange={(e) => onChange(Number(e.target.value))}
           type="number"
-          value={Number(configItem.value)}
+          value={
+            typeof configItem.value === 'number' || configItem.value === ''
+              ? configItem.value
+              : ''
+          }
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            if (inputValue === '') {
+              onChange('');
+              return;
+            }
+            const parsedValue = Number(inputValue);
+            if (!isNaN(parsedValue)) {
+              onChange(parsedValue);
+            }
+          }}
         />
       );
     }
