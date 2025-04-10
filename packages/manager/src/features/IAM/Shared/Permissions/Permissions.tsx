@@ -1,7 +1,10 @@
 import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+
+import { NO_PERMISSIONS_TEXT } from 'src/features/IAM/Shared/constants';
 
 import { useCalculateHiddenItems } from '../utilities';
 import {
@@ -16,10 +19,15 @@ import {
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
 type Props = {
+  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+export const Permissions = ({
+  noPermissionsMessage = NO_PERMISSIONS_TEXT,
+  permissions,
+}: Props) => {
+  const theme = useTheme();
   const [showAll, setShowAll] = React.useState(false);
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
@@ -78,6 +86,25 @@ export const Permissions = ({ permissions }: Props) => {
               </StyledPermissionItem>
             ))}
           </StyledClampedContent>
+
+      {/*<StyledContainer>*/}
+      {/*  <StyledClampedContent ref={containerRef} showAll={showAll}>*/}
+      {/*    {!permissions.length ? (*/}
+      {/*      <Typography sx={{ margin: theme.spacing(1) }}>*/}
+      {/*        {noPermissionsMessage}*/}
+      {/*      </Typography>*/}
+      {/*    ) : (*/}
+      {/*      permissions.map((permission: PermissionType, index: number) => (*/}
+      {/*        <StyledPermissionItem*/}
+      {/*          data-testid="permission"*/}
+      {/*          key={permission}*/}
+      {/*          ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}*/}
+      {/*        >*/}
+      {/*          {permission}*/}
+      {/*        </StyledPermissionItem>*/}
+      {/*      ))*/}
+      {/*    )}*/}
+      {/*  </StyledClampedContent>*/}
 
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>

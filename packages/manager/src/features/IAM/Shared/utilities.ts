@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalizeAllWords } from '@linode/utilities';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -17,6 +17,7 @@ import type {
   PermissionType,
   Roles,
 } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 
 /**
  * Hook to determine if the IAM feature should be visible to the user.
@@ -195,7 +196,7 @@ export interface EntitiesRole {
 
 export interface EntitiesType {
   label: string;
-  rawValue: EntityType | EntityTypePermissions;
+  rawValue?: EntityType | EntityTypePermissions;
   value?: string;
 }
 
@@ -206,10 +207,24 @@ export const mapEntityTypes = (
   const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
   return resourceTypes.map((resource) => ({
-    label: capitalize(resource) + suffix,
+    label: capitalizeAllWords(resource, '_') + suffix,
     rawValue: resource,
-    value: capitalize(resource) + suffix,
+    value: capitalizeAllWords(resource, '_') + suffix,
   }));
+};
+
+export const mapEntityTypesForSelect = (
+  data: EntitiesRole[] | RoleMap[],
+  suffix: string
+): SelectOption[] => {
+  const resourceTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
+
+  return resourceTypes
+    .map((resource) => ({
+      label: capitalizeAllWords(resource, '_') + suffix,
+      value: resource,
+    }))
+    .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
 };
 
 export interface CombinedRoles {
@@ -309,6 +324,35 @@ export const mapRolesToPermissions = (
   });
 
   return Array.from(roleMap.values());
+};
+
+/**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapAccountPermissionsToRoles = (
+  accountPermissions: IamAccountPermissions
+): RoleMap[] => {
+  const mapperFn = (access: string, entity_type: string, role: Roles) => ({
+    access,
+    description: role.description,
+    entity_type,
+    id: role.name,
+    name: role.name,
+    permissions: role.permissions,
+  });
+
+  return [
+    ...accountPermissions.account_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('account_access', ap.type, role) as RoleMap
+      )
+    ),
+    ...accountPermissions.entity_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('entity_access', ap.type, role) as RoleMap
+      )
+    ),
+  ].flat();
 };
 
 /**
