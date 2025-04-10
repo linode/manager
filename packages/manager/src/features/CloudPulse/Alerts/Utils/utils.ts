@@ -327,7 +327,7 @@ export const enhanceValidationSchemaWithEntityIdValidation = (
             .of(string())
             .max(
               maxSelectionCount,
-              `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+              `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
             ),
         }) as ObjectSchema<
           CreateAlertDefinitionForm | EditAlertDefinitionPayload

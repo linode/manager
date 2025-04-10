@@ -2,6 +2,7 @@
  * @file LKE creation end-to-end tests.
  */
 import {
+  accountBetaFactory,
   dedicatedTypeFactory,
   linodeTypeFactory,
   pluralize,
@@ -46,7 +47,6 @@ import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, extendRegion } from 'support/util/regions';
 
 import {
-  accountBetaFactory,
   accountFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
