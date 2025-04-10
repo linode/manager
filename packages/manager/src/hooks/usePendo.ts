@@ -125,8 +125,8 @@ export const usePendo = () => {
       // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
       loadScript(ADOBE_ANALYTICS_URL, {
         location: 'head',
-      }).then(() => {
-        console.log('Launch script loaded successfully');
+      }).then((result) => {
+        console.log('Launch script load result:', result);
         console.log('Pendo object before initializing:', window.pendo);
         console.log('Pendo queue before initializing:', window.pendo._q);
 
