@@ -61,27 +61,28 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
   })
 );
 
-export const createAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
-  object({
-    entity_ids: array().of(string().defined()).required(),
-    rule_criteria: object({
-      rules: array()
-        .of(metricCriteriaSchema)
-        .required()
-        .min(1, 'At least one metric criteria is required.'),
-    }).required(),
-    serviceType: string()
-      .oneOf(['linode', 'dbaas'])
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    severity: mixed<AlertSeverityType>()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    trigger_conditions: triggerConditionSchema,
-  })
-);
+export const createAlertDefinitionFormSchema =
+  createAlertDefinitionSchema.concat(
+    object({
+      entity_ids: array().of(string().defined()).required(),
+      rule_criteria: object({
+        rules: array()
+          .of(metricCriteriaSchema)
+          .required()
+          .min(1, 'At least one metric criteria is required.'),
+      }).required(),
+      serviceType: string()
+        .oneOf(['linode', 'dbaas'])
+        .required(fieldErrorMessage)
+        .nullable()
+        .test('nonNull', fieldErrorMessage, (value) => value !== null),
+      severity: mixed<AlertSeverityType>()
+        .required(fieldErrorMessage)
+        .nullable()
+        .test('nonNull', fieldErrorMessage, (value) => value !== null),
+      trigger_conditions: triggerConditionSchema,
+    })
+  );
 
 export const notificationChannelSchema = object({
   channel_type: string().required(fieldErrorMessage),

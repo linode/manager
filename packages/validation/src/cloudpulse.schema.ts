@@ -43,7 +43,7 @@ export const createAlertDefinitionSchema = object({
     .required(fieldErrorMessage)
     .matches(
       /^[^*#&+:<>"?@%{}\\\/]+$/,
-      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
     )
     .max(100, 'Name must be 100 characters or less.')
     .test(
@@ -51,7 +51,7 @@ export const createAlertDefinitionSchema = object({
       'Name cannot start or end with a special character.',
       (value) => {
         return !specialStartEndRegex.test(value ?? '');
-      }
+      },
     ),
   description: string()
     .max(100, 'Description must be 100 characters or less.')
@@ -60,7 +60,7 @@ export const createAlertDefinitionSchema = object({
       'Description cannot start or end with a special character.',
       (value) => {
         return !specialStartEndRegex.test(value ?? '');
-      }
+      },
     )
     .optional(),
   severity: number().oneOf([0, 1, 2, 3]).required(fieldErrorMessage),
@@ -84,7 +84,7 @@ export const editAlertDefinitionSchema = object({
   label: string()
     .matches(
       /^[^*#&+:<>"?@%{}\\\/]+$/,
-      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.'
+      'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
     )
     .max(100, 'Name must be 100 characters or less.')
     .test(
@@ -92,8 +92,9 @@ export const editAlertDefinitionSchema = object({
       'Name cannot start or end with a special character.',
       (value) => {
         return !specialStartEndRegex.test(value ?? '');
-      }
-    ).optional(),
+      },
+    )
+    .optional(),
   description: string()
     .max(100, 'Description must be 100 characters or less.')
     .test(
@@ -101,7 +102,7 @@ export const editAlertDefinitionSchema = object({
       'Description cannot start or end with a special character.',
       (value) => {
         return !specialStartEndRegex.test(value ?? '');
-      }
+      },
     )
     .optional(),
   entity_ids: array().of(string().defined()).optional(),
