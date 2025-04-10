@@ -1,9 +1,11 @@
 import { useFirewallSettingsQuery } from '@linode/queries';
-import { FormControl, FormControlLabel, Radio, RadioGroup } from '@linode/ui';
+import { InputLabel, Radio, RadioGroup } from '@linode/ui';
+import { Grid2 } from '@mui/material';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { FormLabel } from 'src/components/FormLabel';
+import { FormGroup } from 'src/components/FormGroup';
+import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
 
@@ -14,11 +16,26 @@ interface Props {
   index: number;
 }
 
+const interfaceTypes = [
+  {
+    label: 'Public Internet',
+    purpose: 'public',
+  },
+  {
+    label: 'VPC',
+    purpose: 'vpc',
+  },
+  {
+    label: 'VLAN',
+    purpose: 'vlan',
+  },
+] as const;
+
 export const InterfaceType = ({ index }: Props) => {
   const {
     control,
-    setValue,
     getFieldState,
+    setValue,
   } = useFormContext<LinodeCreateFormValues>();
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
@@ -28,44 +45,54 @@ export const InterfaceType = ({ index }: Props) => {
     name: `linodeInterfaces.${index}.purpose`,
   });
 
+  const onChange = (value: InterfacePurpose) => {
+    // Change the interface purpose (Public, VPC, VLAN)
+    field.onChange(value);
+
+    const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+      value,
+      firewallSettings
+    );
+
+    // Set the Firewall based on defaults if:
+    // - there is a default firewall for this interface type
+    // - the user has not touched the Firewall field
+    if (
+      defaultFirewall &&
+      !getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched
+    ) {
+      setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+    }
+  };
+
   return (
-    <FormControl>
-      <FormLabel id="network-interface" sx={{ mb: 0 }}>
-        Network Connection
-      </FormLabel>
+    <FormGroup sx={{ display: 'block' }}>
+      <InputLabel id="network-connection-label">Network Connection</InputLabel>
       <RadioGroup
-        onChange={(e, value) => {
-          // Change the interface purpose (Public, VPC, VLAN)
-          field.onChange(value);
-
-          const defaultFirewall = getDefaultFirewallForInterfacePurpose(
-            value as InterfacePurpose,
-            firewallSettings
-          );
-
-          // Set the Firewall based on defaults if:
-          // - there is a default firewall for this interface type
-          // - the user has not touched the Firewall field
-          if (
-            defaultFirewall &&
-            !getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched
-          ) {
-            setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
-          }
-        }}
-        aria-labelledby="network-interface"
-        row
-        sx={{ mb: '0px !important' }}
-        value={field.value}
+        aria-labelledby="network-connection-label"
+        sx={{ display: 'block', marginBottom: '0px !important' }}
       >
-        <FormControlLabel
-          control={<Radio />}
-          label="Public Internet"
-          value="public"
-        />
-        <FormControlLabel control={<Radio />} label="VPC" value="vpc" />
-        <FormControlLabel control={<Radio />} label="VLAN" value="vlan" />
+        <Grid2 container spacing={1}>
+          {interfaceTypes.map((interfaceType) => (
+            <SelectionCard
+              gridSize={{
+                md: 3,
+                sm: 12,
+                xs: 12,
+              }}
+              renderIcon={() => (
+                <Radio checked={field.value === interfaceType.purpose} />
+              )}
+              checked={field.value === interfaceType.purpose}
+              heading={interfaceType.label}
+              key={interfaceType.purpose}
+              onClick={() => onChange(interfaceType.purpose)}
+              subheadings={[]}
+              sxCardBaseIcon={{ svg: { fontSize: '24px !important' } }}
+            />
+          ))}
+        </Grid2>
       </RadioGroup>
-    </FormControl>
+    </FormGroup>
   );
 };
