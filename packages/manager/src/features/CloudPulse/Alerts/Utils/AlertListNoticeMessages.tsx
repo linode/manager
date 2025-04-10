@@ -11,14 +11,14 @@ interface AlertListNoticeMessagesProps extends NoticeProps {
   /**
    * The separator used to split the error message into individual errors
    */
-  separator: string;
+  separator?: string;
 }
 
 export const AlertListNoticeMessages = (
   props: AlertListNoticeMessagesProps
 ) => {
   const { errorMessage, separator, style, sx, variant } = props;
-  const errorList = errorMessage.split(separator);
+  const errorList = separator ? errorMessage.split(separator) : [errorMessage];
 
   if (errorList.length > 1) {
     return (

@@ -24,7 +24,7 @@ const searchAndSelectSx = {
   xs: '300px',
 };
 // hardcoding the value is temporary solution until something from the API side is confirmed.
-const maxAllowedAlerts = 50;
+const maxAllowedAlerts = 30;
 
 export const AlertListing = () => {
   const { url } = useRouteMatch();
@@ -37,7 +37,7 @@ export const AlertListing = () => {
   } = useCloudPulseServiceTypes(true);
   const topRef = React.useRef<HTMLButtonElement>(null);
 
-  const canCreateAlerts =
+  const isAlertLimitReached =
     alerts &&
     alerts.filter((alert) => alert.type === 'user').length >= maxAllowedAlerts;
 
@@ -154,10 +154,9 @@ export const AlertListing = () => {
   }
   return (
     <Stack spacing={2}>
-      {canCreateAlerts && (
+      {isAlertLimitReached && (
         <AlertListNoticeMessages
           errorMessage="You have reached maximum number of metrics created per account."
-          separator={':'}
           variant="warning"
         />
       )}
@@ -249,7 +248,7 @@ export const AlertListing = () => {
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
-          disabled={canCreateAlerts}
+          disabled={isAlertLimitReached}
           ref={topRef}
           tooltipText="You have reached your limit of definitions for this account."
           variant="contained"
