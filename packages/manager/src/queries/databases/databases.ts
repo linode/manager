@@ -3,6 +3,7 @@ import {
   deleteDatabase,
   getDatabaseBackups,
   getDatabaseCredentials,
+  getDatabaseEngineConfig,
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
@@ -36,6 +37,7 @@ import type {
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabaseEngineConfig,
   DatabaseFork,
   DatabaseInstance,
   DatabaseType,
@@ -47,6 +49,10 @@ import type {
 } from '@linode/api-v4';
 
 export const databaseQueries = createQueryKeys('databases', {
+  configs: (engine: Engine) => ({
+    queryFn: () => getDatabaseEngineConfig(engine),
+    queryKey: ['configs', engine],
+  }),
   database: (engine: Engine, id: number) => ({
     contextQueries: {
       backups: {
@@ -262,6 +268,15 @@ export const useDatabaseTypesQuery = (
 ) =>
   useQuery<DatabaseType[], APIError[]>({
     ...databaseQueries.types._ctx.all(filter),
+    enabled,
+  });
+
+export const useDatabaseEngineConfig = (
+  engine: Engine,
+  enabled: boolean = true
+) =>
+  useQuery<DatabaseEngineConfig, APIError[]>({
+    ...databaseQueries.configs(engine),
     enabled,
   });
 

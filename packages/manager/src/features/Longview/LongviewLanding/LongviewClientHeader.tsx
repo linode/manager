@@ -1,5 +1,6 @@
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
+import { formatUptime } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -9,7 +10,6 @@ import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { formatUptime } from 'src/utilities/formatUptime';
 
 import { getPackageNoticeText } from '../shared/utilities';
 import {

@@ -81,7 +81,7 @@ export const NetworkInterfaceType = () => {
     <Accordion
       defaultExpanded
       heading="Network Interface Type"
-      headingChip={<BetaChip color="primary" />}
+      headingChip={<BetaChip />}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>

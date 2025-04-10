@@ -5,6 +5,7 @@ import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
@@ -85,7 +86,12 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -97,12 +103,22 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable')); // click the enable button to enable alert
-    expect(getByText('Alert enabled')).toBeInTheDocument(); // validate whether snackbar is displayed properly if alert is enabled successfully
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
+
+    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -114,7 +130,12 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable')); // click the enable button to enable alert
-    expect(getByText('Alert disabled')).toBeInTheDocument(); // validate whether snackbar is displayed properly if alert is disabled successfully
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
+
+    expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show error snackbar when enabling alert fails', async () => {
@@ -125,7 +146,12 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -138,6 +164,10 @@ describe('Alert List Table test', () => {
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable'));
 
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
+
     expect(getByText('Enabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while enabling an alert
   });
 
@@ -149,7 +179,12 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -161,6 +196,10 @@ describe('Alert List Table test', () => {
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable'));
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
 
     expect(getByText('Disabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
   });

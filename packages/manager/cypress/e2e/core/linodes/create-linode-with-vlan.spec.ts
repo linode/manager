@@ -1,3 +1,4 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -12,7 +13,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { VLANFactory, linodeFactory, regionFactory } from 'src/factories';
+import { VLANFactory } from 'src/factories';
 
 describe('Create Linode with VLANs', () => {
   beforeEach(() => {

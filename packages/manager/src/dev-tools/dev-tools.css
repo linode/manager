@@ -112,7 +112,7 @@
   transform: rotate(135deg);
 }
 
-.dev-tools__select select {
+.dev-tools__select select.dt-select {
   background: transparent;
   border: none;
   color: white;
@@ -124,7 +124,7 @@
 }
 
  /* avoid overriding TanStack React Query Devtools styles */
-.dev-tools__body button:not(.tsqd-parent-container button) {
+.dev-tools__body button.dev-tools-button:not(.tsqd-parent-container button) {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 1000px;
@@ -155,18 +155,18 @@
   }
 }
 
-.dev-tools__body .dev-tools__content button:hover {
+.dev-tools__body .dev-tools__content button.dev-tools-button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dev-tools__body .dev-tools__content button:not(:disabled).green:hover {
+.dev-tools__body .dev-tools__content button.dev-tools-button:not(:disabled).green:hover {
   background-color: #60e9a4;
   color: #080808;
 
 }
 
-.dev-tools__body .dev-tools__content button:disabled,
-.dev-tools__body .dev-tools__content button:disabled:active {
+.dev-tools__body .dev-tools__content button.dev-tools-button:disabled,
+.dev-tools__body .dev-tools__content button.dev-tools-button:disabled:active {
   background: transparent;
   cursor: not-allowed;
   border-color: rgba(255, 255, 255, 0.3);
@@ -232,7 +232,7 @@
   text-shadow: 0px -1px 0px black;
 }
 
-.dev-tools__body .dev-tools__content button:active {
+.dev-tools__body .dev-tools__content button.dev-tools-button:active {
   background: rgb(50, 50, 50);
   border-color: rgba(255, 255, 255, 0.65);
 }
@@ -327,7 +327,7 @@
 }
 
 .dev-tools__body input[type="number"],
-.dev-tools__body input[type="text"],
+.dev-tools__body input[type="text"]:not(.MuiInput-input),
 .dev-tools__body textarea {
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);

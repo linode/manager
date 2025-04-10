@@ -2,6 +2,7 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
+import { profileFactory } from '@linode/utilities';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
@@ -14,7 +15,6 @@ import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 
 import { appTokenFactory } from 'src/factories/oauth';
-import { profileFactory } from 'src/factories/profile';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 import type { Token } from '@linode/api-v4';
@@ -177,6 +177,72 @@ describe('Personal access tokens', () => {
       .within(() => {
         ui.drawerCloseButton.find().click();
       });
+  });
+
+  it('sends scope as "*" when all permissions are set to read/write', () => {
+    const token = appTokenFactory.build({
+      label: randomLabel(),
+      token: randomString(64),
+    });
+
+    mockCreatePersonalAccessToken(token).as('createToken');
+
+    cy.visitWithLogin('/profile/tokens');
+
+    // Click create button, fill out and submit PAT create form.
+    ui.button
+      .findByTitle('Create a Personal Access Token')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer
+      .findByTitle('Add Personal Access Token')
+      .should('be.visible')
+      .within(() => {
+        // Confirm that the “Child account access” grant is not visible in the list of permissions.
+        cy.findAllByText('Child Account Access').should('not.exist');
+
+        // Confirm submit button is disabled without specifying scopes.
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup.findButtonByTitle('Create Token').should('be.disabled');
+
+        // Select "Read/Write" for all scopes.
+        cy.get(
+          '[aria-label="Personal Access Token Permissions"] tr:gt(1)'
+        ).each((row) =>
+          cy.wrap(row).within(() => {
+            cy.get('[type="radio"]').eq(2).click();
+          })
+        );
+
+        // Verify "Select All" radio for "Read/Write" is active
+        cy.get('[data-qa-perm-rw-radio]').should(
+          'have.attr',
+          'data-qa-radio',
+          'true'
+        );
+
+        // Specify a label and submit.
+        cy.findByLabelText('Label').scrollIntoView();
+        cy.findByLabelText('Label')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByLabelText('Label').type(token.label);
+
+        ui.buttonGroup.findButtonByTitle('Create Token').scrollIntoView();
+        ui.buttonGroup
+          .findButtonByTitle('Create Token')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that new PAT's scopes are '*'
+    cy.wait('@createToken').then((xhr) => {
+      expect(xhr.request.body.scopes).to.equal('*');
+    });
   });
 
   /*

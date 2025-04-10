@@ -1,9 +1,9 @@
-import { useAllFirewallsQuery } from '@linode/queries';
-import { Autocomplete, Box, Stack } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
@@ -26,31 +26,23 @@ export const InterfaceFirewall = ({ index }: Props) => {
     name: `linodeInterfaces.${index}.firewall_id`,
   });
 
-  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
 
-  const selectedFirewall =
-    firewalls?.find((firewall) => firewall.id === field.value) ?? null;
-
   return (
     <Stack spacing={2}>
       <Stack spacing={1.5}>
-        <Autocomplete
+        <FirewallSelect
           disabled={isLinodeCreateRestricted}
-          errorText={fieldState.error?.message ?? error?.[0].reason}
+          errorText={fieldState.error?.message}
           label={`${labelMap[interfaceType]} Interface Firewall`}
-          loading={isLoading}
-          noMarginTop
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
-          options={firewalls ?? []}
           placeholder="None"
-          value={selectedFirewall}
+          value={field.value}
         />
         <Box>
           <LinkButton

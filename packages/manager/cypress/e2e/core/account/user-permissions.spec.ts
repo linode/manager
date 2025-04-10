@@ -1,4 +1,4 @@
-import { profileFactory } from '@src/factories';
+import { profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
@@ -581,7 +581,7 @@ describe('User permission management', () => {
     );
 
     // Confirm that no "Profile" tab is present on the proxy user's User Permissions page.
-    expect(cy.findByText('User Profile').should('not.exist'));
+    cy.findByText('User Profile').should('not.exist');
 
     cy.get('[data-qa-global-section]')
       .should('be.visible')

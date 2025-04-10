@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
@@ -109,13 +109,10 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByLabelText, getByRole } = renderWithTheme(
-      <CloudPulseTagsSelect {...props} />
-    );
+    const { getByRole } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
     await user.click(getByRole('button', { name: 'Open' }));
     await user.click(getByRole('option', { name: 'tag-2' }));
     await user.click(getByRole('option', { name: 'tag-3' }));
-    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     expect(
       getByRole('option', {
@@ -143,13 +140,11 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByLabelText, getByRole } = renderWithTheme(
-      <CloudPulseTagsSelect {...props} />
-    );
+    const { getByRole } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
     await user.click(getByRole('button', { name: 'Open' }));
     await user.click(getByRole('option', { name: SELECT_ALL }));
     await user.click(getByRole('option', { name: 'Deselect All' }));
-    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+
     expect(
       getByRole('option', {
         name: 'tag-2',

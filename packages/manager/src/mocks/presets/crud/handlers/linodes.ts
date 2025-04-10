@@ -1,22 +1,19 @@
 import {
   configFactory,
+  linodeBackupFactory,
+  linodeFactory,
+  linodeIPFactory,
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
   linodeInterfaceSettingsFactory,
+  linodeStatsFactory,
+  linodeTransferFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import {
-  firewallDeviceFactory,
-  linodeBackupFactory,
-  linodeDiskFactory,
-  linodeFactory,
-  linodeIPFactory,
-  linodeStatsFactory,
-  linodeTransferFactory,
-} from 'src/factories';
+import { firewallDeviceFactory, linodeDiskFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,

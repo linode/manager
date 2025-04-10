@@ -1,9 +1,11 @@
-import { linodeConfigInterfaceFactory } from '@linode/utilities';
+import {
+  createLinodeRequestFactory,
+  linodeConfigInterfaceFactory,
+  linodeFactory,
+} from '@linode/utilities';
 import {
   VLANFactory,
-  createLinodeRequestFactory,
   linodeConfigFactory,
-  linodeFactory,
   volumeFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';

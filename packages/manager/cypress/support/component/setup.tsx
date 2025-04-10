@@ -35,7 +35,7 @@ import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
 
 import type { ThemeName } from '@linode/ui';
-import type { AnyRouter } from '@tanstack/react-router';
+import type { AnyRoute, AnyRouter } from '@tanstack/react-router';
 import type { Flags } from 'src/featureFlags';
 
 /**
@@ -48,7 +48,8 @@ export const mountWithTheme = (
   jsx: React.ReactNode,
   theme: ThemeName = 'light',
   flags: Partial<Flags> = {},
-  useTanstackRouter: boolean = false
+  useTanstackRouter: boolean = false,
+  routeTree?: (parentRoute: AnyRoute) => AnyRoute[]
 ) => {
   const queryClient = queryClientFactory();
   const store = storeFactory();
@@ -59,10 +60,13 @@ export const mountWithTheme = (
     path: '/',
   });
   const router: AnyRouter = createRouter({
+    defaultNotFoundComponent: () => <div>Not Found</div>,
     history: createMemoryHistory({
       initialEntries: ['/'],
     }),
-    routeTree: rootRoute.addChildren([indexRoute]),
+    routeTree: routeTree
+      ? rootRoute.addChildren([indexRoute, ...routeTree(indexRoute)])
+      : rootRoute.addChildren([indexRoute]),
   });
 
   return mount(

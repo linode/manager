@@ -12,7 +12,7 @@ import type { CPU } from '../../request.types';
 import type { BaseProps as Props } from './common';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
-interface getFinalUsedCPUProps extends Props, LVDataProps {}
+interface GetFinalUsedCPUProps extends Props, LVDataProps {}
 
 export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   const numberOfCores = data?.SysInfo?.cpu?.cores ?? 0;
@@ -21,7 +21,7 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
 };
 
 export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
-  (props: getFinalUsedCPUProps) => {
+  (props: GetFinalUsedCPUProps) => {
     const {
       lastUpdatedError,
       longviewClientData,

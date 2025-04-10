@@ -1,5 +1,5 @@
 import { getProfile } from '@linode/api-v4';
-import { profileFactory } from '@src/factories';
+import { profileFactory } from '@linode/utilities';
 import { formatDate } from '@src/utilities/formatDate';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
@@ -125,24 +125,21 @@ describe('Billing Activity Feed', () => {
    * - Confirms that clicking on an invoice's label directs the user to the invoice details page.
    */
   it('lists invoices and payments', () => {
-    const invoiceMocks = buildArray(
-      10,
-      (i: number): Invoice => {
-        const id = randomNumber(1, 999999);
-        const date = DateTime.now().minus({ days: 2, months: i }).toISO();
-        const subtotal = randomNumber(25, 949);
-        const tax = randomNumber(5, 50);
+    const invoiceMocks = buildArray(10, (i: number): Invoice => {
+      const id = randomNumber(1, 999999);
+      const date = DateTime.now().minus({ days: 2, months: i }).toISO();
+      const subtotal = randomNumber(25, 949);
+      const tax = randomNumber(5, 50);
 
-        return invoiceFactory.build({
-          date,
-          id,
-          label: `Invoice #${id}`,
-          subtotal,
-          tax,
-          total: subtotal + tax,
-        });
-      }
-    );
+      return invoiceFactory.build({
+        date,
+        id,
+        label: `Invoice #${id}`,
+        subtotal,
+        tax,
+        total: subtotal + tax,
+      });
+    });
 
     const paymentMocks = invoiceMocks.map(
       (invoice: Invoice, i: number): Payment => {

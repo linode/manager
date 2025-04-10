@@ -183,11 +183,13 @@ export const CreateFirewallDrawer = React.memo(
                     >
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="Custom Firewall"
                         value="custom"
                       />
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="From a Template"
                         value="template"
                       />

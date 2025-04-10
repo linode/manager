@@ -1,12 +1,12 @@
-import { waitFor } from '@testing-library/react';
-import React from 'react';
-
 import {
-  accountFactory,
   profileFactory,
   regionFactory,
   sshKeyFactory,
-} from 'src/factories';
+} from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
+import React from 'react';
+
+import { accountFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
@@ -147,13 +147,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
@@ -177,14 +176,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText, getByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Distributed Compute Instances are encrypted. This setting can not be changed.'

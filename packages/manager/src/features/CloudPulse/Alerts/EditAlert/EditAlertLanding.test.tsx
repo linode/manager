@@ -14,7 +14,7 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
 }));
 
 describe('Edit Alert Landing tests', () => {
-  it('Edit alert resources alert details error and loading path', () => {
+  it('Edit alert entities alert details error and loading path', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined,
       isError: true, // simulate error
@@ -25,7 +25,7 @@ describe('Edit Alert Landing tests', () => {
 
     expect(
       getByText(
-        'An error occurred while loading the alerts definitions and resources. Please try again later.'
+        'An error occurred while loading the alerts definitions and entities. Please try again later.'
       )
     ).toBeInTheDocument();
 
@@ -40,7 +40,7 @@ describe('Edit Alert Landing tests', () => {
     expect(getByTestId('circle-progress')).toBeInTheDocument();
   });
 
-  it('Edit alert resources alert details empty path', () => {
+  it('Edit alert entities alert details empty path', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValue({
       data: undefined, // simulate empty
       isError: false,

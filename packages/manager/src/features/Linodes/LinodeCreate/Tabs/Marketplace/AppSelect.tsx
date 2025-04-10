@@ -1,3 +1,4 @@
+import { useMarketplaceAppsQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -10,7 +11,6 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import { AppsList } from './AppsList';
 import { categoryOptions } from './utilities';

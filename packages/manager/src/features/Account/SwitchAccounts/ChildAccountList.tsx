@@ -86,7 +86,7 @@ export const ChildAccountList = React.memo(
       return (
         <Notice variant="info">
           There are no child accounts
-          {filter.hasOwnProperty('company')
+          {Object.prototype.hasOwnProperty.call(filter, 'company')
             ? ' that match this query'
             : undefined}
           .

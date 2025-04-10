@@ -1,4 +1,4 @@
-import { linodeFactory } from '@src/factories';
+import { linodeFactory } from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,

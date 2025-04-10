@@ -1,9 +1,9 @@
 import { Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';

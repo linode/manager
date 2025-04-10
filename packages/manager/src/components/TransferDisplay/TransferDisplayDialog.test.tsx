@@ -1,7 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
 import {
   accountTransferFactory,
   accountTransferNoResourceFactory,

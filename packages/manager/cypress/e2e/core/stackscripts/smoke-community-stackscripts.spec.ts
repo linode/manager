@@ -190,7 +190,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that pagination works as expected.
    */
   it('pagination works with infinite scrolling', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     interceptGetStackScripts().as('getStackScripts');
 
     // Fetch all public Images to later use while filtering StackScripts.
@@ -236,7 +236,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that search can filter the expected results.
    */
   it('search function filters results correctly', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScript = mockStackScripts[0];
 
     interceptGetStackScripts().as('getStackScripts');
@@ -267,6 +267,7 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that the deployment flow works.
    */
   it('deploys a new linode as expected', () => {
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = '37239';
     const stackScriptName = 'setup-ipsec-vpn';
     const sharedKey = randomString();

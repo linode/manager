@@ -1,12 +1,11 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
-import {
-  fireEvent,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import {
@@ -15,7 +14,6 @@ import {
   subnetFactory,
 } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
-import { linodeFactory } from 'src/factories/linodes';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {
@@ -72,10 +70,12 @@ describe('SubnetLinodeRow', () => {
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const config = linodeConfigFactory.build({
+      interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
+    });
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        const configs = linodeConfigFactory.buildList(3);
-        return HttpResponse.json(makeResourcePage(configs));
+      http.get('*/instances/*/configs/:configId', async () => {
+        return HttpResponse.json(config);
       })
     );
 
@@ -94,7 +94,9 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
           subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
         />
       )
     );
@@ -118,20 +120,78 @@ describe('SubnetLinodeRow', () => {
 
     const rebootLinodeButton = getAllByRole('button')[2];
     expect(rebootLinodeButton).toHaveTextContent('Reboot');
-    fireEvent.click(rebootLinodeButton);
+    await userEvent.click(rebootLinodeButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
 
     const unassignLinodeButton = getAllByRole('button')[3];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
-    fireEvent.click(unassignLinodeButton);
+    await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
+  });
+
+  it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    server.use(
+      http.get('*/instances/*/interfaces/:interfaceId', async () => {
+        const vpcLinodeInterface = linodeInterfaceFactoryVPC.build();
+        return HttpResponse.json(vpcLinodeInterface);
+      }),
+      http.get('*/instances/*/interfaces/:interfaceId/firewalls', async () => {
+        return HttpResponse.json(
+          makeResourcePage(
+            firewallFactory.buildList(1, { label: mockFirewall0 })
+          )
+        );
+      })
+    );
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const {
+      getAllByRole,
+      getAllByText,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
+        />
+      )
+    );
+
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const linodeLabelLink = getAllByRole('link')[0];
+    expect(linodeLabelLink).toHaveAttribute(
+      'href',
+      `/linodes/${linodeFactory1.id}/networking/interfaces/1`
+    );
+
+    getAllByText('10.0.0.0');
+    getAllByText('10.0.0.1');
+    getByText(mockFirewall0);
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
+      ip_ranges: [],
       primary: true,
+    });
+    const config = linodeConfigFactory.build({
+      interfaces: [vpcInterface],
     });
     server.use(
       http.get('*/linodes/instances/:linodeId', () => {
@@ -144,11 +204,8 @@ describe('SubnetLinodeRow', () => {
           )
         );
       }),
-      http.get('*/instances/*/configs', () => {
-        const configs = linodeConfigFactory.build({
-          interfaces: [vpcInterface],
-        });
-        return HttpResponse.json(makeResourcePage([configs]));
+      http.get('*/instances/*/configs/:configId', async () => {
+        return HttpResponse.json(config);
       })
     );
 
@@ -158,10 +215,14 @@ describe('SubnetLinodeRow', () => {
     const { getAllByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
+          subnetInterfaces={[
+            { active: true, config_id: config.id, id: vpcInterface.id },
+          ]}
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
           subnetId={0}
         />
       )
@@ -182,11 +243,11 @@ describe('SubnetLinodeRow', () => {
     expect(buttons.length).toEqual(2);
     const powerOffButton = buttons[0];
     expect(powerOffButton).toHaveTextContent('Power Off');
-    fireEvent.click(powerOffButton);
+    await userEvent.click(powerOffButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
     const unassignLinodeButton = buttons[1];
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
-    fireEvent.click(unassignLinodeButton);
+    await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
 
@@ -211,8 +272,8 @@ describe('SubnetLinodeRow', () => {
     });
 
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        return HttpResponse.json(makeResourcePage([configurationProfile]));
+      http.get('*/instances/*/configs/*', async () => {
+        return HttpResponse.json(configurationProfile);
       })
     );
 
@@ -225,6 +286,7 @@ describe('SubnetLinodeRow', () => {
           linodeId={linodeFactory2.id}
           subnet={subnet}
           subnetId={subnet.id}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -249,8 +311,8 @@ describe('SubnetLinodeRow', () => {
       })
     );
     server.use(
-      http.get('*/instances/*/configs', async () => {
-        return HttpResponse.json(makeResourcePage([configurationProfile]));
+      http.get('*/instances/*/configs/*', async () => {
+        return HttpResponse.json(configurationProfile);
       })
     );
 
@@ -264,7 +326,9 @@ describe('SubnetLinodeRow', () => {
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
           linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
           subnetId={0}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
@@ -299,6 +363,7 @@ describe('SubnetLinodeRow', () => {
           linodeId={linodeFactory2.id}
           subnet={subnet}
           subnetId={subnet.id}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );

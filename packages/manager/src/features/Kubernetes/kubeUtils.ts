@@ -1,12 +1,15 @@
 import { useAccount, useAccountBetaQuery } from '@linode/queries';
-import { isFeatureEnabledV2, sortByVersion } from '@linode/utilities';
+import {
+  getBetaStatus,
+  isFeatureEnabledV2,
+  sortByVersion,
+} from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 import {
   useKubernetesTieredVersionsQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
-import { getBetaStatus } from 'src/utilities/betaUtils';
 
 import type { Account } from '@linode/api-v4/lib/account';
 import type {
@@ -264,5 +267,16 @@ export const useLkeStandardOrEnterpriseVersions = (
         ? enterpriseTierVersions
         : _versions,
     versionsError: enterpriseTierVersionsError || versionsError,
+  };
+};
+
+export const useKubernetesBetaEndpoint = () => {
+  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
+
+  return {
+    isAPLAvailabilityLoading,
+    isUsingBetaEndpoint,
   };
 };

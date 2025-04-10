@@ -14,7 +14,9 @@ export const UserEntities = () => {
   const { username } = useParams<{ username: string }>();
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const hasAssignedRoles = assignedRoles ? !isEmpty(assignedRoles) : false;
+  const hasAssignedRoles = assignedRoles
+    ? !isEmpty(assignedRoles.entity_access)
+    : false;
 
   return (
     <>

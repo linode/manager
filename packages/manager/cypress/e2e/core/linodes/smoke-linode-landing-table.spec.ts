@@ -1,9 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { profileFactory, userPreferencesFactory } from '@src/factories';
+import {
+  linodeFactory,
+  profileFactory,
+  userPreferencesFactory,
+} from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { grantsFactory } from '@src/factories/grants';
-import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { authenticate } from 'support/api/authentication';
 import { mockGetUser } from 'support/intercepts/account';
@@ -28,15 +31,15 @@ import { chooseRegion, getRegionById } from 'support/util/regions';
 
 import type { Linode } from '@linode/api-v4';
 
-const mockLinodes = new Array(5).fill(null).map(
-  (_item: null, index: number): Linode => {
+const mockLinodes = new Array(5)
+  .fill(null)
+  .map((_item: null, index: number): Linode => {
     return linodeFactory.build({
       label: `Linode ${index}`,
       region: chooseRegion().id,
       tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
     });
-  }
-);
+  });
 
 const mockLinodesData = makeResourcePage(mockLinodes);
 
@@ -74,7 +77,7 @@ describe('linode landing checks', () => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
     cy.intercept('GET', apiMatcher('profile')).as('getProfile');
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
+    cy.intercept('GET', apiMatcher('linode/instances*'), (req) => {
       req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });
@@ -570,15 +573,15 @@ describe('linode landing checks for empty state', () => {
 describe('linode landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
     // Mock setup to display the Linode landing page in an non-empty state
-    const mockLinodes: Linode[] = new Array(1).fill(null).map(
-      (_item: null, index: number): Linode => {
+    const mockLinodes: Linode[] = new Array(1)
+      .fill(null)
+      .map((_item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
           tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
         });
-      }
-    );
+      });
 
     mockGetLinodes(mockLinodes).as('getLinodes');
 

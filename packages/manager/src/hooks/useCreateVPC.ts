@@ -19,7 +19,7 @@ import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEvent
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload, VPC } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+import type { LinodeCreateType } from '@linode/utilities';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 export interface UseCreateVPCInputs {

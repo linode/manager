@@ -1,4 +1,4 @@
-import { regionFactory } from '@src/factories';
+import { regionFactory } from '@linode/utilities';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { extendRegion } from 'support/util/regions';
@@ -86,6 +86,6 @@ describe('Linode Create Region Select', () => {
     cy.findByLabelText('Region').should('have.value', 'UK, London (eu-west)');
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
-    expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
+    cy.get('[data-testid="table-row-empty"]').should('not.exist');
   });
 });

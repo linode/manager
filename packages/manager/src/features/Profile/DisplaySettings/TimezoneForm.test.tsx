@@ -1,9 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { clearAuthToken, setAuthToken } from 'src/utilities/authentication';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TimezoneForm, getOptionLabel } from './TimezoneForm';
@@ -19,8 +18,6 @@ describe('Timezone change form', () => {
         );
       })
     );
-
-    clearAuthToken();
   });
 
   it('should render input label', () => {
@@ -30,9 +27,9 @@ describe('Timezone change form', () => {
   });
 
   it('should show a message if an admin is logged in as a customer', async () => {
-    setAuthToken({ expiration: 'never', scopes: '*', token: 'admin 123' });
-
-    const { getByTestId } = renderWithTheme(<TimezoneForm />);
+    const { getByTestId } = renderWithTheme(<TimezoneForm />, {
+      customStore: { authentication: { loggedInAsCustomer: true } },
+    });
 
     expect(getByTestId('admin-notice')).toBeInTheDocument();
   });
@@ -44,9 +41,9 @@ describe('Timezone change form', () => {
   });
 
   it("should include text with the user's current time zone in the admin warning", async () => {
-    setAuthToken({ expiration: 'never', scopes: '*', token: 'admin 123' });
-
-    const { queryByTestId } = renderWithTheme(<TimezoneForm />);
+    const { queryByTestId } = renderWithTheme(<TimezoneForm />, {
+      customStore: { authentication: { loggedInAsCustomer: true } },
+    });
 
     await waitFor(() => {
       expect(queryByTestId('admin-notice')).toHaveTextContent(

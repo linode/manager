@@ -1,8 +1,9 @@
+import { regionFactory } from '@linode/utilities';
 import '@testing-library/jest-dom';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { objectStorageKeyFactory, regionFactory } from 'src/factories';
+import { objectStorageKeyFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';

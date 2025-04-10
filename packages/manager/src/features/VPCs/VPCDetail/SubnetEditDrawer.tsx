@@ -14,6 +14,7 @@ import { NotFound } from 'src/components/NotFound';
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -24,7 +25,7 @@ const IP_HELPER_TEXT =
   'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
-  const { onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, vpcId } = props;
 
   const {
     isPending,
@@ -77,6 +78,7 @@ export const SubnetEditDrawer = (props: Props) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
       title="Edit Subnet"

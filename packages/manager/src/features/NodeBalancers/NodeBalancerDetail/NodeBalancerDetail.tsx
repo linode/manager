@@ -8,6 +8,7 @@ import { useMatch, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
@@ -120,22 +121,23 @@ export const NodeBalancerDetail = () => {
       )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <NodeBalancerSummary />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <NodeBalancerConfigurationWrapper
-              grants={grants}
-              nodeBalancerLabel={nodebalancer.label}
-              nodeBalancerRegion={nodebalancer.region}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <NodeBalancerSettings />
-          </SafeTabPanel>
-        </TabPanels>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <NodeBalancerSummary />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <NodeBalancerConfigurationWrapper
+                grants={grants}
+                nodeBalancerLabel={nodebalancer.label}
+                nodeBalancerRegion={nodebalancer.region}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <NodeBalancerSettings />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
     </React.Fragment>
   );

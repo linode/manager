@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { gettingStartedGuides as goResources } from './GoSDKResources';
@@ -30,11 +31,19 @@ vi.mock('@reach/tabs', async () => {
 
 describe('SDKTabPanel', () => {
   it('Should render SDKTabPanel', () => {
-    renderWithTheme(<SDKTabPanel {...defaultProps} />);
+    renderWithTheme(
+      <Tabs>
+        <SDKTabPanel {...defaultProps} />
+      </Tabs>
+    );
     expect(screen.getByPlaceholderText('Select An SDK')).toBeInTheDocument();
   });
   it('Should update the state correctly and render relevant resources when Go is selected', async () => {
-    renderWithTheme(<SDKTabPanel {...defaultProps} />);
+    renderWithTheme(
+      <Tabs>
+        <SDKTabPanel {...defaultProps} />
+      </Tabs>
+    );
 
     // Check initial value of the SDK field
     expect(screen.getByPlaceholderText('Select An SDK')).toHaveValue('');
@@ -67,7 +76,11 @@ describe('SDKTabPanel', () => {
     });
   });
   it('Should update the state correctly and render relevant resources when Python is selected', async () => {
-    renderWithTheme(<SDKTabPanel {...defaultProps} />);
+    renderWithTheme(
+      <Tabs>
+        <SDKTabPanel {...defaultProps} />
+      </Tabs>
+    );
 
     // Check initial value of the SDK field
     expect(screen.getByPlaceholderText('Select An SDK')).toHaveValue('');

@@ -66,11 +66,7 @@ export const AlertsLanding = React.memo(() => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
-      <Tabs
-        index={activeTabIndex}
-        onChange={handleChange}
-        sx={{ width: '100%' }}
-      >
+      <Tabs index={activeTabIndex} onChange={handleChange}>
         <TabLinkList tabs={accessibleTabs} />
         <React.Fragment>
           <DocumentTitleSegment segment="Alerts" />

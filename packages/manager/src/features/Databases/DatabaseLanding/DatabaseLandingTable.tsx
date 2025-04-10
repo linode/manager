@@ -94,7 +94,12 @@ const DatabaseLandingTable = ({
 
   return (
     <>
-      <Table sx={{ marginTop: '10px' }}>
+      <Table
+        sx={{ marginTop: '10px' }}
+        aria-label={`List of ${
+          isNewDatabase ? 'New' : 'Legacy'
+        } Database Clusters`}
+      >
         <TableHead>
           <TableRow>
             <TableSortCell

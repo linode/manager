@@ -34,7 +34,11 @@ export const ThemeSelector = () => {
         </p>
       </Grid>
       <Grid size={12}>
-        <select onChange={handleSetTheme} value={mockTheme}>
+        <select
+          className="dt-select"
+          onChange={handleSetTheme}
+          value={mockTheme}
+        >
           <option value="system">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>

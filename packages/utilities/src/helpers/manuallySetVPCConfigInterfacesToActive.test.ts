@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
-
 import {
   configFactory,
   linodeConfigInterfaceFactoryWithVPC,
-} from '../factories';
+} from '@linode/utilities';
+import { describe, expect, it } from 'vitest';
+
 import { manuallySetVPCConfigInterfacesToActive } from './manuallySetVPCConfigInterfacesToActive';
 
 describe('manually setting VPC Configs to active', () => {

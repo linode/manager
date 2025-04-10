@@ -1,10 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
-  accountSettingsFactory,
   createLinodeRequestFactory,
   linodeBackupsFactory,
   linodeFactory,
-} from '@src/factories';
+} from '@linode/utilities';
+import { accountSettingsFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { expectManagedDisabled } from 'support/api/managed';
 import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specific-pricing';
@@ -98,6 +98,7 @@ describe('linode backups', () => {
         .should('be.visible')
         .within(() => {
           // Confirm that user is warned of additional backup charges.
+          // eslint-disable-next-line sonarjs/slow-regex
           cy.contains(/.* This will add .* to your monthly bill\./).should(
             'be.visible'
           );

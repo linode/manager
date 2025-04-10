@@ -1,8 +1,8 @@
+import { profileFactory, sshKeyFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { profileFactory, sshKeyFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
@@ -22,7 +22,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage([]));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]));
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { queryByTestId } = renderWithTheme(
@@ -46,7 +46,7 @@ describe('UserSSHKeyPanel', () => {
           return HttpResponse.json(makeResourcePage(sshKeys));
         }),
         http.get('*/account/users', () => {
-          return HttpResponse.json(makeResourcePage([]));
+          return HttpResponse.json(makeResourcePage([]), { status: 401 });
         })
       );
       const { getByText } = renderWithTheme(

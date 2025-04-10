@@ -1,3 +1,4 @@
+// eslint-disable-next-line sonarjs/single-char-in-character-classes
 const storageRegex = /([0-9])([kMGTPEZY]?i?[B])/;
 const labelPrefixRegex = /^(DBaaS).+- /;
 

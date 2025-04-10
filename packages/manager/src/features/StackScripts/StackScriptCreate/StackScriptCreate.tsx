@@ -1,4 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useCreateStackScriptMutation,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { stackScriptSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
@@ -9,8 +14,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useGrants, useProfile } from '@linode/queries';
-import { useCreateStackScriptMutation } from 'src/queries/stackscripts';
 
 import { StackScriptForm } from '../StackScriptForm/StackScriptForm';
 

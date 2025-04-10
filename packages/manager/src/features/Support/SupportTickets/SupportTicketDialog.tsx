@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { useCreateSupportTicketMutation } from '@linode/queries';
 import {
   Accordion,
   ActionsPanel,
@@ -17,7 +18,6 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';

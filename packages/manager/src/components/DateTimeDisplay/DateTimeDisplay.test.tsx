@@ -4,8 +4,17 @@ import * as React from 'react';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DateTimeDisplay, DateTimeDisplayProps } from './DateTimeDisplay';
-vi.mock('../../utilities/getUserTimezone');
+import { DateTimeDisplay } from './DateTimeDisplay';
+
+import type { DateTimeDisplayProps } from './DateTimeDisplay';
+
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  return {
+    ...actual,
+    getUserTimezone: vi.fn().mockReturnValue('utc'),
+  };
+});
 
 const APIDate = '2018-07-20T04:23:17';
 

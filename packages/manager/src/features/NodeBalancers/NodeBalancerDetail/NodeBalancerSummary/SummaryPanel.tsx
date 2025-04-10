@@ -13,15 +13,26 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import {
+  useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
+} from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 export const SummaryPanel = () => {
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
   const { id } = useParams({
     from: '/nodebalancers/$id/summary',
   });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { data: nodebalancer } = useNodeBalancerQuery(
+    Number(id),
+    Boolean(id),
+    isLkeEnterpriseLAFeatureEnabled
+  );
   const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
@@ -42,16 +53,17 @@ export const SummaryPanel = () => {
   });
 
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
-  const { status: clusterStatus } = useKubernetesClusterQuery(
-    nodebalancer?.lke_cluster?.id ?? -1,
-    nodebalancer && Boolean(nodebalancer.lke_cluster),
-    {
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: Boolean(nodebalancer?.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    isUsingBetaEndpoint,
+    options: {
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       retry: false,
-    }
-  );
+    },
+  });
 
   const configPorts = configs?.reduce((acc, config) => {
     return [...acc, { configId: config.id, port: config.port }];

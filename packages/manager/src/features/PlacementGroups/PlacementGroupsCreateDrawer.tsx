@@ -3,6 +3,7 @@ import {
   useCreatePlacementGroup,
   useRegionsQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   ActionsPanel,
   Divider,
@@ -31,6 +32,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
@@ -42,15 +44,15 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
-import type { LinodeCreateType } from '../Linodes/LinodeCreate/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { FormikHelpers } from 'formik';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -62,6 +64,11 @@ export const PlacementGroupsCreateDrawer = (
     open,
     selectedRegionId,
   } = props;
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { data: regions } = useRegionsQuery();
   const { data: allPlacementGroupsInRegion } = useAllPlacementGroupsQuery({
     enabled: Boolean(selectedRegionId),
@@ -266,6 +273,7 @@ export const PlacementGroupsCreateDrawer = (
                 disableClearable
                 disabledRegions={disabledRegions}
                 helperText={values.region && pgRegionLimitHelperText}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 onChange={(e, region) => handleRegionSelect(region.id)}
                 regions={regions ?? []}
                 tooltipText="Only regions that support placement groups are listed."

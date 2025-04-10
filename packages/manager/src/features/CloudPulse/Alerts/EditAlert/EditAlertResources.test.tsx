@@ -1,10 +1,11 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import { alertFactory, linodeFactory, regionFactory } from 'src/factories';
+import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EditAlertResources } from './EditAlertResources';
@@ -84,7 +85,7 @@ describe('EditAlertResources component tests', () => {
     );
 
     expect(
-      getByPlaceholderText('Search for a Region or Resource')
+      getByPlaceholderText('Search for a Region or Entity')
     ).toBeInTheDocument();
     expect(getByPlaceholderText('Select Regions')).toBeInTheDocument();
     expect(getByTestId('show_selected_only')).toBeInTheDocument();
@@ -124,7 +125,7 @@ describe('EditAlertResources component tests', () => {
 
     await waitFor(() => {
       expect(
-        getByText('Alert resources successfully updated.') // validate whether snackbar is displayed properly
+        getByText('Alert entities successfully updated.') // validate whether snackbar is displayed properly
       ).toBeInTheDocument();
     });
 
@@ -137,7 +138,7 @@ describe('EditAlertResources component tests', () => {
     );
   });
 
-  it('Edit alert resources error case', async () => {
+  it('Edit alert entities error case', async () => {
     const mockMutateAsync = vi.fn().mockRejectedValue(new Error('API Error'));
     queryMocks.useEditAlertDefinition.mockReturnValue({
       isError: true,
@@ -174,7 +175,7 @@ describe('EditAlertResources component tests', () => {
 
     await waitFor(() => {
       expect(
-        getByText('Error while updating the resources. Try again later.') // validate whether snackbar is displayed properly
+        getByText('Error while updating the entities. Try again later.') // validate whether snackbar is displayed properly
       ).toBeInTheDocument();
     });
   });

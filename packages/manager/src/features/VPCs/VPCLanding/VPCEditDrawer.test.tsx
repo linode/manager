@@ -7,6 +7,7 @@ import { VPCEditDrawer } from './VPCEditDrawer';
 
 describe('Edit VPC Drawer', () => {
   const props = {
+    isFetching: false,
     onClose: vi.fn(),
     open: true,
     vpc: vpcFactory.build(),

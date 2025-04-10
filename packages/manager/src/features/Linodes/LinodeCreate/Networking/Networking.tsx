@@ -1,3 +1,4 @@
+import { useFirewallSettingsQuery } from '@linode/queries';
 import {
   Button,
   Divider,
@@ -13,6 +14,7 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { Firewall } from './Firewall';
 import { InterfaceGeneration } from './InterfaceGeneration';
 import { LinodeInterface } from './LinodeInterface';
+import { getDefaultInterfacePayload } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -21,6 +23,8 @@ export const Networking = () => {
     control,
     formState: { errors },
   } = useFormContext<LinodeCreateFormValues>();
+
+  const { data: firewallSettings } = useFirewallSettingsQuery();
 
   const { append, fields, remove } = useFieldArray({
     control,
@@ -42,16 +46,9 @@ export const Networking = () => {
         >
           <Typography variant="h2">Networking</Typography>
           <Button
-            onClick={() =>
-              append({
-                default_route: null,
-                firewall_id: null,
-                public: {},
-                purpose: 'public',
-                vlan: null,
-                vpc: null,
-              })
-            }
+            onClick={() => {
+              append(getDefaultInterfacePayload('public', firewallSettings));
+            }}
             buttonType="outlined"
             endIcon={<PlusSignIcon height="12px" width="12px" />}
           >

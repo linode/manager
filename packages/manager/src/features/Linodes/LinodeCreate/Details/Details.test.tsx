@@ -1,7 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { grantsFactory, profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
@@ -28,12 +29,10 @@ describe('Linode Create Details', () => {
   });
 
   it('renders an "Add Tags" field', () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
-      component: <Details />,
-    });
+    const { getByLabelText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <Details />,
+      });
 
     expect(getByLabelText('Add Tags')).toBeVisible();
     expect(

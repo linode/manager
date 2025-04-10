@@ -1,7 +1,13 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-import { pluralize } from '@linode/utilities';
+import {
+  accountBetaFactory,
+  dedicatedTypeFactory,
+  linodeTypeFactory,
+  pluralize,
+  regionFactory,
+} from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
@@ -38,21 +44,17 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 
-import { accountBetaFactory, lkeEnterpriseTypeFactory } from 'src/factories';
 import {
   accountFactory,
-  dedicatedTypeFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
-  linodeTypeFactory,
+  lkeEnterpriseTypeFactory,
   lkeHighAvailabilityTypeFactory,
   nodePoolFactory,
-  regionFactory,
 } from 'src/factories';
 import {
   CLUSTER_TIER_DOCS_LINK,
@@ -580,6 +582,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.focused().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
+    // eslint-disable-next-line sonarjs/slow-regex
     cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
@@ -1306,6 +1309,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms an LKE-E supported region can be selected
      * - Confirms an LKE-E supported k8 version can be selected
      * - Confirms the APL section is disabled while it remains unsupported
+     * - Confirms the VPC & Firewall placeholder section displays with correct copy
      * - Confirms ACL is enabled by default
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
@@ -1464,6 +1468,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByTestId('apl-radio-button-no').within(() => {
         cy.findByRole('radio').should('be.disabled').should('be.checked');
       });
+
+      // Confirm the VPC/Firewall section displays.
+      cy.findByText('VPC & Firewall').should('be.visible');
+      cy.findByText(
+        'A VPC and Firewall are automatically generated for LKE Enterprise customers.'
+      ).should('be.visible');
 
       // Confirm the expected available plans display.
       validEnterprisePlanTabs.forEach((tab) => {

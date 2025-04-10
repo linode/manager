@@ -34,7 +34,6 @@ const Glish = (props: Props) => {
       }
     }, 30 * 1000);
 
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     document.addEventListener('paste', handlePaste);
 
     return () => {
@@ -77,7 +76,6 @@ const Glish = (props: Props) => {
 
     monitor = new WebSocket(monitor_url, ws_protocols);
 
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     monitor.addEventListener('message', (ev) => {
       const data = JSON.parse(ev.data);
 

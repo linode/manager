@@ -1,6 +1,6 @@
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories/profile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Avatar } from './Avatar';

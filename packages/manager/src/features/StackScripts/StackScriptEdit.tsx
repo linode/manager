@@ -1,4 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useStackScriptQuery,
+  useUpdateStackScriptMutation,
+} from '@linode/queries';
 import { useGrants, useProfile } from '@linode/queries';
 import {
   Button,
@@ -19,10 +23,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import {
-  useStackScriptQuery,
-  useUpdateStackScriptMutation,
-} from 'src/queries/stackscripts';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
