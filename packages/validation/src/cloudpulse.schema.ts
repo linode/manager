@@ -83,7 +83,7 @@ export const editAlertDefinitionSchema = object({
   channel_ids: array().of(number().required()).optional(),
   label: string()
     .matches(
-      /^[^*#&+:<>"?@%{}\\\/]+$/,
+      /^[^*#&+:<>"?@%{}\\/]+$/,
       'Name cannot contain special characters: * # & + : < > ? @ % { } \\ /.',
     )
     .max(100, 'Name must be 100 characters or less.')
