@@ -16,9 +16,7 @@ export interface CreateAlertDefinitionForm
     CreateAlertDefinitionPayload,
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
-  engineType: null | string;
   entity_ids: string[];
-  region: string;
   rule_criteria: {
     rules: MetricCriteriaForm[];
   };
