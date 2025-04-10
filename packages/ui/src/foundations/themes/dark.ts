@@ -5,11 +5,11 @@ import {
   Badge,
   Border,
   Button,
-  Component,
   Color,
-  Font,
+  Component,
   Content,
   Dropdown,
+  Font,
   GlobalHeader,
   Interaction,
   NotificationToast,
@@ -345,11 +345,12 @@ export const darkTheme: ThemeOptions = {
         {
           props: { color: 'error' },
           style: {
-            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
-              backgroundColor: Background.Negativesubtle,
-              border: `1px solid ${Border.Negative}`,
-              color: Content.Text.Negative,
-            },
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
+              {
+                backgroundColor: Background.Negativesubtle,
+                border: `1px solid ${Border.Negative}`,
+                color: Content.Text.Negative,
+              },
             '&[aria-disabled="true"]': {
               backgroundColor: 'transparent',
               border: `1px solid ${Button.Secondary.Disabled.Border}`,
@@ -601,11 +602,12 @@ export const darkTheme: ThemeOptions = {
             border: `1px solid ${TextField.Focus.Border}`,
             color: TextField.Focus.Text,
           },
-          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
-            backgroundColor: TextField.Disabled.Background,
-            border: `1px solid ${TextField.Disabled.Border}`,
-            color: TextField.Disabled.Text,
-          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              backgroundColor: TextField.Disabled.Background,
+              border: `1px solid ${TextField.Disabled.Border}`,
+              color: TextField.Disabled.Text,
+            },
           '&:hover': {
             backgroundColor: TextField.Hover.Background,
             border: `1px solid ${TextField.Hover.Border}`,
@@ -838,9 +840,11 @@ export const darkTheme: ThemeOptions = {
           // Zebra Striping
           '&.MuiTable-zebra': {
             // Linodes Group by Tag: First Row is the Title
-            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)':
+              MuiTableZebraStyles,
             // Default Striping
-            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)':
+              MuiTableZebraStyles,
           },
           // Nested Tables
           '.MuiTable-root': {
@@ -907,9 +911,10 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.Row.Background.Hover,
           },
           // Disable hover for nested rows (VPC)
-          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
-            backgroundColor: Table.Row.Background.Default,
-          },
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
+            {
+              backgroundColor: Table.Row.Background.Default,
+            },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
             backgroundColor: Interaction.Background.Disabled,
