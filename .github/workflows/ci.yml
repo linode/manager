@@ -374,7 +374,7 @@ jobs:
         with:
           node-version: "20.17"
           cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile && pnpm bootstrap
       - run: pnpm dev &
       - run: npx wait-on http://localhost:3000
       - run: pnpm cy:run -s 'cypress/e2e/core/cloudpulse/*'
