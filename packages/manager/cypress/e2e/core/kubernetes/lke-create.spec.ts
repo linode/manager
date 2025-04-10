@@ -582,6 +582,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.focused().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
+    // eslint-disable-next-line sonarjs/slow-regex
     cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
@@ -1290,8 +1291,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    // TODO: revert me before we release on 4/8!
-    cy.contains('Tier').should('not.exist');
+    cy.contains('Cluster Tier').should('not.exist');
   });
 
   describe('shows the LKE-E flow with the feature flag on', () => {
