@@ -27,8 +27,9 @@ export const EditAlertResources = (props: EditAlertProps) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
-  const [showConfirmation, setShowConfirmation] =
-    React.useState<boolean>(false);
+  const [showConfirmation, setShowConfirmation] = React.useState<boolean>(
+    false
+  );
 
   React.useEffect(() => {
     setSelectedResources(

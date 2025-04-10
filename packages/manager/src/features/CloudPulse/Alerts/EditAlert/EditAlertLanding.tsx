@@ -29,11 +29,10 @@ const overrides = [
 
 export const EditAlertLanding = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
-  const {
-    data: alertDetails,
-    isError,
-    isFetching,
-  } = useAlertDefinitionQuery(alertId, serviceType);
+  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
+    alertId,
+    serviceType
+  );
   const pathname = '/Definition/Edit';
 
   if (isFetching) {
