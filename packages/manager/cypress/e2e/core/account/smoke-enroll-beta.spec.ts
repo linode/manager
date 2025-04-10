@@ -1,4 +1,4 @@
-import { accountBetaFactory, betaFactory } from '@src/factories';
+import { accountBetaFactory, betaFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import {
