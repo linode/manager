@@ -35,10 +35,11 @@ export const EditInterfaceForm = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: linodeInterface, error, isPending } = useLinodeInterfaceQuery(
-    linodeId,
-    interfaceId
-  );
+  const {
+    data: linodeInterface,
+    error,
+    isPending,
+  } = useLinodeInterfaceQuery(linodeId, interfaceId);
 
   const { mutateAsync } = useUpdateLinodeInterfaceMutation(
     linodeId,
@@ -86,12 +87,18 @@ export const EditInterfaceForm = (props: Props) => {
 
   if (interfaceType === 'Public') {
     return (
-      <Stack divider={<Divider />} spacing={3}>
-        <PublicIPv4Addresses
-          linodeId={linodeId}
-          linodeInterface={linodeInterface}
+      <Stack spacing={3}>
+        <Notice
+          text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+          variant="warning"
         />
-        <IPv6Ranges linodeId={linodeId} linodeInterface={linodeInterface} />
+        <Stack divider={<Divider />} spacing={3}>
+          <PublicIPv4Addresses
+            linodeId={linodeId}
+            linodeInterface={linodeInterface}
+          />
+          <IPv6Ranges linodeId={linodeId} linodeInterface={linodeInterface} />
+        </Stack>
       </Stack>
     );
   }
@@ -99,6 +106,10 @@ export const EditInterfaceForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Notice
+          text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+          variant="warning"
+        />
         <Stack divider={<Divider />} spacing={2}>
           {interfaceType === 'VPC' && (
             <Notice
