@@ -381,7 +381,7 @@ jobs:
           cp packages/manager/.env.example packages/manager/.env
           cd packages/manager
           pnpm exec cypress install
-          pnpm cy:cloudpulse
+      - run: cd packages/manager && pnpm cy:cloudpulse    
 
   publish-packages:
     runs-on: ubuntu-latest
