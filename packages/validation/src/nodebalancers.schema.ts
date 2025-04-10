@@ -320,7 +320,7 @@ const createNodeBalancerVPCsSchema = object().shape(
           .test({
             name: 'valid-ipv6-range',
             message:
-              'Must be a valid IPv6 range, e.g. 2001:db8:abcd:0012::0/64.',
+              'Must be a valid private IPv6 range, e.g. fd12:3456:789a:1::1/64.',
             test: (value) =>
               vpcsValidateIP({
                 value,
