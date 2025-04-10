@@ -12,7 +12,7 @@ export const AlertMaxSelectionText = (props: AlertMaxSelectionTextProps) => {
   const { maxSelectionCount } = props;
   return (
     <Typography data-testid="warning-tip">
-      You can select up to {maxSelectionCount} resources.
+      You can select up to {maxSelectionCount} entities.
     </Typography>
   );
 };
