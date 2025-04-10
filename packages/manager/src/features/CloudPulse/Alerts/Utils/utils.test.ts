@@ -1,6 +1,6 @@
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
-import { createAlertDefinitionFormSchema } from '../CreateAlert/schemas';
+import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
@@ -90,7 +90,7 @@ it('should correctly convert an alert definition values to the required format',
 });
 
 describe('getSchemaWithEntityIdValidation', () => {
-  const baseSchema = createAlertDefinitionFormSchema;
+  const baseSchema = alertDefinitionFormSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
     { maxResourceSelectionCount: 5, serviceType: 'linode' },

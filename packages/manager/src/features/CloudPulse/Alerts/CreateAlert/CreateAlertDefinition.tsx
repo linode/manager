@@ -28,7 +28,7 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { createAlertDefinitionFormSchema } from './schemas';
+import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type {
@@ -85,7 +85,7 @@ export const CreateAlertDefinition = () => {
   const [validationSchema, setValidationSchema] = React.useState(
     getSchemaWithEntityIdValidation({
       aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-      baseSchema: createAlertDefinitionFormSchema,
+      baseSchema: alertDefinitionFormSchema,
       serviceTypeObj: null,
     })
   );
@@ -156,7 +156,7 @@ export const CreateAlertDefinition = () => {
     setValidationSchema(
       getSchemaWithEntityIdValidation({
         aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-        baseSchema: createAlertDefinitionFormSchema,
+        baseSchema: alertDefinitionFormSchema,
         serviceTypeObj: serviceTypeWatcher,
       })
     );

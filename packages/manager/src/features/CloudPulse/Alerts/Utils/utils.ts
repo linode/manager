@@ -318,9 +318,9 @@ export const getSchemaWithEntityIdValidation = (
     (config) => config && serviceTypeObj === config.serviceType
   )?.maxResourceSelectionCount;
 
-  return !maxSelectionCount
-    ? baseSchema
-    : baseSchema.concat(getEntityIdWithMax(maxSelectionCount));
+  return maxSelectionCount
+    ? baseSchema.concat(getEntityIdWithMax(maxSelectionCount))
+    : baseSchema;
 };
 
 /**
