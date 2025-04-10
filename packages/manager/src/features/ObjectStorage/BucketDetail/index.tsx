@@ -1,5 +1,3 @@
-import { useAccount } from '@linode/queries';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -10,7 +8,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -29,14 +27,8 @@ export const BucketDetailLanding = React.memo(() => {
   const { bucketName, clusterId } = useParams({
     from: '/object-storage/buckets/$clusterId/$bucketName',
   });
-  const { data: account } = useAccount();
-  const flags = useFlags();
 
-  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-    'Object Storage Endpoint Types',
-    Boolean(flags.objectStorageGen2?.enabled),
-    account?.capabilities ?? []
-  );
+  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const { data: bucketsData } = useObjectStorageBuckets(
     isObjectStorageGen2Enabled
@@ -90,7 +82,7 @@ export const BucketDetailLanding = React.memo(() => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList endpointType={endpoint_type} />
+              <ObjectList />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <BucketAccess
