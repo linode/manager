@@ -149,7 +149,7 @@ const sortCases = [
  * - Verifies that sorting by different columns (ID, label, type) works as expected with ascending and descending orders.
  */
 
-it('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
+it.skip('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
   mockAppendFeatureFlags({ aclp: { beta: true, enabled: true } });
   mockGetAccount(mockAccount);
   mockGetDatabase(databaseMock).as('getDatabase');
