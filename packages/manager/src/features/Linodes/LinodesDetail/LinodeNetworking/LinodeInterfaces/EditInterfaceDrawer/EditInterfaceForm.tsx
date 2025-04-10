@@ -95,7 +95,7 @@ export const EditInterfaceForm = (props: Props) => {
         <Stack divider={<Divider />} spacing={2}>
           {interfaceType === 'Public' && (
             <Stack divider={<Divider />} spacing={3}>
-              <PublicIPv4Addresses />
+              <PublicIPv4Addresses linodeId={linodeId} />
               <IPv6Ranges />
             </Stack>
           )}

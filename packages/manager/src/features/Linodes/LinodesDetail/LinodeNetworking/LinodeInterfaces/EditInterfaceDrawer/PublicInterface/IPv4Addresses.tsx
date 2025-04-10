@@ -14,7 +14,11 @@ import { IPv4AddressRow } from './IPv4AddressRow';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
-export const PublicIPv4Addresses = () => {
+interface Props {
+  linodeId: number;
+}
+
+export const PublicIPv4Addresses = (props: Props) => {
   const {
     control,
     formState: { errors },
@@ -47,13 +51,13 @@ export const PublicIPv4Addresses = () => {
               message="No IPv4s assigned to this interface."
             />
           )}
-          {fields.map(({ id, address, primary }, index) => (
+          {fields.map(({ id, address }, index) => (
             <IPv4AddressRow
               address={address}
               index={index}
               key={id}
+              linodeId={props.linodeId}
               onRemove={() => remove(index)}
-              primary={primary ?? false}
             />
           ))}
         </TableBody>
