@@ -19,7 +19,7 @@ export const useStyles = makeStyles()((theme) => ({
     font: theme.font.normal,
     padding: `4px ${theme.spacing(2)}`,
     '& p': {
-      paddingLeft: theme.spacing(3),
+      paddingLeft: theme.spacing(2.5),
     },
   },
   info: {
