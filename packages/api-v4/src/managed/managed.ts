@@ -6,6 +6,7 @@ import {
   updateManagedLinodeSchema,
   updatePasswordSchema,
 } from '@linode/validation/lib/managed.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -14,8 +15,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   ContactPayload,
   CredentialPayload,
   ManagedContact,
@@ -44,7 +46,7 @@ import {
 export const enableManaged = () =>
   Request<{}>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/account/settings/managed-enable`)
+    setURL(`${API_ROOT}/account/settings/managed-enable`),
   );
 
 /**
@@ -57,7 +59,7 @@ export const getServices = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/managed/services`)
+    setURL(`${API_ROOT}/managed/services`),
   );
 
 /**
@@ -69,8 +71,8 @@ export const disableServiceMonitor = (serviceID: number) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(
-      `${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}/disable`
-    )
+      `${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}/disable`,
+    ),
   );
 
 /**
@@ -82,8 +84,8 @@ export const enableServiceMonitor = (serviceID: number) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(
-      `${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}/enable`
-    )
+      `${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}/enable`,
+    ),
   );
 
 /**
@@ -94,7 +96,7 @@ export const enableServiceMonitor = (serviceID: number) =>
 export const deleteServiceMonitor = (serviceID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}`)
+    setURL(`${API_ROOT}/managed/services/${encodeURIComponent(serviceID)}`),
   );
 
 /**
@@ -107,7 +109,7 @@ export const getLinodeSettings = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/managed/linode-settings`)
+    setURL(`${API_ROOT}/managed/linode-settings`),
   );
 
 /**
@@ -118,7 +120,7 @@ export const getLinodeSettings = (params?: Params, filters?: Filter) =>
 export const getServiceMonitor = (serviceId: number) =>
   Request<ManagedServiceMonitor>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/managed/services/${encodeURIComponent(serviceId)}`)
+    setURL(`${API_ROOT}/managed/services/${encodeURIComponent(serviceId)}`),
   );
 
 /**
@@ -130,7 +132,7 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
-    setData(data, createServiceMonitorSchema)
+    setData(data, createServiceMonitorSchema),
   );
 
 /**
@@ -140,12 +142,12 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
  */
 export const updateServiceMonitor = (
   monitorID: number,
-  data: Partial<ManagedServicePayload>
+  data: Partial<ManagedServicePayload>,
 ) =>
   Request<ManagedServiceMonitor>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/services/${encodeURIComponent(monitorID)}`),
-    setData(data, createServiceMonitorSchema)
+    setData(data, createServiceMonitorSchema),
   );
 
 /**
@@ -157,8 +159,8 @@ export const getCredential = (credentialId: number) =>
   Request<ManagedCredential>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/managed/credentials/${encodeURIComponent(credentialId)}`
-    )
+      `${API_ROOT}/managed/credentials/${encodeURIComponent(credentialId)}`,
+    ),
   );
 
 /**
@@ -171,7 +173,7 @@ export const getCredentials = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/managed/credentials`)
+    setURL(`${API_ROOT}/managed/credentials`),
   );
 
 /**
@@ -182,14 +184,14 @@ export const getCredentials = (params?: Params, filters?: Filter) =>
  */
 export const updateCredential = (
   credentialID: number,
-  data: UpdateCredentialPayload
+  data: UpdateCredentialPayload,
 ) =>
   Request<ManagedCredential>(
     setMethod('PUT'),
     setData(data, updateCredentialSchema),
     setURL(
-      `${API_ROOT}/managed/credentials/${encodeURIComponent(credentialID)}`
-    )
+      `${API_ROOT}/managed/credentials/${encodeURIComponent(credentialID)}`,
+    ),
   );
 
 /**
@@ -199,16 +201,16 @@ export const updateCredential = (
  */
 export const updatePassword = (
   credentialID: number,
-  data: UpdatePasswordPayload
+  data: UpdatePasswordPayload,
 ) =>
   Request<{}>(
     setMethod('POST'),
     setData(data, updatePasswordSchema),
     setURL(
       `${API_ROOT}/managed/credentials/${encodeURIComponent(
-        credentialID
-      )}/update`
-    )
+        credentialID,
+      )}/update`,
+    ),
   );
 
 /**
@@ -221,9 +223,9 @@ export const deleteCredential = (credentialID: number) =>
     setMethod('POST'),
     setURL(
       `${API_ROOT}/managed/credentials/${encodeURIComponent(
-        credentialID
-      )}/revoke`
-    )
+        credentialID,
+      )}/revoke`,
+    ),
   );
 
 /*
@@ -235,7 +237,7 @@ export const createCredential = (data: CredentialPayload) =>
   Request<ManagedCredential>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials`),
-    setData(data, createCredentialSchema)
+    setData(data, createCredentialSchema),
   );
 
 /**
@@ -248,7 +250,7 @@ export const createCredential = (data: CredentialPayload) =>
 export const getSSHPubKey = () =>
   Request<ManagedSSHPubKey>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/managed/credentials/sshkey`)
+    setURL(`${API_ROOT}/managed/credentials/sshkey`),
   );
 
 /**
@@ -259,14 +261,14 @@ export const getSSHPubKey = () =>
  */
 export const updateLinodeSettings = (
   linodeId: number,
-  data: { ssh: Partial<ManagedSSHSetting> }
+  data: { ssh: Partial<ManagedSSHSetting> },
 ) =>
   Request<ManagedLinodeSetting>(
     setURL(
-      `${API_ROOT}/managed/linode-settings/${encodeURIComponent(linodeId)}`
+      `${API_ROOT}/managed/linode-settings/${encodeURIComponent(linodeId)}`,
     ),
     setMethod('PUT'),
-    setData(data, updateManagedLinodeSchema)
+    setData(data, updateManagedLinodeSchema),
   );
 
 /**
@@ -277,7 +279,7 @@ export const updateLinodeSettings = (
 export const getManagedContact = (contactId: number) =>
   Request<ManagedContact>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`)
+    setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`),
   );
 
 /**
@@ -290,7 +292,7 @@ export const getManagedContacts = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/managed/contacts`)
+    setURL(`${API_ROOT}/managed/contacts`),
   );
 
 /**
@@ -302,7 +304,7 @@ export const createContact = (data: ContactPayload) =>
   Request<ManagedContact>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/contacts`),
-    setData(data, createContactSchema)
+    setData(data, createContactSchema),
   );
 
 /**
@@ -312,12 +314,12 @@ export const createContact = (data: ContactPayload) =>
  */
 export const updateContact = (
   contactId: number,
-  data: Partial<ContactPayload>
+  data: Partial<ContactPayload>,
 ) =>
   Request<ManagedContact>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`),
-    setData(data, createContactSchema)
+    setData(data, createContactSchema),
   );
 
 /**
@@ -328,7 +330,7 @@ export const updateContact = (
 export const deleteContact = (contactId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`)
+    setURL(`${API_ROOT}/managed/contacts/${encodeURIComponent(contactId)}`),
   );
 
 /**
@@ -339,7 +341,7 @@ export const deleteContact = (contactId: number) =>
 export const getManagedIssues = () =>
   Request<Page<ManagedIssue>>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/managed/issues`)
+    setURL(`${API_ROOT}/managed/issues`),
   );
 
 /**

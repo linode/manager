@@ -37,26 +37,20 @@ export const Contacts = () => {
   const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    data,
-    dataUpdatedAt,
-    error,
-    isLoading,
-  } = useAllManagedContactsQuery();
+  const { data, dataUpdatedAt, error, isLoading } =
+    useAllManagedContactsQuery();
 
   const contacts = data || [];
 
-  const {
-    data: selectedContact,
-    isFetching: isSelectedContactFetching,
-  } = useDialogData({
-    enabled:
-      match.routeId === '/managed/contacts/$contactId/edit' ||
-      match.routeId === '/managed/contacts/$contactId/delete',
-    paramKey: 'contactId',
-    queryHook: useManagedContactQuery,
-    redirectToOnNotFound: '/managed/contacts',
-  });
+  const { data: selectedContact, isFetching: isSelectedContactFetching } =
+    useDialogData({
+      enabled:
+        match.routeId === '/managed/contacts/$contactId/edit' ||
+        match.routeId === '/managed/contacts/$contactId/delete',
+      paramKey: 'contactId',
+      queryHook: useManagedContactQuery,
+      redirectToOnNotFound: '/managed/contacts',
+    });
 
   const [deleteError, setDeleteError] = React.useState<string | undefined>(
     undefined
@@ -122,12 +116,12 @@ export const Contacts = () => {
       >
         <StyledWrapperGrid>
           <Button
+            buttonType="primary"
             onClick={() => {
               navigate({
                 to: '/managed/contacts/add',
               });
             }}
-            buttonType="primary"
             sx={{ mb: 1 }}
           >
             Add Contact
@@ -217,16 +211,16 @@ export const Contacts = () => {
         }}
       </Paginate>
       <DeletionDialog
+        entity="contact"
+        error={deleteError}
+        label={selectedContact?.name || ''}
+        loading={isSelectedContactFetching}
         onClose={() => {
           setDeleteError(undefined);
           navigate({
             to: '/managed/contacts',
           });
         }}
-        entity="contact"
-        error={deleteError}
-        label={selectedContact?.name || ''}
-        loading={isSelectedContactFetching}
         onDelete={handleDelete}
         open={isDeleteContactDialogOpen}
       />
