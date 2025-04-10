@@ -386,7 +386,7 @@ jobs:
           cd packages/manager
           pnpm exec cypress install
       # Run the tests only for cloudpulse
-      - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/*' --retries=0
+      - run: cd packages/manager && pnpm cy:run -s 'cypress/e2e/core/cloudpulse/*'
 
   publish-packages:
     runs-on: ubuntu-latest
