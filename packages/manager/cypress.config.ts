@@ -50,7 +50,7 @@ export default defineConfig({
   video: true,
 
   // Only retry test when running via CI.
-  retries: process.env['CI'] && !process.env['CY_TEST_DISABLE_RETRIES'] ? 2 : 0,
+  retries: 0,
 
   experimentalMemoryManagement: true,
 
