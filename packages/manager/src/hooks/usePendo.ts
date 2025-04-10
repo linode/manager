@@ -1,8 +1,12 @@
+/* eslint-disable no-console */
 import { useAccount, useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
 
-import { ADOBE_ANALYTICS_URL, APP_ROOT /*PENDO_API_KEY*/ } from 'src/constants';
+import {
+  ADOBE_ANALYTICS_URL,
+  APP_ROOT /* PENDO_API_KEY*/,
+} from 'src/constants';
 // import {
 //   ONE_TRUST_COOKIE_CATEGORIES,
 //   checkOptanonConsent,
@@ -86,17 +90,14 @@ export const usePendo = () => {
   // Temporarily added for testing with the development launch script - this isn't secret; we just don't have this env var set for preview environments.
   const PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef';
 
-  // eslint-disable-next-line no-console
-  console.log({ ADOBE_ANALYTICS_URL }, { PENDO_API_KEY });
-
   React.useEffect(() => {
     if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
-      // Adapted Pendo install script for readability
-      // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
+      console.log({ ADOBE_ANALYTICS_URL, PENDO_API_KEY });
 
       // Set up Pendo namespace and queue
       const pendo = (window['pendo'] = window['pendo'] || {});
       pendo._q = pendo._q || [];
+      console.log('Initial Pendo setup:', { pendo, queue: pendo._q });
 
       // Define the methods Pendo uses in a queue
       const methodNames = [
@@ -125,49 +126,66 @@ export const usePendo = () => {
       loadScript(ADOBE_ANALYTICS_URL, {
         location: 'head',
       }).then(() => {
-        window.pendo.initialize({
-          account: {
-            id: accountId, // Highly recommended, required if using Pendo Feedback
-            // name:         // Optional
-            // is_paying:    // Recommended if using Pendo Feedback
-            // monthly_value:// Recommended if using Pendo Feedback
-            // planLevel:    // Optional
-            // planPrice:    // Optional
-            // creationDate: // Optional
+        console.log('Launch script loaded successfully');
+        console.log('Pendo object before initializing:', window.pendo);
+        console.log('Pendo queue before initializing:', window.pendo._q);
 
-            // You can add any additional account level key-values here,
-            // as long as it's not one of the above reserved names.
-          },
-          // Controls what URLs we send to Pendo. Refer to: https://agent.pendo.io/advanced/location/.
-          location: {
-            transforms: [
-              {
-                action: 'Clear',
-                attr: 'hash',
-              },
-              {
-                action: 'Clear',
-                attr: 'search',
-              },
-              {
-                action: 'Replace',
-                attr: 'pathname',
-                data(url: string) {
-                  return transformUrl(url);
+        try {
+          window.pendo.initialize({
+            account: {
+              id: accountId, // Highly recommended, required if using Pendo Feedback
+              // name:         // Optional
+              // is_paying:    // Recommended if using Pendo Feedback
+              // monthly_value:// Recommended if using Pendo Feedback
+              // planLevel:    // Optional
+              // planPrice:    // Optional
+              // creationDate: // Optional
+
+              // You can add any additional account level key-values here,
+              // as long as it's not one of the above reserved names.
+            },
+            // Controls what URLs we send to Pendo. Refer to: https://agent.pendo.io/advanced/location/.
+            location: {
+              transforms: [
+                {
+                  action: 'Clear',
+                  attr: 'hash',
                 },
-              },
-            ],
-          },
-          visitor: {
-            id: visitorId, // Required if user is logged in
-            // email:        // Recommended if using Pendo Feedback, or NPS Email
-            // full_name:    // Recommended if using Pendo Feedback
-            // role:         // Optional
+                {
+                  action: 'Clear',
+                  attr: 'search',
+                },
+                {
+                  action: 'Replace',
+                  attr: 'pathname',
+                  data(url: string) {
+                    return transformUrl(url);
+                  },
+                },
+              ],
+            },
+            visitor: {
+              id: visitorId, // Required if user is logged in
+              // email:        // Recommended if using Pendo Feedback, or NPS Email
+              // full_name:    // Recommended if using Pendo Feedback
+              // role:         // Optional
 
-            // You can add any additional visitor level key-values here,
-            // as long as it's not one of the above reserved names.
-          },
-        });
+              // You can add any additional visitor level key-values here,
+              // as long as it's not one of the above reserved names.
+            },
+          });
+          console.log('Pendo initialized successfully');
+        } catch (error) {
+          console.error('Error initializing Pendo:', error);
+        }
+        console.log(
+          'Pendo object after attempting initializing:',
+          window.pendo
+        );
+        console.log(
+          'Pendo queue after attempting initializing:',
+          window.pendo._q
+        );
       });
     }
   }, [accountId, visitorId]);
