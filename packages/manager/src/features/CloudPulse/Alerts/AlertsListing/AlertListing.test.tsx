@@ -193,7 +193,7 @@ describe('Alert Listing', () => {
     const { getByRole, getByText } = renderWithTheme(<AlertListing />);
 
     const bannerText =
-      'You have reached maximum number of metrics created per account.';
+      'You have reached the maximum number of metrics that can be evaluated by alerts created on this account.';
 
     expect(getByText(bannerText)).toBeVisible();
     const createButton = getByRole('button', { name: 'Create Alert' });

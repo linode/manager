@@ -166,10 +166,10 @@ export const AlertListing = () => {
     <Stack spacing={2}>
       {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertListNoticeMessages
-          errorMessage="You have reached maximum number of metrics created per account."
+          errorMessage="You have reached the maximum number of metrics that can be evaluated by alerts created on this account."
           variant="warning"
         />
-      )}
+      )} 
       <Box
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
