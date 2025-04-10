@@ -118,7 +118,7 @@ describe('getValidationSchema', () => {
     await expect(
       schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 3."
+      "The overall number of entities assigned to an alert can't exceed 3."
     );
   });
 
@@ -133,7 +133,7 @@ describe('getValidationSchema', () => {
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
       })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 5."
+      "The overall number of entities assigned to an alert can't exceed 5."
     );
   });
   it('should combine all the API errors to the parent field and return in errorMap properly', () => {
