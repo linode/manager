@@ -4,6 +4,7 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Notice,
   Stack,
   TextField,
   TooltipIcon,
@@ -27,6 +28,12 @@ export const VPCIPv4Address = (props: Props) => {
 
   return (
     <Stack spacing={1}>
+      {errors.vpc?.ipv4?.addresses?.[index]?.message && (
+        <Notice
+          text={errors.vpc?.ipv4?.addresses?.[index]?.message}
+          variant="error"
+        />
+      )}
       <Controller
         control={control}
         name={`vpc.ipv4.addresses.${index}.address`}
@@ -41,10 +48,7 @@ export const VPCIPv4Address = (props: Props) => {
             {field.value !== 'auto' && (
               <TextField
                 containerProps={{ sx: { mb: 1.5, mt: 1 } }}
-                errorText={
-                  fieldState.error?.message ??
-                  errors.vpc?.ipv4?.addresses?.[index]?.message
-                }
+                errorText={fieldState.error?.message}
                 label="VPC IPv4"
                 noMarginTop
                 onBlur={field.onBlur}
