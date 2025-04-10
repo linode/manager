@@ -58,7 +58,6 @@ export const EditInterfaceForm = (props: Props) => {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
-      onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -85,32 +84,27 @@ export const EditInterfaceForm = (props: Props) => {
 
   const interfaceType = getLinodeInterfaceType(linodeInterface);
 
-  if (interfaceType === 'Public') {
-    return (
-      <Stack spacing={3}>
-        <Notice
-          text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
-          variant="warning"
-        />
-        <Stack divider={<Divider />} spacing={3}>
-          <PublicIPv4Addresses
-            linodeId={linodeId}
-            linodeInterface={linodeInterface}
-          />
-          <IPv6Ranges linodeId={linodeId} linodeInterface={linodeInterface} />
-        </Stack>
-      </Stack>
-    );
-  }
-
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Notice
+          spacingBottom={16}
           text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
           variant="warning"
         />
         <Stack divider={<Divider />} spacing={2}>
+          {interfaceType === 'Public' && (
+            <Stack divider={<Divider />} spacing={3}>
+              <PublicIPv4Addresses
+                linodeId={linodeId}
+                linodeInterface={linodeInterface}
+              />
+              <IPv6Ranges
+                linodeId={linodeId}
+                linodeInterface={linodeInterface}
+              />
+            </Stack>
+          )}
           {interfaceType === 'VPC' && (
             <Notice
               text="TODO: Support editing a VPC interface"

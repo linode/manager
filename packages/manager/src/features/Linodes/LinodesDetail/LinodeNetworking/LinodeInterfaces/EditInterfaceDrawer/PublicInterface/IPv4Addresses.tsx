@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { Table } from 'src/components/Table';
@@ -11,9 +12,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import { DeleteIPv4Dialog } from './DeleteIPv4Dialog';
 import { IPv4AddressRow } from './IPv4AddressRow';
-import { ipv4AddressSorter, useAllocatePublicIPv4 } from './utilities';
 
-import type { LinodeInterface } from '@linode/api-v4';
+import type {
+  LinodeInterface,
+  ModifyLinodeInterfacePayload,
+} from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
@@ -23,9 +26,10 @@ interface Props {
 export const PublicIPv4Addresses = ({ linodeId, linodeInterface }: Props) => {
   const [selectedAddress, setSelectedAddress] = useState<string>();
 
-  const { isAllocating, onAllocate } = useAllocatePublicIPv4({
-    interfaceId: linodeInterface.id,
-    linodeId,
+  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'public.ipv4.addresses',
   });
 
   return (
@@ -39,29 +43,28 @@ export const PublicIPv4Addresses = ({ linodeId, linodeInterface }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {linodeInterface.public?.ipv4.addresses.length === 0 && (
+          {fields.length === 0 && (
             <TableRowEmpty
               colSpan={2}
               message="No IPv4s assigned to this interface."
             />
           )}
-          {linodeInterface.public?.ipv4.addresses
+          {fields
             // We have to client-side sort because the API's reponse order is never consistent
-            .sort(ipv4AddressSorter)
-            .map(({ address, primary }) => (
+            // .sort(ipv4AddressSorter)
+            .map(({ id, address, primary }, index) => (
               <IPv4AddressRow
                 address={address}
-                interfaceId={linodeInterface.id}
-                key={address}
-                linodeId={linodeId}
-                onDelete={() => setSelectedAddress(address)}
-                primary={primary}
+                index={index}
+                key={id}
+                onRemove={() => remove(index)}
+                primary={primary ?? false}
               />
             ))}
         </TableBody>
       </Table>
       <Box>
-        <LinkButton isLoading={isAllocating} onClick={onAllocate}>
+        <LinkButton onClick={() => append({ address: 'auto' })}>
           Add IPv4 Address
         </LinkButton>
       </Box>
