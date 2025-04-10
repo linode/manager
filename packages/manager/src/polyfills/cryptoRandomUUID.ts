@@ -2,8 +2,9 @@ import type { Plugin } from 'vite';
 
 /**
  * This is a polyfill for the crypto.randomUUID method, meant to be used with our vite.config.ts file.
- * crypto.randomUUID is not supported in older browsers such as Safari <=16 or chrome <=119.
+ * crypto.randomUUID is not supported in older browsers such as Safari <=15.3 or chrome <=91.
  *
+ * see: https://caniuse.com/?search=randomUUID
  */
 export const cryptoRandomUUIDPolyfill = (): Plugin => {
   return {
