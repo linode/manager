@@ -1,9 +1,9 @@
 import {
-  Box,
   CloseIcon,
   IconButton,
   Stack,
   TextField,
+  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import React from 'react';
@@ -24,15 +24,6 @@ export const VPCRanges = () => {
 
   return (
     <Stack spacing={1}>
-      <Typography variant="h3">VPC IP Ranges</Typography>
-      <Typography>
-        Assign additional IPv4 address ranges that the VPC can use to reach
-        services running on this Linode.{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-          Learn more
-        </Link>
-        .
-      </Typography>
       {fields.map((field, index) => (
         <Stack
           alignItems="flex-start"
@@ -45,12 +36,14 @@ export const VPCRanges = () => {
             name={`vpc.ipv4.ranges.${index}.range`}
             render={({ field, fieldState }) => (
               <TextField
-                containerProps={{ sx: { flexGrow: 1 }}}
+                containerProps={{ sx: { flexGrow: 1 } }}
                 errorText={fieldState.error?.message}
                 hideLabel
                 label={`IP Range ${index}`}
                 noMarginTop
                 onChange={field.onChange}
+                // eslint-disable-next-line sonarjs/no-hardcoded-ip
+                placeholder="10.0.0.0/24"
                 value={field.value}
               />
             )}
@@ -64,9 +57,25 @@ export const VPCRanges = () => {
           </IconButton>
         </Stack>
       ))}
-      <Box>
-        <LinkButton onClick={() => append({ range: '' })}>Add Range</LinkButton>
-      </Box>
+      <Stack direction="row" spacing={1}>
+        <LinkButton onClick={() => append({ range: '' })}>
+          Add IPv4 Range
+        </LinkButton>
+        <TooltipIcon
+          status="help"
+          sxTooltipIcon={{ p: 0.5 }}
+          text={
+            <Typography>
+              Assign additional IPv4 address ranges that the VPC can use to
+              reach services running on this Linode.{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
+                Learn more
+              </Link>
+              .
+            </Typography>
+          }
+        />
+      </Stack>
     </Stack>
   );
 };

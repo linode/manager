@@ -47,7 +47,11 @@ export const VPC = ({ index }: Props) => {
   const regionSupportsVPCs =
     selectedRegion?.capabilities.includes('VPCs') ?? false;
 
-  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region: regionId },
   });
@@ -70,8 +74,16 @@ export const VPC = ({ index }: Props) => {
           />
         )}
         <Controller
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.vpc_id`}
           render={({ field, fieldState }) => (
             <Autocomplete
+              disabled={!regionSupportsVPCs}
+              errorText={error?.[0].reason ?? fieldState.error?.message}
+              label="VPC"
+              loading={isLoading}
+              noMarginTop
+              onBlur={field.onBlur}
               onChange={(e, vpc) => {
                 field.onChange(vpc?.id ?? null);
 
@@ -88,22 +100,14 @@ export const VPC = ({ index }: Props) => {
                   resetField(`linodeInterfaces.${index}.vpc.subnet_id`);
                 }
               }}
+              options={vpcs ?? []}
+              placeholder="None"
               textFieldProps={{
                 tooltipText: REGION_CAVEAT_HELPER_TEXT,
               }}
-              disabled={!regionSupportsVPCs}
-              errorText={error?.[0].reason ?? fieldState.error?.message}
-              label="VPC"
-              loading={isLoading}
-              noMarginTop
-              onBlur={field.onBlur}
-              options={vpcs ?? []}
-              placeholder="None"
               value={selectedVPC ?? null}
             />
           )}
-          control={control}
-          name={`linodeInterfaces.${index}.vpc.vpc_id`}
         />
         {regionId && regionSupportsVPCs && (
           <Box>
@@ -113,13 +117,10 @@ export const VPC = ({ index }: Props) => {
           </Box>
         )}
         <Controller
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.subnet_id`}
           render={({ field, fieldState }) => (
             <Autocomplete
-              value={
-                selectedVPC?.subnets.find(
-                  (subnet) => subnet.id === field.value
-                ) ?? null
-              }
               disabled={!regionSupportsVPCs}
               errorText={fieldState.error?.message}
               getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
@@ -129,16 +130,24 @@ export const VPC = ({ index }: Props) => {
               onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
               options={selectedVPC?.subnets ?? []}
               placeholder="Select Subnet"
+              value={
+                selectedVPC?.subnets.find(
+                  (subnet) => subnet.id === field.value
+                ) ?? null
+              }
             />
           )}
-          control={control}
-          name={`linodeInterfaces.${index}.vpc.subnet_id`}
         />
         <Stack>
           <Controller
+            control={control}
+            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
             render={({ field, fieldState }) => (
               <Box>
                 <FormControlLabel
+                  checked={field.value === 'auto'}
+                  control={<Checkbox sx={{ ml: 0.4 }} />}
+                  disabled={!regionSupportsVPCs}
                   label={
                     <Stack alignItems="center" direction="row">
                       <Typography>
@@ -154,18 +163,15 @@ export const VPC = ({ index }: Props) => {
                   onChange={(e, checked) =>
                     field.onChange(checked ? 'auto' : '')
                   }
-                  checked={field.value === 'auto'}
-                  control={<Checkbox sx={{ ml: 0.4 }} />}
-                  disabled={!regionSupportsVPCs}
                 />
                 {field.value !== 'auto' && (
                   <TextField
+                    containerProps={{ sx: { mb: 1.5, mt: 1 } }}
                     errorText={
                       fieldState.error?.message ??
                       errors.linodeInterfaces?.[index]?.vpc?.ipv4
                         ?.addresses?.[0]?.message
                     }
-                    containerProps={{ sx: { mb: 1.5, mt: 1 } }}
                     label="VPC IPv4"
                     noMarginTop
                     onBlur={field.onBlur}
@@ -176,16 +182,19 @@ export const VPC = ({ index }: Props) => {
                 )}
               </Box>
             )}
-            control={control}
-            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
           />
           <Controller
+            control={control}
+            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
             render={({ field, fieldState }) => (
               <Box>
                 {fieldState.error?.message && (
                   <Notice text={fieldState.error.message} variant="error" />
                 )}
                 <FormControlLabel
+                  checked={field.value === 'auto'}
+                  control={<Checkbox sx={{ ml: 0.4 }} />}
+                  disabled={!regionSupportsVPCs}
                   label={
                     <Stack alignItems="center" direction="row">
                       <Typography>
@@ -202,19 +211,15 @@ export const VPC = ({ index }: Props) => {
                   onChange={(e, checked) =>
                     field.onChange(checked ? 'auto' : null)
                   }
-                  checked={field.value === 'auto'}
-                  control={<Checkbox sx={{ ml: 0.4 }} />}
-                  disabled={!regionSupportsVPCs}
                 />
               </Box>
             )}
-            control={control}
-            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
           />
         </Stack>
         <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
       </Stack>
       <VPCCreateDrawer
+        onClose={() => setIsCreateDrawerOpen(false)}
         onSuccess={(vpc) => {
           setValue(`linodeInterfaces.${index}.vpc.vpc_id`, vpc.id, {
             shouldValidate: true,
@@ -232,7 +237,6 @@ export const VPC = ({ index }: Props) => {
             );
           }
         }}
-        onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         selectedRegion={regionId}
       />
