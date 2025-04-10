@@ -110,7 +110,6 @@
     "cy:debug": "cypress open --e2e",
     "cy:component": "cypress open --component",
     "cy:component:run": "cypress run --component --headless -b chrome",
-    "cy:cloudpulse": "cypress run -s 'cypress/e2e/core/cloudpulse/*' --retries=0",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "typecheck": "tsc --noEmit && tsc -p cypress --noEmit",
     "coverage": "vitest run --coverage && open coverage/index.html",
