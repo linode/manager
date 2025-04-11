@@ -8,6 +8,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account';
+import type { NoticeProps } from '@linode/ui';
 
 interface Props {
   maintenanceEnd?: null | string;
@@ -16,8 +17,10 @@ interface Props {
   type?: AccountMaintenance['type'];
 }
 
-export const MaintenanceBanner = React.memo((props: Props) => {
-  const { maintenanceEnd, maintenanceStart, type } = props;
+interface MaintenanceBannerProps extends Props, Partial<NoticeProps> {}
+
+export const MaintenanceBanner = React.memo((props: MaintenanceBannerProps) => {
+  const { maintenanceEnd, maintenanceStart, type, ...rest } = props;
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
@@ -68,7 +71,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice important variant="warning" {...rest}>
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
