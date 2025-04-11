@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -138,5 +138,17 @@ describe('AssignedPermissionsPanel', () => {
     expect(visibleChips.length).toBe(
       mockEntitiesAcceessRole.permissions.length
     );
+  });
+
+  it('does not render the Entities component when mode is "change-role-for-entity"', () => {
+    renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="change-role-for-entity"
+        role={mockEntitiesAcceessRole}
+      />
+    );
+
+    // Verify that the Entities component is not rendered
+    expect(screen.queryByText('Entities')).not.toBeInTheDocument();
   });
 });
