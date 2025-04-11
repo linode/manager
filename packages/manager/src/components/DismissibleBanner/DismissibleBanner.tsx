@@ -1,5 +1,4 @@
-import { IconButton, Notice, Stack } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
@@ -57,7 +56,7 @@ export const DismissibleBanner = (props: Props) => {
       onClick={handleDismiss}
       sx={{ padding: 1 }}
     >
-      <Close />
+      <CloseIcon />
     </IconButton>
   );
 
@@ -84,10 +83,8 @@ export const useDismissibleBanner = (
   preferenceKey: string,
   options?: DismissibleNotificationOptions
 ) => {
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+  const { dismissNotifications, hasDismissedNotifications } =
+    useDismissibleNotifications();
 
   const hasDismissedBanner = hasDismissedNotifications([preferenceKey]);
 

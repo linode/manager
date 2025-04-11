@@ -6,10 +6,6 @@ import { Notice } from './Notice';
 import type { NoticeProps } from './Notice';
 import type { Meta, StoryObj } from '@storybook/react';
 
-export const Default: StoryObj<NoticeProps> = {
-  render: (args) => <Notice {...args} />,
-};
-
 export const Success: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a success notice" variant="success" />
