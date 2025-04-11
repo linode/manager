@@ -7,6 +7,7 @@ import {
   CheckboxIcon,
   CheckboxIndeterminateIcon,
 } from '../../assets/icons';
+import { omittedProps } from '../../utilities';
 import { FormControlLabel } from '../FormControlLabel';
 import { TooltipIcon } from '../TooltipIcon';
 
@@ -82,7 +83,8 @@ export const Checkbox = (props: Props) => {
 };
 
 const StyledCheckbox = styled(_Checkbox, {
-  shouldForwardProp: (prop) => prop !== 'size', // Do not forward `customSize` to MUI Checkbox
+  label: 'StyledCheckbox',
+  shouldForwardProp: omittedProps(['customSize']),
 })<Props>(({ theme, customSize = 'md', ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
