@@ -64,11 +64,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
-    const {
-      setUnassignLinodesErrors,
-      unassignLinode,
-      unassignLinodesErrors,
-    } = useUnassignLinode();
+    const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
+      useUnassignLinode();
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
@@ -76,21 +73,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
       singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
-    const [
-      selectedLinodesAndConfigData,
-      setSelectedLinodesAndConfigData,
-    ] = React.useState<ConfigInterfaceAndLinodeData[]>([]);
+    const [selectedLinodesAndConfigData, setSelectedLinodesAndConfigData] =
+      React.useState<ConfigInterfaceAndLinodeData[]>([]);
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
-    const [
-      linodeOptionsToUnassign,
-      setLinodeOptionsToUnassign,
-    ] = React.useState<Linode[]>([]);
-    const [
-      configInterfacesToDelete,
-      setConfigInterfacesToDelete,
-    ] = React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
+    const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
+      React.useState<Linode[]>([]);
+    const [configInterfacesToDelete, setConfigInterfacesToDelete] =
+      React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
@@ -289,13 +280,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     return (
       <Drawer
+        isFetching={isFetching}
+        NotFoundComponent={NotFound}
+        onClose={handleOnClose}
+        open={open}
         title={`Unassign Linodes from subnet: ${subnet?.label} (${
           subnet?.ipv4 ?? subnet?.ipv6
         })`}
-        NotFoundComponent={NotFound}
-        isFetching={isFetching}
-        onClose={handleOnClose}
-        open={open}
       >
         {userCannotUnassignLinodes && (
           <Notice
@@ -322,14 +313,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Stack>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
-                onChange={(_, value) => {
-                  setSelectedLinodes(value);
-                  getConfigWithVPCInterface(value);
-                }}
                 disabled={userCannotUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
                 multiple
+                onChange={(_, value) => {
+                  setSelectedLinodes(value);
+                  getConfigWithVPCInterface(value);
+                }}
                 options={linodeOptionsToUnassign}
                 placeholder="Select Linodes or type to search"
                 renderTags={() => null}
@@ -339,7 +330,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
               <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
-                isRemovable={!Boolean(singleLinodeToBeUnassigned)}
+                isRemovable={!singleLinodeToBeUnassigned}
                 noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}
                 selectionData={selectedLinodesAndConfigData}
@@ -348,6 +339,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             </Box>
             {selectedLinodesAndConfigData.length > 0 && (
               <DownloadCSV
+                buttonType="styledLink"
+                csvRef={csvRef}
+                data={selectedLinodesAndConfigData}
+                filename={`linodes-unassigned-${formattedDate}.csv`}
+                headers={SUBNET_LINODE_CSV_HEADERS}
+                onClick={downloadCSV}
                 sx={{
                   alignItems: 'flex-start',
                   display: 'flex',
@@ -355,12 +352,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   marginTop: 2,
                   textAlign: 'left',
                 }}
-                buttonType="styledLink"
-                csvRef={csvRef}
-                data={selectedLinodesAndConfigData}
-                filename={`linodes-unassigned-${formattedDate}.csv`}
-                headers={SUBNET_LINODE_CSV_HEADERS}
-                onClick={downloadCSV}
                 text={'Download List of Linodes to be Unassigned (.csv)'}
               />
             )}
