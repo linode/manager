@@ -61,9 +61,6 @@ export const baseConfig = [
   // 4. Base rules
   {
     files: ['**/*.{js,ts,tsx}'],
-    plugins: {
-      'custom-rules': cloudPulseRules,
-    },
     rules: {
       'array-callback-return': 'error',
       'comma-dangle': 'off',
@@ -118,6 +115,16 @@ export const baseConfig = [
       'object-shorthand': 'warn',
       'sort-keys': 'off',
       'spaced-comment': 'warn',
+    },
+  },
+
+  // 4. CloudPulse-specific rules
+  {
+    files: ['**/CloudPulse/**/*.{js,ts,tsx}'],
+    plugins: {
+      'custom-rules': cloudPulseRules,
+    },
+    rules: {
       'custom-rules/no-useless-template': 'warn',
       'custom-rules/no-non-null-assertion': 'warn',
     },
@@ -128,7 +135,6 @@ export const baseConfig = [
     files: ['**/*.{ts,tsx}'],
     plugins: {
       react,
-      'custom-rules': cloudPulseRules,
     },
     rules: {
       'react-hooks/exhaustive-deps': 'warn',
@@ -140,8 +146,6 @@ export const baseConfig = [
       'react/no-unescaped-entities': 'warn',
       'react/prop-types': 'off',
       'react/self-closing-comp': 'warn',
-      'custom-rules/no-useless-template': 'warn',
-      'custom-rules/no-non-null-assertion': 'warn',
     },
   },
 
