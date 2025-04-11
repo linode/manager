@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { type MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 import { TableBody } from 'src/components/TableBody';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
@@ -13,6 +12,7 @@ import {
 } from './LinodeEntityDetail.styles';
 
 import type { SxProps, Theme } from '@mui/material/styles';
+import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
 interface AccessTableRow {
   heading?: string;
