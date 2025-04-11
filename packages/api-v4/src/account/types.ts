@@ -111,6 +111,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
+  maintenance_policy_id: MaintenancePolicyId;
 }
 
 export interface ActivePromotion {
@@ -278,6 +279,8 @@ export type NotificationType =
   | 'outage'
   | 'maintenance'
   | 'maintenance_scheduled'
+  | 'maintenance_pending'
+  | 'maintenance_in_progress'
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
@@ -392,8 +395,10 @@ export const EventActionKeys = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter',
   'linode_migrate',
+  'linode_migration',
   'linode_mutate_create',
   'linode_mutate',
+  'linode_power_on_off',
   'linode_reboot',
   'linode_rebuild',
   'linode_resize_create',
@@ -504,6 +509,8 @@ export type EventStatus =
   | 'failed'
   | 'notification';
 
+export type EventSource = 'platform' | 'user';
+
 export interface Event {
   id: number;
   action: EventAction;
@@ -522,6 +529,18 @@ export interface Event {
   username: string | null;
   secondary_entity: Entity | null;
   message: string | null;
+
+  /**
+   * Tentative fields from Host & VM Maintenance Policy project.
+   *
+   * TODO: verify final state of these fields.
+   */
+  maintenance_policy_set?: MaintenancePolicyType | null;
+  description?: string | null;
+  source?: EventSource | null;
+  not_before?: string | null;
+  start_time?: string | null;
+  complete_time?: string | null;
 }
 /**
  * Represents an event which has an entity. For use with type guards.
@@ -566,6 +585,22 @@ export interface AccountMaintenance {
     url: string;
   };
 }
+
+export const maintenancePolicies = [
+  { id: 1, type: 'migrate' },
+  { id: 2, type: 'power on/off' },
+] as const;
+
+export type MaintenancePolicyId = typeof maintenancePolicies[number]['id'];
+
+export type MaintenancePolicyType = typeof maintenancePolicies[number]['type'];
+
+export type MaintenancePolicy = typeof maintenancePolicies[number] & {
+  name: string;
+  description: string;
+  notification_period_sec: number;
+  is_default: boolean;
+};
 
 export interface PayPalData {
   paypal_id: string;

@@ -15,6 +15,7 @@ export type Capabilities =
   | 'Kubernetes'
   | 'Kubernetes Enterprise'
   | 'Linodes'
+  | 'Maintenance Policy'
   | 'Managed Databases'
   | 'Metadata'
   | 'NodeBalancers'
