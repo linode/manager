@@ -1,14 +1,17 @@
-import { deleteLinodeConfigInterface } from '@linode/api-v4';
+import {
+  deleteLinodeConfigInterface,
+  deleteLinodeInterface,
+} from '@linode/api-v4';
 import { linodeQueries, vpcQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import type { APIError } from '@linode/api-v4';
+import type {
+  APIError,
+  DeleteLinodeConfigInterfacePayload,
+} from '@linode/api-v4';
 
-interface IdsForUnassignLinode {
-  configId: null | number;
-  interfaceId: number;
-  linodeId: number;
+interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
   vpcId: number;
 }
 
@@ -52,7 +55,7 @@ export const useUnassignLinode = () => {
     if (configId) {
       await deleteLinodeConfigInterface(linodeId, configId, interfaceId);
     } else {
-      // delete Linode Interface
+      await deleteLinodeInterface(linodeId, interfaceId);
     }
     invalidateQueries({ configId, linodeId, vpcId });
   };
