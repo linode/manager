@@ -530,7 +530,7 @@ export const UpdateLinodeInterfaceSettingsSchema = object({
 });
 
 const BaseInterfaceIPv4AddressSchema = object({
-  address: string().required(),
+  address: string().required('IPv4 address is required.'),
   primary: boolean(),
 });
 
@@ -539,7 +539,7 @@ const VPCInterfaceIPv4RangeSchema = object({
 });
 
 const PublicInterfaceRangeSchema = object({
-  range: string().required().nullable(),
+  range: string().required('IPv6 range is required.').nullable(),
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
