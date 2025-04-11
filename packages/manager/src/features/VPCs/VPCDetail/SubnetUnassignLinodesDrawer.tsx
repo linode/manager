@@ -25,6 +25,8 @@ import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
+import { mapInterfaceDataToDownloadableData } from '../utils';
+
 import type {
   APIError,
   DeleteLinodeConfigInterfacePayload,
@@ -44,7 +46,7 @@ interface Props {
   vpcId: number;
 }
 
-interface ConfigInterfaceAndLinodeData extends Linode {
+export interface InterfaceAndLinodeData extends Linode {
   configId: null | number;
   interfaceData: Interface | LinodeInterface;
   interfaceId: number;
@@ -75,7 +77,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
     const [selectedLinodesAndConfigData, setSelectedLinodesAndConfigData] =
-      React.useState<ConfigInterfaceAndLinodeData[]>([]);
+      React.useState<InterfaceAndLinodeData[]>([]);
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
@@ -116,7 +118,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const getConfigWithVPCInterface = React.useCallback(
       async (selectedLinodes: Linode[]) => {
         try {
-          const updatedConfigInterfaces: (ConfigInterfaceAndLinodeData | null)[] =
+          const updatedConfigInterfaces: (InterfaceAndLinodeData | null)[] =
             await Promise.all(
               // TODO: clean this logic up at some point now that we have config ids
               selectedLinodes.map(async (linode) => {
@@ -180,7 +182,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
           // Filter out any null values and ensure item conforms to type using `is` type guard.
           const _selectedLinodesAndConfigData = updatedConfigInterfaces.filter(
-            (item): item is ConfigInterfaceAndLinodeData => item !== null
+            (item): item is InterfaceAndLinodeData => item !== null
           );
 
           // Remove interface property for the DeleteLinodeConfigInterfacePayload data
@@ -225,9 +227,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       csvRef.current.link.click();
     };
 
-    const handleRemoveLinode = (
-      optionToRemove: ConfigInterfaceAndLinodeData
-    ) => {
+    const handleRemoveLinode = (optionToRemove: InterfaceAndLinodeData) => {
       setSelectedLinodes((prevSelectedLinodes) =>
         prevSelectedLinodes.filter((option) => option.id !== optionToRemove.id)
       );
@@ -350,7 +350,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 value={selectedLinodes}
               />
             )}
-            <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+            <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
               <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
                 isRemovable={!singleLinodeToBeUnassigned}
@@ -364,7 +364,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <DownloadCSV
                 buttonType="styledLink"
                 csvRef={csvRef}
-                data={selectedLinodesAndConfigData}
+                data={mapInterfaceDataToDownloadableData(
+                  selectedLinodesAndConfigData
+                )}
                 filename={`linodes-unassigned-${formattedDate}.csv`}
                 headers={SUBNET_LINODE_CSV_HEADERS}
                 onClick={downloadCSV}

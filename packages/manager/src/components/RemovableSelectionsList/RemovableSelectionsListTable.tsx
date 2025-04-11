@@ -7,6 +7,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import {
+  getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
+} from 'src/features/VPCs/utils';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { TableRowEmpty } from '../TableRowEmpty/TableRowEmpty';
@@ -87,10 +91,16 @@ export const RemovableSelectionsListTable = (
                 : selection.label}
             </StyledLabel>
           </TableCell>
-          <TableCell>{selection.interfaceData?.ipv4?.vpc ?? null}</TableCell>
+          <TableCell>
+            {selection.interfaceData?.ipv4?.vpc ??
+              getLinodeInterfacePrimaryIPv4(selection.interfaceData) ??
+              null}
+          </TableCell>
           <TableCell>
             {determineNoneSingleOrMultipleWithChip(
-              selection.interfaceData?.ip_ranges ?? []
+              selection.interfaceData?.ip_ranges ??
+                getLinodeInterfaceRanges(selection.interfaceData) ??
+                []
             )}
           </TableCell>
           <TableCell>

@@ -1,5 +1,7 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
+import type { LinodeAndConfigData } from './VPCDetail/SubnetAssignLinodesDrawer';
+import type { InterfaceAndLinodeData } from './VPCDetail/SubnetUnassignLinodesDrawer';
 import type { Config, LinodeInterface, Subnet, VPC } from '@linode/api-v4';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
@@ -72,3 +74,30 @@ export const hasUnrecommendedConfiguration = (
 export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
   /^workload VPC for LKE Enterprise Cluster lke\d+/i.test(vpc.description) &&
   /^lke\d+/i.test(vpc.label);
+
+export const getLinodeInterfacePrimaryIPv4 = (iface: LinodeInterface) =>
+  iface.vpc?.ipv4.addresses.find((address) => address.primary)?.address;
+
+export const getLinodeInterfaceRanges = (iface: LinodeInterface) =>
+  iface.vpc?.ipv4.ranges.map((range) => range.range);
+
+export const mapInterfaceDataToDownloadableData = (
+  interfacesData: InterfaceAndLinodeData[] | LinodeAndConfigData[]
+) => {
+  return interfacesData.map((data) => {
+    const { interfaceData } = data;
+    const vpcIPv4 =
+      interfaceData && 'vpc' in interfaceData
+        ? getLinodeInterfacePrimaryIPv4(interfaceData)
+        : interfaceData?.ipv4?.vpc;
+    const vpcRanges =
+      interfaceData && 'vpc' in interfaceData
+        ? getLinodeInterfaceRanges(interfaceData)
+        : interfaceData?.ip_ranges;
+    return {
+      ...data,
+      vpcIPv4,
+      vpcRanges,
+    };
+  });
+};
