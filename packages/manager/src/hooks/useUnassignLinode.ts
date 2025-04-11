@@ -6,10 +6,10 @@ import * as React from 'react';
 import type { APIError } from '@linode/api-v4';
 
 interface IdsForUnassignLinode {
-  vpcId: number;  
-  linodeId: number;
-  configId: number | null;
+  configId: null | number;
   interfaceId: number;
+  linodeId: number;
+  vpcId: number;
 }
 
 type InvalidateSubnetLinodeConfigQueryIds = Omit<
@@ -28,7 +28,9 @@ export const useUnassignLinode = () => {
     vpcId,
     configId,
   }: InvalidateSubnetLinodeConfigQueryIds) => {
-    const interfacesQueryKey = configId ? linodeQueries.linode(linodeId)._ctx.configs.queryKey : linodeQueries.linode(linodeId)._ctx.interfaces.queryKey
+    const interfacesQueryKey = configId
+      ? linodeQueries.linode(linodeId)._ctx.configs.queryKey
+      : linodeQueries.linode(linodeId)._ctx.interfaces.queryKey;
     const queryKeys = [
       vpcQueries.all._def,
       vpcQueries.paginated._def,
