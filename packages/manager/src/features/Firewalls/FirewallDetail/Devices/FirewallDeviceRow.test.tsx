@@ -68,11 +68,7 @@ describe('FirewallDeviceRow', () => {
       },
     });
 
-    const {
-      getAllByRole,
-      getByText,
-      queryByText,
-    } = renderWithTheme(
+    const { getAllByRole, getByText, queryByText } = renderWithTheme(
       <FirewallDeviceRow
         {...props}
         device={nodeBalancerEntity}

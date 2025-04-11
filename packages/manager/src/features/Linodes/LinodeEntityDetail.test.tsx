@@ -1,4 +1,8 @@
-import { linodeFactory } from '@linode/utilities';
+import {
+  linodeConfigInterfaceFactoryWithVPC,
+  linodeFactory,
+  linodeInterfaceFactoryVPC,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -11,12 +15,12 @@ import {
   vpcFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
-import { getSubnetsString } from './LinodeEntityDetailBody';
+import { getSubnetsString, getVPCIPv4 } from './LinodeEntityDetailBody';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { AccountCapability } from '@linode/api-v4';
@@ -48,13 +52,12 @@ describe('Linode Entity Detail', () => {
     return {
       ...actual,
       __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
+      useIsDiskEncryptionFeatureEnabled:
+        mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(() => {
           return {
             isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
           };
-        }
-      ),
+        }),
     };
   });
 
@@ -331,6 +334,22 @@ describe('getSubnetsString function', () => {
     expect(getSubnetsString(subnets)).toEqual(
       'first-subnet, second-subnet, third-subnet, plus 5 more.'
     );
+  });
+});
+
+describe('getVPCIPv4 function', () => {
+  it('gets the VPC IPv4 for a config interface VPC that has an IPv4', () => {
+    expect(getVPCIPv4(linodeConfigInterfaceFactoryWithVPC.build())).toBe(
+      '10.0.0.0'
+    );
+  });
+
+  it('gets the VPC IPv4 for a Linode Interface VPC', () => {
+    expect(getVPCIPv4(linodeInterfaceFactoryVPC.build())).toBe('10.0.0.0');
+  });
+
+  it('returns undefined if the given interface is undefined', () => {
+    expect(getVPCIPv4(undefined)).toBe(undefined);
   });
 });
 
