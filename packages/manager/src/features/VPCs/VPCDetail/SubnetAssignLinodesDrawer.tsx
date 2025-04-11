@@ -41,6 +41,7 @@ import {
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
+import { mapInterfaceDataToDownloadableData } from '../utils';
 import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 
@@ -65,7 +66,7 @@ interface SubnetAssignLinodesDrawerProps {
   vpcRegion: string;
 }
 
-interface LinodeAndConfigData extends Linode {
+export interface LinodeAndConfigData extends Linode {
   configId: number;
   interfaceData: Interface | undefined;
   linodeConfigLabel: string;
@@ -94,10 +95,8 @@ export const SubnetAssignLinodesDrawer = (
   // While the drawer is open, we maintain a local list of assigned Linodes.
   // This is distinct from the subnet's global list of assigned Linodes, which encompasses all assignments.
   // The local list resets to empty when the drawer is closed and reopened.
-  const [
-    assignedLinodesAndConfigData,
-    setAssignedLinodesAndConfigData,
-  ] = React.useState<LinodeAndConfigData[]>([]);
+  const [assignedLinodesAndConfigData, setAssignedLinodesAndConfigData] =
+    React.useState<LinodeAndConfigData[]>([]);
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
@@ -271,25 +270,19 @@ export const SubnetAssignLinodesDrawer = (
     return errorMap.none;
   };
 
-  const {
-    dirty,
-    handleSubmit,
-    resetForm,
-    setFieldValue,
-    setValues,
-    values,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      chosenIP: '',
-      ipRanges: [] as ExtendedIP[],
-      selectedConfig: null as Config | null,
-      selectedLinode: null as Linode | null,
-    },
-    onSubmit: handleAssignLinode,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+  const { dirty, handleSubmit, resetForm, setFieldValue, setValues, values } =
+    useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        chosenIP: '',
+        ipRanges: [] as ExtendedIP[],
+        selectedConfig: null as Config | null,
+        selectedLinode: null as Linode | null,
+      },
+      onSubmit: handleAssignLinode,
+      validateOnBlur: false,
+      validateOnChange: false,
+    });
 
   const handleIPRangeChange = React.useCallback(
     (_ipRanges: ExtendedIP[]) => {
@@ -410,13 +403,13 @@ export const SubnetAssignLinodesDrawer = (
 
   return (
     <Drawer
+      isFetching={isFetching}
+      NotFoundComponent={NotFound}
+      onClose={handleOnClose}
+      open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
-      onClose={handleOnClose}
-      open={open}
     >
       {userCannotAssignLinodes && (
         <Notice
@@ -436,13 +429,13 @@ export const SubnetAssignLinodesDrawer = (
       <form onSubmit={handleSubmit}>
         <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
         <LinodeSelect
+          checkIsOptionEqualToValue
+          disabled={userCannotAssignLinodes}
+          label="Linode"
           onSelectionChange={(selected) => {
             setFieldValue('selectedLinode', selected);
             setAssignLinodesErrors({});
           }}
-          checkIsOptionEqualToValue
-          disabled={userCannotAssignLinodes}
-          label="Linode"
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
@@ -464,26 +457,26 @@ export const SubnetAssignLinodesDrawer = (
                     onChange={handleAutoAssignIPv4Change}
                   />
                 }
+                data-testid="vpc-ipv4-checkbox"
+                disabled={userCannotAssignLinodes}
                 label={
                   <Typography>
                     Auto-assign a VPC IPv4 address for this Linode
                   </Typography>
                 }
-                data-testid="vpc-ipv4-checkbox"
-                disabled={userCannotAssignLinodes}
                 sx={{ marginRight: 0 }}
               />
               <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignIPv4 && (
               <TextField
+                disabled={userCannotAssignLinodes}
+                errorText={assignLinodesErrors['ipv4.vpc']}
+                label="VPC IPv4"
                 onChange={(e) => {
                   setFieldValue('chosenIP', e.target.value);
                   setAssignLinodesErrors({});
                 }}
-                disabled={userCannotAssignLinodes}
-                errorText={assignLinodesErrors['ipv4.vpc']}
-                label="VPC IPv4"
                 sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
                 value={values.chosenIP}
               />
@@ -498,12 +491,12 @@ export const SubnetAssignLinodesDrawer = (
                   .
                 </FormHelperText>
                 <Autocomplete
+                  disabled={userCannotAssignLinodes}
+                  label={'Configuration profile'}
                   onChange={(_, value: Config) => {
                     setFieldValue('selectedConfig', value);
                     setAssignLinodesErrors({});
                   }}
-                  disabled={userCannotAssignLinodes}
-                  label={'Configuration profile'}
                   options={linodeConfigs}
                   placeholder="Select a configuration profile"
                   value={values.selectedConfig || null}
@@ -517,6 +510,9 @@ export const SubnetAssignLinodesDrawer = (
             {((linodeConfigs.length > 1 && values.selectedConfig) ||
               linodeConfigs.length === 1) && (
               <AssignIPRanges
+                handleIPRangeChange={handleIPRangeChange}
+                ipRanges={values.ipRanges}
+                ipRangesError={assignLinodesErrors['ip_ranges']}
                 sx={{
                   marginBottom: theme.spacingFunction(8),
                   marginTop:
@@ -524,22 +520,19 @@ export const SubnetAssignLinodesDrawer = (
                       ? theme.spacingFunction(16)
                       : theme.spacingFunction(8),
                 }}
-                handleIPRangeChange={handleIPRangeChange}
-                ipRanges={values.ipRanges}
-                ipRangesError={assignLinodesErrors['ip_ranges']}
               />
             )}
           </>
         )}
         <StyledButtonBox>
           <Button
+            buttonType="primary"
             disabled={
               userCannotAssignLinodes ||
               !dirty ||
               !values.selectedLinode ||
               (linodeConfigs.length > 1 && !values.selectedConfig)
             }
-            buttonType="primary"
             type="submit"
           >
             Assign Linode
@@ -557,18 +550,26 @@ export const SubnetAssignLinodesDrawer = (
           ))
         : null}
       <RemovableSelectionsListTable
+        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        noDataText={'No Linodes have been assigned.'}
         onRemove={(data) => {
           handleUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
         }}
-        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
-        noDataText={'No Linodes have been assigned.'}
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}
         tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
       />
       {assignedLinodesAndConfigData.length > 0 && (
         <DownloadCSV
+          buttonType="styledLink"
+          csvRef={csvRef}
+          data={mapInterfaceDataToDownloadableData(
+            assignedLinodesAndConfigData
+          )}
+          filename={`linodes-assigned-${formattedDate}.csv`}
+          headers={SUBNET_LINODE_CSV_HEADERS}
+          onClick={downloadCSV}
           sx={{
             alignItems: 'flex-start',
             display: 'flex',
@@ -576,12 +577,6 @@ export const SubnetAssignLinodesDrawer = (
             marginTop: 2,
             textAlign: 'left',
           }}
-          buttonType="styledLink"
-          csvRef={csvRef}
-          data={assignedLinodesAndConfigData}
-          filename={`linodes-assigned-${formattedDate}.csv`}
-          headers={SUBNET_LINODE_CSV_HEADERS}
-          onClick={downloadCSV}
           text={'Download List of Assigned Linodes (.csv)'}
         />
       )}

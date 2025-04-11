@@ -25,11 +25,14 @@ import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
+import { mapInterfaceDataToDownloadableData } from '../utils';
+
 import type {
   APIError,
   DeleteLinodeConfigInterfacePayload,
   Interface,
   Linode,
+  LinodeInterface,
   Subnet,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
@@ -43,9 +46,9 @@ interface Props {
   vpcId: number;
 }
 
-interface ConfigInterfaceAndLinodeData extends Linode {
-  configId: number;
-  interfaceData: Interface;
+export interface InterfaceAndLinodeData extends Linode {
+  configId: null | number;
+  interfaceData: Interface | LinodeInterface;
   interfaceId: number;
 }
 
@@ -64,11 +67,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
-    const {
-      setUnassignLinodesErrors,
-      unassignLinode,
-      unassignLinodesErrors,
-    } = useUnassignLinode();
+    const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
+      useUnassignLinode();
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
@@ -76,21 +76,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
       singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
-    const [
-      selectedLinodesAndConfigData,
-      setSelectedLinodesAndConfigData,
-    ] = React.useState<ConfigInterfaceAndLinodeData[]>([]);
+    const [selectedLinodesAndConfigData, setSelectedLinodesAndConfigData] =
+      React.useState<InterfaceAndLinodeData[]>([]);
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
-    const [
-      linodeOptionsToUnassign,
-      setLinodeOptionsToUnassign,
-    ] = React.useState<Linode[]>([]);
-    const [
-      configInterfacesToDelete,
-      setConfigInterfacesToDelete,
-    ] = React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
+    const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
+      React.useState<Linode[]>([]);
+    const [configInterfacesToDelete, setConfigInterfacesToDelete] =
+      React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
@@ -124,46 +118,71 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const getConfigWithVPCInterface = React.useCallback(
       async (selectedLinodes: Linode[]) => {
         try {
-          const updatedConfigInterfaces = await Promise.all(
-            selectedLinodes.map(async (linode) => {
-              const response = await queryClient.fetchQuery(
-                linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
-              );
+          const updatedConfigInterfaces: (InterfaceAndLinodeData | null)[] =
+            await Promise.all(
+              // TODO: clean this logic up at some point now that we have config ids
+              selectedLinodes.map(async (linode) => {
+                let response;
+                if (linode.interface_generation === 'linode') {
+                  response = await queryClient.fetchQuery(
+                    linodeQueries.linode(linode.id)._ctx.interfaces._ctx
+                      .interfaces
+                  );
+                } else {
+                  response = await queryClient.fetchQuery(
+                    linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
+                  );
+                }
 
-              if (response) {
-                const configWithVpcInterface = response.find((config) =>
-                  config.interfaces?.some(
+                if (response) {
+                  if ('interfaces' in response) {
+                    const vpcLinodeInterface = response.interfaces.find(
+                      (iface) => iface.vpc && iface.vpc.subnet_id === subnetId
+                    );
+                    if (!vpcLinodeInterface) {
+                      return null;
+                    }
+                    return {
+                      ...linode,
+                      configId: null,
+
+                      interfaceData: vpcLinodeInterface,
+                      interfaceId: vpcLinodeInterface.id,
+                    };
+                  }
+                  const configWithVpcInterface = response.find((config) =>
+                    config.interfaces?.some(
+                      (_interface) =>
+                        _interface.subnet_id === subnetId &&
+                        _interface.purpose === 'vpc'
+                    )
+                  );
+
+                  const vpcInterface = configWithVpcInterface?.interfaces?.find(
                     (_interface) =>
                       _interface.subnet_id === subnetId &&
                       _interface.purpose === 'vpc'
-                  )
-                );
+                  );
 
-                const vpcInterface = configWithVpcInterface?.interfaces?.find(
-                  (_interface) =>
-                    _interface.subnet_id === subnetId &&
-                    _interface.purpose === 'vpc'
-                );
+                  if (!vpcInterface || !configWithVpcInterface) {
+                    return null;
+                  }
 
-                if (!vpcInterface || !configWithVpcInterface) {
-                  return null;
+                  return {
+                    ...linode,
+                    configId: configWithVpcInterface.id,
+
+                    interfaceData: vpcInterface,
+                    interfaceId: vpcInterface.id,
+                  };
                 }
-
-                return {
-                  ...linode,
-                  configId: configWithVpcInterface.id,
-
-                  interfaceData: vpcInterface,
-                  interfaceId: vpcInterface.id,
-                };
-              }
-              return null;
-            })
-          );
+                return null;
+              })
+            );
 
           // Filter out any null values and ensure item conforms to type using `is` type guard.
           const _selectedLinodesAndConfigData = updatedConfigInterfaces.filter(
-            (item): item is ConfigInterfaceAndLinodeData => item !== null
+            (item): item is InterfaceAndLinodeData => item !== null
           );
 
           // Remove interface property for the DeleteLinodeConfigInterfacePayload data
@@ -208,9 +227,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       csvRef.current.link.click();
     };
 
-    const handleRemoveLinode = (
-      optionToRemove: ConfigInterfaceAndLinodeData
-    ) => {
+    const handleRemoveLinode = (optionToRemove: InterfaceAndLinodeData) => {
       setSelectedLinodes((prevSelectedLinodes) =>
         prevSelectedLinodes.filter((option) => option.id !== optionToRemove.id)
       );
@@ -286,13 +303,13 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     return (
       <Drawer
+        isFetching={isFetching}
+        NotFoundComponent={NotFound}
+        onClose={handleOnClose}
+        open={open}
         title={`Unassign Linodes from subnet: ${subnet?.label} (${
           subnet?.ipv4 ?? subnet?.ipv6
         })`}
-        NotFoundComponent={NotFound}
-        isFetching={isFetching}
-        onClose={handleOnClose}
-        open={open}
       >
         {userCannotUnassignLinodes && (
           <Notice
@@ -319,24 +336,24 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           <Stack>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
-                onChange={(_, value) => {
-                  setSelectedLinodes(value);
-                  getConfigWithVPCInterface(value);
-                }}
                 disabled={userCannotUnassignLinodes}
                 errorText={linodesError ? linodesError[0].reason : undefined}
                 label="Linodes"
                 multiple
+                onChange={(_, value) => {
+                  setSelectedLinodes(value);
+                  getConfigWithVPCInterface(value);
+                }}
                 options={linodeOptionsToUnassign}
                 placeholder="Select Linodes or type to search"
                 renderTags={() => null}
                 value={selectedLinodes}
               />
             )}
-            <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+            <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
               <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
-                isRemovable={!Boolean(singleLinodeToBeUnassigned)}
+                isRemovable={!singleLinodeToBeUnassigned}
                 noDataText="Select Linodes to be Unassigned from Subnet."
                 onRemove={handleRemoveLinode}
                 selectionData={selectedLinodesAndConfigData}
@@ -345,6 +362,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             </Box>
             {selectedLinodesAndConfigData.length > 0 && (
               <DownloadCSV
+                buttonType="styledLink"
+                csvRef={csvRef}
+                data={mapInterfaceDataToDownloadableData(
+                  selectedLinodesAndConfigData
+                )}
+                filename={`linodes-unassigned-${formattedDate}.csv`}
+                headers={SUBNET_LINODE_CSV_HEADERS}
+                onClick={downloadCSV}
                 sx={{
                   alignItems: 'flex-start',
                   display: 'flex',
@@ -352,12 +377,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   marginTop: 2,
                   textAlign: 'left',
                 }}
-                buttonType="styledLink"
-                csvRef={csvRef}
-                data={selectedLinodesAndConfigData}
-                filename={`linodes-unassigned-${formattedDate}.csv`}
-                headers={SUBNET_LINODE_CSV_HEADERS}
-                onClick={downloadCSV}
                 text={'Download List of Linodes to be Unassigned (.csv)'}
               />
             )}

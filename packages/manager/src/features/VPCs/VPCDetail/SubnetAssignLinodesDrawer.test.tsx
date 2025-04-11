@@ -47,7 +47,7 @@ describe('Subnet Assign Linodes Drawer', () => {
     );
     expect(header).toBeVisible();
     const notice = getByText(
-      'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.'
+      'Assigning a Linode using Configuration Profile Interfaces to a subnet requires you to reboot the Linode to update its configuration.'
     );
     expect(notice).toBeVisible();
     const helperText = getByText(
