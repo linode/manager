@@ -103,6 +103,7 @@ const submitRebuild = () => {
 };
 
 // Error message that is displayed when desired password is not strong enough.
+// eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const passwordComplexityError = 'Password does not meet strength requirement.';
 
 authenticate();
@@ -176,7 +177,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using a Community StackScript.
    */
   it('rebuilds a linode from Community StackScript', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
@@ -404,7 +405,7 @@ describe('rebuild linode', () => {
     cy.wait('@rebuildLinode').then((xhr) => {
       // Confirm that metadata is NOT in the payload.
       // If we omit metadata from the payload, the API will reuse previously provided userdata.
-      expect(xhr.request.body.metadata).to.be.undefined;
+      expect(xhr.request.body.metadata).to.equal(undefined);
 
       // Verify other expected values are in the request
       expect(xhr.request.body.image).to.equal(image.id);

@@ -23,7 +23,7 @@ import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
-import { createAlertDefinitionFormSchema as editAlertDefinitionFormSchema } from '../CreateAlert/schemas';
+import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
   convertAlertDefinitionValues,
@@ -54,7 +54,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -62,6 +61,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
+  const flags = useFlags();
   const formMethods = useForm<EditAlertDefintionForm>({
     defaultValues: {
       ...filteredAlertDefinitionValues,
@@ -69,13 +69,11 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     },
     mode: 'onBlur',
     resolver: yupResolver(
-      getSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: alertDetails.service_type,
-        },
-        editAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: alertDefinitionFormSchema,
+        serviceTypeObj: alertDetails.service_type,
+      })
     ),
   });
 

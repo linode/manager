@@ -49,25 +49,25 @@ export const filterFormValues = (
 export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: AlertServiceType,
-  defaultSeverityType: AlertSeverityType,
+  severity: AlertSeverityType,
   alertId: number
 ): EditAlertPayloadWithService => {
   const values = omitProps(formValues, [
     'serviceType',
+    'severity',
     'rule_criteria',
     'trigger_conditions',
   ]);
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
-  const severity = formValues.severity ?? defaultSeverityType;
   return {
     ...values,
     alertId,
     entity_ids: entityIds,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     serviceType,
-    severity,
+    severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
   };
 };

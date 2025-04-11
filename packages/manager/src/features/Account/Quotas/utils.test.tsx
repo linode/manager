@@ -1,8 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories/profile';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 
 import {
@@ -82,10 +82,10 @@ describe('useGetLocationsForQuotaService', () => {
   });
 
   it('should return the error for a given quota usage query', () => {
-    const quotaUsageQueries = ([
+    const quotaUsageQueries = [
       { error: [{ reason: 'Error 1' }] },
       { error: [{ reason: 'Error 2' }] },
-    ] as unknown) as UseQueryResult<QuotaUsage, Error>[];
+    ] as unknown as UseQueryResult<QuotaUsage, Error>[];
     const index = 0;
 
     const error = getQuotaError(quotaUsageQueries, index);

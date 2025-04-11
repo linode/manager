@@ -352,12 +352,12 @@ export const mockGetAlertChannels = (
  */
 export const mockCreateAlertDefinition = (
   serviceType: string,
-  mockAlert: Alert
+  alert: Alert
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
-    makeResponse(mockAlert)
+    makeResponse(alert)
   );
 };
 /**

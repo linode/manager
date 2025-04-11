@@ -67,10 +67,14 @@ const mockAlerts = [
     updated: new Date(now.getTime() - 4 * 86400).toISOString(),
   }),
 ];
-interface AlertToggleOptions {
+
+interface AlertActionOptions {
   action: 'Disable' | 'Enable';
   alertName: string;
   alias: string;
+}
+
+interface AlertToggleOptions extends AlertActionOptions {
   confirmationText: string;
   successMessage: string;
 }
@@ -335,33 +339,24 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       ui.actionMenuItem.findByTitle(action).should('be.visible').click();
 
       // verify dialog title
-      cy.get('[data-qa-drawer-title]')
+      ui.dialog
+        .findByTitle(`${action} ${alertName} Alert?`)
         .should('be.visible')
-        .should('have.text', `${action} ${alertName} Alert?`);
+        .within(() => {
+          cy.findByText(confirmationText).should('be.visible');
+          ui.button
+            .findByTitle(action)
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
-      cy.get('[data-qa-drawer="true"]')
-        .find('h6')
-        .should('be.visible')
-        .should('have.text', confirmationText);
-
-      ui.buttonGroup
-        .find()
-        .find('button')
-        .filter(`[label="${action}"]`)
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      cy.wait(alias).then(({}) => {
+      cy.wait(alias).then(() => {
         ui.toast.assertMessage(successMessage);
       });
     };
     // Disable "Alert-1"
-    const actions: Array<{
-      action: 'Disable' | 'Enable';
-      alertName: string;
-      alias: string;
-    }> = [
+    const actions: Array<AlertActionOptions> = [
       {
         action: 'Disable',
         alertName: 'Alert-1',

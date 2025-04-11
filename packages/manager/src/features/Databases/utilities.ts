@@ -335,7 +335,7 @@ export const findConfigItem = (
     const value = configs[key];
 
     if (key === targetKey) {
-      return value as ConfigurationOption;
+      return { ...value, category: 'other' } as ConfigurationOption;
     }
 
     if (typeof value === 'object' && value !== null) {
@@ -343,7 +343,7 @@ export const findConfigItem = (
         value as Record<string, ConfigurationItem>,
         targetKey
       );
-      if (found) return found;
+      if (found) return { ...found, category: key };
     }
   }
 
@@ -374,7 +374,7 @@ export const convertExistingConfigsToArray = (
         if (foundConfig) {
           options.push({
             ...foundConfig,
-            category: '',
+            category: foundConfig.category || '',
             label: subKey,
             value: subValue,
           });
@@ -385,7 +385,7 @@ export const convertExistingConfigsToArray = (
       if (foundConfig) {
         options.push({
           ...foundConfig,
-          category: '',
+          category: foundConfig.category || '',
           label: key,
           value: value,
         });
@@ -456,6 +456,6 @@ export const getDefaultConfigValue = (config: ConfigurationOption) => {
     : isConfigStringWithEnum(config)
     ? config.enum?.[0] ?? ''
     : config?.type === 'number' || config?.type === 'integer'
-    ? 0
+    ? config.minimum ?? 0
     : '';
 };

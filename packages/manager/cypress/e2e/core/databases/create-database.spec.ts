@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 import {
   databaseConfigurations,
   mockDatabaseEngineTypes,
@@ -25,15 +26,14 @@ import {
   databaseFactory,
   eventFactory,
   grantsFactory,
-  profileFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
-import type { databaseClusterConfiguration } from 'support/constants/databases';
+import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
-    (configuration: databaseClusterConfiguration) => {
+    (configuration: DatabaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         // Database mock immediately after instance has been created.

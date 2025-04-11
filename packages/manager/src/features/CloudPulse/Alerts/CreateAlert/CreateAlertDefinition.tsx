@@ -28,7 +28,7 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { createAlertDefinitionFormSchema } from './schemas';
+import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type {
@@ -37,7 +37,6 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type { APIError } from '@linode/api-v4';
-import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -84,16 +83,12 @@ export const CreateAlertDefinition = () => {
   const flags = useFlags();
 
   // Default resolver
-  const [validationSchema, setValidationSchema] = React.useState<
-    ObjectSchema<CreateAlertDefinitionForm>
-  >(
-    getSchemaWithEntityIdValidation(
-      {
-        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-        serviceTypeObj: null,
-      },
-      createAlertDefinitionFormSchema
-    )
+  const [validationSchema, setValidationSchema] = React.useState(
+    getSchemaWithEntityIdValidation({
+      aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+      baseSchema: alertDefinitionFormSchema,
+      serviceTypeObj: null,
+    })
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -160,13 +155,11 @@ export const CreateAlertDefinition = () => {
 
   React.useEffect(() => {
     setValidationSchema(
-      getSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: serviceTypeWatcher,
-        },
-        createAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: alertDefinitionFormSchema,
+        serviceTypeObj: serviceTypeWatcher,
+      })
     );
   }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 
