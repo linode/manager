@@ -39,3 +39,8 @@ export const statusToActionMap: Record<
   failed: 'Disable',
   'in progress': 'Disable',
 };
+
+export const alertLimitMessage =
+  'You have reached the maximum number of definitions created per account.';
+export const metricLimitMessage =
+  'You have reached the maximum number of metrics that can be evaluated by alerts created on this account.';

@@ -16,6 +16,7 @@ import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+import { alertLimitMessage, metricLimitMessage } from './constants';
 
 const searchAndSelectSx = {
   lg: '250px',
@@ -27,10 +28,7 @@ const searchAndSelectSx = {
 const maxAllowedAlerts = 100;
 const maxAllowedMetrics = 100;
 
-const alertLimitMessage =
-  'You have reached the maximum number of definitions created per account.';
-const metricLimitMessage =
-  'You have reached the maximum number of metrics that can be evaluated by alerts created on this account.';
+
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();

@@ -1,4 +1,4 @@
-import { act, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -9,6 +9,7 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertListing } from './AlertListing';
+import { alertLimitMessage, metricLimitMessage } from './constants';
 
 const queryMocks = vi.hoisted(() => ({
   useAllAlertDefinitionsQuery: vi.fn().mockReturnValue({}),
@@ -193,19 +194,16 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByText } = renderWithTheme(<AlertListing />);
+    renderWithTheme(<AlertListing />);
 
-    const bannerText =
-      'You have reached the maximum number of definitions created per account.';
-
-    expect(getByText(bannerText)).toBeVisible();
-    const createButton = getByRole('button', { name: 'Create Alert' });
+    expect(screen.getByText(alertLimitMessage)).toBeVisible();
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
 
     expect(createButton).toBeDisabled();
     userEvent.hover(createButton);
     await waitFor(() => {
       expect(
-        getByText(
+        screen.getByText(
           'You have reached your limit of definitions for this account.'
         )
       ).toBeVisible();
@@ -227,19 +225,16 @@ describe('Alert Listing', () => {
       status: 'success',
     });
 
-    const { getByRole, getByText } = renderWithTheme(<AlertListing />);
+    renderWithTheme(<AlertListing />);
 
-    const bannerText =
-      'You have reached the maximum number of metrics that can be evaluated by alerts created on this account.';
-
-    expect(getByText(bannerText)).toBeVisible();
-    const createButton = getByRole('button', { name: 'Create Alert' });
+    expect(screen.getByText(metricLimitMessage)).toBeVisible();
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
 
     expect(createButton).toBeDisabled();
     userEvent.hover(createButton);
     await waitFor(() => {
       expect(
-        getByText(
+        screen.getByText(
           'You have reached your limit of definitions for this account.'
         )
       ).toBeVisible();
