@@ -18,7 +18,7 @@ import type {
 interface Props {
   access: IamAccessType;
   errorText?: string;
-  mode: DrawerModes;
+  mode?: DrawerModes;
   onChange: (value: EntitiesOption[]) => void;
   type: EntityType | EntityTypePermissions;
   value: EntitiesOption[];
@@ -64,15 +64,15 @@ export const Entities = ({
 
   return (
     <Autocomplete
-      onChange={(_, newValue) => {
-        onChange(newValue || []);
-      }}
       errorText={errorText}
       getOptionLabel={(option) => option.label}
       isOptionEqualToValue={(option, value) => option.value === value.value}
       label="Entities"
       multiple
       noMarginTop
+      onChange={(_, newValue) => {
+        onChange(newValue || []);
+      }}
       options={memoizedEntities}
       placeholder={value.length ? ' ' : getPlaceholder(type)}
       readOnly={mode === 'change-role'}

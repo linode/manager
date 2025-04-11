@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -55,19 +55,18 @@ const mockEntities = [
 
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
-    const { getByText } = renderWithTheme(
+    renderWithTheme(
       <AssignedPermissionsPanel
         mode="assign-role"
         role={mockAccountAcceessRole}
       />
     );
-    expect(
-      getByText(
-        'Access to perform any supported action on all linode instances in the account'
-      )
-    ).toBeInTheDocument();
-    expect(getByText('cancel_account')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    screen.getByText('All entities');
+    screen.getByText(
+      'Access to perform any supported action on all linode instances in the account'
+    );
+    screen.getByText('cancel_account');
+    screen.getByText('Description');
   });
 
   it('does not render Autocomplete when the access is an account', () => {
@@ -144,17 +143,5 @@ describe('AssignedPermissionsPanel', () => {
     expect(visibleChips.length).toBe(
       mockEntitiesAcceessRole.permissions.length
     );
-  });
-
-  it('displays the role name when mode is "update-entities"', () => {
-    const { getByText } = renderWithTheme(
-      <AssignedPermissionsPanel
-        mode="update-entities"
-        role={mockEntitiesAcceessRole}
-      />
-    );
-
-    // Verify that the role name is displayed
-    expect(getByText(mockEntitiesAcceessRole.name)).toBeInTheDocument();
   });
 });

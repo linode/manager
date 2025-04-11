@@ -52,28 +52,21 @@ export const AssignedRolesTable = () => {
   const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
 
-  const [
-    isChangeRoleDrawerOpen,
-    setIsChangeRoleDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
+    React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
-  const [drawerMode, setDrawerMode] = React.useState<DrawerModes>(
-    'assign-role'
-  );
+  const [drawerMode, setDrawerMode] =
+    React.useState<DrawerModes>('assign-role');
 
-  const [
-    isUnassignRoleDialogOpen,
-    setIsUnassignRoleDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    isUpdateEntitiesDrawerOpen,
-    setIsUpdateEntitiesDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
+    React.useState<boolean>(false);
+  const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
+    React.useState<boolean>(false);
 
-  const handleChangeRole = (role: ExtendedRoleMap, mode: DrawerModes) => {
+  const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
     setSelectedRole(role);
-    setDrawerMode(mode);
+    setDrawerMode('change-role');
   };
 
   const handleUnassignRole = (role: ExtendedRoleMap) => {
@@ -81,21 +74,16 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const handleUpdateEntities = (role: ExtendedRoleMap, mode: DrawerModes) => {
+  const handleUpdateEntities = (role: ExtendedRoleMap) => {
     setIsUpdateEntitiesDrawerOpen(true);
     setSelectedRole(role);
-    setDrawerMode(mode);
   };
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
   const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
-  const {
-    data: assignedRoles,
-    isLoading: assignedRolesLoading,
-  } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading: assignedRolesLoading } =
+    useAccountUserPermissions(username ?? '');
 
   const { resourceTypes, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountPermissions) {
@@ -195,11 +183,11 @@ export const AssignedRolesTable = () => {
             {description}{' '}
             {description.length > 150 && (
               <StyledLinkButton
+                onClick={() => setShowFullDescription((show) => !show)}
                 sx={{
                   font: theme.tokens.alias.Typography.Label.Semibold.Xs,
                   width: 'max-content',
                 }}
-                onClick={() => setShowFullDescription((show) => !show)}
               >
                 {showFullDescription ? 'Hide' : 'Expand'}
               </StyledLinkButton>
@@ -250,15 +238,16 @@ export const AssignedRolesTable = () => {
   return (
     <Grid>
       <Grid
+        container
+        direction="row"
         sx={{
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: 3,
         }}
-        container
-        direction="row"
       >
         <DebouncedSearchTextField
+          clearable
           containerProps={{
             sx: {
               marginBottom: { md: 0, xs: 2 },
@@ -266,7 +255,6 @@ export const AssignedRolesTable = () => {
               width: { md: '410px', xs: '100%' },
             },
           }}
-          clearable
           hideLabel
           label="Filter"
           onSearch={setQuery}
@@ -275,24 +263,24 @@ export const AssignedRolesTable = () => {
           value={query}
         />
         <Autocomplete
+          label="Select type"
+          onChange={(_, selected) => setEntityType(selected ?? null)}
+          options={resourceTypes}
+          placeholder="All Assigned Roles"
           textFieldProps={{
             containerProps: {
               sx: { minWidth: 250, width: { md: '250px', xs: '100%' } },
             },
             hideLabel: true,
           }}
-          label="Select type"
-          onChange={(_, selected) => setEntityType(selected ?? null)}
-          options={resourceTypes}
-          placeholder="All Assigned Roles"
           value={entityType}
         />
       </Grid>
       <CollapsibleTable
+        TableItems={memoizedTableItems}
         TableRowEmpty={
           <TableRowEmpty colSpan={5} message={'No Roles are assigned.'} />
         }
-        TableItems={memoizedTableItems}
         TableRowHead={RoleTableRowHead}
       />
       <ChangeRoleDrawer
@@ -307,7 +295,6 @@ export const AssignedRolesTable = () => {
         role={selectedRole}
       />
       <UpdateEntitiesDrawer
-        mode={drawerMode}
         onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
         open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}

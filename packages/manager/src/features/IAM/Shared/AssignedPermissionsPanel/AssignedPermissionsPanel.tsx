@@ -16,7 +16,7 @@ import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   errorText?: string;
-  mode: DrawerModes;
+  mode?: DrawerModes;
   onChange?: (value: EntitiesOption[]) => void;
   role: ExtendedRole | ExtendedRoleMap;
   sx?: SxProps<Theme>;
@@ -47,26 +47,23 @@ export const AssignedPermissionsPanel = ({
           theme.name === 'light'
             ? theme.tokens.color.Neutrals[5]
             : theme.tokens.color.Neutrals[100],
-        marginTop: theme.spacing(1.25),
+        marginTop: theme.tokens.spacing.S8,
         padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
         ...sx,
       }}
     >
-      {mode === 'update-entities' && (
-        <Typography
-          sx={{
-            font: theme.tokens.alias.Typography.Heading.S,
-            marginBottom: theme.tokens.spacing.S2,
-          }}
-        >
-          {role.name}
-        </Typography>
-      )}
+      <Typography
+        sx={(theme) => ({
+          font: theme.tokens.alias.Typography.Label.Bold.S,
+        })}
+      >
+        Description
+      </Typography>
       <Typography
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          marginBottom: theme.tokens.spacing.S12,
+          marginBottom: theme.tokens.spacing.S8,
           overflowWrap: 'anywhere',
           wordBreak: 'normal',
         }}
@@ -74,11 +71,11 @@ export const AssignedPermissionsPanel = ({
         {description}{' '}
         {description.length > 110 && (
           <StyledLinkButton
+            onClick={() => setShowFullDescription((show) => !show)}
             sx={{
               font: theme.tokens.alias.Typography.Label.Semibold.Xs,
               width: 'max-content',
             }}
-            onClick={() => setShowFullDescription((show) => !show)}
             type="button"
           >
             {showFullDescription ? 'Hide' : 'Expand'}

@@ -58,7 +58,6 @@ const mockRole: ExtendedRoleMap = {
 };
 
 const props = {
-  mode: 'update-entities' as const,
   onClose: vi.fn(),
   open: true,
   role: mockRole,

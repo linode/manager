@@ -14,8 +14,8 @@ import type {
   IamAccountPermissions,
   IamUserPermissions,
   PermissionType,
-  RoleType,
   Roles,
+  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -427,7 +427,7 @@ export const updateUserRoles = ({
 export interface AssignNewRoleFormValues {
   roles: {
     entities?: EntitiesOption[] | null;
-    role: RolesType | null;
+    role: null | RolesType;
   }[];
 }
 
@@ -483,10 +483,8 @@ export const deleteUserRole = ({
 export const transformedAccountEntities = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
-  const result: Map<
-    EntityType,
-    Pick<AccountEntity, 'id' | 'label'>[]
-  > = new Map();
+  const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
+    new Map();
 
   entities.forEach((item) => {
     if (!result.has(item.type)) {
@@ -502,69 +500,45 @@ export const transformedAccountEntities = (
   return result;
 };
 
-export type DrawerModes = 'assign-role' | 'change-role' | 'update-entities';
+export type DrawerModes = 'assign-role' | 'change-role';
 
-interface UpdateUserEntitiesProps {
-  assignedRoles?: IamUserPermissions;
-  entityIds: number[];
-  roleName: RoleType;
-  roleType: EntityTypePermissions;
-}
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: RoleType,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
 
-export const updateUserEntities = ({
-  assignedRoles,
-  entityIds,
-  roleName,
-  roleType,
-}: UpdateUserEntitiesProps): IamUserPermissions => {
-  if (!assignedRoles) {
-    return {
-      account_access: [],
-      entity_access: [],
-    };
-  }
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
 
-  const { entity_access } = assignedRoles;
-
-  const entityIdsSet = new Set(entityIds);
-
-  const updatedEntityAccess = entity_access.map((entity) => {
-    const isInEntityIds = entityIdsSet.has(entity.id);
-
-    if (!isInEntityIds) {
-      // Remove the role if the entity is not in entityIds but has the role
+      // Remove the role if the entity is not in the new entity IDs
       return {
         ...entity,
         roles: entity.roles.filter((role) => role !== roleName),
       };
-    }
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
 
-    // Return the entity unchanged if no updates are needed
-    return entity;
-  });
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
 
-  // Add new entities for entityIds that don't exist in entity_access
-  entityIds.forEach((id) => {
-    const existingEntity = updatedEntityAccess.find(
-      (entity) => entity.id === id
-    );
-
-    if (!existingEntity) {
-      updatedEntityAccess.push({
-        id,
-        roles: [roleName],
-        type: roleType,
-      });
-    }
-  });
-
-  // Filter out entities with empty roles
-  const filteredEntityAccess = updatedEntityAccess.filter(
-    (entity) => entity.roles.length > 0
-  );
-
-  return {
-    ...assignedRoles,
-    entity_access: filteredEntityAccess,
-  };
+  return [...updatedEntityAccess, ...newEntities];
 };

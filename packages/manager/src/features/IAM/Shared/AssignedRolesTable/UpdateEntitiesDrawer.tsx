@@ -11,10 +11,9 @@ import {
 } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { updateUserEntities } from '../utilities';
+import { toEntityAccess } from '../utilities';
 
 import type {
-  DrawerModes,
   EntitiesOption,
   ExtendedRoleMap,
   UpdateEntitiesFormValues,
@@ -22,22 +21,20 @@ import type {
 import type { RoleType } from '@linode/api-v4';
 
 interface Props {
-  mode: DrawerModes;
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleMap | undefined;
 }
 
-export const UpdateEntitiesDrawer = ({ mode, onClose, open, role }: Props) => {
+export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   const theme = useTheme();
 
   const { username } = useParams<{ username: string }>();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -76,7 +73,6 @@ export const UpdateEntitiesDrawer = ({ mode, onClose, open, role }: Props) => {
       (entity: EntitiesOption) => entity.value
     );
 
-    // Check if `role.entity_ids` is the same as `entityIds`
     const areIdsEqual =
       role?.entity_ids &&
       entityIds.length === role.entity_ids.length &&
@@ -90,14 +86,17 @@ export const UpdateEntitiesDrawer = ({ mode, onClose, open, role }: Props) => {
     try {
       const roleName: RoleType = role!.name as RoleType;
 
-      const updatedUserEntities = updateUserEntities({
-        assignedRoles,
+      const entityAccess = toEntityAccess(
+        assignedRoles!.entity_access,
         entityIds,
         roleName,
-        roleType: role!.entity_type,
-      });
+        role!.entity_type
+      );
 
-      await updateUserPermissions(updatedUserEntities);
+      await updateUserPermissions({
+        ...assignedRoles!,
+        entity_access: entityAccess,
+      });
 
       handleClose();
     } catch (errors) {
@@ -124,24 +123,34 @@ export const UpdateEntitiesDrawer = ({ mode, onClose, open, role }: Props) => {
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Typography sx={{ marginBottom: theme.tokens.spacing.S32 }}>
+          <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
             Add or remove entities the role should apply to.
           </Typography>
 
+          {role && (
+            <Typography
+              sx={{
+                font: theme.tokens.alias.Typography.Heading.S,
+                marginBottom: theme.tokens.spacing.S8,
+              }}
+            >
+              {role.name}
+            </Typography>
+          )}
+
           <Controller
+            control={control}
+            name="entities"
             render={({ field, fieldState }) => (
               <AssignedPermissionsPanel
                 errorText={fieldState.error?.message}
                 key={role?.name}
-                mode={mode}
                 onChange={field.onChange}
                 role={role!}
                 sx={{ marginBottom: theme.tokens.spacing.S16 }}
                 value={field.value}
               />
             )}
-            control={control}
-            name="entities"
             rules={{ required: 'Entities are required.' }}
           />
 
