@@ -51,7 +51,7 @@ export const BucketDetailLanding = React.memo(() => {
     },
 
     {
-      hide: isGen2Endpoint,
+      hide: !bucketsData || isGen2Endpoint,
       title: 'SSL/TLS',
       to: `/object-storage/buckets/$clusterId/$bucketName/ssl`,
     },
