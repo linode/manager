@@ -304,35 +304,6 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
-  // TODO Host & VM Maintenance: copy is not final
-  linode_migration: {
-    failed: (e) => (
-      <>
-        {e.description ?? 'Maintenance'} <strong>migration failed</strong> for
-        Linode <EventLink event={e} to="entity" />.
-      </>
-    ),
-    finished: (e) => (
-      <>
-        Linode <EventLink event={e} to="entity" /> <strong>migration</strong>{' '}
-        {e.description?.toLowerCase() ?? 'maintenance'} completed.
-      </>
-    ),
-    scheduled: (e) => (
-      <>
-        Linode <EventLink event={e} to="entity" /> has scheduled{' '}
-        <strong>migration</strong>{' '}
-        {e.description?.toLowerCase() ?? 'maintenance'}.
-      </>
-    ),
-    started: (e) => (
-      <>
-        Linode <EventLink event={e} to="entity" /> is being{' '}
-        <strong>migrated</strong> for{' '}
-        {e.description?.toLowerCase() ?? 'maintenance'}.
-      </>
-    ),
-  },
   linode_mutate: {
     failed: (e) => (
       <>
@@ -374,7 +345,7 @@ export const linode: PartialEventMap<'linode'> = {
     ),
   },
   // TODO Host & VM Maintenance: copy is not final
-  linode_power_on_off: {
+  linode_poweroff_on: {
     failed: (e) => (
       <>
         {e.description ?? 'Maintenance'}{' '}
