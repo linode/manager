@@ -84,15 +84,13 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
 
   const [isDeleteIPDialogOpen, setIsDeleteIPDialogOpen] = React.useState(false);
-  const [isDeleteRangeDialogOpen, setIsDeleteRangeDialogOpen] = React.useState(
-    false
-  );
+  const [isDeleteRangeDialogOpen, setIsDeleteRangeDialogOpen] =
+    React.useState(false);
   const [isRangeDrawerOpen, setIsRangeDrawerOpen] = React.useState(false);
   const [isIPDrawerOpen, setIsIPDrawerOpen] = React.useState(false);
   const [isIpRdnsDrawerOpen, setIsIpRdnsDrawerOpen] = React.useState(false);
-  const [isRangeRdnsDrawerOpen, setIsRangeRdnsDrawerOpen] = React.useState(
-    false
-  );
+  const [isRangeRdnsDrawerOpen, setIsRangeRdnsDrawerOpen] =
+    React.useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = React.useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = React.useState(false);
 
@@ -355,7 +353,7 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
+  // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
   if (ipv4.vpc.find((vpcIp) => vpcIp.nat_1_1)) {
     ipDisplay.shift();
   }
@@ -398,8 +396,8 @@ type ipKey =
   | 'Private'
   | 'Public'
   | 'Reserved'
-  | 'SLAAC'
-  | 'Shared';
+  | 'Shared'
+  | 'SLAAC';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));

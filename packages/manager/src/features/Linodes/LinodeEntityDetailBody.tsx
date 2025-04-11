@@ -129,18 +129,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const theme = useTheme();
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
   const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
 
-  const {
-    canUpgradeInterfaces,
-    unableToUpgradeReasons,
-  } = useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
+  const { canUpgradeInterfaces, unableToUpgradeReasons } =
+    useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
 
   const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
     unableToUpgradeReasons
@@ -169,10 +166,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
-  } = useKubernetesBetaEndpoint();
+  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
+    useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
@@ -281,8 +276,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                       isLKELinode && cluster?.tier === 'enterprise'
                         ? undefined
                         : isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
-                        : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
+                          ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
+                          : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
                     encryptionStatus={encryptionStatus}
                     regionSupportsDiskEncryption={regionSupportsDiskEncryption}
@@ -540,11 +535,10 @@ export const getVPCIPv4 = (
   if (interfaceWithVPC) {
     if ('purpose' in interfaceWithVPC) {
       return interfaceWithVPC.ipv4?.vpc;
-    } else {
-      return interfaceWithVPC.vpc?.ipv4?.addresses.find(
-        (address) => address.primary
-      )?.address;
     }
+    return interfaceWithVPC.vpc?.ipv4?.addresses.find(
+      (address) => address.primary
+    )?.address;
   }
 
   return undefined;

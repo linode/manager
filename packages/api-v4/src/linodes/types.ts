@@ -1,19 +1,19 @@
-import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
-import { InferType } from 'yup';
-import {
+import type { Region, RegionSite } from '../regions';
+import type {
   CreateLinodeInterfaceSchema,
   ModifyLinodeInterfaceSchema,
   RebuildLinodeSchema,
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
-import { VPCIP } from 'src/vpcs';
+import type { VPCIP } from 'src/vpcs';
+import type { InferType } from 'yup';
 
 export type Hypervisor = 'kvm' | 'zen';
 
-export type EncryptionStatus = 'enabled' | 'disabled';
+export type EncryptionStatus = 'disabled' | 'enabled';
 
 export type InterfaceGenerationType = 'legacy_config' | 'linode';
 

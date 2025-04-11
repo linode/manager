@@ -64,15 +64,11 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const isLinodeInterface = linode.interface_generation === 'linode';
 
-  const {
-    configs,
-    interfaceWithVPC,
-    isVPCOnlyLinode,
-    vpcLinodeIsAssignedTo,
-  } = useVPCInterface({
-    isLinodeInterface,
-    linodeId: linode.id,
-  });
+  const { configs, interfaceWithVPC, isVPCOnlyLinode, vpcLinodeIsAssignedTo } =
+    useVPCInterface({
+      isLinodeInterface,
+      linodeId: linode.id,
+    });
 
   const { data: attachedFirewallData } = useLinodeFirewallsQuery(
     linode.id,
@@ -123,10 +119,10 @@ export const LinodeEntityDetail = (props: Props) => {
     <>
       {isLinodesGrantReadOnly && (
         <Notice
+          important
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
           })}
-          important
           variant="warning"
         />
       )}
