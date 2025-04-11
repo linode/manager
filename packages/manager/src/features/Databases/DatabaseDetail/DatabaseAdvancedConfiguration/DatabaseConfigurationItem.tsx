@@ -10,11 +10,6 @@ import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import {
-  formatConfigValue,
-  isConfigBoolean,
-  isConfigStringWithEnum,
-} from '../../utilities';
-import {
   StyledBox,
   StyledChip,
   StyledWrapper,
@@ -22,6 +17,11 @@ import {
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type { ConfigValue } from '@linode/api-v4';
+import {
+  isConfigBoolean,
+  formatConfigValue,
+  isConfigStringWithEnum,
+} from './utilities';
 
 interface Props {
   configItem?: ConfigurationOption;
@@ -64,7 +64,6 @@ export const DatabaseConfigurationItem = (props: Props) => {
             <TextField {...params} label="" placeholder="Select an option" />
           )}
           disableClearable
-          filterOptions={(options) => options}
           isOptionEqualToValue={(option, value) => option.label === value.label}
           label={''}
           options={options}
@@ -72,7 +71,10 @@ export const DatabaseConfigurationItem = (props: Props) => {
         />
       );
     }
-    if (configItem?.type === 'number' || configItem?.type === 'integer') {
+    if (
+      (configItem?.type === 'number' || configItem?.type === 'integer') &&
+      typeof configItem.value !== 'boolean'
+    ) {
       return (
         <TextField
           placeholder={
@@ -83,9 +85,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
           label=""
           name={configLabel}
           onBlur={onBlur}
-          onChange={(e) => onChange(Number(e.target.value))}
           type="number"
-          value={Number(configItem.value)}
+          value={configItem.value}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
         />
       );
     }

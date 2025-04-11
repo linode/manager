@@ -4,7 +4,6 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { formatConfigValue } from '../../utilities';
 import {
   StyledGridContainer,
   StyledLabelTypography,
@@ -13,6 +12,8 @@ import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 
 import type { Database } from '@linode/api-v4';
+import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
+import { formatConfigValue } from './utilities';
 
 interface Props {
   database: Database;
@@ -20,10 +21,8 @@ interface Props {
 }
 
 export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
-  const [
-    advancedConfigurationDrawerOpen,
-    setAdvancedConfigurationDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [advancedConfigurationDrawerOpen, setAdvancedConfigurationDrawerOpen] =
+    React.useState<boolean>(false);
 
   const engineConfigs = database.engine_config;
 
@@ -34,15 +33,14 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
           <Typography variant="h2">Advanced Configuration</Typography>
           <Typography sx={{ mb: 1, mt: 1 }}>
             Advanced parameters to configure your database cluster.{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters">
-              Learn more.
-            </Link>
+            <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
           </Typography>
         </Grid>
         <Button
           buttonType="outlined"
           onClick={() => setAdvancedConfigurationDrawerOpen(true)}
           sx={{ height: 1 }}
+          title="Configure"
         >
           Configure
         </Button>
