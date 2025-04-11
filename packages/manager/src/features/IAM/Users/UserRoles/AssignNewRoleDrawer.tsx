@@ -26,7 +26,12 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
-      roles: [{ role: null }],
+      roles: [
+        {
+          entities: null,
+          role: null,
+        },
+      ],
     },
   });
 
@@ -49,7 +54,11 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
     // TODO - make this really do something apart from console logging - UIE-8590
 
-    // const selectedRoles = values.roles.map((r) => r.role).filter(Boolean);
+    // const selectedRoles = values.roles.map((r) => ({
+    //   access: r.role?.access,
+    //   entities: r.entities || null,
+    //   role: r.role?.value,
+    // }));
     handleClose();
   });
 

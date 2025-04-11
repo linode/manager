@@ -47,23 +47,34 @@ export const AssignSingleRole = ({
             <>
               <Autocomplete
                 onChange={(event, newValue) => {
-                  onChange(newValue);
+                  onChange({
+                    ...value,
+                    role: newValue,
+                  });
                 }}
                 label="Assign New Roles"
                 options={options}
                 placeholder="Select a Role"
                 textFieldProps={{ hideLabel: true }}
-                value={value || null}
+                value={value?.role || null}
               />
-              {value && (
+              {value?.role && (
                 <AssignedPermissionsPanel
-                  role={getRoleByName(permissions, value.value)!}
+                  onChange={(updatedEntities) => {
+                    onChange({
+                      ...value,
+                      entities: updatedEntities,
+                    });
+                  }}
+                  mode="assign-role"
+                  role={getRoleByName(permissions, value.role?.value)!}
+                  value={value.entities || []}
                 />
               )}
             </>
           )}
           control={control}
-          name={`roles.${index}.role`}
+          name={`roles.${index}`}
         />
       </Box>
       <Box

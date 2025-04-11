@@ -14,8 +14,8 @@ import type {
   IamAccountPermissions,
   IamUserPermissions,
   PermissionType,
-  RoleType,
   Roles,
+  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -135,7 +135,7 @@ export interface RolesType {
   value: string;
 }
 
-interface ExtendedRole extends Roles {
+export interface ExtendedRole extends Roles {
   access: IamAccessType;
   entity_type: EntityTypePermissions;
 }
@@ -426,9 +426,15 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
-    role: RolesType | null;
+    entities?: EntitiesOption[] | null;
+    role: null | RolesType;
   }[];
 }
+
+export interface UpdateEntitiesFormValues {
+  entities: EntitiesOption[];
+}
+
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -477,10 +483,8 @@ export const deleteUserRole = ({
 export const transformedAccountEntities = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
-  const result: Map<
-    EntityType,
-    Pick<AccountEntity, 'id' | 'label'>[]
-  > = new Map();
+  const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
+    new Map();
 
   entities.forEach((item) => {
     if (!result.has(item.type)) {
@@ -494,4 +498,47 @@ export const transformedAccountEntities = (
   });
 
   return result;
+};
+
+export type DrawerModes = 'assign-role' | 'change-role';
+
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: RoleType,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
+
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
+
+      // Remove the role if the entity is not in the new entity IDs
+      return {
+        ...entity,
+        roles: entity.roles.filter((role) => role !== roleName),
+      };
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
+
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
+
+  return [...updatedEntityAccess, ...newEntities];
 };
