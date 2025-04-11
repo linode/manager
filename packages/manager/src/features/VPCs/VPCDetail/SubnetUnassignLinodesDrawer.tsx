@@ -126,9 +126,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         try {
           const updatedConfigInterfaces = await Promise.all(
             selectedLinodes.map(async (linode) => {
-              const response = await queryClient.fetchQuery(
-                linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
-              );
+              let response;
+              if (linode.interface_generation === 'legacy_config') {
+                response = await queryClient.fetchQuery(
+                  linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
+                );
+              }
 
               if (response) {
                 const configWithVpcInterface = response.find((config) =>
