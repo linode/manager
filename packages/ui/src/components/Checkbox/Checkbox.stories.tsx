@@ -118,7 +118,6 @@ export const WithLabelAndTooltip: Story = {
 
 export const SmallSize: Story = {
   args: {
-    checked: false,
     customSize: 'sm',
   },
 };
