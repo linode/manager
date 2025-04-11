@@ -8,6 +8,7 @@ import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import type { ManagerPreferences } from '@linode/utilities';
 
 const props = {
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
   subnet: subnetFactory.build({ label: 'some subnet' }),

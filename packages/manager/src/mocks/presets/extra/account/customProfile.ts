@@ -1,6 +1,6 @@
+import { profileFactory } from '@linode/utilities';
 import { http } from 'msw';
 
-import { profileFactory } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
 
 import type { Profile } from '@linode/api-v4';

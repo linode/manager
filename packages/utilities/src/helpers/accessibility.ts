@@ -4,6 +4,7 @@
  */
 export const srSpeak = (text: string, priority: 'assertive' | 'polite') => {
   const el = document.createElement('div');
+  // eslint-disable-next-line sonarjs/pseudo-random
   const id = 'speak-' + Math.random().toString(36).substr(2, 9);
   el.setAttribute('id', id);
   el.setAttribute('aria-live', priority || 'polite');

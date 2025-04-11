@@ -6,8 +6,13 @@ import {
   useMutateFirewall,
   useProfile,
 } from '@linode/queries';
-import { Chip, CircleProgress, ErrorState, Paper } from '@linode/ui';
-import { Typography } from '@mui/material';
+import {
+  Chip,
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 

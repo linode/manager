@@ -1,4 +1,7 @@
-import { createAlertDefinitionSchema, editAlertDefinitionSchema } from '@linode/validation';
+import {
+  createAlertDefinitionSchema,
+  editAlertDefinitionSchema,
+} from '@linode/validation';
 import Request, {
   setURL,
   setMethod,
@@ -64,13 +67,13 @@ export const getAlertDefinitionByServiceType = (serviceType: string) =>
 export const editAlertDefinition = (
   data: EditAlertDefinitionPayload,
   serviceType: string,
-  alertId: number
+  alertId: number,
 ) =>
   Request<Alert>(
     setURL(
       `${API_ROOT}/monitor/services/${encodeURIComponent(
-        serviceType
-      )}/alert-definitions/${encodeURIComponent(alertId)}`
+        serviceType,
+      )}/alert-definitions/${encodeURIComponent(alertId)}`,
     ),
     setMethod('PUT'),
     setData(data, editAlertDefinitionSchema),

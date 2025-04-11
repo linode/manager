@@ -61,7 +61,7 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
   })
 );
 
-export const createAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
+export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
     entity_ids: array().of(string().defined()).required(),
     rule_criteria: object({

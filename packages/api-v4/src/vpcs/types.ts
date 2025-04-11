@@ -66,6 +66,11 @@ export interface VPCIP {
   active: boolean;
   address: string | null;
   address_range: string | null;
+  ipv6_range: string | null;
+  ipv6_is_public: boolean | null;
+  ipv6_addresses: {
+    slaac_address: string;
+  }[];
   config_id: number | null;
   gateway: string | null;
   interface_id: number;

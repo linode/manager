@@ -67,6 +67,12 @@ export interface AlertValidationSchemaProps {
    * The config that holds the maxResourceSelection count per service type like linode, dbaas etc.,
    */
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+
+  /**
+   * The base schema which needs to be enhanced with the entity_ids validation
+   */
+  baseSchema: ObjectSchema<CreateAlertDefinitionForm>;
+
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
@@ -325,27 +331,26 @@ export const processMetricCriteria = (
 };
 
 /**
- * @param props The props required foe the max selection count calculation
- * @param createSchema The schema in which the entity id max validation will be added
+ * @param props The props required for the max selection count calculation
+ * @param baseSchema The schema in which the entity id max validation will be added
  * @returns The updated schema with entity id max validation based on max selection count
  */
 export const getSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  createSchema: ObjectSchema<CreateAlertDefinitionForm>
+  props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
+  const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
 
   if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
-    return createSchema;
+    return baseSchema;
   }
 
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
     (config) => config && serviceTypeObj === config.serviceType
   )?.maxResourceSelectionCount;
 
-  return !maxSelectionCount
-    ? createSchema
-    : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
+  return maxSelectionCount
+    ? baseSchema.concat(getEntityIdWithMax(maxSelectionCount))
+    : baseSchema;
 };
 
 /**

@@ -178,7 +178,6 @@ export const DisplayAlertResources = React.memo(
 
       return selectionsRemaining < uncheckedCount; // find if there is appropriate space for root checkbox to be enabled
     };
-
     const columns = serviceTypeBasedColumns[serviceType ?? ''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
@@ -276,9 +275,8 @@ export const DisplayAlertResources = React.memo(
                   {!isDataLoadingError &&
                     paginatedData.map((resource, index) => {
                       const { checked, id } = resource;
-                      const isItemCheckboxDisabled = isCheckboxDisabled(
-                        checked
-                      );
+                      const isItemCheckboxDisabled =
+                        isCheckboxDisabled(checked);
                       return (
                         <TableRow data-qa-alert-row={id} key={`${index}_${id}`}>
                           {isSelectionsNeeded && (
