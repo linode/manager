@@ -694,9 +694,9 @@ export interface ResizeLinodePayload {
 }
 
 export interface DeleteLinodeConfigInterfacePayload {
-  linodeId: number;
-  configId: number;
+  configId: null | number;
   interfaceId: number;
+  linodeId: number;
 }
 
 export interface LinodeLishData {
