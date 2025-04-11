@@ -2,7 +2,10 @@ import { act, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
+import {
+  alertFactory,
+  alertRulesFactory,
+} from 'src/factories/cloudpulse/alerts';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertListing } from './AlertListing';
@@ -181,6 +184,40 @@ describe('Alert Listing', () => {
 
   it('should show the banner and disable the create button when the user has reached the maximum allowed user alerts', async () => {
     const userAlerts = alertFactory.buildList(100, { type: 'user' });
+    const systemAlerts = alertFactory.buildList(10, { type: 'system' });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
+      data: [...userAlerts, ...systemAlerts],
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    const { getByRole, getByText } = renderWithTheme(<AlertListing />);
+
+    const bannerText =
+      'You have reached the maximum number of definitions created per account.';
+
+    expect(getByText(bannerText)).toBeVisible();
+    const createButton = getByRole('button', { name: 'Create Alert' });
+
+    expect(createButton).toBeDisabled();
+    userEvent.hover(createButton);
+    await waitFor(() => {
+      expect(
+        getByText(
+          'You have reached your limit of definitions for this account.'
+        )
+      ).toBeVisible();
+    });
+  });
+  it('should show the banner and disable the create button when the user has reached the maximum allowed user metrics', async () => {
+    const userAlerts = alertFactory.buildList(25, {
+      rule_criteria: {
+        rules: alertRulesFactory.buildList(4, { dimension_filters: [] }),
+      },
+      type: 'user',
+    });
     const systemAlerts = alertFactory.buildList(10, { type: 'system' });
 
     queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
