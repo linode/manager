@@ -1,12 +1,13 @@
 {
   "name": "@linode/utilities",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Linode Utility functions library",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "types": "src/index.ts",
   "author": "Linode",
   "license": "Apache-2.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/linode/manager/tree/develop/packages/utilities"
@@ -38,7 +39,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
@@ -46,13 +46,6 @@
     "@types/ramda": "0.25.16",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^7.1.0",
-    "eslint-config-prettier": "~8.1.0",
-    "eslint-plugin-prettier": "~3.3.1",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "factory.ts": "^0.5.1",
-    "prettier": "~2.2.1"
+    "factory.ts": "^0.5.1"
   }
 }

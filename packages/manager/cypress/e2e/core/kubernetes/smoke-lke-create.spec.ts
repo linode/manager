@@ -1,8 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import {
   accountUserFactory,
   grantsFactory,
   kubernetesClusterFactory,
-  profileFactory,
 } from '@src/factories';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockCreateCluster } from 'support/intercepts/lke';

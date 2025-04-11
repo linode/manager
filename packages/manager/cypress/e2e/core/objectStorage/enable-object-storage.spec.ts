@@ -1,13 +1,12 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import {
   accountFactory,
   accountSettingsFactory,
   objectStorageClusterFactory,
   objectStorageKeyFactory,
-  profileFactory,
 } from '@src/factories';
 import {
   mockGetAccount,
@@ -37,7 +36,8 @@ import type {
 // under different circumstances.
 const objNotes = {
   // Information regarding the Object Storage cancellation process.
-  cancellationExplanation: /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
+  cancellationExplanation:
+    /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
 
   // Link to further DC-specific pricing information.
   dcPricingLearnMoreNote: 'Learn more about pricing and specifications.',
