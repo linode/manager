@@ -137,7 +137,6 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
-    flags,
     label,
     metricsList: responsePayload,
     resources: [
@@ -147,7 +146,6 @@ const getWidgetLegendRowValuesFromResponse = (
         region: 'us-ord',
       },
     ],
-    serviceType,
     status: 'success',
     unit,
   });
