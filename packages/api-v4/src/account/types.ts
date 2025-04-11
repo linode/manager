@@ -87,7 +87,7 @@ export const accountCapabilities = [
   'VPCs',
 ] as const;
 
-export type AccountCapability = typeof accountCapabilities[number];
+export type AccountCapability = (typeof accountCapabilities)[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
@@ -101,7 +101,8 @@ export const linodeInterfaceAccountSettings = [
   'linode_only',
 ] as const;
 
-export type LinodeInterfaceAccountSetting = typeof linodeInterfaceAccountSettings[number];
+export type LinodeInterfaceAccountSetting =
+  (typeof linodeInterfaceAccountSettings)[number];
 
 export interface AccountSettings {
   managed: boolean;
@@ -394,10 +395,9 @@ export const EventActionKeys = [
   'linode_migrate_datacenter_create',
   'linode_migrate_datacenter',
   'linode_migrate',
-  'linode_migration',
   'linode_mutate_create',
   'linode_mutate',
-  'linode_power_on_off',
+  'linode_poweroff_on',
   'linode_reboot',
   'linode_rebuild',
   'linode_resize_create',
@@ -499,7 +499,7 @@ export const EventActionKeys = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionKeys[number];
+export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
   | 'scheduled'
@@ -590,11 +590,12 @@ export const maintenancePolicies = [
   { id: 2, type: 'power on/off' },
 ] as const;
 
-export type MaintenancePolicyId = typeof maintenancePolicies[number]['id'];
+export type MaintenancePolicyId = (typeof maintenancePolicies)[number]['id'];
 
-export type MaintenancePolicyType = typeof maintenancePolicies[number]['type'];
+export type MaintenancePolicyType =
+  (typeof maintenancePolicies)[number]['type'];
 
-export type MaintenancePolicy = typeof maintenancePolicies[number] & {
+export type MaintenancePolicy = (typeof maintenancePolicies)[number] & {
   name: string;
   description: string;
   notification_period_sec: number;
