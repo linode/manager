@@ -64,16 +64,18 @@ const mockEntities = [
 
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
-    const { getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
+    renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockAccountAcceessRole}
+      />
     );
-    expect(
-      getByText(
-        'Access to perform any supported action on all linode instances in the account'
-      )
-    ).toBeInTheDocument();
-    expect(getByText('cancel_account')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    screen.getByText('All entities');
+    screen.getByText(
+      'Access to perform any supported action on all linode instances in the account'
+    );
+    screen.getByText('cancel_account');
+    screen.getByText('Description');
   });
 
   it('does not render Autocomplete when the access is an account', () => {

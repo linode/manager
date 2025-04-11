@@ -16,6 +16,7 @@ import type {
   IamUserPermissions,
   PermissionType,
   Roles,
+  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -509,7 +510,7 @@ export const transformedAccountEntities = (
   return result;
 };
 
-export type DrawerModes = 'assign-role' | 'change-role-for-entity';
+export type DrawerModes = 'assign-role' | 'change-role-for-entity' | 'change-role';
 
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
@@ -534,71 +535,46 @@ export const changeRoleForEntity = (
       return entity;
     }),
   ];
-=======
-export type DrawerModes = 'assign-role' | 'change-role' | 'update-entities';
+};
 
-interface UpdateUserEntitiesProps {
-  assignedRoles?: IamUserPermissions;
-  entityIds: number[];
-  roleName: RoleType;
-  roleType: EntityTypePermissions;
-}
 
-export const updateUserEntities = ({
-  assignedRoles,
-  entityIds,
-  roleName,
-  roleType,
-}: UpdateUserEntitiesProps): IamUserPermissions => {
-  if (!assignedRoles) {
-    return {
-      account_access: [],
-      entity_access: [],
-    };
-  }
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: RoleType,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
 
-  const { entity_access } = assignedRoles;
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
 
-  const entityIdsSet = new Set(entityIds);
-
-  const updatedEntityAccess = entity_access.map((entity) => {
-    const isInEntityIds = entityIdsSet.has(entity.id);
-
-    if (!isInEntityIds) {
-      // Remove the role if the entity is not in entityIds but has the role
+      // Remove the role if the entity is not in the new entity IDs
       return {
         ...entity,
         roles: entity.roles.filter((role) => role !== roleName),
       };
-    }
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
 
-    // Return the entity unchanged if no updates are needed
-    return entity;
-  });
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
 
-  // Add new entities for entityIds that don't exist in entity_access
-  entityIds.forEach((id) => {
-    const existingEntity = updatedEntityAccess.find(
-      (entity) => entity.id === id
-    );
-
-    if (!existingEntity) {
-      updatedEntityAccess.push({
-        id,
-        roles: [roleName],
-        type: roleType,
-      });
-    }
-  });
-
-  // Filter out entities with empty roles
-  const filteredEntityAccess = updatedEntityAccess.filter(
-    (entity) => entity.roles.length > 0
-  );
-
-  return {
-    ...assignedRoles,
-    entity_access: filteredEntityAccess,
-  };
->>>>>>> bac7e8b1b (feat: [UIE-8601] - IAM RBAC: add new drawer for updating entities flow)
+  return [...updatedEntityAccess, ...newEntities];
 };

@@ -69,10 +69,10 @@ export const AssignedRolesTable = () => {
   const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
     React.useState<boolean>(false);
 
-  const handleChangeRole = (role: ExtendedRoleMap, mode: DrawerModes) => {
+  const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
     setSelectedRole(role);
-    setDrawerMode(mode);
+    setDrawerMode('change-role');
   };
 
   const handleUnassignRole = (role: ExtendedRoleMap) => {
@@ -80,10 +80,9 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const handleUpdateEntities = (role: ExtendedRoleMap, mode: DrawerModes) => {
+  const handleUpdateEntities = (role: ExtendedRoleMap) => {
     setIsUpdateEntitiesDrawerOpen(true);
     setSelectedRole(role);
-    setDrawerMode(mode);
   };
 
   const { data: accountPermissions, isLoading: accountPermissionsLoading } =
@@ -304,7 +303,6 @@ export const AssignedRolesTable = () => {
         role={selectedRole}
       />
       <UpdateEntitiesDrawer
-        mode={drawerMode}
         onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
         open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}
