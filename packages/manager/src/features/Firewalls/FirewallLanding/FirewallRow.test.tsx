@@ -19,8 +19,10 @@ import {
   getDeviceLinks,
   getRuleString,
 } from './FirewallRow';
+import { accountFactory } from 'src/factories';
 
 const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
 }));
 
@@ -28,6 +30,7 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useAccount: queryMocks.useAccount,
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
   };
 });
@@ -77,6 +80,10 @@ describe('FirewallRow', () => {
           },
         },
       });
+      queryMocks.useAccount.mockReturnValue({
+        data: accountFactory.build({ capabilities: ['Linode Interfaces'] }),
+      });
+
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />, {
           flags: { linodeInterfaces: { enabled: true } },

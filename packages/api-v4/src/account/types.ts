@@ -70,6 +70,7 @@ export const accountCapabilities = [
   'Kubernetes',
   'Kubernetes Enterprise',
   'Linodes',
+  'Linode Interfaces',
   'LKE HA Control Planes',
   'LKE Network Access Control List (IP ACL)',
   'Machine Images',
