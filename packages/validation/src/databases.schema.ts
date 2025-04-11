@@ -104,11 +104,7 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     );
   }
   if (key === 'timezone') {
-    if (
-      field.value === undefined ||
-      field.value === null ||
-      field.value === ''
-    ) {
+    if (!field.value) {
       validator = validator.required('timezone cannot be empty');
     }
   }

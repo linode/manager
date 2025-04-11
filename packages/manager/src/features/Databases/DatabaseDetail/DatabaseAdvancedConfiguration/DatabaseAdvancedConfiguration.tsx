@@ -4,7 +4,6 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
-import { formatConfigValue } from '../../utilities';
 import {
   StyledGridContainer,
   StyledLabelTypography,
@@ -14,6 +13,7 @@ import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigura
 
 import type { Database } from '@linode/api-v4';
 import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
+import { formatConfigValue } from './utilities';
 
 interface Props {
   database: Database;

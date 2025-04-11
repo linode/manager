@@ -22,13 +22,6 @@ import {
   useDatabaseMutation,
 } from 'src/queries/databases/databases';
 
-import {
-  convertEngineConfigToOptions,
-  convertExistingConfigsToArray,
-  findConfigItem,
-  formatConfigPayload,
-  getDefaultConfigValue,
-} from '../../utilities';
 import { DatabaseConfigurationItem } from './DatabaseConfigurationItem';
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
 
@@ -41,7 +34,15 @@ import type {
 } from '@linode/api-v4';
 import type { SubmitHandler } from 'react-hook-form';
 import type { ObjectSchema } from 'yup';
-import { getConfigAPIError, hasRestartCluster } from './utilities';
+import {
+  convertEngineConfigToOptions,
+  convertExistingConfigsToArray,
+  findConfigItem,
+  formatConfigPayload,
+  getConfigAPIError,
+  getDefaultConfigValue,
+  hasRestartCluster,
+} from './utilities';
 import {
   ADVANCED_CONFIG_INFO,
   ADVANCED_CONFIG_LEARN_MORE_LINK,
