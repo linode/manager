@@ -196,7 +196,7 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
         <StyledDiv>{name}</StyledDiv>
       </TableCell>
       <TableCell data-testid={`user-${user}`}>
-        <MaskableText isToggleable text={user} />
+        <MaskableText isToggleable length={10} text={user} />
       </TableCell>
       <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
         {Math.round(maxCount)}
