@@ -116,15 +116,9 @@ it('test generateGraphData with metrics data', () => {
   };
 
   const result = generateGraphData({
-    flags: {
-      aclpResourceTypeMap: [
-        { dimensionKey: 'resource_id', serviceType: 'linode' },
-      ],
-    },
     label: 'Graph',
     metricsList: mockMetricsResponse,
     resources: [{ id: '1', label: 'linode-1' }],
-    serviceType: 'linode',
     status: 'success',
     unit: '%',
   });
@@ -161,15 +155,6 @@ describe('getDimensionName method', () => {
     expect(result).toBe('linode-1');
   });
 
-  it('returns resource_id when flag is undefined', () => {
-    const props = {
-      ...baseProps,
-      flag: undefined,
-    };
-    const result = getDimensionName(props);
-    expect(result).toBe('123');
-  });
-
   it('returns empty string when metric is empty', () => {
     const props = {
       ...baseProps,
@@ -188,13 +173,13 @@ describe('getDimensionName method', () => {
     expect(result).toBe('456');
   });
 
-  it('joins multiple metric values with underscore', () => {
+  it('joins multiple metric values with separator', () => {
     const props = {
       ...baseProps,
       metric: { other_key: 'test', resource_id: '123' },
     };
     const result = getDimensionName(props);
-    expect(result).toBe('test_linode-1');
+    expect(result).toBe('test | linode-1');
   });
 
   it('handles empty metric values by filtering them out', () => {
