@@ -105,6 +105,18 @@ export async function loadDevTools(
         ...(seedContext?.linodeConfigs || []),
       ],
       linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
+      nodeBalancerConfigNodes: [
+        ...initialContext.nodeBalancerConfigNodes,
+        ...(seedContext.nodeBalancerConfigNodes || []),
+      ],
+      nodeBalancerConfigs: [
+        ...initialContext.nodeBalancerConfigs,
+        ...(seedContext.nodeBalancerConfigs || []),
+      ],
+      nodeBalancers: [
+        ...initialContext.nodeBalancers,
+        ...(seedContext.nodeBalancers || []),
+      ],
       notificationQueue: [
         ...initialContext.notificationQueue,
         ...(seedContext?.notificationQueue || []),
