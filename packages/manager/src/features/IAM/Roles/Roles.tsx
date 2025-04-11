@@ -21,7 +21,7 @@ export const RolesLanding = () => {
   }
 
   return (
-    <Paper sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
+    <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
       <RolesTable roles={roles} />
     </Paper>
   );
