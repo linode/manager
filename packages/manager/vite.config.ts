@@ -3,7 +3,6 @@ import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
 
-import { cryptoRandomUUIDPolyfill } from './src/polyfills/cryptoRandomUUID';
 import { urlCanParsePolyfill } from './src/polyfills/urlCanParse';
 
 // ESM-friendly alternative to `__dirname`.
@@ -14,12 +13,7 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  plugins: [
-    react(),
-    svgr({ exportAsDefault: true }),
-    urlCanParsePolyfill(),
-    cryptoRandomUUIDPolyfill(),
-  ],
+  plugins: [react(), svgr({ exportAsDefault: true }), urlCanParsePolyfill()],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
