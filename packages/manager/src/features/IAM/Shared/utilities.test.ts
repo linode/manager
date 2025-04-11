@@ -290,16 +290,16 @@ describe('changeRoleForEntity', () => {
     const newRole = 'linode_contributor';
     const entityId = 12345678;
     const entityType = 'linode';
-    const expectedRoles = userPermissions;
+    const expectedRoles = userPermissions.entity_access;
 
     expect(
-      changeRoleForEntity({
-        assignedRoles: userPermissions,
+      changeRoleForEntity(
+        userPermissions.entity_access,
         entityId,
         entityType,
         initialRole,
-        newRole,
-      })
+        newRole
+      )
     ).toEqual(expectedRoles);
   });
 
@@ -308,25 +308,22 @@ describe('changeRoleForEntity', () => {
     const newRole = 'linode_viewer';
     const entityId = 12345678;
     const entityType = 'linode';
-    const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
-      entity_access: [
-        {
-          id: 12345678,
-          roles: ['linode_viewer'],
-          type: 'linode',
-        },
-      ],
-    };
+    const expectedRoles = [
+      {
+        id: 12345678,
+        roles: ['linode_viewer'],
+        type: 'linode',
+      },
+    ];
 
     expect(
-      changeRoleForEntity({
-        assignedRoles: userPermissions,
+      changeRoleForEntity(
+        userPermissions.entity_access,
         entityId,
         entityType,
         initialRole,
-        newRole,
-      })
+        newRole
+      )
     ).toEqual(expectedRoles);
   });
 
@@ -350,30 +347,27 @@ describe('changeRoleForEntity', () => {
     const newRole = 'linode_viewer';
     const entityId = 1;
     const entityType = 'linode';
-    const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
-      entity_access: [
-        {
-          id: 2,
-          roles: ['linode_contributor'],
-          type: 'linode',
-        },
-        {
-          id: 1,
-          roles: ['linode_viewer'],
-          type: 'linode',
-        },
-      ],
-    };
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_viewer'],
+        type: 'linode',
+      },
+    ];
 
     expect(
-      changeRoleForEntity({
-        assignedRoles: userPermissions,
+      changeRoleForEntity(
+        userPermissions.entity_access,
         entityId,
         entityType,
         initialRole,
-        newRole,
-      })
+        newRole
+      )
     ).toEqual(expectedRoles);
   });
 
@@ -397,30 +391,27 @@ describe('changeRoleForEntity', () => {
     const newRole = 'linode_viewer';
     const entityId = 2;
     const entityType = 'linode';
-    const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
-      entity_access: [
-        {
-          id: 2,
-          roles: ['linode_viewer'],
-          type: 'linode',
-        },
-        {
-          id: 1,
-          roles: ['linode_contributor', 'linode_viewer'],
-          type: 'linode',
-        },
-      ],
-    };
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_viewer'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
 
     expect(
-      changeRoleForEntity({
-        assignedRoles: userPermissions,
+      changeRoleForEntity(
+        userPermissions.entity_access,
         entityId,
         entityType,
         initialRole,
-        newRole,
-      })
+        newRole
+      )
     ).toEqual(expectedRoles);
   });
 });

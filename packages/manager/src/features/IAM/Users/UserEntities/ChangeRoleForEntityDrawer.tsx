@@ -98,20 +98,24 @@ export const ChangeRoleForEntityDrawer = ({
       return;
     }
     try {
-      const initialRole = role?.role_name;
+      const initialRole = role!.role_name;
       const newRole = data.roleName.label;
       const entityId = role!.entity_id;
       const entityType = role!.entity_type;
 
-      const updatedUserRoles = changeRoleForEntity({
-        assignedRoles: assignedRoles!,
+      const updatedEntityRoles = changeRoleForEntity(
+        assignedRoles!.entity_access,
         entityId,
         entityType,
         initialRole,
-        newRole,
+        newRole
+      );
+
+      await updateUserPermissions({
+        ...assignedRoles!,
+        entity_access: updatedEntityRoles,
       });
 
-      await updateUserPermissions(updatedUserRoles);
       handleClose();
     } catch (errors) {
       for (const error of errors) {
