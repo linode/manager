@@ -18,7 +18,7 @@ interface Props extends Omit<CheckboxProps, 'size'> {
   /**
    * New custom size prop
    *
-   * @default md
+   * @default "md"
    */
   customSize?: 'md' | 'sm';
   /**
