@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateLinodeInterfaceMutation } from '@linode/queries';
-import { Notice, Stack, omitProps } from '@linode/ui';
+import { Notice, omitProps, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -12,7 +12,7 @@ import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
 import { VLANInterface } from './VLANInterface';
-import { VPCInterface } from './VPCInterface';
+import { VPCInterface } from './VPC/VPCInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
 
@@ -29,7 +29,16 @@ export const AddInterfaceForm = (props: Props) => {
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
   const form = useForm<CreateInterfaceFormValues>({
-    defaultValues: { firewall_id: null, public: {}, vlan: {}, vpc: {} },
+    defaultValues: {
+      firewall_id: null,
+      public: {},
+      vlan: {},
+      vpc: {
+        ipv4: {
+          addresses: [{ primary: true, address: 'auto' }],
+        },
+      },
+    },
     async resolver(rawValues, context, options) {
       const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
         structuredClone(rawValues)
@@ -68,6 +77,10 @@ export const AddInterfaceForm = (props: Props) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
+          <Notice
+            text="Adding a network interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+            variant="warning"
+          />
           {form.formState.errors.root && (
             <Notice
               spacingBottom={0}

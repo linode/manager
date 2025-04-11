@@ -51,6 +51,8 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
             spacing={0.5}
           >
             <Controller
+              control={control}
+              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges.${index}.range`}
               render={({ field, fieldState }) => (
                 <TextField
                   errorText={fieldState.error?.message}
@@ -64,8 +66,6 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges.${index}.range`}
             />
             <IconButton
               aria-label={`Remove IP Range ${index}`}
@@ -82,6 +82,8 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
           Add IPv4 Range
         </LinkButton>
         <TooltipIcon
+          status="help"
+          sxTooltipIcon={{ p: 0.5 }}
           text={
             <Typography>
               Assign additional IPv4 address ranges that the VPC can use to
@@ -92,8 +94,6 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
               .
             </Typography>
           }
-          status="help"
-          sxTooltipIcon={{ p: 0.5 }}
         />
       </Stack>
     </Stack>
