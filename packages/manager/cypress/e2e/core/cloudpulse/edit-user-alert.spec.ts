@@ -283,8 +283,6 @@ describe('Integration Tests for Edit Alert', () => {
       .contains('Select All')
       .click();
 
-    cy.get('[data-qa-notice="true"]').contains('Select All').click();
-
     cy.get(
       '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
     ).within(() => {
