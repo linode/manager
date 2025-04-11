@@ -1,4 +1,5 @@
 export * from './accountAvailability';
+export * from './betas';
 export * from './config';
 export * from './factoryProxy';
 export * from './linodes';
