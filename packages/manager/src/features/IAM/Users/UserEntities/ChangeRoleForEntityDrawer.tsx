@@ -20,9 +20,9 @@ import {
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import {
+  changeRoleForEntity,
   getAllRoles,
   getRoleByName,
-  changeRoleForEntity,
 } from '../../Shared/utilities';
 
 import type {
@@ -47,16 +47,13 @@ export const ChangeRoleForEntityDrawer = ({
   const theme = useTheme();
   const { username } = useParams<{ username: string }>();
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
@@ -151,6 +148,8 @@ export const ChangeRoleForEntityDrawer = ({
         </Typography>
 
         <Controller
+          control={control}
+          name="roleName"
           render={({ field, fieldState }) => (
             <Autocomplete
               errorText={fieldState.error?.message}
@@ -163,8 +162,6 @@ export const ChangeRoleForEntityDrawer = ({
               value={field.value || null}
             />
           )}
-          control={control}
-          name="roleName"
           rules={{ required: 'Role is required.' }}
         />
 

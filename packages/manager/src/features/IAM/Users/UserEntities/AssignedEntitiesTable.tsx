@@ -56,14 +56,11 @@ export const AssignedEntitiesTable = () => {
 
   const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
 
-  const [drawerMode, setDrawerMode] = React.useState<DrawerModes>(
-    'assign-role'
-  );
+  const [drawerMode, setDrawerMode] =
+    React.useState<DrawerModes>('assign-role');
 
-  const [
-    isChangeRoleForEntityDrawerOpen,
-    setIsChangeRoleForEntityDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isChangeRoleForEntityDrawerOpen, setIsChangeRoleForEntityDrawerOpen] =
+    React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<EntitiesRole>();
 
   const {
@@ -170,15 +167,16 @@ export const AssignedEntitiesTable = () => {
   return (
     <Grid>
       <Grid
+        container
+        direction="row"
         sx={{
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: 3,
         }}
-        container
-        direction="row"
       >
         <DebouncedSearchTextField
+          clearable
           containerProps={{
             sx: {
               marginBottom: { md: 0, xs: 2 },
@@ -186,7 +184,6 @@ export const AssignedEntitiesTable = () => {
               width: { md: '410px', xs: '100%' },
             },
           }}
-          clearable
           hideLabel
           label="Filter"
           onSearch={setQuery}
@@ -195,14 +192,14 @@ export const AssignedEntitiesTable = () => {
           value={query}
         />
         <Autocomplete
-          textFieldProps={{
-            containerProps: { sx: { minWidth: 250 } },
-            hideLabel: true,
-          }}
           label="Select type"
           onChange={(_, selected) => setEntityType(selected ?? null)}
           options={entityTypes}
           placeholder="All Assigned Entities"
+          textFieldProps={{
+            containerProps: { sx: { minWidth: 250 } },
+            hideLabel: true,
+          }}
           value={entityType}
         />
       </Grid>

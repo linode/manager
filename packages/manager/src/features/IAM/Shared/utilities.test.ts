@@ -1,12 +1,12 @@
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 import {
+  changeRoleForEntity,
   combineRoles,
   deleteUserRole,
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
-  changeRoleForEntity,
   updateUserRoles,
 } from './utilities';
 
@@ -303,7 +303,7 @@ describe('changeRoleForEntity', () => {
     ).toEqual(expectedRoles);
   });
 
-  it('should return an object of updated users roles with entity access', () => {
+  it('should return an object of updated users roles with entity access when changing from "linode_contributor" to "linode_viewer"', () => {
     const initialRole = 'linode_contributor';
     const newRole = 'linode_viewer';
     const entityId = 12345678;
@@ -330,7 +330,7 @@ describe('changeRoleForEntity', () => {
     ).toEqual(expectedRoles);
   });
 
-  it('should return an object of updated users roles with entity access', () => {
+  it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
     const userPermissions: IamUserPermissions = {
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [

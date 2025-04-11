@@ -223,10 +223,8 @@ export interface CombinedRoles {
  */
 export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
-  const roleMap: Map<
-    AccountAccessRole | EntityAccessRole,
-    null | number[]
-  > = new Map();
+  const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
+    new Map();
 
   // Add account access roles with resource_id set to null
   data.account_access.forEach((role: AccountAccessRole) => {
@@ -437,7 +435,7 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
-    role: RolesType | null;
+    role: null | RolesType;
   }[];
 }
 interface DeleteUserRolesProps {
@@ -488,10 +486,8 @@ export const deleteUserRole = ({
 export const transformedAccountEntities = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
-  const result: Map<
-    EntityType,
-    Pick<AccountEntity, 'id' | 'label'>[]
-  > = new Map();
+  const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
+    new Map();
 
   entities.forEach((item) => {
     if (!result.has(item.type)) {
