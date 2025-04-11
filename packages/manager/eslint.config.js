@@ -118,9 +118,9 @@ export const baseConfig = [
     },
   },
 
-  // 4. CloudPulse-specific rules
+  // N. CloudPulse-specific rules
   {
-    files: ['**/CloudPulse/**/*.{js,ts,tsx}'],
+    files: ['**/CloudPulse/**/*.{js,ts,tsx}', '**/cloudpulse/**/*.{js,ts,tsx}'],
     plugins: {
       'custom-rules': cloudPulseRules,
     },
