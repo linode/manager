@@ -121,6 +121,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
         }}
         disabled={!searchEnabled}
         inputValue={inputValue}
+        keepSearchEnabledOnMobile
         label="Search for answers"
         onChange={(_, selected) => handleSelect(selected)}
         onInputChange={(_, value) => onInputValueChange(value)}
