@@ -15,7 +15,7 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
 
   const ipv4ToTypography = (
     <>
-      {ipv4.addresses.map((address) =>
+      {ipv4?.addresses.map((address) =>
         address.nat_1_1_address ? (
           <Stack key={address.address}>
             <MaskableText
@@ -35,7 +35,7 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
           />
         )
       )}
-      {ipv4.ranges.map((range) => (
+      {ipv4?.ranges.map((range) => (
         <MaskableText
           isToggleable
           key={range.range}
