@@ -8,7 +8,9 @@ import {
   ActionsPanel,
   Autocomplete,
   Checkbox,
+  DisableItemOption,
   FormControlLabel,
+  ListItemOption,
   Stack,
 } from '@linode/ui';
 import { UpdateLinodeInterfaceSettingsSchema } from '@linode/validation';
@@ -63,6 +65,28 @@ export const InterfaceSettingsForm = (props: Props) => {
     }
   };
 
+  const disabledIPv4Interfaces = interfaces?.reduce<
+    Record<number, DisableItemOption>
+  >((acc, i) => {
+    if (!data?.default_route.ipv4_eligible_interface_ids.includes(i.id)) {
+      acc[i.id] = {
+        reason: 'This interface is not eligible to be the default IPv4 route.',
+      };
+    }
+    return acc;
+  }, []);
+
+  const disabledIPv6Interfaces = interfaces?.reduce<
+    Record<number, DisableItemOption>
+  >((acc, i) => {
+    if (!data?.default_route.ipv6_eligible_interface_ids.includes(i.id)) {
+      acc[i.id] = {
+        reason: 'This interface is not eligible to be the default IPv6 route.',
+      };
+    }
+    return acc;
+  }, []);
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Stack spacing={2}>
@@ -71,13 +95,28 @@ export const InterfaceSettingsForm = (props: Props) => {
           name="default_route.ipv4_interface_id"
           render={({ field, fieldState }) => (
             <Autocomplete
-              disableClearable
+              disableClearable={Boolean(field.value)}
               errorText={fieldState.error?.message}
+              getOptionDisabled={(option) =>
+                Boolean(disabledIPv4Interfaces?.[option.id])
+              }
               label="Default IPv4 Route"
               noMarginTop
-              onChange={(e, i) => field.onChange(i.id)}
+              onChange={(e, i) => field.onChange(i?.id ?? null)}
               options={interfaces ?? []}
-              value={interfaces?.find((i) => i.id === field.value)}
+              placeholder="Select an Interface"
+              renderOption={({ key, ...props }, item, state) => (
+                <ListItemOption
+                  disabledOptions={disabledIPv4Interfaces?.[item.id]}
+                  item={item}
+                  key={key}
+                  props={props}
+                  selected={state.selected}
+                >
+                  {item.label}
+                </ListItemOption>
+              )}
+              value={interfaces?.find((i) => i.id === field.value) ?? null}
             />
           )}
         />
@@ -86,13 +125,28 @@ export const InterfaceSettingsForm = (props: Props) => {
           name="default_route.ipv6_interface_id"
           render={({ field, fieldState }) => (
             <Autocomplete
-              disableClearable
+              disableClearable={Boolean(field.value)}
               errorText={fieldState.error?.message}
+              getOptionDisabled={(option) =>
+                Boolean(disabledIPv6Interfaces?.[option.id])
+              }
               label="Default IPv6 Route"
               noMarginTop
-              onChange={(e, i) => field.onChange(i.id)}
+              onChange={(e, i) => field.onChange(i?.id ?? null)}
               options={interfaces ?? []}
-              value={interfaces?.find((i) => i.id === field.value)}
+              placeholder="Select an Interface"
+              renderOption={({ key, ...props }, item, state) => (
+                <ListItemOption
+                  disabledOptions={disabledIPv6Interfaces?.[item.id]}
+                  item={item}
+                  key={key}
+                  props={props}
+                  selected={state.selected}
+                >
+                  {item.label}
+                </ListItemOption>
+              )}
+              value={interfaces?.find((i) => i.id === field.value) ?? null}
             />
           )}
         />
