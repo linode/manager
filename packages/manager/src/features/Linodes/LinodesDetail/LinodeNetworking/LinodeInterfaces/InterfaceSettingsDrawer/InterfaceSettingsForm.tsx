@@ -8,7 +8,6 @@ import {
   ActionsPanel,
   Autocomplete,
   Checkbox,
-  DisableItemOption,
   FormControlLabel,
   ListItemOption,
   Stack,
@@ -19,6 +18,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { getLinodeInterfaceType } from '../utilities';
+import { getDisabledInterfaceSelectOptions } from './InterfaceSettingsForm.utilities';
 
 import type {
   LinodeInterfaceSettings,
@@ -65,27 +65,15 @@ export const InterfaceSettingsForm = (props: Props) => {
     }
   };
 
-  const disabledIPv4Interfaces = interfaces?.reduce<
-    Record<number, DisableItemOption>
-  >((acc, i) => {
-    if (!data?.default_route.ipv4_eligible_interface_ids.includes(i.id)) {
-      acc[i.id] = {
-        reason: 'This interface is not eligible to be the default IPv4 route.',
-      };
-    }
-    return acc;
-  }, []);
+  const disabledIPv4Interfaces =
+    data &&
+    interfacesData &&
+    getDisabledInterfaceSelectOptions(interfacesData, data, 'IPv4');
 
-  const disabledIPv6Interfaces = interfaces?.reduce<
-    Record<number, DisableItemOption>
-  >((acc, i) => {
-    if (!data?.default_route.ipv6_eligible_interface_ids.includes(i.id)) {
-      acc[i.id] = {
-        reason: 'This interface is not eligible to be the default IPv6 route.',
-      };
-    }
-    return acc;
-  }, []);
+  const disabledIPv6Interfaces =
+    data &&
+    interfacesData &&
+    getDisabledInterfaceSelectOptions(interfacesData, data, 'IPv6');
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
