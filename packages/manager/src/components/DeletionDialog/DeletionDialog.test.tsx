@@ -29,6 +29,7 @@ queryMocks.usePreferences.mockReturnValue({
 describe('DeletionDialog', () => {
   const defaultArgs: DeletionDialogProps = {
     entity: 'Linode',
+    isFetching: false,
     label: 'my-linode-0',
     loading: false,
     onClose: vi.fn(),

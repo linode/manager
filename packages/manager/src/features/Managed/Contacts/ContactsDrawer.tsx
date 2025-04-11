@@ -1,6 +1,8 @@
 import { ActionsPanel, Drawer, Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Grid2';
+import { useNavigate } from '@tanstack/react-router';
+import { useMatch } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
@@ -15,7 +17,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
-import type { ManagedContactGroup, Mode } from './common';
+import type { ManagedContactGroup } from './common';
 import type {
   ContactPayload,
   ManagedContact,
@@ -23,11 +25,10 @@ import type {
 import type { FormikHelpers } from 'formik';
 
 interface ContactsDrawerProps {
-  closeDrawer: () => void;
   contact?: ManagedContact;
   groups: ManagedContactGroup[];
+  isFetching: boolean;
   isOpen: boolean;
-  mode: Mode;
 }
 
 const emptyContactPayload: ContactPayload = {
@@ -41,9 +42,10 @@ const emptyContactPayload: ContactPayload = {
 };
 
 const ContactsDrawer = (props: ContactsDrawerProps) => {
-  const { closeDrawer, contact, groups, isOpen, mode } = props;
-
-  const isEditing = mode === 'edit' && contact;
+  const { contact, groups, isFetching, isOpen } = props;
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const isEditing = match.routeId === '/managed/contacts/$contactId/edit';
 
   const { mutateAsync: createContact } = useCreateContactMutation();
   const { mutateAsync: updateContact } = useUpdateContactMutation(
@@ -81,7 +83,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
     // Conditionally build request based on the mode of the drawer.
     let createOrUpdate: () => Promise<ManagedContact>;
 
-    if (mode === 'edit' && contact) {
+    if (isEditing && contact) {
       createOrUpdate = () => updateContact(payload);
     } else {
       createOrUpdate = () => createContact(payload);
@@ -90,7 +92,9 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
     createOrUpdate()
       .then(() => {
         setSubmitting(false);
-        closeDrawer();
+        navigate({
+          to: '/managed/contacts',
+        });
       })
       .catch((err) => {
         setSubmitting(false);
@@ -108,8 +112,13 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
+      onClose={() => {
+        navigate({
+          to: '/managed/contacts',
+        });
+      }}
       NotFoundComponent={NotFound}
-      onClose={closeDrawer}
+      isFetching={isFetching}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}
     >

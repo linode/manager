@@ -8,6 +8,7 @@ import {
   mockDeleteServiceMonitor,
   mockDisableServiceMonitor,
   mockEnableServiceMonitor,
+  mockGetServiceMonitor,
   mockGetServiceMonitors,
   mockUpdateServiceMonitor,
 } from 'support/intercepts/managed';
@@ -80,6 +81,7 @@ describe('Managed Monitors tab', () => {
       label: newLabel,
     };
 
+    mockGetServiceMonitor(monitorId, originalMonitor).as('getMonitor');
     mockGetServiceMonitors([originalMonitor]).as('getMonitors');
     visitUrlWithManagedEnabled('/managed/monitors');
     cy.wait('@getMonitors');
@@ -90,6 +92,8 @@ describe('Managed Monitors tab', () => {
       .within(() => {
         ui.button.findByTitle('Edit').should('be.visible').click();
       });
+
+    cy.wait('@getMonitor');
 
     ui.drawer
       .findByTitle('Edit Monitor')
@@ -223,6 +227,7 @@ describe('Managed Monitors tab', () => {
       status: 'ok',
     });
 
+    mockGetServiceMonitor(monitorId, originalMonitor).as('getMonitor');
     mockGetServiceMonitors([originalMonitor]).as('getMonitors');
     mockDeleteServiceMonitor(monitorId).as('deleteMonitor');
     visitUrlWithManagedEnabled('/managed/monitors');
@@ -240,6 +245,8 @@ describe('Managed Monitors tab', () => {
       });
 
     ui.actionMenuItem.findByTitle('Delete').click();
+
+    cy.wait('@getMonitor');
 
     // Fill out and submit type-to-confirm.
     ui.dialog

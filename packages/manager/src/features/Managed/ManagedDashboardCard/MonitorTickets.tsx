@@ -1,6 +1,7 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';

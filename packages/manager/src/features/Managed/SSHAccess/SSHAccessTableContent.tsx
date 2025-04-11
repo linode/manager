@@ -6,7 +6,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import SSHAccessRow from './SSHAccessRow';
+import { SSHAccessRow } from './SSHAccessRow';
 
 import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -16,11 +16,10 @@ interface SSHAccessTableContentProps {
   error?: APIError[] | null;
   linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
-  openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
-  const { error, linodeSettings, loading, openDrawer } = props;
+  const { error, linodeSettings, loading } = props;
 
   const matchesSmDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -54,12 +53,9 @@ export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
           <SSHAccessRow
             key={`linode-setting-row-${idx}`}
             linodeSetting={linodeSetting}
-            openDrawer={openDrawer}
           />
         )
       )}
     </>
   );
 };
-
-export default SSHAccessTableContent;
