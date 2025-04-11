@@ -1,4 +1,3 @@
-import { Box } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
@@ -32,13 +31,13 @@ export interface AlertsListTableProps {
    */
   alerts: Alert[];
   /**
-   * The current state of the alerts grouped by tag
-   */
-  alertsGroupedByTag?: boolean;
-  /**
    * An error to display if there was an issue fetching the alerts
    */
   error?: APIError[];
+  /**
+   * The current state of the alerts grouped by tag
+   */
+  isGroupedByTag?: boolean;
   /**
    * A boolean indicating whether the alerts are loading
    */
@@ -54,17 +53,17 @@ export interface AlertsListTableProps {
   /**
    * The callback to toggle the alerts grouped by tag
    */
-  toggleAlertsGroupedByTag?: () => boolean;
+  toggleGroupByTag?: () => boolean;
 }
 export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const {
     alerts,
-    alertsGroupedByTag,
+    isGroupedByTag,
     error,
     isLoading,
     scrollToElement,
     services,
-    toggleAlertsGroupedByTag,
+    toggleGroupByTag,
   } = props;
 
   const _error = error
@@ -198,9 +197,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         colCount={7}
                         data-qa="alert-table"
                         size="small"
-                        tableClass={
-                          alertsGroupedByTag ? 'MuiTable-groupByTag' : ''
-                        }
+                        tableClass={isGroupedByTag ? 'MuiTable-groupByTag' : ''}
                       >
                         <TableHead>
                           <TableRow>
@@ -218,23 +215,17 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                                 {value.colName}
                               </TableSortCell>
                             ))}
-                            <TableCell sx={{ padding: '0 !important' }}>
-                              <Box
-                                sx={{
-                                  alignItems: 'center',
-                                  display: 'flex',
-                                  gap: 3,
-                                  justifyContent: 'flex-end',
-                                  paddingRight: 1.5,
-                                }}
-                              >
-                                <GroupByTagToggle
-                                  isGroupedByTag={alertsGroupedByTag ?? false}
-                                  toggleGroupByTag={
-                                    toggleAlertsGroupedByTag ?? (() => false)
-                                  }
-                                />
-                              </Box>
+                            <TableCell
+                              sx={{
+                                textAlign: 'right',
+                              }}
+                            >
+                              <GroupByTagToggle
+                                isGroupedByTag={isGroupedByTag ?? false}
+                                toggleGroupByTag={
+                                  toggleGroupByTag ?? (() => false)
+                                }
+                              />
                             </TableCell>
                           </TableRow>
                         </TableHead>
@@ -246,7 +237,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                             loadingProps={{ columns: 6 }}
                           />
                         </TableBody>
-                        {alertsGroupedByTag ? (
+                        {isGroupedByTag ? (
                           <GroupedAlertsTable
                             groupedAlerts={sortGroups(groupByTags(orderedData))}
                             handleDetails={handleDetails}
@@ -265,7 +256,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         )}
                       </Table>
                     </Grid2>
-                    {!alertsGroupedByTag && (
+                    {!isGroupedByTag && (
                       <PaginationFooter
                         count={count}
                         eventCategory="Alert Definitions Table"

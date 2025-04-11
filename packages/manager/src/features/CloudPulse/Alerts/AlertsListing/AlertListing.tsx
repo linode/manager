@@ -121,10 +121,12 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
-    'aclpAlertsGroupByTag',
-    [false, true]
-  );
+  const { preference: togglePreference, toggle: toggleGroupByTag } =
+    usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
   if (alerts && alerts.length === 0) {
     return (
@@ -242,12 +244,12 @@ export const AlertListing = () => {
       </Box>
       <AlertsListTable
         alerts={getAlertsList}
-        alertsGroupedByTag={preference}
         error={error ?? undefined}
+        isGroupedByTag={togglePreference}
         isLoading={isLoading}
         scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
-        toggleAlertsGroupedByTag={() => toggleAlertsGroupedByTag?.() ?? false}
+        toggleGroupByTag={() => toggleGroupByTag?.() ?? false}
       />
     </Stack>
   );

@@ -210,11 +210,11 @@ describe('Alert List Table test', () => {
     renderWithTheme(
       <AlertsListTable
         alerts={[alertFactory.build({ label: 'Test Alert' })]}
-        alertsGroupedByTag={true}
+        isGroupedByTag={true}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={() => true}
+        toggleGroupByTag={() => true}
       />
     );
     const toggleButton = screen.getByLabelText('Toggle group by tag');

@@ -13,6 +13,12 @@ interface AclpPreferenceObject {
   updateWidgetPreference: (label: string, data: Partial<AclpWidget>) => void;
 }
 
+interface PreferenceToggleObject<K extends keyof ManagerPreferences> {
+  defaultValue: ManagerPreferences[K];
+  options: [ManagerPreferences[K], ManagerPreferences[K]];
+  preferenceKey: K;
+}
+
 export const useAclpPreference = (): AclpPreferenceObject => {
   const { data: preferences, isLoading } = usePreferences();
 
@@ -80,13 +86,15 @@ export const useAclpPreference = (): AclpPreferenceObject => {
  *
  * @param key key of the preference to be toggled
  * @param options options for the preference
+ * @param defaultValue default value of the preference
  */
-export const usePreferencesToggle = <K extends keyof ManagerPreferences>(
-  key: K,
-  options: [ManagerPreferences[K], ManagerPreferences[K]]
-) => {
+export const usePreferencesToggle = <K extends keyof ManagerPreferences>({
+  preferenceKey,
+  options,
+  defaultValue,
+}: PreferenceToggleObject<K>) => {
   const { data: preference } = usePreferences(
-    (preferences: ManagerPreferences) => preferences?.[key]
+    (preferences: ManagerPreferences) => preferences?.[preferenceKey]
   );
 
   const { mutateAsync: updateFunction } = useMutatePreferences();
@@ -100,7 +108,7 @@ export const usePreferencesToggle = <K extends keyof ManagerPreferences>(
 
     // if the preference is undefined, set it to false
     if (preference === undefined) {
-      newPreferenceToSet = options[1];
+      newPreferenceToSet = defaultValue;
     } else if (preference === options[0]) {
       newPreferenceToSet = options[1];
     } else {
@@ -108,7 +116,7 @@ export const usePreferencesToggle = <K extends keyof ManagerPreferences>(
     }
 
     updateFunction({
-      [key]: newPreferenceToSet,
+      [preferenceKey]: newPreferenceToSet,
     }).catch(() => null);
 
     return newPreferenceToSet;

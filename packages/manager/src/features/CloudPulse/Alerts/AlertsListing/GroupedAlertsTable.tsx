@@ -73,8 +73,9 @@ export const GroupedAlertsTable = ({
 
   return (
     <>
-      {groupedAlerts.map(([tag, alertsForTag]) => {
+      {groupedAlerts.map(([tag, alertsForTag], index) => {
         const tagRef = tagRefs.current.get(tag);
+        const isLastGroup = index === groupedAlerts.length - 1;
 
         return (
           <Paginate data={alertsForTag} key={tag}>
@@ -87,7 +88,11 @@ export const GroupedAlertsTable = ({
               pageSize,
             }) => (
               <TableBody>
-                <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
+                <StyledTagHeaderRow
+                  sx={{
+                    backgroundColor: theme.tokens.alias.Background.Neutral,
+                  }}
+                >
                   <TableCell colSpan={7}>
                     <StyledTagHeader
                       data-qa-tag-header={tag}
@@ -129,10 +134,9 @@ export const GroupedAlertsTable = ({
                         pageSize={pageSize}
                         sx={{
                           border: 0,
-                          marginBottom:
-                            groupedAlerts[groupedAlerts.length - 1][0] === tag
-                              ? 0
-                              : theme.spacingFunction(16),
+                          marginBottom: isLastGroup
+                            ? 0
+                            : theme.spacingFunction(16),
                           marginTop: theme.spacingFunction(16),
                         }}
                       />
