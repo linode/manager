@@ -20,6 +20,7 @@ import { ClusterActionMenu } from './ClusterActionMenu';
 import { ClusterChips } from './ClusterChips';
 
 import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 export interface Props {
   cluster: KubernetesCluster;
@@ -44,6 +45,12 @@ export const KubernetesClusterRow = (props: Props) => {
   const { versions } = useLkeStandardOrEnterpriseVersions(
     cluster.tier ?? 'standard' // TODO LKE: remove fallback once LKE-E is in GA and tier is required
   );
+
+  const isLKEClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster.id,
+  });
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -106,6 +113,7 @@ export const KubernetesClusterRow = (props: Props) => {
           }
           clusterId={cluster.id}
           clusterLabel={cluster.label}
+          disabled={isLKEClusterReadOnly}
         />
       </TableCell>
     </TableRow>
