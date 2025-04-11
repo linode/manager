@@ -54,8 +54,8 @@ const LinodesDetailNavigation = () => {
 
   const tabs = [
     {
-      routeName: `${url}/analytics`,
-      title: 'Analytics',
+      routeName: `${url}/metrics`,
+      title: 'Metrics',
     },
     {
       routeName: `${url}/networking`,
