@@ -16,6 +16,6 @@
     "@linode/api-v4": "workspace:*"
   },
   "peerDependencies": {
-    "vite": "^5 || ^6"
+    "vite": "^6.2.5"
   }
 }

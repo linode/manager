@@ -1,13 +1,19 @@
 import {
   Autocomplete,
   FormControlLabel,
+  IconButton,
   TextField,
   Toggle,
   Typography,
 } from '@linode/ui';
+import Close from '@mui/icons-material/Close';
 import React from 'react';
 
-import { formatConfigValue } from '../../utilities';
+import {
+  formatConfigValue,
+  isConfigBoolean,
+  isConfigStringWithEnum,
+} from '../../utilities';
 import {
   StyledBox,
   StyledChip,
@@ -19,43 +25,35 @@ import type { ConfigValue } from '@linode/api-v4';
 
 interface Props {
   configItem?: ConfigurationOption;
-  configValue?: ConfigValue;
-  engine: string;
   errorText: string | undefined;
+  onBlur?: () => void;
   onChange: (config: ConfigValue) => void;
+  onRemove?: (label: string) => void;
 }
 
 export const DatabaseConfigurationItem = (props: Props) => {
-  const { configItem, configValue, engine, errorText, onChange } = props;
+  const { configItem, errorText, onBlur, onChange, onRemove } = props;
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
-    if (
-      configItem?.type === 'boolean' ||
-      (Array.isArray(configItem?.type) && configItem?.type.includes('boolean'))
-    ) {
+    if (configItem && isConfigBoolean(configItem)) {
       return (
         <FormControlLabel
           control={
             <Toggle
-              checked={Boolean(configValue)}
+              checked={Boolean(configItem.value)}
               onChange={(e) => onChange(e.target.checked)}
             />
           }
-          label={formatConfigValue(String(configValue))}
+          label={formatConfigValue(String(configItem.value))}
         />
       );
     }
-    if (
-      (configItem?.type === 'string' && configItem.enum) ||
-      (Array.isArray(configItem?.type) &&
-        configItem?.type.includes('string') &&
-        configItem.enum)
-    ) {
+    if (configItem && isConfigStringWithEnum(configItem)) {
       const options =
         configItem.enum?.map((option) => ({ label: option })) || [];
       const selectedValue = options.find(
-        (option) => option.label === String(configValue)
+        (option) => option.label === String(configItem.value)
       );
       return (
         <Autocomplete
@@ -77,40 +75,41 @@ export const DatabaseConfigurationItem = (props: Props) => {
     if (configItem?.type === 'number' || configItem?.type === 'integer') {
       return (
         <TextField
-          slotProps={{
-            htmlInput: { max: configItem.maximum, min: configItem.minimum },
-          }}
+          placeholder={
+            configItem.isNew ? String(configItem?.example ?? '') : ''
+          }
           errorText={errorText}
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(Number(e.target.value))}
           type="number"
-          value={Number(configValue)}
+          value={Number(configItem.value)}
         />
       );
     }
 
-    if (configItem?.type === 'string') {
+    if (
+      configItem?.type === 'string' ||
+      (Array.isArray(configItem?.type) &&
+        configItem?.type.includes('string') &&
+        !configItem.enum)
+    ) {
       return (
         <TextField
-          slotProps={{
-            htmlInput: {
-              maxLength: configItem?.maxLength,
-              minLength: configItem?.minLength,
-            },
-          }}
           errorText={errorText}
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(e.target.value)}
+          placeholder={String(configItem.example)}
           type="text"
-          value={configValue ? String(configValue) : ''}
+          value={configItem.value ? String(configItem.value) : ''}
         />
       );
     }
-
     return null;
   };
 
@@ -127,9 +126,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
             mr: 0.5,
           })}
         >
-          {`${engine}.${configLabel}`}
+          {configItem?.category === 'other'
+            ? configLabel
+            : `${configItem?.category}.${configLabel}`}
         </Typography>
-        {configItem?.restart_cluster && (
+        {configItem?.requires_restart && (
           <StyledChip color="warning" label="restarts service" size="small" />
         )}
         {configItem?.description && (
@@ -137,6 +138,16 @@ export const DatabaseConfigurationItem = (props: Props) => {
         )}
         {renderInputField()}
       </StyledBox>
+
+      {configItem?.isNew && configItem && onRemove && (
+        <IconButton
+          disableRipple
+          onClick={() => onRemove(configItem?.label)}
+          size="large"
+        >
+          <Close />
+        </IconButton>
+      )}
     </StyledWrapper>
   );
 };

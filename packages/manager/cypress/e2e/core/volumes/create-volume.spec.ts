@@ -1,40 +1,20 @@
-import {
-  createLinodeRequestFactory,
-  linodeFactory,
-  regionFactory,
-} from '@linode/utilities';
-import {
-  accountUserFactory,
-  grantsFactory,
-  profileFactory,
-} from '@src/factories';
+import { createLinodeRequestFactory, profileFactory } from '@linode/utilities';
+import { accountUserFactory, grantsFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
-import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
+import { mockGetUser } from 'support/intercepts/account';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import {
-  interceptCreateVolume,
-  mockGetVolume,
-  mockGetVolumes,
-} from 'support/intercepts/volumes';
+import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { accountFactory, volumeFactory } from 'src/factories';
-
-import type { Linode, Region } from '@linode/api-v4';
+import type { Linode } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -42,18 +22,6 @@ import type { Linode, Region } from '@linode/api-v4';
 const pageSizeOverride = {
   PAGE_SIZE: 100,
 };
-
-const mockRegions: Region[] = [
-  regionFactory.build({
-    capabilities: ['Linodes', 'Block Storage', 'Block Storage Encryption'],
-    id: 'us-east',
-    label: 'Newark, NJ',
-    site_type: 'core',
-  }),
-];
-
-const CLIENT_LIBRARY_UPDATE_COPY =
-  'This Linode requires a client library update and will need to be rebooted prior to attaching an encrypted volume.';
 
 authenticate();
 describe('volume create flow', () => {
@@ -156,10 +124,6 @@ describe('volume create flow', () => {
           .should('be.visible')
           .click();
 
-        // @TODO BSE: once BSE is fully rolled out, check for the notice (selected linode doesn't have
-        // "Block Storage Encryption" capability + user checked "Encrypt Volume" checkbox) instead of the absence of it
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
-
         cy.findByText('Create Volume').click();
         cy.wait('@createVolume');
 
@@ -185,195 +149,6 @@ describe('volume create flow', () => {
             cy.findByText(volume.label).should('be.visible');
             cy.findByText(`${volume.size} GB`).should('be.visible');
           });
-      }
-    );
-  });
-
-  /*
-   * - Checks for Block Storage Encryption client library update notice on the Volume Create page.
-   */
-  it('displays a warning notice on Volume Create page re: rebooting for client library updates under the appropriate conditions', () => {
-    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; volume being created is encrypted and the
-    // selected Linode does not support Block Storage Encryption
-
-    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
-    mockAppendFeatureFlags({
-      blockStorageEncryption: true,
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Block Storage Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-
-    const linodeRequest = createLinodeRequestFactory.build({
-      booted: false,
-      label: randomLabel(),
-      region: mockRegions[0].id,
-      root_pass: randomString(16),
-    });
-
-    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
-      (linode: Linode) => {
-        cy.visitWithLogin('/volumes/create');
-        cy.wait(['@getFeatureFlags', '@getAccount']);
-
-        // Select a linode without the BSE capability
-        cy.findByLabelText('Linode').should('be.visible').click();
-        cy.focused().type(linode.label);
-
-        ui.autocompletePopper
-          .findByTitle(linode.label)
-          .should('be.visible')
-          .click();
-
-        // Check the "Encrypt Volume" checkbox
-        cy.get('[data-qa-checked]').should('be.visible').click();
-        // });
-
-        // Ensure warning notice is displayed and "Create Volume" button is disabled
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
-        ui.button
-          .findByTitle('Create Volume')
-          .should('be.visible')
-          .should('be.disabled');
-      }
-    );
-  });
-
-  /*
-   * - Checks for absence of Block Storage Encryption client library update notice on the Volume Create page
-   *   when selected linode supports BSE
-   */
-  it('does not display a warning notice on Volume Create page re: rebooting for client library updates when selected linode supports BSE', () => {
-    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; volume being created is encrypted and the
-    // selected Linode supports Block Storage Encryption
-
-    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
-    mockAppendFeatureFlags({
-      blockStorageEncryption: true,
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Block Storage Encryption'],
-    });
-
-    // Mock linode
-    const mockLinode = linodeFactory.build({
-      capabilities: ['Block Storage Encryption'],
-      id: 123456,
-      region: mockRegions[0].id,
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockGetLinodes([mockLinode]).as('getLinodes');
-    mockGetLinodeDetails(mockLinode.id, mockLinode);
-
-    cy.visitWithLogin(`/volumes/create`);
-    cy.wait(['@getAccount', '@getRegions', '@getLinodes']);
-
-    // Select a linode without the BSE capability
-    cy.findByLabelText('Linode').should('be.visible').click();
-    cy.focused().type(mockLinode.label);
-
-    ui.autocompletePopper
-      .findByTitle(mockLinode.label)
-      .should('be.visible')
-      .click();
-
-    // Check the "Encrypt Volume" checkbox
-    cy.get('[data-qa-checked]').should('be.visible').click();
-    // });
-
-    // Ensure warning notice is not displayed and "Create Volume" button is enabled
-    cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
-    ui.button
-      .findByTitle('Create Volume')
-      .should('be.visible')
-      .should('be.enabled');
-  });
-
-  /*
-   * - Checks for Block Storage Encryption client library update notice in the Create/Attach Volume drawer from the
-       'Storage' details page of an existing Linode.
-   */
-  it('displays a warning notice re: rebooting for client library updates under the appropriate conditions in Create/Attach Volume drawer', () => {
-    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; Linode does not support Block Storage Encryption and the user is trying to attach an encrypted volume
-
-    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
-    mockAppendFeatureFlags({
-      blockStorageEncryption: true,
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Block Storage Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-
-    const volume = volumeFactory.build({
-      encryption: 'enabled',
-      region: mockRegions[0].id,
-    });
-
-    const linodeRequest = createLinodeRequestFactory.build({
-      booted: false,
-      label: randomLabel(),
-      region: mockRegions[0].id,
-      root_pass: randomString(16),
-    });
-
-    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
-      (linode: Linode) => {
-        mockGetVolumes([volume]).as('getVolumes');
-        mockGetVolume(volume);
-
-        cy.visitWithLogin(`/linodes/${linode.id}/storage`);
-        cy.wait(['@getFeatureFlags', '@getAccount']);
-
-        // Click "Add Volume" button
-        cy.findByText('Add Volume').click();
-
-        // Check "Encrypt Volume" checkbox
-        cy.get('[data-qa-drawer="true"]').within(() => {
-          cy.get('[data-qa-checked]').should('be.visible').click();
-        });
-
-        // Ensure client library update notice is displayed and the "Create Volume" button is disabled
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
-        ui.button.findByTitle('Create Volume').should('be.disabled');
-
-        // Ensure notice is cleared when switching views in drawer
-        cy.get('[data-qa-radio="Attach Existing Volume"]').click();
-        cy.wait(['@getVolumes']);
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
-        ui.button
-          .findByTitle('Attach Volume')
-          .should('be.visible')
-          .should('be.enabled');
-
-        // Ensure notice is displayed in "Attach Existing Volume" view when an encrypted volume is selected, & that the "Attach Volume" button is disabled
-        cy.findByPlaceholderText('Select a Volume')
-          .should('be.visible')
-          .click();
-        cy.focused().type(`${volume.label}{downarrow}{enter}`);
-        ui.autocompletePopper
-          .findByTitle(volume.label)
-          .should('be.visible')
-          .click();
-
-        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
-        ui.button
-          .findByTitle('Attach Volume')
-          .should('be.visible')
-          .should('be.disabled');
       }
     );
   });

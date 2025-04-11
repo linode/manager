@@ -16,20 +16,21 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
+import { useAccountEntities } from 'src/queries/entities/entities';
 import {
   useAccountPermissions,
   useAccountUserPermissions,
 } from 'src/queries/iam/iam';
-import { useAccountResources } from 'src/queries/resources/resources';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
 import {
-  addResourceNamesToRoles,
+  addEntitiesNamesToRoles,
   combineRoles,
   getFilteredRoles,
   mapEntityTypes,
   mapRolesToPermissions,
+  transformedAccountEntities,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -69,10 +70,7 @@ export const AssignedRolesTable = () => {
     data: accountPermissions,
     isLoading: accountPermissionsLoading,
   } = useAccountPermissions();
-  const {
-    data: resources,
-    isLoading: resourcesLoading,
-  } = useAccountResources();
+  const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
   const {
     data: assignedRoles,
     isLoading: assignedRolesLoading,
@@ -88,12 +86,14 @@ export const AssignedRolesTable = () => {
 
     const resourceTypes = getResourceTypes(roles);
 
-    if (resources) {
-      roles = addResourceNamesToRoles(roles, resources);
+    if (entities) {
+      const transformedEntities = transformedAccountEntities(entities.data);
+
+      roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
     return { resourceTypes, roles };
-  }, [assignedRoles, accountPermissions, resources]);
+  }, [assignedRoles, accountPermissions, entities]);
 
   const [query, setQuery] = React.useState('');
 
@@ -123,15 +123,15 @@ export const AssignedRolesTable = () => {
           {role.access === 'account_access' ? (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <Typography>
-                {role.resource_type === 'account'
+                {role.entity_type === 'account'
                   ? 'All Entities'
-                  : `All ${capitalize(role.resource_type)}s`}
+                  : `All ${capitalize(role.entity_type)}s`}
               </Typography>
             </TableCell>
           ) : (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <AssignedEntities
-                entities={role.resource_names!}
+                entities={role.entity_names!}
                 onButtonClick={handleViewEntities}
                 roleName={role.name}
               />
@@ -196,7 +196,7 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, query, entityType, showFullDescription]);
 
-  if (accountPermissionsLoading || resourcesLoading || assignedRolesLoading) {
+  if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
   }
 
@@ -291,14 +291,13 @@ const getResourceTypes = (data: RoleMap[]): EntitiesType[] =>
   mapEntityTypes(data, ' Roles');
 
 const getSearchableFields = (role: ExtendedRoleMap): string[] => {
-  const resourceNames = role.resource_names || [];
+  const entityNames = role.entity_names || [];
   return [
     String(role.id),
-    role.resource_type,
+    role.entity_type,
     role.name,
-    role.access,
     role.description,
-    ...resourceNames,
+    ...entityNames,
     ...role.permissions,
   ];
 };

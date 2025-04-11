@@ -4,6 +4,7 @@ import Collapse from '@mui/material/Collapse';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import type { ButtonProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'caret'>()(
@@ -40,6 +41,10 @@ const useStyles = makeStyles<void, 'caret'>()(
 
 export interface ShowMoreExpansionProps {
   /**
+   * Optional props that will be passed to the underlying button
+   */
+  ButtonProps?: ButtonProps;
+  /**
    * The content that will be shown when the component is expanded.
    */
   children?: JSX.Element;
@@ -54,7 +59,7 @@ export interface ShowMoreExpansionProps {
 }
 
 export const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
-  const { children, defaultExpanded, name } = props;
+  const { ButtonProps, children, defaultExpanded, name } = props;
 
   const { classes } = useStyles();
 
@@ -74,6 +79,7 @@ export const ShowMoreExpansion = (props: ShowMoreExpansionProps) => {
         data-qa-show-more-toggle
         onClick={handleNameClick}
         role="button"
+        {...ButtonProps}
       >
         {open ? (
           <KeyboardArrowRight className={classes.caret + ' rotate'} />

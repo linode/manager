@@ -5,6 +5,7 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import {
   ActionsPanel,
   Box,
@@ -59,6 +60,10 @@ export const ImageUpload = () => {
   const dispatch = useDispatch<Dispatch>();
   const hasPendingUpload = usePendingUpload();
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
   const cancelRef = React.useRef<(() => void) | null>(null);
@@ -196,8 +201,12 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly at $0.10/GB. An uploaded image
-              file needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#upload-an-image-file">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. An uploaded image file needs to
+              meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements
               </Link>
@@ -267,8 +276,8 @@ export const ImageUpload = () => {
                   currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
-                  flags={flags}
                   ignoreAccountAvailability
+                  isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta

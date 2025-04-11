@@ -15,7 +15,6 @@ import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
-  useIsGeckoEnabled,
 } from './RegionSelect.utils';
 
 import type { RegionSelectProps } from './RegionSelect.types';
@@ -42,10 +41,10 @@ export const RegionSelect = <
     disabled,
     disabledRegions: disabledRegionsFromProps,
     errorText,
-    flags,
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
+    isGeckoLAEnabled,
     label,
     noMarginTop,
     onChange,
@@ -59,7 +58,6 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled(flags);
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,

@@ -123,7 +123,6 @@ const Kubernetes = React.lazy(() =>
     default: module.Kubernetes,
   }))
 );
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
@@ -157,7 +156,6 @@ const AccountActivationLanding = React.lazy(
   () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
-const VPC = React.lazy(() => import('src/features/VPCs'));
 
 const CloudPulseMetrics = React.lazy(() =>
   import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
@@ -299,8 +297,8 @@ export const MainContent = () => {
                     isNarrowViewport
                       ? '100%'
                       : isPageScrollable
-                      ? '100vh'
-                      : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+                        ? '100vh'
+                        : `calc(100vh - ${TOPMENU_HEIGHT}px)`
                   }
                   position="sticky"
                   top={0}
@@ -321,9 +319,9 @@ export const MainContent = () => {
                     marginLeft: isNarrowViewport
                       ? 0
                       : desktopMenuIsOpen ||
-                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                      ? SIDEBAR_COLLAPSED_WIDTH
-                      : SIDEBAR_WIDTH,
+                          (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                        ? SIDEBAR_COLLAPSED_WIDTH
+                        : SIDEBAR_WIDTH,
                   }}
                 >
                   <MainContentBanner />
@@ -366,10 +364,6 @@ export const MainContent = () => {
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
                             <Route component={Managed} path="/managed" />
-                            <Route
-                              component={ObjectStorage}
-                              path="/object-storage"
-                            />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />
@@ -382,7 +376,6 @@ export const MainContent = () => {
                             {isDatabasesEnabled && (
                               <Route component={Databases} path="/databases" />
                             )}
-                            <Route component={VPC} path="/vpcs" />
                             {isACLPEnabled && (
                               <Route
                                 component={CloudPulseMetrics}

@@ -9,7 +9,7 @@ import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
-export interface databaseClusterConfiguration {
+export interface DatabaseClusterConfiguration {
   clusterSize: ClusterSize;
   dbType: Engine;
   engine: string;
@@ -325,7 +325,7 @@ export const mockDatabaseNodeTypes: DatabaseType[] = [
 ];
 
 // Array of database cluster configurations for which to test creation.
-export const databaseConfigurations: databaseClusterConfiguration[] = [
+export const databaseConfigurations: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 1,
     dbType: 'mysql',
@@ -344,16 +344,6 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
   },
-  // {
-  //   label: randomLabel(),
-  //   linodeType: 'g6-dedicated-16',
-  //   clusterSize: 1,
-  //   dbType: 'mongodb',
-  //   regionTypeahead: 'Atlanta',
-  //   region: 'us-southeast',
-  //   engine: 'MongoDB',
-  //   version: '4',
-  // },
   {
     clusterSize: 3,
     dbType: 'postgresql',
@@ -365,7 +355,7 @@ export const databaseConfigurations: databaseClusterConfiguration[] = [
   },
 ];
 
-export const databaseConfigurationsResize: databaseClusterConfiguration[] = [
+export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
   {
     clusterSize: 3,
     dbType: 'mysql',

@@ -105,7 +105,7 @@ describe('AlertDetail component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(<AlertDetail />);
@@ -121,7 +121,7 @@ describe('AlertDetail component tests', () => {
     // validate overview is present with its couple of properties (values will be validated in its own components test)
     expect(getByText('Overview')).toBeInTheDocument();
     expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
-    expect(getByText('Resources')).toBeInTheDocument(); // validate if resources is present
+    expect(getByText('Entities')).toBeInTheDocument(); // validate if entities is present
     expect(getByText('Notification Channels')).toBeInTheDocument(); // validate if notification channels is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();

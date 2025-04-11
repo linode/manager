@@ -60,7 +60,7 @@ export const hasLabelOrRegionsChanged = (
 ): boolean => {
   const regionsChanged = !areArraysEqual(
     [...updatedValues.regions].sort(sortRegionOptions),
-    [...initialValues.regions?.map((region) => region.id)].sort(
+    [...initialValues.regions.map((region) => region.id)].sort(
       sortRegionOptions
     )
   );

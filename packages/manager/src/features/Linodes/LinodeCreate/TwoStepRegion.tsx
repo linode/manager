@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -75,6 +76,10 @@ export const TwoStepRegion = (props: CombinedProps) => {
   const { data: regions } = useRegionsQuery();
   const { params } = useLinodeCreateQueryParams();
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   return (
     <Paper data-qa-linode-region data-testid="region">
@@ -112,7 +117,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
-              flags={flags}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
@@ -143,7 +148,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
-              flags={flags}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}
