@@ -73,9 +73,9 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: RolesType }>({
+  } = useForm<{ roleName: RolesType | null }>({
     defaultValues: {
-      roleName: undefined,
+      roleName: null,
     },
     mode: 'onBlur',
   });
@@ -120,7 +120,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   };
 
   const handleClose = () => {
-    reset();
+    reset({ roleName: null });
     onClose();
   };
 

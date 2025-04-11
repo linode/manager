@@ -22,7 +22,7 @@ import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/
 import {
   getAllRoles,
   getRoleByName,
-  updateUserRoleForEntity,
+  changeRoleForEntity,
 } from '../../Shared/utilities';
 
 import type {
@@ -76,9 +76,9 @@ export const ChangeRoleForEntityDrawer = ({
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: ExtendedEntityRole }>({
+  } = useForm<{ roleName: ExtendedEntityRole | null }>({
     defaultValues: {
-      roleName: undefined,
+      roleName: null,
     },
     mode: 'onBlur',
   });
@@ -106,8 +106,8 @@ export const ChangeRoleForEntityDrawer = ({
       const entityId = role!.entity_id;
       const entityType = role!.entity_type;
 
-      const updatedUserRoles = updateUserRoleForEntity({
-        assignedRoles,
+      const updatedUserRoles = changeRoleForEntity({
+        assignedRoles: assignedRoles!,
         entityId,
         entityType,
         initialRole,
@@ -124,7 +124,7 @@ export const ChangeRoleForEntityDrawer = ({
   };
 
   const handleClose = () => {
-    reset();
+    reset({ roleName: null });
     onClose();
   };
 

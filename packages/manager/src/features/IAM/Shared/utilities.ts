@@ -510,32 +510,23 @@ export const transformedAccountEntities = (
 export type DrawerModes = 'assign-role' | 'change-role-for-entity';
 
 interface UpdateUserEntityProps {
-  assignedRoles?: IamUserPermissions;
+  assignedRoles: IamUserPermissions;
   entityId: number;
   entityType: EntityType | EntityTypePermissions;
   initialRole?: EntityAccessRole;
   newRole: EntityAccessRole;
 }
 
-export const updateUserRoleForEntity = ({
+export const changeRoleForEntity = ({
   assignedRoles,
   entityId,
   entityType,
   initialRole,
   newRole,
 }: UpdateUserEntityProps): IamUserPermissions => {
-  if (!assignedRoles) {
-    return {
-      account_access: [],
-      entity_access: [],
-    };
-  }
-
-  const { entity_access } = assignedRoles;
-
   return {
     ...assignedRoles,
-    entity_access: entity_access.map((entity) => {
+    entity_access: assignedRoles.entity_access.map((entity) => {
       const roles = Array.from(
         new Set(
           entity.roles.map((role) => (role === initialRole ? newRole : role))

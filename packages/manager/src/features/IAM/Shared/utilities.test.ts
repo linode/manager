@@ -6,7 +6,7 @@ import {
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
-  updateUserRoleForEntity,
+  changeRoleForEntity,
   updateUserRoles,
 } from './utilities';
 
@@ -284,7 +284,7 @@ describe('deleteUserRole', () => {
   });
 });
 
-describe('updateUserRoleForEntity', () => {
+describe('changeRoleForEntity', () => {
   it('should return the same object of users roles when change the same role', () => {
     const initialRole = 'linode_contributor';
     const newRole = 'linode_contributor';
@@ -293,7 +293,7 @@ describe('updateUserRoleForEntity', () => {
     const expectedRoles = userPermissions;
 
     expect(
-      updateUserRoleForEntity({
+      changeRoleForEntity({
         assignedRoles: userPermissions,
         entityId,
         entityType,
@@ -320,7 +320,7 @@ describe('updateUserRoleForEntity', () => {
     };
 
     expect(
-      updateUserRoleForEntity({
+      changeRoleForEntity({
         assignedRoles: userPermissions,
         entityId,
         entityType,
@@ -367,7 +367,7 @@ describe('updateUserRoleForEntity', () => {
     };
 
     expect(
-      updateUserRoleForEntity({
+      changeRoleForEntity({
         assignedRoles: userPermissions,
         entityId,
         entityType,
@@ -414,7 +414,7 @@ describe('updateUserRoleForEntity', () => {
     };
 
     expect(
-      updateUserRoleForEntity({
+      changeRoleForEntity({
         assignedRoles: userPermissions,
         entityId,
         entityType,
