@@ -58,7 +58,7 @@ export const getNodeBalancers = (mockState: MockState) => [
   ),
 
   http.get(
-    '*/v4beta/nodebalancers/:id',
+    '*/v4/nodebalancers/:id',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | NodeBalancer>> =>
