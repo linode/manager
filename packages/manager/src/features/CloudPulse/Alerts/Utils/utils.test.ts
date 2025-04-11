@@ -88,38 +88,6 @@ it('should correctly convert an alert definition values to the required format',
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });
-it('should combine all the API errors to the parent field and return in errorMap properly', () => {
-  const errors: APIError[] = [
-    {
-      field: 'label',
-      reason: 'Label already exists',
-    },
-    {
-      field: 'label',
-      reason: 'Label should have less than 100 character',
-    },
-    {
-      field: 'label',
-      reason: 'Label should not start with special characters',
-    },
-    { field: 'severity', reason: 'Wrong field.' },
-    {
-      field: 'rule_criteria.rules[0].aggregate_function',
-      reason: 'Must be one of avg, sum, min, max, count and no full stop',
-    },
-    {
-      field: 'rule_criteria',
-      reason: 'Must have at least one rule',
-    },
-    {
-      field: 'rule_criteria.rules[0].dimension_filters[0].values',
-      reason: 'Invalid value.',
-    },
-    {
-      field: 'rule_criteria.rules[1].dimension_filters[3].values',
-      reason: 'Invalid value.',
-    },
-  ];
 
 describe('getSchemaWithEntityIdValidation', () => {
   const baseSchema = alertDefinitionFormSchema;
@@ -129,6 +97,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   ];
   const props: AlertValidationSchemaProps = {
     aclpAlertServiceTypeConfig,
+    baseSchema,
     serviceTypeObj: 'dbaas',
   };
 
