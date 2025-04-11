@@ -55,6 +55,7 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -73,6 +74,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     linodesAreGrouped,
     order,
     orderBy,
+    regionFilter,
     toggleGroupLinodes,
     toggleLinodeView,
     updatePageUrl,
@@ -152,7 +154,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     sx={{ borderBottom: 0, padding: 1 }}
                     variant="outlined"
                   >
-                    <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+                    <RegionTypeFilter
+                      regionFilter={regionFilter}
+                      handleRegionFilter={handleRegionFilter}
+                    />
                   </Paper>
                 )}
                 <TableWrapper
@@ -182,6 +187,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     >
                       <RegionTypeFilter
                         handleRegionFilter={handleRegionFilter}
+                        regionFilter={regionFilter}
                       />
                     </Paper>
                   )}
