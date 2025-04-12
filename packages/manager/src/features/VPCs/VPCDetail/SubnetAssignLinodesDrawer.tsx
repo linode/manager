@@ -332,8 +332,8 @@ export const SubnetAssignLinodesDrawer = (
       const isLinodeInterface =
         values.selectedLinode.interface_generation === 'linode';
       const configId = isLinodeInterface
-        ? getConfigId(linodeConfigs, values.selectedConfig)
-        : null;
+        ? null
+        : getConfigId(linodeConfigs, values.selectedConfig);
 
       // Construct a new Linode data object with additional properties
       const newLinodeData = {
