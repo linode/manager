@@ -13,6 +13,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Divider,
   Drawer,
   FormControlLabel,
   FormHelperText,
@@ -557,14 +558,17 @@ export const SubnetAssignLinodesDrawer = (
               />
             )}
             {values.selectedLinode.interface_generation === 'linode' && (
-              <FirewallSelect
-                disableClearable
-                label="VPC Interface Firewall"
-                onChange={(e, firewall) =>
-                  setFieldValue('selectedFirewall', firewall?.id)
-                }
-                value={values.selectedFirewall}
-              />
+              <>
+                <Divider spacingBottom={16} spacingTop={16} />
+                <FirewallSelect
+                  disableClearable
+                  label="VPC Interface Firewall"
+                  onChange={(e, firewall) =>
+                    setFieldValue('selectedFirewall', firewall?.id)
+                  }
+                  value={values.selectedFirewall}
+                />
+              </>
             )}
           </>
         )}

@@ -128,6 +128,8 @@ export const getVPCInterfacePayload = (inputs: {
     autoAssignIPv4,
     vpcId,
   } = inputs;
+  const filteredIPRanges = ipRanges.filter((ipRange) => ipRange.address !== '');
+
   if (isLinodeInterface) {
     return {
       firewall_id: firewallId,
@@ -140,6 +142,9 @@ export const getVPCInterfacePayload = (inputs: {
               address: !autoAssignIPv4 ? chosenIP : 'auto',
             },
           ],
+          ranges: filteredIPRanges.map((ipRange) => {
+            return { range: ipRange.address };
+          }),
         },
       },
       public: null,
@@ -149,9 +154,7 @@ export const getVPCInterfacePayload = (inputs: {
   }
 
   return {
-    ip_ranges: ipRanges
-      .map((ipRange) => ipRange.address)
-      .filter((ipRange) => ipRange !== ''),
+    ip_ranges: filteredIPRanges.map((ipRange) => ipRange.address),
     ipam_address: null,
     ipv4: {
       nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
