@@ -1,11 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { object, string } from 'yup';
 
-import {
-  GLOBAL_QUOTA_LABEL,
-  GLOBAL_QUOTA_VALUE,
-  regionSelectGlobalOption,
-} from 'src/components/RegionSelect/constants';
+import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 
 import type { QuotaIncreaseFormFields } from './QuotasIncreaseForm';
@@ -53,7 +49,6 @@ export const useGetLocationsForQuotaService = (
       isFetchingS3Endpoints,
       regions: null,
       s3Endpoints: [
-        ...[{ label: GLOBAL_QUOTA_LABEL, value: GLOBAL_QUOTA_VALUE }],
         ...(s3Endpoints ?? [])
           .map((s3Endpoint) => {
             if (!s3Endpoint.s3_endpoint) {
