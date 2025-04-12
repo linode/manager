@@ -49,6 +49,7 @@ import {
 import {
   getVPCInterfacePayload,
   mapInterfaceDataToDownloadableData,
+  transformLinodeInterfaceErrorsToFormikErrors,
 } from '../utils';
 import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
@@ -161,7 +162,16 @@ export const SubnetAssignLinodesDrawer = (
   }, [linodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
 
   // Determine the configId based on the number of configurations
-  function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
+  function getConfigId(inputs: {
+    isLinodeInterface: boolean;
+    linodeConfigs: Config[];
+    selectedConfig: Config | null;
+  }) {
+    const { linodeConfigs, selectedConfig, isLinodeInterface } = inputs;
+    if (isLinodeInterface) {
+      return null;
+    }
+
     return (
       // Use the first configuration's id or -1 if no configurations
       // Use selected configuration's id if available
@@ -180,7 +190,11 @@ export const SubnetAssignLinodesDrawer = (
     } = values;
 
     const isLinodeInterface = selectedLinode?.interface_generation === 'linode';
-    const configId = getConfigId(linodeConfigs, selectedConfig);
+    const configId = getConfigId({
+      isLinodeInterface,
+      linodeConfigs,
+      selectedConfig,
+    });
     const configToBeModified = linodeConfigs.find(
       (config) => config.id === configId
     );
@@ -204,14 +218,14 @@ export const SubnetAssignLinodesDrawer = (
         if (configToBeModified?.interfaces?.length === 0) {
           appendConfigInterface(
             selectedLinode?.id ?? -1,
-            configId,
+            configId ?? -1,
             defaultPublicInterface
           );
         }
 
         _newInterface = await appendConfigInterface(
           selectedLinode?.id ?? -1,
-          configId,
+          configId ?? -1,
           interfacePayload
         );
       } else {
@@ -232,9 +246,10 @@ export const SubnetAssignLinodesDrawer = (
         vpcId,
       });
     } catch (errors) {
-      // todo: YIKES
-      const fieldsOfIPRangesErrors = errors.reduce(
-        (accum: any, _err: { field: string }) => {
+      const updatedErrors =
+        transformLinodeInterfaceErrorsToFormikErrors(errors);
+      const fieldsOfIPRangesErrors = updatedErrors.reduce(
+        (accum: any, _err: { field?: string }) => {
           if (_err.field && _err.field.includes('ip_ranges[')) {
             return [...accum, _err.field];
           } else {
@@ -285,8 +300,9 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   // Helper function to determine the error message based on the configId
+  // A null configId means the selected Linode is using Linode Interfaces
   const determineErrorMessage = (
-    configId: number,
+    configId: null | number,
     errorMap: Record<string, string | undefined>
   ) => {
     if (configId === -1) {
@@ -331,9 +347,11 @@ export const SubnetAssignLinodesDrawer = (
     ) {
       const isLinodeInterface =
         values.selectedLinode.interface_generation === 'linode';
-      const configId = isLinodeInterface
-        ? null
-        : getConfigId(linodeConfigs, values.selectedConfig);
+      const configId = getConfigId({
+        isLinodeInterface,
+        linodeConfigs,
+        selectedConfig: values.selectedConfig,
+      });
 
       // Construct a new Linode data object with additional properties
       const newLinodeData = {
@@ -559,7 +577,7 @@ export const SubnetAssignLinodesDrawer = (
             )}
             {values.selectedLinode.interface_generation === 'linode' && (
               <>
-                <Divider spacingBottom={16} spacingTop={16} />
+                <Divider spacingBottom={8} spacingTop={8} />
                 <FirewallSelect
                   disableClearable
                   label="VPC Interface Firewall"

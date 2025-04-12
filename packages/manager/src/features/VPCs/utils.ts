@@ -3,6 +3,7 @@ import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs
 import type { LinodeAndConfigData } from './VPCDetail/SubnetAssignLinodesDrawer';
 import type { InterfaceAndLinodeData } from './VPCDetail/SubnetUnassignLinodesDrawer';
 import type {
+  APIError,
   Config,
   CreateLinodeInterfacePayload,
   InterfacePayload,
@@ -110,6 +111,8 @@ export const mapInterfaceDataToDownloadableData = (
   });
 };
 
+// TODO: update this when converting to react-hook-form
+// gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload
 export const getVPCInterfacePayload = (inputs: {
   autoAssignIPv4: boolean;
   chosenIP: string;
@@ -166,4 +169,25 @@ export const getVPCInterfacePayload = (inputs: {
     subnet_id: subnetId,
     vpc_id: vpcId,
   };
+};
+
+// TODO M3-9768: we can do something similar to LinodeCreate and use
+// transformLegacyInterfaceErrorsToLinodeInterfaceErrors
+// once we switch to react-hook-form (not doing this as part of M3-9250
+// due to time constraints). For now, this method essentially does the
+// opposite: it transforms LinodeInterface errors to an error format that formik
+// recognizes
+export const transformLinodeInterfaceErrorsToFormikErrors = (
+  errors: APIError[]
+): APIError[] => {
+  for (const error of errors) {
+    if (error.field && error.field.match(/vpc.ipv4.ranges\[(\d+)\]/)) {
+      error.field = 'ip_ranges[$1]';
+    }
+    if (error.field && error.field.includes('vpc.ipv4.addresses')) {
+      error.field = 'ipv4.vpc';
+    }
+  }
+
+  return errors;
 };
