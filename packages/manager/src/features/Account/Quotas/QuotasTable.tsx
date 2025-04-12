@@ -26,7 +26,7 @@ import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/S
 const quotaRowMinHeight = 58;
 
 interface QuotasTableProps {
-  selectedLocation: SelectOption<Quota['region_applied']> | null;
+  selectedLocation: null | SelectOption<Quota['region_applied']>;
   selectedService: SelectOption<QuotaType>;
 }
 
@@ -96,7 +96,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
     <>
       <Table
         sx={(theme) => ({
-          marginTop: theme.spacing(2),
+          marginTop: theme.spacingFunction(16),
           minWidth: theme.breakpoints.values.sm,
         })}
       >
@@ -159,13 +159,13 @@ export const QuotasTable = (props: QuotasTableProps) => {
       )}
 
       <Dialog
+        onClose={() => setSupportModalOpen(false)}
+        open={supportModalOpen}
         sx={{
           '& .MuiDialog-paper': {
             width: '600px',
           },
         }}
-        onClose={() => setSupportModalOpen(false)}
-        open={supportModalOpen}
         title="Increase Quota"
       >
         {selectedQuota && (
