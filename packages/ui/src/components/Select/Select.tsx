@@ -82,6 +82,14 @@ export interface SelectProps<T extends { label: string }>
    */
   hideLabel?: boolean;
   /**
+   * Keep the search input enabled on mobile.
+   * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
+   * Because some instances may require the search input to be editable on mobile, this prop is available to override that default behavior.
+   *
+   * @default false
+   */
+  keepSearchEnabledOnMobile?: boolean;
+  /**
    * The label for the select.
    */
   label: string;
@@ -131,6 +139,7 @@ export const Select = <T extends SelectOption = SelectOption>(
     clearable = false,
     creatable = false,
     hideLabel = false,
+    keepSearchEnabledOnMobile = false,
     label,
     listItemProps,
     loading = false,
@@ -259,6 +268,7 @@ export const Select = <T extends SelectOption = SelectOption>(
       forcePopupIcon
       freeSolo={creatable}
       getOptionDisabled={(option: SelectOption) => option.value === ''}
+      keepSearchEnabledOnMobile={keepSearchEnabledOnMobile}
       label={label}
       noOptionsText={noOptionsText}
       onChange={handleChange}
