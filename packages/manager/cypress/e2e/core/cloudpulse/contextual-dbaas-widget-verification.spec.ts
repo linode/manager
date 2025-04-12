@@ -32,7 +32,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
