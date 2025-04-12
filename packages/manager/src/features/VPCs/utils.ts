@@ -2,7 +2,15 @@ import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs
 
 import type { LinodeAndConfigData } from './VPCDetail/SubnetAssignLinodesDrawer';
 import type { InterfaceAndLinodeData } from './VPCDetail/SubnetUnassignLinodesDrawer';
-import type { Config, LinodeInterface, Subnet, VPC } from '@linode/api-v4';
+import type {
+  Config,
+  CreateLinodeInterfacePayload,
+  InterfacePayload,
+  LinodeInterface,
+  Subnet,
+  VPC,
+} from '@linode/api-v4';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
@@ -100,4 +108,59 @@ export const mapInterfaceDataToDownloadableData = (
       vpcRanges,
     };
   });
+};
+
+export const getVPCInterfacePayload = (inputs: {
+  autoAssignIPv4: boolean;
+  chosenIP: string;
+  firewallId: null | number;
+  ipRanges: ExtendedIP[];
+  isLinodeInterface: boolean;
+  subnetId: null | number | undefined;
+  vpcId: number;
+}): CreateLinodeInterfacePayload | InterfacePayload => {
+  const {
+    firewallId,
+    chosenIP,
+    ipRanges,
+    subnetId,
+    isLinodeInterface,
+    autoAssignIPv4,
+    vpcId,
+  } = inputs;
+  if (isLinodeInterface) {
+    return {
+      firewall_id: firewallId,
+      vpc: {
+        subnet_id: subnetId ?? -1,
+        ipv4: {
+          addresses: [
+            {
+              nat_1_1_address: 'auto',
+              address: !autoAssignIPv4 ? chosenIP : 'auto',
+            },
+          ],
+        },
+      },
+      public: null,
+      vlan: null,
+      default_route: null,
+    };
+  }
+
+  return {
+    ip_ranges: ipRanges
+      .map((ipRange) => ipRange.address)
+      .filter((ipRange) => ipRange !== ''),
+    ipam_address: null,
+    ipv4: {
+      nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
+      vpc: !autoAssignIPv4 ? chosenIP : undefined,
+    },
+    label: null,
+    primary: true,
+    purpose: 'vpc',
+    subnet_id: subnetId,
+    vpc_id: vpcId,
+  };
 };

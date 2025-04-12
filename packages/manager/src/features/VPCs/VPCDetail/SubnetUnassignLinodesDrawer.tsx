@@ -120,7 +120,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         try {
           const updatedConfigInterfaces: (InterfaceAndLinodeData | null)[] =
             await Promise.all(
-              // TODO: clean this logic up at some point now that we have config ids
               selectedLinodes.map(async (linode) => {
                 let response;
                 if (linode.interface_generation === 'linode') {
