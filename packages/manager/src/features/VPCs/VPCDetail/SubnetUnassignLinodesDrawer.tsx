@@ -65,7 +65,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
   }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
-    const subnetId = subnet?.id;
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
@@ -116,63 +115,59 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       }
     }, [linodes, setLinodeOptionsToUnassign, findAssignedLinodes]);
 
-    // 3. When a linode is selected, we need to get the configs with VPC interfaces.
-    const getConfigWithVPCInterface = React.useCallback(
+    // 3. When a linode is selected, we need to get the VPC interface to unassign.
+    const getVPCInterface = React.useCallback(
       async (selectedLinodes: Linode[]) => {
         try {
           const updatedConfigInterfaces: (InterfaceAndLinodeData | null)[] =
             await Promise.all(
               selectedLinodes.map(async (linode) => {
-                let response;
-                if (linode.interface_generation === 'linode') {
-                  response = await queryClient.fetchQuery(
-                    linodeQueries.linode(linode.id)._ctx.interfaces._ctx
-                      .interfaces
+                // Get the SubnetLinodeInterfaceData associated with this Linode (the config and interface ID)
+                const subnetInterfaces = subnet?.linodes.find(
+                  (subnetLinodeData) => subnetLinodeData.id === linode.id
+                )?.interfaces;
+                const subnetInterfaceData =
+                  subnetInterfaces?.find(
+                    (interfaceData) => interfaceData.active
+                  ) ?? subnetInterfaces?.[0];
+                const { config_id: configId, id: interfaceId } =
+                  subnetInterfaceData ?? {};
+
+                let vpcInterface;
+
+                if (
+                  linode.interface_generation === 'legacy_config' &&
+                  configId &&
+                  interfaceId
+                ) {
+                  vpcInterface = await queryClient.fetchQuery(
+                    linodeQueries
+                      .linode(linode.id)
+                      ._ctx.configs._ctx.config(configId)
+                      ._ctx.interface(interfaceId)
                   );
                 } else {
-                  response = await queryClient.fetchQuery(
-                    linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
+                  vpcInterface = await queryClient.fetchQuery(
+                    linodeQueries
+                      .linode(linode.id)
+                      ._ctx.interfaces._ctx.interface(interfaceId ?? -1)
                   );
                 }
 
-                if (response) {
-                  if ('interfaces' in response) {
-                    const vpcLinodeInterface = response.interfaces.find(
-                      (iface) => iface.vpc && iface.vpc.subnet_id === subnetId
-                    );
-                    if (!vpcLinodeInterface) {
-                      return null;
-                    }
+                if (vpcInterface) {
+                  if ('vpc' in vpcInterface) {
                     return {
                       ...linode,
                       configId: null,
-                      vpcIPv4:
-                        getLinodeInterfacePrimaryIPv4(vpcLinodeInterface),
-                      vpcRanges: getLinodeInterfaceRanges(vpcLinodeInterface),
-                      interfaceId: vpcLinodeInterface.id,
+                      vpcIPv4: getLinodeInterfacePrimaryIPv4(vpcInterface),
+                      vpcRanges: getLinodeInterfaceRanges(vpcInterface),
+                      interfaceId: vpcInterface.id,
                     };
-                  }
-                  const configWithVpcInterface = response.find((config) =>
-                    config.interfaces?.some(
-                      (_interface) =>
-                        _interface.subnet_id === subnetId &&
-                        _interface.purpose === 'vpc'
-                    )
-                  );
-
-                  const vpcInterface = configWithVpcInterface?.interfaces?.find(
-                    (_interface) =>
-                      _interface.subnet_id === subnetId &&
-                      _interface.purpose === 'vpc'
-                  );
-
-                  if (!vpcInterface || !configWithVpcInterface) {
-                    return null;
                   }
 
                   return {
                     ...linode,
-                    configId: configWithVpcInterface.id,
+                    configId: configId ?? -1,
                     interfaceId: vpcInterface.id,
                     vpcIPv4: vpcInterface.ipv4?.vpc,
                     vpcRanges: vpcInterface?.ip_ranges,
@@ -209,19 +204,14 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           setUnassignLinodesErrors(error as APIError[]);
         }
       },
-      [
-        queryClient,
-        setConfigInterfacesToDelete,
-        setUnassignLinodesErrors,
-        subnetId,
-      ]
+      [queryClient, setUnassignLinodesErrors, subnet?.linodes]
     );
 
     React.useEffect(() => {
       if (singleLinodeToBeUnassigned) {
-        getConfigWithVPCInterface([singleLinodeToBeUnassigned]);
+        getVPCInterface([singleLinodeToBeUnassigned]);
       }
-    }, [singleLinodeToBeUnassigned, getConfigWithVPCInterface]);
+    }, [singleLinodeToBeUnassigned, getVPCInterface]);
 
     const downloadCSV = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -298,6 +288,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const handleOnClose = () => {
       resetForm();
       setSelectedLinodes([]);
+      setSelectedLinodesAndConfigData([]);
       setConfigInterfacesToDelete([]);
       setUnassignLinodesErrors([]);
       onClose();
@@ -344,7 +335,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 multiple
                 onChange={(_, value) => {
                   setSelectedLinodes(value);
-                  getConfigWithVPCInterface(value);
+                  getVPCInterface(value);
                 }}
                 options={linodeOptionsToUnassign}
                 placeholder="Select Linodes or type to search"
