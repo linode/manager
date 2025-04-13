@@ -169,12 +169,12 @@ export const AddLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={() => {
         setSelectedLinodes([]);
         setLocalError(undefined);
         onClose();
       }}
-      NotFoundComponent={NotFound}
       open={open}
       title={`Add Linode to Firewall: ${firewall?.label}`}
     >
