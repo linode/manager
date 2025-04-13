@@ -1,7 +1,5 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
-import type { LinodeAndConfigData } from './VPCDetail/SubnetAssignLinodesDrawer';
-import type { InterfaceAndLinodeData } from './VPCDetail/SubnetUnassignLinodesDrawer';
 import type {
   APIError,
   Config,
@@ -89,27 +87,6 @@ export const getLinodeInterfacePrimaryIPv4 = (iface: LinodeInterface) =>
 
 export const getLinodeInterfaceRanges = (iface: LinodeInterface) =>
   iface.vpc?.ipv4.ranges.map((range) => range.range);
-
-export const mapInterfaceDataToDownloadableData = (
-  interfacesData: InterfaceAndLinodeData[] | LinodeAndConfigData[]
-) => {
-  return interfacesData.map((data) => {
-    const { interfaceData } = data;
-    const vpcIPv4 =
-      interfaceData && 'vpc' in interfaceData
-        ? getLinodeInterfacePrimaryIPv4(interfaceData)
-        : interfaceData?.ipv4?.vpc;
-    const vpcRanges =
-      interfaceData && 'vpc' in interfaceData
-        ? getLinodeInterfaceRanges(interfaceData)
-        : interfaceData?.ip_ranges;
-    return {
-      ...data,
-      vpcIPv4,
-      vpcRanges,
-    };
-  });
-};
 
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload

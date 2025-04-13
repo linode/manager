@@ -25,14 +25,15 @@ import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
-import { mapInterfaceDataToDownloadableData } from '../utils';
+import {
+  getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
+} from '../utils';
 
 import type {
   APIError,
   DeleteLinodeConfigInterfacePayload,
-  Interface,
   Linode,
-  LinodeInterface,
   Subnet,
   UpdateConfigInterfacePayload,
 } from '@linode/api-v4';
@@ -48,8 +49,9 @@ interface Props {
 
 export interface InterfaceAndLinodeData extends Linode {
   configId: null | number;
-  interfaceData: Interface | LinodeInterface;
   interfaceId: number;
+  vpcIPv4: null | string | undefined;
+  vpcRanges: string[] | undefined;
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
@@ -144,8 +146,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                     return {
                       ...linode,
                       configId: null,
-
-                      interfaceData: vpcLinodeInterface,
+                      vpcIPv4:
+                        getLinodeInterfacePrimaryIPv4(vpcLinodeInterface),
+                      vpcRanges: getLinodeInterfaceRanges(vpcLinodeInterface),
                       interfaceId: vpcLinodeInterface.id,
                     };
                   }
@@ -170,9 +173,9 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                   return {
                     ...linode,
                     configId: configWithVpcInterface.id,
-
-                    interfaceData: vpcInterface,
                     interfaceId: vpcInterface.id,
+                    vpcIPv4: vpcInterface.ipv4?.vpc,
+                    vpcRanges: vpcInterface?.ip_ranges,
                   };
                 }
                 return null;
@@ -363,9 +366,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
               <DownloadCSV
                 buttonType="styledLink"
                 csvRef={csvRef}
-                data={mapInterfaceDataToDownloadableData(
-                  selectedLinodesAndConfigData
-                )}
+                data={selectedLinodesAndConfigData}
                 filename={`linodes-unassigned-${formattedDate}.csv`}
                 headers={SUBNET_LINODE_CSV_HEADERS}
                 onClick={downloadCSV}
