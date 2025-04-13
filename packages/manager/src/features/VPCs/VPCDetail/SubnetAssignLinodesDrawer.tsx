@@ -192,7 +192,6 @@ export const SubnetAssignLinodesDrawer = (
       selectedFirewall,
     } = values;
 
-    const isLinodeInterface = selectedLinode?.interface_generation === 'linode';
     const configId = getConfigId({
       isLinodeInterface,
       linodeConfigs,
@@ -328,6 +327,8 @@ export const SubnetAssignLinodesDrawer = (
       validateOnBlur: false,
       validateOnChange: false,
     });
+  const isLinodeInterface =
+    values.selectedLinode?.interface_generation === 'linode';
 
   const handleIPRangeChange = React.useCallback(
     (_ipRanges: ExtendedIP[]) => {
@@ -348,8 +349,6 @@ export const SubnetAssignLinodesDrawer = (
         (linodeInfo) => linodeInfo.id === values.selectedLinode?.id
       )
     ) {
-      const isLinodeInterface =
-        values.selectedLinode.interface_generation === 'linode';
       const configId = getConfigId({
         isLinodeInterface,
         linodeConfigs,
@@ -398,6 +397,7 @@ export const SubnetAssignLinodesDrawer = (
     }
   }, [
     subnet,
+    isLinodeInterface,
     assignedLinodesAndConfigData,
     values.ipRanges,
     values.selectedLinode,
@@ -549,37 +549,35 @@ export const SubnetAssignLinodesDrawer = (
                 value={values.chosenIP}
               />
             )}
-            {linodeConfigs.length > 1 &&
-              values.selectedLinode.interface_generation ===
-                'legacy_config' && (
-                <>
-                  <FormHelperText sx={{ marginTop: `16px` }}>
-                    {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
-                    <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
-                      Learn more
-                    </Link>
-                    .
-                  </FormHelperText>
-                  <Autocomplete
-                    disabled={userCannotAssignLinodes}
-                    label={'Configuration profile'}
-                    onChange={(_, value: Config) => {
-                      setFieldValue('selectedConfig', value);
-                      setAssignLinodesErrors({});
-                    }}
-                    options={linodeConfigs}
-                    placeholder="Select a configuration profile"
-                    value={values.selectedConfig || null}
-                  />
-                </>
-              )}
+            {linodeConfigs.length > 1 && !isLinodeInterface && (
+              <>
+                <FormHelperText sx={{ marginTop: `16px` }}>
+                  {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
+                  <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
+                    Learn more
+                  </Link>
+                  .
+                </FormHelperText>
+                <Autocomplete
+                  disabled={userCannotAssignLinodes}
+                  label={'Configuration profile'}
+                  onChange={(_, value: Config) => {
+                    setFieldValue('selectedConfig', value);
+                    setAssignLinodesErrors({});
+                  }}
+                  options={linodeConfigs}
+                  placeholder="Select a configuration profile"
+                  value={values.selectedConfig || null}
+                />
+              </>
+            )}
             {/* Display the 'Assign additional IPv4 ranges' section if
                 the Configuration Profile section has been populated, or
                 if it doesn't display b/c the linode has a single config
             */}
             {((linodeConfigs.length > 1 && values.selectedConfig) ||
               linodeConfigs.length === 1 ||
-              values.selectedLinode.interface_generation === 'linode') && (
+              isLinodeInterface) && (
               <AssignIPRanges
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}
@@ -593,7 +591,7 @@ export const SubnetAssignLinodesDrawer = (
                 }}
               />
             )}
-            {values.selectedLinode.interface_generation === 'linode' && (
+            {isLinodeInterface && (
               <>
                 <Divider spacingBottom={8} spacingTop={8} />
                 <FirewallSelect
@@ -616,7 +614,7 @@ export const SubnetAssignLinodesDrawer = (
               userCannotAssignLinodes ||
               !dirty ||
               !values.selectedLinode ||
-              (values.selectedLinode.interface_generation === 'legacy_config' &&
+              (!isLinodeInterface &&
                 linodeConfigs.length > 1 &&
                 !values.selectedConfig)
             }
