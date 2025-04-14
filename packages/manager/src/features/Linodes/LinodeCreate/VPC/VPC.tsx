@@ -18,6 +18,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -30,9 +32,6 @@ import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
-
-// @TODO Linode Interfaces - need to handle case if interface is not legacy
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -282,14 +281,7 @@ export const VPC = () => {
                         variant="error"
                       />
                     )}
-                  <Typography>
-                    Assign additional IPv4 address ranges that the VPC can use
-                    to reach services running on this Linode.{' '}
-                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-                      Learn more
-                    </Link>
-                    .
-                  </Typography>
+                  <VPCRangesDescription />
                   {formState.errors.interfaces?.[0] &&
                     'ip_ranges' in formState.errors.interfaces[0] && (
                       <Notice

@@ -1,17 +1,10 @@
-import {
-  IconButton,
-  Notice,
-  Stack,
-  TextField,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { IconButton, Notice, Stack, TextField, TooltipIcon } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -84,16 +77,7 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
         <TooltipIcon
           status="help"
           sxTooltipIcon={{ p: 0.5 }}
-          text={
-            <Typography>
-              Assign additional IPv4 address ranges that the VPC can use to
-              reach services running on this Linode.{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-                Learn more
-              </Link>
-              .
-            </Typography>
-          }
+          text={<VPCRangesDescription />}
         />
       </Stack>
     </Stack>
