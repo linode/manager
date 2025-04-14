@@ -34,7 +34,6 @@ interface LinodeInterfaceOption extends LinodeInterface {
 
 interface LinodeWithMultiLinodeInterfaces extends Linode {
   linodeInterfaces: LinodeInterfaceOption[];
-  selectedInterfaceId: null | number;
 }
 
 export const AddLinodeDrawer = (props: Props) => {
@@ -59,12 +58,13 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
   // linode with single interfaces
-  const [selectedInterfaceIDs, setSelectedInterfaceIDs] = React.useState<
-    number[]
-  >([]);
+  const [selectedSingleInterfaceIDs, setSelectedSingleInterfaceIDs] =
+    React.useState<number[]>([]);
   // linode with multi interfaces keeping track of them
   const [linodesWithMultiInterfaces, setLinodesWithMultiInterfaces] =
     React.useState<LinodeWithMultiLinodeInterfaces[]>([]);
+  const [linodeWithMultiInterfacesIdMap, setLinodeWithMultiInterfacesIdMap] =
+    React.useState<Map<number, null | number>>(new Map());
 
   const [localError, setLocalError] = React.useState<string | undefined>(
     undefined
@@ -182,7 +182,10 @@ export const AddLinodeDrawer = (props: Props) => {
   const onSelectionChange = async (linodes: Linode[]) => {
     const legacyLinodes: Linode[] = [];
     const interfaceLinodes: Linode[] = [];
-    const interfaceIds: number[] = [];
+    const singleInterfaceIds: number[] = [];
+    const _linodeWithMultiInterfacesIdMap = new Map<number, null | number>(
+      linodeWithMultiInterfacesIdMap
+    );
 
     for (const linode of linodes) {
       if (linode.interface_generation === 'legacy_config') {
@@ -200,9 +203,12 @@ export const AddLinodeDrawer = (props: Props) => {
           (iface) => !iface.vlan
         );
         if (nonVlanInterfaces.length === 1) {
-          interfaceIds.push(nonVlanInterfaces[0].id);
+          singleInterfaceIds.push(nonVlanInterfaces[0].id);
         }
         if (nonVlanInterfaces.length > 1) {
+          if (!_linodeWithMultiInterfacesIdMap.has(linode.id)) {
+            _linodeWithMultiInterfacesIdMap.set(linode.id, null);
+          }
           const interfacesWithLabels = nonVlanInterfaces.map((iface) => ({
             ...iface,
             label: `${getLinodeInterfaceType(iface)} Interface (ID : ${iface.id})`,
@@ -211,7 +217,6 @@ export const AddLinodeDrawer = (props: Props) => {
           return {
             ...linode,
             linodeInterfaces: interfacesWithLabels,
-            selectedInterfaceId: null as null | number,
           };
         }
         return null;
@@ -222,8 +227,9 @@ export const AddLinodeDrawer = (props: Props) => {
       (item): item is LinodeWithMultiLinodeInterfaces => item !== null
     );
 
-    setSelectedInterfaceIDs(interfaceIds);
+    setSelectedSingleInterfaceIDs(singleInterfaceIds);
     setLinodesWithMultiInterfaces(_linodesAndLinodeInterfaces);
+    setLinodeWithMultiInterfacesIdMap(_linodeWithMultiInterfacesIdMap);
   };
 
   // how do i filter in advance for linode interfaces???????????????? i am struggling fr rn
@@ -262,18 +268,18 @@ export const AddLinodeDrawer = (props: Props) => {
           optionsFilter={linodeOptionsFilter}
           value={selectedLinodes.map((linode) => linode.id)}
         />
-        {linodesWithMultiInterfaces.map((linodeWithInterfaces) => (
+        {linodesWithMultiInterfaces.map((linode) => (
           <Select
-            key={linodeWithInterfaces.id}
-            label={`${linodeWithInterfaces.label} Interfaces`}
+            key={linode.id}
+            label={`${linode.label} Interfaces`}
             onChange={(e, option) => {
-              // this is an awful idea
-              // todo, think this through some more
+              linodeWithMultiInterfacesIdMap.set(linode.id, option.id);
             }}
-            options={linodeWithInterfaces.linodeInterfaces}
+            options={linode.linodeInterfaces}
             value={
-              linodeWithInterfaces.linodeInterfaces.find(
-                (iface) => iface.id === linodeWithInterfaces.selectedInterfaceId
+              linode.linodeInterfaces.find(
+                (iface) =>
+                  iface.id === linodeWithMultiInterfacesIdMap.get(linode.id)
               ) ?? null
             }
           />
