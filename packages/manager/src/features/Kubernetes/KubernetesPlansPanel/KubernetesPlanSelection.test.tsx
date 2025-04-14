@@ -39,6 +39,7 @@ const props: KubernetesPlanSelectionProps = {
   onSelect: vi.fn(),
   plan: PlanWithAvailability,
   selectedRegionId: 'us-east',
+  selectedTier: 'standard',
   updatePlanCount: vi.fn(),
   wholePanelIsDisabled: false,
 };
