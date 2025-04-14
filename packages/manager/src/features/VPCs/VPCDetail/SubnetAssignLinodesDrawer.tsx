@@ -76,10 +76,12 @@ interface SubnetAssignLinodesDrawerProps {
   vpcRegion: string;
 }
 
-export interface LinodeAndConfigData extends Linode {
+interface LinodeAndInterfaceData extends Linode {
   configId: null | number;
   interfaceId: number | undefined;
   linodeConfigLabel: string;
+  // Since Linode and legacy interfaces have different shapes, we will extract the interface's VPC IPv4 and ranges
+  // and store them in these fields to make displaying and downloading interface CSV data simpler
   vpcIPv4: null | string | undefined;
   vpcRanges: string[] | undefined;
 }
@@ -113,8 +115,8 @@ export const SubnetAssignLinodesDrawer = (
   // While the drawer is open, we maintain a local list of assigned Linodes.
   // This is distinct from the subnet's global list of assigned Linodes, which encompasses all assignments.
   // The local list resets to empty when the drawer is closed and reopened.
-  const [assignedLinodesAndConfigData, setAssignedLinodesAndConfigData] =
-    React.useState<LinodeAndConfigData[]>([]);
+  const [assignedLinodesAndInterfaceData, setAssignedLinodesAndInterfaceData] =
+    React.useState<LinodeAndInterfaceData[]>([]);
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
@@ -281,7 +283,7 @@ export const SubnetAssignLinodesDrawer = (
     }
   };
 
-  const handleUnassignLinode = async (data: LinodeAndConfigData) => {
+  const handleUnassignLinode = async (data: LinodeAndInterfaceData) => {
     const { configId, id: linodeId, interfaceId } = data;
     removedLinodeId.current = linodeId;
     try {
@@ -378,8 +380,8 @@ export const SubnetAssignLinodesDrawer = (
       };
 
       // Add the new Linode data to the list of assigned Linodes and configurations
-      setAssignedLinodesAndConfigData([
-        ...assignedLinodesAndConfigData,
+      setAssignedLinodesAndInterfaceData([
+        ...assignedLinodesAndInterfaceData,
         newLinodeData,
       ]);
 
@@ -397,7 +399,7 @@ export const SubnetAssignLinodesDrawer = (
   }, [
     subnet,
     isLinodeInterface,
-    assignedLinodesAndConfigData,
+    assignedLinodesAndInterfaceData,
     values.ipRanges,
     values.selectedLinode,
     values.selectedConfig,
@@ -416,18 +418,18 @@ export const SubnetAssignLinodesDrawer = (
       !subnet?.linodes.some(
         (linodeInfo) => linodeInfo.id === removedLinodeId.current
       ) &&
-      !!assignedLinodesAndConfigData.find(
+      !!assignedLinodesAndInterfaceData.find(
         (data) => data.id === removedLinodeId.current
       );
 
     if (isLinodeToRemoveValid) {
-      setAssignedLinodesAndConfigData(
-        [...assignedLinodesAndConfigData].filter(
+      setAssignedLinodesAndInterfaceData(
+        [...assignedLinodesAndInterfaceData].filter(
           (linode) => linode.id !== removedLinodeId.current
         )
       );
     }
-  }, [subnet, assignedLinodesAndConfigData]);
+  }, [subnet, assignedLinodesAndInterfaceData]);
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
@@ -456,7 +458,7 @@ export const SubnetAssignLinodesDrawer = (
   const handleOnClose = () => {
     onClose();
     resetForm();
-    setAssignedLinodesAndConfigData([]);
+    setAssignedLinodesAndInterfaceData([]);
     setLinodeConfigs([]);
     setAssignLinodesErrors({});
     setUnassignLinodesErrors([]);
@@ -634,21 +636,21 @@ export const SubnetAssignLinodesDrawer = (
           ))
         : null}
       <RemovableSelectionsListTable
-        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndInterfaceData.length})`}
         noDataText={'No Linodes have been assigned.'}
         onRemove={(data) => {
-          handleUnassignLinode(data as LinodeAndConfigData);
+          handleUnassignLinode(data as LinodeAndInterfaceData);
           setUnassignLinodesErrors([]);
         }}
         preferredDataLabel="linodeConfigLabel"
-        selectionData={assignedLinodesAndConfigData}
+        selectionData={assignedLinodesAndInterfaceData}
         tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
       />
-      {assignedLinodesAndConfigData.length > 0 && (
+      {assignedLinodesAndInterfaceData.length > 0 && (
         <DownloadCSV
           buttonType="styledLink"
           csvRef={csvRef}
-          data={assignedLinodesAndConfigData}
+          data={assignedLinodesAndInterfaceData}
           filename={`linodes-assigned-${formattedDate}.csv`}
           headers={SUBNET_LINODE_CSV_HEADERS}
           onClick={downloadCSV}
