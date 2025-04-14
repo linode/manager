@@ -16,7 +16,6 @@ import {
   Divider,
   Drawer,
   FormControlLabel,
-  FormHelperText,
   Notice,
   TextField,
   TooltipIcon,
@@ -490,7 +489,7 @@ export const SubnetAssignLinodesDrawer = (
         variant="warning"
       />
       <form onSubmit={handleSubmit}>
-        <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
+        <Typography>{REGIONAL_LINODE_MESSAGE}</Typography>
         <LinodeSelect
           checkIsOptionEqualToValue
           disabled={userCannotAssignLinodes}
@@ -551,13 +550,13 @@ export const SubnetAssignLinodesDrawer = (
             )}
             {linodeConfigs.length > 1 && !isLinodeInterface && (
               <>
-                <FormHelperText sx={{ marginTop: `16px` }}>
+                <Typography sx={{ marginTop: `16px` }}>
                   {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
                   <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
                     Learn more
                   </Link>
                   .
-                </FormHelperText>
+                </Typography>
                 <Autocomplete
                   disabled={userCannotAssignLinodes}
                   label={'Configuration profile'}
