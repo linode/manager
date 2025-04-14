@@ -4,16 +4,16 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 
+import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
 import {
   StyledGridContainer,
   StyledLabelTypography,
 } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
+import { formatConfigValue } from './utilities';
 
 import type { Database } from '@linode/api-v4';
-import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
-import { formatConfigValue } from './utilities';
 
 interface Props {
   database: Database;

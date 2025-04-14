@@ -14,14 +14,14 @@ import {
   StyledChip,
   StyledWrapper,
 } from './DatabaseConfigurationItem.style';
+import {
+  formatConfigValue,
+  isConfigBoolean,
+  isConfigStringWithEnum,
+} from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type { ConfigValue } from '@linode/api-v4';
-import {
-  isConfigBoolean,
-  formatConfigValue,
-  isConfigStringWithEnum,
-} from './utilities';
 
 interface Props {
   configItem?: ConfigurationOption;
@@ -57,16 +57,16 @@ export const DatabaseConfigurationItem = (props: Props) => {
       );
       return (
         <Autocomplete
-          onChange={(_, selected) => {
-            onChange(selected?.label ?? '');
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="" placeholder="Select an option" />
-          )}
           disableClearable
           isOptionEqualToValue={(option, value) => option.label === value.label}
           label={''}
+          onChange={(_, selected) => {
+            onChange(selected?.label ?? '');
+          }}
           options={options}
+          renderInput={(params) => (
+            <TextField {...params} label="" placeholder="Select an option" />
+          )}
           value={selectedValue ?? options[0]}
         />
       );
@@ -77,19 +77,19 @@ export const DatabaseConfigurationItem = (props: Props) => {
     ) {
       return (
         <TextField
-          placeholder={
-            configItem.isNew ? String(configItem?.example ?? '') : ''
-          }
           errorText={errorText}
           fullWidth
           label=""
           name={configLabel}
           onBlur={onBlur}
-          type="number"
-          value={configItem.value}
           onChange={(e) => {
             onChange(e.target.value);
           }}
+          placeholder={
+            configItem.isNew ? String(configItem?.example ?? '') : ''
+          }
+          type="number"
+          value={configItem.value}
         />
       );
     }

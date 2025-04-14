@@ -9,11 +9,13 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
@@ -22,18 +24,12 @@ import {
   useDatabaseMutation,
 } from 'src/queries/databases/databases';
 
+import {
+  ADVANCED_CONFIG_INFO,
+  ADVANCED_CONFIG_LEARN_MORE_LINK,
+} from '../../constants';
 import { DatabaseConfigurationItem } from './DatabaseConfigurationItem';
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
-
-import type { ConfigurationOption } from './DatabaseConfigurationSelect';
-import type {
-  APIError,
-  Database,
-  DatabaseInstance,
-  UpdateDatabasePayload,
-} from '@linode/api-v4';
-import type { SubmitHandler } from 'react-hook-form';
-import type { ObjectSchema } from 'yup';
 import {
   convertEngineConfigToOptions,
   convertExistingConfigsToArray,
@@ -43,10 +39,15 @@ import {
   getDefaultConfigValue,
   hasRestartCluster,
 } from './utilities';
-import {
-  ADVANCED_CONFIG_INFO,
-  ADVANCED_CONFIG_LEARN_MORE_LINK,
-} from '../../constants';
+
+import type { ConfigurationOption } from './DatabaseConfigurationSelect';
+import type {
+  APIError,
+  Database,
+  DatabaseInstance,
+  UpdateDatabasePayload,
+} from '@linode/api-v4';
+import type { ObjectSchema } from 'yup';
 
 interface Props {
   database: Database | DatabaseInstance;
@@ -68,6 +69,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     APIError[] | null
   >(null);
 
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
   const { isPending: isUpdating, mutateAsync: updateDatabase } =
     useDatabaseMutation(engine, id);
 
@@ -160,6 +162,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       })
       .catch((error) => {
         setUpdateDatabaseError(error);
+        scrollErrorIntoViewV2(formContainerRef);
       });
   };
 
@@ -170,20 +173,21 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
       open={open}
       title="Advanced Configuration"
     >
-      {Boolean(updateDatabaseError) && !updateDatabaseError?.[0].field && (
-        <Notice spacingBottom={16} spacingTop={16} variant="error">
-          {updateDatabaseError?.[0].reason}
-        </Notice>
-      )}
-      <Typography>
-        Advanced parameters to configure your database cluster.
-      </Typography>
-      <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
+      <form onSubmit={handleSubmit(onSubmit)} ref={formContainerRef}>
+        {Boolean(updateDatabaseError) && !updateDatabaseError?.[0].field && (
+          <Notice spacingBottom={16} spacingTop={16} variant="error">
+            {updateDatabaseError?.[0].reason}
+          </Notice>
+        )}
+        <Typography>
+          Advanced parameters to configure your database cluster.
+        </Typography>
+        <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
 
-      <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
-        <Typography>{ADVANCED_CONFIG_INFO}</Typography>
-      </Notice>
-      <form onSubmit={handleSubmit(onSubmit)}>
+        <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
+          <Typography>{ADVANCED_CONFIG_INFO}</Typography>
+        </Notice>
+
         <Grid
           alignItems="end"
           container
@@ -223,6 +227,9 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         )}
         {configs.map((config, index) => (
           <Controller
+            control={control}
+            key={config.label}
+            name={`configs.${index}.value`}
             render={({ field, fieldState }) => {
               return (
                 <DatabaseConfigurationItem
@@ -237,9 +244,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
                 />
               );
             }}
-            control={control}
-            key={config.label}
-            name={`configs.${index}.value`}
           />
         ))}
         <Divider spacingBottom={20} spacingTop={24} />
