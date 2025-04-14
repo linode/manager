@@ -118,7 +118,7 @@ export const getVPCInterfacePayload = (inputs: {
         ipv4: {
           addresses: [
             {
-              nat_1_1_address: 'auto',
+              nat_1_1_address: 'auto', // 'auto' in all cases here to match legacy interface behavior - helps the user towards a functional configuration & hides complexity per stakeholder feedback
               address: !autoAssignIPv4 ? chosenIP : 'auto',
             },
           ],
