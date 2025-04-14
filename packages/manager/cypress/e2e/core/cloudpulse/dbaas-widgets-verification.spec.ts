@@ -389,7 +389,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             expect(testData.expectedAggregation).to.equal(
-              interception.request.body.aggregate_function
+              interception.request.body.metrics[0].aggregate_function
             );
           });
 
@@ -437,15 +437,18 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        const { metric, relative_time_duration: timeRange } = requestPayload;
-        const metricData = metrics.find(({ name }) => name === metric);
+        const {
+          metrics: metric,
+          relative_time_duration: timeRange,
+        } = requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric[0].name);
 
         if (!metricData) {
           throw new Error(
-            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
+            `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
           );
         }
-        expect(metric).to.equal(metricData.name);
+        expect(metric[0].name).to.equal(metricData.name);
         expect(timeRange).to.have.property('unit', 'hr');
         expect(timeRange).to.have.property('value', 24);
       });

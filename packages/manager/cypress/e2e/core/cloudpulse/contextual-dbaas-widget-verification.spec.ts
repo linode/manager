@@ -310,7 +310,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             expect(testData.expectedAggregation).to.equal(
-              interception.request.body.aggregate_function
+              interception.request.body.metrics[0].aggregate_function
             );
           });
 
