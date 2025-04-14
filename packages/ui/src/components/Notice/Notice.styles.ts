@@ -28,6 +28,8 @@ export const useStyles = makeStyles()((theme) => ({
       theme.tokens.component.NotificationBanner.Informative.Background,
   },
   root: {
+    display: 'flex',
+    height: 40,
     '& + .notice': {
       marginTop: `${theme.spacingFunction(8)} !important`,
     },
