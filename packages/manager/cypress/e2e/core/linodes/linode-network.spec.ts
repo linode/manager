@@ -68,6 +68,7 @@ describe('IP Addresses', () => {
         public: [ipAddress],
         reserved: [],
         shared: [],
+        vpc: [],
       },
       ipv6: {
         global: [_ipv6Range],
@@ -383,7 +384,9 @@ describe('Linode Interfaces', () => {
 
       // Select a Subnet
       ui.autocomplete.findByLabel('Subnet').click();
-      ui.autocompletePopper.findByTitle(selectedSubnet.label).click();
+      ui.autocompletePopper
+        .findByTitle(`${selectedSubnet.label} (${selectedSubnet.ipv4})`)
+        .click();
 
       // Verify the error goes away
       cy.findByText('Subnet is required.').should('not.exist');
