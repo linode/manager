@@ -80,8 +80,9 @@ interface LinodeAndInterfaceData extends Linode {
   configId: null | number;
   interfaceId: number | undefined;
   linodeConfigLabel: string;
-  // Since Linode and legacy interfaces have different shapes, we will extract the interface's VPC IPv4 and ranges
-  // and store them in these fields to make displaying and downloading interface CSV data simpler
+  // Normalize VPC IPv4 and ranges for display/download since legacy and Linode interfaces have different shapes
+  // Legacy VPC Interface: VPC IPv4 = interface.ipv4.vpc, VPC ranges = interface.ip_ranges
+  // Linode Interfaces: VPC IPv4 = interface.vpc.ipv4.addresses[], VPC ranges = interface.vpc.ipv4.ranges
   vpcIPv4: null | string | undefined;
   vpcRanges: string[] | undefined;
 }
