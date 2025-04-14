@@ -83,6 +83,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
     ],
     reserved: [],
     shared: [],
+    vpc: [],
   },
   ipv6: {
     global: [
