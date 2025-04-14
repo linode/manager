@@ -65,7 +65,7 @@ export const useVPCLinodeInterface = (
   // but doesn't have a nat_1_1 val
   const isVPCOnlyLinodeInterface = Boolean(
     linodeInterfaceWithVPC?.default_route.ipv4 &&
-      !linodeInterfaceWithVPC?.vpc?.ipv4.addresses.some(
+      !linodeInterfaceWithVPC?.vpc?.ipv4?.addresses.some(
         (address) => address.nat_1_1_address
       )
   );
