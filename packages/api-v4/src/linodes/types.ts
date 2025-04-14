@@ -188,12 +188,11 @@ export interface IPv6SLAAC {
   address: string;
 }
 
-export interface ConfigInterfaceIPv6Range {
-  range?: string;
-}
 export interface ConfigInterfaceIPv6 {
   slaac?: IPv6SLAAC[];
-  ranges?: ConfigInterfaceIPv6Range[];
+  ranges?: {
+    range?: string;
+  }[];
   is_public?: boolean;
 }
 
