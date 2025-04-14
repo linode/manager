@@ -53,7 +53,7 @@ export const convertEngineConfigToOptions = (
           const category = parentCategory || 'other';
           options.push({
             ...value,
-            category: category,
+            category,
             enum: value.enum ?? [],
             label: key,
             type: value.type,
@@ -83,7 +83,7 @@ export const convertEngineConfigToOptions = (
  */
 export const findConfigItem = (
   configs:
-    | Record<string, Record<string, ConfigurationItem> | ConfigurationItem>
+    | Record<string, ConfigurationItem | Record<string, ConfigurationItem>>
     | undefined,
   targetKey: string
 ): ConfigurationOption | undefined => {
@@ -143,7 +143,7 @@ export const convertExistingConfigsToArray = (
           ...foundConfig,
           category: foundConfig.category || '',
           label: key,
-          value: value,
+          value,
         });
       }
     }
