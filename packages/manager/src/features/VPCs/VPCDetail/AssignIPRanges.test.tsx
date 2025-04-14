@@ -1,13 +1,11 @@
 import * as React from 'react';
 
-import {
-  ASSIGN_IPV4_RANGES_DESCRIPTION,
-  ASSIGN_IPV4_RANGES_TITLE,
-} from 'src/features/VPCs/constants';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+import { ASSIGN_IPV4_RANGES_TITLE } from 'src/features/VPCs/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignIPRanges } from './AssignIPRanges';
+
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 describe('AssignIPRanges', () => {
   const handleIPRangeChangeMock = vi.fn();
@@ -26,7 +24,12 @@ describe('AssignIPRanges', () => {
       />
     );
     expect(getByText(ASSIGN_IPV4_RANGES_TITLE)).toBeInTheDocument();
-    expect(getByText(ASSIGN_IPV4_RANGES_DESCRIPTION)).toBeInTheDocument();
+    expect(
+      getByText(
+        'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.',
+        { exact: false }
+      )
+    ).toBeInTheDocument();
   });
 
   it('renders error notice if ipRangesError is provided', () => {

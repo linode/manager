@@ -1,23 +1,23 @@
 import { useAllVPCsQuery } from '@linode/queries';
-import { Autocomplete, Stack } from '@linode/ui';
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import type { CreateInterfaceFormValues } from './utilities';
+import type { CreateInterfaceFormValues } from '../utilities';
 
 interface Props {
   regionId: string;
 }
 
-export const VPCInterface = (props: Props) => {
-  const { regionId } = props;
-  const {
-    control,
-    resetField,
-    setValue,
-  } = useFormContext<CreateInterfaceFormValues>();
+export const VPCDetails = ({ regionId }: Props) => {
+  const { control, resetField, setValue } =
+    useFormContext<CreateInterfaceFormValues>();
 
-  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     filter: { region: regionId },
   });
 
@@ -26,10 +26,17 @@ export const VPCInterface = (props: Props) => {
   const selectedVPC = vpcs?.find((vpc) => vpc.id === vpcId) ?? null;
 
   return (
-    <Stack spacing={2}>
+    <>
       <Controller
+        control={control}
+        name="vpc.vpc_id"
         render={({ field, fieldState }) => (
           <Autocomplete
+            errorText={fieldState.error?.message ?? error?.[0].reason}
+            label="VPC"
+            loading={isLoading}
+            noMarginTop
+            onBlur={field.onBlur}
             onChange={(e, vpc) => {
               field.onChange(vpc?.id ?? null);
 
@@ -44,27 +51,20 @@ export const VPCInterface = (props: Props) => {
                 resetField('vpc.subnet_id');
               }
             }}
-            errorText={fieldState.error?.message ?? error?.[0].reason}
-            label="VPC"
-            loading={isLoading}
-            noMarginTop
-            onBlur={field.onBlur}
             options={vpcs ?? []}
             placeholder="Select a VPC"
             value={selectedVPC}
           />
         )}
-        control={control}
-        name="vpc.vpc_id"
       />
       <Controller
+        control={control}
+        name="vpc.subnet_id"
         render={({ field, fieldState }) => (
           <Autocomplete
-            value={
-              selectedVPC?.subnets.find((s) => s.id === field.value) ?? null
-            }
             disabled={!selectedVPC}
             errorText={fieldState.error?.message}
+            getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
             label="Subnet"
             loading={isLoading}
             noMarginTop
@@ -72,11 +72,12 @@ export const VPCInterface = (props: Props) => {
             onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
             options={selectedVPC?.subnets ?? []}
             placeholder="Select a Subnet"
+            value={
+              selectedVPC?.subnets.find((s) => s.id === field.value) ?? null
+            }
           />
         )}
-        control={control}
-        name="vpc.subnet_id"
       />
-    </Stack>
+    </>
   );
 };

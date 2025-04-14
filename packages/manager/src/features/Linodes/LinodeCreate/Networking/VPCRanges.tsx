@@ -1,17 +1,10 @@
-import {
-  IconButton,
-  Notice,
-  Stack,
-  TextField,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { IconButton, Notice, Stack, TextField, TooltipIcon } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -51,6 +44,8 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
             spacing={0.5}
           >
             <Controller
+              control={control}
+              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges.${index}.range`}
               render={({ field, fieldState }) => (
                 <TextField
                   errorText={fieldState.error?.message}
@@ -64,8 +59,6 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name={`linodeInterfaces.${interfaceIndex}.vpc.ipv4.ranges.${index}.range`}
             />
             <IconButton
               aria-label={`Remove IP Range ${index}`}
@@ -82,18 +75,9 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
           Add IPv4 Range
         </LinkButton>
         <TooltipIcon
-          text={
-            <Typography>
-              Assign additional IPv4 address ranges that the VPC can use to
-              reach services running on this Linode.{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-                Learn more
-              </Link>
-              .
-            </Typography>
-          }
           status="help"
           sxTooltipIcon={{ p: 0.5 }}
+          text={<VPCRangesDescription />}
         />
       </Stack>
     </Stack>
