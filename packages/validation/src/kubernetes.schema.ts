@@ -27,7 +27,7 @@ export const AutoscaleNodePoolSchema = object({
               return false;
             }
             return true;
-          }
+          },
         ),
   }),
   max: number().when('enabled', {
@@ -35,8 +35,7 @@ export const AutoscaleNodePoolSchema = object({
     then: (schema) =>
       schema
         .required('Maximum is a required field.')
-        .min(1, 'Maximum must be between 1 and 100 nodes.')
-        .max(100, 'Maximum must be between 1 and 100 nodes.'),
+        .min(1, 'Maximum must be between 1 and 100 nodes.'),
   }),
 });
 
@@ -48,7 +47,7 @@ export const clusterLabelSchema = string()
    */
   .matches(
     /^[a-zA-Z0-9-]+$/,
-    'Cluster labels cannot contain special characters, spaces, or underscores.'
+    'Cluster labels cannot contain special characters, spaces, or underscores.',
   )
   .min(3, 'Length must be between 3 and 32 characters.')
   .max(32, 'Length must be between 3 and 32 characters.');
@@ -111,7 +110,7 @@ export const createKubeClusterWithRequiredACLSchema = object({
         const { ipv4, ipv6 } = controlPlane.acl.addresses;
         // Pass validation if either IP address has a value.
         return (ipv4 && ipv4.length > 0) || (ipv6 && ipv6.length > 0);
-      }
+      },
     )
     .required(),
 });
@@ -131,15 +130,17 @@ export const kubernetesEnterpriseControlPlaneACLPayloadSchema = object({
         (ipv4 && ipv4.length > 0 && ipv4[0] !== '') ||
         (ipv6 && ipv6.length > 0 && ipv6[0] !== '')
       );
-    }
+    },
   ),
 });
 
 // Starts and ends with a letter or number and contains letters, numbers, hyphens, dots, and underscores
-const alphaNumericValidCharactersRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
+const alphaNumericValidCharactersRegex =
+  /^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$/;
 
 // DNS subdomain key (example.com/my-app)
-const dnsKeyRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-._/]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+const dnsKeyRegex =
+  /^[a-zA-Z0-9]([a-zA-Z0-9-._/]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
 
 const MAX_DNS_KEY_TOTAL_LENGTH = 128;
 const MAX_DNS_KEY_SUFFIX_LENGTH = 62;
@@ -210,19 +211,19 @@ export const kubernetesTaintSchema = object({
           alphaNumericValidCharactersRegex.test(value) ||
           dnsKeyRegex.test(value)
         );
-      }
+      },
     )
     .max(253, 'Key must be between 1 and 253 characters.')
     .min(1, 'Key must be between 1 and 253 characters.'),
   value: string()
     .matches(
       alphaNumericValidCharactersRegex,
-      'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.'
+      'Value must start with a letter or number and may contain letters, numbers, hyphens, dots, and underscores, up to 63 characters.',
     )
     .max(63, 'Value must be between 0 and 63 characters.')
     .notOneOf(
       ['kubernetes.io', 'linode.com'],
-      'Value cannot be "kubernetes.io" or "linode.com".'
+      'Value cannot be "kubernetes.io" or "linode.com".',
     )
     .notRequired(),
 });

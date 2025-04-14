@@ -18,11 +18,21 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
-import type { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../../constants';
+
+import type {
+  AutoscaleSettings,
+  KubeNodePoolResponse,
+  KubernetesTier,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
   clusterId: number;
+  clusterTier: KubernetesTier;
   handleOpenResizeDrawer: (poolId: number) => void;
   nodePool: KubeNodePoolResponse | undefined;
   onClose: () => void;
@@ -67,7 +77,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const AutoscalePoolDialog = (props: Props) => {
-  const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
+  const {
+    clusterId,
+    clusterTier,
+    handleOpenResizeDrawer,
+    nodePool,
+    onClose,
+    open,
+  } = props;
   const autoscaler = nodePool?.autoscaler;
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -78,6 +95,15 @@ export const AutoscalePoolDialog = (props: Props) => {
   );
 
   const onSubmit = async (values: AutoscaleSettings) => {
+    const maxLimit =
+      clusterTier === 'enterprise'
+        ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+        : MAX_NODES_PER_POOL_STANDARD_TIER;
+    if (values.enabled && values.max > maxLimit) {
+      setFieldError('max', `Maximum must be between 1 and ${maxLimit} nodes.`);
+      return;
+    }
+
     await mutateAsync({ autoscaler: values }).then(() => {
       enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
         variant: 'success',
@@ -97,6 +123,7 @@ export const AutoscalePoolDialog = (props: Props) => {
     handleReset,
     handleSubmit,
     isSubmitting,
+    setFieldError,
     values,
   } = useFormik({
     enableReinitialize: true,
