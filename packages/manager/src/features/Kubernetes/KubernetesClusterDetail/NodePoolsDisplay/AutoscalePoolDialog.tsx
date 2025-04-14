@@ -128,7 +128,6 @@ export const AutoscalePoolDialog = (props: Props) => {
       min: autoscaler?.min ?? 1,
     },
     onSubmit,
-    // validationSchema: AutoscaleNodePoolSchema,
     validate: (values) => {
       const errors: { max?: string; min?: string } = {};
       const maxLimit =
