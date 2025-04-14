@@ -1,15 +1,17 @@
-import { linodeFactory } from '@linode/utilities';
 import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
+import { linodeFactory } from '@linode/utilities';
 import {
+  accountFactory,
   firewallDeviceFactory,
   firewallFactory,
   ipAddressFactory,
   subnetFactory,
   vpcFactory,
 } from '@src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockAddFirewallDevice,
@@ -66,6 +68,7 @@ describe('IP Addresses', () => {
         public: [ipAddress],
         reserved: [],
         shared: [],
+        vpc: [],
       },
       ipv6: {
         global: [_ipv6Range],
@@ -248,6 +251,11 @@ describe('Firewalls', () => {
 
 describe('Linode Interfaces', () => {
   beforeEach(() => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Linode Interfaces'],
+      })
+    );
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: true },
     });
