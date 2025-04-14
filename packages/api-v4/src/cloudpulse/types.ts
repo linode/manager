@@ -130,8 +130,8 @@ export interface JWEToken {
 }
 
 export interface Metric {
-  name: string;
   aggregate_function: string;
+  name: string;
 }
 
 export interface CloudPulseMetricsRequest {
