@@ -327,10 +327,6 @@ export const createFooter = (
   });
 };
 
-const truncateLabel = (label: string) => {
-  return label.length > 20 ? `${label.substr(0, 20)}...` : label;
-};
-
 export const getInvoiceRegion = (
   invoiceItem: InvoiceItem,
   regions: Region[]
@@ -381,13 +377,12 @@ const formatDescription = (desc?: string) => {
 
   if (descChunks.length < 2) {
     /** in this case, it's probably a manual payment from admin */
-    // return desc;
-    return truncateLabel(desc);
+    return desc;
   }
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
+    return `${descChunks[0]}\r\n${volLabel} ${
       descChunks?.[2] ?? ''
     }\r\n${volID}`;
   }
@@ -402,14 +397,14 @@ const formatDescription = (desc?: string) => {
        * If we arrive here, we're dealing with the former.
        */
       const [backupLabel, backupID] = descChunks[2].split(' ');
-      return `${base}\r\n${truncateLabel(backupLabel)}\r\n${backupID}`;
+      return `${base}\r\n${backupLabel}\r\n${backupID}`;
     }
     return base;
   }
 
   const [entityLabel, entityID] = descChunks[1].split(' ');
   const cleanedType = descChunks[0].replace(/\(pending upgrade\)/, '');
-  return `${cleanedType}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
+  return `${cleanedType}\r\n${entityLabel}\r\n${entityID}`;
 };
 
 export interface PdfResult {

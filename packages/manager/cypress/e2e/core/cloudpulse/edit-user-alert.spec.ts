@@ -187,17 +187,18 @@ describe('Integration Tests for Edit Alert', () => {
       .should('have.value', 'Databases');
     cy.findByLabelText('Severity').should('have.value', 'Severe');
 
-    // Verify alert resource selection
+    // Verify alert entity selection
     cy.get('[data-qa-alert-table="true"]')
-      .contains('[data-qa-alert-cell*="resource"]', 'database-3')
+      .contains('[data-qa-alert-cell*="entity"]', 'database-3')
       .parents('tr')
       .find('[type="checkbox"]')
       .should('be.checked');
 
-    // Verify alert resource selection count message
-    cy.get('[data-qa-notice="true"]')
-      .find('p')
-      .should('contain.text', '1 of 5 resources are selected.');
+    // Verify alert entity selection count message
+    cy.get('[data-testid="selection_notice"]').should(
+      'contain',
+      '1 of 5 entities are selected.'
+    );
 
     // Assert rule values 1
     assertRuleValues(0, {
@@ -277,8 +278,10 @@ describe('Integration Tests for Edit Alert', () => {
       .find('button')
       .contains('Deselect All')
       .click();
-
-    cy.get('[data-qa-notice="true"]').contains('Select All').click();
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
+      .contains('Select All')
+      .click();
 
     cy.get(
       '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'

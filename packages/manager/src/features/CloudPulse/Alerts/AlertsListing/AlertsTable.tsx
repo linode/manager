@@ -1,10 +1,11 @@
+import { TableBody } from '@mui/material';
 import * as React from 'react';
 
 import { AlertTableRow } from './AlertTableRow';
 
 import type { Item } from '../constants';
-import type { Alert } from '@linode/api-v4';
 import type { AlertServiceType } from '@linode/api-v4';
+import type { Alert } from '@linode/api-v4';
 
 interface UngroupedAlertsProps {
   /**
@@ -37,7 +38,7 @@ export const AlertsTable = ({
   services,
 }: UngroupedAlertsProps) => {
   return (
-    <>
+    <TableBody>
       {alerts.map((alert: Alert) => (
         <AlertTableRow
           handlers={{
@@ -50,6 +51,6 @@ export const AlertsTable = ({
           services={services}
         />
       ))}
-    </>
+    </TableBody>
   );
 };

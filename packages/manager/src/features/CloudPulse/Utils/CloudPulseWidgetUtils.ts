@@ -237,7 +237,7 @@ export const generateMaxUnit = (
 ) => {
   const maxValue = Math.max(
     0,
-    ...legendRowsData?.map((row) => row?.data.max ?? 0)
+    ...legendRowsData.map((row) => row?.data.max ?? 0)
   );
 
   return generateUnitByBaseUnit(maxValue, unit);

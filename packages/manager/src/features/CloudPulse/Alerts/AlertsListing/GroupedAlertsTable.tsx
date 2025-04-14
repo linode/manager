@@ -1,4 +1,4 @@
-import { TableCell, TableRow, useTheme } from '@mui/material';
+import { TableBody, TableCell, TableRow, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -80,7 +80,7 @@ export const GroupedAlertsTable = ({
               page,
               pageSize,
             }) => (
-              <React.Fragment>
+              <TableBody>
                 <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
                   <TableCell colSpan={7}>
                     <StyledTagHeader
@@ -119,7 +119,10 @@ export const GroupedAlertsTable = ({
                         }}
                         sx={{
                           border: 0,
-                          marginBottom: theme.spacingFunction(16),
+                          marginBottom:
+                            groupedAlerts[groupedAlerts.length - 1][0] === tag
+                              ? 0
+                              : theme.spacingFunction(16),
                           marginTop: theme.spacingFunction(16),
                         }}
                         count={count}
@@ -130,7 +133,7 @@ export const GroupedAlertsTable = ({
                     </TableCell>
                   </TableRow>
                 )}
-              </React.Fragment>
+              </TableBody>
             )}
           </Paginate>
         );

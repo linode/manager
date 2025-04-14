@@ -1,7 +1,7 @@
 import { Dialog } from '@linode/ui';
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomProfileData } from 'src/mocks/presets/extra/account/customProfile';
 
@@ -35,9 +35,8 @@ export const ExtraPresetProfile = ({
     }),
     ...customProfileData,
   }));
-  const [isEditingCustomProfile, setIsEditingCustomProfile] = React.useState(
-    false
-  );
+  const [isEditingCustomProfile, setIsEditingCustomProfile] =
+    React.useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<

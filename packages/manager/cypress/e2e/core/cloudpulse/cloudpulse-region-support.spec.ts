@@ -129,7 +129,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('have.text', 'US, Chicago, IL');
     });
   });
-
+  // Reason: Not needed
   it.skip('If the supportedRegionIds column is removed, all mocked regions will be considered supported by default', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },

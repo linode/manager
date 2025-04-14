@@ -165,7 +165,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // navigate to the Monitor
     cy.visitWithLogin(
-      `/databases/${databaseMock.engine}/${databaseMock.id}/monitor`
+      `/databases/${databaseMock.engine}/${databaseMock.id}/metrics`
     );
 
     cy.wait(['@getDashboard', '@getServiceType', '@getDatabase']);

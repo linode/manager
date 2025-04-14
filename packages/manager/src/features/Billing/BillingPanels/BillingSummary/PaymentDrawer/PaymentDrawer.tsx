@@ -276,7 +276,7 @@ export const PaymentDrawer = (props: Props) => {
         ) : null}
         <TextField
           InputProps={{
-            startAdornment: <InputAdornment position="end">$</InputAdornment>,
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
           disabled={isProcessing || isReadOnly}
           label="Payment Amount"

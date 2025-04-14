@@ -121,16 +121,7 @@ export const AlertInformationActionTable = (
     setSelectedAlert(alert);
   };
 
-  let isEnabled = false;
-
-  let message = '';
-  let title = '';
-  if (isDialogOpen) {
-    isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
-    message = `Are you sure you want to
-              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`;
-    title = `${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`;
-  }
+  const isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
 
   return (
     <>
@@ -204,14 +195,14 @@ export const AlertInformationActionTable = (
         )}
       </OrderBy>
       <AlertConfirmationDialog
+        message={`Are you sure you want to
+              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isLoading}
         isOpen={isDialogOpen}
-        message={message}
-        title={title}
       />
     </>
   );

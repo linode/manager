@@ -2,7 +2,7 @@
  * @file Integration tests for Cloud Manager account enable Linode Managed flows.
  */
 
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, profileFactory } from '@linode/utilities';
 import {
   visitUrlWithManagedDisabled,
   visitUrlWithManagedEnabled,
@@ -22,7 +22,6 @@ import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory } from 'src/factories/account';
-import { profileFactory } from 'src/factories/profile';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -38,14 +37,14 @@ describe('Account Linode Managed', () => {
       restricted: false,
       username: 'mock-user',
     });
-    const mockLinodes = new Array(5).fill(null).map(
-      (item: null, index: number): Linode => {
+    const mockLinodes = new Array(5)
+      .fill(null)
+      .map((item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
         });
-      }
-    );
+      });
 
     mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetAccount(mockAccount).as('getAccount');

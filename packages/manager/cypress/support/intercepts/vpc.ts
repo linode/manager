@@ -133,6 +133,27 @@ export const mockGetSubnets = (
 };
 
 /**
+ * Intercepts GET request to get a specific subnet and mocks response.
+ *
+ * @param vpcId - ID of VPC for which to mock response.
+ * @param subnetId - ID of subnet for which to mock response.
+ * @param subnet - Subnet for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSubnet = (
+  vpcId: number,
+  subnetId: number,
+  subnet: Subnet
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`vpcs/${vpcId}/subnets/${subnetId}`),
+    subnet
+  );
+};
+
+/**
  * Intercepts DELETE request to delete a subnet of a VPC and mocks response
  *
  * @param vpcId - ID of VPC for which to mock response.
