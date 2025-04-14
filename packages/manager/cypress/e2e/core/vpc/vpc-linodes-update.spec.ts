@@ -14,7 +14,6 @@ import {
 import {
   mockCreateLinodeConfigInterfaces,
   mockDeleteLinodeConfigInterface,
-  mockGetLinodeConfigInterface,
   mockGetLinodeConfigs,
 } from 'support/intercepts/configs';
 import { mockGetLinodes } from 'support/intercepts/linodes';
@@ -198,26 +197,10 @@ describe('VPC assign/unassign flows', () => {
       label: randomLabel(),
     });
 
-    const vpcInterfaceId = randomNumber();
-    const configId = randomNumber();
-
     const mockSubnet = subnetFactory.build({
       id: randomNumber(2),
       label: randomLabel(),
-      linodes: [
-        {
-          id: mockLinode.id,
-          interfaces: [
-            { active: false, config_id: configId, id: vpcInterfaceId },
-          ],
-        },
-        {
-          id: mockSecondLinode.id,
-          interfaces: [
-            { active: false, config_id: configId, id: vpcInterfaceId },
-          ],
-        },
-      ],
+      linodes: [mockLinode, mockSecondLinode],
     });
 
     const mockVPC = vpcFactory.build({
@@ -229,12 +212,14 @@ describe('VPC assign/unassign flows', () => {
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       subnet_id: mockSubnet.id,
       vpc_id: mockVPC.id,
-      id: vpcInterfaceId,
     });
     const mockLinodeConfig = linodeConfigFactory.build({
       interfaces: [vpcInterface],
-      id: configId,
     });
+
+    const mockLinodeConfigInterfaces = mockLinodeConfig.interfaces ?? [
+      vpcInterface,
+    ];
 
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
@@ -277,12 +262,9 @@ describe('VPC assign/unassign flows', () => {
           .should('be.disabled');
 
         // confirm that unassign a single Linode from the VPC correctly
-        mockGetLinodeConfigInterface({
-          configId: mockLinodeConfig.id,
-          configInterface: vpcInterface,
-          interfaceId: vpcInterface.id,
-          linodeId: mockLinode.id,
-        }).as('getLinodeConfigInterface');
+        mockGetLinodeConfigs(mockLinode.id, [mockLinodeConfig]).as(
+          'getLinodeConfigs'
+        );
 
         cy.findByLabelText('Linodes').should('be.visible').click();
         cy.focused().type(mockLinode.label);
@@ -292,7 +274,7 @@ describe('VPC assign/unassign flows', () => {
           .should('be.visible')
           .click();
 
-        cy.wait('@getLinodeConfigInterface');
+        cy.wait('@getLinodeConfigs');
 
         // the select option won't disappear unless click on somewhere else
         cy.findByText(vpcUnassignLinodeRebootNotice).click();
@@ -303,19 +285,13 @@ describe('VPC assign/unassign flows', () => {
         cy.findByText(mockLinode.label).should('be.visible');
 
         // confirm that unassign multiple Linodes from the VPC correctly
-        // mockGetLinodeConfigs(mockSecondLinode.id, [mockLinodeConfig]).as(
-        //   'getLinodeConfigs'
-        // );
-        mockGetLinodeConfigInterface({
-          configId: mockLinodeConfig.id,
-          configInterface: vpcInterface,
-          interfaceId: vpcInterface.id,
-          linodeId: mockSecondLinode.id,
-        }).as('getLinodeConfigInterface');
+        mockGetLinodeConfigs(mockSecondLinode.id, [mockLinodeConfig]).as(
+          'getLinodeConfigs'
+        );
         cy.findByText('Linodes').should('be.visible').click();
         cy.focused().type(mockSecondLinode.label);
         cy.findByText(mockSecondLinode.label).should('be.visible').click();
-        cy.wait('@getLinodeConfigInterface');
+        cy.wait('@getLinodeConfigs');
 
         // confirm that unassigned Linode(s) are displayed on the details page
         cy.findByText(vpcUnassignLinodeRebootNotice).click();
@@ -327,12 +303,12 @@ describe('VPC assign/unassign flows', () => {
         mockDeleteLinodeConfigInterface(
           mockLinode.id,
           mockLinodeConfig.id,
-          vpcInterface.id
+          mockLinodeConfigInterfaces[0].id
         ).as('deleteLinodeConfigInterface1');
         mockDeleteLinodeConfigInterface(
           mockSecondLinode.id,
           mockLinodeConfig.id,
-          vpcInterface.id
+          mockLinodeConfigInterfaces[0].id
         ).as('deleteLinodeConfigInterface2');
         ui.button
           .findByTitle('Unassign Linodes')
