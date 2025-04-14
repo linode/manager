@@ -22,10 +22,14 @@ import type {
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
 
-export const useLinodeInterfacesQuery = (linodeId: number) => {
-  return useQuery<LinodeInterfaces, APIError[]>(
-    linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces,
-  );
+export const useLinodeInterfacesQuery = (
+  linodeId: number,
+  enabled: boolean = true,
+) => {
+  return useQuery<LinodeInterfaces, APIError[]>({
+    ...linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces,
+    enabled,
+  });
 };
 
 export const useLinodeInterfaceQuery = (
