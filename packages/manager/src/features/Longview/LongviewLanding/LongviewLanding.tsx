@@ -2,6 +2,7 @@ import {
   getActiveLongviewPlan,
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
+import { useAccountSettings } from '@linode/queries';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -18,7 +19,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
-import { useAccountSettings } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
@@ -29,6 +29,7 @@ import type {
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
 import type { LongviewState } from 'src/routes/longview';
+import { Notice } from '@linode/ui';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -53,13 +54,10 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   const isManaged = Boolean(accountSettings?.managed);
 
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [newClientLoading, setNewClientLoading] =
+    React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -120,6 +118,18 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   return (
     <>
+      {isLongviewCreationRestricted && (
+        <Notice
+          important
+          sx={{ marginBottom: 2 }}
+          text={getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Images',
+          })}
+          variant="error"
+        />
+      )}
       <LandingHeader
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
