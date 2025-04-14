@@ -1,3 +1,4 @@
+import { getLinodeInterfaces, type Linode } from '@linode/api-v4';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
@@ -5,7 +6,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
-import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Select } from '@linode/ui';
 import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
@@ -15,15 +16,25 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
+import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import type { Linode } from '@linode/api-v4';
+import type { LinodeInterface } from '@linode/api-v4';
 
 interface Props {
   helperText: string;
   onClose: () => void;
   open: boolean;
+}
+interface LinodeInterfaceOption extends LinodeInterface {
+  label: string;
+  value: number;
+}
+
+interface LinodeWithMultiLinodeInterfaces extends Linode {
+  linodeInterfaces: LinodeInterfaceOption[];
+  selectedInterfaceId: null | number;
 }
 
 export const AddLinodeDrawer = (props: Props) => {
@@ -47,6 +58,13 @@ export const AddLinodeDrawer = (props: Props) => {
     useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
+  // linode with single interfaces
+  const [selectedInterfaceIDs, setSelectedInterfaceIDs] = React.useState<
+    number[]
+  >([]);
+  // linode with multi interfaces keeping track of them
+  const [linodesWithMultiInterfaces, setLinodesWithMultiInterfaces] =
+    React.useState<LinodeWithMultiLinodeInterfaces[]>([]);
 
   const [localError, setLocalError] = React.useState<string | undefined>(
     undefined
@@ -161,6 +179,57 @@ export const AddLinodeDrawer = (props: Props) => {
     );
   };
 
+  const onSelectionChange = async (linodes: Linode[]) => {
+    const legacyLinodes: Linode[] = [];
+    const interfaceLinodes: Linode[] = [];
+    const interfaceIds: number[] = [];
+
+    for (const linode of linodes) {
+      if (linode.interface_generation === 'legacy_config') {
+        legacyLinodes.push(linode);
+      } else {
+        interfaceLinodes.push(linode);
+      }
+    }
+    setSelectedLinodes(legacyLinodes);
+
+    const linodesAndLinodeInterfaces = await Promise.all(
+      interfaceLinodes.map(async (linode) => {
+        const interfaces = await getLinodeInterfaces(linode.id);
+        const nonVlanInterfaces = interfaces.interfaces.filter(
+          (iface) => !iface.vlan
+        );
+        if (nonVlanInterfaces.length === 1) {
+          interfaceIds.push(nonVlanInterfaces[0].id);
+        }
+        if (nonVlanInterfaces.length > 1) {
+          const interfacesWithLabels = nonVlanInterfaces.map((iface) => ({
+            ...iface,
+            label: `${getLinodeInterfaceType(iface)} Interface (ID : ${iface.id})`,
+            value: iface.id,
+          }));
+          return {
+            ...linode,
+            linodeInterfaces: interfacesWithLabels,
+            selectedInterfaceId: null as null | number,
+          };
+        }
+        return null;
+      })
+    );
+
+    const _linodesAndLinodeInterfaces = linodesAndLinodeInterfaces.filter(
+      (item): item is LinodeWithMultiLinodeInterfaces => item !== null
+    );
+
+    setSelectedInterfaceIDs(interfaceIds);
+    setLinodesWithMultiInterfaces(_linodesAndLinodeInterfaces);
+  };
+
+  // how do i filter in advance for linode interfaces???????????????? i am struggling fr rn
+  // idea: keep track of linodes with multi interfaces in that state ^, then have selects for each of them
+  // something something promise.all ({ type: interface, id: interfaceId }) post firewall device
+
   React.useEffect(() => {
     if (error) {
       setLocalError('Could not load firewall data');
@@ -189,10 +258,26 @@ export const AddLinodeDrawer = (props: Props) => {
           disabled={isLoading}
           helperText={helperText}
           multiple
-          onSelectionChange={(linodes) => setSelectedLinodes(linodes)}
+          onSelectionChange={(linodes) => onSelectionChange(linodes)}
           optionsFilter={linodeOptionsFilter}
           value={selectedLinodes.map((linode) => linode.id)}
         />
+        {linodesWithMultiInterfaces.map((linodeWithInterfaces) => (
+          <Select
+            key={linodeWithInterfaces.id}
+            label={`${linodeWithInterfaces.label} Interfaces`}
+            onChange={(e, option) => {
+              // this is an awful idea
+              // todo, think this through some more
+            }}
+            options={linodeWithInterfaces.linodeInterfaces}
+            value={
+              linodeWithInterfaces.linodeInterfaces.find(
+                (iface) => iface.id === linodeWithInterfaces.selectedInterfaceId
+              ) ?? null
+            }
+          />
+        ))}
         <ActionsPanel
           primaryButtonProps={{
             disabled: selectedLinodes.length === 0,
