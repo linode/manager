@@ -1,12 +1,12 @@
-import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
+import { InterfaceSettingsForm } from './InterfaceSettingsForm';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
-import { InterfaceSettingsDrawer } from './InterfaceSettingsDrawer/InterfaceSettingsDrawer';
 
 interface Props {
   linodeId: number;
@@ -77,11 +77,16 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
         open={location.pathname.includes('networking/interfaces')}
       />
-      <InterfaceSettingsDrawer
-        linodeId={linodeId}
+      <Drawer
         onClose={() => setIsSettingsDrawerOpen(false)}
         open={isSettingsDrawerOpen}
-      />
+        title="Interface Settings"
+      >
+        <InterfaceSettingsForm
+          linodeId={linodeId}
+          onClose={() => setIsSettingsDrawerOpen(false)}
+        />
+      </Drawer>
     </Box>
   );
 };
