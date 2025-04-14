@@ -6,12 +6,9 @@ import { linodeQueries, vpcQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import type {
-  APIError,
-  DeleteLinodeConfigInterfacePayload,
-} from '@linode/api-v4';
+import type { APIError, DeleteInterfaceIds } from '@linode/api-v4';
 
-interface IdsForUnassignLinode extends DeleteLinodeConfigInterfacePayload {
+interface IdsForUnassignLinode extends DeleteInterfaceIds {
   vpcId: number;
 }
 

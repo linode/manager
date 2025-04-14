@@ -32,7 +32,7 @@ import {
 
 import type {
   APIError,
-  DeleteLinodeConfigInterfacePayload,
+  DeleteInterfaceIds,
   Linode,
   Subnet,
   UpdateConfigInterfacePayload,
@@ -85,7 +85,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
       React.useState<Linode[]>([]);
     const [configInterfacesToDelete, setConfigInterfacesToDelete] =
-      React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
+      React.useState<DeleteInterfaceIds[]>([]);
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
@@ -182,7 +182,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
             (item): item is InterfaceAndLinodeData => item !== null
           );
 
-          // Remove interface property for the DeleteLinodeConfigInterfacePayload data
+          // Remove interface property for the DeleteInterfaceIds data
           const _updatedConfigInterfaces = updatedConfigInterfaces.map(
             (item) => ({
               configId: item?.configId,
@@ -192,7 +192,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           );
 
           const filteredConfigInterfaces = _updatedConfigInterfaces.filter(
-            (item): item is DeleteLinodeConfigInterfacePayload => item !== null
+            (item): item is DeleteInterfaceIds => item !== null
           );
 
           // Update the state with the new data

@@ -695,7 +695,7 @@ export interface ResizeLinodePayload {
   migration_type?: MigrationTypes;
 }
 
-export interface DeleteLinodeConfigInterfacePayload {
+export interface DeleteInterfaceIds {
   configId: null | number;
   interfaceId: number;
   linodeId: number;
