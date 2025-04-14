@@ -260,13 +260,17 @@ export const getCloudPulseMetricRequest = (
       preset !== 'last_month'
         ? undefined
         : { end: duration.end, start: duration.start },
-    aggregate_function: widget.aggregate_function,
     entity_ids: resources
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: widget.group_by,
-    metric: widget.metric,
+    metrics: [
+      {
+        aggregate_function: widget.aggregate_function,
+        name: widget.metric,
+      },
+    ],
     relative_time_duration: getTimeDurationFromPreset(preset),
     time_granularity:
       widget.time_granularity.unit === 'Auto'

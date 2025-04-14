@@ -241,7 +241,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
-      url: flags.aclpReadEndpoint!,
+      url: 'https://monitor-api.linode.com/v2beta/monitor/services/',
     }
   );
   let data: DataSet[] = [];
