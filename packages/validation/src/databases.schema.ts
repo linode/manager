@@ -103,6 +103,32 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       `Please ensure that ${key} follows the format ${field.example}`,
     );
   }
+
+  if (field.anyOf) {
+    const allowedRanges = field.anyOf;
+
+    validator = validator.test(
+      'is-in-range',
+      () => {
+        const rangesText = allowedRanges
+          .map((range: { maximum: number; minimum: number }) =>
+            range.minimum === range.maximum
+              ? `${range.minimum}`
+              : `between ${range.minimum} and ${range.maximum}`,
+          )
+          .join(' or ');
+
+        return `Value must be ${rangesText}`;
+      },
+      (value: boolean | number | string) => {
+        if (typeof value !== 'number') return false;
+        return allowedRanges.some(
+          (range: { maximum: number; minimum: number }) =>
+            value >= range.minimum && value <= range.maximum,
+        );
+      },
+    );
+  }
   if (key === 'timezone') {
     if (!field.value) {
       validator = validator.required('timezone cannot be empty');

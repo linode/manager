@@ -126,8 +126,8 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
 
 const adb10 = (i: number) => i % 2 === 0;
 
-export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
-  {
+export const databaseInstanceFactory =
+  Factory.Sync.makeFactory<DatabaseInstance>({
     allow_list: [],
     cluster_size: Factory.each((i) =>
       adb10(i)
@@ -187,8 +187,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
       week_of_month: null,
     },
     version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
-  }
-);
+  });
 
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   allow_list: [...IPv4List],
@@ -273,8 +272,8 @@ export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
   version: Factory.each((i) => `${i}`),
 });
 
-export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngineConfig>(
-  {
+export const databaseEngineConfigFactory =
+  Factory.Sync.makeFactory<DatabaseEngineConfig>({
     binlog_retention_period: {
       description:
         'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
@@ -283,6 +282,16 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
       minimum: 600,
       requires_restart: false,
       type: 'integer',
+    },
+    wal_sender_timeout: {
+      description:
+        'Terminate replication connections that are inactive for longer than this amount of time, in milliseconds. Setting this value to zero disables the timeout.',
+      type: 'integer',
+      example: 60000,
+      anyOf: [
+        { minimum: 0, maximum: 0 },
+        { minimum: 5000, maximum: 10800000 },
+      ],
     },
     mysql: {
       connect_timeout: {
@@ -370,5 +379,4 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
       requires_restart: false,
       type: ['boolean', 'null'],
     },
-  }
-);
+  });
