@@ -7,7 +7,6 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -95,15 +94,6 @@ export const AutoscalePoolDialog = (props: Props) => {
   );
 
   const onSubmit = async (values: AutoscaleSettings) => {
-    const maxLimit =
-      clusterTier === 'enterprise'
-        ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-        : MAX_NODES_PER_POOL_STANDARD_TIER;
-    if (values.enabled && values.max > maxLimit) {
-      setFieldError('max', `Maximum must be between 1 and ${maxLimit} nodes.`);
-      return;
-    }
-
     await mutateAsync({ autoscaler: values }).then(() => {
       enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
         variant: 'success',
@@ -117,27 +107,58 @@ export const AutoscalePoolDialog = (props: Props) => {
     handleReset(values);
   };
 
+  // TODO: revert back to autoscaler.max once the API returns the correct max for LKE-E.
+  const AUTOSCALE_MAX_VALUE =
+    clusterTier === 'enterprise'
+      ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+      : (autoscaler?.max ?? 1);
+
   const {
     errors,
     handleChange,
     handleReset,
     handleSubmit,
     isSubmitting,
-    setFieldError,
     values,
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
       enabled: autoscaler?.enabled ?? false,
-      max: autoscaler?.max ?? 1,
+      max: AUTOSCALE_MAX_VALUE,
       min: autoscaler?.min ?? 1,
     },
     onSubmit,
-    validationSchema: AutoscaleNodePoolSchema,
+    // validationSchema: AutoscaleNodePoolSchema,
+    validate: (values) => {
+      const errors: { max?: string; min?: string } = {};
+      const maxLimit =
+        clusterTier === 'enterprise'
+          ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+          : MAX_NODES_PER_POOL_STANDARD_TIER;
+      if (values.enabled) {
+        if (!values.min) {
+          errors.min = 'Minimum is a required field.';
+        }
+        if (
+          values.min > values.max ||
+          values.min < 1 ||
+          values.min > maxLimit
+        ) {
+          errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+        }
+        if (!values.max) {
+          errors.max = 'Maximum is a required field.';
+        }
+        if (values.max > maxLimit || values.max < 1) {
+          errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
+        }
+      }
+      return errors;
+    },
   });
 
   const warning =
-    autoscaler && autoscaler.max > 1 && +values.max < autoscaler.max
+    autoscaler && AUTOSCALE_MAX_VALUE > 1 && +values.max < AUTOSCALE_MAX_VALUE
       ? 'The Node Pool will only be scaled down if there are unneeded nodes.'
       : undefined;
 
@@ -150,7 +171,7 @@ export const AutoscalePoolDialog = (props: Props) => {
             disabled:
               (values.enabled === autoscaler?.enabled &&
                 values.min === autoscaler?.min &&
-                values.max === autoscaler?.max) ||
+                values.max === AUTOSCALE_MAX_VALUE) ||
               Object.keys(errors).length !== 0,
             label: 'Save Changes',
             loading: isPending || isSubmitting,
@@ -174,13 +195,13 @@ export const AutoscalePoolDialog = (props: Props) => {
           {warning}
           <div>
             <Button
+              buttonType="secondary"
+              className={classes.resize}
+              compactX
               onClick={() => {
                 handleClose();
                 handleOpenResizeDrawer(nodePool?.id ?? -1);
               }}
-              buttonType="secondary"
-              className={classes.resize}
-              compactX
             >
               Resize
             </Button>
