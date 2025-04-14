@@ -120,6 +120,9 @@ export const AlertInformationActionTable = (
     setIsDialogOpen(true);
     setSelectedAlert(alert);
   };
+
+  const isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
+
   return (
     <>
       <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
@@ -191,11 +194,12 @@ export const AlertInformationActionTable = (
         )}
       </OrderBy>
       <AlertConfirmationDialog
+        message={`Are you sure you want to
+              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
         alert={selectedAlert}
-        entityName={entityName}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
-        isActive={selectedAlert?.entity_ids?.includes(entityId) ?? false}
+        isEnabled={isEnabled}
         isLoading={isLoading}
         isOpen={isDialogOpen}
       />
