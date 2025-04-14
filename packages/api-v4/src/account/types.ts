@@ -70,6 +70,7 @@ export const accountCapabilities = [
   'Kubernetes',
   'Kubernetes Enterprise',
   'Linodes',
+  'Linode Interfaces',
   'LKE HA Control Planes',
   'LKE Network Access Control List (IP ACL)',
   'Machine Images',
@@ -87,7 +88,7 @@ export const accountCapabilities = [
   'VPCs',
 ] as const;
 
-export type AccountCapability = typeof accountCapabilities[number];
+export type AccountCapability = (typeof accountCapabilities)[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
@@ -101,7 +102,8 @@ export const linodeInterfaceAccountSettings = [
   'linode_only',
 ] as const;
 
-export type LinodeInterfaceAccountSetting = typeof linodeInterfaceAccountSettings[number];
+export type LinodeInterfaceAccountSetting =
+  (typeof linodeInterfaceAccountSettings)[number];
 
 export interface AccountSettings {
   managed: boolean;
@@ -494,7 +496,7 @@ export const EventActionKeys = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionKeys[number];
+export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
   | 'scheduled'
