@@ -24,6 +24,7 @@ import { VPCAvailability } from './VPCAvailability';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 interface Props {
   index: number;
@@ -191,19 +192,7 @@ export const VPC = ({ index }: Props) => {
                   checked={field.value === 'auto'}
                   control={<Checkbox sx={{ ml: 0.4 }} />}
                   disabled={!regionSupportsVPCs}
-                  label={
-                    <Stack alignItems="center" direction="row">
-                      <Typography>
-                        Assign a public IPv4 address for this Linode
-                      </Typography>
-                      <TooltipIcon
-                        text={
-                          'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                        }
-                        status="help"
-                      />
-                    </Stack>
-                  }
+                  label={<VPCPublicIPLabel />}
                   onChange={(e, checked) =>
                     field.onChange(checked ? 'auto' : null)
                   }

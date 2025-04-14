@@ -7,11 +7,11 @@ import {
   Notice,
   Stack,
   TextField,
-  TooltipIcon,
-  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 import type { CreateInterfaceFormValues } from '../utilities';
 
@@ -44,6 +44,7 @@ export const VPCIPv4Address = (props: Props) => {
               control={<Checkbox />}
               label="Auto-assign a VPC IPv4 address"
               onChange={(e, checked) => field.onChange(checked ? 'auto' : '')}
+              sx={{ pl: 0.4 }}
             />
             {field.value !== 'auto' && (
               <TextField
@@ -68,18 +69,9 @@ export const VPCIPv4Address = (props: Props) => {
             <FormControlLabel
               checked={field.value === 'auto'}
               control={<Checkbox />}
-              label={
-                <Stack alignItems="center" direction="row">
-                  <Typography>
-                    Assign a public IPv4 address for this Linode
-                  </Typography>
-                  <TooltipIcon
-                    status="help"
-                    text="Access the internet through the public IPv4 address using static 1:1 NAT."
-                  />
-                </Stack>
-              }
+              label={<VPCPublicIPLabel />}
               onChange={(e, checked) => field.onChange(checked ? 'auto' : null)}
+              sx={{ pl: 0.4 }}
             />
             {fieldState.error?.message && (
               <FormHelperText>{fieldState.error.message}</FormHelperText>

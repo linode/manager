@@ -30,6 +30,7 @@ import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 // @TODO Linode Interfaces - need to handle case if interface is not legacy
 
@@ -260,19 +261,7 @@ export const VPC = () => {
                         <FormControlLabel
                           checked={field.value === 'any'}
                           control={<Checkbox sx={{ ml: 0.5 }} />}
-                          label={
-                            <Stack alignItems="center" direction="row">
-                              <Typography>
-                                Assign a public IPv4 address for this Linode
-                              </Typography>
-                              <TooltipIcon
-                                status="help"
-                                text={
-                                  'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                                }
-                              />
-                            </Stack>
-                          }
+                          label={<VPCPublicIPLabel />}
                           onChange={(e, checked) =>
                             field.onChange(checked ? 'any' : null)
                           }
