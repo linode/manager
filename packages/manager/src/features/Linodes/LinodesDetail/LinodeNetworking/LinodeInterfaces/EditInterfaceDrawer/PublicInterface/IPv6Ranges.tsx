@@ -15,7 +15,11 @@ import { IPv6RangeRow } from './IPv6RangeRow';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
-export const IPv6Ranges = () => {
+interface Props {
+  linodeId: number;
+}
+
+export const IPv6Ranges = ({ linodeId }: Props) => {
   const { control } = useFormContext<ModifyLinodeInterfacePayload>();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -48,7 +52,9 @@ export const IPv6Ranges = () => {
           )}
           {fields.map(({ id, range }, index) => (
             <IPv6RangeRow
+              index={index}
               key={id}
+              linodeId={linodeId}
               onRemove={() => remove(index)}
               range={range!}
             />
