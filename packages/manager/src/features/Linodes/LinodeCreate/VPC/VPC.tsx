@@ -301,15 +301,6 @@ export const VPC = () => {
                     </Link>
                     .
                   </Typography>
-                  {formState.errors.interfaces?.[0] &&
-                    'ip_ranges' in formState.errors.interfaces[0] && (
-                      <Notice
-                        text={
-                          formState.errors.interfaces[0]?.ip_ranges?.message
-                        }
-                        variant="error"
-                      />
-                    )}
                   <VPCRanges />
                 </>
               )}

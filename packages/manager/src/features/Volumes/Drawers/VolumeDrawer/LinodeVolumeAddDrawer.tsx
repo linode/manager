@@ -22,14 +22,12 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
   const { linode, onClose, open, openDetails } = props;
 
   const [mode, setMode] = React.useState<'attach' | 'create'>('create');
-  const [
-    clientLibraryCopyVisible,
-    setClientLibraryCopyVisible,
-  ] = React.useState(false);
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const [clientLibraryCopyVisible, setClientLibraryCopyVisible] =
+    React.useState(false);
+
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const linodeSupportsBlockStorageEncryption = Boolean(
     linode.capabilities?.includes('Block Storage Encryption')
@@ -48,7 +46,10 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
           : `Create Volume for ${linode.label}`
       }
       NotFoundComponent={NotFound}
-      onClose={onClose}
+      onClose={() => {
+        setMode('create');
+        onClose();
+      }}
       open={open}
     >
       <ModeSelection mode={mode} onChange={toggleMode} />
