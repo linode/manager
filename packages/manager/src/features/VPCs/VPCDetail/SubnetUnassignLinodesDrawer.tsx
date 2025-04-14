@@ -338,7 +338,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           </Typography>
         )}
         <form onSubmit={handleSubmit}>
-          <Stack>
+          <Stack marginTop={!singleLinodeToBeUnassigned ? 0 : 3} spacing={3}>
             {!singleLinodeToBeUnassigned && (
               <Autocomplete
                 disabled={userCannotUnassignLinodes}
@@ -355,7 +355,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 value={selectedLinodes}
               />
             )}
-            <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
+            <Box>
               <RemovableSelectionsListTable
                 headerText={`Linodes to be Unassigned from Subnet (${selectedLinodes.length})`}
                 isRemovable={!singleLinodeToBeUnassigned}
@@ -364,37 +364,40 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 selectionData={selectedLinodesAndInterfaceData}
                 tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
               />
+              {selectedLinodesAndInterfaceData.length > 0 && (
+                <DownloadCSV
+                  buttonType="styledLink"
+                  csvRef={csvRef}
+                  data={selectedLinodesAndInterfaceData}
+                  filename={`linodes-unassigned-${formattedDate}.csv`}
+                  headers={SUBNET_LINODE_CSV_HEADERS}
+                  onClick={downloadCSV}
+                  sx={{
+                    alignItems: 'flex-start',
+                    display: 'flex',
+                    gap: 1,
+                    marginTop: 2,
+                    textAlign: 'left',
+                  }}
+                  text={'Download List of Linodes to be Unassigned (.csv)'}
+                />
+              )}
             </Box>
-            {selectedLinodesAndInterfaceData.length > 0 && (
-              <DownloadCSV
-                buttonType="styledLink"
-                csvRef={csvRef}
-                data={selectedLinodesAndInterfaceData}
-                filename={`linodes-unassigned-${formattedDate}.csv`}
-                headers={SUBNET_LINODE_CSV_HEADERS}
-                onClick={downloadCSV}
-                sx={{
-                  alignItems: 'flex-start',
-                  display: 'flex',
-                  gap: 1,
-                  marginTop: 2,
-                  textAlign: 'left',
+            <Box>
+              <ActionsPanel
+                primaryButtonProps={{
+                  'data-testid': 'unassign-submit-button',
+                  disabled: interfacesToDelete.length === 0,
+                  label: 'Unassign Linodes',
+                  type: 'submit',
                 }}
-                text={'Download List of Linodes to be Unassigned (.csv)'}
+                secondaryButtonProps={{
+                  label: 'Cancel',
+                  onClick: handleOnClose,
+                }}
+                sx={{ padding: 0 }}
               />
-            )}
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'unassign-submit-button',
-                disabled: interfacesToDelete.length === 0,
-                label: 'Unassign Linodes',
-                type: 'submit',
-              }}
-              secondaryButtonProps={{
-                label: 'Cancel',
-                onClick: handleOnClose,
-              }}
-            />
+            </Box>
           </Stack>
         </form>
       </Drawer>

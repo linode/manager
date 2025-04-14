@@ -1,4 +1,4 @@
-import { IconButton } from '@linode/ui';
+import { IconButton, Stack, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
@@ -10,10 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { TableRowEmpty } from '../TableRowEmpty/TableRowEmpty';
-import {
-  SelectedOptionsHeader,
-  StyledLabel,
-} from './RemovableSelectionsList.style';
+import { StyledLabel } from './RemovableSelectionsList.style';
 
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed
@@ -125,14 +122,16 @@ export const RemovableSelectionsListTable = (
   });
 
   return (
-    <>
-      <SelectedOptionsHeader>{headerText}</SelectedOptionsHeader>
+    <Stack spacing={1}>
+      <Typography>
+        <strong>{headerText}</strong>
+      </Typography>
       <Table>
         <TableHead>
           <TableRow>{tableHeadersJSX}</TableRow>
         </TableHead>
         <TableBody>{selectedOptionsJSX}</TableBody>
       </Table>
-    </>
+    </Stack>
   );
 };

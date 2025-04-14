@@ -41,7 +41,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
-  ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE,
+  ASSIGN_LINODES_DRAWER_MESSAGE,
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
@@ -488,7 +488,7 @@ export const SubnetAssignLinodesDrawer = (
       )}
       <Notice
         spacingBottom={16}
-        text={`${ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE}`}
+        text={`${ASSIGN_LINODES_DRAWER_MESSAGE}`}
         variant="warning"
       />
       <form onSubmit={handleSubmit}>
