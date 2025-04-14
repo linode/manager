@@ -129,10 +129,14 @@ export interface JWEToken {
   token: string;
 }
 
-export interface CloudPulseMetricsRequest {
-  metric: string;
-  filters?: Filters[];
+export interface Metric {
+  name: string;
   aggregate_function: string;
+}
+
+export interface CloudPulseMetricsRequest {
+  metrics: Metric[];
+  filters?: Filters[];
   group_by: string;
   relative_time_duration: TimeDuration | undefined;
   absolute_time_duration: DateTimeWithPreset | undefined;
