@@ -5,13 +5,13 @@ import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../Shared/utilities';
 
-import type { AccountAccessType, RoleType } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
-type Props = {
+interface Props {
   entities: string[];
-  onButtonClick: (roleName: AccountAccessType | RoleType) => void;
-  roleName: AccountAccessType | RoleType;
-};
+  onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
+  roleName: AccountAccessRole | EntityAccessRole;
+}
 
 export const AssignedEntities = ({
   entities,
