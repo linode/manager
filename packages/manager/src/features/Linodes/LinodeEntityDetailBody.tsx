@@ -9,10 +9,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import {
-  DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
-  UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
-} from 'src/components/Encryption/constants';
+import { UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
@@ -258,16 +255,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   flexDirection="row"
                 >
                   <EncryptedStatus
-                    /**
-                     * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                     * explaining how LDE can be enabled on LKE-E node pools.
-                     * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                     */
                     tooltipText={
-                      isLKELinode && cluster?.tier === 'enterprise'
+                      isLKELinode
                         ? undefined
-                        : isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
                         : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
                     encryptionStatus={encryptionStatus}
