@@ -50,6 +50,7 @@ export interface DatabaseBackup {
   label: string;
   type: DatabaseBackupType;
 }
+
 export interface ConfigurationItem {
   description?: string;
   enum?: string[];

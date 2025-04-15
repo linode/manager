@@ -103,10 +103,27 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       `Please ensure that ${key} follows the format ${field.example}`,
     );
   }
+  // custom validation for wal_sender_timeout since it has a special case
+  // where it can be 0 or between 5000 and 10800000
+  if (key === 'wal_sender_timeout') {
+    validator = validator.test(
+      'is-zero-or-in-range',
+      `${key} must be 0 or between 5000 and 10800000`,
+      (value: boolean | number | string) => {
+        if (typeof value !== 'number') return false;
+        return value === 0 || (value >= 5000 && value <= 10800000);
+      },
+    );
+  }
   if (key === 'timezone') {
     if (!field.value) {
       validator = validator.required('timezone cannot be empty');
     }
+  }
+  // temporary custom validation for max_failover_replication_time_lag
+  // TODO: remove this when the API is updated
+  if (key === 'max_failover_replication_time_lag') {
+    validator = validator.max(999999, `${key} must be at most 999999`);
   }
 
   return validator;
