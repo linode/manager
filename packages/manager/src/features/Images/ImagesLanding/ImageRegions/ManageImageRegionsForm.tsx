@@ -118,6 +118,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         preferenceKey={`manage-replicas-${image?.id}`}
         spacingTop={16}
         variant="info"
+        important
       >
         <Typography fontSize="inherit">
           As part of our limited promotional period, image replicas are free of
