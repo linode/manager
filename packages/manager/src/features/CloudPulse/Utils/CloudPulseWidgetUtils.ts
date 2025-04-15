@@ -25,6 +25,7 @@ import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import { FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
   /**
@@ -248,12 +249,13 @@ export const generateMaxUnit = (
  * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
  */
 export const getCloudPulseMetricRequest = (
-  props: MetricRequestProps
+  props: MetricRequestProps,
+  flags: FlagSet
 ): CloudPulseMetricsRequest => {
   const { duration, entityIds, resources, widget } = props;
   const preset = duration.preset;
 
-  return {
+  const basePayload: CloudPulseMetricsRequest = {
     absolute_time_duration:
       preset !== 'custom_range' &&
       preset !== 'this_month' &&
@@ -265,12 +267,6 @@ export const getCloudPulseMetricRequest = (
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: widget.group_by,
-    metrics: [
-      {
-        aggregate_function: widget.aggregate_function,
-        name: widget.metric,
-      },
-    ],
     relative_time_duration: getTimeDurationFromPreset(preset),
     time_granularity:
       widget.time_granularity.unit === 'Auto'
@@ -280,6 +276,12 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
   };
+
+  const versionSpecificProps = flags.aclpReadEndpoint?.includes('v1beta')
+    ? { metric: widget.metric, aggregate_function: widget.aggregate_function }
+    : { metrics: [{ aggregate_function: widget.aggregate_function, name: widget.metric }] };
+
+  return { ...basePayload, ...versionSpecificProps };
 };
 
 /**

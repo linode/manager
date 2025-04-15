@@ -135,7 +135,9 @@ export interface Metric {
 }
 
 export interface CloudPulseMetricsRequest {
-  metrics: Metric[];
+  metrics?: Metric[];
+  metric?: string;
+  aggregate_function?: string;
   filters?: Filters[];
   group_by: string;
   relative_time_duration: TimeDuration | undefined;
