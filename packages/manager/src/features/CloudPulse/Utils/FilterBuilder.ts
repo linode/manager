@@ -451,7 +451,7 @@ export const constructAdditionalRequestFilters = (
     if (filter) {
       // push to the filters
       filters.push({
-        key: filter.filterKey,
+        dimension_label: filter.filterKey,
         operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
         value: Array.isArray(filter.filterValue)
           ? Array.of(filter.filterValue).join(',')
