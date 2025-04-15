@@ -18,6 +18,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -30,8 +32,6 @@ import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
-
-// @TODO Linode Interfaces - need to handle case if interface is not legacy
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -260,19 +260,7 @@ export const VPC = () => {
                         <FormControlLabel
                           checked={field.value === 'any'}
                           control={<Checkbox sx={{ ml: 0.5 }} />}
-                          label={
-                            <Stack alignItems="center" direction="row">
-                              <Typography>
-                                Assign a public IPv4 address for this Linode
-                              </Typography>
-                              <TooltipIcon
-                                status="help"
-                                text={
-                                  'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                                }
-                              />
-                            </Stack>
-                          }
+                          label={<VPCPublicIPLabel />}
                           onChange={(e, checked) =>
                             field.onChange(checked ? 'any' : null)
                           }
@@ -293,14 +281,7 @@ export const VPC = () => {
                         variant="error"
                       />
                     )}
-                  <Typography>
-                    Assign additional IPv4 address ranges that the VPC can use
-                    to reach services running on this Linode.{' '}
-                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-                      Learn more
-                    </Link>
-                    .
-                  </Typography>
+                  <VPCRangesDescription />
                   {formState.errors.interfaces?.[0] &&
                     'ip_ranges' in formState.errors.interfaces[0] && (
                       <Notice

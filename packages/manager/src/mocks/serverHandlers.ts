@@ -8,6 +8,8 @@
  */
 import {
   accountAvailabilityFactory,
+  accountBetaFactory,
+  betaFactory,
   dedicatedTypeFactory,
   linodeFactory,
   linodeIPFactory,
@@ -31,7 +33,6 @@ import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
   VLANFactory,
   // abuseTicketNotificationFactory,
-  accountBetaFactory,
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
@@ -39,7 +40,6 @@ import {
   alertFactory,
   alertRulesFactory,
   appTokenFactory,
-  betaFactory,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
@@ -2540,11 +2540,17 @@ export const handlers = [
       ...customAlerts,
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
+      ...alertFactory.buildList(36, {
+        status: 'disabled',
+        tags: ['tag-3'],
+        updated: '2021-10-16T04:00:00',
+      }),
       ...customAlertsWithServiceType,
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
         status: 'in progress',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),
@@ -2552,6 +2558,7 @@ export const handlers = [
         created_by: 'user1',
         service_type: 'linode',
         status: 'failed',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),
