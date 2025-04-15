@@ -383,10 +383,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        const {
-          metrics: metric,
-          relative_time_duration: timeRange,
-        } = requestPayload;
+        const { metrics: metric, relative_time_duration: timeRange } =
+          requestPayload;
         const metricData = metrics.find(({ name }) => name === metric[0].name);
 
         if (!metricData) {

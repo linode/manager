@@ -135,15 +135,15 @@ export interface Metric {
 }
 
 export interface CloudPulseMetricsRequest {
-  metrics?: Metric[];
-  metric?: string;
+  absolute_time_duration: DateTimeWithPreset | undefined;
   aggregate_function?: string;
+  entity_ids: number[];
   filters?: Filters[];
   group_by: string;
+  metric?: string;
+  metrics?: Metric[];
   relative_time_duration: TimeDuration | undefined;
-  absolute_time_duration: DateTimeWithPreset | undefined;
   time_granularity: TimeGranularity | undefined;
-  entity_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
