@@ -3,6 +3,7 @@ import {
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
 import { useAccountSettings } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -29,7 +30,6 @@ import type {
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
 import type { LongviewState } from 'src/routes/longview';
-import { Notice } from '@linode/ui';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
@@ -125,7 +125,7 @@ export const LongviewLanding = (props: LongviewProps) => {
           text={getRestrictedResourceText({
             action: 'create',
             isSingular: false,
-            resourceType: 'Images',
+            resourceType: 'Longview Clients',
           })}
           variant="error"
         />
