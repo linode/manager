@@ -1,26 +1,81 @@
 import { Box, Button, Chip, Tooltip } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { debounce, useTheme } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 
-import { useCalculateHiddenItems } from '../../Shared/utilities';
+import {
+  useAccountUserPermissions,
+  useAccountUserPermissionsMutation,
+} from 'src/queries/iam/iam';
 
-import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
+import {
+  deleteUserEntity,
+  useCalculateHiddenItems,
+} from '../../Shared/utilities';
+
+import type {
+  AccountAccessRole,
+  EntityTypePermissions,
+  EntityAccessRole,
+} from '@linode/api-v4';
 
 interface Props {
   entities: string[];
+  entityIds: number[];
+  entityType: EntityTypePermissions;
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  roleName: AccountAccessRole | EntityAccessRole;
+  roleName: EntityAccessRole;
+}
+
+interface CombinedEntity {
+  id: number;
+  name: string;
 }
 
 export const AssignedEntities = ({
   entities,
   onButtonClick,
   roleName,
+  entityType,
+  entityIds,
 }: Props) => {
   const theme = useTheme();
+  const { username } = useParams<{ username: string }>();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleDelete = () => {};
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
+
+  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+
+  const handleDelete = React.useCallback(
+    async (entity: CombinedEntity) => {
+      try {
+        const updatedUserEntityRoles = deleteUserEntity(
+          assignedRoles!.entity_access,
+          roleName,
+          entity.id,
+          entityType
+        );
+
+        await updateUserPermissions({
+          ...assignedRoles!,
+          entity_access: updatedUserEntityRoles,
+        });
+
+        enqueueSnackbar('Entity removed', {
+          variant: 'success',
+        });
+      } catch {
+        enqueueSnackbar('Something went wrong. Try again later.', {
+          variant: 'error',
+        });
+      }
+    },
+    [assignedRoles]
+  );
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
     useCalculateHiddenItems(entities);
@@ -42,39 +97,50 @@ export const AssignedEntities = ({
     };
   }, [calculateHiddenItems, handleResize]);
 
-  const items = entities?.map((name: string, index: number) => (
-    <div
-      key={name}
-      ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
-      style={{ display: 'inline-block', marginRight: 8 }}
-    >
-      <Chip
-        sx={{
-          backgroundColor:
-            theme.name === 'light'
-              ? theme.tokens.color.Ultramarine[20]
-              : theme.tokens.color.Neutrals.Black,
-          color: theme.tokens.alias.Content.Text.Primary.Default,
-        }}
-        data-testid="entities"
-        deleteIcon={<CloseIcon />}
-        key={name}
-        label={name}
-        onDelete={handleDelete}
-      />
-    </div>
-  ));
+  const combinedEntities: CombinedEntity[] = React.useMemo(
+    () =>
+      entities.map((name, index) => ({
+        name,
+        id: entityIds[index],
+      })),
+    [entities, entityIds]
+  );
+
+  const items = combinedEntities?.map(
+    (entity: CombinedEntity, index: number) => (
+      <div
+        key={entity.id}
+        ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
+        style={{ display: 'inline-block', marginRight: 8 }}
+      >
+        <Chip
+          data-testid="entities"
+          deleteIcon={<CloseIcon />}
+          key={entity.id}
+          label={entity.name}
+          onDelete={() => handleDelete(entity)}
+          sx={{
+            backgroundColor:
+              theme.name === 'light'
+                ? theme.tokens.color.Ultramarine[20]
+                : theme.tokens.color.Neutrals.Black,
+            color: theme.tokens.alias.Content.Text.Primary.Default,
+          }}
+        />
+      </div>
+    )
+  );
 
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', maxWidth: '800px' }}>
       <div
+        ref={containerRef}
         style={{
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 1,
           display: '-webkit-box',
           overflow: 'hidden',
         }}
-        ref={containerRef}
       >
         {items}
       </div>
@@ -95,12 +161,12 @@ export const AssignedEntities = ({
         >
           <Tooltip placement="top" title="Click to View All Entities">
             <Button
+              onClick={() => onButtonClick(roleName)}
               sx={{
                 color: theme.tokens.alias.Content.Text.Primary.Default,
                 font: theme.tokens.alias.Typography.Label.Regular.Xs,
                 padding: 0,
               }}
-              onClick={() => onButtonClick(roleName)}
             >
               +{numHiddenItems}
             </Button>

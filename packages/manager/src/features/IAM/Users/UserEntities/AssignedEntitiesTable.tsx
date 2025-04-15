@@ -25,6 +25,7 @@ import {
   transformedAccountEntities,
 } from '../../Shared/utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
+import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
 import type {
   DrawerModes,
@@ -93,6 +94,13 @@ export const AssignedEntitiesTable = () => {
     setSelectedRole(role);
     setDrawerMode(mode);
   };
+  const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
+    React.useState<boolean>(false);
+
+  const handleRemoveAssignment = (role: EntitiesRole) => {
+    setIsRemoveAssignmentDialogOpen(true);
+    setSelectedRole(role);
+  };
 
   const renderTableBody = () => {
     if (entitiesLoading || assignedRolesLoading) {
@@ -134,7 +142,7 @@ export const AssignedEntitiesTable = () => {
               },
               {
                 onClick: () => {
-                  // mock
+                  handleRemoveAssignment(el);
                 },
                 title: 'Remove Assignment',
               },
@@ -241,6 +249,11 @@ export const AssignedEntitiesTable = () => {
         mode={drawerMode}
         onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
         open={isChangeRoleForEntityDrawerOpen}
+        role={selectedRole}
+      />
+      <RemoveAssignmentConfirmationDialog
+        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />
     </Grid>

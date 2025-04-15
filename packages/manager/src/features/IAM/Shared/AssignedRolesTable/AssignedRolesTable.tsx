@@ -143,8 +143,10 @@ export const AssignedRolesTable = () => {
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <AssignedEntities
                 entities={role.entity_names!}
+                entityIds={role.entity_ids!}
+                entityType={role.entity_type}
                 onButtonClick={handleViewEntities}
-                roleName={role.name}
+                roleName={role.name as RoleType}
               />
             </TableCell>
           )}

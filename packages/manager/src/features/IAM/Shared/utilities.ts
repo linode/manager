@@ -16,6 +16,7 @@ import type {
   IamUserPermissions,
   PermissionType,
   Roles,
+  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -578,4 +579,27 @@ export const toEntityAccess = (
     }));
 
   return [...updatedEntityAccess, ...newEntities];
+};
+
+export const deleteUserEntity = (
+  entityRoles: EntityAccess[],
+  roleName: RoleType,
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions
+): EntityAccess[] => {
+  return entityRoles
+    .map((entity) => {
+      if (entity.type === entityType && entity.id === entityId) {
+        const roles = entity.roles.filter(
+          (role: RoleType) => role !== roleName
+        );
+        return {
+          ...entity,
+          roles,
+        };
+      }
+
+      return entity;
+    })
+    .filter((entity) => entity.roles.length > 0);
 };
