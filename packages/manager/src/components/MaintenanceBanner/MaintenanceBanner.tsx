@@ -15,6 +15,7 @@ interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */
   maintenanceStart?: null | string;
   type?: AccountMaintenance['type'];
+  onBannerRender?: (visible: boolean) => void;
 }
 
 interface MaintenanceBannerProps extends Props, Partial<NoticeProps> {}
@@ -48,6 +49,15 @@ export const MaintenanceBanner = React.memo((props: MaintenanceBannerProps) => {
 
     return profile.timezone;
   };
+
+  const shouldRender =
+    maintenanceStart !== null &&
+    accountMaintenanceData &&
+    accountMaintenanceData.length > 0;
+
+  React.useEffect(() => {
+    props.onBannerRender?.(Boolean(shouldRender));
+  }, [shouldRender, props.onBannerRender]);
 
   /**
    * don't display a banner if there is no start time.

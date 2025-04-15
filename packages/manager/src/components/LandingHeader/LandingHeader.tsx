@@ -79,7 +79,7 @@ export const LandingHeader = ({
       sx={(theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: theme.spacing(3),
+        marginBottom: theme.spacingFunction(24),
         width: '100%',
       })}
       container
@@ -109,17 +109,19 @@ export const LandingHeader = ({
               justifyContent: 'flex-end',
 
               marginLeft: customSmMdBetweenBreakpoint
-                ? theme.spacing(2)
+                ? theme.spacingFunction(16)
                 : customXsDownBreakpoint
-                ? theme.spacing(1)
-                : undefined,
+                  ? theme.spacingFunction(8)
+                  : undefined,
             }}
           >
             {betaFeedbackLink && (
               <span
                 style={{
-                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
-                  marginRight: `${theme.spacing(2)}`,
+                  marginLeft: xsDown
+                    ? `${theme.spacingFunction(16)}`
+                    : undefined,
+                  marginRight: `${theme.spacingFunction(16)}`,
                 }}
               >
                 <DocsLink
