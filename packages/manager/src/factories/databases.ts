@@ -288,10 +288,6 @@ export const databaseEngineConfigFactory =
         'Terminate replication connections that are inactive for longer than this amount of time, in milliseconds. Setting this value to zero disables the timeout.',
       type: 'integer',
       example: 60000,
-      anyOf: [
-        { minimum: 0, maximum: 0 },
-        { minimum: 5000, maximum: 10800000 },
-      ],
     },
     mysql: {
       connect_timeout: {

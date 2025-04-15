@@ -103,29 +103,15 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       `Please ensure that ${key} follows the format ${field.example}`,
     );
   }
-
-  if (field.anyOf) {
-    const allowedRanges = field.anyOf;
-
+  // custom validation for wal_sender_timeout since it has a special case
+  // where it can be 0 or between 5000 and 10800000
+  if (key === 'wal_sender_timeout') {
     validator = validator.test(
-      'is-in-range',
-      () => {
-        const rangesText = allowedRanges
-          .map((range: { maximum: number; minimum: number }) =>
-            range.minimum === range.maximum
-              ? `${range.minimum}`
-              : `between ${range.minimum} and ${range.maximum}`,
-          )
-          .join(' or ');
-
-        return `Value must be ${rangesText}`;
-      },
+      'is-zero-or-in-range',
+      `${key} must be 0 or between 5000 and 10800000`,
       (value: boolean | number | string) => {
         if (typeof value !== 'number') return false;
-        return allowedRanges.some(
-          (range: { maximum: number; minimum: number }) =>
-            value >= range.minimum && value <= range.maximum,
-        );
+        return value === 0 || (value >= 5000 && value <= 10800000);
       },
     );
   }

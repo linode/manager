@@ -51,12 +51,7 @@ export interface DatabaseBackup {
   type: DatabaseBackupType;
 }
 
-type Range = {
-  maximum: number;
-  minimum: number;
-};
 export interface ConfigurationItem {
-  anyOf?: Range[];
   description?: string;
   enum?: string[];
   example?: boolean | number | string;
