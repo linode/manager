@@ -4,8 +4,8 @@ import {
   CheckIcon,
   ErrorIcon,
   InfoIcon,
-  WarningIcon,
   LightBulbIcon,
+  WarningIcon,
 } from '../../assets/icons';
 import { Box } from '../Box';
 import { Typography } from '../Typography';

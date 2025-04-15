@@ -52,6 +52,17 @@ export const ImportantInfo: StoryObj<NoticeProps> = {
   ),
 };
 
+export const ImportantTip: StoryObj<NoticeProps> = {
+  render: (args) => (
+    <Notice
+      {...args}
+      important
+      text="This is an important tip notice"
+      variant="tip"
+    />
+  ),
+};
+
 export const ImportantError: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice
