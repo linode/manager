@@ -3,6 +3,7 @@ export * from './accountCapabilities';
 export * from './areArraysEqual';
 export * from './arePropsEqual';
 export * from './arrayToList';
+export * from './betaUtils';
 export * from './breakpoints';
 export * from './capitalize';
 export * from './createDevicesFromStrings';

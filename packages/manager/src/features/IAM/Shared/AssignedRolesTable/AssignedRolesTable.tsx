@@ -37,7 +37,7 @@ import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
 import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
-import type { AccountAccessType, RoleType } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 export const AssignedRolesTable = () => {
@@ -101,7 +101,9 @@ export const AssignedRolesTable = () => {
 
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
-  const handleViewEntities = (roleName: AccountAccessType | RoleType) => {
+  const handleViewEntities = (
+    roleName: AccountAccessRole | EntityAccessRole
+  ) => {
     const selectedRole = roleName;
     history.push({
       pathname: `/iam/users/${username}/entities`,
