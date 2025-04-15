@@ -12,10 +12,9 @@ import {
   Divider,
   ErrorState,
   FormControlLabel,
-  ListItemOption,
+  Notice,
   Stack,
   Toggle,
-  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import { UpdateLinodeInterfaceSettingsSchema } from '@linode/validation';
@@ -25,7 +24,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 
-import { getDisabledInterfaceSelectOptions } from './InterfaceSettingsDrawer/InterfaceSettingsForm.utilities';
 import { getLinodeInterfaceType } from './utilities';
 
 import type {
@@ -54,9 +52,9 @@ export const InterfaceSettingsForm = (props: Props) => {
     error: interfacesError,
   } = useLinodeInterfacesQuery(linodeId);
 
-  const interfaces = interfacesData?.interfaces.map((i) => ({
-    ...i,
-    label: `${getLinodeInterfaceType(i)} Interface (ID : ${i.id})`,
+  const interfaces = interfacesData?.interfaces.map((networkInterface) => ({
+    ...networkInterface,
+    label: `${getLinodeInterfaceType(networkInterface)} Interface (ID : ${networkInterface.id})`,
   }));
 
   const { mutateAsync: updateSettings } =
@@ -103,27 +101,28 @@ export const InterfaceSettingsForm = (props: Props) => {
     return <ErrorState errorText={error[0].reason} />;
   }
 
-  const disabledIPv4Interfaces =
-    data &&
-    interfacesData &&
-    getDisabledInterfaceSelectOptions(interfacesData, data, 'IPv4');
-
-  const disabledIPv6Interfaces =
-    data &&
-    interfacesData &&
-    getDisabledInterfaceSelectOptions(interfacesData, data, 'IPv6');
-
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Stack spacing={2} divider={<Divider />}>
-        <Stack spacing={1.5}>
-          <Typography variant="h3">Default Route</Typography>
-          <Typography>
-            The network interface default route is the route your Linode uses
-            when traffic doesn&rsquo;t have a specific route to a destination.
-            Note that the default route may change automatically when
-            adding/removing IP Addresses on interfaces.
-          </Typography>
+      <Stack divider={<Divider />} spacing={2}>
+        <Stack spacing={2}>
+          <Stack spacing={1}>
+            <Typography variant="h3">Default Route</Typography>
+            <Typography>
+              The default route is the route your Linode uses when traffic
+              doesn&rsquo;t have a specific route to a destination.
+            </Typography>
+            <Notice variant="info">
+              <Typography
+                sx={(theme) => ({
+                  fontSize: theme.tokens.font.FontSize.Xs,
+                  font: theme.font.bold,
+                })}
+              >
+                The default route may change automatically when modifying
+                interfaces.
+              </Typography>
+            </Notice>
+          </Stack>
           <Controller
             control={form.control}
             name="default_route.ipv4_interface_id"
@@ -131,25 +130,11 @@ export const InterfaceSettingsForm = (props: Props) => {
               <Autocomplete
                 disableClearable={Boolean(field.value)}
                 errorText={fieldState.error?.message}
-                getOptionDisabled={(option) =>
-                  Boolean(disabledIPv4Interfaces?.[option.id])
-                }
                 label="Default IPv4 Route"
                 noMarginTop
                 onChange={(e, i) => field.onChange(i?.id ?? null)}
                 options={interfaces ?? []}
-                placeholder="Select an Interface"
-                renderOption={({ key, ...props }, item, state) => (
-                  <ListItemOption
-                    disabledOptions={disabledIPv4Interfaces?.[item.id]}
-                    item={item}
-                    key={key}
-                    props={props}
-                    selected={state.selected}
-                  >
-                    {item.label}
-                  </ListItemOption>
-                )}
+                placeholder="None"
                 value={interfaces?.find((i) => i.id === field.value) ?? null}
               />
             )}
@@ -161,32 +146,26 @@ export const InterfaceSettingsForm = (props: Props) => {
               <Autocomplete
                 disableClearable={Boolean(field.value)}
                 errorText={fieldState.error?.message}
-                getOptionDisabled={(option) =>
-                  Boolean(disabledIPv6Interfaces?.[option.id])
-                }
                 label="Default IPv6 Route"
                 noMarginTop
                 onChange={(e, i) => field.onChange(i?.id ?? null)}
                 options={interfaces ?? []}
-                placeholder="Select an Interface"
-                renderOption={({ key, ...props }, item, state) => (
-                  <ListItemOption
-                    disabledOptions={disabledIPv6Interfaces?.[item.id]}
-                    item={item}
-                    key={key}
-                    props={props}
-                    selected={state.selected}
-                  >
-                    {item.label}
-                  </ListItemOption>
-                )}
+                placeholder="None"
                 value={interfaces?.find((i) => i.id === field.value) ?? null}
               />
             )}
           />
         </Stack>
-        <Stack spacing={0.5}>
-          <Typography variant="h3">Networking Settings</Typography>
+        <Stack spacing={1}>
+          <Typography variant="h3">Network Helper</Typography>
+          <Typography>
+            Enable the <i>Network Helper</i> to automatically adjust your
+            Linode&rsquo;s internal network configuration files during each
+            system boot.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
+              Learn more.
+            </Link>
+          </Typography>
           <Controller
             control={form.control}
             name="network_helper"
@@ -194,24 +173,7 @@ export const InterfaceSettingsForm = (props: Props) => {
               <FormControlLabel
                 checked={field.value ?? false}
                 control={<Toggle />}
-                label={
-                  <Stack alignItems="center" direction="row" gap={0.5}>
-                    <Typography>Automatically configure networking</Typography>
-                    <TooltipIcon
-                      status="help"
-                      text={
-                        <>
-                          Enable the <i>Network Helper</i> to automatically
-                          adjust your Linode&rsquo;s internal network
-                          configuration files during each system boot.{' '}
-                          <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
-                            Learn more.
-                          </Link>
-                        </>
-                      }
-                    />
-                  </Stack>
-                }
+                label="Automatically configure networking"
                 onChange={field.onChange}
                 sx={{ ml: '-10px !important' }}
               />
