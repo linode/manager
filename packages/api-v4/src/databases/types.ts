@@ -45,42 +45,42 @@ export type DatabaseStatus =
 export type DatabaseBackupType = 'snapshot' | 'auto';
 /** @deprecated TODO (UIE-8214) remove after migration */
 export interface DatabaseBackup {
-  id: number;
-  type: DatabaseBackupType;
-  label: string;
   created: string;
+  id: number;
+  label: string;
+  type: DatabaseBackupType;
 }
 export interface ConfigurationItem {
   description?: string;
-  example?: string | number | boolean;
-  minimum?: number; // min value for the number input
+  enum?: string[];
+  example?: boolean | number | string;
   maximum?: number; // max value for the number input
   maxLength?: number; // max length for the text input
+  minimum?: number; // min value for the number input
   minLength?: number; // min length for the text input
   pattern?: string;
-  type?: string | [string, null] | string[];
-  enum?: string[];
   requires_restart?: boolean;
+  type?: [string, null] | string | string[];
 }
 
-export type ConfigValue = number | string | boolean;
+export type ConfigValue = boolean | number | string;
 
 export type ConfigCategoryValues = Record<string, ConfigValue>;
 export type DatabaseEngineConfig = Record<
   string,
-  Record<string, ConfigurationItem> | ConfigurationItem
+  ConfigurationItem | Record<string, ConfigurationItem>
 >;
 export interface DatabaseInstanceAdvancedConfig {
   [category: string]: ConfigCategoryValues | ConfigValue;
 }
 export interface DatabaseFork {
-  source: number;
   restore_time?: string;
+  source: number;
 }
 
 export interface DatabaseCredentials {
-  username: string;
   password: string;
+  username: string;
 }
 
 interface DatabaseHosts {
