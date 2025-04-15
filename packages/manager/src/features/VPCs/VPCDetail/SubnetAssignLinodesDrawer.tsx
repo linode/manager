@@ -434,7 +434,7 @@ export const SubnetAssignLinodesDrawer = (
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
-      if (linode && linode.interface_generation === 'legacy_config') {
+      if (linode && linode.interface_generation !== 'linode') {
         try {
           const data = await getAllLinodeConfigs(linode.id);
           setLinodeConfigs(data);
