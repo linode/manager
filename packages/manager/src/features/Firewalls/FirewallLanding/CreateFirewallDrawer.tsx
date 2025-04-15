@@ -177,17 +177,19 @@ export const CreateFirewallDrawer = React.memo(
                         clearErrors();
                       }}
                       aria-label="Create custom firewall or from a template"
-                      data-testid="create-firewall-from"
+                      data-testid="create-firewall-from-radio-group"
                       row
                       value={field.value}
                     >
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="Custom Firewall"
                         value="custom"
                       />
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="From a Template"
                         value="template"
                       />
