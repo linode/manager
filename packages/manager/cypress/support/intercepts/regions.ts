@@ -10,9 +10,9 @@ import {
   isExtendedRegion,
   getRegionFromExtendedRegion,
 } from 'support/util/regions';
+import { makeResponse } from 'support/util/response';
 
 import type { ExtendedRegion } from 'support/util/regions';
-import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts GET request to fetch Linode regions and mocks response.
@@ -26,7 +26,7 @@ import { makeResponse } from 'support/util/response';
  * @returns Cypress chainable.
  */
 export const mockGetRegions = (
-  regions: Region[] | ExtendedRegion[]
+  regions: ExtendedRegion[] | Region[]
 ): Cypress.Chainable<null> => {
   const mockResponseRegions = regions.map(
     (region: Region | ExtendedRegion): Region => {
@@ -56,7 +56,7 @@ export const mockGetRegions = (
  * @returns Cypress chainable.
  */
 export const mockGetRegion = (
-  region: Region | ExtendedRegion
+  region: ExtendedRegion | Region
 ): Cypress.Chainable<null> => {
   const mockRegion = isExtendedRegion(region)
     ? getRegionFromExtendedRegion(region)
