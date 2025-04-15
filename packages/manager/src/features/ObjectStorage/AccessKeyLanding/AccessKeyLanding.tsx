@@ -286,6 +286,7 @@ export const AccessKeyLanding = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+
       {isObjMultiClusterEnabled ? (
         <OMC_AccessKeyDrawer
           isRestrictedUser={props.isRestrictedUser}
