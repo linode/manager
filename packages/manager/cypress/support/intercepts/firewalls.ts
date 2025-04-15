@@ -8,8 +8,10 @@ import { paginateResponse } from 'support/util/paginate';
 import type {
   Firewall,
   FirewallDevice,
+  FirewallSettings,
   FirewallTemplate,
 } from '@linode/api-v4';
+import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts GET request to fetch Firewalls.
@@ -159,5 +161,22 @@ export const mockGetTemplate = (
     'GET',
     apiMatcher('networking/firewalls/templates/*'),
     template
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Firewall settings and mocks response.
+ *
+ * @param settings - Firewall settings object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallSettings = (
+  settings: FirewallSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('networking/firewalls/settings'),
+    makeResponse(settings)
   );
 };
