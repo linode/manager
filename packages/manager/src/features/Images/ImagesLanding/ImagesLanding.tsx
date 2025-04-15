@@ -77,17 +77,17 @@ import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
-    marginBottom: theme.spacingFunction(3),
+    marginBottom: theme.spacingFunction(24),
     padding: 0,
   },
   imageTableHeader: {
     border: `1px solid ${theme.tokens.alias.Border.Normal}`,
     borderBottom: 0,
-    padding: theme.spacingFunction(),
-    paddingLeft: theme.spacingFunction(1.5),
+    padding: theme.spacingFunction(8),
+    paddingLeft: theme.spacingFunction(12),
   },
   imageTableSubheader: {
-    marginTop: theme.spacingFunction(),
+    marginTop: theme.spacingFunction(8),
   },
 }));
 
@@ -115,7 +115,7 @@ export const ImagesLanding = () => {
   const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
+  const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
   const queryClient = useQueryClient();
@@ -123,10 +123,6 @@ export const ImagesLanding = () => {
     React.useState<ImageDialogState>(defaultDialogState);
   const dialogStatus =
     dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
-
-  const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
 
   /**
    * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
@@ -455,7 +451,7 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
-        disabledCreateButton={isImagesReadOnly}
+        disabledCreateButton={isCreateImageRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
         onButtonClick={() =>
