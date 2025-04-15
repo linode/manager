@@ -91,10 +91,9 @@ const Panel = (props: NodePoolPanelProps) => {
   };
 
   const getPlansPanelCopy = () => {
-    if (selectedTier === 'enterprise') {
-      return ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION;
-    }
-    return ADD_NODE_POOLS_DESCRIPTION;
+    return selectedTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
+      : ADD_NODE_POOLS_DESCRIPTION;
   };
 
   return (
