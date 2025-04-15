@@ -1,14 +1,11 @@
 import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
-import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
-import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import {
-  ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK,
-  ASSIGN_IPV4_RANGES_DESCRIPTION,
-  ASSIGN_IPV4_RANGES_TITLE,
-} from 'src/features/VPCs/constants';
+import { ASSIGN_IPV4_RANGES_TITLE } from 'src/features/VPCs/constants';
+
+import { VPCRangesDescription } from '../components/VPCRangesDescription';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -51,10 +48,10 @@ export const AssignIPRanges = (props: Props) => {
               padding: theme.spacing(0.5),
             }}
             status="help"
-            text={IPv4RangesDescriptionJSX}
+            text={<VPCRangesDescription />}
           />
         ) : (
-          <Typography variant="body1">{IPv4RangesDescriptionJSX}</Typography>
+          <VPCRangesDescription />
         )}
       </Box>
       <MultipleIPInput
@@ -69,14 +66,3 @@ export const AssignIPRanges = (props: Props) => {
     </>
   );
 };
-
-const StyledDescription = styled('span')(() => ({
-  marginRight: '5px',
-}));
-
-const IPv4RangesDescriptionJSX = (
-  <>
-    <StyledDescription>{ASSIGN_IPV4_RANGES_DESCRIPTION}</StyledDescription>
-    <Link to={ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK}>Learn more</Link>.
-  </>
-);

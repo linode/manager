@@ -150,6 +150,31 @@ export const createFirewall = (mockState: MockState) => [
           );
         }
       }
+      if (payload.devices?.nodebalancers) {
+        for (const nbId of payload.devices?.nodebalancers as number[]) {
+          const entity = {
+            id: nbId,
+            label: `nodebalancer-${nbId}`,
+            type: 'nodebalancer' as FirewallDeviceEntityType,
+            url: `/nodebalancers/${nbId}`,
+          };
+          firewallEntities.push(entity);
+
+          const firewallDevice = firewallDeviceFactory.build({
+            created: DateTime.now().toISO(),
+            entity,
+            updated: DateTime.now().toISO(),
+          });
+
+          createDevicePromises.push(
+            mswDB.add(
+              'firewallDevices',
+              [firewall.id, firewallDevice],
+              mockState
+            )
+          );
+        }
+      }
 
       await Promise.all(createDevicePromises);
       await mswDB.add(
@@ -326,8 +351,8 @@ export const createFirewallDevice = (mockState: MockState) => [
       const payload = await request.clone().json();
       const entity = {
         ...payload,
-        label: `linode-${payload.id}`,
-        url: `/linodes/${payload.id}`,
+        label: `${payload.type}-${payload.id}`,
+        url: `/v4beta/${payload.type}s/${payload.id}`,
       };
 
       const firewallDevice = firewallDeviceFactory.build({
@@ -356,7 +381,10 @@ export const createFirewallDevice = (mockState: MockState) => [
             id: firewallId,
             label: firewall.label,
             type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewallId}/linodes`,
+            url: `/v4beta/networking/firewalls/${firewallId}/${payload.type}s`,
+          },
+          secondary_entity: {
+            ...entity,
           },
         },
         mockState,
@@ -380,7 +408,6 @@ export const deleteFirewallDevice = (mockState: MockState) => [
       if (!firewall || !firewallDevice) {
         return makeNotFoundResponse();
       }
-
       const updatedFirewall = {
         ...firewall,
         entities: firewall.entities.filter(
@@ -398,7 +425,10 @@ export const deleteFirewallDevice = (mockState: MockState) => [
             id: firewall.id,
             label: firewall.label,
             type: 'firewallDevice',
-            url: `/v4beta/networking/firewalls/${firewall.id}/linodes`,
+            url: `/v4beta/networking/firewalls/${firewall.id}`,
+          },
+          secondary_entity: {
+            ...firewallDevice[1].entity,
           },
         },
         mockState,
