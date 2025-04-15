@@ -165,7 +165,7 @@ interface MarketplaceAppOverride {
    *
    * Pass `null` to hide the marketplace app
    */
-  details: Partial<OCA> | null;
+  details: null | Partial<OCA>;
   /**
    * The ID of the StackScript that powers this Marketplace app
    */
@@ -256,8 +256,8 @@ export type ProductInformationBannerLocation =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;
