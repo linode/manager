@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -23,6 +24,7 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 const mockScroll = vi.fn();
+
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
     const { getByText } = renderWithTheme(
@@ -202,5 +204,22 @@ describe('Alert List Table test', () => {
     await userEvent.click(getByRole('button', { name: 'Disable' }));
 
     expect(getByText('Disabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
+  });
+
+  it('should toggle alerts grouped by tag', async () => {
+    renderWithTheme(
+      <AlertsListTable
+        alerts={[alertFactory.build({ label: 'Test Alert' })]}
+        isGroupedByTag={true}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[{ label: 'Linode', value: 'linode' }]}
+        toggleGroupByTag={() => true}
+      />
+    );
+    const toggleButton = screen.getByLabelText('Toggle group by tag');
+    await userEvent.click(toggleButton);
+    expect(screen.getByText('tag1')).toBeVisible();
+    expect(screen.getByText('tag2')).toBeVisible();
   });
 });

@@ -31,7 +31,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -48,7 +48,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -75,7 +75,7 @@ describe('Alert Row', () => {
           handlers={{
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
-            handleEnableDisable: vi.fn(),
+            handleStatusChange: vi.fn(),
           }}
           alert={alert}
           services={mockServices}
@@ -95,7 +95,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -115,7 +115,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -133,7 +133,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -151,7 +151,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -173,7 +173,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
