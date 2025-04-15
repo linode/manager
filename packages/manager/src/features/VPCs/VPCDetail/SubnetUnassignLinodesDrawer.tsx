@@ -21,7 +21,6 @@ import * as React from 'react';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
@@ -29,6 +28,7 @@ import {
   getLinodeInterfacePrimaryIPv4,
   getLinodeInterfaceRanges,
 } from '../utils';
+import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
 import type {
   APIError,
@@ -326,11 +326,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         {unassignLinodesErrors.length > 0 && (
           <Notice text={unassignLinodesErrors[0].reason} variant="error" />
         )}
-        <Notice
-          spacingBottom={singleLinodeToBeUnassigned ? 0 : 16}
-          text={SUBNET_UNASSIGN_LINODES_WARNING}
-          variant="warning"
-        />
+        <SubnetLinodeActionNotice linodeAction="Unassigning" />
         {!singleLinodeToBeUnassigned && (
           <Typography>
             Select the Linodes you would like to unassign from this subnet. Only

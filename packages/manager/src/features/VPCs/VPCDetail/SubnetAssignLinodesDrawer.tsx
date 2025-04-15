@@ -41,7 +41,6 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
-  ASSIGN_LINODES_DRAWER_MESSAGE,
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
@@ -53,6 +52,7 @@ import {
 } from '../utils';
 import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
+import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
 import type {
   APIError,
@@ -486,11 +486,7 @@ export const SubnetAssignLinodesDrawer = (
       {assignLinodesErrors.none && (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}
-      <Notice
-        spacingBottom={16}
-        text={`${ASSIGN_LINODES_DRAWER_MESSAGE}`}
-        variant="warning"
-      />
+      <SubnetLinodeActionNotice linodeAction="Assigning" />
       <form onSubmit={handleSubmit}>
         <Typography>{REGIONAL_LINODE_MESSAGE}</Typography>
         <LinodeSelect
