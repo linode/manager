@@ -43,7 +43,6 @@ import type {
   ExtendedRoleMap,
   RoleMap,
 } from '../utilities';
-
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
@@ -56,14 +55,13 @@ export const AssignedRolesTable = () => {
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
-
   const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
     React.useState<boolean>(false);
-  const [drawerMode, setDrawerMode] =
-    React.useState<DrawerModes>('assign-role');
-
   const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
     React.useState<boolean>(false);
+
+  const [drawerMode, setDrawerMode] =
+    React.useState<DrawerModes>('assign-role');
 
   const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
