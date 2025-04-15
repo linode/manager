@@ -17,7 +17,11 @@ const INTERFACE_WARNINGS = [
 export const SubnetLinodeActionNotice = (props: Props) => {
   const { linodeAction } = props;
   return (
-    <Notice data-testid="subnet-linode-action-notice" variant="warning">
+    <Notice
+      data-testid="subnet-linode-action-notice"
+      spacingBottom={16}
+      variant="warning"
+    >
       <Typography component="span" sx={{ pl: 1, py: 1, fontSize: '0.875rem' }}>
         <strong>{linodeAction} a Linode to a subnet requires:</strong>
         <List
@@ -29,7 +33,7 @@ export const SubnetLinodeActionNotice = (props: Props) => {
         >
           {INTERFACE_WARNINGS.map((notice, idx) => (
             <ListItem
-              disableGutters
+              disablePadding
               key={idx}
               sx={{
                 display: 'list-item',

@@ -38,7 +38,7 @@ describe('Subnet Assign Linodes Drawer', () => {
   );
 
   it('should render a subnet assign linodes drawer', () => {
-    const { getByText, queryAllByText } = renderWithTheme(
+    const { getByTestId, getByText, queryAllByText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
@@ -46,7 +46,7 @@ describe('Subnet Assign Linodes Drawer', () => {
       'Assign Linodes to subnet: subnet-1 (10.0.0.0/24)'
     );
     expect(header).toBeVisible();
-    const notice = getByText('subnet-linode-action-notice');
+    const notice = getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();
     const helperText = getByText(
       `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`
