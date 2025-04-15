@@ -85,12 +85,12 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   const dataLength = data.length;
   const orderedGroupedLinodes = sortGroups(groupByTags(data));
 
-  const scrollRefs = React.useRef([]);
+  const tabGroupRefs = React.useRef([]);
 
   // avoids recreating the refs array unless the no. of linodes have changed
-  if (scrollRefs.current.length !== orderedGroupedLinodes.length) {
-    scrollRefs.current = orderedGroupedLinodes.map(
-      (_, i) => scrollRefs.current[i] || React.createRef()
+  if (tabGroupRefs.current.length !== orderedGroupedLinodes.length) {
+    tabGroupRefs.current = orderedGroupedLinodes.map(
+      (_, i) => tabGroupRefs.current[i] || React.createRef()
     );
   }
 
@@ -180,7 +180,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
             <Box
               data-qa-tag-header={tag}
               key={tag}
-              ref={scrollRefs.current[index]}
+              ref={tabGroupRefs.current[index]}
               sx={{ marginBottom: 2 }}
             >
               <Grid container>
@@ -200,7 +200,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     : infinitePageSize
                 }
                 pageSizeSetter={setInfinitePageSize}
-                scrollToRef={scrollRefs.current[index]}
+                scrollToRef={tabGroupRefs.current[index]}
               >
                 {({
                   count,
@@ -279,7 +279,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                   data={linodes}
                   pageSize={infinitePageSize}
                   pageSizeSetter={setInfinitePageSize}
-                  scrollToRef={scrollRefs.current[index]}
+                  scrollToRef={tabGroupRefs.current[index]}
                 >
                   {({
                     count,
@@ -304,7 +304,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     return (
                       <TableBody
                         data-qa-tag-header={tag}
-                        ref={scrollRefs.current[index]}
+                        ref={tabGroupRefs.current[index]}
                       >
                         <StyledTagHeaderRow>
                           <TableCell colSpan={7}>
