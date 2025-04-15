@@ -9,6 +9,7 @@ import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 
 import type { Linode } from '@linode/api-v4';
+import { chooseRegion } from 'support/util/regions';
 
 const confirmDeletion = (linodeLabel: string) => {
   cy.url().should('endWith', '/linodes');
@@ -69,6 +70,7 @@ describe('delete linode', () => {
   it('deletes linode from linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -114,6 +116,7 @@ describe('delete linode', () => {
   it('deletes linode from setting tab in linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -163,6 +166,7 @@ describe('delete linode', () => {
   it('deletes linode from linode landing page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -211,10 +215,16 @@ describe('delete linode', () => {
     const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
       return Promise.all([
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
       ]);
     };
