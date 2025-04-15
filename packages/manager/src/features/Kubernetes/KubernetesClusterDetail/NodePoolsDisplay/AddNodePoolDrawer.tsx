@@ -24,6 +24,7 @@ import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   boxOuter: {
@@ -104,8 +105,10 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    selectedType,
+    clusterRegionId
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -184,6 +187,7 @@ export const AddNodePoolDrawer = (props: Props) => {
               setSelectedTypeInfo({ count: 1, planId: newType });
             }
           }}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           addPool={handleAdd}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
