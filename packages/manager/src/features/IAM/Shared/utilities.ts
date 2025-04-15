@@ -96,15 +96,15 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
 /**
  * Checks if the given Role has a type
  *
- * @param resourceType The type to check for
+ * @param entityType The type to check for
  * @param role The role to compare against
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  resourceType: EntityType | EntityTypePermissions,
+  entityType: EntityType | EntityTypePermissions,
   role: ExtendedRoleMap
 ) => {
-  return role.entity_type === resourceType;
+  return role.entity_type === entityType;
 };
 
 /**
@@ -204,12 +204,12 @@ export const mapEntityTypes = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): EntitiesType[] => {
-  const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
+  const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
-  return resourceTypes.map((resource) => ({
-    label: capitalizeAllWords(resource, '_') + suffix,
-    rawValue: resource,
-    value: capitalizeAllWords(resource, '_') + suffix,
+  return entityTypes.map((entity) => ({
+    label: capitalizeAllWords(entity, '_') + suffix,
+    rawValue: entity,
+    value: capitalizeAllWords(entity, '_') + suffix,
   }));
 };
 
@@ -217,12 +217,12 @@ export const mapEntityTypesForSelect = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): SelectOption[] => {
-  const resourceTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
+  const entityTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
 
-  return resourceTypes
-    .map((resource) => ({
-      label: capitalizeAllWords(resource, '_') + suffix,
-      value: resource,
+  return entityTypes
+    .map((entity) => ({
+      label: capitalizeAllWords(entity, '_') + suffix,
+      value: entity,
     }))
     .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
 };

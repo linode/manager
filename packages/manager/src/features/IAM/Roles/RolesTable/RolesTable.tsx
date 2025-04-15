@@ -24,6 +24,11 @@ import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
 import type { RoleMap } from 'src/features/IAM/Shared/utilities';
 
+const ALL_ROLES_OPTION: SelectOption = {
+  label: 'All Roles',
+  value: 'all',
+};
+
 interface Props {
   roles: RoleMap[];
 }
@@ -35,14 +40,8 @@ export const RolesTable = ({ roles }: Props) => {
   const [filterString, setFilterString] = React.useState('');
 
   // Get just the list of entity types from this list of roles, to be used in the selection filter
-  const ALL_ROLES_OPTION: SelectOption = {
-    label: 'All Roles',
-    value: 'all',
-  };
   const filterableOptions = React.useMemo(() => {
-    const options = [ALL_ROLES_OPTION];
-    mapEntityTypesForSelect(roles, ' Roles').forEach((et) => options.push(et));
-    return options;
+    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
   }, [roles]);
 
   const [filterableEntityType, setFilterableEntityType] =
@@ -55,9 +54,7 @@ export const RolesTable = ({ roles }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
 
   const areAllSelected = React.useMemo(() => {
-    return (
-      !!rows && rows.length === selectedRows.length && !!selectedRows.length
-    );
+    return !!rows?.length && !!selectedRows?.length && rows?.length === selectedRows?.length;
   }, [rows, selectedRows]);
 
   const handleSort = (event: CustomEvent, column: string) => {
