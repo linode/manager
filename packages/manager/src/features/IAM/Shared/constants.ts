@@ -7,9 +7,6 @@ export const NO_ASSIGNED_ROLES_TEXT = `The user doesn't have any roles assigned 
 
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entities assigned yet. Once you assigned the user a role on specific entities, these entities will show up here.`;
 
-export const NO_PERMISSIONS_TEXT =
-  'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.';
-
 // Links
 // TODO: update the link when it's ready - UIE-8534
 export const IAM_DOCS_LINK =

@@ -29,11 +29,11 @@ const mockRoles: RoleMap[] = [
   },
   {
     access: 'entity_access',
-    description: 'Database admin',
+    description: 'Firewall admin',
     entity_ids: [1],
-    entity_type: 'database',
-    id: 'database_admin',
-    name: 'database_admin',
+    entity_type: 'firewall',
+    id: 'firewall_admin',
+    name: 'firewall_admin',
     permissions: [],
   },
 ];

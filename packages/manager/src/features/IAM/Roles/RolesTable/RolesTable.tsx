@@ -1,4 +1,4 @@
-import { Button, Select, StyledLinkButton } from '@linode/ui';
+import { Button, Select } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
@@ -15,6 +15,7 @@ import {
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { StyledTextTooltip } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
 import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
@@ -22,17 +23,14 @@ import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
 import type { RoleMap } from 'src/features/IAM/Shared/utilities';
-import { useTheme } from '@mui/material';
 
 interface Props {
   roles: RoleMap[];
 }
 
 export const RolesTable = ({ roles }: Props) => {
-  const theme = useTheme();
   const [rows, setRows] = useState(roles);
 
-  const [showFullDescription, setShowFullDescription] = React.useState(false);
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
 
@@ -212,27 +210,20 @@ export const RolesTable = ({ roles }: Props) => {
                 selectable
                 selected={selectedRows.includes(roleRow)}
               >
-                <TableCell style={{ minWidth: '30%' }}>
+                <TableCell style={{ minWidth: '26%' }}>
                   {roleRow.name}
                 </TableCell>
                 <TableCell style={{ minWidth: '18%' }}>
                   {capitalizeAllWords(roleRow.access, '_')}
                 </TableCell>
-                <TableCell style={{ minWidth: '34%' }}>
-                  {showFullDescription
-                    ? roleRow.description
-                    : roleRow.description.substring(0, 80)}{' '}
-                  {roleRow.description.length > 80 && (
-                    <StyledLinkButton
-                      sx={{
-                        font: theme.tokens.alias.Typography.Label.Semibold.Xs,
-                        width: 'max-content'
-                      }}
-                      onClick={() => setShowFullDescription((show) => !show)}
-                      type="button"
-                    >
-                      {showFullDescription ? 'Hide' : 'Expand'}
-                    </StyledLinkButton>
+                <TableCell style={{ minWidth: '30%' }}>
+                  {roleRow.description.length <= 80 ? (
+                    <>{roleRow.description}</>
+                  ) : (
+                    <span>
+                      {roleRow.description.substring(0, 80)}{'... '}
+                      <StyledTextTooltip tooltipText={roleRow.description} displayText={'Show more'}/>
+                    </span>
                   )}
                 </TableCell>
                 <TableCell style={{ minWidth: '14%' }}>
