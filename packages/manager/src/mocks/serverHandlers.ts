@@ -139,6 +139,7 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
+import { MTC_TT_CUSTOM_PLANS_AVAILABILITY_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -722,11 +723,13 @@ export const handlers = [
         label: 'mtc-tt-custom-plan-linode-1',
         region: 'us-iad',
         type: 'g8-premimum-64-ht',
+        id: 1234,
       }),
       linodeFactory.build({
         label: 'mtc-tt-custom-plan-linode-2',
         region: 'no-oslo',
         type: 'g8-premimum-64-ht',
+        id: 1235,
       }),
     ];
     const linodes = [
@@ -835,14 +838,23 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    return HttpResponse.json(
-      linodeFactory.build({
-        backups: { enabled: false },
-        id,
-        label: 'Gecko Distributed Region Test',
-        region: 'us-den-10',
-      })
-    );
+    const mtcTTLinodeDetail = linodeFactory.build({
+      backups: { enabled: false },
+      id,
+      label: 'mtc-tt-custom-plan-linode',
+      region: 'us-iad',
+      type: 'g8-premimum-64-ht',
+    });
+    const linodeDetail = linodeFactory.build({
+      backups: { enabled: false },
+      id,
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
+    });
+    const response = [1234, 1235].includes(id)
+      ? mtcTTLinodeDetail
+      : linodeDetail;
+    return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
@@ -2286,7 +2298,9 @@ export const handlers = [
         region: 'us-east',
       }),
       ...(params.regionId &&
-      ['no-oslo', 'us-iad'].includes(params.regionId as string)
+      MTC_TT_CUSTOM_PLANS_AVAILABILITY_REGIONS.includes(
+        params.regionId as string
+      )
         ? [
             regionAvailabilityFactory.build({
               available: true,

@@ -32,6 +32,7 @@ export interface PlanSelectionAvailabilityTypes {
   planBelongsToDisabledClass: boolean;
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
+  planIsMtcTikTokAndUnavailableInSelectedRegion?: boolean;
   planIsSmallerThanUsage?: boolean;
   planIsTooSmall: boolean;
   planIsTooSmallForAPL?: boolean;
