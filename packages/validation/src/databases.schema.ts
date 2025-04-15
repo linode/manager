@@ -120,6 +120,11 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       validator = validator.required('timezone cannot be empty');
     }
   }
+  // temporary custom validation for max_failover_replication_time_lag
+  // TODO: remove this when the API is updated
+  if (key === 'max_failover_replication_time_lag') {
+    validator = validator.max(999999, `${key} must be at most 999999`);
+  }
 
   return validator;
 };
