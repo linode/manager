@@ -2,6 +2,7 @@ import { getLinodeInterfaces } from '@linode/api-v4';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
+  useAllLinodesQuery,
   useGrants,
   useProfile,
 } from '@linode/queries';
@@ -18,6 +19,7 @@ import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Linode, LinodeInterface } from '@linode/api-v4';
@@ -54,9 +56,12 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isRestrictedUser = Boolean(profile?.restricted);
 
   const { data, error, isLoading } = useAllFirewallsQuery();
+  const { data: allLinodes } = useAllLinodesQuery({}, {});
+  const [linodeOptions, setLinodeOptions] = React.useState<Linode[]>([]);
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
@@ -214,17 +219,15 @@ export const AddLinodeDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
-  const assignedLinodes = data
-    ?.map((firewall) => firewall.entities)
-    .flat()
-    ?.filter((service) => service.type === 'linode');
-
-  const linodeOptionsFilter = (linode: Linode) => {
-    return (
-      !readOnlyLinodeIds.includes(linode.id) &&
-      !assignedLinodes?.some((service) => service.id === linode.id)
-    );
-  };
+  const firewallEntities = data?.map((firewall) => firewall.entities).flat();
+  const assignedLinodes = firewallEntities?.filter(
+    (service) => service.type === 'linode'
+  );
+  const assignedInterfaceIds = new Set<number>(
+    firewallEntities
+      ?.filter((service) => service.type === 'interface')
+      ?.map((service) => service.id) ?? []
+  );
 
   const onSelectionChange = async (linodes: Linode[]) => {
     setLocalError('');
@@ -233,10 +236,10 @@ export const AddLinodeDrawer = (props: Props) => {
     const _interfacesToAddMap = new Map<number, InterfaceDeviceInfo | null>();
 
     for (const linode of linodes) {
-      if (linode.interface_generation === 'legacy_config') {
-        legacyLinodes.push(linode);
-      } else {
+      if (linode.interface_generation === 'linode') {
         interfaceLinodes.push(linode);
+      } else {
+        legacyLinodes.push(linode);
       }
     }
 
@@ -247,19 +250,19 @@ export const AddLinodeDrawer = (props: Props) => {
         const linodeId = linode.id;
         const interfaces = await getLinodeInterfaces(linodeId);
         // vlan interfaces cannot have a firewall assigned to them
-        const nonVlanInterfaces = interfaces.interfaces.filter(
-          (iface) => !iface.vlan
+        const assignableInterfaces = interfaces.interfaces.filter(
+          (iface) => !iface.vlan && !assignedInterfaceIds.has(iface.id)
         );
 
-        if (nonVlanInterfaces.length === 1) {
+        if (assignableInterfaces.length === 1) {
           _interfacesToAddMap.set(linodeId, {
             linodeId,
             linodeLabel: linode.label,
-            interfaceId: nonVlanInterfaces[0].id,
+            interfaceId: assignableInterfaces[0].id,
           });
         }
 
-        if (nonVlanInterfaces.length > 1) {
+        if (assignableInterfaces.length > 1) {
           if (!interfacesToAddMap.has(linodeId)) {
             _interfacesToAddMap.set(linodeId, null);
           } else {
@@ -269,7 +272,7 @@ export const AddLinodeDrawer = (props: Props) => {
             );
           }
 
-          const interfacesWithLabels = nonVlanInterfaces.map((iface) => ({
+          const interfacesWithLabels = assignableInterfaces.map((iface) => ({
             ...iface,
             label: `${getLinodeInterfaceType(iface)} Interface (ID : ${iface.id})`,
             value: iface.id,
@@ -294,12 +297,6 @@ export const AddLinodeDrawer = (props: Props) => {
     setInterfacesToAddMap(_interfacesToAddMap);
   };
 
-  React.useEffect(() => {
-    if (error) {
-      setLocalError('Could not load firewall data');
-    }
-  }, [error]);
-
   const handleClose = () => {
     setLinodesToAdd([]);
     setInterfacesToAddMap(new Map());
@@ -307,6 +304,49 @@ export const AddLinodeDrawer = (props: Props) => {
     setLocalError(undefined);
     onClose();
   };
+
+  React.useEffect(() => {
+    const linodeOptionsFilter = async (linode: Linode) => {
+      if (linode.interface_generation === 'linode') {
+        const interfaces = await getLinodeInterfaces(linode.id);
+        // Return true if Linode has some non-vlan interface that is not assigned to a firewall
+        return (
+          !readOnlyLinodeIds.includes(linode.id) &&
+          interfaces.interfaces.some(
+            (iface) => !iface.vlan && !assignedInterfaceIds.has(iface.id)
+          )
+        );
+      }
+      return (
+        !readOnlyLinodeIds.includes(linode.id) &&
+        !assignedLinodes?.some((service) => service.id === linode.id)
+      );
+    };
+
+    const filterLinodes = async () => {
+      const asyncFilteredDataPromises = allLinodes?.map((linode) =>
+        linodeOptionsFilter(linode)
+      );
+      const predicateArr = await Promise.all(asyncFilteredDataPromises ?? []);
+      const filteredLinodes = allLinodes?.filter((_, idx) => predicateArr[idx]);
+
+      setLinodeOptions(filteredLinodes ?? []);
+    };
+
+    filterLinodes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    allLinodes?.length,
+    assignedLinodes?.length,
+    readOnlyLinodeIds?.length,
+    assignedInterfaceIds.size,
+  ]);
+
+  React.useEffect(() => {
+    if (error) {
+      setLocalError('Could not load firewall data');
+    }
+  }, [error]);
 
   return (
     <Drawer
@@ -327,42 +367,43 @@ export const AddLinodeDrawer = (props: Props) => {
           helperText={helperText}
           multiple
           onSelectionChange={(linodes) => onSelectionChange(linodes)}
-          optionsFilter={linodeOptionsFilter}
+          options={linodeOptions}
           value={[
             ...linodesToAdd.map((linode) => linode.id),
             ...Array.from(interfacesToAddMap.keys()),
           ]}
         />
-        {linodesWithMultiInterfaces.length > 0 && (
+        {isLinodeInterfacesEnabled && linodesWithMultiInterfaces.length > 0 && (
           <Typography marginTop={3}>
             {`The following ${linodesWithMultiInterfaces.length === 1 ? 'Linode has' : 'Linodes have'} 
             more than one interface to which a firewall can be applied. Select which interface.`}
           </Typography>
         )}
-        {linodesWithMultiInterfaces.map((linode) => (
-          <Select
-            key={linode.linodeId}
-            label={`${linode.linodeLabel} Interface`}
-            onChange={(e, option) => {
-              const updatedInterfacesToAdd = new Map(interfacesToAddMap);
-              updatedInterfacesToAdd.set(linode.linodeId, {
-                linodeId: linode.linodeId,
-                linodeLabel: linode.linodeLabel,
-                interfaceId: option.value,
-              });
-              setInterfacesToAddMap(updatedInterfacesToAdd);
-            }}
-            options={linode.linodeInterfaces}
-            placeholder="Select Interface"
-            value={
-              linode.linodeInterfaces.find(
-                (iface) =>
-                  iface.id ===
-                  interfacesToAddMap.get(linode.linodeId)?.interfaceId
-              ) ?? null
-            }
-          />
-        ))}
+        {isLinodeInterfacesEnabled &&
+          linodesWithMultiInterfaces.map((linode) => (
+            <Select
+              key={linode.linodeId}
+              label={`${linode.linodeLabel} Interface`}
+              onChange={(e, option) => {
+                const updatedInterfacesToAdd = new Map(interfacesToAddMap);
+                updatedInterfacesToAdd.set(linode.linodeId, {
+                  linodeId: linode.linodeId,
+                  linodeLabel: linode.linodeLabel,
+                  interfaceId: option.value,
+                });
+                setInterfacesToAddMap(updatedInterfacesToAdd);
+              }}
+              options={linode.linodeInterfaces}
+              placeholder="Select Interface"
+              value={
+                linode.linodeInterfaces.find(
+                  (iface) =>
+                    iface.id ===
+                    interfacesToAddMap.get(linode.linodeId)?.interfaceId
+                ) ?? null
+              }
+            />
+          ))}
         <ActionsPanel
           primaryButtonProps={{
             disabled:
