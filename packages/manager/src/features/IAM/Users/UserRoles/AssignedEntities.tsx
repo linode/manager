@@ -22,12 +22,8 @@ export const AssignedEntities = ({
 
   const handleDelete = () => {};
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(entities);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(entities);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),

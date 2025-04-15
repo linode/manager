@@ -22,12 +22,8 @@ type Props = {
 export const Permissions = ({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(permissions, showAll);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(permissions, showAll);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),

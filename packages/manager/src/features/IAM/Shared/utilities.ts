@@ -135,7 +135,7 @@ export interface RolesType {
   value: string;
 }
 
-interface ExtendedRole extends Roles {
+export interface ExtendedRole extends Roles {
   access: IamAccessType;
   entity_type: EntityTypePermissions;
 }
@@ -435,9 +435,15 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
+    entities?: EntitiesOption[] | null;
     role: null | RolesType;
   }[];
 }
+
+export interface UpdateEntitiesFormValues {
+  entities: EntitiesOption[];
+}
+
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -503,7 +509,10 @@ export const transformedAccountEntities = (
   return result;
 };
 
-export type DrawerModes = 'assign-role' | 'change-role-for-entity';
+export type DrawerModes =
+  | 'assign-role'
+  | 'change-role'
+  | 'change-role-for-entity';
 
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
@@ -528,4 +537,45 @@ export const changeRoleForEntity = (
       return entity;
     }),
   ];
+};
+
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: EntityAccessRole,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
+
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
+
+      // Remove the role if the entity is not in the new entity IDs
+      return {
+        ...entity,
+        roles: entity.roles.filter((role) => role !== roleName),
+      };
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
+
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
+
+  return [...updatedEntityAccess, ...newEntities];
 };
