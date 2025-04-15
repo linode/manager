@@ -17,7 +17,7 @@ export const REGION_CAVEAT_HELPER_TEXT =
 export const ASSIGN_LINODES_DRAWER_MESSAGE =
   'Assigning a Linode to a subnet requires the Linode to be shut down. Changes will take affect when the Linode is powered on.';
 
-export const REGIONAL_LINODE_MESSAGE = `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`;
+export const REGIONAL_LINODE_MESSAGE = "Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.";
 
 export const MULTIPLE_CONFIGURATIONS_MESSAGE =
   'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
@@ -28,7 +28,7 @@ export const SUBNET_UNASSIGN_LINODES_WARNING =
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
-export const CANNOT_CREATE_VPC_MESSAGE = `You don't have permissions to create a new VPC. Please contact an account administrator for details.`;
+export const CANNOT_CREATE_VPC_MESSAGE = "You don't have permissions to create a new VPC. Please contact an account administrator for details.";
 
 export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT =
   'Each VPC can further segment itself into distinct networks through the use of multiple subnets. These subnets can isolate various functionality of an application.';
