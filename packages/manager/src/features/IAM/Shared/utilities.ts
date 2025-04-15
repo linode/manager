@@ -581,6 +581,11 @@ export const toEntityAccess = (
   return [...updatedEntityAccess, ...newEntities];
 };
 
+export interface CombinedEntity {
+  id: number;
+  name: string;
+}
+
 export const deleteUserEntity = (
   entityRoles: EntityAccess[],
   roleName: RoleType,

@@ -24,6 +24,7 @@ import {
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
+import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   addEntitiesNamesToRoles,
   combineRoles,
@@ -39,11 +40,13 @@ import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
 import type {
   DrawerModes,
+  CombinedEntity,
   EntitiesType,
   ExtendedRoleMap,
   RoleMap,
 } from '../utilities';
-import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole, EntityTypePermissions } from '@linode/api-v4';
+
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 export const AssignedRolesTable = () => {
@@ -55,6 +58,7 @@ export const AssignedRolesTable = () => {
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+  const [selectedEntity, setSelectedEntity] = React.useState<CombinedEntity>();
   const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
     React.useState<boolean>(false);
   const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
@@ -62,6 +66,8 @@ export const AssignedRolesTable = () => {
 
   const [drawerMode, setDrawerMode] =
     React.useState<DrawerModes>('assign-role');
+  const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
@@ -76,6 +82,15 @@ export const AssignedRolesTable = () => {
 
   const handleUpdateEntities = (role: ExtendedRoleMap) => {
     setIsUpdateEntitiesDrawerOpen(true);
+    setSelectedRole(role);
+  };
+
+  const handleRemoveAssignment = (
+    entity: CombinedEntity,
+    role: ExtendedRoleMap
+  ) => {
+    setIsRemoveAssignmentDialogOpen(true);
+    setSelectedEntity(entity);
     setSelectedRole(role);
   };
 
@@ -142,11 +157,9 @@ export const AssignedRolesTable = () => {
           ) : (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <AssignedEntities
-                entities={role.entity_names!}
-                entityIds={role.entity_ids!}
-                entityType={role.entity_type}
                 onButtonClick={handleViewEntities}
-                roleName={role.name as RoleType}
+                onRemoveAssignment={handleRemoveAssignment}
+                role={role}
               />
             </TableCell>
           )}
@@ -302,6 +315,17 @@ export const AssignedRolesTable = () => {
         onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
         open={isUpdateEntitiesDrawerOpen}
         role={selectedRole}
+/>
+        <RemoveAssignmentConfirmationDialog
+        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        open={isRemoveAssignmentDialogOpen}
+        role={{
+          entity_type: selectedRole?.entity_type as EntityTypePermissions,
+          id: selectedRole?.id as EntityAccessRole,
+          resource_id: selectedEntity?.id as number,
+          resource_name: selectedEntity?.name as string,
+          role_name: selectedRole?.name as EntityAccessRole,
+        }}
       />
     </Grid>
   );

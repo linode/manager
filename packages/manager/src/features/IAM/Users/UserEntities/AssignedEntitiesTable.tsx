@@ -25,7 +25,7 @@ import {
   transformedAccountEntities,
 } from '../../Shared/utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
-import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
+import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 
 import type {
   DrawerModes,

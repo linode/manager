@@ -9,7 +9,7 @@ import {
   useAccountUserPermissionsMutation,
 } from 'src/queries/iam/iam';
 
-import { deleteUserEntity, type EntitiesRole } from '../../Shared/utilities';
+import { deleteUserEntity, type EntitiesRole } from '../utilities';
 
 interface Props {
   onClose: () => void;

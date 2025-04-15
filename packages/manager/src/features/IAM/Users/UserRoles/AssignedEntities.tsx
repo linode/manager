@@ -1,84 +1,28 @@
 import { Box, Button, Chip, Tooltip } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { debounce, useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
-import {
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useCalculateHiddenItems } from '../../Shared/utilities';
 
-import {
-  deleteUserEntity,
-  useCalculateHiddenItems,
-} from '../../Shared/utilities';
-
-import type {
-  AccountAccessRole,
-  EntityTypePermissions,
-  EntityAccessRole,
-} from '@linode/api-v4';
+import type { CombinedEntity, ExtendedRoleMap } from '../../Shared/utilities';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
-  entities: string[];
-  entityIds: number[];
-  entityType: EntityTypePermissions;
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  roleName: EntityAccessRole;
-}
-
-interface CombinedEntity {
-  id: number;
-  name: string;
+  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleMap) => void;
+  role: ExtendedRoleMap;
 }
 
 export const AssignedEntities = ({
-  entities,
   onButtonClick,
-  roleName,
-  entityType,
-  entityIds,
+  onRemoveAssignment,
+  role,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
-
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
-
-  const handleDelete = React.useCallback(
-    async (entity: CombinedEntity) => {
-      try {
-        const updatedUserEntityRoles = deleteUserEntity(
-          assignedRoles!.entity_access,
-          roleName,
-          entity.id,
-          entityType
-        );
-
-        await updateUserPermissions({
-          ...assignedRoles!,
-          entity_access: updatedUserEntityRoles,
-        });
-
-        enqueueSnackbar('Entity removed', {
-          variant: 'success',
-        });
-      } catch {
-        enqueueSnackbar('Something went wrong. Try again later.', {
-          variant: 'error',
-        });
-      }
-    },
-    [assignedRoles]
-  );
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
-    useCalculateHiddenItems(entities);
+    useCalculateHiddenItems(role.entity_names!);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
@@ -99,11 +43,11 @@ export const AssignedEntities = ({
 
   const combinedEntities: CombinedEntity[] = React.useMemo(
     () =>
-      entities.map((name, index) => ({
+      role.entity_names!.map((name, index) => ({
         name,
-        id: entityIds[index],
+        id: role.entity_ids![index],
       })),
-    [entities, entityIds]
+    [role.entity_names, role.entity_ids]
   );
 
   const items = combinedEntities?.map(
@@ -118,7 +62,7 @@ export const AssignedEntities = ({
           deleteIcon={<CloseIcon />}
           key={entity.id}
           label={entity.name}
-          onDelete={() => handleDelete(entity)}
+          onDelete={() => onRemoveAssignment(entity, role)}
           sx={{
             backgroundColor:
               theme.name === 'light'
@@ -161,7 +105,7 @@ export const AssignedEntities = ({
         >
           <Tooltip placement="top" title="Click to View All Entities">
             <Button
-              onClick={() => onButtonClick(roleName)}
+              onClick={() => onButtonClick(role.name as EntityAccessRole)}
               sx={{
                 color: theme.tokens.alias.Content.Text.Primary.Default,
                 font: theme.tokens.alias.Typography.Label.Regular.Xs,
