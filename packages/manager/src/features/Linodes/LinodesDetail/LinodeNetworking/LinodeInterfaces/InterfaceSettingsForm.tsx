@@ -100,13 +100,26 @@ export const InterfaceSettingsForm = (props: Props) => {
   if (error) {
     return <ErrorState errorText={error[0].reason} />;
   }
+  const numberOfEligibleIPv4Interfaces =
+    data?.default_route.ipv4_eligible_interface_ids.length ?? 0;
+  const numberOfEligibleIPv6Interfaces =
+    data?.default_route.ipv6_eligible_interface_ids.length ?? 0;
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
+      {form.formState.errors.root?.message && (
+        <Notice text={form.formState.errors.root?.message} variant="error" />
+      )}
       <Stack divider={<Divider />} spacing={2}>
         <Stack spacing={2}>
           <Stack spacing={1}>
             <Typography variant="h3">Default Route</Typography>
+            {form.formState.errors.default_route?.message && (
+              <Notice
+                text={form.formState.errors.default_route?.message}
+                variant="error"
+              />
+            )}
             <Typography>
               The default route is the route your Linode uses when traffic
               doesn&rsquo;t have a specific route to a destination.
@@ -128,7 +141,7 @@ export const InterfaceSettingsForm = (props: Props) => {
             name="default_route.ipv4_interface_id"
             render={({ field, fieldState }) => (
               <Autocomplete
-                disableClearable={Boolean(field.value)}
+                disableClearable={numberOfEligibleIPv4Interfaces > 0}
                 errorText={fieldState.error?.message}
                 label="Default IPv4 Route"
                 noMarginTop
@@ -144,7 +157,7 @@ export const InterfaceSettingsForm = (props: Props) => {
             name="default_route.ipv6_interface_id"
             render={({ field, fieldState }) => (
               <Autocomplete
-                disableClearable={Boolean(field.value)}
+                disableClearable={numberOfEligibleIPv6Interfaces > 0}
                 errorText={fieldState.error?.message}
                 label="Default IPv6 Route"
                 noMarginTop
@@ -158,6 +171,12 @@ export const InterfaceSettingsForm = (props: Props) => {
         </Stack>
         <Stack spacing={1}>
           <Typography variant="h3">Network Helper</Typography>
+          {form.formState.errors.network_helper?.message && (
+            <Notice
+              text={form.formState.errors.network_helper.message}
+              variant="error"
+            />
+          )}
           <Typography>
             Enable the <i>Network Helper</i> to automatically adjust your
             Linode&rsquo;s internal network configuration files during each
