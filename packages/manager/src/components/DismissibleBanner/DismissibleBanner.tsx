@@ -54,7 +54,7 @@ export const DismissibleBanner = (props: Props) => {
       aria-label={`Dismiss ${preferenceKey} banner`}
       data-testid="notice-dismiss"
       onClick={handleDismiss}
-      sx={{ padding: 1 }}
+      sx={{ padding: 1, paddingRight: 2 }}
     >
       <CloseIcon />
     </IconButton>

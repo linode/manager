@@ -17,9 +17,8 @@ export const useStyles = makeStyles()((theme) => ({
   },
   important: {
     font: theme.font.normal,
-    padding: `4px ${theme.spacingFunction(16)}`,
     '& p': {
-      paddingLeft: theme.spacingFunction(20),
+      paddingLeft: theme.spacingFunction(36),
     },
   },
   info: {
@@ -29,7 +28,6 @@ export const useStyles = makeStyles()((theme) => ({
   },
   root: {
     display: 'flex',
-    height: 40,
     '& + .notice': {
       marginTop: `${theme.spacingFunction(8)} !important`,
     },
@@ -39,9 +37,10 @@ export const useStyles = makeStyles()((theme) => ({
       fontSize: theme.tokens.font.FontSize.Xs,
       lineHeight: '20px',
       font: theme.font.semibold,
+      padding: `10px ${theme.spacingFunction(16)}`,
     },
     maxWidth: '100%',
-    padding: `2px ${theme.spacingFunction(16)}`,
+    padding: '0px',
     position: 'relative',
   },
   success: {
