@@ -106,6 +106,7 @@ describe('Migrate linodes', () => {
 
     ui.button
       .findByTitle('Enter Migration Queue')
+      .scrollIntoView()
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -185,9 +186,11 @@ describe('Migrate linodes', () => {
 
     ui.button
       .findByTitle('Enter Migration Queue')
+      .scrollIntoView()
       .should('be.visible')
       .should('be.enabled')
       .click();
+
     cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
@@ -253,6 +256,7 @@ describe('Migrate linodes', () => {
     // Confirm that migration queue button is enabled.
     ui.button
       .findByTitle('Enter Migration Queue')
+      .scrollIntoView()
       .should('be.visible')
       .should('be.enabled');
   });
