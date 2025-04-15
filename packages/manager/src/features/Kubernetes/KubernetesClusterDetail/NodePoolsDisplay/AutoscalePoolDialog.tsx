@@ -151,7 +151,7 @@ export const AutoscalePoolDialog = (props: Props) => {
   });
 
   const warning =
-    autoscaler && autoscaler?.max > 1 && +values.max < autoscaler?.max
+    autoscaler && autoscaler.max > 1 && +values.max < autoscaler.max
       ? 'The Node Pool will only be scaled down if there are unneeded nodes.'
       : undefined;
 
