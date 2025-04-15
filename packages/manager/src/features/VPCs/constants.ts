@@ -43,9 +43,6 @@ export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
 
-export const ASSIGN_IPV4_RANGES_DESCRIPTION =
-  'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.';
-
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
