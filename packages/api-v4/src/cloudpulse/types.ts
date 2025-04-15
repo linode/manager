@@ -76,7 +76,8 @@ export interface Widgets {
 }
 
 export interface Filters {
-  dimension_label: string;
+  dimension_label?: string;
+  key?: string;
   operator: string;
   value: string;
 }
