@@ -89,19 +89,10 @@ export const AssignedPermissionsPanel = ({
           errorText={errorText}
           mode={mode}
           onChange={(value) => onChange?.(value)}
-          // assignedEntities={assignedEntities ?? []}
           type={role.entity_type}
           value={value || []}
         />
       )}
-      {/* // <Entities
-      //   access={role.access}
-      //   errorText={errorText}
-      //   mode={mode}
-      //   onChange={(value) => onChange?.(value)}
-      //   type={role.entity_type}
-      //   value={value || []}
-      // /> */}
     </Paper>
   );
 };

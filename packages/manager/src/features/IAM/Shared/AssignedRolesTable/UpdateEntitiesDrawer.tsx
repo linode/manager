@@ -18,7 +18,7 @@ import type {
   ExtendedRoleMap,
   UpdateEntitiesFormValues,
 } from '../utilities';
-import type { RoleType } from '@linode/api-v4';
+import type { EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -84,7 +84,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
     }
 
     try {
-      const roleName: RoleType = role!.name as RoleType;
+      const roleName: EntityAccessRole = role!.name as EntityAccessRole;
 
       const entityAccess = toEntityAccess(
         assignedRoles!.entity_access,

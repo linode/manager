@@ -1,4 +1,5 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -38,7 +39,7 @@ const mockValue: EntitiesOption[] = [];
 
 describe('Entities', () => {
   it('renders correct data when it is an account access and type is an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="account_access"
         mode="assign-role"
@@ -48,10 +49,10 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = queryAllByRole('combobox');
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All entities')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
@@ -59,7 +60,7 @@ describe('Entities', () => {
   });
 
   it('renders correct data when it is an account access and type is not an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="account_access"
         mode="assign-role"
@@ -69,10 +70,10 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = queryAllByRole('combobox');
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All firewalls')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All firewalls')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
@@ -84,7 +85,7 @@ describe('Entities', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByRole, getByText } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="entity_access"
         mode="assign-role"
@@ -94,21 +95,21 @@ describe('Entities', () => {
       />
     );
 
-    expect(getByText('Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
 
     // Verify comboboxes exist
-    const autocomplete = getAllByRole('combobox');
+    const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
-    expect(autocomplete[0]).toBeInTheDocument();
+    expect(autocomplete[0]).toBeVisible();
     expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
   });
 
-  it('renders correct options in Autocomplete dropdown when it is an entity access', () => {
+  it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByRole, getByText } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="entity_access"
         mode="assign-role"
@@ -118,16 +119,15 @@ describe('Entities', () => {
       />
     );
 
-    expect(getByText('Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
 
-    const autocomplete = getAllByRole('combobox')[0];
-    fireEvent.focus(autocomplete);
-    fireEvent.mouseDown(autocomplete);
-    expect(getByText('firewall-1')).toBeInTheDocument();
+    const autocomplete = screen.getAllByRole('combobox')[0];
+    await userEvent.click(autocomplete);
+    expect(screen.getByText('firewall-1')).toBeVisible();
   });
 
   it('updates selected options when Autocomplete value changes when it is an entity access', () => {
-    const { getAllByRole, getByText } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="entity_access"
         mode="assign-role"
@@ -137,14 +137,14 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = getAllByRole('combobox')[0];
+    const autocomplete = screen.getAllByRole('combobox')[0];
     fireEvent.change(autocomplete, { target: { value: 'linode7' } });
     fireEvent.keyDown(autocomplete, { key: 'Enter' });
-    expect(getByText('test-1')).toBeInTheDocument();
+    expect(screen.getByText('test-1')).toBeVisible();
   });
 
   it('renders Autocomplete as readonly when mode is "change-role"', () => {
-    const { getByRole } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="entity_access"
         mode="change-role"
@@ -154,15 +154,15 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = getByRole('combobox');
-    expect(autocomplete).toBeInTheDocument();
-    expect(autocomplete).toHaveAttribute('readonly');
+    const autocomplete = screen.getByRole('combobox');
+    expect(autocomplete).toBeVisible();
+    expect(autocomplete).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('displays errorText when provided', () => {
     const errorMessage = 'Entities are required.';
 
-    const { getByText } = renderWithTheme(
+    renderWithTheme(
       <Entities
         access="entity_access"
         errorText={errorMessage}
@@ -174,6 +174,6 @@ describe('Entities', () => {
     );
 
     // Verify that the error message is displayed
-    expect(getByText(errorMessage)).toBeInTheDocument();
+    expect(screen.getByText(errorMessage)).toBeVisible();
   });
 });

@@ -12,7 +12,11 @@ import {
 } from './utilities';
 
 import type { CombinedRoles } from './utilities';
-import type { EntityAccess, IamAccountPermissions, IamUserPermissions } from '@linode/api-v4';
+import type {
+  EntityAccess,
+  IamAccountPermissions,
+  IamUserPermissions,
+} from '@linode/api-v4';
 
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';

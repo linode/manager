@@ -43,12 +43,8 @@ import type {
   ExtendedRoleMap,
   RoleMap,
 } from '../utilities';
-import type {
-  AccountAccessRole,
-  AccountAccessType,
-  EntityAccessRole,
-  RoleType,
-} from '@linode/api-v4';
+
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 export const AssignedRolesTable = () => {

@@ -16,7 +16,6 @@ import type {
   IamUserPermissions,
   PermissionType,
   Roles,
-  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -436,8 +435,8 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
-    role: null | RolesType;
     entities?: EntitiesOption[] | null;
+    role: null | RolesType;
   }[];
 }
 
@@ -510,7 +509,10 @@ export const transformedAccountEntities = (
   return result;
 };
 
-export type DrawerModes = 'assign-role' | 'change-role-for-entity' | 'change-role';
+export type DrawerModes =
+  | 'assign-role'
+  | 'change-role'
+  | 'change-role-for-entity';
 
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
@@ -537,11 +539,10 @@ export const changeRoleForEntity = (
   ];
 };
 
-
 export const toEntityAccess = (
   entityRoles: EntityAccess[],
   entityIds: number[],
-  roleName: RoleType,
+  roleName: EntityAccessRole,
   roleType: EntityTypePermissions
 ): EntityAccess[] => {
   const selectedIds = new Set(entityIds);
