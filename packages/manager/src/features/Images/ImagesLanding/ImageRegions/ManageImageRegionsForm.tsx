@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
 
@@ -113,6 +114,27 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Link>{' '}
         for details on managing your Linux system's disk space.
       </Typography>
+      <DismissibleBanner
+        preferenceKey={`manage-replicas-${image?.id}`}
+        spacingTop={16}
+        variant="info"
+      >
+        <Typography fontSize="inherit">
+          As part of our limited promotional period, image replicas are free of
+          charge until Q4 2025. Starting in Q4, replicas will be subject to our
+          standard monthly rate of &#36;0.10/GB. When replicas become billable,
+          your monthly charge will be calculated using the value in the All
+          Replicas column.{' '}
+          <Link
+            to={
+              'https://www.linode.com/blog/compute/image-service-improvements-akamai-cdn/'
+            }
+          >
+            Learn more
+          </Link>
+          .
+        </Typography>
+      </DismissibleBanner>
       <RegionMultiSelect
         onChange={(regionIds) =>
           setValue('regions', regionIds, {

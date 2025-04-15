@@ -17,11 +17,11 @@ export const ImagesRoute = () => {
         variant="info"
       >
         <Typography fontSize="inherit" py={1}>
-          Custom Images are now encrypted for enhanced security.{' '}
+          Custom Images are now encrypted by default for enhanced security.{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
             Learn more
-          </Link>{' '}
-          about encryption.
+          </Link>
+          .
         </Typography>
       </DismissibleBanner>
       <DocumentTitleSegment segment="Images" />
