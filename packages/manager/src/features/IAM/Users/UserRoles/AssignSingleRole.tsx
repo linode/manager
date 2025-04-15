@@ -12,14 +12,13 @@ import type {
   AssignNewRoleFormValues,
   RolesType,
 } from 'src/features/IAM/Shared/utilities';
-// import { Delete } from '@mui/icons-material';
 
 interface Props {
+  hideDetails: boolean;
   index: number;
   onRemove: (idx: number) => void;
   options: RolesType[];
   permissions: IamAccountPermissions;
-  hideDetails: boolean;
 }
 
 export const AssignSingleRole = ({
@@ -45,39 +44,38 @@ export const AssignSingleRole = ({
         )}
 
         <Controller
+          control={control}
+          name={`roles.${index}`}
           render={({ field: { onChange, value } }) => (
             <>
               <Autocomplete
+                label="Assign New Roles"
                 onChange={(event, newValue) => {
                   onChange({
                     ...value,
                     role: newValue,
                   });
                 }}
-                label="Assign New Roles"
                 options={options}
                 placeholder="Select a Role"
                 textFieldProps={{ hideLabel: true }}
                 value={value?.role || null}
               />
-              {value && !hideDetails && (
-              {value?.role && (
+              {value?.role && !hideDetails && (
                 <AssignedPermissionsPanel
+                  mode="assign-role"
                   onChange={(updatedEntities) => {
                     onChange({
                       ...value,
                       entities: updatedEntities,
                     });
                   }}
-                  mode="assign-role"
                   role={getRoleByName(permissions, value.role?.value)!}
                   value={value.entities || []}
                 />
               )}
             </>
           )}
-          control={control}
-          name={`roles.${index}`}
         />
       </Box>
       <Box

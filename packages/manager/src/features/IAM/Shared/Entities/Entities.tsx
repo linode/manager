@@ -1,11 +1,8 @@
-import { isEmpty } from '@linode/api-v4';
 import { Autocomplete, Notice, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
-import { Autocomplete, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
-// import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
@@ -72,40 +69,22 @@ export const Entities = ({
   }
 
   return (
-    <Autocomplete
-      errorText={errorText}
-      getOptionLabel={(option) => option.label}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      label="Entities"
-      multiple
-      noMarginTop
-      onChange={(_, newValue) => {
-        onChange(newValue || []);
-      }}
-      options={memoizedEntities}
-      placeholder={value.length ? ' ' : getPlaceholder(type)}
-      readOnly={mode === 'change-role'}
-      sx={{ marginTop: theme.tokens.spacing.S12 }}
-      value={value || []}
-    />
     <>
       <Autocomplete
-        renderOption={(props, option) => (
-          <li {...props} key={option.label}>
-            {option.label}
-          </li>
-        )}
-        ListboxProps={{ sx: { overflowX: 'hidden' } }}
+        errorText={errorText}
         getOptionLabel={(option) => option.label}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
         multiple
         noMarginTop
-        onChange={(_, value) => setSelectedEntities(value)}
+        onChange={(_, newValue) => {
+          onChange(newValue || []);
+        }}
         options={memoizedEntities}
-        placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
-        readOnly={!isEmpty(assignedEntities)}
+        placeholder={value.length ? ' ' : getPlaceholder(type)}
+        readOnly={mode === 'change-role'}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
-        value={selectedEntities}
+        value={value || []}
       />
       {!memoizedEntities.length && (
         <Notice spacingTop={8} variant="warning">
