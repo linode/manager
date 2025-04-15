@@ -27,6 +27,7 @@ interface Props {
   onClose: () => void;
   open: boolean;
 }
+
 interface LinodeInterfaceOption extends LinodeInterface {
   label: string;
   value: number;
@@ -71,16 +72,37 @@ export const AddLinodeDrawer = (props: Props) => {
   );
 
   const handleSubmit = async () => {
-    let firstError: string | undefined = undefined;
+    let linodeError: string | undefined = undefined;
+    let interfaceError: string | undefined = undefined;
     const failedLinodes: Linode[] = [];
+    const failedLinodeInterfaceIds: number[] = [];
 
-    const results = await Promise.allSettled(
+    const linodeResults = await Promise.allSettled(
       selectedLinodes.map((linode) =>
         addDevice({ firewallId: Number(id), id: linode.id, type: 'linode' })
       )
     );
 
-    results.forEach((result, index) => {
+    const interfaceIdsFromMultiMap = Array.from(
+      linodeWithMultiInterfacesIdMap.values()
+    ).filter((val) => val !== null);
+
+    const combinedInterfaceIds = [
+      ...selectedSingleInterfaceIDs,
+      ...interfaceIdsFromMultiMap,
+    ];
+
+    const interfaceResults = await Promise.allSettled(
+      combinedInterfaceIds.map((interfaceId) =>
+        addDevice({
+          firewallId: Number(id),
+          id: interfaceId,
+          type: 'interface',
+        })
+      )
+    );
+
+    linodeResults.forEach((result, index) => {
       const label = selectedLinodes[index].label;
       const id = selectedLinodes[index].id;
       if (result.status === 'fulfilled') {
@@ -95,15 +117,36 @@ export const AddLinodeDrawer = (props: Props) => {
         `Failed to add Linode ${label} (ID ${id}).`
       )[0].reason;
 
-      if (!firstError) {
-        firstError = errorReason;
+      if (!linodeError) {
+        linodeError = errorReason;
       }
     });
 
-    setLocalError(firstError);
-    setSelectedLinodes(failedLinodes);
+    interfaceResults.forEach((result, index) => {
+      const id = combinedInterfaceIds[index];
+      if (result.status === 'fulfilled') {
+        enqueueSnackbar(`Interface (ID ${id}) successfully added.`, {
+          variant: 'success',
+        });
+        return;
+      }
+      failedLinodeInterfaceIds?.push(id);
+      const errorReason = getAPIErrorOrDefault(
+        result.reason,
+        `Failed to add Interface (ID ${id}).`
+      )[0].reason;
 
-    if (!firstError) {
+      if (!interfaceError) {
+        interfaceError = errorReason;
+      }
+    });
+
+    setLocalError(linodeError ?? interfaceError);
+    setSelectedLinodes(failedLinodes);
+    // this is bad >> single and multi yikes
+    setSelectedSingleInterfaceIDs(failedLinodeInterfaceIds);
+
+    if (!linodeError && !interfaceError) {
       onClose();
     }
   };
@@ -196,7 +239,7 @@ export const AddLinodeDrawer = (props: Props) => {
     }
     setSelectedLinodes(legacyLinodes);
 
-    const linodesAndLinodeInterfaces = await Promise.all(
+    const linodesWithMultiInterfaces = await Promise.all(
       interfaceLinodes.map(async (linode) => {
         const interfaces = await getLinodeInterfaces(linode.id);
         const nonVlanInterfaces = interfaces.interfaces.filter(
@@ -223,12 +266,12 @@ export const AddLinodeDrawer = (props: Props) => {
       })
     );
 
-    const _linodesAndLinodeInterfaces = linodesAndLinodeInterfaces.filter(
+    const _linodesWithMultiInterfaces = linodesWithMultiInterfaces.filter(
       (item): item is LinodeWithMultiLinodeInterfaces => item !== null
     );
 
     setSelectedSingleInterfaceIDs(singleInterfaceIds);
-    setLinodesWithMultiInterfaces(_linodesAndLinodeInterfaces);
+    setLinodesWithMultiInterfaces(_linodesWithMultiInterfaces);
     setLinodeWithMultiInterfacesIdMap(_linodeWithMultiInterfacesIdMap);
   };
 
