@@ -46,15 +46,11 @@ export const AssignedRolesTable = () => {
   const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
 
-  const [
-    isChangeRoleDrawerOpen,
-    setIsChangeRoleDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
+    React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
-  const [
-    isUnassignRoleDialogOpen,
-    setIsUnassignRoleDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
@@ -66,15 +62,11 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
   const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
-  const {
-    data: assignedRoles,
-    isLoading: assignedRolesLoading,
-  } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading: assignedRolesLoading } =
+    useAccountUserPermissions(username ?? '');
 
   const { resourceTypes, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountPermissions) {
