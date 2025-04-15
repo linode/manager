@@ -23,6 +23,7 @@ import type {
   Region,
 } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 const DEFAULT_PLAN_COUNT = 3;
 
@@ -141,6 +142,7 @@ const Panel = (props: NodePoolPanelProps) => {
             return t.class !== 'nanode';
           })}
           copy={getPlansPanelCopy()}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
