@@ -151,6 +151,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     widget: widgetProp,
   } = props;
   const flags = useFlags();
+  flags.aclpReadEndpoint = 'https://monitor-api.linode.com/v2beta/monitor/services/';
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
@@ -228,13 +229,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = useCloudPulseMetricsQuery(
     serviceType,
     {
-      ...getCloudPulseMetricRequest({
-        duration,
-        entityIds,
-        resources,
-        widget,
-      }, flags),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      ...getCloudPulseMetricRequest(
+        {
+          duration,
+          entityIds,
+          resources,
+          widget,
+        },
+        flags
+      ),
+      filters: constructAdditionalRequestFilters(
+        additionalFilters ?? [],
+        flags
+      ), // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
