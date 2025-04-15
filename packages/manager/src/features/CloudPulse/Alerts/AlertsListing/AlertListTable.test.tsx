@@ -88,19 +88,15 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -115,19 +111,15 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -148,19 +140,15 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -181,19 +169,15 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);

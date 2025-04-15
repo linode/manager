@@ -171,10 +171,10 @@ export const ChangeRoleForEntityDrawer = ({
 
         {selectedRole && (
           <AssignedPermissionsPanel
-            assignedEntities={[]}
             key={selectedRole.name}
             mode={mode}
             role={selectedRole}
+            value={[]}
           />
         )}
 
