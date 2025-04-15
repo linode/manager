@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -45,5 +46,13 @@ describe('Permissions', () => {
 
     const chips = getAllByTestId('permission');
     expect(chips).toHaveLength(mockPermissionsLong.length);
+  });
+
+  it('renders a message when there are no permissions', () => {
+    renderWithTheme(<Permissions permissions={[]} />);
+
+    screen.getByText(
+      'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.'
+    );
   });
 });

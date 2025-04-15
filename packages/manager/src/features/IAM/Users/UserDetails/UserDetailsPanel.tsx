@@ -8,10 +8,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
 import type {
-  AccountAccessType,
+  AccountAccessRole,
   EntityAccess,
+  EntityAccessRole,
   IamUserPermissions,
-  RoleType,
   User,
 } from '@linode/api-v4';
 
@@ -146,7 +146,7 @@ const getAssignRoles = (assignedRoles: IamUserPermissions): number => {
         .flat()
     : [];
 
-  const combinedRoles: (AccountAccessType | RoleType)[] = Array.from(
+  const combinedRoles: (AccountAccessRole | EntityAccessRole)[] = Array.from(
     new Set([...accountAccessRoles, ...resourceAccessRoles])
   );
 

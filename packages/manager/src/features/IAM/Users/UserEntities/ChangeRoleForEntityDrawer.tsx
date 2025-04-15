@@ -18,42 +18,42 @@ import {
   useAccountUserPermissionsMutation,
 } from 'src/queries/iam/iam';
 
-import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
+import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import {
+  changeRoleForEntity,
+  getAllRoles,
+  getRoleByName,
+} from '../../Shared/utilities';
 
-import type { EntitiesOption, ExtendedRoleMap, RolesType } from '../utilities';
+import type {
+  DrawerModes,
+  EntitiesRole,
+  ExtendedEntityRole,
+} from '../../Shared/utilities';
 
 interface Props {
+  mode: DrawerModes;
   onClose: () => void;
   open: boolean;
-  role: ExtendedRoleMap | undefined;
+  role: EntitiesRole | undefined;
 }
 
-export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
+export const ChangeRoleForEntityDrawer = ({
+  mode,
+  onClose,
+  open,
+  role,
+}: Props) => {
   const theme = useTheme();
   const { username } = useParams<{ username: string }>();
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
-
-  const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
-    if (!role || !role.entity_names || !role.entity_ids) {
-      return [];
-    }
-
-    return role.entity_names.map((name, index) => ({
-      label: name,
-      value: role.entity_ids![index],
-    }));
-  }, [role]);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
@@ -73,7 +73,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: RolesType | null }>({
+  } = useForm<{ roleName: ExtendedEntityRole | null }>({
     defaultValues: {
       roleName: null,
     },
@@ -92,24 +92,29 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     return getRoleByName(accountPermissions, selectedOptions.value);
   }, [selectedOptions, accountPermissions]);
 
-  const onSubmit = async (data: { roleName: RolesType }) => {
-    if (role?.name === data.roleName.label) {
+  const onSubmit = async (data: { roleName: ExtendedEntityRole }) => {
+    if (role?.role_name === data.roleName.label) {
       handleClose();
       return;
     }
     try {
-      const initialRole = role?.name;
+      const initialRole = role!.role_name;
       const newRole = data.roleName.label;
-      const access = data.roleName.access;
+      const entityId = role!.entity_id;
+      const entityType = role!.entity_type;
 
-      const updatedUserRoles = updateUserRoles({
-        access,
-        assignedRoles,
+      const updatedEntityRoles = changeRoleForEntity(
+        assignedRoles!.entity_access,
+        entityId,
+        entityType,
         initialRole,
-        newRole,
-      });
+        newRole
+      );
 
-      await updateUserPermissions(updatedUserRoles);
+      await updateUserPermissions({
+        ...assignedRoles!,
+        entity_access: updatedEntityRoles,
+      });
 
       handleClose();
     } catch (errors) {
@@ -137,15 +142,18 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want to assign.
+          Select a role you want to assign to the entity.
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
-          Change from role <strong>{role?.name}</strong> to:
+          Change the role for <strong>{role?.entity_name}</strong> from{' '}
+          <strong>{role?.role_name}</strong> to:
         </Typography>
 
         <Controller
+          control={control}
+          name="roleName"
           render={({ field, fieldState }) => (
             <Autocomplete
               errorText={fieldState.error?.message}
@@ -158,15 +166,14 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
               value={field.value || null}
             />
           )}
-          control={control}
-          name="roleName"
           rules={{ required: 'Role is required.' }}
         />
 
         {selectedRole && (
           <AssignedPermissionsPanel
-            assignedEntities={formattedAssignedEntities ?? []}
+            assignedEntities={[]}
             key={selectedRole.name}
+            mode={mode}
             role={selectedRole}
           />
         )}
@@ -174,7 +181,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            label: 'Save Change',
+            label: 'Save Changes',
             loading: isSubmitting,
             type: 'submit',
           }}
@@ -183,7 +190,6 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
             label: 'Cancel',
             onClick: handleClose,
           }}
-          sx={{ marginTop: 2 }}
         />
       </form>
     </Drawer>
