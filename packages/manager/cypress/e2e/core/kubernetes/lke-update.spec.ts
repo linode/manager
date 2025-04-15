@@ -727,8 +727,8 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type('501');
 
-          cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('be.visible');
+          cy.findByText(minWarning).should('not.exist');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
