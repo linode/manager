@@ -25,11 +25,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
