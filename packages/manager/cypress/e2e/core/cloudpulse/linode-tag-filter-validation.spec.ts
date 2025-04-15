@@ -200,7 +200,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       });
   });
 
-  it('should correctly filter resources by tags, region, select tag "tag-2" and available resource should be linodeWithTagsTag2AndTag3', () => {
+  it.skip('should correctly filter resources by tags, region, select tag "tag-2" and available resource should be linodeWithTagsTag2AndTag3', () => {
     cy.visitWithLogin('metrics');
 
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);

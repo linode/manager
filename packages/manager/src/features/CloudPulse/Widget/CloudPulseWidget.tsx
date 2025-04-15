@@ -233,7 +233,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         entityIds,
         resources,
         widget,
-      }),
+      }, flags),
       filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
     },
     {
@@ -241,7 +241,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
-      url: 'https://monitor-api.linode.com/v2beta/monitor/services/',
+      url: flags.aclpReadEndpoint!,
     }
   );
   let data: DataSet[] = [];

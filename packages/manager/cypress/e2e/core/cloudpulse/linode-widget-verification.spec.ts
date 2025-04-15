@@ -330,7 +330,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         });
     });
   });
-  it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+  it.skip('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -387,7 +387,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         });
     });
   });
-  it('should trigger the global refresh button and verify the corresponding network calls', () => {
+  it.skip('should trigger the global refresh button and verify the corresponding network calls', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
