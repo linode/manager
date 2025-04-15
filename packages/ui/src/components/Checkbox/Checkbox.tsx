@@ -7,20 +7,19 @@ import {
   CheckboxIcon,
   CheckboxIndeterminateIcon,
 } from '../../assets/icons';
-import { omittedProps } from '../../utilities';
 import { FormControlLabel } from '../FormControlLabel';
 import { TooltipIcon } from '../TooltipIcon';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-interface Props extends Omit<CheckboxProps, 'size'> {
+interface Props extends CheckboxProps {
   /**
-   * New custom size prop
+   * New custom size prop (Overides and restrict 'size' to only 'small' and 'medium' per ADS)
    *
-   * @default "md"
+   * @default medium
    */
-  customSize?: 'md' | 'sm';
+  size?: 'medium' | 'small';
   /**
    * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
    */
@@ -84,25 +83,12 @@ export const Checkbox = (props: Props) => {
 
 const StyledCheckbox = styled(_Checkbox, {
   label: 'StyledCheckbox',
-  shouldForwardProp: omittedProps(['customSize']),
-})<Props>(({ theme, customSize = 'md', ...props }) => ({
+})(({ theme, ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
   padding: theme.tokens.spacing.S8,
   transition: theme.transitions.create(['color']),
-  ...(customSize === 'sm' && {
-    svg: {
-      height: '16px',
-      width: '16px',
-    },
-  }),
-  ...(customSize === 'md' && {
-    svg: {
-      height: '20px',
-      width: '20px',
-    },
-  }),
   // Unchecked & Readonly
   ...(props.readOnly && {
     color: theme.tokens.component.Checkbox.Empty.ReadOnly.Border,
