@@ -107,12 +107,6 @@ export const AutoscalePoolDialog = (props: Props) => {
     handleReset(values);
   };
 
-  // TODO: revert back to autoscaler.max once the API returns the correct max for LKE-E.
-  const AUTOSCALE_MAX_VALUE =
-    clusterTier === 'enterprise'
-      ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-      : (autoscaler?.max ?? 1);
-
   const {
     errors,
     handleChange,
@@ -124,7 +118,7 @@ export const AutoscalePoolDialog = (props: Props) => {
     enableReinitialize: true,
     initialValues: {
       enabled: autoscaler?.enabled ?? false,
-      max: AUTOSCALE_MAX_VALUE,
+      max: autoscaler?.max ?? 1,
       min: autoscaler?.min ?? 1,
     },
     onSubmit,
@@ -157,7 +151,7 @@ export const AutoscalePoolDialog = (props: Props) => {
   });
 
   const warning =
-    autoscaler && AUTOSCALE_MAX_VALUE > 1 && +values.max < AUTOSCALE_MAX_VALUE
+    autoscaler && autoscaler?.max > 1 && +values.max < autoscaler?.max
       ? 'The Node Pool will only be scaled down if there are unneeded nodes.'
       : undefined;
 
@@ -170,7 +164,7 @@ export const AutoscalePoolDialog = (props: Props) => {
             disabled:
               (values.enabled === autoscaler?.enabled &&
                 values.min === autoscaler?.min &&
-                values.max === AUTOSCALE_MAX_VALUE) ||
+                values.max === autoscaler?.max) ||
               Object.keys(errors).length !== 0,
             label: 'Save Changes',
             loading: isPending || isSubmitting,
