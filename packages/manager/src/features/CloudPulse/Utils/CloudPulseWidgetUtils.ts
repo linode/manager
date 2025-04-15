@@ -25,7 +25,7 @@ import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import { FlagSet } from 'src/featureFlags';
+import type { FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
   /**
@@ -279,7 +279,14 @@ export const getCloudPulseMetricRequest = (
 
   const versionSpecificProps = flags.aclpReadEndpoint?.includes('v1beta')
     ? { metric: widget.metric, aggregate_function: widget.aggregate_function }
-    : { metrics: [{ aggregate_function: widget.aggregate_function, name: widget.metric }] };
+    : {
+        metrics: [
+          {
+            aggregate_function: widget.aggregate_function,
+            name: widget.metric,
+          },
+        ],
+      };
 
   return { ...basePayload, ...versionSpecificProps };
 };

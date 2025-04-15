@@ -237,10 +237,8 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        const {
-          metrics: metric,
-          relative_time_duration: timeRange,
-        } = requestPayload;
+        const { metrics: metric, relative_time_duration: timeRange } =
+          requestPayload;
         const metricData = metrics.find(({ name }) => name === metric[0].name);
 
         if (!metricData) {
@@ -253,9 +251,9 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
         expect(timeRange).to.have.property('unit', 'min');
         expect(timeRange).to.have.property('value', 30);
         expect(interception.request.body.entity_ids).to.deep.equal([1]);
-        expect(interception.request.body.metrics[0].aggregate_function).to.equal(
-          'avg'
-        );
+        expect(
+          interception.request.body.metrics[0].aggregate_function
+        ).to.equal('avg');
       });
   });
 
