@@ -20,6 +20,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { getLinodeInterfaceType } from '../utilities';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
+import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
+import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
@@ -58,6 +60,7 @@ export const EditInterfaceForm = (props: Props) => {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -100,10 +103,10 @@ export const EditInterfaceForm = (props: Props) => {
             </Stack>
           )}
           {interfaceType === 'VPC' && (
-            <Notice
-              text="TODO: Support editing a VPC interface"
-              variant="warning"
-            />
+            <Stack divider={<Divider />} spacing={3}>
+              <VPCIPv4Addresses linodeInterface={linodeInterface} />
+              <VPCIPv4Ranges />
+            </Stack>
           )}
           {interfaceType === 'VLAN' && (
             <Notice
