@@ -4,6 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
+import { EditInterfaceDrawer } from './EditInterfaceDrawer/EditInterfaceDrawer';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
@@ -18,6 +19,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const history = useHistory();
 
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
 
@@ -26,6 +28,11 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const onDelete = (interfaceId: number) => {
     setSelectedInterfaceId(interfaceId);
     setIsDeleteDialogOpen(true);
+  };
+
+  const onEdit = (interfaceId: number) => {
+    setSelectedInterfaceId(interfaceId);
+    setIsEditDrawerOpen(true);
   };
 
   const onShowDetails = (interfaceId: number) => {
@@ -56,13 +63,20 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         </Stack>
       </Paper>
       <LinodeInterfacesTable
-        handlers={{ onDelete, onShowDetails }}
+        handlers={{ onDelete, onEdit, onShowDetails }}
         linodeId={linodeId}
       />
       <AddInterfaceDrawer
         linodeId={linodeId}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
+        regionId={regionId}
+      />
+      <EditInterfaceDrawer
+        interfaceId={selectedInterfaceId}
+        linodeId={linodeId}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
         regionId={regionId}
       />
       <DeleteInterfaceDialog

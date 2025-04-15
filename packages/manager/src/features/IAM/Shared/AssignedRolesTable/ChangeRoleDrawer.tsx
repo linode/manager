@@ -33,16 +33,13 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   const theme = useTheme();
   const { username } = useParams<{ username: string }>();
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -73,9 +70,9 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: RolesType }>({
+  } = useForm<{ roleName: RolesType | null }>({
     defaultValues: {
-      roleName: undefined,
+      roleName: null,
     },
     mode: 'onBlur',
   });
@@ -120,7 +117,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   };
 
   const handleClose = () => {
-    reset();
+    reset({ roleName: null });
     onClose();
   };
 

@@ -37,7 +37,7 @@ import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
 import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
-import type { AccountAccessType, RoleType } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 export const AssignedRolesTable = () => {
@@ -46,15 +46,11 @@ export const AssignedRolesTable = () => {
   const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
 
-  const [
-    isChangeRoleDrawerOpen,
-    setIsChangeRoleDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
+    React.useState<boolean>(false);
   const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
-  const [
-    isUnassignRoleDialogOpen,
-    setIsUnassignRoleDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleChangeRole = (role: ExtendedRoleMap) => {
     setIsChangeRoleDrawerOpen(true);
@@ -66,15 +62,11 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
   const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
-  const {
-    data: assignedRoles,
-    isLoading: assignedRolesLoading,
-  } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading: assignedRolesLoading } =
+    useAccountUserPermissions(username ?? '');
 
   const { resourceTypes, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountPermissions) {
@@ -101,7 +93,9 @@ export const AssignedRolesTable = () => {
 
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
-  const handleViewEntities = (roleName: AccountAccessType | RoleType) => {
+  const handleViewEntities = (
+    roleName: AccountAccessRole | EntityAccessRole
+  ) => {
     const selectedRole = roleName;
     history.push({
       pathname: `/iam/users/${username}/entities`,

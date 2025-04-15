@@ -76,9 +76,9 @@ export async function loadDevTools(
 
     const seeds = await populateSeeds(emptyStore);
 
-    const seedPromises = (Object.keys(
-      seedContext
-    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
+    const seedPromises = (Object.keys(seedContext) as (keyof MockState)[]).map(
+      (key) => updateSeedContext(key, seeds)
+    );
 
     await Promise.all(seedPromises);
 
@@ -105,6 +105,18 @@ export async function loadDevTools(
         ...(seedContext?.linodeConfigs || []),
       ],
       linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
+      nodeBalancerConfigNodes: [
+        ...initialContext.nodeBalancerConfigNodes,
+        ...(seedContext.nodeBalancerConfigNodes || []),
+      ],
+      nodeBalancerConfigs: [
+        ...initialContext.nodeBalancerConfigs,
+        ...(seedContext.nodeBalancerConfigs || []),
+      ],
+      nodeBalancers: [
+        ...initialContext.nodeBalancers,
+        ...(seedContext.nodeBalancers || []),
+      ],
       notificationQueue: [
         ...initialContext.notificationQueue,
         ...(seedContext?.notificationQueue || []),
