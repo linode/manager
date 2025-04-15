@@ -10,15 +10,15 @@ import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import {
-  formatConfigValue,
-  isConfigBoolean,
-  isConfigStringWithEnum,
-} from '../../utilities';
-import {
   StyledBox,
   StyledChip,
   StyledWrapper,
 } from './DatabaseConfigurationItem.style';
+import {
+  formatConfigValue,
+  isConfigBoolean,
+  isConfigStringWithEnum,
+} from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type { ConfigValue } from '@linode/api-v4';
@@ -57,35 +57,39 @@ export const DatabaseConfigurationItem = (props: Props) => {
       );
       return (
         <Autocomplete
+          disableClearable
+          isOptionEqualToValue={(option, value) => option.label === value.label}
+          label={''}
           onChange={(_, selected) => {
             onChange(selected?.label ?? '');
           }}
+          options={options}
           renderInput={(params) => (
             <TextField {...params} label="" placeholder="Select an option" />
           )}
-          disableClearable
-          filterOptions={(options) => options}
-          isOptionEqualToValue={(option, value) => option.label === value.label}
-          label={''}
-          options={options}
           value={selectedValue ?? options[0]}
         />
       );
     }
-    if (configItem?.type === 'number' || configItem?.type === 'integer') {
+    if (
+      (configItem?.type === 'number' || configItem?.type === 'integer') &&
+      typeof configItem.value !== 'boolean'
+    ) {
       return (
         <TextField
-          placeholder={
-            configItem.isNew ? String(configItem?.example ?? '') : ''
-          }
           errorText={errorText}
           fullWidth
           label=""
           name={configLabel}
           onBlur={onBlur}
-          onChange={(e) => onChange(Number(e.target.value))}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          placeholder={
+            configItem.isNew ? String(configItem?.example ?? '') : ''
+          }
           type="number"
-          value={Number(configItem.value)}
+          value={configItem.value}
         />
       );
     }
