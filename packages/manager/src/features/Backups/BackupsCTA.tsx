@@ -1,5 +1,5 @@
-import { IconButton, Notice, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Notice, Typography } from '@linode/ui';
+
 import React from 'react';
 
 import { LinkButton } from 'src/components/LinkButton';
@@ -61,9 +61,9 @@ export const BackupsCTA = () => {
       <IconButton
         aria-label="Dismiss notice enabling Linode backups"
         onClick={handleDismiss}
-        sx={{ padding: 1 }}
+        sx={{ padding: 1, paddingRight: 2 }}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
       <BackupDrawer
         onClose={() => setIsBackupsDrawerOpen(false)}

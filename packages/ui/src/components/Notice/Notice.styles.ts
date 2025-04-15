@@ -2,53 +2,53 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
   error: {
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
+    background: theme.tokens.component.NotificationBanner.Error.Background,
   },
   icon: {
     '& g': {
       stroke: theme.tokens.color.Neutrals.White,
     },
     color: theme.tokens.color.Neutrals.White,
-    left: -25,
+    left: 10,
     position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
   },
   important: {
-    backgroundColor: theme.palette.background.paper,
-    borderLeftWidth: 32,
     font: theme.font.normal,
-    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    '& p': {
+      paddingLeft: theme.spacingFunction(36),
+    },
   },
   info: {
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  noticeText: {
-    font: theme.font.bold,
-    fontSize: '1rem',
-    lineHeight: '20px',
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
+    background:
+      theme.tokens.component.NotificationBanner.Informative.Background,
   },
   root: {
+    display: 'flex',
     '& + .notice': {
-      marginTop: `${theme.spacing()} !important`,
+      marginTop: `${theme.spacingFunction(8)} !important`,
     },
     alignItems: 'center',
     borderRadius: 1,
-    fontSize: '1rem',
+    '& p': {
+      fontSize: theme.tokens.font.FontSize.Xs,
+      lineHeight: '20px',
+      font: theme.font.semibold,
+      padding: `10px ${theme.spacingFunction(16)}`,
+    },
     maxWidth: '100%',
-    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+    padding: '0px',
     position: 'relative',
   },
   success: {
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
+    background: theme.tokens.component.NotificationBanner.Success.Background,
   },
   warning: {
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-  },
-  warningIcon: {
-    '& path:first-of-type': {
-      stroke: theme.tokens.color.Neutrals[80],
-    },
-    color: theme.tokens.color.Neutrals[80],
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
+    background: theme.tokens.component.NotificationBanner.Warning.Background,
   },
 }));
