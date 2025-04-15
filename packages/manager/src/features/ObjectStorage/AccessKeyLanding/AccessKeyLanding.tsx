@@ -61,16 +61,12 @@ export const AccessKeyLanding = (props: Props) => {
     page_size: pagination.pageSize,
   });
 
-  const {
-    data: accountSettings,
-    refetch: requestAccountSettings,
-  } = useAccountSettings();
+  const { data: accountSettings, refetch: requestAccountSettings } =
+    useAccountSettings();
 
   // Key to display in Confirmation Modal upon creation
-  const [
-    keyToDisplay,
-    setKeyToDisplay,
-  ] = React.useState<ObjectStorageKey | null>(null);
+  const [keyToDisplay, setKeyToDisplay] =
+    React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
   const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(

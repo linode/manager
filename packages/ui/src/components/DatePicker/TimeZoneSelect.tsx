@@ -4,7 +4,7 @@ import React from 'react';
 
 import { timezones } from '../../utilities/timezones';
 
-type Timezone = typeof timezones[number];
+type Timezone = (typeof timezones)[number];
 
 interface TimeZoneSelectProps {
   disabled?: boolean;

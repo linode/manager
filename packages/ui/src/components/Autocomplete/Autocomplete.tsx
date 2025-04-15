@@ -23,7 +23,7 @@ export interface EnhancedAutocompleteProps<
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 > extends Omit<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
@@ -75,9 +75,9 @@ export const Autocomplete = <
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 >(
-  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
+  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
 ) => {
   const {
     clearOnBlur,
@@ -209,7 +209,7 @@ export const Autocomplete = <
           if (details?.option === selectAllOption) {
             if (isSelectAllActive) {
               if (typeof value === typeof []) {
-                onChange(e, ([] as T[]) as typeof value, reason, details);
+                onChange(e, [] as T[] as typeof value, reason, details);
               }
             } else {
               if (typeof value === typeof options) {

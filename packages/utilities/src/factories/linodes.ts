@@ -144,8 +144,8 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   },
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUtilization>(
-  {
+export const linodeTransferFactory =
+  Factory.Sync.makeFactory<RegionalNetworkUtilization>({
     billable: 0,
     quota: 1950, // GB
     region_transfers: [
@@ -163,8 +163,7 @@ export const linodeTransferFactory = Factory.Sync.makeFactory<RegionalNetworkUti
       },
     ],
     used: 13956637, // Bytes
-  }
-);
+  });
 
 export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   accelerated_devices: 0,
@@ -272,15 +271,14 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 56,
 });
 
-export const linodePlacementGroupPayloadFactory = Factory.Sync.makeFactory<LinodePlacementGroupPayload>(
-  {
+export const linodePlacementGroupPayloadFactory =
+  Factory.Sync.makeFactory<LinodePlacementGroupPayload>({
     id: Factory.each((i) => i),
     label: Factory.each((i) => `pg-${i}`),
     migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
-  }
-);
+  });
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   alerts: linodeAlertsFactory.build(),
@@ -311,16 +309,15 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   watchdog_enabled: true,
 });
 
-export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeRequest>(
-  {
+export const createLinodeRequestFactory =
+  Factory.Sync.makeFactory<CreateLinodeRequest>({
     booted: true,
     image: 'linode/debian12',
     label: Factory.each((i) => `linode-${i}`),
     region: 'us-southeast',
     root_pass: 'linode-root-password',
     type: 'g6-standard-1',
-  }
-);
+  });
 
 export const backupFactory = Factory.Sync.makeFactory<LinodeBackup>({
   available: true,

@@ -40,22 +40,18 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
     setSelectedProcess,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedProcess>({
-    data: processesData,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'name',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<ExtendedProcess>({
+      data: processesData,
+      initialRoute: {
+        defaultOrder: {
+          order: 'asc',
+          orderBy: 'name',
+        },
+        from: '/longview/clients/$id/processes',
       },
-      from: '/longview/clients/$id/processes',
-    },
-    preferenceKey: 'lv-detail-processes',
-  });
+      preferenceKey: 'lv-detail-processes',
+    });
 
   return (
     <Table

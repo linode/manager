@@ -27,8 +27,8 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   updated: '2019-12-13T00:00:00',
 });
 
-export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<NodeBalancerConfig>(
-  {
+export const nodeBalancerConfigFactory =
+  Factory.Sync.makeFactory<NodeBalancerConfig>({
     algorithm: 'roundrobin',
     check: 'connection',
     check_attempts: 2,
@@ -50,11 +50,10 @@ export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<NodeBalancerCo
     ssl_fingerprint: '',
     ssl_key: '',
     stickiness: 'table',
-  }
-);
+  });
 
-export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<NodeBalancerConfigNode>(
-  {
+export const nodeBalancerConfigNodeFactory =
+  Factory.Sync.makeFactory<NodeBalancerConfigNode>({
     address: '192.168.0.1:80',
     config_id: Factory.each((id) => id),
     id: Factory.each((id) => id),
@@ -63,11 +62,10 @@ export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<NodeBalanc
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
-  }
-);
+  });
 
-export const nodeBalancerStatsFactory = Factory.Sync.makeFactory<NodeBalancerStats>(
-  {
+export const nodeBalancerStatsFactory =
+  Factory.Sync.makeFactory<NodeBalancerStats>({
     data: {
       connections: generateLinodeStatSeries(),
       traffic: {
@@ -76,5 +74,4 @@ export const nodeBalancerStatsFactory = Factory.Sync.makeFactory<NodeBalancerSta
       },
     },
     title: 'Some fake stats',
-  }
-);
+  });

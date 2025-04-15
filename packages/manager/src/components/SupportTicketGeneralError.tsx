@@ -19,7 +19,8 @@ interface SupportTicketGeneralErrorProps {
   supportLinkProps?: Partial<SupportLinkProps>;
 }
 
-const accountLimitRegex = /(limit|limit for the number of active services) on your account/i;
+const accountLimitRegex =
+  /(limit|limit for the number of active services) on your account/i;
 
 export const SupportTicketGeneralError = (
   props: SupportTicketGeneralErrorProps
