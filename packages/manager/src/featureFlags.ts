@@ -107,12 +107,13 @@ interface LimitsEvolution {
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpAlerting: AclpAlerting;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
-  apiMaintenance: APIMaintenance;
   apicliButtonCopy: string;
+  apiMaintenance: APIMaintenance;
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -136,8 +137,8 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   nodebalancerVpc: boolean;
-  objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objMultiCluster: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -148,8 +149,8 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  taxId: BaseFeatureFlag;
   taxes: Taxes;
+  taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: BetaFeatureFlag;
