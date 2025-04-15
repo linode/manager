@@ -77,17 +77,17 @@ import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacingFunction(24),
     padding: 0,
   },
   imageTableHeader: {
     border: `1px solid ${theme.tokens.alias.Border.Normal}`,
     borderBottom: 0,
-    padding: theme.spacing(),
-    paddingLeft: theme.spacing(1.5),
+    padding: theme.spacingFunction(8),
+    paddingLeft: theme.spacingFunction(12),
   },
   imageTableSubheader: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacingFunction(8),
   },
 }));
 
@@ -115,13 +115,12 @@ export const ImagesLanding = () => {
   const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
+  const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
   const queryClient = useQueryClient();
-  const [dialogState, setDialogState] = React.useState<ImageDialogState>(
-    defaultDialogState
-  );
+  const [dialogState, setDialogState] =
+    React.useState<ImageDialogState>(defaultDialogState);
   const dialogStatus =
     dialogState.status === 'pending_upload' ? 'cancel' : 'delete';
 
@@ -263,15 +262,13 @@ export const ImagesLanding = () => {
     }
   );
 
-  const {
-    data: selectedImage,
-    isFetching: isFetchingSelectedImage,
-  } = useDialogData({
-    enabled: !!selectedImageId,
-    paramKey: 'imageId',
-    queryHook: useImageQuery,
-    redirectToOnNotFound: '/images',
-  });
+  const { data: selectedImage, isFetching: isFetchingSelectedImage } =
+    useDialogData({
+      enabled: !!selectedImageId,
+      paramKey: 'imageId',
+      queryHook: useImageQuery,
+      redirectToOnNotFound: '/images',
+    });
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
@@ -430,6 +427,18 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
+      {isCreateImageRestricted && (
+        <Notice
+          important
+          sx={{ marginBottom: 2 }}
+          text={getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Images',
+          })}
+          variant="error"
+        />
+      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -442,40 +451,40 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
+        disabledCreateButton={isCreateImageRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
+        entity="Image"
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
-        disabledCreateButton={isImagesReadOnly}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
-        entity="Image"
         title="Images"
       />
       <TextField
+        containerProps={{ mb: 2 }}
+        errorText={searchParseError?.message}
+        hideLabel
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress noPadding size="xs" />}
               <IconButton
-                sx={{
-                  padding: 0,
-                }}
                 aria-label="Clear"
                 data-testid="clear-images-search"
                 onClick={resetSearch}
                 size="small"
+                sx={{
+                  padding: 0,
+                }}
               >
                 <CloseIcon />
               </IconButton>
             </InputAdornment>
           ),
         }}
+        label="Search"
         onChange={debounce(400, (e) => {
           onSearch(e);
         })}
-        containerProps={{ mb: 2 }}
-        errorText={searchParseError?.message}
-        hideLabel
-        label="Search"
         placeholder="Search Images"
         value={query ?? ''}
       />
@@ -659,8 +668,8 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
-        NotFoundComponent={NotFound}
         isFetching={isFetchingSelectedImage}
+        NotFoundComponent={NotFound}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}
@@ -687,14 +696,14 @@ export const ImagesLanding = () => {
             }}
           />
         }
+        isFetching={isFetchingSelectedImage}
+        onClose={handleCloseDialog}
+        open={action === 'delete'}
         title={
           dialogStatus === 'cancel'
             ? 'Cancel Upload'
             : `Delete Image ${selectedImage?.label}`
         }
-        isFetching={isFetchingSelectedImage}
-        onClose={handleCloseDialog}
-        open={action === 'delete'}
       >
         {dialogState.error && (
           <Notice text={dialogState.error} variant="error" />
