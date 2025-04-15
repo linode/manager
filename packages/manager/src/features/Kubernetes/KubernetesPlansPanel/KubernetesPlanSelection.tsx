@@ -54,13 +54,15 @@ export const KubernetesPlanSelection = (
     planHasLimitedAvailability,
     planIsDisabled512Gb,
     planIsTooSmallForAPL,
+    planIsMtcTikTokAndUnavailableInSelectedRegion,
   } = plan;
 
   const rowIsDisabled =
     wholePanelIsDisabled ||
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
-    planIsTooSmallForAPL;
+    planIsTooSmallForAPL ||
+    planIsMtcTikTokAndUnavailableInSelectedRegion;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
@@ -74,6 +76,7 @@ export const KubernetesPlanSelection = (
     // So far, planIsTooSmall only applies to DbaaS plans (resize)
     planIsTooSmall: false,
     planIsTooSmallForAPL,
+    planIsMtcTikTokAndUnavailableInSelectedRegion,
     wholePanelIsDisabled,
   });
 
@@ -87,7 +90,8 @@ export const KubernetesPlanSelection = (
     (planBelongsToDisabledClass ||
       planIsDisabled512Gb ||
       planIsTooSmallForAPL ||
-      planHasLimitedAvailability);
+      planHasLimitedAvailability ||
+      planIsMtcTikTokAndUnavailableInSelectedRegion);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [
@@ -172,10 +176,10 @@ export const KubernetesPlanSelection = (
                   rowIsDisabled ||
                   typeof price?.hourly !== 'number'
                 }
+                inputLabel={`edit-quantity-${plan.id}`}
                 setValue={(newCount: number) =>
                   updatePlanCount(plan.id, newCount)
                 }
-                inputLabel={`edit-quantity-${plan.id}`}
                 value={count}
               />
               {onAdd && (
@@ -183,12 +187,12 @@ export const KubernetesPlanSelection = (
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
                   }
+                  buttonType="primary"
                   disabled={
                     count < 1 ||
                     rowIsDisabled ||
                     typeof price?.hourly !== 'number'
                   }
-                  buttonType="primary"
                   onClick={() => onAdd(plan.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
@@ -202,6 +206,12 @@ export const KubernetesPlanSelection = (
       {/* Displays SelectionCard for small screens */}
       <Hidden mdUp>
         <SelectionCard
+          checked={plan.id === String(selectedId)}
+          disabled={rowIsDisabled}
+          heading={plan.heading}
+          key={plan.id}
+          onClick={() => onSelect(plan.id)}
+          renderVariant={renderVariant}
           subheadings={[
             ...subHeadings,
             planHasLimitedAvailability || planIsDisabled512Gb ? (
@@ -210,12 +220,6 @@ export const KubernetesPlanSelection = (
               ''
             ),
           ]}
-          checked={plan.id === String(selectedId)}
-          disabled={rowIsDisabled}
-          heading={plan.heading}
-          key={plan.id}
-          onClick={() => onSelect(plan.id)}
-          renderVariant={renderVariant}
           tooltip={rowIsDisabled ? disabledPlanReasonCopy : undefined}
         />
       </Hidden>
