@@ -152,12 +152,29 @@ export const mockAddFirewallDevice = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetTemplate = (
+export const mockGetFirewallTemplate = (
   template: FirewallTemplate
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('networking/firewalls/templates/*'),
+    apiMatcher(`networking/firewalls/templates/${template.slug}`),
     template
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Firewall templates and mocks response.
+ *
+ * @param templates - Array of templates with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallTemplates = (
+  templates: FirewallTemplate[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/templates*`),
+    paginateResponse(templates)
   );
 };
