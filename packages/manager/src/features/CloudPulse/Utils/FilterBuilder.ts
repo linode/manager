@@ -444,21 +444,22 @@ export const getMetricsCallCustomFilters = (
  * @returns The list of filters for the metric API call, based the additional custom select components
  */
 export const constructAdditionalRequestFilters = (
-  additionalFilters: CloudPulseMetricsAdditionalFilters[]
+  additionalFilters: CloudPulseMetricsAdditionalFilters[],
+  metricsUrl: string
 ): Filters[] => {
-  const filters: Filters[] = [];
-  for (const filter of additionalFilters) {
-    if (filter) {
-      // push to the filters
-      filters.push({
-        key: filter.filterKey,
-        operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
-        value: Array.isArray(filter.filterValue)
-          ? Array.of(filter.filterValue).join(',')
-          : String(filter.filterValue),
-      });
-    }
-  }
+  const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
+    const baseFilter = {
+      operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
+      value: Array.isArray(filter.filterValue)
+        ? Array.of(filter.filterValue).join(',')
+        : String(filter.filterValue),
+    };
+
+    return metricsUrl.includes('v1beta')
+      ? { ...baseFilter, key: filter.filterKey }
+      : { ...baseFilter, dimension_label: filter.filterKey };
+  });
+
   return filters;
 };
 

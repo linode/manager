@@ -228,13 +228,19 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = useCloudPulseMetricsQuery(
     serviceType,
     {
-      ...getCloudPulseMetricRequest({
-        duration,
-        entityIds,
-        resources,
-        widget,
-      }),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      ...getCloudPulseMetricRequest(
+        {
+          duration,
+          entityIds,
+          resources,
+          widget,
+        },
+        flags.aclpReadEndpoint ?? ''
+      ),
+      filters: constructAdditionalRequestFilters(
+        additionalFilters ?? [],
+        flags.aclpReadEndpoint ?? ''
+      ), // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
@@ -252,11 +258,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
-      flags,
       label: widget.label,
       metricsList,
       resources,
-      serviceType,
       status,
       unit,
     });
