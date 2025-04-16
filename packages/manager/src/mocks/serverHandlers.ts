@@ -11,6 +11,8 @@ import {
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  grantFactory,
+  grantsFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -27,14 +29,13 @@ import {
   securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
-  VLANFactory,
-  // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
+  // abuseTicketNotificationFactory,
   accountTransferFactory,
   alertDimensionsFactory,
   alertFactory,
@@ -102,6 +103,7 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  VLANFactory,
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
@@ -109,7 +111,6 @@ import {
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { getStorage } from 'src/utilities/storage';
 
@@ -2540,11 +2541,17 @@ export const handlers = [
       ...customAlerts,
       ...defaultAlertsWithServiceType,
       ...alertFactory.buildList(3),
+      ...alertFactory.buildList(36, {
+        status: 'disabled',
+        tags: ['tag-3'],
+        updated: '2021-10-16T04:00:00',
+      }),
       ...customAlertsWithServiceType,
       ...alertFactory.buildList(2, {
         created_by: 'user1',
         service_type: 'linode',
         status: 'in progress',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),
@@ -2552,6 +2559,7 @@ export const handlers = [
         created_by: 'user1',
         service_type: 'linode',
         status: 'failed',
+        tags: ['tag-1', 'tag-2'],
         type: 'user',
         updated_by: 'user1',
       }),

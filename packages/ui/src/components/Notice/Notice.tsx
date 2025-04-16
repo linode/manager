@@ -2,8 +2,9 @@ import React from 'react';
 
 import {
   CheckIcon,
-  AlertIcon as ErrorIcon,
+  ErrorIcon,
   InfoIcon,
+  LightBulbIcon,
   WarningIcon,
 } from '../../assets/icons';
 import { Box } from '../Box';
@@ -13,7 +14,7 @@ import { useStyles } from './Notice.styles';
 import type { BoxProps } from '../Box';
 import type { TypographyProps } from '../Typography';
 
-export type NoticeVariant = 'error' | 'info' | 'success' | 'warning';
+export type NoticeVariant = 'error' | 'info' | 'success' | 'tip' | 'warning';
 
 export interface NoticeProps extends BoxProps {
   /**
@@ -99,14 +100,15 @@ export const Notice = (props: NoticeProps) => {
     error: variant === 'error',
     info: variant === 'info',
     success: variant === 'success',
+    tip: variant === 'tip',
     warning: variant === 'warning',
   };
 
   const errorScrollClassName = bypassValidation
     ? ''
     : errorGroup
-    ? `error-for-scroll-${errorGroup}`
-    : `error-for-scroll`;
+      ? `error-for-scroll-${errorGroup}`
+      : `error-for-scroll`;
 
   const dataAttributes = !variantMap.error
     ? {
@@ -123,7 +125,7 @@ export const Notice = (props: NoticeProps) => {
         classes.root,
         {
           [classes.error]: variantMap.error,
-          [classes.info]: variantMap.info,
+          [classes.info]: variantMap.info || variantMap.tip,
           [classes.success]: variantMap.success,
           [classes.warning]: variantMap.warning,
           // The order we apply styles matters, therefore we:
@@ -132,7 +134,7 @@ export const Notice = (props: NoticeProps) => {
           [errorScrollClassName]: variantMap.error,
         },
         'notice',
-        className
+        className,
       )}
       data-testid={
         dataTestId ??
@@ -158,16 +160,14 @@ export const Notice = (props: NoticeProps) => {
       {important && variantMap.success && (
         <CheckIcon className={classes.icon} />
       )}
+      {important && variantMap.tip && (
+        <LightBulbIcon className={classes.icon} />
+      )}
       {important && variantMap.warning && (
-        <WarningIcon className={cx(classes.icon, classes.warningIcon)} />
+        <WarningIcon className={classes.icon} />
       )}
       {text || typeof children === 'string' ? (
-        <Typography
-          className={cx(classes.noticeText, 'noticeText')}
-          {...typeProps}
-        >
-          {text ?? children}
-        </Typography>
+        <Typography {...typeProps}>{text ?? children}</Typography>
       ) : (
         children
       )}
