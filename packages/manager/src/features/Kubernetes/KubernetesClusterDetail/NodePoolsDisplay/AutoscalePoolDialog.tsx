@@ -7,7 +7,6 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -18,11 +17,21 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
-import type { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../../constants';
+
+import type {
+  AutoscaleSettings,
+  KubeNodePoolResponse,
+  KubernetesTier,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 interface Props {
   clusterId: number;
+  clusterTier: KubernetesTier;
   handleOpenResizeDrawer: (poolId: number) => void;
   nodePool: KubeNodePoolResponse | undefined;
   onClose: () => void;
@@ -67,7 +76,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const AutoscalePoolDialog = (props: Props) => {
-  const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
+  const {
+    clusterId,
+    clusterTier,
+    handleOpenResizeDrawer,
+    nodePool,
+    onClose,
+    open,
+  } = props;
   const autoscaler = nodePool?.autoscaler;
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -106,7 +122,32 @@ export const AutoscalePoolDialog = (props: Props) => {
       min: autoscaler?.min ?? 1,
     },
     onSubmit,
-    validationSchema: AutoscaleNodePoolSchema,
+    validate: (values) => {
+      const errors: { max?: string; min?: string } = {};
+      const maxLimit =
+        clusterTier === 'enterprise'
+          ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+          : MAX_NODES_PER_POOL_STANDARD_TIER;
+      if (values.enabled) {
+        if (!values.min) {
+          errors.min = 'Minimum is a required field.';
+        }
+        if (
+          values.min > values.max ||
+          values.min < 1 ||
+          values.min > maxLimit
+        ) {
+          errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+        }
+        if (!values.max) {
+          errors.max = 'Maximum is a required field.';
+        }
+        if (values.max > maxLimit || values.max < 1) {
+          errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
+        }
+      }
+      return errors;
+    },
   });
 
   const warning =
@@ -147,13 +188,13 @@ export const AutoscalePoolDialog = (props: Props) => {
           {warning}
           <div>
             <Button
+              buttonType="secondary"
+              className={classes.resize}
+              compactX
               onClick={() => {
                 handleClose();
                 handleOpenResizeDrawer(nodePool?.id ?? -1);
               }}
-              buttonType="secondary"
-              className={classes.resize}
-              compactX
             >
               Resize
             </Button>
