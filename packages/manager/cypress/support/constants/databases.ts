@@ -5,7 +5,7 @@ import type {
   DatabaseEngine,
   DatabaseType,
 } from '@linode/api-v4';
-import { randomLabel } from 'support/util/random';
+import { randomIp, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 
@@ -17,6 +17,7 @@ export interface DatabaseClusterConfiguration {
   linodeType: string;
   region: Region;
   version: string;
+  ip: string;
 }
 
 /**
@@ -334,6 +335,17 @@ export const databaseConfigurations: DatabaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 2,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-2',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+    ip: '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e',
   },
   {
     clusterSize: 3,
@@ -343,6 +355,7 @@ export const databaseConfigurations: DatabaseClusterConfiguration[] = [
     linodeType: 'g6-dedicated-2',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
+    ip: '',
   },
   {
     clusterSize: 3,
@@ -352,6 +365,7 @@ export const databaseConfigurations: DatabaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '13',
+    ip: randomIp(),
   },
 ];
 
@@ -364,6 +378,7 @@ export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
     linodeType: 'g6-standard-6',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '8',
+    ip: randomIp(),
   },
   {
     clusterSize: 3,
@@ -373,5 +388,6 @@ export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
     linodeType: 'g6-dedicated-16',
     region: chooseRegion({ capabilities: ['Managed Databases'] }),
     version: '5',
+    ip: randomIp(),
   },
 ];
