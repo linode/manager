@@ -4,6 +4,7 @@
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
 import type {
   Firewall,
@@ -11,7 +12,6 @@ import type {
   FirewallSettings,
   FirewallTemplate,
 } from '@linode/api-v4';
-import { makeResponse } from 'support/util/response';
 
 /**
  * Intercepts GET request to fetch Firewalls.
