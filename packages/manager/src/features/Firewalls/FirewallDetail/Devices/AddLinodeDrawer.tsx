@@ -225,18 +225,32 @@ export const AddLinodeDrawer = (props: Props) => {
   };
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const readOnlyLinodeIds = isRestrictedUser
-    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
-    : [];
-
-  const firewallEntities = data?.map((firewall) => firewall.entities).flat();
-  const assignedLinodes = firewallEntities?.filter(
-    (service) => service.type === 'linode'
+  const readOnlyLinodeIds = React.useMemo(
+    () =>
+      isRestrictedUser
+        ? getEntityIdsByPermission(grants, 'linode', 'read_only')
+        : [],
+    [grants, isRestrictedUser]
   );
-  const assignedInterfaceIds = new Set<number>(
-    firewallEntities
-      ?.filter((service) => service.type === 'interface')
-      ?.map((service) => service.id) ?? []
+
+  const firewallEntities = React.useMemo(
+    () => data?.map((firewall) => firewall.entities).flat(),
+    [data]
+  );
+
+  const assignedLinodes = React.useMemo(
+    () => firewallEntities?.filter((service) => service.type === 'linode'),
+    [firewallEntities]
+  );
+
+  const assignedInterfaceIds = React.useMemo(
+    () =>
+      new Set<number>(
+        firewallEntities
+          ?.filter((service) => service.type === 'interface')
+          ?.map((service) => service.id) ?? []
+      ),
+    [firewallEntities]
   );
 
   const onSelectionChange = async (linodes: Linode[]) => {
@@ -344,13 +358,7 @@ export const AddLinodeDrawer = (props: Props) => {
     };
 
     filterLinodes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    allLinodes?.length,
-    assignedLinodes?.length,
-    readOnlyLinodeIds?.length,
-    assignedInterfaceIds.size,
-  ]);
+  }, [allLinodes, assignedInterfaceIds, assignedLinodes, readOnlyLinodeIds]);
 
   React.useEffect(() => {
     if (error) {
@@ -417,11 +425,10 @@ export const AddLinodeDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled:
-              linodesToAdd.length === 0 &&
-              (interfacesToAddMap.size === 0 ||
-                Array.from(interfacesToAddMap.values()).some(
-                  (iface) => iface === null
-                )),
+              (linodesToAdd.length === 0 && interfacesToAddMap.size === 0) ||
+              Array.from(interfacesToAddMap.values()).some(
+                (iface) => iface === null
+              ),
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,
