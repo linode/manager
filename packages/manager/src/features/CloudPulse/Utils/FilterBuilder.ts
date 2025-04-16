@@ -32,7 +32,6 @@ import type {
   Filters,
   TimeDuration,
 } from '@linode/api-v4';
-import { FlagSet } from 'src/featureFlags';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -446,7 +445,7 @@ export const getMetricsCallCustomFilters = (
  */
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[],
-  flags: FlagSet
+  metricsUrl: string
 ): Filters[] => {
   const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
     const baseFilter = {
@@ -456,7 +455,7 @@ export const constructAdditionalRequestFilters = (
         : String(filter.filterValue),
     };
 
-    return flags.aclpReadEndpoint?.includes('v1beta')
+    return metricsUrl.includes('v1beta')
       ? { ...baseFilter, key: filter.filterKey }
       : { ...baseFilter, dimension_label: filter.filterKey };
   });

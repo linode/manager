@@ -19,6 +19,7 @@ import {
 
 import type {
   CloudPulseMetricsRequest,
+  CloudPulseMetricsRequestV2,
   Filter,
   JWETokenPayLoad,
   Params,
@@ -70,7 +71,7 @@ export const queryFactory = createQueryKeys(key, {
     token: string,
     readApiEndpoint: string,
     serviceType: string,
-    requestData: CloudPulseMetricsRequest,
+    requestData: CloudPulseMetricsRequest | CloudPulseMetricsRequestV2,
     timeStamp: number | undefined,
     label: string
   ) => ({
