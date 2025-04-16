@@ -19,7 +19,7 @@ vi.mock(import('src/queries/iam/iam'), async (importOriginal) => {
 });
 
 describe('useIsIAMEnabled', () => {
-  it('should correctly for IAM beta, enabled, API access', async () => {
+  it('should be enabled for a BETA user', async () => {
     const rolePermissions = accountPermissionsFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
@@ -43,7 +43,7 @@ describe('useIsIAMEnabled', () => {
     });
   });
 
-  it('should correctly for IAM port-beta, enabled, API access', async () => {
+  it('should enabled for a GA user', async () => {
     const rolePermissions = accountPermissionsFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
@@ -67,7 +67,7 @@ describe('useIsIAMEnabled', () => {
     });
   });
 
-  it('should correctly for IAM non-beta, disabled, API access', async () => {
+  it('should be diabled for all users via a feature flag', async () => {
     const rolePermissions = accountPermissionsFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
@@ -91,7 +91,7 @@ describe('useIsIAMEnabled', () => {
     });
   });
 
-  it('should correctly for IAM beta, enabled, no API access', async () => {
+  it('should be diabled for a user via API', async () => {
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
         return HttpResponse.json({}, { status: 403 });
