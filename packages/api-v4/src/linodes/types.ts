@@ -714,10 +714,10 @@ export interface ResizeLinodePayload {
   migration_type?: MigrationTypes;
 }
 
-export interface DeleteLinodeConfigInterfacePayload {
-  linodeId: number;
-  configId: number;
+export interface DeleteInterfaceIds {
+  configId: null | number;
   interfaceId: number;
+  linodeId: number;
 }
 
 export interface LinodeLishData {

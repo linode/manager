@@ -59,7 +59,7 @@ const testnameDisallowedBasedOnPurpose = (allowedPurpose: string) =>
   `Disallowed for non-${allowedPurpose} interfaces`;
 const testmessageDisallowedBasedOnPurpose = (
   allowedPurpose: string,
-  field: string
+  field: string,
 ) =>
   `${field} is not allowed for interfaces that do not have a purpose set to ${allowedPurpose}.`;
 
@@ -96,7 +96,7 @@ const ipv4ConfigInterface = object().when('purpose', {
       .shape({
         vpc: IPv4,
         nat_1_1: lazy((value) =>
-          value === 'any' ? string().notRequired().nullable() : IPv4
+          value === 'any' ? string().notRequired().nullable() : IPv4,
         ),
       })
       .when('ipv6', {
@@ -222,7 +222,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
     purpose: string()
       .oneOf(
         ['public', 'vlan', 'vpc'] as const,
-        'Purpose must be public, vlan, or vpc.'
+        'Purpose must be public, vlan, or vpc.',
       )
       .defined()
       .required(),
@@ -235,7 +235,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
           .max(64, 'VLAN label must be between 1 and 64 characters.')
           .matches(
             /[a-zA-Z0-9-]+/,
-            'Must include only ASCII letters, numbers, and dashes'
+            'Must include only ASCII letters, numbers, and dashes',
           ),
       otherwise: (schema) =>
         schema.when('label', {
@@ -266,7 +266,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
               name: testnameDisallowedBasedOnPurpose('VLAN'),
               message: testmessageDisallowedBasedOnPurpose(
                 'vlan',
-                'ipam_address'
+                'ipam_address',
               ),
               test: (value) => typeof value === 'undefined' || value === '',
             }),
@@ -280,7 +280,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
           const isVLANandIsSetToPrimary =
             value && context.parent.purpose === 'vlan';
           return !isVLANandIsSetToPrimary;
-        }
+        },
       )
       .optional(),
     subnet_id: number().when('purpose', {
@@ -326,8 +326,8 @@ export const ConfigProfileInterfaceSchema = object().shape(
               string().test(
                 'valid-ip-range',
                 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
-                validateIP
-              )
+                validateIP,
+              ),
             )
             .notRequired()
             .nullable(),
@@ -345,7 +345,7 @@ export const ConfigProfileInterfaceSchema = object().shape(
   [
     ['ipv6', 'ipv4'],
     ['ipv4', 'ipv6'],
-  ]
+  ],
 );
 
 export const ConfigProfileInterfacesSchema = array()
@@ -361,7 +361,7 @@ export const ConfigProfileInterfacesSchema = array()
       return (
         list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
       );
-    }
+    },
   );
 
 export const UpdateConfigInterfaceOrderSchema = object({
@@ -375,7 +375,7 @@ export const UpdateConfigInterfaceSchema = object({
     .shape({
       vpc: IPv4,
       nat_1_1: lazy((value) =>
-        value === 'any' ? string().notRequired().nullable() : IPv4
+        value === 'any' ? string().notRequired().nullable() : IPv4,
       ),
     }),
   ipv6: object().notRequired().nullable().shape({
@@ -434,7 +434,7 @@ const schedule = object({
       'Friday',
       'Saturday',
     ],
-    'Invalid day value.'
+    'Invalid day value.',
   ),
   window: mixed().oneOf(
     [
@@ -452,7 +452,7 @@ const schedule = object({
       'W22',
       'W24',
     ],
-    'Invalid schedule value.'
+    'Invalid schedule value.',
   ),
 });
 
@@ -576,7 +576,7 @@ export const CreateLinodeDiskSchema = object({
     is: (value: any) => Boolean(value),
     then: (schema) =>
       schema.required(
-        'You must provide a root password when deploying from an image.'
+        'You must provide a root password when deploying from an image.',
       ),
     // .concat(rootPasswordValidation),
     otherwise: (schema) => schema.notRequired(),
@@ -595,13 +595,12 @@ export const UpdateLinodeDiskSchema = object({
     .oneOf(['raw', 'swap', 'ext3', 'ext4', 'initrd']),
 });
 
-export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
-  {
+export const CreateLinodeDiskFromImageSchema =
+  CreateLinodeDiskSchema.clone().shape({
     image: string()
       .required('An image is required.')
       .typeError('An image is required.'),
-  }
-);
+  });
 
 const LABEL_LENGTH_MESSAGE = 'Label must be between 1 and 64 characters.';
 const LABEL_CHARACTER_TYPES =
@@ -621,7 +620,7 @@ export const UpdateLinodeInterfaceSettingsSchema = object({
 });
 
 const BaseInterfaceIPv4AddressSchema = object({
-  address: string().required(),
+  address: string().required('IPv4 address is required.'),
   primary: boolean(),
 });
 
@@ -634,7 +633,7 @@ const VPCInterfaceIPv6RangeSchema = object({
 });
 
 const PublicInterfaceRangeSchema = object({
-  range: string().required().nullable(),
+  range: string().required('IPv6 range is required.').nullable(),
 });
 
 const CreateVPCInterfaceIpv4AddressSchema = object({
@@ -787,7 +786,7 @@ export const CreateLinodeSchema = object({
     is: (value: any) => Boolean(value),
     then: (schema) =>
       schema.required(
-        'You must provide a root password when deploying from an image.'
+        'You must provide a root password when deploying from an image.',
       ),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -799,7 +798,7 @@ export const CreateLinodeSchema = object({
       }
 
       return ConfigProfileInterfacesSchema;
-    }
+    },
   ),
   interface_generation: string()
     .oneOf(['legacy_config', 'linode'])
