@@ -18,7 +18,7 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
  * We extend the new `CreateLinodeInterfacePayload` to add extra state we need to track
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
-  purpose: InterfacePurpose;
+  purpose?: InterfacePurpose;
   vpc: null | VPC;
 }
 
@@ -34,6 +34,7 @@ export const getLinodeInterfacePayload = (
   const cleanedInterface = {
     ...networkInterface,
   };
+  cleanedInterface.purpose = undefined;
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== networkInterface.purpose) {

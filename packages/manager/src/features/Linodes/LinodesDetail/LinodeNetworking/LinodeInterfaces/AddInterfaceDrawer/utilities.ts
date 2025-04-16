@@ -11,9 +11,7 @@ import type { InferType } from 'yup';
 export const CreateLinodeInterfaceFormSchema =
   CreateLinodeInterfaceSchema.concat(
     object({
-      purpose: string()
-        .oneOf(['vpc', 'vlan', 'public'])
-        .required('You must selected an Interface type.'),
+      purpose: string().oneOf(['vpc', 'vlan', 'public'] as InterfacePurpose[]),
       vpc: CreateVPCInterfaceSchema.concat(object({ vpc_id: number() }))
         .optional()
         .nullable()
