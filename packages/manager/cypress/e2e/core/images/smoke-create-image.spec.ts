@@ -1,4 +1,8 @@
-import { linodeFactory, profileFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  linodeFactory,
+  profileFactory,
+} from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetEvents } from 'support/intercepts/events';
 import { mockCreateImage } from 'support/intercepts/images';
@@ -10,7 +14,7 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 
-import { accountUserFactory, eventFactory, grantsFactory } from 'src/factories';
+import { accountUserFactory, eventFactory } from 'src/factories';
 import { linodeDiskFactory } from 'src/factories/disk';
 import { imageFactory } from 'src/factories/images';
 

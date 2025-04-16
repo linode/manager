@@ -1,4 +1,5 @@
 import {
+  grantsFactory,
   profileFactory,
   regionFactory,
   sshKeyFactory,
@@ -7,9 +8,8 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Security } from './Security';

@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   databaseConfigurations,
   mockDatabaseEngineTypes,
@@ -8,8 +8,8 @@ import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import {
   mockCreateDatabase,
   mockGetDatabaseEngines,
-  mockGetDatabaseTypes,
   mockGetDatabases,
+  mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
 import {
@@ -25,7 +25,6 @@ import {
   accountUserFactory,
   databaseFactory,
   eventFactory,
-  grantsFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';

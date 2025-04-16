@@ -1,9 +1,8 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantsFactory } from 'src/factories/grants';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,

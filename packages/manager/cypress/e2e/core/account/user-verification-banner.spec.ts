@@ -1,6 +1,9 @@
-import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  profileFactory,
+  securityQuestionsFactory,
+} from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
 import { verificationBannerNotice } from 'support/constants/user';
 import {
   mockGetUser,

@@ -1,6 +1,6 @@
-import { Factory } from '@linode/utilities';
+import { Factory } from './factoryProxy';
 
-import type { Grant, Grants } from '@linode/api-v4/lib/account';
+import type { Grant, Grants } from '@linode/api-v4';
 
 export const grantFactory = Factory.Sync.makeFactory<Grant>({
   id: Factory.each((i) => i),

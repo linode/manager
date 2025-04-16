@@ -1,11 +1,10 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';

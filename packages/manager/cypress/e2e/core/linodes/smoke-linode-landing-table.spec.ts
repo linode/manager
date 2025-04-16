@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
+  grantsFactory,
   linodeFactory,
   profileFactory,
   userPreferencesFactory,
 } from '@linode/utilities';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { authenticate } from 'support/api/authentication';
 import { mockGetUser } from 'support/intercepts/account';
