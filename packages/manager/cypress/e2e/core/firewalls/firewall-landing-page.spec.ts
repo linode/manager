@@ -1,9 +1,4 @@
 import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
-import {
-  accountFactory,
-  firewallFactory,
-  firewallRuleFactory,
-} from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -15,6 +10,12 @@ import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import {
+  accountFactory,
+  firewallFactory,
+  firewallRuleFactory,
+} from 'src/factories';
 
 describe('confirms Firewalls landing page empty state is shown when no Firewalls exist', () => {
   /*

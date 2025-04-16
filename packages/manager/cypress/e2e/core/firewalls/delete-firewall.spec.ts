@@ -1,19 +1,16 @@
 import { createFirewall } from '@linode/api-v4';
-import { DEFAULT_FIREWALL_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
-
 import { authenticate } from 'support/api/authentication';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-
-import { firewallFactory } from 'src/factories/firewalls';
-
-import { accountFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetFirewalls,
   mockGetFirewallSettings,
 } from 'support/intercepts/firewalls';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+
+import { accountFactory, firewallFactory } from 'src/factories';
+import { DEFAULT_FIREWALL_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
 
 import type { Firewall } from '@linode/api-v4';
 
