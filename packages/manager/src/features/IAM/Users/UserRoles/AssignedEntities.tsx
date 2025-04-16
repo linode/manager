@@ -5,13 +5,13 @@ import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../Shared/utilities';
 
-import type { AccountAccessType, RoleType } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
-type Props = {
+interface Props {
   entities: string[];
-  onButtonClick: (roleName: AccountAccessType | RoleType) => void;
-  roleName: AccountAccessType | RoleType;
-};
+  onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
+  roleName: AccountAccessRole | EntityAccessRole;
+}
 
 export const AssignedEntities = ({
   entities,
@@ -22,12 +22,8 @@ export const AssignedEntities = ({
 
   const handleDelete = () => {};
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(entities);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(entities);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
@@ -54,7 +50,10 @@ export const AssignedEntities = ({
     >
       <Chip
         sx={{
-          backgroundColor: theme.tokens.color.Ultramarine[20],
+          backgroundColor:
+            theme.name === 'light'
+              ? theme.tokens.color.Ultramarine[20]
+              : theme.tokens.color.Neutrals.Black,
           color: theme.tokens.alias.Content.Text.Primary.Default,
         }}
         data-testid="entities"
@@ -83,7 +82,10 @@ export const AssignedEntities = ({
         <Box
           sx={{
             aligIitems: 'center',
-            backgroundColor: theme.tokens.color.Ultramarine[20],
+            backgroundColor:
+              theme.name === 'light'
+                ? theme.tokens.color.Ultramarine[20]
+                : theme.tokens.color.Neutrals.Black,
             borderRadius: 1,
             display: 'flex',
             height: '20px',

@@ -208,7 +208,9 @@ export const SearchBar = () => {
                     ...params.inputProps,
                     sx: {
                       '&::placeholder': {
-                        color: theme.tokens.component.GlobalHeader.Search.Text.Placeholder,
+                        color:
+                          theme.tokens.component.GlobalHeader.Search.Text
+                            .Placeholder,
                       },
                     },
                   },
@@ -220,9 +222,13 @@ export const SearchBar = () => {
                           sx={{
                             '> svg': {
                               '&:hover': {
-                                color: theme.tokens.component.GlobalHeader.Search.Icon.Hover,
+                                color:
+                                  theme.tokens.component.GlobalHeader.Search
+                                    .Icon.Hover,
                               },
-                              color: theme.tokens.component.GlobalHeader.Search.Icon.Default,
+                              color:
+                                theme.tokens.component.GlobalHeader.Search.Icon
+                                  .Default,
                             },
                             padding: 0,
                             [theme.breakpoints.up('sm')]: {
@@ -245,18 +251,32 @@ export const SearchBar = () => {
                     ),
                     sx: {
                       '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
-                        backgroundColor: theme.tokens.component.GlobalHeader.Search.Background,
-                        borderColor: theme.tokens.component.GlobalHeader.Search.Border.Active,
-                        color: theme.tokens.component.GlobalHeader.Search.Text.Filled,
+                        backgroundColor:
+                          theme.tokens.component.GlobalHeader.Search.Background,
+                        borderColor:
+                          theme.tokens.component.GlobalHeader.Search.Border
+                            .Active,
+                        color:
+                          theme.tokens.component.GlobalHeader.Search.Text
+                            .Filled,
                       },
                       '&:hover': {
-                        backgroundColor: theme.tokens.component.GlobalHeader.Search.Background,
-                        borderColor: theme.tokens.component.GlobalHeader.Search.Border.Hover,
-                        color: theme.tokens.component.GlobalHeader.Search.Text.Filled,
+                        backgroundColor:
+                          theme.tokens.component.GlobalHeader.Search.Background,
+                        borderColor:
+                          theme.tokens.component.GlobalHeader.Search.Border
+                            .Hover,
+                        color:
+                          theme.tokens.component.GlobalHeader.Search.Text
+                            .Filled,
                       },
-                      backgroundColor: theme.tokens.component.GlobalHeader.Search.Background,
-                      borderColor: theme.tokens.component.GlobalHeader.Search.Border.Default,
-                      color: theme.tokens.component.GlobalHeader.Search.Text.Filled,
+                      backgroundColor:
+                        theme.tokens.component.GlobalHeader.Search.Background,
+                      borderColor:
+                        theme.tokens.component.GlobalHeader.Search.Border
+                          .Default,
+                      color:
+                        theme.tokens.component.GlobalHeader.Search.Text.Filled,
                       maxWidth: '100%',
                     },
                   },
@@ -334,6 +354,7 @@ export const SearchBar = () => {
           data-qa-main-search
           disableClearable
           inputValue={searchText}
+          keepSearchEnabledOnMobile
           label={label}
           loading={isLoading}
           multiple={false}

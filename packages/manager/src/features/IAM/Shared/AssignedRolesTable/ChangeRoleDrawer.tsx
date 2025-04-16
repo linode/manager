@@ -21,49 +21,51 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
 
-import type { EntitiesOption, ExtendedRoleMap, RolesType } from '../utilities';
+import type {
+  DrawerModes,
+  EntitiesOption,
+  ExtendedRoleMap,
+  RolesType,
+} from '../utilities';
 
 interface Props {
+  mode: DrawerModes;
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleMap | undefined;
 }
 
-export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
+export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
   const { username } = useParams<{ username: string }>();
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
-    if (!role || !role.resource_names || !role.resource_ids) {
+    if (!role || !role.entity_names || !role.entity_ids) {
       return [];
     }
 
-    return role.resource_names.map((name, index) => ({
+    return role.entity_names.map((name, index) => ({
       label: name,
-      value: role.resource_ids![index],
+      value: role.entity_ids![index],
     }));
   }, [role]);
 
-  // filtered roles by resource_type and access
+  // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
     if (!accountPermissions) {
       return [];
     }
 
     return getAllRoles(accountPermissions).filter(
-      (el) =>
-        el.resource_type === role?.resource_type && el.access === role?.access
+      (el) => el.entity_type === role?.entity_type && el.access === role?.access
     );
   }, [accountPermissions, role]);
 
@@ -74,26 +76,11 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: RolesType }>({
+  } = useForm<{ roleName: RolesType | null }>({
     defaultValues: {
-      roleName: {
-        access: role?.access,
-        label: role?.name,
-        resource_type: role?.resource_type,
-        value: role?.name,
-      },
+      roleName: null,
     },
     mode: 'onBlur',
-    values: role
-      ? {
-          roleName: {
-            access: role.access,
-            label: role.name,
-            resource_type: role.resource_type,
-            value: role.name,
-          },
-        }
-      : undefined,
   });
 
   // Watch the selected role
@@ -136,7 +123,7 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
   };
 
   const handleClose = () => {
-    reset();
+    reset({ roleName: null });
     onClose();
   };
 
@@ -157,32 +144,35 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: 2.5 }}>
-          Change from role{' '}
-          <span style={{ font: theme.font.bold }}>{role?.name}</span> to:
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+          Change from role <strong>{role?.name}</strong> to:
         </Typography>
 
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <Autocomplete
+              errorText={fieldState.error?.message}
               label="Assign New Roles"
               loading={accountPermissionsLoading}
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
-              value={field.value}
+              value={field.value || null}
             />
           )}
           control={control}
           name="roleName"
+          rules={{ required: 'Role is required.' }}
         />
 
         {selectedRole && (
           <AssignedPermissionsPanel
-            assignedEntities={formattedAssignedEntities ?? []}
             key={selectedRole.name}
+            mode={mode}
             role={selectedRole}
+            sx={{ marginBottom: theme.tokens.spacing.S16 }}
+            value={formattedAssignedEntities ?? []}
           />
         )}
 
@@ -198,7 +188,6 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
             label: 'Cancel',
             onClick: handleClose,
           }}
-          sx={{ marginTop: 2 }}
         />
       </form>
     </Drawer>

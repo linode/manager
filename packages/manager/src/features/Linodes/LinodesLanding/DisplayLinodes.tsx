@@ -1,5 +1,5 @@
-import { Box, CircleProgress, Paper, Tooltip } from '@linode/ui';
-import { IconButton } from '@linode/ui';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -10,9 +10,9 @@ import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 
 import { StyledControlHeader } from './DisplayLinodes.styles';
@@ -55,6 +55,7 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -73,6 +74,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     linodesAreGrouped,
     order,
     orderBy,
+    regionFilter,
     toggleGroupLinodes,
     toggleLinodeView,
     updatePageUrl,
@@ -82,6 +84,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const displayViewDescriptionId = React.useId();
   const groupByDescriptionId = React.useId();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+  const flags = useFlags();
 
   const numberOfLinodesWithMaintenance = React.useMemo(() => {
     return data.reduce((acc, thisLinode) => {
@@ -104,7 +107,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   return (
     <Paginate
@@ -148,7 +154,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     sx={{ borderBottom: 0, padding: 1 }}
                     variant="outlined"
                   >
-                    <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+                    <RegionTypeFilter
+                      regionFilter={regionFilter}
+                      handleRegionFilter={handleRegionFilter}
+                    />
                   </Paper>
                 )}
                 <TableWrapper
@@ -178,6 +187,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     >
                       <RegionTypeFilter
                         handleRegionFilter={handleRegionFilter}
+                        regionFilter={regionFilter}
                       />
                     </Paper>
                   )}

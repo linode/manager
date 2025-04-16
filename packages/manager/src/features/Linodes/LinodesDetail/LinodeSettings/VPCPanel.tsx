@@ -10,17 +10,20 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
+import {
+  doesRegionSupportFeature,
+  scrollErrorIntoView,
+} from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -82,7 +85,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
     'VPCs'
   );
 
-  const { data: vpcsData, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcsData,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region },
   });
@@ -135,9 +142,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
           }}
           value={
             selectedVPCId && selectedVPCId !== -1
-              ? vpcDropdownOptions.find(
+              ? (vpcDropdownOptions.find(
                   (option) => option.value === selectedVPCId
-                ) ?? null
+                ) ?? null)
               : defaultVPCValue
           }
           autoHighlight
@@ -233,23 +240,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         onChange={toggleAssignPublicIPv4Address}
                       />
                     }
-                    label={
-                      <Box
-                        alignItems="center"
-                        display="flex"
-                        flexDirection="row"
-                      >
-                        <Typography>
-                          Assign a public IPv4 address for this Linode
-                        </Typography>
-                        <TooltipIcon
-                          text={
-                            'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                          }
-                          status="help"
-                        />
-                      </Box>
-                    }
+                    label={<VPCPublicIPLabel />}
                   />
                 </Box>
                 {assignPublicIPv4Address && publicIPv4Error && (

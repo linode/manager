@@ -1,4 +1,5 @@
 import { useAllFirewallsQuery, useGrants } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   FormControlLabel,
@@ -7,16 +8,15 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { getEntityIdsByPermission } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
 
 import {
   FIREWALL_HELPER_TEXT,
@@ -142,10 +142,16 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
           >
             <FormControlLabel
               control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -165,10 +171,16 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
           >
             <FormControlLabel
               control={<Radio />}
+              disabled={userCannotAddFirewall}
               label="Accept"
               value="ACCEPT"
             />
-            <FormControlLabel control={<Radio />} label="Drop" value="DROP" />
+            <FormControlLabel
+              control={<Radio />}
+              disabled={userCannotAddFirewall}
+              label="Drop"
+              value="DROP"
+            />
           </RadioGroup>
         )}
         control={control}
@@ -177,7 +189,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       <Box>
         <Typography
           sx={(theme) => ({
-            margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+            margin: `${theme.spacingFunction(16)} ${theme.spacingFunction(0)}`,
           })}
           variant="h3"
         >
@@ -189,7 +201,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
         </Typography>
         <Typography
           sx={(theme) => ({
-            margin: `${theme.spacing(2)} ${theme.spacing(0)}`,
+            margin: `${theme.spacingFunction(16)} ${theme.spacingFunction(0)}`,
           })}
         >
           {NODEBALANCER_HELPER_TEXT}
@@ -206,6 +218,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
+            disabled={userCannotAddFirewall}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple
@@ -229,6 +242,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
+            disabled={userCannotAddFirewall}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             multiple

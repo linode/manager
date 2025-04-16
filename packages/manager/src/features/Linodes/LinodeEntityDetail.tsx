@@ -12,7 +12,7 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
@@ -62,16 +62,17 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const {
-    configInterfaceWithVPC,
-    configs,
-    isVPCOnlyLinode,
-    vpcLinodeIsAssignedTo,
-  } = useVPCConfigInterface(linode.id);
+  const isLinodeInterface = linode.interface_generation === 'linode';
+
+  const { configs, interfaceWithVPC, isVPCOnlyLinode, vpcLinodeIsAssignedTo } =
+    useVPCInterface({
+      isLinodeInterface,
+      linodeId: linode.id,
+    });
 
   const { data: attachedFirewallData } = useLinodeFirewallsQuery(
     linode.id,
-    linode.interface_generation !== 'linode'
+    !isLinodeInterface
   );
 
   const attachedFirewalls = attachedFirewallData?.data ?? [];
@@ -96,9 +97,13 @@ export const LinodeEntityDetail = (props: Props) => {
   );
 
   const regionSupportsDiskEncryption =
-    regions
+    (regions
       ?.find((r) => r.id === linode.region)
-      ?.capabilities.includes('Disk Encryption') ?? false;
+      ?.capabilities.includes('Disk Encryption') ||
+      regions
+        ?.find((r) => r.id === linode.region)
+        ?.capabilities.includes('LA Disk Encryption')) ??
+    false;
 
   let progress;
   let transitionText;
@@ -114,22 +119,22 @@ export const LinodeEntityDetail = (props: Props) => {
     <>
       {isLinodesGrantReadOnly && (
         <Notice
+          important
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
           })}
-          important
           variant="warning"
         />
       )}
       <EntityDetail
         body={
           <LinodeEntityDetailBody
-            configInterfaceWithVPC={configInterfaceWithVPC}
             encryptionStatus={linode.disk_encryption}
             firewalls={attachedFirewalls}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
             interfaceGeneration={linode.interface_generation}
+            interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}

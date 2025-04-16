@@ -19,6 +19,21 @@ import {
   getDeviceLinks,
   getRuleString,
 } from './FirewallRow';
+import { accountFactory } from 'src/factories';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+  useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+    useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+  };
+});
 
 beforeAll(() => mockMatchMedia());
 
@@ -54,6 +69,31 @@ describe('FirewallRow', () => {
       triggerEnableFirewall: mockTriggerEnableFirewall,
     };
 
+    it('renders a TableRow with the default firewall chip, status, rules, and Linodes', () => {
+      queryMocks.useFirewallSettingsQuery.mockReturnValue({
+        data: {
+          default_firewall_ids: {
+            linode: null,
+            nodebalancer: null,
+            public_interface: 1,
+            vpc_interface: null,
+          },
+        },
+      });
+      queryMocks.useAccount.mockReturnValue({
+        data: accountFactory.build({ capabilities: ['Linode Interfaces'] }),
+      });
+
+      const { getByTestId, getByText } = render(
+        wrapWithTableBody(<FirewallRow {...baseProps} />, {
+          flags: { linodeInterfaces: { enabled: true } },
+        })
+      );
+      getByTestId('firewall-row-1');
+      getByText(firewall.label);
+      getByText('DEFAULT');
+    });
+
     it('renders a TableRow with label, status, rules, and Linodes', () => {
       const { getByTestId, getByText } = render(
         wrapWithTableBody(<FirewallRow {...baseProps} />)
@@ -68,21 +108,33 @@ describe('FirewallRow', () => {
   describe('getDeviceLinks', () => {
     it('should return a single Link if one Device is attached', () => {
       const device = firewallDeviceFactory.build();
-      const links = getDeviceLinks([device.entity]);
+      const links = getDeviceLinks({
+        entities: [device.entity],
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { getByText } = renderWithTheme(links);
-      expect(getByText(device.entity.label));
+      expect(getByText(device.entity.label ?? ''));
     });
 
     it('should render up to three comma-separated links', () => {
       const devices = firewallDeviceFactory.buildList(3);
-      const links = getDeviceLinks(devices.map((device) => device.entity));
+      const links = getDeviceLinks({
+        entities: devices.map((device) => device.entity),
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
     });
 
     it('should render "plus N more" text for any devices over three', () => {
       const devices = firewallDeviceFactory.buildList(13);
-      const links = getDeviceLinks(devices.map((device) => device.entity));
+      const links = getDeviceLinks({
+        entities: devices.map((device) => device.entity),
+        isLoading: false,
+        linodesWithInterfaceDevices: undefined,
+      });
       const { getByText, queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
       expect(getByText(/10 more/));

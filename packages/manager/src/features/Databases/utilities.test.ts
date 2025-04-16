@@ -7,7 +7,6 @@ import {
   databaseTypeFactory,
 } from 'src/factories';
 import {
-  formatConfigValue,
   getDatabasesDescription,
   hasPendingUpdates,
   isDateOutsideBackup,
@@ -19,7 +18,7 @@ import {
   upgradableVersions,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import type {
@@ -397,10 +396,10 @@ describe('toFormatedDate', () => {
     const today = DateTime.utc();
     const mockTodayWithHours = DateTime.fromObject({
       day: today.day,
-      month: today.month,
-      year: today.year,
       hour: today.hour,
       minute: 0,
+      month: today.month,
+      year: today.year,
     }).toFormat('yyyy-MM-dd HH:mm');
     const result = toFormatedDate(selectedDate, undefined);
     expect(result).toContain(mockTodayWithHours);
@@ -562,27 +561,5 @@ describe('upgradableVersions', () => {
   it('should return undefined when no engines are provided', () => {
     const result = upgradableVersions('mysql', '8.0.26', undefined);
     expect(result).toBeUndefined();
-  });
-});
-
-describe('formatConfigValue', () => {
-  it('should return "Enabled" when configValue is "true"', () => {
-    const result = formatConfigValue('true');
-    expect(result).toBe('Enabled');
-  });
-
-  it('should return "Disabled" when configValue is "false"', () => {
-    const result = formatConfigValue('false');
-    expect(result).toBe('Disabled');
-  });
-
-  it('should return " -" when configValue is "undefined"', () => {
-    const result = formatConfigValue('undefined');
-    expect(result).toBe(' - ');
-  });
-
-  it('should return the original configValue for other values', () => {
-    const result = formatConfigValue('+03:00');
-    expect(result).toBe('+03:00');
   });
 });

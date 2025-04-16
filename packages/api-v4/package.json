@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.135.0",
+  "version": "0.137.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -58,9 +58,6 @@
   "devDependencies": {
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
-    "eslint": "^6.8.0",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "prettier": "~2.2.1",
     "tsup": "^8.4.0"
   },
   "lint-staged": {

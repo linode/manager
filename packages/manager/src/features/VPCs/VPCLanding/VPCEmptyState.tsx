@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -11,7 +11,7 @@ import { sendEvent } from 'src/utilities/analytics/utils';
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 
 export const VPCEmptyState = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_vpcs',
@@ -29,7 +29,7 @@ export const VPCEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create VPC',
             });
-            push('/vpcs/create');
+            navigate({ to: '/vpcs/create' });
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',

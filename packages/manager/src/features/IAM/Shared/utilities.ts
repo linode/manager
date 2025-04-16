@@ -4,17 +4,17 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type {
-  AccountAccessType,
+  AccountAccessRole,
+  AccountEntity,
+  EntityAccess,
+  EntityAccessRole,
+  EntityType,
+  EntityTypePermissions,
   IamAccess,
   IamAccessType,
   IamAccountPermissions,
-  IamAccountResource,
   IamUserPermissions,
   PermissionType,
-  ResourceAccess,
-  ResourceType,
-  ResourceTypePermissions,
-  RoleType,
   Roles,
 } from '@linode/api-v4';
 
@@ -50,20 +50,20 @@ export const placeholderMap: Record<string, string> = {
 };
 
 export interface RoleMap {
-  access: 'account_access' | 'resource_access';
+  access: 'account_access' | 'entity_access';
   description: string;
-  id: AccountAccessType | RoleType;
-  name: AccountAccessType | RoleType;
+  entity_ids: null | number[];
+  entity_type: EntityTypePermissions;
+  id: AccountAccessRole | EntityAccessRole;
+  name: AccountAccessRole | EntityAccessRole;
   permissions: PermissionType[];
-  resource_ids: null | number[];
-  resource_type: ResourceTypePermissions;
 }
 export interface ExtendedRoleMap extends RoleMap {
-  resource_names?: string[];
+  entity_names?: string[];
 }
 
 interface FilteredRolesOptions {
-  entityType?: ResourceType | ResourceTypePermissions;
+  entityType?: EntityType | EntityTypePermissions;
   getSearchableFields: (role: EntitiesRole | ExtendedRoleMap) => string[];
   query: string;
   roles: EntitiesRole[] | RoleMap[];
@@ -100,10 +100,10 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  resourceType: ResourceType | ResourceTypePermissions,
+  resourceType: EntityType | EntityTypePermissions,
   role: ExtendedRoleMap
 ) => {
-  return role.resource_type === resourceType;
+  return role.entity_type === resourceType;
 };
 
 /**
@@ -130,27 +130,32 @@ const getDoesRolesMatchQuery = (
 
 export interface RolesType {
   access: IamAccessType;
+  entity_type: EntityTypePermissions;
   label: string;
-  resource_type: ResourceTypePermissions;
   value: string;
 }
 
-interface ExtendedRole extends Roles {
+export interface ExtendedRole extends Roles {
   access: IamAccessType;
-  resource_type: ResourceTypePermissions;
+  entity_type: EntityTypePermissions;
+}
+
+export interface ExtendedEntityRole extends EntitiesRole {
+  label: EntityAccessRole;
+  value: EntityAccessRole;
 }
 
 export const getAllRoles = (
   permissions: IamAccountPermissions
 ): RolesType[] => {
-  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+  const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
 
   return accessTypes.flatMap((accessType: IamAccessType) =>
     permissions[accessType].flatMap((resource: IamAccess) =>
       resource.roles.map((role: Roles) => ({
         access: accessType,
+        entity_type: resource.type,
         label: role.name,
-        resource_type: resource.resource_type,
         value: role.name,
       }))
     )
@@ -161,7 +166,7 @@ export const getRoleByName = (
   accountPermissions: IamAccountPermissions,
   roleName: string
 ): ExtendedRole | null => {
-  const accessTypes: IamAccessType[] = ['account_access', 'resource_access'];
+  const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
 
   for (const permissionType of accessTypes) {
     const resources = accountPermissions[permissionType];
@@ -171,7 +176,7 @@ export const getRoleByName = (
         return {
           ...role,
           access: permissionType, // Include access type (account or resource)
-          resource_type: resource.resource_type,
+          entity_type: resource.type,
         };
       }
     }
@@ -180,16 +185,17 @@ export const getRoleByName = (
 };
 
 export interface EntitiesRole {
+  access: IamAccessType;
+  entity_id: number;
+  entity_name: string;
+  entity_type: EntityType | EntityTypePermissions;
   id: string;
-  resource_id: number;
-  resource_name: string;
-  resource_type: ResourceType | ResourceTypePermissions;
-  role_name: RoleType;
+  role_name: EntityAccessRole;
 }
 
 export interface EntitiesType {
   label: string;
-  rawValue: ResourceType | ResourceTypePermissions;
+  rawValue: EntityType | EntityTypePermissions;
   value?: string;
 }
 
@@ -197,7 +203,7 @@ export const mapEntityTypes = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): EntitiesType[] => {
-  const resourceTypes = Array.from(new Set(data.map((el) => el.resource_type)));
+  const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
   return resourceTypes.map((resource) => ({
     label: capitalize(resource) + suffix,
@@ -208,35 +214,36 @@ export const mapEntityTypes = (
 
 export interface CombinedRoles {
   id: null | number[];
-  name: AccountAccessType | RoleType;
+  name: AccountAccessRole | EntityAccessRole;
 }
 
 /**
- * Group account_access and resource_access roles of the user
+ * Group account_access and entity_access roles of the user
  *
  */
 export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
-  const roleMap: Map<AccountAccessType | RoleType, null | number[]> = new Map();
+  const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
+    new Map();
 
   // Add account access roles with resource_id set to null
-  data.account_access.forEach((role: AccountAccessType) => {
+  data.account_access.forEach((role: AccountAccessRole) => {
     if (!roleMap.has(role)) {
       roleMap.set(role, null);
     }
   });
 
   // Add resource access roles with their respective resource_id
-  data.resource_access.forEach(
-    (resource: { resource_id: number; roles: RoleType[] }) => {
-      resource.roles?.forEach((role: RoleType) => {
+  data.entity_access.forEach(
+    (resource: { id: number; roles: EntityAccessRole[] }) => {
+      resource.roles?.forEach((role: EntityAccessRole) => {
         if (roleMap.has(role)) {
           const existingResourceIds = roleMap.get(role);
           if (existingResourceIds && existingResourceIds !== null) {
-            existingResourceIds.push(resource.resource_id);
+            existingResourceIds.push(resource.id);
           }
         } else {
-          roleMap.set(role, [resource.resource_id]);
+          roleMap.set(role, [resource.id]);
         }
       });
     }
@@ -252,7 +259,7 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
 
 interface AllResources {
   resource: IamAccess;
-  type: 'account_access' | 'resource_access';
+  type: 'account_access' | 'entity_access';
 }
 
 /**
@@ -270,9 +277,9 @@ export const mapRolesToPermissions = (
       resource,
       type: 'account_access' as const,
     })),
-    ...accountPermissions.resource_access.map((resource) => ({
+    ...accountPermissions.entity_access.map((resource) => ({
       resource,
-      type: 'resource_access' as const,
+      type: 'entity_access' as const,
     })),
   ];
 
@@ -292,11 +299,11 @@ export const mapRolesToPermissions = (
       roleMap.set(name, {
         access: type,
         description: role.description,
+        entity_ids: id,
+        entity_type: resource.type,
         id: name,
         name,
         permissions: role.permissions,
-        resource_ids: id,
-        resource_type: resource.resource_type,
       });
     }
   });
@@ -307,32 +314,28 @@ export const mapRolesToPermissions = (
 /**
  * Add assigned entities to role
  */
-export const addResourceNamesToRoles = (
+
+export const addEntitiesNamesToRoles = (
   roles: ExtendedRoleMap[],
-  resources: IamAccountResource
+  entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): ExtendedRoleMap[] => {
-  const resourcesArray: IamAccountResource[] = Object.values(resources);
-
   return roles.map((role) => {
-    // Find the resource group by resource_type
-    const resourceGroup = resourcesArray.find(
-      (res) => res.resource_type === role.resource_type
-    );
+    // Find the resource group by entity_type
+    const resourceGroup = entities.get(role.entity_type as EntityType);
 
-    if (resourceGroup && role.resource_ids) {
-      // Map resource_ids to their names
-      const resourceNames = role.resource_ids
+    if (resourceGroup && role.entity_ids) {
+      // Map entity_ids to their names
+      const resourceNames = role.entity_ids
         .map(
-          (id) =>
-            resourceGroup.resources.find((resource) => resource.id === id)?.name
+          (id) => resourceGroup.find((resource) => resource.id === id)?.label
         )
-        .filter((name): name is string => name !== undefined); // Remove undefined values
+        .filter((label): label is string => label !== undefined); // Remove undefined values
 
-      return { ...role, resource_names: resourceNames };
+      return { ...role, entity_names: resourceNames };
     }
 
-    // If no matching resource_type, return the role unchanged
-    return { ...role, resource_names: [] };
+    // If no matching entity_type, return the role unchanged
+    return { ...role, entity_names: [] };
   });
 };
 
@@ -385,7 +388,7 @@ export interface EntitiesOption {
 }
 
 interface UpdateUserRolesProps {
-  access: 'account_access' | 'resource_access';
+  access: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
   initialRole?: string;
   newRole: string;
@@ -401,20 +404,20 @@ export const updateUserRoles = ({
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.map(
-        (role: AccountAccessType) =>
-          role === initialRole ? (newRole as AccountAccessType) : role
+        (role: AccountAccessRole) =>
+          role === initialRole ? (newRole as AccountAccessRole) : role
       ),
     };
   }
 
-  if (access === 'resource_access' && assignedRoles) {
+  if (access === 'entity_access' && assignedRoles) {
     return {
       ...assignedRoles,
-      resource_access: assignedRoles.resource_access.map(
-        (resource: ResourceAccess) => ({
+      entity_access: assignedRoles.entity_access.map(
+        (resource: EntityAccess) => ({
           ...resource,
-          roles: resource.roles.map((role: RoleType) =>
-            role === initialRole ? (newRole as RoleType) : role
+          roles: resource.roles.map((role: EntityAccessRole) =>
+            role === initialRole ? (newRole as EntityAccessRole) : role
           ),
         })
       ),
@@ -425,7 +428,154 @@ export const updateUserRoles = ({
   return (
     assignedRoles ?? {
       account_access: [],
-      resource_access: [],
+      entity_access: [],
     }
   );
+};
+
+export interface AssignNewRoleFormValues {
+  roles: {
+    entities?: EntitiesOption[] | null;
+    role: null | RolesType;
+  }[];
+}
+
+export interface UpdateEntitiesFormValues {
+  entities: EntitiesOption[];
+}
+
+interface DeleteUserRolesProps {
+  access?: 'account_access' | 'entity_access';
+  assignedRoles?: IamUserPermissions;
+  initialRole?: string;
+}
+
+export const deleteUserRole = ({
+  access,
+  assignedRoles,
+  initialRole,
+}: DeleteUserRolesProps): IamUserPermissions => {
+  if (!assignedRoles) {
+    return {
+      account_access: [],
+      entity_access: [],
+    };
+  }
+
+  if (access === 'account_access') {
+    return {
+      ...assignedRoles,
+      account_access: assignedRoles.account_access.filter(
+        (role: AccountAccessRole) => role !== initialRole
+      ),
+    };
+  }
+
+  if (access === 'entity_access') {
+    return {
+      ...assignedRoles,
+      entity_access: assignedRoles.entity_access
+        .map((resource: EntityAccess) => ({
+          ...resource,
+          roles: resource.roles.filter(
+            (role: EntityAccessRole) => role !== initialRole
+          ),
+        }))
+        .filter((resource: EntityAccess) => resource.roles.length > 0),
+    };
+  }
+
+  // If access type is invalid, return unchanged object
+  return assignedRoles;
+};
+
+export const transformedAccountEntities = (
+  entities: AccountEntity[]
+): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
+  const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
+    new Map();
+
+  entities.forEach((item) => {
+    if (!result.has(item.type)) {
+      result.set(item.type, []);
+    }
+
+    result.get(item.type)?.push({
+      id: item.id,
+      label: item.label,
+    });
+  });
+
+  return result;
+};
+
+export type DrawerModes =
+  | 'assign-role'
+  | 'change-role'
+  | 'change-role-for-entity';
+
+export const changeRoleForEntity = (
+  entityRoles: EntityAccess[],
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions,
+  initialRole: EntityAccessRole,
+  newRole: EntityAccessRole
+): EntityAccess[] => {
+  return [
+    ...entityRoles.map((entity) => {
+      const roles = Array.from(
+        new Set(
+          entity.roles.map((role) => (role === initialRole ? newRole : role))
+        )
+      );
+      if (entity.type === entityType && entity.id === entityId) {
+        return {
+          ...entity,
+          roles,
+        };
+      }
+      return entity;
+    }),
+  ];
+};
+
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: EntityAccessRole,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
+
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
+
+      // Remove the role if the entity is not in the new entity IDs
+      return {
+        ...entity,
+        roles: entity.roles.filter((role) => role !== roleName),
+      };
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
+
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
+
+  return [...updatedEntityAccess, ...newEntities];
 };

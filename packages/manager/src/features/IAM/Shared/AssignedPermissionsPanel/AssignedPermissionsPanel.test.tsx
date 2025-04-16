@@ -1,31 +1,23 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
 
-import type {
-  IamAccessType,
-  ResourceTypePermissions,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-import type { IamAccountResource } from '@linode/api-v4/lib/resources/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  resource_type: ResourceTypePermissions;
-}
+import type { ExtendedRole } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountResources: vi.fn().mockReturnValue({}),
+  useAccountEntities: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
@@ -33,14 +25,15 @@ const mockAccountAcceessRole: ExtendedRole = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all linode instances in the account',
+  entity_type: 'account',
   name: 'account_retail_owner',
   permissions: ['cancel_account'],
-  resource_type: 'account',
 };
 
-const mockResourcesAcceessRole: ExtendedRole = {
-  access: 'resource_access',
+const mockEntitiesAcceessRole: ExtendedRole = {
+  access: 'entity_access',
   description: 'Access to administer a image instance',
+  entity_type: 'image',
   name: 'image_admin',
   permissions: [
     'create_image',
@@ -50,106 +43,105 @@ const mockResourcesAcceessRole: ExtendedRole = {
     'update_image',
     'delete_image',
   ],
-  resource_type: 'image',
 };
 
-const mockResources: IamAccountResource[] = [
-  {
-    resource_type: 'linode',
-    resources: [
-      {
-        id: 23456789,
-        name: 'linode-uk-123',
-      },
-      {
-        id: 456728,
-        name: 'db-us-southeast1',
-      },
-    ],
-  },
-  {
-    resource_type: 'image',
-    resources: [
-      { id: 3, name: 'image-1' },
-      { id: 4, name: 'image-2' },
-    ],
-  },
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 1,
+    label: 'image-1',
+    type: 'image',
+  }),
 ];
 
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
-    const { getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
+    renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockAccountAcceessRole}
+      />
     );
+    expect(screen.getByText('Entities')).toBeVisible();
     expect(
-      getByText(
+      screen.getByText(
         'Access to perform any supported action on all linode instances in the account'
       )
-    ).toBeInTheDocument();
-    expect(getByText('cancel_account')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    ).toBeVisible();
+    expect(screen.getByText('cancel_account')).toBeVisible();
+    expect(screen.getByText('Description')).toBeVisible();
   });
 
   it('does not render Autocomplete when the access is an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
-    );
-    const autocomplete = queryAllByRole('combobox');
+    renderWithTheme(<AssignedPermissionsPanel role={mockAccountAcceessRole} />);
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All entities')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
     expect(autocomplete[0]).toBeUndefined();
   });
 
-  it('renders with the correct context when the access is a resource', () => {
-    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
-
-    const { getAllByRole, getAllByTestId, getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockResourcesAcceessRole} />
+  it('renders with the correct context when the access is an entity', () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
+    renderWithTheme(
+      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
-    const permissions = getAllByTestId('permission');
+    const permissions = screen.getAllByTestId('permission');
     expect(permissions).toHaveLength(6);
 
     expect(
-      getByText('Access to administer a image instance')
-    ).toBeInTheDocument();
-    expect(getByText('create_image')).toBeInTheDocument();
-    expect(getByText('Entities')).toBeInTheDocument();
+      screen.getByText('Access to administer a image instance')
+    ).toBeVisible();
+    expect(screen.getByText('create_image')).toBeVisible();
+    expect(screen.getByText('Entities')).toBeVisible();
 
-    const autocomplete = getAllByRole('combobox');
+    const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeInTheDocument();
     expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
   });
 
-  it('renders the Autocomplete when the access is a resource', () => {
-    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
-
-    const { getAllByRole, getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockResourcesAcceessRole} />
+  it('renders the Autocomplete when the access is an entity', () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
+    renderWithTheme(
+      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
     // Verify comboboxes exist
-    const autocomplete = getAllByRole('combobox')[0];
+    const autocomplete = screen.getAllByRole('combobox')[0];
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
-    expect(getByText('image-1')).toBeInTheDocument();
-    expect(getByText('image-2')).toBeInTheDocument();
+    expect(screen.getByText('image-1')).toBeVisible();
   });
 
   it('shows all permissions', () => {
-    const { getAllByTestId } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockResourcesAcceessRole} />
+    renderWithTheme(
+      <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
     // All chips should now be visible
-    const visibleChips = getAllByTestId('permission');
+    const visibleChips = screen.getAllByTestId('permission');
     expect(visibleChips.length).toBe(
-      mockResourcesAcceessRole.permissions.length
+      mockEntitiesAcceessRole.permissions.length
     );
+  });
+
+  it('does not render the Entities component when mode is "change-role-for-entity"', () => {
+    renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="change-role-for-entity"
+        role={mockEntitiesAcceessRole}
+      />
+    );
+
+    // Verify that the Entities component is not rendered
+    expect(screen.queryByText('Entities')).not.toBeInTheDocument();
   });
 });

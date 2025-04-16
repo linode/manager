@@ -115,24 +115,28 @@ export const borderColors = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.Border}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.Border}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.Border}`,
+  },
+  tip: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
   },
 } as const;
 
@@ -590,7 +594,37 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: Color.Neutrals[40],
+          '&:active': {
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
+          '&:hover': {
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+          },
+          // Checked
+          '&.Mui-checked': {
+            color: Component.Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Component.Checkbox.Indeterminated.Default.Background,
+          },
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
+          },
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },
@@ -1124,25 +1158,35 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '& $checked': {
-            color: primaryColors.main,
+          '&:active': {
+            color: theme.tokens.component.RadioButton.Active.Active.Border,
+          },
+          '&.Mui-checked': {
+            color: theme.tokens.component.RadioButton.Active.Default.Border,
+            '&:active': {
+              color: theme.tokens.component.RadioButton.Active.Active.Border,
+            },
           },
           '& .defaultFill': {
             fill: theme.color.white,
             transition: theme.transitions.create(['fill']),
           },
+          '& svg circle': {
+            fill: Color.Neutrals.White,
+          },
           '&.Mui-disabled': {
             '& .defaultFill': {
               fill: Color.Neutrals[5],
             },
-            color: `${Color.Neutrals[40]} !important`,
-            fill: `${Color.Neutrals[5]} !important`,
-            pointerEvents: 'none',
-          },
-          '&.MuiRadio-root': {
-            '.MuiSvgIcon-fontSizeMedium': {
-              fontSize: '20px',
+            '&:not(.Mui-checked) svg circle': {
+              fill: Color.Neutrals[20],
             },
+            '&:not(.Mui-checked)': {
+              color:
+                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+            },
+            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
+            pointerEvents: 'none',
           },
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
@@ -1153,10 +1197,10 @@ export const lightTheme: ThemeOptions = {
             '& .defaultFill': {
               fill: theme.color.white,
             },
-            color: theme.palette.primary.main,
-            fill: theme.color.white,
+            color: theme.tokens.component.RadioButton.Active.Hover.Border,
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
           },
-          color: Color.Neutrals[40],
+          color: theme.tokens.alias.Action.Neutral,
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
         }),
@@ -1208,7 +1252,7 @@ export const lightTheme: ThemeOptions = {
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          fontSize: 24,
+          fontSize: 20,
         },
       },
     },

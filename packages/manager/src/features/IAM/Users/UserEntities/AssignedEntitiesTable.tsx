@@ -16,18 +16,27 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
+import { useAccountEntities } from 'src/queries/entities/entities';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
-import { useAccountResources } from 'src/queries/resources/resources';
 
-import { getFilteredRoles, mapEntityTypes } from '../../Shared/utilities';
+import {
+  getFilteredRoles,
+  mapEntityTypes,
+  transformedAccountEntities,
+} from '../../Shared/utilities';
+import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
-import type { EntitiesRole, EntitiesType } from '../../Shared/utilities';
 import type {
-  IamAccountResource,
+  DrawerModes,
+  EntitiesRole,
+  EntitiesType,
+} from '../../Shared/utilities';
+import type {
+  AccountEntity,
+  EntityAccess,
+  EntityAccessRole,
+  EntityType,
   IamUserPermissions,
-  Resource,
-  ResourceAccess,
-  RoleType,
 } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -47,11 +56,19 @@ export const AssignedEntitiesTable = () => {
 
   const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
 
+  const [drawerMode, setDrawerMode] =
+    React.useState<DrawerModes>('assign-role');
+
+  const [isChangeRoleForEntityDrawerOpen, setIsChangeRoleForEntityDrawerOpen] =
+    React.useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = React.useState<EntitiesRole>();
+
   const {
-    data: resources,
-    error: resourcesError,
-    isLoading: resourcesLoading,
-  } = useAccountResources();
+    data: entities,
+    error: entitiesError,
+    isLoading: entitiesLoading,
+  } = useAccountEntities();
+
   const {
     data: assignedRoles,
     error: assignedRolesError,
@@ -59,37 +76,30 @@ export const AssignedEntitiesTable = () => {
   } = useAccountUserPermissions(username ?? '');
 
   const { entityTypes, roles } = React.useMemo(() => {
-    if (!assignedRoles || !resources) {
+    if (!assignedRoles || !entities) {
       return { entityTypes: [], roles: [] };
     }
+    const transformedEntities = transformedAccountEntities(entities.data);
 
-    const roles = addResourceNamesToRoles(assignedRoles, resources);
+    const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
+
     const entityTypes = getEntityTypes(roles);
 
     return { entityTypes, roles };
-  }, [assignedRoles, resources]);
+  }, [assignedRoles, entities]);
 
-  const actions: Action[] = [
-    {
-      onClick: () => {
-        // mock
-      },
-      title: 'Change Role ',
-    },
-    {
-      onClick: () => {
-        // mock
-      },
-      title: 'Remove Assignment',
-    },
-  ];
+  const handleChangeRole = (role: EntitiesRole, mode: DrawerModes) => {
+    setIsChangeRoleForEntityDrawerOpen(true);
+    setSelectedRole(role);
+    setDrawerMode(mode);
+  };
 
   const renderTableBody = () => {
-    if (resourcesLoading || assignedRolesLoading) {
+    if (entitiesLoading || assignedRolesLoading) {
       return <TableRowLoading columns={3} rows={1} />;
     }
 
-    if (resourcesError || assignedRolesError) {
+    if (entitiesError || assignedRolesError) {
       return (
         <TableRowError
           colSpan={3}
@@ -105,31 +115,48 @@ export const AssignedEntitiesTable = () => {
       roles,
     });
 
-    if (!resources || !assignedRoles || filteredRoles.length === 0) {
+    if (!entities || !assignedRoles || filteredRoles.length === 0) {
       return (
         <TableRowEmpty colSpan={3} message={'No Entities are assigned.'} />
       );
     }
 
-    if (assignedRoles && resources) {
+    if (assignedRoles && entities) {
       return (
         <>
-          {filteredRoles.map((el: EntitiesRole) => (
-            <TableRow key={el.id}>
-              <TableCell>
-                <Typography>{el.resource_name}</Typography>
-              </TableCell>
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <Typography>{capitalize(el.resource_type)}</Typography>
-              </TableCell>
-              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                <Typography>{el.role_name}</Typography>
-              </TableCell>
-              <TableCell actionCell>
-                <ActionMenu actionsList={actions} ariaLabel="action menu" />
-              </TableCell>
-            </TableRow>
-          ))}
+          {filteredRoles.map((el: EntitiesRole) => {
+            const actions: Action[] = [
+              {
+                onClick: () => {
+                  handleChangeRole(el, 'change-role-for-entity');
+                },
+                title: 'Change Role ',
+              },
+              {
+                onClick: () => {
+                  // mock
+                },
+                title: 'Remove Assignment',
+              },
+            ];
+
+            return (
+              <TableRow key={el.id}>
+                <TableCell>
+                  <Typography>{el.entity_name}</Typography>
+                </TableCell>
+                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                  <Typography>{capitalize(el.entity_type)}</Typography>
+                </TableCell>
+                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                  <Typography>{el.role_name}</Typography>
+                </TableCell>
+                <TableCell actionCell>
+                  <ActionMenu actionsList={actions} ariaLabel="action menu" />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </>
       );
     }
@@ -140,15 +167,16 @@ export const AssignedEntitiesTable = () => {
   return (
     <Grid>
       <Grid
+        container
+        direction="row"
         sx={{
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: 3,
         }}
-        container
-        direction="row"
       >
         <DebouncedSearchTextField
+          clearable
           containerProps={{
             sx: {
               marginBottom: { md: 0, xs: 2 },
@@ -156,7 +184,6 @@ export const AssignedEntitiesTable = () => {
               width: { md: '410px', xs: '100%' },
             },
           }}
-          clearable
           hideLabel
           label="Filter"
           onSearch={setQuery}
@@ -165,14 +192,14 @@ export const AssignedEntitiesTable = () => {
           value={query}
         />
         <Autocomplete
-          textFieldProps={{
-            containerProps: { sx: { minWidth: 250 } },
-            hideLabel: true,
-          }}
           label="Select type"
           onChange={(_, selected) => setEntityType(selected ?? null)}
           options={entityTypes}
           placeholder="All Assigned Entities"
+          textFieldProps={{
+            containerProps: { sx: { minWidth: 250 } },
+            hideLabel: true,
+          }}
           value={entityType}
         />
       </Grid>
@@ -210,6 +237,12 @@ export const AssignedEntitiesTable = () => {
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
       </Table>
+      <ChangeRoleForEntityDrawer
+        mode={drawerMode}
+        onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
+        open={isChangeRoleForEntityDrawerOpen}
+        role={selectedRole}
+      />
     </Grid>
   );
 };
@@ -217,30 +250,27 @@ export const AssignedEntitiesTable = () => {
 const getEntityTypes = (data: EntitiesRole[]): EntitiesType[] =>
   mapEntityTypes(data, 's');
 
-const addResourceNamesToRoles = (
+const addEntityNamesToRoles = (
   assignedRoles: IamUserPermissions,
-  resources: IamAccountResource
+  entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): EntitiesRole[] => {
-  const resourcesRoles = assignedRoles.resource_access;
+  const entitiesRoles = assignedRoles.entity_access;
 
-  const resourcesArray: IamAccountResource[] = Object.values(resources);
+  return entitiesRoles.flatMap((entityRole: EntityAccess) => {
+    const entityByType = entities.get(entityRole.type as EntityType);
 
-  return resourcesRoles.flatMap((resourceRole: ResourceAccess) => {
-    const resourceByType = resourcesArray.find(
-      (r: IamAccountResource) => r.resource_type === resourceRole.resource_type
-    );
-
-    if (resourceByType) {
-      const resource = resourceByType.resources.find(
-        (res: Resource) => res.id === resourceRole.resource_id
+    if (entityByType) {
+      const entity = entityByType.find(
+        (res: AccountEntity) => res.id === entityRole.id
       );
 
-      if (resource) {
-        return resourceRole.roles.map((r: RoleType) => ({
-          id: `${r}-${resourceRole.resource_id}`,
-          resource_id: resourceRole.resource_id,
-          resource_name: resource.name,
-          resource_type: resourceRole.resource_type,
+      if (entity) {
+        return entityRole.roles.map((r: EntityAccessRole) => ({
+          access: 'entity_access',
+          entity_id: entityRole.id,
+          entity_name: entity.label,
+          entity_type: entityRole.type,
+          id: `${r}-${entityRole.id}`,
           role_name: r,
         }));
       }
@@ -251,8 +281,8 @@ const addResourceNamesToRoles = (
 };
 
 const getSearchableFields = (role: EntitiesRole): string[] => [
-  String(role.resource_id),
-  role.resource_name,
-  role.resource_type,
+  String(role.entity_id),
+  role.entity_name,
+  role.entity_type,
   role.role_name,
 ];

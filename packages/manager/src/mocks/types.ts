@@ -8,6 +8,9 @@ import type {
   IPAddress,
   Linode,
   LinodeInterface,
+  NodeBalancer,
+  NodeBalancerConfig,
+  NodeBalancerConfigNode,
   Notification,
   PlacementGroup,
   Region,
@@ -91,6 +94,7 @@ export type MockPresetCrudGroup = {
     | 'Firewalls'
     | 'IP Addresses'
     | 'Linodes'
+    | 'NodeBalancers'
     | 'Placement Groups'
     | 'Quotas'
     | 'Support Tickets'
@@ -102,6 +106,7 @@ export type MockPresetCrudId =
   | 'firewalls:crud'
   | 'ip-addresses:crud'
   | 'linodes:crud'
+  | 'nodebalancers:crud'
   | 'placement-groups:crud'
   | 'quotas:crud'
   | 'support-tickets:crud'
@@ -126,8 +131,11 @@ export interface MockState {
   firewalls: Firewall[];
   ipAddresses: IPAddress[];
   linodeConfigs: [number, Config][];
-  linodeInterfaces: [number, LinodeInterface][],
+  linodeInterfaces: [number, LinodeInterface][];
   linodes: Linode[];
+  nodeBalancerConfigNodes: NodeBalancerConfigNode[];
+  nodeBalancerConfigs: NodeBalancerConfig[];
+  nodeBalancers: NodeBalancer[];
   notificationQueue: Notification[];
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];

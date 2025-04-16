@@ -1,5 +1,4 @@
-import { IconButton, Notice, Stack } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
@@ -55,9 +54,9 @@ export const DismissibleBanner = (props: Props) => {
       aria-label={`Dismiss ${preferenceKey} banner`}
       data-testid="notice-dismiss"
       onClick={handleDismiss}
-      sx={{ padding: 1 }}
+      sx={{ padding: 1, paddingRight: 2 }}
     >
-      <Close />
+      <CloseIcon />
     </IconButton>
   );
 
@@ -84,10 +83,8 @@ export const useDismissibleBanner = (
   preferenceKey: string,
   options?: DismissibleNotificationOptions
 ) => {
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
+  const { dismissNotifications, hasDismissedNotifications } =
+    useDismissibleNotifications();
 
   const hasDismissedBanner = hasDismissedNotifications([preferenceKey]);
 

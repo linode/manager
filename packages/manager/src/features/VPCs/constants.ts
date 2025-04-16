@@ -45,9 +45,6 @@ export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
 
-export const ASSIGN_IPV4_RANGES_DESCRIPTION =
-  'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.';
-
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
   'This network configuration is not recommended. The Linode will not be reachable or able to reach Linodes in the other subnets of the VPC. We recommend selecting VPC as the primary interface and checking the “Assign a public IPv4 address for this Linode” checkbox.';
@@ -70,3 +67,11 @@ export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
 
 export const ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc';
+
+// constants used for tanstack routing:
+export const VPC_LANDING_TABLE_PREFERENCE_KEY = 'vpcs';
+export const VPC_LANDING_ROUTE = '/vpcs';
+export const VPC_DETAILS_ROUTE = '/vpcs/$vpcId';
+export const VPC_CREATE_ROUTE = '/vpcs/create';
+export const SUBNET_ACTION_PATH =
+  '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';

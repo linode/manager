@@ -1,3 +1,4 @@
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
@@ -5,10 +6,9 @@ import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { createLinodeRequestFactory } from 'src/factories/linodes';
-
 authenticate();
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
 describe.skip('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);

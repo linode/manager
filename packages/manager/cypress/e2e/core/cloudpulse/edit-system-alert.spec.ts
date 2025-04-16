@@ -4,6 +4,7 @@
  * This file contains Cypress tests for the Edit Alert page of the CloudPulse application.
  * It ensures that users can navigate to the Edit Alert Page and that alerts are correctly displayed and interactive on the Edit page.
  */
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetAlertDefinitions,
@@ -15,12 +16,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import {
-  accountFactory,
-  alertFactory,
-  databaseFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountFactory, alertFactory, databaseFactory } from 'src/factories';
 
 import type { Alert, Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
@@ -117,14 +113,14 @@ describe('Integration Tests for Edit Alert', () => {
 
     cy.wait(['@getAlertDefinitions', '@getDatabases']);
 
-    // Verify that the heading with text 'resource' is visible
-    ui.heading.findByText('resource').should('be.visible');
+    // Verify that the heading with text 'entity' is visible
+    ui.heading.findByText('entity').should('be.visible');
 
     // Verify that the heading with text 'region' is visible
     ui.heading.findByText('region').should('be.visible');
 
-    // Verify the initial selection of resources, then select all resources.
-    cy.findByText('3 of 50 resources are selected.')
+    // Verify the initial selection of entities, then select all entities.
+    cy.findByText('3 of 50 entities are selected.')
       .should('be.visible')
       .closest('[data-qa-notice]')
       .within(() => {
@@ -137,7 +133,7 @@ describe('Integration Tests for Edit Alert', () => {
       });
 
     // Confirm notice text updates to reflect selection.
-    cy.findByText('50 of 50 resources are selected.').should('be.visible');
+    cy.findByText('50 of 50 entities are selected.').should('be.visible');
 
     // Verify the initial state of the page size
     ui.pagination.findPageSizeSelect().click();
@@ -275,7 +271,7 @@ describe('Integration Tests for Edit Alert', () => {
       cy.url().should('endWith', '/alerts/definitions');
 
       // Confirm toast notification appears
-      ui.toast.assertMessage('Alert resources successfully updated.');
+      ui.toast.assertMessage('Alert entities successfully updated.');
     });
   });
 });

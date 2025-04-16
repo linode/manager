@@ -1,9 +1,59 @@
 import { Factory } from '@linode/utilities';
 
-import type { IamUserPermissions } from '@linode/api-v4';
+import type {
+  EntityAccess,
+  EntityAccessRole,
+  EntityType,
+  IamUserPermissions,
+} from '@linode/api-v4';
 
-export const userPermissionsFactory = Factory.Sync.makeFactory<IamUserPermissions>(
-  {
+const possibleRoles: EntityAccessRole[] = [
+  'firewall_admin',
+  'firewall_creator',
+  'linode_contributor',
+  'linode_creator',
+  'linode_viewer',
+  'update_firewall',
+];
+
+export const possibleTypes: EntityType[] = [
+  'database',
+  'domain',
+  'firewall',
+  'image',
+  'linode',
+  'longview',
+  'nodebalancer',
+  'stackscript',
+  'volume',
+  'vpc',
+];
+
+export const entityAccessFactory = Factory.Sync.makeFactory<EntityAccess>({
+  id: Factory.each((i) => i + 1),
+  roles: Factory.each((i) => [possibleRoles[i % possibleRoles.length]]),
+  type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
+});
+
+const entityAccessList = [
+  ...entityAccessFactory.buildList(7, {
+    roles: ['linode_contributor'],
+    type: 'linode',
+  }),
+  entityAccessFactory.build({
+    id: 10,
+    roles: ['linode_contributor', 'linode_viewer'],
+    type: 'linode',
+  }),
+  entityAccessFactory.build({
+    id: 1,
+    roles: ['firewall_admin'],
+    type: 'firewall',
+  }),
+];
+
+export const userPermissionsFactory =
+  Factory.Sync.makeFactory<IamUserPermissions>({
     account_access: [
       'account_linode_admin',
       'linode_creator',
@@ -11,62 +61,5 @@ export const userPermissionsFactory = Factory.Sync.makeFactory<IamUserPermission
       'account_admin',
       'account_viewer',
     ],
-    resource_access: [
-      {
-        resource_id: 12345678,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 23456789,
-        resource_type: 'linode',
-        roles: ['linode_contributor', 'linode_viewer'],
-      },
-      {
-        resource_id: 1,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 2,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 3,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 4,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 5,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 6,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 7,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 8,
-        resource_type: 'linode',
-        roles: ['linode_contributor'],
-      },
-      {
-        resource_id: 45678901,
-        resource_type: 'firewall',
-        roles: ['update_firewall'],
-      },
-    ],
-  }
-);
+    entity_access: entityAccessList,
+  });

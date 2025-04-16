@@ -1,13 +1,30 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import { Autocomplete, Box, Notice, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Notice,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
-import { REGION_CAVEAT_HELPER_TEXT } from 'src/features/VPCs/constants';
+import {
+  REGION_CAVEAT_HELPER_TEXT,
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+} from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
+import { VPCAvailability } from './VPCAvailability';
+import { VPCRanges } from './VPCRanges';
+
 import type { LinodeCreateFormValues } from '../utilities';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 interface Props {
   index: number;
@@ -16,8 +33,9 @@ interface Props {
 export const VPC = ({ index }: Props) => {
   const {
     control,
-    setValue,
     resetField,
+    setValue,
+    formState: { errors },
   } = useFormContext<LinodeCreateFormValues>();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -31,7 +49,11 @@ export const VPC = ({ index }: Props) => {
   const regionSupportsVPCs =
     selectedRegion?.capabilities.includes('VPCs') ?? false;
 
-  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region: regionId },
   });
@@ -47,15 +69,18 @@ export const VPC = ({ index }: Props) => {
             variant="warning"
           />
         )}
-        {selectedRegion && !regionSupportsVPCs && (
-          <Notice
-            text="VPC is not available in the selected region."
-            variant="warning"
-          />
-        )}
+        {selectedRegion && !regionSupportsVPCs && <VPCAvailability />}
         <Controller
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.vpc_id`}
           render={({ field, fieldState }) => (
             <Autocomplete
+              disabled={!regionSupportsVPCs}
+              errorText={error?.[0].reason ?? fieldState.error?.message}
+              label="VPC"
+              loading={isLoading}
+              noMarginTop
+              onBlur={field.onBlur}
               onChange={(e, vpc) => {
                 field.onChange(vpc?.id ?? null);
 
@@ -72,22 +97,14 @@ export const VPC = ({ index }: Props) => {
                   resetField(`linodeInterfaces.${index}.vpc.subnet_id`);
                 }
               }}
+              options={vpcs ?? []}
+              placeholder="None"
               textFieldProps={{
                 tooltipText: REGION_CAVEAT_HELPER_TEXT,
               }}
-              disabled={!regionSupportsVPCs}
-              errorText={error?.[0].reason ?? fieldState.error?.message}
-              label="VPC"
-              loading={isLoading}
-              noMarginTop
-              onBlur={field.onBlur}
-              options={vpcs ?? []}
-              placeholder="None"
               value={selectedVPC ?? null}
             />
           )}
-          control={control}
-          name={`linodeInterfaces.${index}.vpc.vpc_id`}
         />
         {regionId && regionSupportsVPCs && (
           <Box>
@@ -97,13 +114,10 @@ export const VPC = ({ index }: Props) => {
           </Box>
         )}
         <Controller
+          control={control}
+          name={`linodeInterfaces.${index}.vpc.subnet_id`}
           render={({ field, fieldState }) => (
             <Autocomplete
-              value={
-                selectedVPC?.subnets.find(
-                  (subnet) => subnet.id === field.value
-                ) ?? null
-              }
               disabled={!regionSupportsVPCs}
               errorText={fieldState.error?.message}
               getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
@@ -113,13 +127,84 @@ export const VPC = ({ index }: Props) => {
               onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
               options={selectedVPC?.subnets ?? []}
               placeholder="Select Subnet"
+              value={
+                selectedVPC?.subnets.find(
+                  (subnet) => subnet.id === field.value
+                ) ?? null
+              }
             />
           )}
-          control={control}
-          name={`linodeInterfaces.${index}.vpc.subnet_id`}
         />
+        <Stack>
+          <Controller
+            control={control}
+            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.address`}
+            render={({ field, fieldState }) => (
+              <Box>
+                <FormControlLabel
+                  checked={field.value === 'auto'}
+                  control={<Checkbox sx={{ ml: 0.4 }} />}
+                  disabled={!regionSupportsVPCs}
+                  label={
+                    <Stack alignItems="center" direction="row">
+                      <Typography>
+                        Auto-assign a VPC IPv4 address for this Linode in the
+                        VPC
+                      </Typography>
+                      <TooltipIcon
+                        status="help"
+                        text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
+                      />
+                    </Stack>
+                  }
+                  onChange={(e, checked) =>
+                    field.onChange(checked ? 'auto' : '')
+                  }
+                />
+                {field.value !== 'auto' && (
+                  <TextField
+                    containerProps={{ sx: { mb: 1.5, mt: 1 } }}
+                    errorText={
+                      fieldState.error?.message ??
+                      errors.linodeInterfaces?.[index]?.vpc?.ipv4
+                        ?.addresses?.[0]?.message
+                    }
+                    label="VPC IPv4"
+                    noMarginTop
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    required
+                    value={field.value}
+                  />
+                )}
+              </Box>
+            )}
+          />
+          <Controller
+            control={control}
+            name={`linodeInterfaces.${index}.vpc.ipv4.addresses.0.nat_1_1_address`}
+            render={({ field, fieldState }) => (
+              <Box>
+                {fieldState.error?.message && (
+                  <Notice text={fieldState.error.message} variant="error" />
+                )}
+                <FormControlLabel
+                  checked={field.value === 'auto'}
+                  control={<Checkbox sx={{ ml: 0.4 }} />}
+                  disabled={!regionSupportsVPCs}
+                  label={<VPCPublicIPLabel />}
+                  onChange={(e, checked) =>
+                    field.onChange(checked ? 'auto' : null)
+                  }
+                />
+              </Box>
+            )}
+          />
+        </Stack>
+        <VPCRanges disabled={!regionSupportsVPCs} interfaceIndex={index} />
       </Stack>
       <VPCCreateDrawer
+        onClose={() => setIsCreateDrawerOpen(false)}
         onSuccess={(vpc) => {
           setValue(`linodeInterfaces.${index}.vpc.vpc_id`, vpc.id, {
             shouldValidate: true,
@@ -137,7 +222,6 @@ export const VPC = ({ index }: Props) => {
             );
           }
         }}
-        onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         selectedRegion={regionId}
       />

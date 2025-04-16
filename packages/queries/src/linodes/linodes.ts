@@ -3,13 +3,17 @@ import {
   cloneLinode,
   createLinode,
   deleteLinode,
+  getConfigInterface,
+  getConfigInterfaces,
   getLinode,
   getLinodeBackups,
+  getLinodeConfig,
   getLinodeFirewalls,
   getLinodeIPs,
   getLinodeInterface,
   getLinodeInterfaceFirewalls,
   getLinodeInterfaces,
+  getLinodeInterfacesSettings,
   getLinodeKernel,
   getLinodeLish,
   getLinodeStats,
@@ -89,7 +93,27 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryKey: null,
       },
       configs: {
-        queryFn: () => getAllLinodeConfigs(id),
+        contextQueries: {
+          config: (configId: number) => ({
+            contextQueries: {
+              interface: (interfaceId: number) => ({
+                queryFn: () => getConfigInterface(id, configId, interfaceId),
+                queryKey: [interfaceId],
+              }),
+              interfaces: {
+                queryFn: () => getConfigInterfaces(id, configId),
+                queryKey: null,
+              },
+              queryKey: null,
+            },
+            queryFn: () => getLinodeConfig(id, configId),
+            queryKey: [configId],
+          }),
+          configs: {
+            queryFn: () => getAllLinodeConfigs(id),
+            queryKey: null,
+          },
+        },
         queryKey: null,
       },
       disks: {
@@ -115,6 +139,10 @@ export const linodeQueries = createQueryKeys('linodes', {
           }),
           interfaces: {
             queryFn: () => getLinodeInterfaces(id),
+            queryKey: null,
+          },
+          settings: {
+            queryFn: () => getLinodeInterfacesSettings(id),
             queryKey: null,
           },
         },
@@ -184,7 +212,7 @@ export const linodeQueries = createQueryKeys('linodes', {
 export const useLinodesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.paginated(params, filter),
@@ -197,7 +225,7 @@ export const useLinodesQuery = (
 export const useAllLinodesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<Linode[], APIError[]>({
     ...linodeQueries.linodes._ctx.all(params, filter),
@@ -208,7 +236,7 @@ export const useAllLinodesQuery = (
 
 export const useInfiniteLinodesQuery = (
   filter: Filter = {},
-  enabled: boolean
+  enabled: boolean,
 ) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.infinite(filter),
@@ -240,7 +268,7 @@ export const useLinodeUpdateMutation = (id: number) => {
       });
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(id).queryKey,
-        linode
+        linode,
       );
     },
   });
@@ -249,7 +277,7 @@ export const useLinodeUpdateMutation = (id: number) => {
 export const useAllLinodeKernelsQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<Kernel[], APIError[]>({
     ...linodeQueries.kernels(params, filter),
@@ -272,7 +300,7 @@ export const useDeleteLinodeMutation = (id: number) => {
   const queryClient = useQueryClient();
 
   const linode = queryClient.getQueryData<Linode>(
-    linodeQueries.linode(id).queryKey
+    linodeQueries.linode(id).queryKey,
   );
 
   const placementGroupId = linode?.placement_group?.id;
@@ -287,8 +315,8 @@ export const useDeleteLinodeMutation = (id: number) => {
       // we need to invalidate the placement group queries
       if (placementGroupId) {
         queryClient.invalidateQueries({
-          queryKey: placementGroupQueries.placementGroup(placementGroupId)
-            .queryKey,
+          queryKey:
+            placementGroupQueries.placementGroup(placementGroupId).queryKey,
         });
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.all._def,
@@ -309,7 +337,7 @@ export const useCreateLinodeMutation = () => {
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(linode.id).queryKey,
-        linode
+        linode,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -322,8 +350,9 @@ export const useCreateLinodeMutation = () => {
           queryClient.invalidateQueries({ queryKey: vlanQueries._def });
         }
 
-        const vpcId = variables.interfaces?.find((i) => i.purpose === 'vpc')
-          ?.vpc_id;
+        const vpcId = variables.interfaces?.find(
+          (i) => i.purpose === 'vpc',
+        )?.vpc_id;
 
         if (vpcId) {
           // If a Linode is created with a VPC, invalidate the related VPC queries.
@@ -335,6 +364,20 @@ export const useCreateLinodeMutation = () => {
             queryKey: vpcQueries.vpc(vpcId).queryKey,
           });
         }
+      } else {
+        // invalidate firewall queries if a new Linode interface is assigned to a firewall
+        if (variables.interfaces?.some((iface) => iface.firewall_id)) {
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+        }
+        for (const iface of variables.interfaces ?? []) {
+          if (iface.firewall_id) {
+            queryClient.invalidateQueries({
+              queryKey: firewallQueries.firewall(iface.firewall_id).queryKey,
+            });
+          }
+        }
       }
 
       // If the Linode is assigned to a placement group on creation,
@@ -342,7 +385,7 @@ export const useCreateLinodeMutation = () => {
       if (variables.placement_group?.id) {
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.placementGroup(
-            variables.placement_group.id
+            variables.placement_group.id,
           ).queryKey,
         });
         queryClient.invalidateQueries({
@@ -380,7 +423,7 @@ export const useCloneLinodeMutation = () => {
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.setQueryData<Linode>(
         linodeQueries.linode(linode.id).queryKey,
-        linode
+        linode,
       );
     },
   });
@@ -388,7 +431,7 @@ export const useCloneLinodeMutation = () => {
 
 export const useBootLinodeMutation = (
   id: number,
-  configsToUpdate?: Config[]
+  configsToUpdate?: Config[],
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>({
@@ -407,12 +450,11 @@ export const useBootLinodeMutation = (
          * shows up as 'Running' right after being booting. Note that the configs query eventually gets invalidated
          * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
          */
-        const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
-          configsToUpdate
-        );
+        const updatedConfigs: Config[] =
+          manuallySetVPCConfigInterfacesToActive(configsToUpdate);
         queryClient.setQueryData(
           linodeQueries.linode(id)._ctx.configs.queryKey,
-          updatedConfigs
+          updatedConfigs,
         );
       }
     },
@@ -421,7 +463,7 @@ export const useBootLinodeMutation = (
 
 export const useRebootLinodeMutation = (
   id: number,
-  configsToUpdate?: Config[]
+  configsToUpdate?: Config[],
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], { config_id?: number }>({
@@ -440,12 +482,11 @@ export const useRebootLinodeMutation = (
        * and refetched after the Linode's status changes, ensuring that the actual data will be up to date.
        */
       if (configsToUpdate) {
-        const updatedConfigs: Config[] = manuallySetVPCConfigInterfacesToActive(
-          configsToUpdate
-        );
+        const updatedConfigs: Config[] =
+          manuallySetVPCConfigInterfacesToActive(configsToUpdate);
         queryClient.setQueryData(
           linodeQueries.linode(id)._ctx.configs.queryKey,
-          updatedConfigs
+          updatedConfigs,
         );
       }
     },
@@ -485,7 +526,7 @@ export const useLinodeMigrateMutation = (id: number) => {
       if (variables.placement_group?.id) {
         queryClient.invalidateQueries({
           queryKey: placementGroupQueries.placementGroup(
-            variables.placement_group.id
+            variables.placement_group.id,
           ).queryKey,
         });
         queryClient.invalidateQueries({
@@ -536,7 +577,7 @@ export const useRebuildLinodeMutation = (id: number) => {
     onSuccess(linode) {
       queryClient.setQueryData(
         linodeQueries.linode(linode.id).queryKey,
-        linode
+        linode,
       );
       queryClient.invalidateQueries(linodeQueries.linodes);
       queryClient.invalidateQueries({

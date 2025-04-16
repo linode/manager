@@ -109,24 +109,28 @@ export const customDarkModeOptions = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.Border}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.Border}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.Border}`,
+  },
+  tip: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
   },
 } as const;
 
@@ -382,6 +386,29 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           backgroundColor: Color.Neutrals[50],
+        },
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
+          },
+          color: Component.Checkbox.Empty.Default.Border,
         },
       },
     },
@@ -757,6 +784,7 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: theme.palette.primary.main,
           },
+          padding: '10px 10px',
         }),
       },
     },
