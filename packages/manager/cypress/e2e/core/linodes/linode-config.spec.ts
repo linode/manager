@@ -2,6 +2,7 @@ import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  regionFactory,
 } from '@linode/utilities';
 import {
   VLANFactory,
@@ -38,7 +39,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
 import { createTestLinode, fetchLinodeConfigs } from 'support/util/linodes';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
+import { chooseRegion } from 'support/util/regions';
 
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
@@ -459,7 +460,12 @@ describe('Linode Config management', () => {
   });
 
   describe('Mocked', () => {
-    const region: Region = getRegionById('us-southeast');
+    const region: Region = regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'us',
+      id: 'us-southeast',
+    });
+
     const mockKernel = kernelFactory.build();
     const mockVPC = vpcFactory.build({
       id: randomNumber(),
