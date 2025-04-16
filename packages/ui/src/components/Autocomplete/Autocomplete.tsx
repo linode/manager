@@ -23,7 +23,7 @@ export interface EnhancedAutocompleteProps<
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 > extends Omit<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
@@ -40,6 +40,14 @@ export interface EnhancedAutocompleteProps<
   noMarginTop?: boolean;
   /** Element to show when the Autocomplete search yields no results. */
   noOptionsText?: JSX.Element | string;
+  /**
+   * Keep the search input enabled on mobile.
+   * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
+   * Because some instances may require the search input to be editable on mobile, this prop is available to override that default behavior.
+   *
+   * @default false
+   */
+  keepSearchEnabledOnMobile?: boolean;
   placeholder?: string;
   renderInput?: (_params: AutocompleteRenderInputParams) => React.ReactNode;
   /** Label for the "select all" option. */
@@ -67,9 +75,9 @@ export const Autocomplete = <
   T extends { label: string },
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
+  FreeSolo extends boolean | undefined = undefined,
 >(
-  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
+  props: EnhancedAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
 ) => {
   const {
     clearOnBlur,
@@ -85,6 +93,7 @@ export const Autocomplete = <
     multiple,
     noMarginTop,
     noOptionsText,
+    keepSearchEnabledOnMobile = false,
     onBlur,
     onChange,
     options,
@@ -96,6 +105,7 @@ export const Autocomplete = <
     value,
     ...rest
   } = props;
+  const [isReadonly, setIsReadonly] = React.useState(false);
 
   const isSelectAllActive =
     multiple && Array.isArray(value) && value.length === options.length;
@@ -144,6 +154,11 @@ export const Autocomplete = <
                     </>
                   ),
                 }}
+                inputProps={{
+                  ...params.inputProps,
+                  ...textFieldProps?.inputProps,
+                  readOnly: isReadonly && !keepSearchEnabledOnMobile,
+                }}
               />
             )
       }
@@ -183,6 +198,9 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
+      onTouchStart={() => {
+        setIsReadonly(true);
+      }}
       popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       value={value}
       {...rest}
@@ -191,7 +209,7 @@ export const Autocomplete = <
           if (details?.option === selectAllOption) {
             if (isSelectAllActive) {
               if (typeof value === typeof []) {
-                onChange(e, ([] as T[]) as typeof value, reason, details);
+                onChange(e, [] as T[] as typeof value, reason, details);
               }
             } else {
               if (typeof value === typeof options) {

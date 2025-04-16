@@ -3,15 +3,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../Shared/utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
-import type { AccountAccessType, RoleType } from '@linode/api-v4';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
-type Props = {
+interface Props {
   entities: string[];
-  onButtonClick: (roleName: AccountAccessType | RoleType) => void;
-  roleName: AccountAccessType | RoleType;
-};
+  onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
+  roleName: AccountAccessRole | EntityAccessRole;
+}
 
 export const AssignedEntities = ({
   entities,
@@ -22,12 +22,8 @@ export const AssignedEntities = ({
 
   const handleDelete = () => {};
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(entities);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(entities);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
