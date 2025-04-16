@@ -80,13 +80,13 @@ describe('GroupedAlertsTable', () => {
   });
 
   it('should scroll to tag header when switching pages within tag pagination', async () => {
-    const manyAlerts: GroupedBy<Alert> = [
+    const alerts: GroupedBy<Alert> = [
       ['tag1', alertFactory.buildList(50, { tags: ['tag1'] })],
     ];
 
     renderWithTheme(
       <GroupedAlertsTable
-        groupedAlerts={manyAlerts}
+        groupedAlerts={alerts}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
         handleStatusChange={mockHandleStatusChange}
