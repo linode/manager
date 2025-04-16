@@ -358,9 +358,11 @@ export const baseConfig = [
     files: ['**/cypress/**/*.{js,ts,tsx}'],
     rules: {
       'no-console': 'off',
+      'no-unused-expressions': 'off',
       'sonarjs/pseudo-random': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
 

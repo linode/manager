@@ -19,8 +19,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'wordpress.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wordpress/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wordpress/',
         title: 'Deploy WordPress through the Linode Marketplace',
       },
     ],
@@ -40,8 +39,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'drupal.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/drupal/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/drupal/',
         title: 'Deploy Drupal through the Linode Marketplace',
       },
     ],
@@ -61,8 +59,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'lamp.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/lamp-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lamp-stack/',
         title: 'Deploy a LAMP Stack through the Linode Marketplace',
       },
     ],
@@ -82,8 +79,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mern.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mern-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mern-stack/',
         title: 'Deploy a MERN Stack through the Linode Marketplace',
       },
     ],
@@ -102,8 +98,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'wireguard.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
         title: 'Deploy WireGuard through the Linode Marketplace',
       },
     ],
@@ -123,8 +118,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'gitlab.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gitlab/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitlab/',
         title: 'Deploy GitLab through the Linode Marketplace',
       },
     ],
@@ -144,8 +138,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'woocommerce.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/woocommerce/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/woocommerce/',
         title: 'Deploy WooCommerce through the Linode Marketplace',
       },
     ],
@@ -166,8 +159,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'minecraft.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/minecraft/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/minecraft/',
         title: 'Deploy a Minecraft Server through the Linode Marketplace',
       },
     ],
@@ -186,8 +178,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openvpn.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openvpn/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openvpn/',
         title: 'Deploy OpenVPN through the Linode Marketplace',
       },
     ],
@@ -206,8 +197,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'plesk.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/plesk/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plesk/',
         title: 'Deploy Plesk through the Linode Marketplace',
       },
     ],
@@ -228,8 +218,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'cpanel.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cpanel/',
         title: 'Deploy cPanel through the Linode Marketplace',
       },
     ],
@@ -250,8 +239,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'shadowsocks.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/shadowsocks/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/shadowsocks/',
         title: 'Deploy Shadowsocks through the Linode Marketplace',
       },
     ],
@@ -271,8 +259,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'lemp.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/lemp-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lemp-stack/',
         title: 'Deploy a LEMP Stack through the Linode Marketplace',
       },
     ],
@@ -290,8 +277,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mysql.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mysql/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mysql/',
         title: 'Deploy MySQL/MariaDB through the Linode Marketplace',
       },
     ],
@@ -310,8 +296,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'jenkins.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jenkins/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jenkins/',
         title: 'Deploy Jenkins through the Linode Marketplace',
       },
     ],
@@ -331,8 +316,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'docker.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/docker/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/docker/',
         title: 'Deploy Docker through the Linode Marketplace',
       },
     ],
@@ -351,8 +335,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'redis.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
         title: 'Deploy Redis&reg; through the Linode Marketplace',
       },
     ],
@@ -373,8 +356,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'phpmyadmin.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/phpmyadmin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/phpmyadmin/',
         title: 'Deploy phpMyAdmin through the Linode Marketplace',
       },
     ],
@@ -393,8 +375,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'rubyonrails.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/ruby-on-rails/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/ruby-on-rails/',
         title: 'Deploy Ruby on Rails through the Linode Marketplace',
       },
     ],
@@ -413,8 +394,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'django.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/django/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/django/',
         title: 'Deploy Django through the Linode Marketplace',
       },
     ],
@@ -433,8 +413,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'flask.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/flask/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/flask/',
         title: 'Deploy Flask through the Linode Marketplace',
       },
     ],
@@ -453,8 +432,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'postgresql.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
         title: 'Deploy PostgreSQL through the Linode Marketplace',
       },
     ],
@@ -473,8 +451,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mean.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mean-stack/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mean-stack/',
         title: 'Deploy a MEAN Stack through the Linode Marketplace',
       },
     ],
@@ -494,8 +471,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nextcloud.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nextcloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nextcloud/',
         title: 'Deploy Nextcloud through the Linode Marketplace',
       },
     ],
@@ -513,8 +489,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'azuracast.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/azuracast/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/azuracast/',
         title: 'Deploy AzuraCast through the Linode Marketplace',
       },
     ],
@@ -534,8 +509,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'plex.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/plex/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plex/',
         title: 'Deploy Plex Media Server through the Linode Marketplace',
       },
     ],
@@ -555,8 +529,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'jitsi.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
         title: 'Deploy Jitsi through the Linode Marketplace',
       },
     ],
@@ -575,8 +548,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'rabbitmq.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rabbitmq/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rabbitmq/',
         title: 'Deploy RabbitMQ through the Linode Marketplace',
       },
     ],
@@ -595,8 +567,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'discourse.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/discourse/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/discourse/',
         title: 'Deploy Discourse through the Linode Marketplace',
       },
     ],
@@ -616,8 +587,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'vscodeserver.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/vscode/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/vscode/',
         title: 'Deploy VS Code through the Linode Marketplace',
       },
     ],
@@ -636,8 +606,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'gitea.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/gitea/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitea/',
         title: 'Deploy Gitea through the Linode Marketplace',
       },
     ],
@@ -656,8 +625,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'guacamole.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/guacamole/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/guacamole/',
         title: 'Deploy Apache Guacamole through the Linode Marketplace',
       },
     ],
@@ -676,8 +644,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'filecloud.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
         title: 'Deploy FileCloud through the Linode Marketplace',
       },
     ],
@@ -697,8 +664,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'cloudron.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cloudron/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cloudron/',
         title: 'Deploy Cloudron through the Linode Marketplace',
       },
     ],
@@ -718,8 +684,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openlitespeedwordpress.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-wordpress/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-wordpress/',
         title: 'Deploy OpenLiteSpeed Wordpress through the Linode Marketplace',
       },
     ],
@@ -738,8 +703,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'secureyourserver.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
         title: 'Secure Your Server through the Linode Marketplace',
       },
     ],
@@ -758,8 +722,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'cyberpanel.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/cyberpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cyberpanel/',
         title: 'Deploy CyberPanel through the Linode Marketplace',
       },
     ],
@@ -778,8 +741,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'yacht.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
         title: 'Deploy Yacht through the Linode Marketplace',
       },
     ],
@@ -798,8 +760,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'zabbix.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/zabbix/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/zabbix/',
         title: 'Deploy Zabbix through the Linode Marketplace',
       },
     ],
@@ -818,8 +779,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'peppermint.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
         title: 'Deploy Peppermint through the Linode Marketplace',
       },
     ],
@@ -839,8 +799,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'antmediaserver.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
         title: 'Deploy Ant Media Server through the Linode Marketplace',
       },
     ],
@@ -859,8 +818,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'owncast.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/owncast/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncast/',
         title: 'Deploy Owncast through the Linode Marketplace',
       },
     ],
@@ -880,8 +838,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'moodle.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/moodle/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/moodle/',
         title: 'Deploy Moodle through the Linode Marketplace',
       },
     ],
@@ -901,8 +858,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'aapanel.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/aapanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/aapanel/',
         title: 'Deploy aaPanel through the Linode Marketplace',
       },
     ],
@@ -922,8 +878,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'splunk.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/splunk/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/splunk/',
         title: 'Deploy Splunk through the Linode Marketplace',
       },
     ],
@@ -944,8 +899,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'clustercontrol.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/clustercontrol/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/clustercontrol/',
         title: 'Deploy ClusterControl through the Linode Marketplace',
       },
     ],
@@ -965,8 +919,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'jetbackup.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jetbackup/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jetbackup/',
         title: 'Deploy JetBackup through the Linode Marketplace',
       },
     ],
@@ -986,8 +939,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'harbor.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/harbor/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/harbor/',
         title: 'Deploy Harbor through the Linode Marketplace',
       },
     ],
@@ -1006,8 +958,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'rocketchat.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/rocketchat/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rocketchat/',
         title: 'Deploy Rocket.Chat through the Linode Marketplace',
       },
     ],
@@ -1027,8 +978,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'wazuh.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
         title: 'Deploy Wazuh through the Linode Marketplace',
       },
     ],
@@ -1047,8 +997,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'beef.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/beef/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/beef/',
         title: 'Deploy BeEF through the Linode Marketplace',
       },
     ],
@@ -1068,8 +1017,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openlitespeeddjango.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-django/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-django/',
         title: 'Deploy OpenLiteSpeed Django through the Linode Marketplace',
       },
     ],
@@ -1088,8 +1036,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openlitespeedrails.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-rails/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-rails/',
         title: 'Deploy OpenLiteSpeed Rails through the Linode Marketplace ',
       },
     ],
@@ -1109,8 +1056,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openlitespeednodejs.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-nodejs/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-nodejs/',
         title: 'Deploy OpenLiteSpeed Node.js through the Linode Marketplace',
       },
     ],
@@ -1129,8 +1075,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'litespeedcpanel.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/litespeed-cpanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/litespeed-cpanel/',
         title: 'Deploy LiteSpeed cPanel through the Linode Marketplace',
       },
     ],
@@ -1150,8 +1095,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'akaunting.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/akaunting/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/akaunting/',
         title: 'Deploy Akaunting through the Linode Marketplace',
       },
     ],
@@ -1171,8 +1115,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'pritunl.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/pritunl/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pritunl/',
         title: 'Deploy Pritunl through the Linode Marketplace',
       },
     ],
@@ -1191,8 +1134,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'pihole.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/pihole/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pihole/',
         title: 'Deploy Pi-hole through the Linode Marketplace',
       },
     ],
@@ -1212,8 +1154,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'uptimekuma.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/uptime-kuma/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/uptime-kuma/',
         title: 'Deploy Uptime Kuma through the Linode Marketplace',
       },
     ],
@@ -1232,8 +1173,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'grav.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/grav/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/grav/',
         title: 'Deploy Grav through the Linode Marketplace',
       },
     ],
@@ -1253,8 +1193,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nodejs.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
         title: 'Deploy Node.js through the Linode Marketplace',
       },
     ],
@@ -1274,8 +1213,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'saltcorn.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/saltcorn/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/saltcorn/',
         title: 'Deploy Saltcorn through the Linode Marketplace',
       },
     ],
@@ -1295,8 +1233,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'odoo.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/odoo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/odoo/',
         title: 'Deploy Odoo through the Linode Marketplace',
       },
     ],
@@ -1316,8 +1253,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'focalboard.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
         title: 'Deploy Focalboard through the Linode Marketplace',
       },
     ],
@@ -1336,8 +1272,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'prometheusgrafana.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana/',
         title: 'Deploy Prometheus & Grafana through the Linode Marketplace',
       },
     ],
@@ -1356,8 +1291,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'joomla.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/joomla/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joomla/',
         title: 'Deploy Joomla through the Linode Marketplace',
       },
     ],
@@ -1377,8 +1311,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'antmediaserver.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
         title:
           'Deploy Ant Media Enterprise Edition through the Linode Marketplace',
       },
@@ -1399,8 +1332,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'joplin.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/joplin/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joplin/',
         title: 'Deploy Joplin through the Linode Marketplace',
       },
     ],
@@ -1419,8 +1351,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'liveswitch.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch/',
         title: 'Deploy LiveSwitch through the Linode Marketplace',
       },
     ],
@@ -1440,8 +1371,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'easypanel.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel/',
         title: 'Deploy Easypanel through the Linode Marketplace',
       },
     ],
@@ -1461,8 +1391,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'kalilinux.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux/',
         title: 'Deploy Kali Linux through the Linode Marketplace',
       },
     ],
@@ -1484,8 +1413,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nomad.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
         title: 'Deploy HashiCorp Nomad through the Linode Marketplace',
       },
     ],
@@ -1505,8 +1433,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'vault.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
         title: 'Deploy HashiCorp Vault through the Linode Marketplace',
       },
     ],
@@ -1525,8 +1452,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'microweber.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/microweber/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/microweber/',
         title: 'Deploy Microweber through the Linode Marketplace',
       },
     ],
@@ -1545,8 +1471,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'postgresql.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
         title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
       },
     ],
@@ -1565,8 +1490,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'galeramarketplaceocc.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
         title: 'Deploy Galera Cluster through the Linode Marketplace',
       },
     ],
@@ -1585,8 +1509,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mastodon.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mastodon/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mastodon/',
         title: 'Deploy Mastodon through the Linode Marketplace',
       },
     ],
@@ -1607,8 +1530,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'apacheairflow.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
         title: 'Deploy Apache Airflow through the Linode Marketplace',
       },
     ],
@@ -1628,8 +1550,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'haltdos.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
         title: 'Deploy Haltdos Community WAF through the Linode Marketplace',
       },
     ],
@@ -1649,8 +1570,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'superinsight.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
         title: 'Deploy Superinsight through the Linode Marketplace',
       },
     ],
@@ -1669,8 +1589,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'passky.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
         title: 'Deploy Passky through the Linode Marketplace',
       },
     ],
@@ -1689,8 +1608,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'onlyoffice.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
         title: 'Deploy ONLYOFFICE Docs through the Linode Marketplace',
       },
     ],
@@ -1709,8 +1627,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'redis.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
         title: 'Deploy Redis® Sentinel Cluster through the Linode Marketplace',
       },
     ],
@@ -1730,8 +1647,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'owncloud.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
         title: 'Deploy ownCloud through the Linode Marketplace',
       },
     ],
@@ -1752,8 +1668,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'appwrite.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
         title: 'Deploy Appwrite through the Linode Marketplace',
       },
     ],
@@ -1775,8 +1690,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nomad.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-cluster',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-cluster',
         title: 'Deploy HashiCorp Nomad Cluster through the Linode Marketplace',
       },
     ],
@@ -1797,8 +1711,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nomad.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
         title:
           'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
       },
@@ -1818,8 +1731,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mainconcept.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins-demo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins-demo/',
         title:
           'Deploy MainConcept FFmpeg Plugins Demo through the Linode Marketplace',
       },
@@ -1840,8 +1752,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mainconcept.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
         title:
           'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
       },
@@ -1861,8 +1772,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mainconcept.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
         title:
           'Deploy MainConcept P2 AVC ULTRA Transcoder Demo through the Linode Marketplace',
       },
@@ -1883,8 +1793,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mainconcept.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder-demo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder-demo/',
         title:
           'Deploy MainConcept XAVC Transcoder Demo through the Linode Marketplace',
       },
@@ -1905,8 +1814,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'mainconcept.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder-demo/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder-demo/',
         title:
           'Deploy MainConcept XDCAM Transcoder Demo through the Linode Marketplace',
       },
@@ -1927,8 +1835,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'simplexchat.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/simplex/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/simplex/',
         title: 'Deploy SimpleX chat through the Linode Marketplace',
       },
     ],
@@ -1948,8 +1855,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'jupyter.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
         title: 'Deploy JupyterLab through the Linode Marketplace',
       },
     ],
@@ -1969,8 +1875,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'nats.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/nats-single-node/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nats-single-node/',
         title: 'Deploy NATS single node through the Linode Marketplace',
       },
     ],
@@ -1990,8 +1895,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'linuxgsm.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/linuxgsm/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/linuxgsm/',
         title: 'Deploy LinuxGSM through the Linode Marketplace',
       },
     ],
@@ -2011,8 +1915,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'jitsi.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi-cluster/',
         title: 'Deploy Jitsi Cluster through the Linode Marketplace',
       },
     ],
@@ -2032,8 +1935,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'glusterfs.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/glusterfs-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/glusterfs-cluster/',
         title: 'Deploy GlusterFS Cluster through the Linode Marketplace',
       },
     ],
@@ -2054,8 +1956,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'apachecassandra.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
         title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
       },
     ],
@@ -2075,8 +1976,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'couchbase.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/couchbase-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/couchbase-cluster/',
         title:
           'Deploy a Couchbase Enterprise Server cluster through the Linode Marketplace',
       },
@@ -2096,8 +1996,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'apachekafka.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-kafka-cluster/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-kafka-cluster/',
         title: 'Deploy an Apache Kafka cluster through the Linode Marketplace',
       },
     ],
@@ -2117,8 +2016,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'valkey.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/valkey/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/valkey/',
         title: 'Deploy Valkey through the Linode Marketplace',
       },
     ],
@@ -2138,8 +2036,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'openbao.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/openbao/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openbao/',
         title: 'Deploy OpenBao through the Linode Marketplace',
       },
     ],
@@ -2159,8 +2056,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'influxdb.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/influxdb/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/influxdb/',
         title: 'Deploy InfluxDB through the Linode Marketplace',
       },
     ],
@@ -2181,8 +2077,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'apachespark.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
         title: 'Deploy Apache Spark through the Linode Marketplace',
       },
     ],
@@ -2201,8 +2096,7 @@ export const oneClickApps: Record<number, OCA> = {
     logo_url: 'passbolt.svg',
     related_guides: [
       {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
         title:
           'Deploy Passbolt Community Edition through the Linode Marketplace',
       },
