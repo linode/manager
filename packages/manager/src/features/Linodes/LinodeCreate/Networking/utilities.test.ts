@@ -50,6 +50,7 @@ describe('getLinodeInterfacesPayload', () => {
 
     expect(getLinodeInterfacePayload(networkInterface)).toEqual({
       ...networkInterface,
+      purpose: undefined,
       vlan: null,
       vpc: null,
     });
