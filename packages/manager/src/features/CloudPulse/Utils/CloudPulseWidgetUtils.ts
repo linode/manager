@@ -16,7 +16,7 @@ import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
-  CloudPulseMetricsRequestV2,
+  CloudPulseMetricsRequestOlderVersion,
   CloudPulseMetricsResponse,
   DateTimeWithPreset,
   TimeDuration,
@@ -251,7 +251,7 @@ export const generateMaxUnit = (
 export const getCloudPulseMetricRequest = (
   props: MetricRequestProps,
   metricsUrl: string
-): CloudPulseMetricsRequest | CloudPulseMetricsRequestV2 => {
+): CloudPulseMetricsRequest | CloudPulseMetricsRequestOlderVersion => {
   const { duration, entityIds, resources, widget } = props;
   const preset = duration.preset;
 
@@ -316,8 +316,14 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
   const { metric, resources } = props;
-  return Object.values(metric)
-    .map((value) => mapResourceIdToName(value, resources))
+  return Object.entries(metric)
+    .map(([key, value]) => {
+      if (key === 'entity_id') {
+        return mapResourceIdToName(value, resources);
+      }
+
+      return value ?? '';
+    })
     .filter(Boolean)
     .join(' | ');
 };
