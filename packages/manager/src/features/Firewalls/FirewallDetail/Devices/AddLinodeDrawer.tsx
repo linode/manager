@@ -298,7 +298,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
           const interfacesWithLabels = assignableInterfaces.map((iface) => ({
             ...iface,
-            label: `${getLinodeInterfaceType(iface)} Interface (ID : ${iface.id})`,
+            label: `${getLinodeInterfaceType(iface)} Interface (ID: ${iface.id})`,
             value: iface.id,
           }));
 
