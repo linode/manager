@@ -68,7 +68,7 @@ export const mockGetCustomImages = (
 };
 
 /**
- * Intercepts GET request to retrieve custom images and mocks response.
+ * Intercepts GET request to retrieve recovery images and mocks response.
  *
  * @param images - Array of Image objects with which to mock response.
  *
