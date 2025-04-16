@@ -1159,47 +1159,6 @@ export const oneClickApps: Record<number, OCA> = {
       'Free and open source accounting software you can use in your browser.',
     website: 'https://akaunting.com',
   },
-  923037: {
-    alt_description: 'Virtual private network.',
-    alt_name: 'WireGuard VPN',
-    categories: ['Security'],
-    colors: {
-      end: '333333',
-      start: '1f76b7',
-    },
-    description: `Feature-rich, self-hosted VPN based on WireGuard® protocol, plus convenient features like single sign-on, real-time bandwidth monitoring, and unlimited users/devices.`,
-    logo_url: 'warpspeed.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/warpspeed/',
-        title: 'Deploy WarpSpeed VPN through the Linode Marketplace',
-      },
-    ],
-    summary: 'Secure low-latency VPN powered by WireGuard® protocol.',
-    website: 'https://bunker.services/products/warpspeed',
-  },
-  925530: {
-    alt_description: 'Virtual private network.',
-    alt_name: 'VPN',
-    categories: ['Security'],
-    colors: {
-      end: '1a32b1',
-      start: '2ec1cf',
-    },
-    description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
-    logo_url: 'utunnel.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/utunnel/',
-        title: 'Deploy UTunnel VPN through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols.',
-    website: 'https://www.utunnel.io/linode-vpn-server.html',
-  },
   925722: {
     alt_description: 'Virtual private network for businesses and teams.',
     alt_name: 'Enterprise VPN',
@@ -1219,27 +1178,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Enterprise open source VPN.',
     website: 'https://docs.pritunl.com/docs',
-  },
-  954759: {
-    alt_description: 'Time series database and database monitoring/metrics.',
-    alt_name: 'Database monitoring',
-    categories: ['Databases'],
-    colors: {
-      end: 'af3e56',
-      start: '6a1e6e',
-    },
-    description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
-    logo_url: 'victoriametricssingle.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/victoriametrics-single/',
-        title: 'Deploy VictoriaMetrics Single through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Free and open source time series database (TSDB) and monitoring solution.',
-    website: 'https://victoriametrics.com/',
   },
   970522: {
     alt_description: 'Popular DNS privacy sinkhole.',
@@ -1822,28 +1760,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'Appwrite is an open-source, cross-platform and technology-agnostic alternative to Firebase, providing all the core APIs necessary for web, mobile and Flutter development.',
     website: 'https://appwrite.io/',
-  },
-  1177225: {
-    alt_description: 'A safe home for all your data.',
-    alt_name:
-      'Spreadsheet style interface with the power of a relational database.',
-    categories: ['Productivity'],
-    colors: {
-      end: 'FF8000',
-      start: 'FF8000',
-    },
-    description: `Self-hosted database for a variety of management projects.`,
-    logo_url: 'seatable.svg',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/seatable/',
-        title: 'Deploy Seatable through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Collaborative web interface for data backed project and process management.',
-    website: 'https://seatable.io/docs/?lang=auto',
   },
   1226544: {
     alt_description:
