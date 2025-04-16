@@ -234,12 +234,12 @@ const VPCDetail = () => {
         </Notice>
       )}
       <Box
+        padding={`${theme.spacingFunction(16)} ${theme.spacingFunction(8)}`}
         sx={(theme) => ({
           [theme.breakpoints.up('lg')]: {
             paddingLeft: 0,
           },
         })}
-        padding={`${theme.spacing(2)} ${theme.spacing()}`}
       >
         <Typography sx={{ fontSize: '1rem' }} variant="h2">
           Subnets ({vpc.subnets.length})

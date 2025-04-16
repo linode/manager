@@ -2,12 +2,13 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallSettingsFactory } from 'src/factories';
 import {
   subnetAssignedLinodeDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithThemeAndRouter,
@@ -43,6 +44,9 @@ describe('VPC Subnets table', () => {
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
         return HttpResponse.json(makeResourcePage([subnet]));
+      }),
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
       })
     );
 
@@ -91,20 +95,20 @@ describe('VPC Subnets table', () => {
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
         return HttpResponse.json(makeResourcePage([subnet]));
+      }),
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
       })
     );
 
-    const {
-      getAllByRole,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={2}
-        vpcRegion=""
-      />
-    );
+    const { getAllByRole, getByText, queryByTestId } =
+      await renderWithThemeAndRouter(
+        <VPCSubnetsTable
+          isVPCLKEEnterpriseCluster={false}
+          vpcId={2}
+          vpcRegion=""
+        />
+      );
 
     const loadingState = queryByTestId(loadingTestId);
     if (loadingState) {
@@ -123,19 +127,19 @@ describe('VPC Subnets table', () => {
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
         return HttpResponse.json(makeResourcePage([subnet]));
+      }),
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
       })
     );
-    const {
-      getAllByRole,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={3}
-        vpcRegion=""
-      />
-    );
+    const { getAllByRole, getByText, queryByTestId } =
+      await renderWithThemeAndRouter(
+        <VPCSubnetsTable
+          isVPCLKEEnterpriseCluster={false}
+          vpcId={3}
+          vpcRegion=""
+        />
+      );
 
     const loadingState = queryByTestId(loadingTestId);
     if (loadingState) {

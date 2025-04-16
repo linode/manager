@@ -58,7 +58,7 @@ export const useVPCLinodeInterface = (
 
   const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
     linodeInterfaceWithVPC?.vpc?.vpc_id ?? -1,
-    Boolean(vpcInterfaces) && enabled
+    Boolean(vpcInterfaces?.length) && enabled
   );
 
   // For Linode Interfaces, a VPC only Linode is a VPC interface that is the default route for ipv4
