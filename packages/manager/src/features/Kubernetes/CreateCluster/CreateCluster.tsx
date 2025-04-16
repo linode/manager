@@ -179,7 +179,7 @@ export const CreateCluster = () => {
   );
 
   const isCreateClusterRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_kubernetes',
+    globalGrantType: 'add_lkes',
   });
 
   const {
