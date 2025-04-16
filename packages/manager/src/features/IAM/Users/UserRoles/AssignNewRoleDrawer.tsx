@@ -1,6 +1,7 @@
 import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import Grid from '@mui/material/Grid2';
+import React, { useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -40,6 +41,8 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     control,
     name: 'roles',
   });
+
+  const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
   // to watch changes to this value since we're conditionally rendering "Add another role"
   const roles = watch('roles');
@@ -85,6 +88,26 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             and continue adding roles or save the assignment.
             <Link to=""> Learn more about roles and permissions.</Link>
           </Typography>
+          <Grid
+            sx={() => ({
+              justifyContent: 'space-between',
+              marginBottom: theme.spacing(2),
+            })}
+            container
+            direction="row"
+            spacing={2}
+          >
+            <Typography variant={'h3'}>Roles</Typography>
+            {roles.length > 0 && roles.some((field) => field.role) && (
+              <StyledLinkButtonBox sx={{ marginTop: 0 }}>
+                <LinkButton
+                  onClick={() => setAreDetailsHidden(!areDetailsHidden)}
+                >
+                  {areDetailsHidden ? 'Show' : 'Hide'} details
+                </LinkButton>
+              </StyledLinkButtonBox>
+            )}
+          </Grid>
 
           {!!accountPermissions &&
             fields.map((field, index) => (
@@ -94,6 +117,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
                 onRemove={() => remove(index)}
                 options={allRoles}
                 permissions={accountPermissions}
+                hideDetails={areDetailsHidden}
               />
             ))}
 
