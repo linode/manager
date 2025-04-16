@@ -1,7 +1,4 @@
 import { capitalizeAllWords } from '@linode/utilities';
-import React from 'react';
-
-import { useFlags } from 'src/hooks/useFlags';
 
 import type {
   AccountAccessRole,
@@ -18,23 +15,6 @@ import type {
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-
-/**
- * Hook to determine if the IAM feature should be visible to the user.
- * Based on the user's account capability and the feature flag.
- *
- * @returns {boolean} - Whether the IAM feature is enabled for the current user.
- */
-export const useIsIAMEnabled = () => {
-  const flags = useFlags();
-
-  const isIAMEnabled = flags.iam?.enabled;
-
-  return {
-    isIAMBeta: flags.iam?.beta,
-    isIAMEnabled,
-  };
-};
 
 export const placeholderMap: Record<string, string> = {
   account: 'Select Account',
@@ -383,49 +363,6 @@ export const addEntitiesNamesToRoles = (
   });
 };
 
-/**
- * Custom hook to calculate hidden items
- */
-export const useCalculateHiddenItems = (
-  items: PermissionType[] | string[],
-  showAll?: boolean
-) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
-
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
-
-  const calculateHiddenItems = React.useCallback(() => {
-    if (showAll || !containerRef.current) {
-      setNumHiddenItems(0);
-      return;
-    }
-
-    if (!itemRefs.current) {
-      return;
-    }
-
-    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
-
-    const itemsArray = Array.from(itemRefs.current);
-
-    const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLDivElement | HTMLSpanElement) => {
-        const rect = item.getBoundingClientRect();
-        return rect.top >= containerBottom;
-      }
-    );
-
-    const numHiddenItems =
-      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
-
-    setNumHiddenItems(numHiddenItems);
-  }, [items, showAll]);
-
-  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
-};
-
 export interface EntitiesOption {
   label: string;
   value: number;
@@ -622,4 +559,11 @@ export const toEntityAccess = (
     }));
 
   return [...updatedEntityAccess, ...newEntities];
+};
+
+export const getCreateLinkForEntityType = (
+  entityType: EntityType | EntityTypePermissions
+): string => {
+  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
+  return `/${entityType}s/create`;
 };
