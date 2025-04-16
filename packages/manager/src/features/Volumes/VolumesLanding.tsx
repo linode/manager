@@ -176,7 +176,7 @@ export const VolumesLanding = () => {
     <>
       <DocumentTitleSegment segment="Volumes" />
       {_isRestrictedUser && (
-        <Notice variant="warning">
+        <Notice variant="warning" important>
           <Typography>
             <strong>Access restricted</strong>: You do not have permissions to
             create or edit Volumes.
