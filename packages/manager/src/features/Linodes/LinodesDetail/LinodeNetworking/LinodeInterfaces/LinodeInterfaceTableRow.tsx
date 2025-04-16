@@ -1,17 +1,17 @@
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import { LinodeInterfaceActionMenu } from './LinodeInterfaceActionMenu';
 import { LinodeInterfaceFirewall } from './LinodeInterfaceFirewall';
+import { LinodeInterfaceIPs } from './LinodeInterfaceIPs';
 import { getLinodeInterfaceType } from './utilities';
 
 import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 import type { LinodeInterface } from '@linode/api-v4';
-import { LinodeInterfaceIPs } from './LinodeInterfaceIPs';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 interface Props extends LinodeInterface {
   handlers: InterfaceActionHandlers;

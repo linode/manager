@@ -1,6 +1,10 @@
 import type { LinodeInterface } from '@linode/api-v4';
 
 export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
+  if (linodeInterface.vlan && linodeInterface.vlan.ipam_address) {
+    return [`${linodeInterface.vlan.ipam_address} (IPAM)`];
+  }
+
   const ips: string[] = [];
 
   if (linodeInterface.public) {

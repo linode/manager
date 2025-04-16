@@ -15,6 +15,10 @@ interface Props {
 export const LinodeInterfaceIPs = ({ linodeInterface }: Props) => {
   const [primary, ...ips] = getLinodeInterfaceIPs(linodeInterface);
 
+  if (!primary && ips.length === 0) {
+    return 'None';
+  }
+
   return (
     <Stack direction="row" spacing={1.5}>
       <MaskableText isToggleable text={primary} />
