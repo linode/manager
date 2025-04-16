@@ -90,6 +90,8 @@ export const AddLinodeDrawer = (props: Props) => {
     let interfaceError: string | undefined = undefined;
     const failedLinodes: Linode[] = [];
     const failedInterfaces: Map<number, InterfaceDeviceInfo | null> = new Map();
+    const failedLinodesWithMultiInterfaces: LinodeWithMultiLinodeInterfaces[] =
+      [];
 
     const linodeResults = await Promise.allSettled(
       linodesToAdd.map((linode) =>
@@ -142,6 +144,12 @@ export const AddLinodeDrawer = (props: Props) => {
         return;
       }
       failedInterfaces.set(ifaceInfo.linodeId, ifaceInfo);
+      const failedLinodeWithMultiInterfaces = linodesWithMultiInterfaces.find(
+        (linode) => linode.linodeId === ifaceInfo.linodeId
+      );
+      if (failedLinodeWithMultiInterfaces) {
+        failedLinodesWithMultiInterfaces.push(failedLinodeWithMultiInterfaces);
+      }
       const errorReason = getAPIErrorOrDefault(
         result.reason,
         `Failed to add Interface (ID ${ifaceInfo.interfaceId} from Linode ${ifaceInfo.linodeLabel}.`
@@ -151,9 +159,11 @@ export const AddLinodeDrawer = (props: Props) => {
         interfaceError = errorReason;
       }
     });
+
     setLocalError(linodeError ?? interfaceError);
     setLinodesToAdd(failedLinodes);
     setInterfacesToAddMap(failedInterfaces);
+    setLinodesWithMultiInterfaces(failedLinodesWithMultiInterfaces);
 
     if (!linodeError && !interfaceError) {
       handleClose();
