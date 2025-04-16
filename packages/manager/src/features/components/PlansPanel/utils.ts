@@ -95,7 +95,7 @@ const shouldExcludePlan = (
  */
 
 export const getPlanSelectionsByPlanType = <
-  T extends BaseType & { class: LinodeTypeClass }
+  T extends BaseType & { class: LinodeTypeClass },
 >(
   types: T[],
   options: { isLKE?: boolean } = {}

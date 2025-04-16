@@ -65,11 +65,8 @@ export const DatabaseDetail = () => {
     id,
   });
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   if (error) {
     return (

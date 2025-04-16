@@ -19,13 +19,10 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <InterfaceGeneration />,
-    });
+    const { findByText, getAllByRole, getByText } =
+      renderWithThemeAndHookFormContext({
+        component: <InterfaceGeneration />,
+      });
 
     const button = getByText('Network Interface Type');
 
@@ -55,13 +52,10 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <InterfaceGeneration />,
-    });
+    const { findByText, getAllByRole, getByText } =
+      renderWithThemeAndHookFormContext({
+        component: <InterfaceGeneration />,
+      });
 
     const button = getByText('Network Interface Type');
 

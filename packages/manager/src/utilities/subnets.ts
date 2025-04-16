@@ -112,12 +112,8 @@ export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
   otherIPv4s: string[]
 ): string => {
-  const [
-    firstOctet,
-    secondOctet,
-    thirdOctet,
-    fourthOctet,
-  ] = lastRecommendedIPv4.split('.');
+  const [firstOctet, secondOctet, thirdOctet, fourthOctet] =
+    lastRecommendedIPv4.split('.');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 

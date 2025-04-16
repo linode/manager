@@ -113,7 +113,11 @@ export const VPCSubnetsTable = (props: Props) => {
     };
   };
 
-  const { data: subnets, error, isLoading } = useSubnetsQuery(
+  const {
+    data: subnets,
+    error,
+    isLoading,
+  } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,

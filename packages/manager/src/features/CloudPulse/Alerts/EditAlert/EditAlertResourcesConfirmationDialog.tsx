@@ -29,12 +29,8 @@ interface AlertResourcesConfirmDialogProps {
 
 export const EditAlertResourcesConfirmDialog = React.memo(
   (props: AlertResourcesConfirmDialogProps) => {
-    const {
-      isApiResponsePending,
-      onClose,
-      onConfirm,
-      openConfirmationDialog,
-    } = props;
+    const { isApiResponsePending, onClose, onConfirm, openConfirmationDialog } =
+      props;
 
     const actionProps: ActionPanelProps = {
       primaryButtonProps: {

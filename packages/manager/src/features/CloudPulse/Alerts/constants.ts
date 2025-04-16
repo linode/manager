@@ -171,13 +171,11 @@ export const alertStatuses: Record<AlertStatusType, string> = {
   'in progress': 'In Progress',
 };
 
-export const alertStatusOptions: Item<
-  string,
-  AlertStatusType
->[] = Object.entries(alertStatuses).map(([key, label]) => ({
-  label,
-  value: key as AlertStatusType,
-}));
+export const alertStatusOptions: Item<string, AlertStatusType>[] =
+  Object.entries(alertStatuses).map(([key, label]) => ({
+    label,
+    value: key as AlertStatusType,
+  }));
 
 export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',

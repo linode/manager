@@ -9,6 +9,7 @@ export type ActionType =
   | 'attach'
   | 'clone'
   | 'create'
+  | 'download'
   | 'delete'
   | 'detach'
   | 'edit'

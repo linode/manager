@@ -90,7 +90,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       TooltipProps,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const showTooltip = alwaysShowTooltip || (disabled && Boolean(tooltipText));
 
@@ -147,5 +147,5 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return button;
-  }
+  },
 );

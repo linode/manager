@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -21,8 +20,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -95,19 +96,18 @@ export const KubernetesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: profile } = useProfile();
-
-  const isRestricted = profile?.restricted ?? false;
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_lkes',
+  });
 
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { data, error, isLoading } = useKubernetesClustersQuery({
-    enabled: !isRestricted,
     filter,
+    isUsingBetaEndpoint,
     params: {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    isUsingBetaEndpoint,
   });
 
   const {
@@ -166,7 +166,7 @@ export const KubernetesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (isRestricted || data?.results === 0) {
+  if (data?.results === 0) {
     return <KubernetesEmptyState isRestricted={isRestricted} />;
   }
 
@@ -185,7 +185,15 @@ export const KubernetesLanding = () => {
         </DismissibleBanner>
       )}
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'LKE Clusters',
+          }),
+        }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
+        disabledCreateButton={isRestricted}
         entity="Cluster"
         onButtonClick={() => push('/kubernetes/create')}
         removeCrumbX={1}

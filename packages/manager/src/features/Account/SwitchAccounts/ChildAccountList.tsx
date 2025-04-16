@@ -45,10 +45,8 @@ export const ChildAccountList = React.memo(
       ...(searchQuery && { company: { '+contains': searchQuery } }),
     };
 
-    const [
-      isSwitchingChildAccounts,
-      setIsSwitchingChildAccounts,
-    ] = useState<boolean>(false);
+    const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
+      useState<boolean>(false);
     const {
       data,
       fetchNextPage,

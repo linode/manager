@@ -27,7 +27,7 @@ class Listeners {
   private listeners: [
     string,
     EventListenerOrEventListenerObject,
-    AddEventListenerOptions | boolean | undefined
+    AddEventListenerOptions | boolean | undefined,
   ][] = [];
 
   public removeAll = () => {

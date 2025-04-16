@@ -82,24 +82,20 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-        />
-      )
-    );
+    const { getAllByRole, getAllByText, getByTestId, getByText } =
+      renderWithTheme(
+        wrapWithTableBody(
+          <SubnetLinodeRow
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isVPCLKEEnterpriseCluster={false}
+            linodeId={linodeFactory1.id}
+            subnet={subnetFactory.build()}
+            subnetId={1}
+            subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+          />
+        )
+      );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -148,24 +144,20 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
-        />
-      )
-    );
+    const { getAllByRole, getAllByText, getByTestId, getByText } =
+      renderWithTheme(
+        wrapWithTableBody(
+          <SubnetLinodeRow
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isVPCLKEEnterpriseCluster={false}
+            linodeId={linodeFactory1.id}
+            subnet={subnetFactory.build()}
+            subnetId={1}
+            subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
+          />
+        )
+      );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

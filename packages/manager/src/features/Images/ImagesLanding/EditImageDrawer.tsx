@@ -31,18 +31,13 @@ export const EditImageDrawer = (props: Props) => {
     tags: image?.tags,
   };
 
-  const {
-    control,
-    formState,
-    handleSubmit,
-    reset,
-    setError,
-  } = useForm<UpdateImagePayload>({
-    defaultValues,
-    mode: 'onBlur',
-    resolver: yupResolver(updateImageSchema),
-    values: defaultValues,
-  });
+  const { control, formState, handleSubmit, reset, setError } =
+    useForm<UpdateImagePayload>({
+      defaultValues,
+      mode: 'onBlur',
+      resolver: yupResolver(updateImageSchema),
+      values: defaultValues,
+    });
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 

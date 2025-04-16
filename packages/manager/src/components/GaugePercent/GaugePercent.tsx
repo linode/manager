@@ -64,8 +64,8 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
     props.max === 0 && props.value === 0
       ? 1 // if they're both actually 0, make sure we have a full grey gauge
       : props.max - props.value < 0
-      ? 0
-      : props.max - props.value;
+        ? 0
+        : props.max - props.value;
 
   const graphDatasets = [
     {

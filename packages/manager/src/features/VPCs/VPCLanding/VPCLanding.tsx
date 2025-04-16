@@ -54,7 +54,11 @@ const VPCLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: vpcs, error, isLoading } = useVPCsQuery(
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useVPCsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

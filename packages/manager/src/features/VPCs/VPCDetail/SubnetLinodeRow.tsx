@@ -83,15 +83,13 @@ export const SubnetLinodeRow = (props: Props) => {
    * The below hook gives us the relevant firewall and interface data depending on
    * interface type.
    */
-  const {
-    firewallsInfo,
-    interfacesInfo,
-  } = useInterfaceAndFirewallDataForLinode({
-    configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
-    interfaceId,
-    isLinodeInterface,
-    linodeId,
-  });
+  const { firewallsInfo, interfacesInfo } =
+    useInterfaceAndFirewallDataForLinode({
+      configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
+      interfaceId,
+      isLinodeInterface,
+      linodeId,
+    });
 
   const { attachedFirewalls, firewallsError, firewallsLoading } = firewallsInfo;
   const {
