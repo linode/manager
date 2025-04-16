@@ -80,7 +80,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     expect(paragraph).toHaveTextContent(/test_user/i);
 
     expect(
-      screen.getByText(/The change will be applied immidiately./i)
+      screen.getByText(/This change will be applied immediately./i)
     ).toBeVisible();
 
     const buttons = screen.getAllByRole('button');
