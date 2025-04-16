@@ -10,6 +10,8 @@ import { getLinodeInterfaceType } from './utilities';
 
 import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
 import type { LinodeInterface } from '@linode/api-v4';
+import { LinodeInterfaceIPs } from './LinodeInterfaceIPs';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 interface Props extends LinodeInterface {
   handlers: InterfaceActionHandlers;
@@ -17,23 +19,21 @@ interface Props extends LinodeInterface {
 }
 
 export const LinodeInterfaceTableRow = (props: Props) => {
-  const {
-    created,
-    handlers,
-    id,
-    linodeId,
-    mac_address,
-    updated,
-    version,
-  } = props;
+  const { created, handlers, id, linodeId, mac_address, updated, version } =
+    props;
 
   const type = getLinodeInterfaceType(props);
 
   return (
     <TableRow>
-      <TableCell>{id}</TableCell>
       <TableCell>{type}</TableCell>
-      <TableCell>{mac_address}</TableCell>
+      <TableCell>{id}</TableCell>
+      <TableCell>
+        <MaskableText isToggleable text={mac_address} />
+      </TableCell>
+      <TableCell>
+        <LinodeInterfaceIPs linodeInterface={props} />
+      </TableCell>
       <TableCell>{version}</TableCell>
       <TableCell>
         <LinodeInterfaceFirewall interfaceId={id} linodeId={linodeId} />
