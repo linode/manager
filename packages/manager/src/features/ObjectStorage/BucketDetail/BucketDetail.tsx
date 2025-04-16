@@ -51,18 +51,12 @@ import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 
 import type {
-  ObjectStorageEndpointTypes,
   ObjectStorageObject,
   ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { InfiniteData } from '@tanstack/react-query';
 
-interface Props {
-  endpointType: ObjectStorageEndpointTypes | undefined;
-}
-
-export const BucketDetail = (props: Props) => {
-  const { endpointType } = props;
+export const BucketDetail = () => {
   /**
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
@@ -103,27 +97,18 @@ export const BucketDetail = (props: Props) => {
     isFetchingNextPage,
     isLoading,
   } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
-  const [
-    isCreateFolderDrawerOpen,
-    setIsCreateFolderDrawerOpen,
-  ] = React.useState(false);
+  const [isCreateFolderDrawerOpen, setIsCreateFolderDrawerOpen] =
+    React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
-  const [
-    deleteObjectDialogOpen,
-    setDeleteObjectDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = React.useState<ObjectStorageObject>();
-  const [
-    objectDetailDrawerOpen,
-    setObjectDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [deleteObjectLoading, setDeleteObjectLoading] = React.useState<boolean>(
-    false
-  );
+  const [deleteObjectDialogOpen, setDeleteObjectDialogOpen] =
+    React.useState<boolean>(false);
+  const [selectedObject, setSelectedObject] =
+    React.useState<ObjectStorageObject>();
+  const [objectDetailDrawerOpen, setObjectDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [deleteObjectLoading, setDeleteObjectLoading] =
+    React.useState<boolean>(false);
 
   const handleDownload = async (objectName: string) => {
     try {
@@ -452,32 +437,31 @@ export const BucketDetail = (props: Props) => {
             }}
           />
         )}
+        error={deleteObjectError}
+        onClose={closeDeleteObjectDialog}
+        open={deleteObjectDialogOpen}
         title={
           objectToDelete
             ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
             : 'Delete object'
         }
-        error={deleteObjectError}
-        onClose={closeDeleteObjectDialog}
-        open={deleteObjectDialogOpen}
       >
         Are you sure you want to delete this object?
       </ConfirmationDialog>
       <ObjectDetailsDrawer
-        url={
-          selectedObject && bucket
-            ? generateObjectUrl(bucket.hostname, selectedObject.name)
-            : undefined
-        }
         bucketName={bucketName}
         clusterId={clusterId}
         displayName={selectedObject?.name}
-        endpointType={endpointType}
         lastModified={selectedObject?.last_modified}
         name={selectedObject?.name}
         onClose={closeObjectDetailsDrawer}
         open={objectDetailDrawerOpen}
         size={selectedObject?.size}
+        url={
+          selectedObject && bucket
+            ? generateObjectUrl(bucket.hostname, selectedObject.name)
+            : undefined
+        }
       />
       <CreateFolderDrawer
         bucketName={bucketName}

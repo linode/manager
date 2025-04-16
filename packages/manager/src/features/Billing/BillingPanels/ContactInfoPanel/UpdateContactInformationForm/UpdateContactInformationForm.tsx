@@ -53,9 +53,8 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
   const { data: profile } = useProfile();
-  const [billingAgreementChecked, setBillingAgreementChecked] = React.useState(
-    false
-  );
+  const [billingAgreementChecked, setBillingAgreementChecked] =
+    React.useState(false);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const isChildUser = profile?.user_type === 'child';
   const isParentUser = profile?.user_type === 'parent';
@@ -378,6 +377,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             disableClearable
             disabled={isReadOnly}
             errorText={errorMap.country}
+            keepSearchEnabledOnMobile
             label="Country"
             onChange={(_event, value) => handleCountryChange(value)}
             options={countryResults}
@@ -414,6 +414,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
               disableClearable
               disabled={isReadOnly}
               errorText={errorMap.state}
+              keepSearchEnabledOnMobile
               label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               options={filteredRegionResults}
             />

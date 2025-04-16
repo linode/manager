@@ -6,8 +6,11 @@ export * from './accountOAuth';
 export * from './accountPayment';
 export * from './accountSettings';
 export * from './accountUsers';
-export * from './betas';
 export * from './billing';
+export * from './cloudpulse/alerts';
+export * from './cloudpulse/channels';
+export * from './cloudpulse/services';
+export * from './dashboards';
 export * from './databases';
 export * from './disk';
 export * from './domain';
@@ -15,7 +18,6 @@ export * from './entityTransfers';
 export * from './events';
 export * from './featureFlags';
 export * from './firewalls';
-export * from './grants';
 export * from './images';
 export * from './kernels';
 export * from './kubernetesCluster';
@@ -44,10 +46,6 @@ export * from './types';
 export * from './vlans';
 export * from './volume';
 export * from './vpcs';
-export * from './dashboards';
-export * from './cloudpulse/services';
-export * from './cloudpulse/alerts';
-export * from './cloudpulse/channels';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

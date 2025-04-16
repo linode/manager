@@ -16,10 +16,6 @@ import { LongviewListRows } from './LongviewListRows';
 import type { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import type { Props as LVProps } from 'src/containers/longview.container';
 
-// TODO: revert me before we release on 4/8!
-// eslint-disable-next-line no-console
-console.log('Delete me!');
-
 type LongviewProps = Omit<
   LVProps,
   | 'createLongviewClient'

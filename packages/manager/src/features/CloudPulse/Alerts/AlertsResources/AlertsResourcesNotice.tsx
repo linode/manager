@@ -54,7 +54,7 @@ export const AlertsResourcesNotice = React.memo(
           })}
           data-testid="selection_notice"
         >
-          {selectedResources} of {totalResources} resources are selected.
+          {selectedResources} of {totalResources} entities are selected.
         </Typography>
         <Tooltip
           slotProps={{

@@ -9,6 +9,8 @@ import { firewallFactory } from 'src/factories/firewalls';
 import type { Firewall } from '@linode/api-v4';
 
 authenticate();
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
 describe.skip('delete firewall', () => {
   before(() => {
     cleanUp('firewalls');

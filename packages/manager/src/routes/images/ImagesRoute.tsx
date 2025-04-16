@@ -12,18 +12,16 @@ export const ImagesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DismissibleBanner
-        preferenceKey="image-encryption"
+        preferenceKey="image-encryption-is-standard"
         spacingBottom={8}
         variant="info"
       >
         <Typography fontSize="inherit" py={1}>
-          Encryption is automatically applied when you create a new image.
-          Older, unencrypted images will be automatically encrypted with an
-          upcoming release, or you can{' '}
+          Custom Images are now encrypted for enhanced security.{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
-            recreate
+            Learn more
           </Link>{' '}
-          the image.
+          about encryption.
         </Typography>
       </DismissibleBanner>
       <DocumentTitleSegment segment="Images" />

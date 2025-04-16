@@ -99,7 +99,7 @@ export const objectStorageRouteTree = objectStorageRoute.addChildren([
     objectStorageBucketCreateRoute,
     objectStorageAccessKeyCreateRoute,
     objectStorageBucketsLandingRoute,
-    objectStorageAccessKeysLandingRoute
+    objectStorageAccessKeysLandingRoute,
   ]),
   objectStorageBucketDetailRoute.addChildren([
     objectStorageBucketDetailObjectsRoute,

@@ -48,8 +48,8 @@ describe('Object Storage gen2 access keys tests', () => {
 
     mockGetAccessKeys([mockAccessKey1, mockAccessKey2]).as(
       'getObjectStorageAccessKeys'
-    ),
-      cy.visitWithLogin('/object-storage/access-keys');
+    );
+    cy.visitWithLogin('/object-storage/access-keys');
 
     cy.wait(['@getFeatureFlags', '@getAccount', '@getObjectStorageAccessKeys']);
 

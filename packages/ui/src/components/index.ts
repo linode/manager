@@ -34,6 +34,7 @@ export * from './Stack';
 export * from './SvgIcon';
 export * from './TextField';
 export * from './Toggle';
+export * from './NewFeatureChip';
 export * from './Tooltip';
 export * from './TooltipIcon';
 export * from './Typography';

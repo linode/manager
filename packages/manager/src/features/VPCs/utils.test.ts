@@ -1,6 +1,7 @@
 import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
@@ -10,9 +11,9 @@ import {
 } from 'src/factories/subnets';
 
 import {
-  getSubnetInterfaceFromConfigs,
   getUniqueLinodesFromSubnets,
   hasUnrecommendedConfiguration,
+  hasUnrecommendedConfigurationLinodeInterface,
 } from './utils';
 
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
@@ -56,34 +57,8 @@ describe('getUniqueLinodesFromSubnets', () => {
   });
 });
 
-describe('getSubnetInterfaceFromConfigs', () => {
-  it('returns the interface associated with the given subnet id', () => {
-    const interfaces = linodeConfigInterfaceFactoryWithVPC.buildList(5);
-    const singleConfig = linodeConfigFactory.build({ interfaces });
-    const configs = [linodeConfigFactory.build(), singleConfig];
-
-    const subnetInterface1 = getSubnetInterfaceFromConfigs(configs, 2);
-    expect(subnetInterface1).toEqual(interfaces[0]);
-    const subnetInterface2 = getSubnetInterfaceFromConfigs(configs, 3);
-    expect(subnetInterface2).toEqual(interfaces[1]);
-    const subnetInterface3 = getSubnetInterfaceFromConfigs(configs, 4);
-    expect(subnetInterface3).toEqual(interfaces[2]);
-    const subnetInterface4 = getSubnetInterfaceFromConfigs(configs, 5);
-    expect(subnetInterface4).toEqual(interfaces[3]);
-    const subnetInterface5 = getSubnetInterfaceFromConfigs(configs, 6);
-    expect(subnetInterface5).toEqual(interfaces[4]);
-  });
-
-  it('should return undefined if an interface with the given subnet ID is not found', () => {
-    const configs = linodeConfigFactory.buildList(4);
-
-    const subnetInterfaceUndefined = getSubnetInterfaceFromConfigs(configs, 5);
-    expect(subnetInterfaceUndefined).toBeUndefined();
-  });
-});
-
 describe('hasUnrecommendedConfiguration function', () => {
-  it('returns true when a config has an active VPC interface and a non-VPC primary interface', () => {
+  it('returns true if the given config has an active VPC interface and a non-VPC primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({
       id: 10,
       primary: true,
@@ -98,8 +73,6 @@ describe('hasUnrecommendedConfiguration function', () => {
     const config1 = linodeConfigFactory.build({
       interfaces: [publicInterface, vpcInterface],
     });
-
-    const config2 = linodeConfigFactory.build();
 
     const subnet = subnetFactory.build({
       id: 1,
@@ -120,22 +93,16 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
-      true
-    );
+    expect(hasUnrecommendedConfiguration(config1, subnet.id)).toBe(true);
   });
 
-  it('returns false when a config has an active VPC interface that is the primary interface', () => {
+  it('returns false if the given config has an active VPC interface that is the primary interface', () => {
     const publicInterface = linodeConfigInterfaceFactory.build({ id: 10 });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       id: 20,
       primary: true,
       subnet_id: 1,
-    });
-
-    const config1 = linodeConfigFactory.build({
-      interfaces: [publicInterface],
     });
 
     const config2 = linodeConfigFactory.build({
@@ -161,8 +128,86 @@ describe('hasUnrecommendedConfiguration function', () => {
       ],
     });
 
-    expect(hasUnrecommendedConfiguration([config1, config2], subnet.id)).toBe(
-      false
-    );
+    expect(hasUnrecommendedConfiguration(config2, subnet.id)).toBe(false);
+  });
+});
+
+describe('hasUnrecommendedConfigurationLinodeInterface function', () => {
+  it('returns false if the given interface is not active', () => {
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(
+        linodeInterfaceFactoryVPC.build(),
+        false
+      )
+    ).toBe(false);
+  });
+
+  it('returns false if the given interface is active and the default route', () => {
+    const vpcInterfaceWithNat = linodeInterfaceFactoryVPC.build({
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              nat_1_1_address: '172.65.28.10',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    const vpcInterfaceWithoutNat = linodeInterfaceFactoryVPC.build();
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithNat, true)
+    ).toBe(false);
+
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithoutNat, true)
+    ).toBe(false);
+  });
+
+  it('returns true if the given active VPC interface is not the default route but has a nat_1_1 address', () => {
+    const vpcInterfaceWithNat = linodeInterfaceFactoryVPC.build({
+      default_route: { ipv4: undefined },
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              nat_1_1_address: '172.65.28.10',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithNat, true)
+    ).toEqual(true);
+  });
+
+  it('returns false if the given active VPC interface is not the default route and has no nat_1_1 address', () => {
+    const vpcInterfaceWithoutNat = linodeInterfaceFactoryVPC.build({
+      default_route: { ipv4: undefined },
+      vpc: {
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.0',
+              primary: true,
+            },
+          ],
+        },
+        subnet_id: 1,
+        vpc_id: 1,
+      },
+    });
+    expect(
+      hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithoutNat, true)
+    ).toEqual(false);
   });
 });

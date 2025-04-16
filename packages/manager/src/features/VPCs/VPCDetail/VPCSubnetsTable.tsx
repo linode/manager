@@ -113,7 +113,11 @@ export const VPCSubnetsTable = (props: Props) => {
     };
   };
 
-  const { data: subnets, error, isLoading } = useSubnetsQuery(
+  const {
+    data: subnets,
+    error,
+    isLoading,
+  } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,
@@ -335,6 +339,7 @@ export const VPCSubnetsTable = (props: Props) => {
                   linodeId={linodeInfo.id}
                   subnet={subnet}
                   subnetId={subnet.id}
+                  subnetInterfaces={linodeInfo.interfaces}
                 />
               ))
             ) : (

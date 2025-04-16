@@ -11,7 +11,7 @@ describe('AlertMaxSelectionText', () => {
     );
     expect(getByTestId('warning-tip')).toBeInTheDocument();
     expect(getByTestId('warning-tip')).toHaveTextContent(
-      'You can select up to 2 resources.'
+      'You can select up to 2 entities.'
     );
   });
 });

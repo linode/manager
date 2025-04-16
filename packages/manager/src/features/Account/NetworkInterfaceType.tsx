@@ -25,24 +25,25 @@ type InterfaceSettingValues = Pick<
   'interfaces_for_new_linodes'
 >;
 
-const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] = [
-  {
-    label: 'Configuration Profile Interfaces but allow Linode Interfaces',
-    value: 'legacy_config_default_but_linode_allowed',
-  },
-  {
-    label: 'Linode Interfaces but allow Configuration Profile Interfaces',
-    value: 'linode_default_but_legacy_config_allowed',
-  },
-  {
-    label: 'Configuration Profile Interfaces Only',
-    value: 'legacy_config_only',
-  },
-  {
-    label: 'Linode Interfaces Only',
-    value: 'linode_only',
-  },
-];
+const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] =
+  [
+    {
+      label: 'Configuration Profile Interfaces but allow Linode Interfaces',
+      value: 'legacy_config_default_but_linode_allowed',
+    },
+    {
+      label: 'Linode Interfaces but allow Configuration Profile Interfaces',
+      value: 'linode_default_but_legacy_config_allowed',
+    },
+    {
+      label: 'Configuration Profile Interfaces Only',
+      value: 'legacy_config_only',
+    },
+    {
+      label: 'Linode Interfaces Only',
+      value: 'linode_only',
+    },
+  ];
 
 export const NetworkInterfaceType = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -81,7 +82,7 @@ export const NetworkInterfaceType = () => {
     <Accordion
       defaultExpanded
       heading="Network Interface Type"
-      headingChip={<BetaChip color="primary" />}
+      headingChip={<BetaChip />}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>

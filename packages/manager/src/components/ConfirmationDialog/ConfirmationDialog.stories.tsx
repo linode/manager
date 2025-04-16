@@ -63,7 +63,7 @@ export const Default: Story = {
   ),
 };
 
-export const Error: Story = {
+export const ConfirmationDialogError: Story = {
   args: {
     error: 'There was an error somewhere in the process.',
   },

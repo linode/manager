@@ -49,12 +49,8 @@ vi.mock('src/queries/kubernetes', async () => {
 
 describe('KubeControlPaneACLDrawer', () => {
   it('renders the drawer as expected when the cluster is migrated', async () => {
-    const {
-      getAllByTestId,
-      getAllByText,
-      getByText,
-      queryByText,
-    } = renderWithTheme(<KubeControlPlaneACLDrawer {...props} />);
+    const { getAllByTestId, getAllByText, getByText, queryByText } =
+      renderWithTheme(<KubeControlPlaneACLDrawer {...props} />);
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
     expect(getByText(ACL_DRAWER_STANDARD_TIER_ACL_COPY)).toBeVisible();

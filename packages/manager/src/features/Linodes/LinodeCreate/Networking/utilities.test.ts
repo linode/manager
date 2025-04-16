@@ -83,6 +83,21 @@ describe('getLinodeInterfaceErrorsFromLegacyInterfaceErrors', () => {
       },
     ]);
   });
+
+  it('handles a complex VPC IP general range error', () => {
+    const error: APIError[] = [
+      { field: 'interfaces[1].ip_ranges', reason: 'Range is invalid.' },
+    ];
+
+    expect(
+      transformLegacyInterfaceErrorsToLinodeInterfaceErrors(error)
+    ).toStrictEqual([
+      {
+        field: 'linodeInterfaces[1].vpc.ipv4.ranges',
+        reason: 'Range is invalid.',
+      },
+    ]);
+  });
 });
 
 describe('getDefaultFirewallForInterfacePurpose', () => {

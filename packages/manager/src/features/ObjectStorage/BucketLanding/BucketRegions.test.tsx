@@ -15,7 +15,6 @@ const mockRegions = {
       id: 'us-1',
       label: 'US Location',
     }),
-    ,
     regionFactory.build({
       capabilities: ['Linodes'],
       country: 'us',
@@ -26,6 +25,7 @@ const mockRegions = {
   // Mock data as needed
   error: null,
 };
+
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: vi.fn(() => mockRegions),

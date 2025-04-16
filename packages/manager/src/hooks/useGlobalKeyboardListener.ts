@@ -36,7 +36,6 @@ export const useGlobalKeyboardListener = () => {
      * Allow an Easter egg for toggling the theme with
      * a key combination
      */
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     document.addEventListener('keydown', keyboardListener);
     return () => {
       document.removeEventListener('keydown', keyboardListener);

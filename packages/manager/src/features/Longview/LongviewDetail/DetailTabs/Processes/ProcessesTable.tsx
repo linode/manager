@@ -40,22 +40,18 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
     setSelectedProcess,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedProcess>({
-    data: processesData,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'name',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<ExtendedProcess>({
+      data: processesData,
+      initialRoute: {
+        defaultOrder: {
+          order: 'asc',
+          orderBy: 'name',
+        },
+        from: '/longview/clients/$id/processes',
       },
-      from: '/longview/clients/$id/processes',
-    },
-    preferenceKey: 'lv-detail-processes',
-  });
+      preferenceKey: 'lv-detail-processes',
+    });
 
   return (
     <Table
@@ -196,7 +192,7 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
         <StyledDiv>{name}</StyledDiv>
       </TableCell>
       <TableCell data-testid={`user-${user}`}>
-        <MaskableText isToggleable text={user} />
+        <MaskableText isToggleable length={10} text={user} />
       </TableCell>
       <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
         {Math.round(maxCount)}

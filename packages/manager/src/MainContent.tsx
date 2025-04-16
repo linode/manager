@@ -297,8 +297,8 @@ export const MainContent = () => {
                     isNarrowViewport
                       ? '100%'
                       : isPageScrollable
-                      ? '100vh'
-                      : `calc(100vh - ${TOPMENU_HEIGHT}px)`
+                        ? '100vh'
+                        : `calc(100vh - ${TOPMENU_HEIGHT}px)`
                   }
                   position="sticky"
                   top={0}
@@ -319,9 +319,9 @@ export const MainContent = () => {
                     marginLeft: isNarrowViewport
                       ? 0
                       : desktopMenuIsOpen ||
-                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                      ? SIDEBAR_COLLAPSED_WIDTH
-                      : SIDEBAR_WIDTH,
+                          (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                        ? SIDEBAR_COLLAPSED_WIDTH
+                        : SIDEBAR_WIDTH,
                   }}
                 >
                   <MainContentBanner />

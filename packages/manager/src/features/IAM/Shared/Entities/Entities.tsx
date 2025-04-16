@@ -1,4 +1,3 @@
-import { isEmpty } from '@linode/api-v4';
 import { Autocomplete, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
@@ -8,7 +7,7 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import { placeholderMap, transformedAccountEntities } from '../utilities';
 
-import type { EntitiesOption } from '../utilities';
+import type { DrawerModes, EntitiesOption } from '../utilities';
 import type {
   AccountEntity,
   EntityType,
@@ -18,24 +17,23 @@ import type {
 
 interface Props {
   access: IamAccessType;
-  assignedEntities?: EntitiesOption[];
+  errorText?: string;
+  mode?: DrawerModes;
+  onChange: (value: EntitiesOption[]) => void;
   type: EntityType | EntityTypePermissions;
+  value: EntitiesOption[];
 }
 
-export const Entities = ({ access, assignedEntities, type }: Props) => {
+export const Entities = ({
+  access,
+  errorText,
+  mode,
+  onChange,
+  type,
+  value,
+}: Props) => {
   const { data: entities } = useAccountEntities();
-
   const theme = useTheme();
-
-  const [selectedEntities, setSelectedEntities] = React.useState<
-    EntitiesOption[]
-  >([]);
-
-  React.useEffect(() => {
-    if (!isEmpty(assignedEntities) && assignedEntities !== undefined) {
-      setSelectedEntities(assignedEntities);
-    }
-  }, [assignedEntities]);
 
   const memoizedEntities = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
@@ -66,22 +64,20 @@ export const Entities = ({ access, assignedEntities, type }: Props) => {
 
   return (
     <Autocomplete
-      renderOption={(props, option) => (
-        <li {...props} key={option.label}>
-          {option.label}
-        </li>
-      )}
-      ListboxProps={{ sx: { overflowX: 'hidden' } }}
+      errorText={errorText}
       getOptionLabel={(option) => option.label}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
       label="Entities"
       multiple
       noMarginTop
-      onChange={(_, value) => setSelectedEntities(value)}
+      onChange={(_, newValue) => {
+        onChange(newValue || []);
+      }}
       options={memoizedEntities}
-      placeholder={selectedEntities.length ? ' ' : getPlaceholder(type)}
-      readOnly={!isEmpty(assignedEntities)}
+      placeholder={value.length ? ' ' : getPlaceholder(type)}
+      readOnly={mode === 'change-role'}
       sx={{ marginTop: theme.tokens.spacing.S12 }}
-      value={selectedEntities}
+      value={value || []}
     />
   );
 };

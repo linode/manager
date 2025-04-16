@@ -72,27 +72,19 @@ export const MonitorTable = () => {
 
   const monitors = data || [];
 
-  const {
-    closeDialog,
-    dialog,
-    handleError,
-    openDialog,
-    submitDialog,
-  } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
+  const { closeDialog, dialog, handleError, openDialog, submitDialog } =
+    useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
-  const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [historyDrawerOpen, setHistoryDrawerOpen] =
+    React.useState<boolean>(false);
 
-  const [monitorDrawerOpen, setMonitorDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [monitorDrawerOpen, setMonitorDrawerOpen] =
+    React.useState<boolean>(false);
   const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
   const [editID, setEditID] = React.useState<number>(0);
 
-  const { mutateAsync: updateServiceMonitor } = useUpdateMonitorMutation(
-    editID
-  );
+  const { mutateAsync: updateServiceMonitor } =
+    useUpdateMonitorMutation(editID);
   const { mutateAsync: createServiceMonitor } = useCreateMonitorMutation();
 
   const [editLabel, setEditLabel] = React.useState<string>('');
@@ -158,17 +150,18 @@ export const MonitorTable = () => {
     // Clear drawer error state
     setStatus(undefined);
 
-    // eslint-disable-next-line no-unused-expressions
-    drawerMode === 'create'
-      ? createServiceMonitor({ ...values, timeout: +values.timeout })
-          .then(_success)
-          .catch(_error)
-      : updateServiceMonitor({
-          ...values,
-          timeout: +values.timeout,
-        })
-          .then(_success)
-          .catch(_error);
+    if (drawerMode === 'create') {
+      createServiceMonitor({ ...values, timeout: +values.timeout })
+        .then(_success)
+        .catch(_error);
+    } else {
+      updateServiceMonitor({
+        ...values,
+        timeout: +values.timeout,
+      })
+        .then(_success)
+        .catch(_error);
+    }
   };
 
   return (
@@ -288,11 +281,11 @@ export const MonitorTable = () => {
         open={monitorDrawerOpen}
       />
       <HistoryDrawer
+        error={failureReason}
+        isFetching={areIssuesFetching}
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(editID)
         )}
-        error={failureReason}
-        isFetching={areIssuesFetching}
         monitorLabel={editLabel}
         onClose={() => setHistoryDrawerOpen(false)}
         open={historyDrawerOpen}

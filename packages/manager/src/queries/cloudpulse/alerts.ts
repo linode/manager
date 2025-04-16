@@ -155,8 +155,8 @@ export const useAddEntityToAlert = () => {
         alert
       );
       queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
-          .queryKey,
+        queryKey:
+          queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
       });
 
       queryClient.invalidateQueries({
@@ -191,8 +191,8 @@ export const useRemoveEntityFromAlert = () => {
         alert
       );
       queryClient.invalidateQueries({
-        queryKey: queryFactory.alerts._ctx.alertsByServiceType(serviceType)
-          .queryKey,
+        queryKey:
+          queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
       });
 
       queryClient.invalidateQueries({

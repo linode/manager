@@ -21,19 +21,19 @@ describe('getUserTimezone', () => {
   it('should handle an empty string timezone', () => {
     setMockProfileTimezone('');
     expect(getUserTimezone(mockProfile.timezone)).toBe(
-      DateTime.local().zoneName
+      DateTime.local().zoneName,
     );
   });
   it('should handle a null timezone', () => {
     setMockProfileTimezone(null);
     expect(getUserTimezone(mockProfile.timezone)).toBe(
-      DateTime.local().zoneName
+      DateTime.local().zoneName,
     );
   });
   it('should handle an undefined timezone', () => {
     setMockProfileTimezone(undefined);
     expect(getUserTimezone(mockProfile.timezone)).toBe(
-      DateTime.local().zoneName
+      DateTime.local().zoneName,
     );
   });
 });

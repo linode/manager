@@ -8,6 +8,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   handleChangeRole: (role: ExtendedRoleMap) => void;
   handleUnassignRole: (role: ExtendedRoleMap) => void;
+  handleUpdateEntities: (role: ExtendedRoleMap) => void;
   handleViewEntities: (role: string) => void;
   role: ExtendedRoleMap;
 }
@@ -15,6 +16,7 @@ interface Props {
 export const AssignedRolesActionMenu = ({
   handleChangeRole,
   handleUnassignRole,
+  handleUpdateEntities,
   handleViewEntities,
   role,
 }: Props) => {
@@ -40,7 +42,7 @@ export const AssignedRolesActionMenu = ({
     },
     {
       onClick: () => {
-        // mock
+        handleUpdateEntities(role);
       },
       title: 'Update List of Entities',
     },

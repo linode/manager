@@ -29,10 +29,11 @@ const overrides = [
 
 export const EditAlertLanding = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
-  const { data: alertDetails, isError, isFetching } = useAlertDefinitionQuery(
-    alertId,
-    serviceType
-  );
+  const {
+    data: alertDetails,
+    isError,
+    isFetching,
+  } = useAlertDefinitionQuery(alertId, serviceType);
   const pathname = '/Definition/Edit';
 
   if (isFetching) {
@@ -46,7 +47,7 @@ export const EditAlertLanding = () => {
   if (isError) {
     return (
       <EditAlertLoadingState overrides={overrides} pathname={pathname}>
-        <ErrorState errorText="An error occurred while loading the alerts definitions and resources. Please try again later." />
+        <ErrorState errorText="An error occurred while loading the alerts definitions and entities. Please try again later." />
       </EditAlertLoadingState>
     );
   }

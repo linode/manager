@@ -126,8 +126,8 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
 
 const adb10 = (i: number) => i % 2 === 0;
 
-export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
-  {
+export const databaseInstanceFactory =
+  Factory.Sync.makeFactory<DatabaseInstance>({
     allow_list: [],
     cluster_size: Factory.each((i) =>
       adb10(i)
@@ -187,8 +187,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
       week_of_month: null,
     },
     version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
-  }
-);
+  });
 
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   allow_list: [...IPv4List],
@@ -273,16 +272,22 @@ export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
   version: Factory.each((i) => `${i}`),
 });
 
-export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngineConfig>(
-  {
+export const databaseEngineConfigFactory =
+  Factory.Sync.makeFactory<DatabaseEngineConfig>({
     binlog_retention_period: {
       description:
         'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
       example: 600,
       maximum: 86400,
       minimum: 600,
-      restart_cluster: false,
+      requires_restart: false,
       type: 'integer',
+    },
+    wal_sender_timeout: {
+      description:
+        'Terminate replication connections that are inactive for longer than this amount of time, in milliseconds. Setting this value to zero disables the timeout.',
+      type: 'integer',
+      example: 60000,
     },
     mysql: {
       connect_timeout: {
@@ -291,7 +296,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         example: 10,
         maximum: 3600,
         minimum: 2,
-        restart_cluster: false,
+        requires_restart: false,
         type: 'integer',
       },
       default_time_zone: {
@@ -301,7 +306,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         maxLength: 100,
         minLength: 2,
         pattern: '^([-+][\\d:]*|[\\w/]*)$',
-        restart_cluster: false,
+        requires_restart: false,
         type: 'string',
       },
       innodb_ft_min_token_size: {
@@ -310,7 +315,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         example: 3,
         maximum: 16,
         minimum: 0,
-        restart_cluster: true,
+        requires_restart: true,
         type: 'integer',
       },
       innodb_ft_server_stopword_table: {
@@ -319,14 +324,14 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         example: 'db_name/table_name',
         maxLength: 1024,
         pattern: '^.+/.+$',
-        restart_cluster: false,
+        requires_restart: false,
         type: ['null', 'string'],
       },
       innodb_print_all_deadlocks: {
         description:
           'When enabled, information about all deadlocks in InnoDB user transactions is recorded in the error log. Disabled by default.',
         example: true,
-        restart_cluster: false,
+        requires_restart: false,
         type: 'boolean',
       },
       log_output: {
@@ -334,7 +339,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
           'The slow log output destination when slow_query_log is ON. To enable MySQL AI Insights, choose INSIGHTS. To use MySQL AI Insights and the mysql.slow_log table at the same time, choose INSIGHTS,TABLE. To only use the mysql.slow_log table, choose TABLE. To silence slow logs, choose NONE.',
         enum: ['INSIGHTS', 'NONE', 'TABLE', 'INSIGHTS,TABLE'],
         example: 'INSIGHTS',
-        restart_cluster: false,
+        requires_restart: false,
         type: 'string',
       },
       long_query_time: {
@@ -343,7 +348,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         example: 10,
         maximum: 3600,
         minimum: 0.0,
-        restart_cluster: false,
+        requires_restart: false,
         type: 'number',
       },
       sql_mode: {
@@ -352,14 +357,14 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
         example: 'ANSI,TRADITIONAL',
         maxLength: 1024,
         pattern: '^[A-Z_]*(,[A-Z_]+)*$',
-        restart_cluster: false,
+        requires_restart: false,
         type: 'string',
       },
       sql_require_primary_key: {
         description:
           'Require primary key to be defined for new tables or old tables modified with ALTER TABLE and fail if missing. It is recommended to always have primary keys because various functionality may break if any large table is missing them.',
         example: true,
-        restart_cluster: false,
+        requires_restart: false,
         type: 'boolean',
       },
     },
@@ -367,8 +372,7 @@ export const databaseEngineConfigFactory = Factory.Sync.makeFactory<DatabaseEngi
       description:
         'Store logs for the service so that they are available in the HTTP API and console.',
       example: true,
-      restart_cluster: false,
+      requires_restart: false,
       type: ['boolean', 'null'],
     },
-  }
-);
+  });

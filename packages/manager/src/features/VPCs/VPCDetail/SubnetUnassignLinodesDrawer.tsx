@@ -64,11 +64,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const vpcPermissions = grants?.vpc.find((v) => v.id === vpcId);
 
     const queryClient = useQueryClient();
-    const {
-      setUnassignLinodesErrors,
-      unassignLinode,
-      unassignLinodesErrors,
-    } = useUnassignLinode();
+    const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
+      useUnassignLinode();
 
     const csvRef = React.useRef<any>();
     const formattedDate = useFormattedDate();
@@ -76,21 +73,15 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(
       singleLinodeToBeUnassigned ? [singleLinodeToBeUnassigned] : []
     );
-    const [
-      selectedLinodesAndConfigData,
-      setSelectedLinodesAndConfigData,
-    ] = React.useState<ConfigInterfaceAndLinodeData[]>([]);
+    const [selectedLinodesAndConfigData, setSelectedLinodesAndConfigData] =
+      React.useState<ConfigInterfaceAndLinodeData[]>([]);
 
     const hasError = React.useRef(false); // This flag is used to prevent the drawer from closing if an error occurs.
 
-    const [
-      linodeOptionsToUnassign,
-      setLinodeOptionsToUnassign,
-    ] = React.useState<Linode[]>([]);
-    const [
-      configInterfacesToDelete,
-      setConfigInterfacesToDelete,
-    ] = React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
+    const [linodeOptionsToUnassign, setLinodeOptionsToUnassign] =
+      React.useState<Linode[]>([]);
+    const [configInterfacesToDelete, setConfigInterfacesToDelete] =
+      React.useState<DeleteLinodeConfigInterfacePayload[]>([]);
 
     const { linodes: subnetLinodeIds } = subnet || {};
 
@@ -127,7 +118,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           const updatedConfigInterfaces = await Promise.all(
             selectedLinodes.map(async (linode) => {
               const response = await queryClient.fetchQuery(
-                linodeQueries.linode(linode.id)._ctx.configs
+                linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
               );
 
               if (response) {

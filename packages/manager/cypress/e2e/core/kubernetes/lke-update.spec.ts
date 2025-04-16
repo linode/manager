@@ -1,4 +1,8 @@
-import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  linodeTypeFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { latestKubernetesVersion } from 'support/constants/lke';
@@ -31,10 +35,11 @@ import {
   mockUpdateNodePool,
   mockUpdateNodePoolError,
 } from 'support/intercepts/lke';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { randomIp, randomLabel, randomString } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
 
 import {
   accountFactory,
@@ -251,7 +256,13 @@ describe('LKE cluster updates', () => {
     it('can upgrade enterprise kubernetes version from the details page', () => {
       const oldVersion = '1.31.1+lke1';
       const newVersion = '1.31.1+lke2';
-
+      const clusterRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-central',
+        })
+      );
+      mockGetRegions([clusterRegion]).as('getRegions');
       mockGetAccount(
         accountFactory.build({
           capabilities: ['Kubernetes Enterprise'],
@@ -265,6 +276,7 @@ describe('LKE cluster updates', () => {
 
       const mockCluster = kubernetesClusterFactory.build({
         k8s_version: oldVersion,
+        region: clusterRegion.id,
         tier: 'enterprise',
       });
 
@@ -295,6 +307,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
       cy.wait([
+        '@getRegions',
         '@getAccount',
         '@getCluster',
         '@getNodePools',
@@ -845,8 +858,16 @@ describe('LKE cluster updates', () => {
      * - Confirms that details page updates to reflect change when pools are added or deleted.
      */
     it('can add and delete node pools', () => {
+      const clusterRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([clusterRegion]).as('getRegions');
       const mockCluster = kubernetesClusterFactory.build({
         k8s_version: latestKubernetesVersion,
+        region: clusterRegion.id,
       });
 
       const mockNodePool = nodePoolFactory.build({
@@ -868,7 +889,7 @@ describe('LKE cluster updates', () => {
       mockGetApiEndpoints(mockCluster.id);
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
-      cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
+      cy.wait(['@getRegions', '@getCluster', '@getNodePools', '@getVersions']);
 
       // Assert that initial node pool is shown on the page.
       cy.findByText('Dedicated 8 GB', { selector: 'h2' }).should('be.visible');
@@ -1928,7 +1949,13 @@ describe('LKE cluster updates', () => {
      * - Confirms that details page updates total cluster price with DC-specific pricing.
      */
     it('can resize pools with DC-specific prices', () => {
-      const dcSpecificPricingRegion = getRegionById('us-east');
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
       const mockPlanType = extendType(dcPricingMockLinodeTypes[0]);
 
       const mockCluster = kubernetesClusterFactory.build({
@@ -1976,6 +2003,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
       cy.wait([
+        '@getRegions',
         '@getCluster',
         '@getNodePools',
         '@getLinodes',
@@ -2073,8 +2101,13 @@ describe('LKE cluster updates', () => {
      * - Confirms that details page updates total cluster price with DC-specific pricing.
      */
     it('can add node pools with DC-specific prices', () => {
-      const dcSpecificPricingRegion = getRegionById('us-east');
-
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-east',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
       const mockCluster = kubernetesClusterFactory.build({
         control_plane: {
           high_availability: false,
@@ -2108,6 +2141,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
       cy.wait([
+        '@getRegions',
         '@getCluster',
         '@getNodePools',
         '@getVersions',
@@ -2178,7 +2212,13 @@ describe('LKE cluster updates', () => {
      * - Confirms that details page still shows $0 pricing after resizing.
      */
     it('can resize pools with region prices of $0', () => {
-      const dcSpecificPricingRegion = getRegionById('us-southeast');
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-southeast',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
       const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
       const mockCluster = kubernetesClusterFactory.build({
@@ -2226,6 +2266,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
       cy.wait([
+        '@getRegions',
         '@getCluster',
         '@getNodePools',
         '@getLinodes',
@@ -2314,8 +2355,13 @@ describe('LKE cluster updates', () => {
      * - Confirms that details page still shows $0 pricing after adding node pool.
      */
     it('can add node pools with region prices of $0', () => {
-      const dcSpecificPricingRegion = getRegionById('us-southeast');
-
+      const dcSpecificPricingRegion = extendRegion(
+        regionFactory.build({
+          capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+          id: 'us-southeast',
+        })
+      );
+      mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
       const mockPlanType = extendType(dcPricingMockLinodeTypes[2]);
 
       const mockCluster = kubernetesClusterFactory.build({
@@ -2349,6 +2395,7 @@ describe('LKE cluster updates', () => {
 
       cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
       cy.wait([
+        '@getRegions',
         '@getCluster',
         '@getNodePools',
         '@getVersions',
@@ -2453,21 +2500,19 @@ describe('LKE ACL updates', () => {
         addresses: { ipv4: ['10.0.3.0/24'], ipv6: undefined },
         enabled: false,
       });
-      const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockUpdatedACLOptions1 =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: { ipv4: ['10.0.0.0/24'], ipv6: undefined },
           enabled: true,
           'revision-id': mockRevisionId,
-        }
-      );
+        });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
       });
-      const mockUpdatedControlPlaneACL1 = kubernetesControlPlaneACLFactory.build(
-        {
+      const mockUpdatedControlPlaneACL1 =
+        kubernetesControlPlaneACLFactory.build({
           acl: mockUpdatedACLOptions1,
-        }
-      );
+        });
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
@@ -2548,8 +2593,8 @@ describe('LKE ACL updates', () => {
         .click();
 
       // update mocks
-      const mockUpdatedACLOptions2 = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockUpdatedACLOptions2 =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: {
             ipv4: ['10.0.0.0/24'],
             ipv6: [
@@ -2559,13 +2604,11 @@ describe('LKE ACL updates', () => {
           },
           enabled: true,
           'revision-id': mockRevisionId,
-        }
-      );
-      const mockUpdatedControlPlaneACL2 = kubernetesControlPlaneACLFactory.build(
-        {
+        });
+      const mockUpdatedControlPlaneACL2 =
+        kubernetesControlPlaneACLFactory.build({
           acl: mockUpdatedACLOptions2,
-        }
-      );
+        });
       mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL2).as(
         'updateControlPlaneACL'
       );
@@ -2656,16 +2699,15 @@ describe('LKE ACL updates', () => {
         enabled: true,
       });
 
-      const mockDisabledACLOptions = kubernetesControlPlaneACLOptionsFactory.build(
-        {
+      const mockDisabledACLOptions =
+        kubernetesControlPlaneACLOptionsFactory.build({
           addresses: {
             ipv4: [''],
             ipv6: [''],
           },
           enabled: false,
           'revision-id': '',
-        }
-      );
+        });
       const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
         acl: mockACLOptions,
       });

@@ -36,7 +36,8 @@ import type {
 // under different circumstances.
 const objNotes = {
   // Information regarding the Object Storage cancellation process.
-  cancellationExplanation: /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
+  cancellationExplanation:
+    /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
 
   // Link to further DC-specific pricing information.
   dcPricingLearnMoreNote: 'Learn more about pricing and specifications.',

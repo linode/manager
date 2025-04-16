@@ -21,7 +21,7 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
     // Default fallback case when service type is empty, in the create flow, until we select a service type it will be empty
     {
       accessor: ({ label }) => label,
-      label: 'Resource',
+      label: 'Entity',
       sortingKey: 'label',
     },
     {
@@ -33,7 +33,7 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   dbaas: [
     {
       accessor: ({ label }) => label,
-      label: 'Resource',
+      label: 'Entity',
       sortingKey: 'label',
     },
     {
@@ -51,7 +51,7 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
   linode: [
     {
       accessor: ({ label }) => label,
-      label: 'Resource',
+      label: 'Entity',
       sortingKey: 'label',
     },
     {

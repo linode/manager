@@ -86,6 +86,6 @@ describe('Linode Create Region Select', () => {
     cy.findByLabelText('Region').should('have.value', 'UK, London (eu-west)');
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
-    expect(cy.get('[data-testid="table-row-empty"]').should('not.exist'));
+    cy.get('[data-testid="table-row-empty"]').should('not.exist');
   });
 });

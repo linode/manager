@@ -89,6 +89,7 @@ const Panel = (props: NodePoolPanelProps) => {
   const addPool = (selectedPlanType: string, nodeCount: number) => {
     addNodePool({
       count: nodeCount,
+      // eslint-disable-next-line sonarjs/pseudo-random
       id: Math.random(),
       type: selectedPlanType,
     });

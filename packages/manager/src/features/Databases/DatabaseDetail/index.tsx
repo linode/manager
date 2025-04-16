@@ -65,11 +65,8 @@ export const DatabaseDetail = () => {
     id,
   });
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   if (error) {
     return (
@@ -114,11 +111,9 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: flags.dbaasV2MonitorMetrics?.beta ? (
-        <BetaChip color="secondary" />
-      ) : null,
-      routeName: `/databases/${engine}/${id}/monitor`,
-      title: 'Monitor',
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+      routeName: `/databases/${engine}/${id}/metrics`,
+      title: 'Metrics',
     });
   }
 

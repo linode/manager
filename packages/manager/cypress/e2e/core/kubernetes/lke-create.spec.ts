@@ -2,6 +2,7 @@
  * @file LKE creation end-to-end tests.
  */
 import {
+  accountBetaFactory,
   dedicatedTypeFactory,
   linodeTypeFactory,
   pluralize,
@@ -43,10 +44,9 @@ import {
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion, getRegionById } from 'support/util/regions';
+import { chooseRegion, extendRegion } from 'support/util/regions';
 
 import {
-  accountBetaFactory,
   accountFactory,
   kubeLinodeFactory,
   kubernetesClusterFactory,
@@ -335,8 +335,10 @@ describe('LKE Cluster Creation', () => {
       // how many identical labels for each plan will exist and confirm that
       // the expected number is present.
       const nodePoolLabel = clusterPlan.planName;
-      const similarNodePoolCount = getSimilarPlans(clusterPlan, clusterPlans)
-        .length;
+      const similarNodePoolCount = getSimilarPlans(
+        clusterPlan,
+        clusterPlans
+      ).length;
 
       // Confirm that the cluster created with the expected parameters.
       cy.findAllByText(`${clusterRegion.label}`).should('be.visible');
@@ -379,7 +381,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       region: clusterRegion.id,
     });
     const mockedLKEClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
-    const mockedLKEClusterControlPlane = kubernetesControlPlaneACLFactory.build();
+    const mockedLKEClusterControlPlane =
+      kubernetesControlPlaneACLFactory.build();
     const dedicated4Type = dedicatedTypeFactory.build({
       disk: 163840,
       id: 'g6-dedicated-4',
@@ -535,8 +538,12 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
    * - Confirms that HA helper text updates dynamically to display pricing when a region is selected.
    */
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
-    // In staging API, only the Dallas region is available for LKE creation
-    const dcSpecificPricingRegion = getRegionById('us-central');
+    const dcSpecificPricingRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['Linodes', 'Kubernetes', 'Kubernetes Enterprise'],
+      })
+    );
+    mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
     const clusterLabel = randomLabel();
     const clusterPlans = new Array(2)
       .fill(null)
@@ -553,7 +560,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.url().should('endWith', '/kubernetes/create');
 
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-    cy.wait(['@getLinodeTypes']);
+    cy.wait(['@getRegions', '@getLinodeTypes']);
 
     // Confirm that, without a region selected, no pricing information is displayed.
 
@@ -582,6 +589,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     cy.focused().type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
+    // eslint-disable-next-line sonarjs/slow-regex
     cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
@@ -1290,8 +1298,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    // TODO: revert me before we release on 4/8!
-    cy.contains('Tier').should('not.exist');
+    cy.contains('Cluster Tier').should('not.exist');
   });
 
   describe('shows the LKE-E flow with the feature flag on', () => {

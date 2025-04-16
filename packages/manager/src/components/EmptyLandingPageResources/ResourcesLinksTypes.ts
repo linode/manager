@@ -4,7 +4,7 @@ interface ResourcesLink {
   to: string;
 }
 
-export interface linkAnalyticsEvent {
+export interface LinkAnalyticsEvent {
   action: string;
   category: string;
 }
@@ -17,7 +17,7 @@ export interface ResourcesHeaders {
 }
 
 export interface ResourcesLinks {
-  linkAnalyticsEvent: linkAnalyticsEvent;
+  linkAnalyticsEvent: LinkAnalyticsEvent;
   links: ResourcesLink[];
   onClick?: () => void;
 }

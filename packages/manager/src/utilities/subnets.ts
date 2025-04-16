@@ -1,5 +1,6 @@
 import { determineIPType } from '@linode/validation';
 
+// eslint-disable-next-line sonarjs/no-hardcoded-ip
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
@@ -111,12 +112,8 @@ export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
   otherIPv4s: string[]
 ): string => {
-  const [
-    firstOctet,
-    secondOctet,
-    thirdOctet,
-    fourthOctet,
-  ] = lastRecommendedIPv4.split('.');
+  const [firstOctet, secondOctet, thirdOctet, fourthOctet] =
+    lastRecommendedIPv4.split('.');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 

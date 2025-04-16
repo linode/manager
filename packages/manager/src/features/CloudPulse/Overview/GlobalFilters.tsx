@@ -35,10 +35,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleToggleAppliedFilter,
   } = props;
 
-  const {
-    preferences,
-    updateGlobalFilterPreference: updatePreferences,
-  } = useAclpPreference();
+  const { preferences, updateGlobalFilterPreference: updatePreferences } =
+    useAclpPreference();
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
@@ -113,7 +111,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             gap={2}
           >
             <CloudPulseDateTimeRangePicker
-              defaultValue={preferences?.timeRange}
+              defaultValue={preferences?.[TIME_DURATION]}
               handleStatsChange={handleTimeRangeChange}
               savePreferences
             />
