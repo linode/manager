@@ -79,7 +79,7 @@ export const AddInterfaceForm = (props: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Notice
-            text="Adding a network interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+            text="Adding a network interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
             variant="warning"
           />
           {form.formState.errors.root && (

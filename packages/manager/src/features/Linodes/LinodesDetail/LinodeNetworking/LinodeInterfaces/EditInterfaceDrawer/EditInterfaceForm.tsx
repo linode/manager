@@ -92,9 +92,12 @@ export const EditInterfaceForm = (props: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Notice
           spacingBottom={16}
-          text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+          text="Updating the interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
           variant="warning"
         />
+        {form.formState.errors.root?.message && (
+          <Notice text={form.formState.errors.root?.message} variant="error" />
+        )}
         <Stack divider={<Divider />} spacing={2}>
           {interfaceType === 'Public' && (
             <Stack divider={<Divider />} spacing={3}>
