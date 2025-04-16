@@ -3,7 +3,6 @@
  */
 
 import { linodeFactory, nodeBalancerFactory } from '@linode/utilities';
-import { accountFactory, firewallFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -15,6 +14,8 @@ import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { accountFactory, firewallFactory } from 'src/factories';
 
 describe('Can create Firewalls using custom rules', () => {
   beforeEach(() => {
