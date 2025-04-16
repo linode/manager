@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../Shared/utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
 import type { CombinedEntity, ExtendedRoleMap } from '../../Shared/utilities';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
