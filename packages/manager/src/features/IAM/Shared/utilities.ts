@@ -516,3 +516,10 @@ export const toEntityAccess = (
 
   return [...updatedEntityAccess, ...newEntities];
 };
+
+export const getCreateLinkForEntityType = (
+  entityType: EntityType | EntityTypePermissions
+): string => {
+  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
+  return `/${entityType}s/create`;
+};
