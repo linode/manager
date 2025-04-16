@@ -192,6 +192,7 @@ export const getLinodeCreatePayload = (
       values.interfaces = formValues.linodeInterfaces.map(
         getLinodeInterfacePayload
       );
+      values.firewall_id = undefined;
     } else {
       values.interfaces = formValues.linodeInterfaces.map(
         getLegacyInterfaceFromLinodeInterface

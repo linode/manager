@@ -8,10 +8,10 @@ import type {
 
 /**
  * Extend the API's new interface type with a vpc_id so that state managment is easier for us
- * The new endpoint only uses subnet_id and I guess it dervies the VPC from that?
+ * The new endpoint only uses subnet_id and I guess it derives the VPC from that?
  */
 interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
-  vpc_id: number;
+  vpc_id?: number;
 }
 
 /**
@@ -19,7 +19,7 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
   purpose: InterfacePurpose;
-  vpc: VPC | null;
+  vpc: null | VPC;
 }
 
 /**
@@ -39,6 +39,10 @@ export const getLinodeInterfacePayload = (
     if (key !== networkInterface.purpose) {
       cleanedInterface[key] = null;
     }
+  }
+
+  if (cleanedInterface.vpc) {
+    cleanedInterface.vpc.vpc_id = undefined;
   }
 
   return cleanedInterface;
@@ -83,7 +87,6 @@ export const getLegacyInterfaceFromLinodeInterface = (
       },
       purpose,
       subnet_id: linodeInterface.vpc?.subnet_id,
-      vpc_id: linodeInterface.vpc?.vpc_id,
     };
   }
 
@@ -149,8 +152,7 @@ export const getDefaultInterfacePayload = (
       ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
       // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       subnet_id: null,
-      // @ts-expect-error the user must select this (I can't find a way to make these types partial)
-      vpc_id: null,
+      vpc_id: undefined,
     },
   };
 };
