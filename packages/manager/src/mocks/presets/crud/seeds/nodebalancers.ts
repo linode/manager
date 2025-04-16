@@ -32,8 +32,8 @@ export const nodeBalancerSeeder: MockSeeder = {
       ),
     });
 
-    const nodeBalancerConfigNodeSeeds = seedWithUniqueIds<'nodeBalancerConfigNodes'>(
-      {
+    const nodeBalancerConfigNodeSeeds =
+      seedWithUniqueIds<'nodeBalancerConfigNodes'>({
         dbEntities: await mswDB.getAll('nodeBalancerConfigNodes'),
         seedEntities: nodeBalancerConfigSeeds.map((config) =>
           nodeBalancerConfigNodeFactory.build({
@@ -42,8 +42,7 @@ export const nodeBalancerSeeder: MockSeeder = {
             nodebalancer_id: config.nodebalancer_id,
           })
         ),
-      }
-    );
+      });
 
     const updatedMockState = {
       ...mockState,
