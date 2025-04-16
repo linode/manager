@@ -140,7 +140,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const handleRemoveConfig = (index: number) => {
     remove(index);
-    reset(watch(), { keepDirty: true });
   };
 
   const handleClose = () => {
