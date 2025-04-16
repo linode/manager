@@ -1,5 +1,9 @@
 import type { LinodeInterface } from '@linode/api-v4';
 
+/**
+ * getLinodeInterfaceIPs
+ * @returns a string array of IP addresses for display purposes
+ */
 export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
   if (linodeInterface.vlan && linodeInterface.vlan.ipam_address) {
     return [`${linodeInterface.vlan.ipam_address} (IPAM)`];
@@ -10,7 +14,11 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
   if (linodeInterface.public) {
     // IPv4s
     for (const address of linodeInterface.public.ipv4.addresses) {
-      ips.push(address.address);
+      if (address.primary) {
+        ips.unshift(address.address);
+      } else {
+        ips.push(address.address);
+      }
     }
 
     // IPv6 Ranges
@@ -25,16 +33,23 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
 
     // IPv6 SLAAC
     for (const address of linodeInterface.public.ipv6.slaac) {
-      ips.push(`${address.address} ${address.prefix} (SLAAC)`);
+      ips.push(`${address.address} (SLAAC)`);
     }
   }
 
   if (linodeInterface.vpc) {
     // VPC IPv4s
     for (const address of linodeInterface.vpc.ipv4.addresses) {
-      ips.push(address.address);
-      if (address.nat_1_1_address) {
-        ips.push(`${address.nat_1_1_address} (VPC NAT)`);
+      if (address.primary) {
+        if (address.nat_1_1_address) {
+          ips.unshift(`${address.nat_1_1_address} (VPC NAT)`);
+        }
+        ips.unshift(address.address);
+      } else {
+        ips.push(address.address);
+        if (address.nat_1_1_address) {
+          ips.push(`${address.nat_1_1_address} (VPC NAT)`);
+        }
       }
     }
     // VPC IPv4 Ranges
