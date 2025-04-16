@@ -128,8 +128,7 @@ export const Notice = (props: NoticeProps) => {
           [classes.info]: variantMap.info || variantMap.tip,
           [classes.success]: variantMap.success,
           [classes.warning]: variantMap.warning,
-          // The order we apply styles matters, therefore we:
-          // eslint-disable-next-line perfectionist/sort-objects
+          // The order we apply styles matters - important must be applied last
           [classes.important]: important,
           [errorScrollClassName]: variantMap.error,
         },
@@ -140,32 +139,36 @@ export const Notice = (props: NoticeProps) => {
         dataTestId ??
         `notice${variant ? `-${variant}` : ''}${important ? '-important' : ''}`
       }
+      role="alert"
       sx={[
         (theme) => ({
           marginBottom:
             spacingBottom !== undefined
               ? `${spacingBottom}px`
-              : theme.spacing(1),
+              : theme.spacingFunction(8),
           marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
           marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      role="alert"
       {...dataAttributes}
       {...rest}
     >
-      {important && variantMap.error && <ErrorIcon className={classes.icon} />}
-      {important && variantMap.info && <InfoIcon className={classes.icon} />}
-      {important && variantMap.success && (
-        <CheckIcon className={classes.icon} />
-      )}
-      {important && variantMap.tip && (
-        <LightBulbIcon className={classes.icon} />
-      )}
-      {important && variantMap.warning && (
-        <WarningIcon className={classes.icon} />
-      )}
+      <Box sx={{ ml: 0.5, mr: 0.5, display: 'flex', alignItems: 'center' }}>
+        {important && variantMap.error && (
+          <ErrorIcon className={classes.icon} />
+        )}
+        {important && variantMap.info && <InfoIcon className={classes.icon} />}
+        {important && variantMap.success && (
+          <CheckIcon className={classes.icon} />
+        )}
+        {important && variantMap.tip && (
+          <LightBulbIcon className={classes.icon} />
+        )}
+        {important && variantMap.warning && (
+          <WarningIcon className={classes.icon} />
+        )}
+      </Box>
       {text || typeof children === 'string' ? (
         <Typography {...typeProps}>{text ?? children}</Typography>
       ) : (

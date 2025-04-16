@@ -54,7 +54,13 @@ export const DismissibleBanner = (props: Props) => {
       aria-label={`Dismiss ${preferenceKey} banner`}
       data-testid="notice-dismiss"
       onClick={handleDismiss}
-      sx={{ padding: 1, paddingRight: 2 }}
+      sx={(theme) => ({
+        padding: theme.spacingFunction(4),
+        '& svg': {
+          width: 20,
+          height: 20,
+        },
+      })}
     >
       <CloseIcon />
     </IconButton>
@@ -63,13 +69,18 @@ export const DismissibleBanner = (props: Props) => {
   return (
     <Notice
       bgcolor={(theme) => theme.palette.background.paper}
-      display="flex"
       gap={1}
-      justifyContent="space-between"
       {...rest}
     >
-      {children}
-      <Stack alignItems="center" direction="row" spacing={1}>
+      <Stack alignItems="center" direction="row" flex={1}>
+        {children}
+      </Stack>
+      <Stack
+        alignItems="center"
+        direction="row"
+        justifyContent="flex-end"
+        spacing={1}
+      >
         {actionButton}
         {dismissibleButton}
       </Stack>
