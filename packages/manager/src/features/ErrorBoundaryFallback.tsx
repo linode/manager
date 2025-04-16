@@ -3,6 +3,7 @@ import { ErrorBoundary } from '@sentry/react';
 import { CatchBoundary } from '@tanstack/react-router';
 import * as React from 'react';
 
+import ZeroState from 'src/assets/icons/zero-state.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 
 export const ErrorComponent = ({
@@ -28,12 +29,20 @@ export const ErrorComponent = ({
           boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`,
         }}
       >
-        <Typography sx={{ mb: 2 }} variant="h1">
-          Oh snap!{' '}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ZeroState />
+        </Box>
+        <Typography sx={{ mb: 2, textAlign: 'center' }} variant="h1">
+          Something went wrong{' '}
         </Typography>
         <Typography style={{ marginBottom: 8 }}>
-          Something went wrong. Please try the following steps that may help
-          resolve the issue.
+          Please try the following steps that may help resolve the issue:
         </Typography>
         <Typography>
           <ul>
@@ -91,14 +100,6 @@ export const ErrorComponent = ({
             code={`${error.name}: ${error.message}`}
             language="typescript"
           />
-          {error.stack && (
-            <details>
-              <summary>
-                <strong>Stack Trace</strong>
-              </summary>
-              <CodeBlock code={error.stack} language="typescript" />
-            </details>
-          )}
         </Typography>
       </Paper>
     </Box>
