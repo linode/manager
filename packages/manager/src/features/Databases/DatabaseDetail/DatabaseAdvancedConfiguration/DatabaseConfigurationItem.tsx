@@ -57,6 +57,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
       );
       return (
         <Autocomplete
+          autoHighlight
           disableClearable
           isOptionEqualToValue={(option, value) => option.label === value.label}
           label={''}
