@@ -59,12 +59,7 @@ describe('GroupedAlertsTable', () => {
 
   it('should handle pagination properly', async () => {
     const alerts: GroupedBy<Alert> = [
-      [
-        'tag1',
-        Array(50)
-          .fill(null)
-          .map(() => alertFactory.build({ tags: ['tag1'] })),
-      ],
+      ['tag1', alertFactory.buildList(50, { tags: ['tag1'] })],
     ];
 
     renderWithTheme(
@@ -86,12 +81,7 @@ describe('GroupedAlertsTable', () => {
 
   it('should scroll to tag header when switching pages within tag pagination', async () => {
     const manyAlerts: GroupedBy<Alert> = [
-      [
-        'tag1',
-        Array(50)
-          .fill(null)
-          .map(() => alertFactory.build({ tags: ['tag1'] })),
-      ],
+      ['tag1', alertFactory.buildList(50, { tags: ['tag1'] })],
     ];
 
     renderWithTheme(
