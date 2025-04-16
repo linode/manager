@@ -1,11 +1,11 @@
-import { InterfacePurpose } from '@linode/api-v4';
 import {
   CreateLinodeInterfaceSchema,
   CreateVPCInterfaceSchema,
 } from '@linode/validation';
-import { FirewallDefaultEntity } from 'src/features/Firewalls/components/FirewallSelectOption.utils';
 import { number, object, string } from 'yup';
 
+import type { InterfacePurpose } from '@linode/api-v4';
+import type { FirewallDefaultEntity } from 'src/features/Firewalls/components/FirewallSelectOption.utils';
 import type { InferType } from 'yup';
 
 export const CreateLinodeInterfaceFormSchema =
