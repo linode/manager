@@ -561,6 +561,34 @@ export const toEntityAccess = (
   return [...updatedEntityAccess, ...newEntities];
 };
 
+export interface CombinedEntity {
+  id: number;
+  name: string;
+}
+
+export const deleteUserEntity = (
+  entityRoles: EntityAccess[],
+  roleName: EntityAccessRole,
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions
+): EntityAccess[] => {
+  return entityRoles
+    .map((entity) => {
+      if (entity.type === entityType && entity.id === entityId) {
+        const roles = entity.roles.filter(
+          (role: EntityAccessRole) => role !== roleName
+        );
+        return {
+          ...entity,
+          roles,
+        };
+      }
+
+      return entity;
+    })
+    .filter((entity) => entity.roles.length > 0);
+};
+
 export const getCreateLinkForEntityType = (
   entityType: EntityType | EntityTypePermissions
 ): string => {
