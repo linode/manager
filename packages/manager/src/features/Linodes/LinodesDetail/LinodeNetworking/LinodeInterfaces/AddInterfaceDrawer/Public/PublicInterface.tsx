@@ -7,7 +7,7 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import type { CreateInterfaceFormValues } from '../utilities';
 
 /**
- * Currentlty, the user can't do any configuration when they create their
+ * Currently, the user can't do any configuration when they create their
  * Public interface. This component exists just to surface errors right now.
  */
 export const PublicInterface = () => {
