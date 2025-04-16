@@ -97,7 +97,10 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     validationSchema: AttachVolumeValidationSchema,
   });
 
-  const { data: volume } = useVolumeQuery(values.volume_id);
+  const { data: volume } = useVolumeQuery(
+    values.volume_id,
+    values.volume_id !== -1
+  );
 
   const linodeRequiresClientLibraryUpdate =
     volume?.encryption === 'enabled' &&
@@ -112,10 +115,10 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     <form onSubmit={handleSubmit}>
       {isReadOnly && (
         <Notice
+          important
           text={
             "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
           }
-          important
           variant="error"
         />
       )}

@@ -16,28 +16,13 @@ export const VolumeSelect = (props: Props) => {
   const { disabled, error, name, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
-
-  const searchFilter = inputValue
-    ? {
-        '+or': [
-          { label: { '+contains': inputValue } },
-          { tags: { '+contains': inputValue } },
-        ],
-      }
-    : {};
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-  } = useInfiniteVolumesQuery({
-    ...searchFilter,
-    ...(region ? { region } : {}),
-    '+order': 'asc',
-    // linode_id: null,  <- if the API let us, we would do this
-    '+order_by': 'label',
-  });
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useInfiniteVolumesQuery({
+      ...(region ? { region } : {}),
+      '+order': 'asc',
+      // linode_id: null,  <- if the API let us, we would do this
+      '+order_by': 'label',
+    });
 
   const options = data?.pages
     .flatMap((page) => page.data)
@@ -47,6 +32,15 @@ export const VolumeSelect = (props: Props) => {
 
   return (
     <Autocomplete
+      disabled={disabled}
+      errorText={error}
+      helperText={
+        region && "Only volumes in this Linode's region are attachable."
+      }
+      id={name}
+      inputValue={selectedVolume ? selectedVolume.label : inputValue}
+      isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
+      label="Volume"
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -59,9 +53,8 @@ export const VolumeSelect = (props: Props) => {
           }
         },
       }}
-      helperText={
-        region && "Only volumes in this Linode's region are attachable."
-      }
+      loading={isLoading}
+      onBlur={onBlur}
       onChange={(event, value) => {
         onChange(value?.id ?? -1);
         setInputValue('');
@@ -73,14 +66,6 @@ export const VolumeSelect = (props: Props) => {
           setInputValue('');
         }
       }}
-      disabled={disabled}
-      errorText={error}
-      id={name}
-      inputValue={selectedVolume ? selectedVolume.label : inputValue}
-      isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
-      label="Volume"
-      loading={isLoading}
-      onBlur={onBlur}
       options={options ?? []}
       placeholder="Select a Volume"
       value={selectedVolume}
