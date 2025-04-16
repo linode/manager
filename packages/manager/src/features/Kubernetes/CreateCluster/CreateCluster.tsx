@@ -56,7 +56,10 @@ import {
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
-import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
+import {
+  CLUSTER_VERSIONS_DOCS_LINK,
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+} from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
@@ -115,13 +118,10 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
+  const [selectedTier, setSelectedTier] =
+    React.useState<KubernetesTier>('standard');
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -151,6 +151,19 @@ export const CreateCluster = () => {
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
     }
+
+    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      setNodePools(
+        nodePools.map((nodePool) => ({
+          ...nodePool,
+          count: Math.min(
+            nodePool.count,
+            tier === 'enterprise' ? MAX_NODES_PER_POOL_ENTERPRISE_TIER : 100
+          ),
+        }))
+      );
+    }
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
@@ -174,18 +187,14 @@ export const CreateCluster = () => {
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
-  const {
-    mutateAsync: createKubernetesClusterBeta,
-  } = useCreateKubernetesClusterBetaMutation();
+  const { mutateAsync: createKubernetesClusterBeta } =
+    useCreateKubernetesClusterBetaMutation();
 
-  const {
-    isLkeEnterpriseLAFeatureEnabled,
-    isLkeEnterpriseLAFlagEnabled,
-  } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const {
     isLoadingVersions,

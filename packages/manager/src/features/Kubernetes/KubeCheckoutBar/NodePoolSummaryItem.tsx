@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { MAX_NODES_PER_POOL_ENTERPRISE_TIER } from 'src/features/Kubernetes/constants';
 
 import {
   StyledHeader,
@@ -16,6 +17,7 @@ import {
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
+  enterprisePrice?: number;
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
@@ -24,7 +26,14 @@ export interface Props {
 }
 
 export const NodePoolSummaryItem = React.memo((props: Props) => {
-  const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
+  const {
+    nodeCount,
+    onRemove,
+    poolType,
+    price,
+    updateNodeCount,
+    enterprisePrice,
+  } = props;
 
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
@@ -55,6 +64,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
         </Box>
         <Box mb={1.5} mt={2}>
           <EnhancedNumberInput
+            max={enterprisePrice ? MAX_NODES_PER_POOL_ENTERPRISE_TIER : 100}
             min={1}
             setValue={updateNodeCount}
             value={nodeCount}
