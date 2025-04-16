@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalizeAllWords } from '@linode/utilities';
 
 import type {
   AccountAccessRole,
@@ -14,6 +14,7 @@ import type {
   PermissionType,
   Roles,
 } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 
 export const placeholderMap: Record<string, string> = {
   account: 'Select Account',
@@ -75,15 +76,15 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
 /**
  * Checks if the given Role has a type
  *
- * @param resourceType The type to check for
+ * @param entityType The type to check for
  * @param role The role to compare against
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  resourceType: EntityType | EntityTypePermissions,
+  entityType: EntityType | EntityTypePermissions,
   role: ExtendedRoleMap
 ) => {
-  return role.entity_type === resourceType;
+  return role.entity_type === entityType;
 };
 
 /**
@@ -175,7 +176,7 @@ export interface EntitiesRole {
 
 export interface EntitiesType {
   label: string;
-  rawValue: EntityType | EntityTypePermissions;
+  rawValue?: EntityType | EntityTypePermissions;
   value?: string;
 }
 
@@ -183,13 +184,27 @@ export const mapEntityTypes = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): EntitiesType[] => {
-  const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
+  const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
-  return resourceTypes.map((resource) => ({
-    label: capitalize(resource) + suffix,
-    rawValue: resource,
-    value: capitalize(resource) + suffix,
+  return entityTypes.map((entity) => ({
+    label: capitalizeAllWords(entity, '_') + suffix,
+    rawValue: entity,
+    value: capitalizeAllWords(entity, '_') + suffix,
   }));
+};
+
+export const mapEntityTypesForSelect = (
+  data: EntitiesRole[] | RoleMap[],
+  suffix: string
+): SelectOption[] => {
+  const entityTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
+
+  return entityTypes
+    .map((entity) => ({
+      label: capitalizeAllWords(entity, '_') + suffix,
+      value: entity,
+    }))
+    .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
 };
 
 export interface CombinedRoles {
@@ -289,6 +304,35 @@ export const mapRolesToPermissions = (
   });
 
   return Array.from(roleMap.values());
+};
+
+/**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapAccountPermissionsToRoles = (
+  accountPermissions: IamAccountPermissions
+): RoleMap[] => {
+  const mapperFn = (access: string, entity_type: string, role: Roles) => ({
+    access,
+    description: role.description,
+    entity_type,
+    id: role.name,
+    name: role.name,
+    permissions: role.permissions,
+  });
+
+  return [
+    ...accountPermissions.account_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('account_access', ap.type, role) as RoleMap
+      )
+    ),
+    ...accountPermissions.entity_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('entity_access', ap.type, role) as RoleMap
+      )
+    ),
+  ].flat();
 };
 
 /**
