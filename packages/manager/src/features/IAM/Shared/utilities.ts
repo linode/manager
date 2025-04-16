@@ -16,7 +16,6 @@ import type {
   IamUserPermissions,
   PermissionType,
   Roles,
-  RoleType,
 } from '@linode/api-v4';
 
 /**
@@ -588,7 +587,7 @@ export interface CombinedEntity {
 
 export const deleteUserEntity = (
   entityRoles: EntityAccess[],
-  roleName: RoleType,
+  roleName: EntityAccessRole,
   entityId: number,
   entityType: EntityType | EntityTypePermissions
 ): EntityAccess[] => {
@@ -596,7 +595,7 @@ export const deleteUserEntity = (
     .map((entity) => {
       if (entity.type === entityType && entity.id === entityId) {
         const roles = entity.roles.filter(
-          (role: RoleType) => role !== roleName
+          (role: EntityAccessRole) => role !== roleName
         );
         return {
           ...entity,

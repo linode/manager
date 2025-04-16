@@ -13,9 +13,10 @@ import type { EntitiesRole } from '../utilities';
 const mockRole: EntitiesRole = {
   role_name: 'firewall_admin',
   id: 'firewall_admin-1',
-  resource_id: 1,
-  resource_name: 'Test',
+  entity_id: 1,
+  entity_name: 'Test',
   entity_type: 'firewall',
+  access: 'entity_access',
 };
 
 const props = {
@@ -74,7 +75,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     const paragraph = screen.getByText(/You’re about to remove the/i);
 
     expect(paragraph).toBeVisible();
-    expect(paragraph).toHaveTextContent(mockRole.resource_name);
+    expect(paragraph).toHaveTextContent(mockRole.entity_name);
     expect(paragraph).toHaveTextContent(mockRole.role_name);
     expect(paragraph).toHaveTextContent(/test_user/i);
 
