@@ -1,9 +1,8 @@
-import { Autocomplete, Box } from '@linode/ui';
+import { Box, Select } from '@linode/ui';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
-import { storage } from 'src/utilities/storage';
 
 import type { RegionFilter } from 'src/utilities/storage';
 
@@ -12,7 +11,7 @@ interface RegionFilterOption {
   value: RegionFilter;
 }
 
-const regionFilterOptions: RegionFilterOption[] = [
+export const regionFilterOptions: RegionFilterOption[] = [
   {
     label: 'All',
     value: 'all',
@@ -27,21 +26,17 @@ const regionFilterOptions: RegionFilterOption[] = [
   },
 ];
 
-const regionFilterMap = {
-  all: 'All',
-  core: 'Core',
-  distributed: 'Distributed',
-};
-
 const ariaIdentifier = 'region-type-filter';
 
 interface Props {
   handleRegionFilter: (regionFilter: RegionFilter) => void;
+  regionFilter: RegionFilter;
 }
 
-export const RegionTypeFilter = ({ handleRegionFilter }: Props) => {
-  const regionFilter = storage.regionFilter.get();
-
+export const RegionTypeFilter = ({
+  handleRegionFilter,
+  regionFilter,
+}: Props) => {
   return (
     <Box alignItems="end" display="flex">
       <FormLabel htmlFor={ariaIdentifier}>
@@ -49,28 +44,24 @@ export const RegionTypeFilter = ({ handleRegionFilter }: Props) => {
           Region Type:
         </Typography>
       </FormLabel>
-      <Autocomplete
-        defaultValue={
-          regionFilterOptions.find((filter) => filter.value === regionFilter) ??
-          regionFilterOptions[0]
-        }
+      <Select
+        hideLabel
+        id={ariaIdentifier}
+        label="Region Type"
         onChange={(_, selectedOption) => {
           if (selectedOption?.value) {
             handleRegionFilter(selectedOption.value);
           }
         }}
+        options={regionFilterOptions}
         sx={{
           display: 'inline-block',
           width: 140,
         }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        disableClearable
-        id={ariaIdentifier}
-        label="Region Type"
-        options={regionFilterOptions}
-        placeholder={regionFilterMap[regionFilter]}
+        value={
+          regionFilterOptions.find((filter) => filter.value === regionFilter) ??
+          regionFilterOptions[0]
+        }
       />
     </Box>
   );
