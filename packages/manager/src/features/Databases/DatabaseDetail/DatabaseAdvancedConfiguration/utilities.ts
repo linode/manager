@@ -242,9 +242,10 @@ export const hasRestartCluster = (
   dirtyFields: any,
   configs: ConfigurationOption[]
 ): string => {
-  return Object.keys(dirtyFields.configs || {}).some(
-    (key) => configs[Number(key)]?.requires_restart
-  )
+  return configs.some((config, index) => {
+    const isDirtyValue = dirtyFields.configs?.[index]?.value;
+    return isDirtyValue && config.requires_restart;
+  })
     ? 'Save and Restart Service'
     : 'Save';
 };
