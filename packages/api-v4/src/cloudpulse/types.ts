@@ -137,14 +137,18 @@ export interface Metric {
 
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
-  aggregate_function?: string;
+  aggregate_function: string;
   entity_ids: number[];
   filters?: Filters[];
   group_by: string;
-  metric?: string;
-  metrics?: Metric[];
+  metric: string;
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
+}
+
+export interface CloudPulseMetricsRequestV2
+  extends Omit<CloudPulseMetricsRequest, 'aggregate_function' | 'metric'> {
+  metrics: Metric[];
 }
 
 export interface CloudPulseMetricsResponse {
