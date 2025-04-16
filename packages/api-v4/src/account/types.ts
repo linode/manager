@@ -206,7 +206,6 @@ export type GlobalGrantTypes =
   | 'add_longview'
   | 'add_lkes'
   | 'add_databases'
-  | 'add_kubernetes'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'

@@ -284,7 +284,6 @@ describe('User permission management', () => {
         add_domains: true,
         add_firewalls: true,
         add_images: true,
-        add_kubernetes: true,
         add_linodes: true,
         add_lkes: true,
         add_longview: true,
