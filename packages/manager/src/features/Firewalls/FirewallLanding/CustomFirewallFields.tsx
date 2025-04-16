@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { getEntityIdsByPermission } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -16,7 +17,6 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
 
 import {
   FIREWALL_HELPER_TEXT,
