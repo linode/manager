@@ -11,7 +11,10 @@ import {
 } from 'src/factories/subnets';
 
 import {
+  getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
   getUniqueLinodesFromSubnets,
+  getVPCInterfacePayload,
   hasUnrecommendedConfiguration,
   hasUnrecommendedConfigurationLinodeInterface,
 } from './utils';
@@ -209,5 +212,45 @@ describe('hasUnrecommendedConfigurationLinodeInterface function', () => {
     expect(
       hasUnrecommendedConfigurationLinodeInterface(vpcInterfaceWithoutNat, true)
     ).toEqual(false);
+  });
+});
+
+describe('Linode Interface utility functions', () => {
+  it('gets the primary IPv4Address', () => {
+    expect(
+      getLinodeInterfacePrimaryIPv4(linodeInterfaceFactoryVPC.build())
+    ).toEqual('10.0.0.0');
+  });
+
+  it('gets the VPC Linode Interface ranges', () => {
+    expect(getLinodeInterfaceRanges(linodeInterfaceFactoryVPC.build())).toEqual(
+      ['10.0.0.1']
+    );
+  });
+
+  describe('getVPCInterfacePayload', () => {
+    const inputs = {
+      autoAssignIPv4: true,
+      chosenIP: '10.0.0.3',
+      firewallId: 1,
+      ipRanges: [],
+      subnetId: 1,
+      vpcId: 1,
+    };
+    it('returns a VPC legacy interface payload', () => {
+      const iface = getVPCInterfacePayload({
+        ...inputs,
+        isLinodeInterface: false,
+      });
+      expect('purpose' in iface).toBe(true);
+    });
+
+    it('returns a VPC Linode Interface payload', () => {
+      const iface = getVPCInterfacePayload({
+        ...inputs,
+        isLinodeInterface: true,
+      });
+      expect('purpose' in iface).toBe(false);
+    });
   });
 });
