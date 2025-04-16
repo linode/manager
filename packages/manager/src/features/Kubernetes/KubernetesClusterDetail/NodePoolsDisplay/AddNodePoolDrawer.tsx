@@ -19,12 +19,12 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../constants';
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   boxOuter: {
@@ -182,18 +182,18 @@ export const AddNodePoolDrawer = (props: Props) => {
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
-          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           addPool={handleAdd}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ count: 1, planId: newType });
+            }
+          }}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}

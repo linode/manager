@@ -10,6 +10,7 @@ import {
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
 } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 import type {
   KubeNodePoolResponse,
@@ -18,7 +19,6 @@ import type {
   Region,
 } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
-import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 const DEFAULT_PLAN_COUNT = 3;
 

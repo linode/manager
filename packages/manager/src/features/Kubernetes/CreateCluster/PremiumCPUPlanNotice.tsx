@@ -1,5 +1,7 @@
-import { Notice, NoticeProps } from '@linode/ui';
+import { Notice } from '@linode/ui';
 import * as React from 'react';
+
+import type { NoticeProps } from '@linode/ui';
 
 export const PremiumCPUPlanNotice = (props: NoticeProps) => {
   return (
