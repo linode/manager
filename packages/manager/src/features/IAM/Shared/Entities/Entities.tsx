@@ -81,8 +81,8 @@ export const Entities = ({
           onChange(newValue || []);
         }}
         options={memoizedEntities}
-        placeholder={value.length ? ' ' : getPlaceholder(type)}
-        readOnly={mode === 'change-role'}
+        placeholder={getPlaceholder(type, value.length, memoizedEntities.length)}
+        readOnly={getReadonlyState(mode, memoizedEntities.length)}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
         value={value || []}
       />
@@ -100,8 +100,21 @@ export const Entities = ({
   );
 };
 
-const getPlaceholder = (type: EntityType | EntityTypePermissions): string =>
-  placeholderMap[type] || 'Select';
+const getPlaceholder = (
+  type: EntityType | EntityTypePermissions,
+  currentValueLength: number,
+  possibleEntitiesLength: number
+): string =>
+  currentValueLength > 0
+    ? ' '
+    : possibleEntitiesLength === 0
+      ? 'None'
+      : placeholderMap[type] || 'Select';
+
+const getReadonlyState = (
+  mode: DrawerModes | undefined,
+  possibleEntitiesLength: number
+): boolean => mode === 'change-role' || possibleEntitiesLength === 0;
 
 const transformedEntities = (
   entities: { id: number; label: string }[]
