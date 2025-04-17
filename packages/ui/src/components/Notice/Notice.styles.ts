@@ -30,9 +30,11 @@ export const useStyles = makeStyles()((theme) => ({
     },
     borderRadius: 1,
     padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+    '& .MuiTypography-root': {
+      width: '100%',
+    },
     '& p': {
       fontSize: theme.tokens.font.FontSize.Xs,
-      lineHeight: '20px',
       font: theme.font.semibold,
       position: 'relative',
       top: 1,

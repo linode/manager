@@ -55,6 +55,24 @@ export const BetaBanner: Story = {
   ),
 };
 
+export const InfoWithLongTextAndMarkup: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      important
+      preferenceKey="lenghty-dismissible-banner"
+      variant="info"
+    >
+      <Typography variant="h2">
+        This is an important, dismissible informational notice with a title.
+      </Typography>
+      <Typography>
+        This notice contains long text that should wrap and contain a{' '}
+        <Link to="https://linode.com">link</Link>.
+      </Typography>
+    </DismissibleBanner>
+  ),
+};
+
 const meta: Meta<typeof DismissibleBanner> = {
   args: { preferenceKey: 'dismissible-banner' },
   component: DismissibleBanner,

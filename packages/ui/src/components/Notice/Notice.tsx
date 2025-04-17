@@ -163,11 +163,13 @@ export const Notice = (props: NoticeProps) => {
           {variantMap.warning && <WarningIcon className={classes.icon} />}
         </Box>
       )}
-      {text || typeof children === 'string' ? (
-        <Typography {...typeProps}>{text ?? children}</Typography>
-      ) : (
-        children
-      )}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        {text || typeof children === 'string' ? (
+          <Typography {...typeProps}>{text ?? children}</Typography>
+        ) : (
+          children
+        )}
+      </Box>
     </Box>
   );
 };

@@ -72,7 +72,7 @@ export const DismissibleBanner = (props: Props) => {
       gap={1}
       {...rest}
     >
-      <Stack alignItems="center" direction="row" flex={1}>
+      <Stack justifyContent="center" direction="column" flex={1}>
         {children}
       </Stack>
       <Stack
