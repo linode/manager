@@ -11,7 +11,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DisabledPlanSelectionTooltip } from 'src/features/components/PlansPanel/DisabledPlanSelectionTooltip';
 import { getDisabledPlanReasonCopy } from 'src/features/components/PlansPanel/utils';
-import { MAX_NODES_PER_POOL_ENTERPRISE_TIER } from 'src/features/Kubernetes/constants';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
@@ -108,7 +111,7 @@ export const KubernetesPlanSelection = (
           max={
             selectedTier === 'enterprise'
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-              : undefined
+              : MAX_NODES_PER_POOL_STANDARD_TIER
           }
           setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
           value={count}
@@ -184,7 +187,7 @@ export const KubernetesPlanSelection = (
                 max={
                   selectedTier === 'enterprise'
                     ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                    : undefined
+                    : MAX_NODES_PER_POOL_STANDARD_TIER
                 }
                 setValue={(newCount: number) =>
                   updatePlanCount(plan.id, newCount)

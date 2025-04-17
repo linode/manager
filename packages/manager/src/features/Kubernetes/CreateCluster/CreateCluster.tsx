@@ -59,6 +59,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import {
   CLUSTER_VERSIONS_DOCS_LINK,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
@@ -159,7 +160,9 @@ export const CreateCluster = () => {
           ...nodePool,
           count: Math.min(
             nodePool.count,
-            tier === 'enterprise' ? MAX_NODES_PER_POOL_ENTERPRISE_TIER : 100
+            tier === 'enterprise'
+              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+              : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
         }))
       );

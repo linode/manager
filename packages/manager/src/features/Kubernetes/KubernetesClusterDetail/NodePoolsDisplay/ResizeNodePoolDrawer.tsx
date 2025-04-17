@@ -12,7 +12,10 @@ import { makeStyles } from 'tss-react/mui';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { NotFound } from 'src/components/NotFound';
-import { MAX_NODES_PER_POOL_ENTERPRISE_TIER } from 'src/features/Kubernetes/constants';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -166,11 +169,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
               Adjust the total number of nodes to resize this node pool.
             </Typography>
             <EnhancedNumberInput
-              // @TODO LKE-E: Use autoscaler.max once API returns the correct value for LKE-E
               max={
                 clusterTier === 'enterprise'
                   ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                  : 100
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
               }
               min={1}
               setValue={handleChange}
