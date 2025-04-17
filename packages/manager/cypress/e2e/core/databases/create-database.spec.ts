@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   databaseConfigurations,
   mockDatabaseEngineTypes,
@@ -8,8 +8,8 @@ import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
 import {
   mockCreateDatabase,
   mockGetDatabaseEngines,
-  mockGetDatabaseTypes,
   mockGetDatabases,
+  mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { mockGetEvents } from 'support/intercepts/events';
 import {
@@ -25,7 +25,6 @@ import {
   accountUserFactory,
   databaseFactory,
   eventFactory,
-  grantsFactory,
 } from 'src/factories';
 
 import type { Database } from '@linode/api-v4';
@@ -74,12 +73,58 @@ describe('create a database cluster, mocked data', () => {
         });
 
         const clusterSizeSelection =
-          configuration.clusterSize > 1 ? '3 Nodes' : '1 Node';
+          configuration.clusterSize == 1
+            ? '1 Node'
+            : configuration.clusterSize == 2
+              ? '2 Nodes'
+              : '3 Nodes';
+
+        const nodes =
+          configuration.clusterSize == 1
+            ? 'Primary (1 Node)'
+            : configuration.clusterSize == 2
+              ? 'Primary (+1 Node)'
+              : 'Primary (+2 Nodes)';
 
         const clusterCpuType =
           configuration.linodeType.indexOf('-dedicated-') !== -1
             ? 'Dedicated CPU'
             : 'Shared CPU';
+
+        // Function to validate Action Menu on the landing page as per db cluster status
+        const validateActionItems = (state: string) => {
+          const menuStates: Record<string, Record<string, boolean>> = {
+            active: {
+              Delete: true,
+              'Manage Access Controls': true,
+              'Reset Root Password': true,
+              Resize: true,
+              Resume: false,
+              Suspend: true,
+            },
+            provisioning: {
+              Delete: true,
+              'Manage Access Controls': true,
+              'Reset Root Password': true,
+              Resize: true,
+              Resume: false,
+              Suspend: false,
+            },
+          };
+          const expectedItems = menuStates[state];
+          ui.actionMenu
+            .findByTitle(`Action menu for Database ${databaseMock.label}`)
+            .should('be.visible')
+            .click();
+
+          Object.entries(expectedItems).forEach(([label, enabled]) => {
+            ui.actionMenuItem
+              .findByTitle(label)
+              .should('be.visible')
+              .should(enabled ? 'be.enabled' : 'be.disabled');
+          });
+          cy.get('body').click(0, 0);
+        };
 
         // Mock account to ensure 'Managed Databases' capability.
         mockGetAccount(accountFactory.build()).as('getAccount');
@@ -120,6 +165,34 @@ describe('create a database cluster, mocked data', () => {
         // Database cluster size selection.
         cy.contains(clusterSizeSelection).should('be.visible').click();
 
+        if (clusterCpuType == 'Shared CPU') {
+          cy.findByLabelText('2 Nodes - High Availability').should('not.exist');
+        }
+
+        // Manage Access while creating a cluster for ipv4 and ipv6
+        if (configuration.ip) {
+          cy.findByText('Specific Access (recommended)')
+            .should('be.visible')
+            .click();
+          cy.get('[id="domain-transfer-ip-0"]').should('be.visible').click();
+          cy.focused().type(configuration.ip);
+          cy.findByText('Add an IP').should('be.visible').click();
+        }
+
+        if (!configuration.ip) {
+          cy.findByText('No Access (Deny connections from all IP addresses)')
+            .should('be.visible')
+            .click();
+          cy.get('[id="domain-transfer-ip-0"]')
+            .should('be.visible')
+            .should('be.disabled');
+          cy.findByText('Add an IP').should('be.visible').should('be.disabled');
+        }
+
+        // Summary section, TODO validating plan details.
+        cy.findByText('Summary').should('be.visible');
+        cy.findAllByTestId('currentSummary').should('be.visible');
+
         // Create database, confirm redirect, and that new instance is listed.
         cy.findByText('Create Database Cluster').should('be.visible').click();
         cy.wait('@createDatabase');
@@ -130,8 +203,24 @@ describe('create a database cluster, mocked data', () => {
           `/databases/${databaseMock.engine}/${databaseMock.id}`
         );
 
-        cy.findByText(databaseMock.label).should('be.visible');
-        cy.findByText(databaseRegionLabel).should('be.visible');
+        // Validate Cluster Configuration on Summary page
+        [
+          'Status',
+          'Plan',
+          'Nodes',
+          'CPUs',
+          'Engine',
+          'Region',
+          'RAM',
+          'Total Disk Size',
+          databaseMock.label,
+          databaseRegionLabel,
+          `${configuration.engine} v${configuration.version}`,
+          nodes,
+          `${databaseMock.total_disk_size_gb} GB`,
+        ].forEach((text: string) => {
+          cy.findByText(text).should('be.visible');
+        });
 
         // Navigate back to landing page.
         ui.entityHeader.find().within(() => {
@@ -154,6 +243,9 @@ describe('create a database cluster, mocked data', () => {
             }).should('be.visible');
           });
 
+        // Confirm enabled dropdown option when cluster is in provisioning state
+        validateActionItems('provisioning');
+
         // Mock next request to fetch databases so that instance appears active.
         // Mock next event request to trigger Cloud to re-fetch DBaaS instances.
         mockGetDatabases([databaseMockActive]).as('getDatabases');
@@ -166,6 +258,9 @@ describe('create a database cluster, mocked data', () => {
           .within(() => {
             cy.findByText('Active').should('be.visible');
           });
+
+        // Confirm enabled dropdown options when cluster is in active state
+        validateActionItems('active');
       });
     }
   );

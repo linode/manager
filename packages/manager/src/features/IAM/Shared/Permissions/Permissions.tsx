@@ -3,7 +3,7 @@ import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 import {
   StyledBox,
   StyledClampedContent,
@@ -16,18 +16,15 @@ import {
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
 type Props = {
+  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
 export const Permissions = ({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(permissions, showAll);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(permissions, showAll);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
@@ -64,31 +61,37 @@ export const Permissions = ({ permissions }: Props) => {
           text="Link is coming..."
         />
       </StyledGrid>
+      {!permissions.length ? (
+        <Typography>
+          This role doesn’t include permissions. Refer to the role description
+          to understand what access is granted by this role.
+        </Typography>
+      ) : (
+        <StyledContainer>
+          <StyledClampedContent ref={containerRef} showAll={showAll}>
+            {permissions.map((permission: PermissionType, index: number) => (
+              <StyledPermissionItem
+                data-testid="permission"
+                key={permission}
+                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
+              >
+                {permission}
+              </StyledPermissionItem>
+            ))}
+          </StyledClampedContent>
 
-      <StyledContainer>
-        <StyledClampedContent ref={containerRef} showAll={showAll}>
-          {permissions.map((permission: PermissionType, index: number) => (
-            <StyledPermissionItem
-              data-testid="permission"
-              key={permission}
-              ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
-            >
-              {permission}
-            </StyledPermissionItem>
-          ))}
-        </StyledClampedContent>
-
-        {(numHiddenItems > 0 || showAll) && (
-          <StyledBox>
-            <StyledLinkButton
-              onClick={() => setShowAll(!showAll)}
-              type="button"
-            >
-              {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
-            </StyledLinkButton>
-          </StyledBox>
-        )}
-      </StyledContainer>
+          {(numHiddenItems > 0 || showAll) && (
+            <StyledBox>
+              <StyledLinkButton
+                onClick={() => setShowAll(!showAll)}
+                type="button"
+              >
+                {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
+              </StyledLinkButton>
+            </StyledBox>
+          )}
+        </StyledContainer>
+      )}
     </Grid>
   );
 };

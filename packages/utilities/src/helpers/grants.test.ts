@@ -1,5 +1,6 @@
-import { grantsFactory } from 'src/factories/grants';
+import { describe, expect, it } from 'vitest';
 
+import { grantsFactory } from '../factories';
 import { getEntityIdsByPermission } from './grants';
 
 const grants = grantsFactory.build({
@@ -14,13 +15,12 @@ const grants = grantsFactory.build({
 describe('getEntityIdsByPermission', () => {
   it('should return an empty array when there is no grant data', () => {
     expect(getEntityIdsByPermission(undefined, 'linode', 'read_write')).toEqual(
-      []
+      [],
     );
   });
   it('should return read-only entity ids with read_only permission', () => {
     expect(getEntityIdsByPermission(grants, 'linode', 'read_only')).toEqual([
-      0,
-      2,
+      0, 2,
     ]);
   });
   it('should return all entity ids if a permission level is omitted', () => {

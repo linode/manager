@@ -25,13 +25,8 @@ interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
  */
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
   const [inputValue, setInputValue] = React.useState('');
-  const {
-    history,
-    searchAlgolia,
-    searchEnabled,
-    searchError,
-    searchResults,
-  } = props;
+  const { history, searchAlgolia, searchEnabled, searchError, searchResults } =
+    props;
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;

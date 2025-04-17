@@ -11,6 +11,8 @@ import {
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  grantFactory,
+  grantsFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -109,7 +111,6 @@ import {
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { getStorage } from 'src/utilities/storage';
 
