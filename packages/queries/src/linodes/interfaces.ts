@@ -101,8 +101,25 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
     {
       mutationFn: (data) => createLinodeInterface(linodeId, data),
       onSuccess() {
+        // Invalidate the list of interfaces
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
+        });
+
+        // Invalidate the Linode's IPs because adding a new interface likely adds IPs to the Linode
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+        });
+
+        // Invaliate networking queries because IPs likely changed
+        queryClient.invalidateQueries({
+          queryKey: networkingQueries._def,
+        });
+
+        // Invalidate the Linode itself in case IPs changed
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+          exact: true,
         });
       },
     },
@@ -127,6 +144,14 @@ export const useUpdateLinodeInterfaceMutation = (
       onSuccess(linodeInterface, variables, context) {
         options?.onSuccess?.(linodeInterface, variables, context);
 
+        // Set the specific interface in the cache
+        queryClient.setQueryData(
+          linodeQueries
+            .linode(linodeId)
+            ._ctx.interfaces._ctx.interface(linodeInterface.id).queryKey,
+          linodeInterface,
+        );
+
         // Invalidate this Linode's interface queries
         queryClient.invalidateQueries({
           queryKey:
@@ -138,14 +163,6 @@ export const useUpdateLinodeInterfaceMutation = (
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
         });
-
-        // Set the specific interface in the cache
-        queryClient.setQueryData(
-          linodeQueries
-            .linode(linodeId)
-            ._ctx.interfaces._ctx.interface(linodeInterface.id).queryKey,
-          linodeInterface,
-        );
 
         // Invaliate networking queries because IPs likely changed
         queryClient.invalidateQueries({
