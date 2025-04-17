@@ -10,6 +10,7 @@ import {
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
 } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 import type {
   KubeNodePoolResponse,
@@ -114,6 +115,7 @@ const Panel = (props: NodePoolPanelProps) => {
             return t.class !== 'nanode';
           })}
           copy={getPlansPanelCopy()}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
