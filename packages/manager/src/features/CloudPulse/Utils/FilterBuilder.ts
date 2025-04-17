@@ -28,6 +28,7 @@ import type {
   AclpConfig,
   Dashboard,
   DateTimeWithPreset,
+  DimensionFilter,
   Filter,
   Filters,
   TimeDuration,
@@ -445,7 +446,8 @@ export const getMetricsCallCustomFilters = (
  */
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[],
-  metricsUrl: string
+  metricsUrl: string,
+  dimensionFilters: DimensionFilter[]
 ): Filters[] => {
   const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
     const baseFilter = {
@@ -459,6 +461,18 @@ export const constructAdditionalRequestFilters = (
       ? { ...baseFilter, key: filter.filterKey }
       : { ...baseFilter, dimension_label: filter.filterKey };
   });
+
+  if (dimensionFilters.length > 0) {
+    dimensionFilters.forEach(
+      ({ dimension_label: dimensionLabel, operator, value }) => {
+        filters.push({
+          dimension_label: dimensionLabel,
+          operator,
+          value,
+        });
+      }
+    );
+  }
 
   return filters;
 };

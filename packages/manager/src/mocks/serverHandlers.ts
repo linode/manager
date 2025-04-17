@@ -50,6 +50,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
+  dimensionFilterFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -2792,6 +2793,9 @@ export const handlers = [
           size: 12,
           unit: '%',
           y_label: 'system_cpu_utilization_ratio',
+          filters: dimensionFilterFactory.buildList(5, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
+          }),
         },
         {
           aggregate_function: 'avg',
@@ -2812,6 +2816,9 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          filters: dimensionFilterFactory.buildList(3, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
+          }),
         },
         {
           aggregate_function: 'avg',
