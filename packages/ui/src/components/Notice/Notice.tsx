@@ -154,21 +154,15 @@ export const Notice = (props: NoticeProps) => {
       {...dataAttributes}
       {...rest}
     >
-      <Box sx={{ ml: 0.5, mr: 0.5, display: 'flex', alignItems: 'center' }}>
-        {important && variantMap.error && (
-          <ErrorIcon className={classes.icon} />
-        )}
-        {important && variantMap.info && <InfoIcon className={classes.icon} />}
-        {important && variantMap.success && (
-          <CheckIcon className={classes.icon} />
-        )}
-        {important && variantMap.tip && (
-          <LightBulbIcon className={classes.icon} />
-        )}
-        {important && variantMap.warning && (
-          <WarningIcon className={classes.icon} />
-        )}
-      </Box>
+      {important && (
+        <Box sx={{ mr: 1, display: 'flex', alignSelf: 'flex-start' }}>
+          {variantMap.error && <ErrorIcon className={classes.icon} />}
+          {variantMap.info && <InfoIcon className={classes.icon} />}
+          {variantMap.success && <CheckIcon className={classes.icon} />}
+          {variantMap.tip && <LightBulbIcon className={classes.icon} />}
+          {variantMap.warning && <WarningIcon className={classes.icon} />}
+        </Box>
+      )}
       {text || typeof children === 'string' ? (
         <Typography {...typeProps}>{text ?? children}</Typography>
       ) : (
