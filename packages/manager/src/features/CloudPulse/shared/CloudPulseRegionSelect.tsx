@@ -52,7 +52,7 @@ export const CloudPulseRegionSelect = React.memo(
       isError: isResourcesError,
       isLoading: isResourcesLoading,
     } = useResourcesQuery(
-      selectedDashboard !== undefined,
+      selectedDashboard !== undefined && Boolean(regions?.length),
       selectedDashboard?.service_type,
       {},
       {
@@ -123,7 +123,7 @@ export const CloudPulseRegionSelect = React.memo(
     const errorMessage = isError
       ? `Failed to fetch ${label || 'Regions'}.`
       : isResourcesError
-        ? 'Failed to fetch resources'
+        ? 'Failed to fetch Resources.'
         : '';
 
     return (
