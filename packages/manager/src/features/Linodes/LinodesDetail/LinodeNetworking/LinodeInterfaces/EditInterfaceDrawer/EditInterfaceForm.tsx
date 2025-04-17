@@ -20,6 +20,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { getLinodeInterfaceType } from '../utilities';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
+import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
+import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
@@ -58,6 +60,7 @@ export const EditInterfaceForm = (props: Props) => {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         form.setError(error.field ?? 'root', { message: error.reason });
@@ -89,9 +92,12 @@ export const EditInterfaceForm = (props: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Notice
           spacingBottom={16}
-          text="Updating the interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+          text="Updating the interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
           variant="warning"
         />
+        {form.formState.errors.root?.message && (
+          <Notice text={form.formState.errors.root?.message} variant="error" />
+        )}
         <Stack divider={<Divider />} spacing={2}>
           {interfaceType === 'Public' && (
             <Stack divider={<Divider />} spacing={3}>
@@ -100,10 +106,10 @@ export const EditInterfaceForm = (props: Props) => {
             </Stack>
           )}
           {interfaceType === 'VPC' && (
-            <Notice
-              text="TODO: Support editing a VPC interface"
-              variant="warning"
-            />
+            <Stack divider={<Divider />} spacing={3}>
+              <VPCIPv4Addresses linodeInterface={linodeInterface} />
+              <VPCIPv4Ranges />
+            </Stack>
           )}
           {interfaceType === 'VLAN' && (
             <Notice
