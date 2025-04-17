@@ -6,7 +6,6 @@ import {
   InputAdornment,
   Notice,
   TextField,
-  Typography,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -176,12 +175,15 @@ export const VolumesLanding = () => {
     <>
       <DocumentTitleSegment segment="Volumes" />
       {_isRestrictedUser && (
-        <Notice variant="warning" important>
-          <Typography>
-            <strong>Access restricted</strong>: You do not have permissions to
-            create or edit Volumes.
-          </Typography>
-        </Notice>
+        <Notice
+          variant="warning"
+          important
+          text={getRestrictedResourceText({
+            action: ['create', 'edit'],
+            resourceType: 'Volumes',
+            isSingular: false,
+          })}
+        ></Notice>
       )}
       <LandingHeader
         breadcrumbProps={{
