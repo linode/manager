@@ -11,7 +11,7 @@ type Story = StoryObj<typeof DismissibleBanner>;
 
 export const Default: Story = {
   render: (args) => (
-    <DismissibleBanner {...args} variant="info">
+    <DismissibleBanner {...args} important variant="info">
       <Typography>This is an example of a dismissible banner.</Typography>
     </DismissibleBanner>
   ),

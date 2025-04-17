@@ -55,7 +55,7 @@ export const DismissibleBanner = (props: Props) => {
       data-testid="notice-dismiss"
       onClick={handleDismiss}
       sx={(theme) => ({
-        padding: theme.spacingFunction(4),
+        padding: theme.spacingFunction(2),
         '& svg': {
           width: 16,
           height: 16,
