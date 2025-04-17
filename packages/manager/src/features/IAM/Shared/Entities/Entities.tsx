@@ -9,6 +9,7 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import {
   getCreateLinkForEntityType,
+  getFormattedEntityType,
   placeholderMap,
   transformedAccountEntities,
 } from '../utilities';
@@ -62,7 +63,9 @@ export const Entities = ({
           </Typography>
         </FormLabel>
         <Typography>
-          {type === 'account' ? 'All entities' : `All ${type}s`}
+          {type === 'account'
+            ? 'All entities'
+            : `All ${getFormattedEntityType(type)}s`}
         </Typography>
       </>
     );
@@ -81,7 +84,11 @@ export const Entities = ({
           onChange(newValue || []);
         }}
         options={memoizedEntities}
-        placeholder={getPlaceholder(type, value.length, memoizedEntities.length)}
+        placeholder={getPlaceholder(
+          type,
+          value.length,
+          memoizedEntities.length
+        )}
         readOnly={getReadonlyState(mode, memoizedEntities.length)}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
         value={value || []}
