@@ -57,8 +57,8 @@ export const DismissibleBanner = (props: Props) => {
       sx={(theme) => ({
         padding: theme.spacingFunction(4),
         '& svg': {
-          width: 20,
-          height: 20,
+          width: 16,
+          height: 16,
         },
       })}
     >
@@ -72,7 +72,7 @@ export const DismissibleBanner = (props: Props) => {
       gap={1}
       {...rest}
     >
-      <Stack justifyContent="center" direction="column" flex={1}>
+      <Stack direction="column" flex={1} justifyContent="center">
         {children}
       </Stack>
       <Stack
