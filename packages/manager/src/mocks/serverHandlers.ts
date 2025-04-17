@@ -840,15 +840,15 @@ export const handlers = [
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
     const mtcTTLinodeDetail = linodeFactory.build({
-      backups: { enabled: false },
       id,
+      backups: { enabled: false },
       label: 'mtc-tt-custom-plan-linode',
       region: 'us-iad',
       type: 'g8-premium-128-ht',
     });
     const linodeDetail = linodeFactory.build({
-      backups: { enabled: false },
       id,
+      backups: { enabled: false },
       label: 'Gecko Distributed Region Test',
       region: 'us-den-10',
     });

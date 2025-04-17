@@ -3,6 +3,7 @@ import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import {
+  sortRows,
   Table,
   TableBody,
   TableCell,
@@ -10,7 +11,6 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
-  sortRows,
 } from 'akamai-cds-react-components/Table';
 import React, { useState } from 'react';
 
@@ -45,10 +45,10 @@ export const RolesTable = ({ roles }: Props) => {
   }, [roles]);
 
   const [filterableEntityType, setFilterableEntityType] =
-    useState<SelectOption | null>(ALL_ROLES_OPTION);
+    useState<null | SelectOption>(ALL_ROLES_OPTION);
 
   const [sort, setSort] = useState<
-    { column: string; order: Order } | undefined
+    undefined | { column: string; order: Order }
   >(undefined);
 
   const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
@@ -111,20 +111,20 @@ export const RolesTable = ({ roles }: Props) => {
   return (
     <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
       <Grid
-        sx={() => ({
-          justifyContent: 'space-between',
-        })}
         container
         direction="row"
         spacing={2}
+        sx={() => ({
+          justifyContent: 'space-between',
+        })}
       >
         <Grid
+          container
+          direction="row"
           sx={() => ({
             alignItems: 'center',
             justifyContent: 'flex-start',
           })}
-          container
-          direction="row"
         >
           <DebouncedSearchTextField
             clearable
@@ -147,14 +147,14 @@ export const RolesTable = ({ roles }: Props) => {
           />
         </Grid>
         <Button
+          buttonType="primary"
+          disabled={selectedRows.length === 0}
+          onClick={() => handleAssignSelectedRoles()}
           tooltipText={
             selectedRows.length === 0
               ? 'You must select some roles to assign them.'
               : undefined
           }
-          buttonType="primary"
-          disabled={selectedRows.length === 0}
-          onClick={() => handleAssignSelectedRoles()}
         >
           Assign Selected Roles
         </Button>
@@ -225,8 +225,8 @@ export const RolesTable = ({ roles }: Props) => {
                       {roleRow.description.substring(0, 80)}
                       {'... '}
                       <StyledTextTooltip
-                        tooltipText={roleRow.description}
                         displayText={'Show more'}
+                        tooltipText={roleRow.description}
                       />
                     </span>
                   )}
