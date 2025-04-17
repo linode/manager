@@ -1,7 +1,11 @@
 import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetBucket } from 'support/intercepts/object-storage';
+import {
+  mockGetBucket,
+  mockGetBucketObjects,
+  mockGetBuckets,
+} from 'support/intercepts/object-storage';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
@@ -38,6 +42,8 @@ describe('Object Storage Multicluster Bucket Details Tabs', () => {
       const { label } = mockBucket;
 
       mockGetBucket(label, mockRegion.id);
+      mockGetBuckets([mockBucket]);
+      mockGetBucketObjects(label, mockRegion.id, []);
       mockGetRegions([mockRegion]);
 
       cy.visitWithLogin(
