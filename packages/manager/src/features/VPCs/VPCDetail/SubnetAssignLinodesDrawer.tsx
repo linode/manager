@@ -1,7 +1,9 @@
 import { appendConfigInterface } from '@linode/api-v4';
+import { createLinodeInterface } from '@linode/api-v4';
 import {
   getAllLinodeConfigs,
   useAllLinodesQuery,
+  useFirewallSettingsQuery,
   useGrants,
   useProfile,
 } from '@linode/queries';
@@ -11,9 +13,9 @@ import {
   Box,
   Button,
   Checkbox,
+  Divider,
   Drawer,
   FormControlLabel,
-  FormHelperText,
   Notice,
   TextField,
   TooltipIcon,
@@ -28,6 +30,8 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
+import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
@@ -37,12 +41,18 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
-  ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE,
   MULTIPLE_CONFIGURATIONS_MESSAGE,
   REGIONAL_LINODE_MESSAGE,
 } from '../constants';
+import {
+  getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
+  getVPCInterfacePayload,
+  transformLinodeInterfaceErrorsToFormikErrors,
+} from '../utils';
 import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
+import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
 import type {
   APIError,
@@ -50,6 +60,7 @@ import type {
   Interface,
   InterfacePayload,
   Linode,
+  LinodeInterface,
   Subnet,
 } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -65,10 +76,15 @@ interface SubnetAssignLinodesDrawerProps {
   vpcRegion: string;
 }
 
-interface LinodeAndConfigData extends Linode {
-  configId: number;
-  interfaceData: Interface | undefined;
+interface LinodeAndInterfaceData extends Linode {
+  configId: null | number;
+  interfaceId: number | undefined;
   linodeConfigLabel: string;
+  // Normalize VPC IPv4 and ranges for display/download since legacy and Linode interfaces have different shapes
+  // Legacy: VPC IPv4 = interface.ipv4.vpc, VPC ranges = interface.ip_ranges
+  // Linode Interface: VPC IPv4 = interface.vpc.ipv4.addresses[], VPC ranges = interface.vpc.ipv4.ranges
+  vpcIPv4: null | string | undefined;
+  vpcRanges: string[] | undefined;
 }
 
 export const SubnetAssignLinodesDrawer = (
@@ -82,10 +98,16 @@ export const SubnetAssignLinodesDrawer = (
     unassignLinodesErrors,
   } = useUnassignLinode();
   const csvRef = React.useRef<any>();
-  const newInterface = React.useRef<Interface>();
+  const newInterface = React.useRef<Interface | LinodeInterface>();
   const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
   const theme = useTheme();
+
+  const { data: firewallSettings } = useFirewallSettingsQuery();
+  const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+    'vpc',
+    firewallSettings
+  );
 
   const [assignLinodesErrors, setAssignLinodesErrors] = React.useState<
     Record<string, string | undefined>
@@ -94,10 +116,8 @@ export const SubnetAssignLinodesDrawer = (
   // While the drawer is open, we maintain a local list of assigned Linodes.
   // This is distinct from the subnet's global list of assigned Linodes, which encompasses all assignments.
   // The local list resets to empty when the drawer is closed and reopened.
-  const [
-    assignedLinodesAndConfigData,
-    setAssignedLinodesAndConfigData,
-  ] = React.useState<LinodeAndConfigData[]>([]);
+  const [assignedLinodesAndInterfaceData, setAssignedLinodesAndInterfaceData] =
+    React.useState<LinodeAndInterfaceData[]>([]);
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
   const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
 
@@ -147,7 +167,16 @@ export const SubnetAssignLinodesDrawer = (
   }, [linodes, setLinodeOptionsToAssign, findUnassignedLinodes]);
 
   // Determine the configId based on the number of configurations
-  function getConfigId(linodeConfigs: Config[], selectedConfig: Config | null) {
+  function getConfigId(inputs: {
+    isLinodeInterface: boolean;
+    linodeConfigs: Config[];
+    selectedConfig: Config | null;
+  }) {
+    const { linodeConfigs, selectedConfig, isLinodeInterface } = inputs;
+    if (isLinodeInterface) {
+      return null;
+    }
+
     return (
       // Use the first configuration's id or -1 if no configurations
       // Use selected configuration's id if available
@@ -157,46 +186,58 @@ export const SubnetAssignLinodesDrawer = (
   }
 
   const handleAssignLinode = async () => {
-    const { chosenIP, ipRanges, selectedConfig, selectedLinode } = values;
+    const {
+      chosenIP,
+      ipRanges,
+      selectedConfig,
+      selectedLinode,
+      selectedFirewall,
+    } = values;
 
-    const configId = getConfigId(linodeConfigs, selectedConfig);
-
+    const configId = getConfigId({
+      isLinodeInterface,
+      linodeConfigs,
+      selectedConfig,
+    });
     const configToBeModified = linodeConfigs.find(
       (config) => config.id === configId
     );
 
-    const interfacePayload: InterfacePayload = {
-      ip_ranges: ipRanges
-        .map((ipRange) => ipRange.address)
-        .filter((ipRange) => ipRange !== ''),
-      ipam_address: null,
-      ipv4: {
-        nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
-        vpc: !autoAssignIPv4 ? chosenIP : undefined,
-      },
-      label: null,
-      primary: true,
-      purpose: 'vpc',
-      subnet_id: subnet?.id,
-      vpc_id: vpcId,
-    };
+    const interfacePayload = getVPCInterfacePayload({
+      firewallId: selectedFirewall,
+      autoAssignIPv4,
+      chosenIP,
+      ipRanges,
+      subnetId: subnet?.id,
+      vpcId,
+      isLinodeInterface,
+    });
 
     try {
-      // If the config has only an implicit public interface, make it explicit and
-      // add it in eth0
-      if (configToBeModified?.interfaces?.length === 0) {
-        appendConfigInterface(
+      let _newInterface;
+
+      if ('purpose' in interfacePayload) {
+        // If the config has only an implicit public interface, make it explicit and
+        // add it in eth0
+        if (configToBeModified?.interfaces?.length === 0) {
+          appendConfigInterface(
+            selectedLinode?.id ?? -1,
+            configId ?? -1,
+            defaultPublicInterface
+          );
+        }
+
+        _newInterface = await appendConfigInterface(
           selectedLinode?.id ?? -1,
-          configId,
-          defaultPublicInterface
+          configId ?? -1,
+          interfacePayload
+        );
+      } else {
+        _newInterface = await createLinodeInterface(
+          selectedLinode?.id ?? -1,
+          interfacePayload
         );
       }
-
-      const _newInterface = await appendConfigInterface(
-        selectedLinode?.id ?? -1,
-        configId,
-        interfacePayload
-      );
 
       // We're storing this in a ref to access this later in order
       // to update `assignedLinodesAndConfigData` with the new
@@ -209,8 +250,10 @@ export const SubnetAssignLinodesDrawer = (
         vpcId,
       });
     } catch (errors) {
-      const fieldsOfIPRangesErrors = errors.reduce(
-        (accum: any, _err: { field: string }) => {
+      const updatedErrors =
+        transformLinodeInterfaceErrorsToFormikErrors(errors);
+      const fieldsOfIPRangesErrors = updatedErrors.reduce(
+        (accum: any, _err: { field?: string }) => {
           if (_err.field && _err.field.includes('ip_ranges[')) {
             return [...accum, _err.field];
           } else {
@@ -221,7 +264,7 @@ export const SubnetAssignLinodesDrawer = (
       );
 
       const errorMap = getErrorMap(
-        [...fieldsOfIPRangesErrors, 'ipv4.vpc', 'ip_ranges'],
+        [...fieldsOfIPRangesErrors, 'ipv4.vpc', 'ip_ranges', 'firewall_id'],
         errors
       );
 
@@ -241,13 +284,13 @@ export const SubnetAssignLinodesDrawer = (
     }
   };
 
-  const handleUnassignLinode = async (data: LinodeAndConfigData) => {
-    const { configId, id: linodeId, interfaceData } = data;
+  const handleUnassignLinode = async (data: LinodeAndInterfaceData) => {
+    const { configId, id: linodeId, interfaceId } = data;
     removedLinodeId.current = linodeId;
     try {
       await unassignLinode({
         configId,
-        interfaceId: interfaceData?.id ?? -1,
+        interfaceId: interfaceId ?? -1,
         linodeId,
         vpcId,
       });
@@ -261,8 +304,9 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   // Helper function to determine the error message based on the configId
+  // A null configId means the selected Linode is using Linode Interfaces
   const determineErrorMessage = (
-    configId: number,
+    configId: null | number,
     errorMap: Record<string, string | undefined>
   ) => {
     if (configId === -1) {
@@ -271,25 +315,22 @@ export const SubnetAssignLinodesDrawer = (
     return errorMap.none;
   };
 
-  const {
-    dirty,
-    handleSubmit,
-    resetForm,
-    setFieldValue,
-    setValues,
-    values,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      chosenIP: '',
-      ipRanges: [] as ExtendedIP[],
-      selectedConfig: null as Config | null,
-      selectedLinode: null as Linode | null,
-    },
-    onSubmit: handleAssignLinode,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+  const { dirty, handleSubmit, resetForm, setFieldValue, setValues, values } =
+    useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        chosenIP: '',
+        ipRanges: [] as ExtendedIP[],
+        selectedConfig: null as Config | null,
+        selectedLinode: null as Linode | null,
+        selectedFirewall: defaultFirewall as null | number,
+      },
+      onSubmit: handleAssignLinode,
+      validateOnBlur: false,
+      validateOnChange: false,
+    });
+  const isLinodeInterface =
+    values.selectedLinode?.interface_generation === 'linode';
 
   const handleIPRangeChange = React.useCallback(
     (_ipRanges: ExtendedIP[]) => {
@@ -310,24 +351,38 @@ export const SubnetAssignLinodesDrawer = (
         (linodeInfo) => linodeInfo.id === values.selectedLinode?.id
       )
     ) {
-      const configId = getConfigId(linodeConfigs, values.selectedConfig);
+      const configId = getConfigId({
+        isLinodeInterface,
+        linodeConfigs,
+        selectedConfig: values.selectedConfig,
+      });
 
       // Construct a new Linode data object with additional properties
       const newLinodeData = {
         ...values.selectedLinode,
         configId,
-        interfaceData: newInterface?.current,
+        interfaceId: newInterface?.current?.id,
         // Create a label that combines Linode label and configuration label (if available)
         linodeConfigLabel: `${values.selectedLinode.label}${
-          values.selectedConfig?.label
+          values.selectedConfig?.label && !isLinodeInterface
             ? ` (${values.selectedConfig.label})`
             : ''
         }`,
+        vpcIPv4: newInterface?.current
+          ? 'vpc' in newInterface.current
+            ? getLinodeInterfacePrimaryIPv4(newInterface.current)
+            : newInterface?.current?.ipv4?.vpc
+          : '',
+        vpcRanges: newInterface?.current
+          ? 'vpc' in newInterface.current
+            ? getLinodeInterfaceRanges(newInterface.current)
+            : newInterface.current?.ip_ranges
+          : [],
       };
 
       // Add the new Linode data to the list of assigned Linodes and configurations
-      setAssignedLinodesAndConfigData([
-        ...assignedLinodesAndConfigData,
+      setAssignedLinodesAndInterfaceData([
+        ...assignedLinodesAndInterfaceData,
         newLinodeData,
       ]);
 
@@ -339,15 +394,18 @@ export const SubnetAssignLinodesDrawer = (
         ipRanges: [],
         selectedConfig: null,
         selectedLinode: null,
+        selectedFirewall: defaultFirewall,
       });
     }
   }, [
     subnet,
-    assignedLinodesAndConfigData,
+    isLinodeInterface,
+    assignedLinodesAndInterfaceData,
     values.ipRanges,
     values.selectedLinode,
     values.selectedConfig,
     linodeConfigs,
+    defaultFirewall,
     resetForm,
     setLinodeConfigs,
     setValues,
@@ -361,22 +419,22 @@ export const SubnetAssignLinodesDrawer = (
       !subnet?.linodes.some(
         (linodeInfo) => linodeInfo.id === removedLinodeId.current
       ) &&
-      !!assignedLinodesAndConfigData.find(
+      !!assignedLinodesAndInterfaceData.find(
         (data) => data.id === removedLinodeId.current
       );
 
     if (isLinodeToRemoveValid) {
-      setAssignedLinodesAndConfigData(
-        [...assignedLinodesAndConfigData].filter(
+      setAssignedLinodesAndInterfaceData(
+        [...assignedLinodesAndInterfaceData].filter(
           (linode) => linode.id !== removedLinodeId.current
         )
       );
     }
-  }, [subnet, assignedLinodesAndConfigData]);
+  }, [subnet, assignedLinodesAndInterfaceData]);
 
   const getLinodeConfigData = React.useCallback(
     async (linode: Linode | null) => {
-      if (linode) {
+      if (linode && linode.interface_generation !== 'linode') {
         try {
           const data = await getAllLinodeConfigs(linode.id);
           setLinodeConfigs(data);
@@ -401,7 +459,7 @@ export const SubnetAssignLinodesDrawer = (
   const handleOnClose = () => {
     onClose();
     resetForm();
-    setAssignedLinodesAndConfigData([]);
+    setAssignedLinodesAndInterfaceData([]);
     setLinodeConfigs([]);
     setAssignLinodesErrors({});
     setUnassignLinodesErrors([]);
@@ -410,13 +468,13 @@ export const SubnetAssignLinodesDrawer = (
 
   return (
     <Drawer
+      isFetching={isFetching}
+      NotFoundComponent={NotFound}
+      onClose={handleOnClose}
+      open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
-      onClose={handleOnClose}
-      open={open}
     >
       {userCannotAssignLinodes && (
         <Notice
@@ -428,21 +486,17 @@ export const SubnetAssignLinodesDrawer = (
       {assignLinodesErrors.none && (
         <Notice text={assignLinodesErrors.none} variant="error" />
       )}
-      <Notice
-        spacingBottom={16}
-        text={`${ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE}`}
-        variant="warning"
-      />
+      <SubnetLinodeActionNotice linodeAction="Assigning" />
       <form onSubmit={handleSubmit}>
-        <FormHelperText>{REGIONAL_LINODE_MESSAGE}</FormHelperText>
+        <Typography>{REGIONAL_LINODE_MESSAGE}</Typography>
         <LinodeSelect
+          checkIsOptionEqualToValue
+          disabled={userCannotAssignLinodes}
+          label="Linode"
           onSelectionChange={(selected) => {
             setFieldValue('selectedLinode', selected);
             setAssignLinodesErrors({});
           }}
-          checkIsOptionEqualToValue
-          disabled={userCannotAssignLinodes}
-          label="Linode"
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
@@ -451,6 +505,11 @@ export const SubnetAssignLinodesDrawer = (
         />
         {values.selectedLinode?.id && (
           <>
+            {autoAssignIPv4 && assignLinodesErrors['ipv4.vpc'] && (
+              <Notice spacingBottom={0} spacingTop={16} variant="error">
+                <Typography>{assignLinodesErrors['ipv4.vpc']}</Typography>
+              </Notice>
+            )}
             <Box
               alignItems="center"
               display="flex"
@@ -464,46 +523,46 @@ export const SubnetAssignLinodesDrawer = (
                     onChange={handleAutoAssignIPv4Change}
                   />
                 }
+                data-testid="vpc-ipv4-checkbox"
+                disabled={userCannotAssignLinodes}
                 label={
                   <Typography>
                     Auto-assign a VPC IPv4 address for this Linode
                   </Typography>
                 }
-                data-testid="vpc-ipv4-checkbox"
-                disabled={userCannotAssignLinodes}
                 sx={{ marginRight: 0 }}
               />
               <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
             {!autoAssignIPv4 && (
               <TextField
+                disabled={userCannotAssignLinodes}
+                errorText={assignLinodesErrors['ipv4.vpc']}
+                label="VPC IPv4"
                 onChange={(e) => {
                   setFieldValue('chosenIP', e.target.value);
                   setAssignLinodesErrors({});
                 }}
-                disabled={userCannotAssignLinodes}
-                errorText={assignLinodesErrors['ipv4.vpc']}
-                label="VPC IPv4"
                 sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
                 value={values.chosenIP}
               />
             )}
-            {linodeConfigs.length > 1 && (
+            {linodeConfigs.length > 1 && !isLinodeInterface && (
               <>
-                <FormHelperText sx={{ marginTop: `16px` }}>
+                <Typography sx={{ marginTop: `16px` }}>
                   {MULTIPLE_CONFIGURATIONS_MESSAGE}{' '}
                   <Link to={VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK}>
                     Learn more
                   </Link>
                   .
-                </FormHelperText>
+                </Typography>
                 <Autocomplete
+                  disabled={userCannotAssignLinodes}
+                  label={'Configuration profile'}
                   onChange={(_, value: Config) => {
                     setFieldValue('selectedConfig', value);
                     setAssignLinodesErrors({});
                   }}
-                  disabled={userCannotAssignLinodes}
-                  label={'Configuration profile'}
                   options={linodeConfigs}
                   placeholder="Select a configuration profile"
                   value={values.selectedConfig || null}
@@ -515,8 +574,12 @@ export const SubnetAssignLinodesDrawer = (
                 if it doesn't display b/c the linode has a single config
             */}
             {((linodeConfigs.length > 1 && values.selectedConfig) ||
-              linodeConfigs.length === 1) && (
+              linodeConfigs.length === 1 ||
+              isLinodeInterface) && (
               <AssignIPRanges
+                handleIPRangeChange={handleIPRangeChange}
+                ipRanges={values.ipRanges}
+                ipRangesError={assignLinodesErrors['ip_ranges']}
                 sx={{
                   marginBottom: theme.spacingFunction(8),
                   marginTop:
@@ -524,22 +587,35 @@ export const SubnetAssignLinodesDrawer = (
                       ? theme.spacingFunction(16)
                       : theme.spacingFunction(8),
                 }}
-                handleIPRangeChange={handleIPRangeChange}
-                ipRanges={values.ipRanges}
-                ipRangesError={assignLinodesErrors['ip_ranges']}
               />
+            )}
+            {isLinodeInterface && (
+              <>
+                <Divider spacingBottom={8} spacingTop={8} />
+                <FirewallSelect
+                  disableClearable
+                  errorText={assignLinodesErrors['firewall_id']}
+                  label="VPC Interface Firewall"
+                  onChange={(e, firewall) =>
+                    setFieldValue('selectedFirewall', firewall?.id)
+                  }
+                  value={values.selectedFirewall}
+                />
+              </>
             )}
           </>
         )}
         <StyledButtonBox>
           <Button
+            buttonType="primary"
             disabled={
               userCannotAssignLinodes ||
               !dirty ||
               !values.selectedLinode ||
-              (linodeConfigs.length > 1 && !values.selectedConfig)
+              (!isLinodeInterface &&
+                linodeConfigs.length > 1 &&
+                !values.selectedConfig)
             }
-            buttonType="primary"
             type="submit"
           >
             Assign Linode
@@ -557,18 +633,24 @@ export const SubnetAssignLinodesDrawer = (
           ))
         : null}
       <RemovableSelectionsListTable
+        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndInterfaceData.length})`}
+        noDataText={'No Linodes have been assigned.'}
         onRemove={(data) => {
-          handleUnassignLinode(data as LinodeAndConfigData);
+          handleUnassignLinode(data as LinodeAndInterfaceData);
           setUnassignLinodesErrors([]);
         }}
-        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
-        noDataText={'No Linodes have been assigned.'}
         preferredDataLabel="linodeConfigLabel"
-        selectionData={assignedLinodesAndConfigData}
+        selectionData={assignedLinodesAndInterfaceData}
         tableHeaders={['Linode', 'VPC IPv4', 'VPC IPv4 Ranges']}
       />
-      {assignedLinodesAndConfigData.length > 0 && (
+      {assignedLinodesAndInterfaceData.length > 0 && (
         <DownloadCSV
+          buttonType="styledLink"
+          csvRef={csvRef}
+          data={assignedLinodesAndInterfaceData}
+          filename={`linodes-assigned-${formattedDate}.csv`}
+          headers={SUBNET_LINODE_CSV_HEADERS}
+          onClick={downloadCSV}
           sx={{
             alignItems: 'flex-start',
             display: 'flex',
@@ -576,12 +658,6 @@ export const SubnetAssignLinodesDrawer = (
             marginTop: 2,
             textAlign: 'left',
           }}
-          buttonType="styledLink"
-          csvRef={csvRef}
-          data={assignedLinodesAndConfigData}
-          filename={`linodes-assigned-${formattedDate}.csv`}
-          headers={SUBNET_LINODE_CSV_HEADERS}
-          onClick={downloadCSV}
           text={'Download List of Assigned Linodes (.csv)'}
         />
       )}

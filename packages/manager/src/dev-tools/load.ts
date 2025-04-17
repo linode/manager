@@ -76,9 +76,9 @@ export async function loadDevTools(
 
     const seeds = await populateSeeds(emptyStore);
 
-    const seedPromises = (Object.keys(
-      seedContext
-    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
+    const seedPromises = (Object.keys(seedContext) as (keyof MockState)[]).map(
+      (key) => updateSeedContext(key, seeds)
+    );
 
     await Promise.all(seedPromises);
 

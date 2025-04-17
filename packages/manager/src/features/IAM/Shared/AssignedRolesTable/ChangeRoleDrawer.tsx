@@ -21,28 +21,31 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
 
-import type { EntitiesOption, ExtendedRoleMap, RolesType } from '../utilities';
+import type {
+  DrawerModes,
+  EntitiesOption,
+  ExtendedRoleMap,
+  RolesType,
+} from '../utilities';
 
 interface Props {
+  mode: DrawerModes;
   onClose: () => void;
   open: boolean;
   role: ExtendedRoleMap | undefined;
 }
 
-export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
+export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
   const { username } = useParams<{ username: string }>();
 
-  const {
-    data: accountPermissions,
-    isLoading: accountPermissionsLoading,
-  } = useAccountPermissions();
+  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
+    useAccountPermissions();
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
-  const {
-    mutateAsync: updateUserPermissions,
-  } = useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserPermissions } =
+    useAccountUserPermissionsMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -165,9 +168,11 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
 
         {selectedRole && (
           <AssignedPermissionsPanel
-            assignedEntities={formattedAssignedEntities ?? []}
             key={selectedRole.name}
+            mode={mode}
             role={selectedRole}
+            sx={{ marginBottom: theme.tokens.spacing.S16 }}
+            value={formattedAssignedEntities ?? []}
           />
         )}
 
@@ -183,7 +188,6 @@ export const ChangeRoleDrawer = ({ onClose, open, role }: Props) => {
             label: 'Cancel',
             onClick: handleClose,
           }}
-          sx={{ marginTop: 2 }}
         />
       </form>
     </Drawer>

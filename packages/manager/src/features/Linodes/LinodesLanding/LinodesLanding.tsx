@@ -91,6 +91,7 @@ export interface LinodesLandingProps {
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
+  regionFilter: RegionFilter;
   someLinodesHaveScheduledMaintenance: boolean;
   /** Keep track of total number of linodes for filtering and empty state landing page logic */
   totalNumLinodes: number;
@@ -210,6 +211,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestError,
       linodesRequestLoading,
       profile,
+      regionFilter,
       totalNumLinodes,
     } = this.props;
 
@@ -443,6 +445,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={true}
+                              regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
                             />
@@ -459,6 +462,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
+                              regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
                               updatePageUrl={this.updatePageUrl}
