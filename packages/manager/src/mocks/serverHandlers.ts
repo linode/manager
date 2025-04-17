@@ -27,11 +27,10 @@ import {
   securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
-  VLANFactory,
   // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -102,6 +101,7 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  VLANFactory,
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
@@ -119,6 +119,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { MTC_TT_2025 } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -139,7 +140,6 @@ import type {
   User,
   VolumeStatus,
 } from '@linode/api-v4';
-import { MTC_TT_CUSTOM_PLANS_AVAILABILITY_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -482,7 +482,7 @@ const premiumTypes = [
   linodeTypeFactory.build({
     class: 'premium',
     disk: 10240000,
-    id: 'g8-premimum-64-ht',
+    id: 'g8-premium-128-ht',
     label: 'Premium HT 512 GB',
     memory: 524288,
     network_out: 40000,
@@ -722,13 +722,13 @@ export const handlers = [
       linodeFactory.build({
         label: 'mtc-tt-custom-plan-linode-1',
         region: 'us-iad',
-        type: 'g8-premimum-64-ht',
+        type: 'g8-premium-128-ht',
         id: 1234,
       }),
       linodeFactory.build({
         label: 'mtc-tt-custom-plan-linode-2',
-        region: 'no-oslo',
-        type: 'g8-premimum-64-ht',
+        region: 'no-east',
+        type: 'g8-premium-128-ht',
         id: 1235,
       }),
     ];
@@ -843,7 +843,7 @@ export const handlers = [
       id,
       label: 'mtc-tt-custom-plan-linode',
       region: 'us-iad',
-      type: 'g8-premimum-64-ht',
+      type: 'g8-premium-128-ht',
     });
     const linodeDetail = linodeFactory.build({
       backups: { enabled: false },
@@ -2298,19 +2298,17 @@ export const handlers = [
         region: 'us-east',
       }),
       ...(params.regionId &&
-      MTC_TT_CUSTOM_PLANS_AVAILABILITY_REGIONS.includes(
-        params.regionId as string
-      )
+      MTC_TT_2025['availability_regions'].includes(params.regionId as string)
         ? [
             regionAvailabilityFactory.build({
               available: true,
-              plan: 'g8-premimum-64-ht',
+              plan: 'g8-premium-128-ht',
               region: 'us-iad',
             }),
             regionAvailabilityFactory.build({
               available: false,
-              plan: 'g8-premimum-64-ht',
-              region: 'no-oslo',
+              plan: 'g8-premium-128-ht',
+              region: 'no-east',
             }),
           ]
         : []),

@@ -1,3 +1,4 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
@@ -10,7 +11,6 @@ import {
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from '@linode/queries';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
@@ -114,30 +114,30 @@ export const KubernetesPlansPanel = (props: Props) => {
           return (
             <>
               <PlanInformation
-                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                  plan
-                )}
                 flow="kubernetes"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 isAPLEnabled={isAPLEnabled}
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
                 planType={plan}
                 regionsData={regionsData}
               />
               <KubernetesPlanContainer
-                wholePanelIsDisabled={
-                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
-                }
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
                 updatePlanCount={updatePlanCount}
+                wholePanelIsDisabled={
+                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
+                }
               />
             </>
           );
