@@ -200,7 +200,7 @@ describe('Alert Listing', () => {
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
 
     expect(createButton).toBeDisabled();
-    userEvent.hover(createButton);
+    await userEvent.hover(createButton);
     await waitFor(() => {
       expect(
         screen.getByText(
@@ -231,7 +231,7 @@ describe('Alert Listing', () => {
     const createButton = screen.getByRole('button', { name: 'Create Alert' });
 
     expect(createButton).toBeDisabled();
-    userEvent.hover(createButton);
+    await userEvent.hover(createButton);
     await waitFor(() => {
       expect(
         screen.getByText(

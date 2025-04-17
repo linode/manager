@@ -25,9 +25,12 @@ const searchAndSelectSx = {
   xs: '300px',
 };
 // hardcoding the value is temporary solution until something from the API side is confirmed.
-const maxAllowedAlerts = 10;
-const maxAllowedMetrics = 10;
-
+const maxAllowedAlerts = 100;
+const maxAllowedMetrics = 100;
+interface AlertsLimitErrorMessageProps {
+  isAlertLimitReached: boolean;
+  isMetricLimitReached: boolean;
+}
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
@@ -40,12 +43,12 @@ export const AlertListing = () => {
   const topRef = React.useRef<HTMLButtonElement>(null);
 
   const isAlertLimitReached = alerts
-    ? alerts.filter((alert) => alert.type === 'user').length >= maxAllowedAlerts
+    ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
     : false;
 
   const isMetricLimitReached = alerts
     ? alerts
-        .filter((alert) => alert.type === 'user')
+        .filter(({ type }) => type === 'user')
         .reduce(
           (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
           0
@@ -165,10 +168,12 @@ export const AlertListing = () => {
   }
   return (
     <Stack spacing={2}>
-      <AlertsLimitErrorMessage
-        isAlertLimitReached={isAlertLimitReached}
-        isMetricLimitReached={isMetricLimitReached}
-      />
+      {(isAlertLimitReached || isMetricLimitReached) && (
+        <AlertsLimitErrorMessage
+          isAlertLimitReached={isAlertLimitReached}
+          isMetricLimitReached={isMetricLimitReached}
+        />
+      )}
       <Box
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
@@ -281,10 +286,7 @@ export const AlertListing = () => {
 const AlertsLimitErrorMessage = ({
   isAlertLimitReached,
   isMetricLimitReached,
-}: {
-  isAlertLimitReached: boolean;
-  isMetricLimitReached: boolean;
-}) => {
+}: AlertsLimitErrorMessageProps) => {
   if (isAlertLimitReached && isMetricLimitReached) {
     return (
       <AlertListNoticeMessages
