@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { useFlags } from 'src/hooks/useFlags';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
 
@@ -114,12 +113,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Link>{' '}
         for details on managing your Linux system's disk space.
       </Typography>
-      <DismissibleBanner
-        preferenceKey={`manage-replicas-${image?.id}`}
-        spacingTop={16}
-        variant="info"
-        important
-      >
+      <Notice important spacingTop={16} variant="info">
         <Typography fontSize="inherit">
           As part of our limited promotional period, image replicas are free of
           charge until Q4 2025. Starting in Q4, replicas will be subject to our
@@ -135,7 +129,7 @@ export const ManageImageReplicasForm = (props: Props) => {
           </Link>
           .
         </Typography>
-      </DismissibleBanner>
+      </Notice>
       <RegionMultiSelect
         onChange={(regionIds) =>
           setValue('regions', regionIds, {

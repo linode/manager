@@ -12,6 +12,7 @@ export const ImagesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DismissibleBanner
+        important
         preferenceKey="image-encryption-is-standard"
         spacingBottom={8}
         variant="info"
