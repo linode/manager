@@ -8,7 +8,7 @@ import { extendType } from 'src/utilities/extendType';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
-} from '../ClusterList/constants';
+} from '../constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
 import type {
