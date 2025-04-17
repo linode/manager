@@ -12,18 +12,39 @@ import type { ProductInformationBannerLocation } from 'src/featureFlags';
 
 interface Props {
   bannerLocation: ProductInformationBannerLocation;
+  onBannerRender?: (visible: boolean) => void;
 }
 
 interface ProductInformationBannerProps extends Props, Partial<NoticeProps> {}
 
 export const ProductInformationBanner = React.memo(
   (props: ProductInformationBannerProps) => {
-    const { bannerLocation, ...rest } = props;
+    const { bannerLocation, onBannerRender, ...rest } = props;
     const { productInformationBanners } = useFlags();
+
+    let hasBannerExpired = true;
+
+    // Uncomment this to test this banner:
+
+    // const thisBanner = {
+    //   bannerLocation: 'Linodes',
+    //   decoration: {
+    //     important: 'true',
+    //     variant: 'warning',
+    //   },
+    //   expirationDate: '2030-08-01',
+    //   key: 'key1',
+    //   // safe
+    //   message: 'Test message',
+    // };
 
     const thisBanner = (productInformationBanners ?? []).find(
       (thisBanner) => thisBanner.bannerLocation === bannerLocation
     );
+
+    React.useEffect(() => {
+      onBannerRender?.(Boolean(thisBanner && !hasBannerExpired));
+    }, [thisBanner && !hasBannerExpired, onBannerRender]);
 
     if (!thisBanner) {
       return null;
@@ -33,10 +54,9 @@ export const ProductInformationBanner = React.memo(
       thisBanner.decoration.important === 'true'
         ? true
         : thisBanner.decoration.important === 'false'
-        ? false
-        : true;
+          ? false
+          : true;
 
-    let hasBannerExpired = true;
     try {
       hasBannerExpired = isAfter(
         new Date().toISOString(),

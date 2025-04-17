@@ -8,16 +8,20 @@ import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account';
+import type { NoticeProps } from '@linode/ui';
 
 interface Props {
   maintenanceEnd?: null | string;
   /** please keep in mind here that it's possible the start time can be in the past */
   maintenanceStart?: null | string;
   type?: AccountMaintenance['type'];
+  onBannerRender?: (visible: boolean) => void;
 }
 
-export const MaintenanceBanner = React.memo((props: Props) => {
-  const { maintenanceEnd, maintenanceStart, type } = props;
+interface MaintenanceBannerProps extends Props, Partial<NoticeProps> {}
+
+export const MaintenanceBanner = React.memo((props: MaintenanceBannerProps) => {
+  const { maintenanceEnd, maintenanceStart, type, ...rest } = props;
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
@@ -46,6 +50,15 @@ export const MaintenanceBanner = React.memo((props: Props) => {
     return profile.timezone;
   };
 
+  const shouldRender =
+    maintenanceStart !== null &&
+    accountMaintenanceData &&
+    accountMaintenanceData.length > 0;
+
+  React.useEffect(() => {
+    props.onBannerRender?.(Boolean(shouldRender));
+  }, [shouldRender, props.onBannerRender]);
+
   /**
    * don't display a banner if there is no start time.
    *
@@ -68,7 +81,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice important variant="warning" {...rest}>
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>

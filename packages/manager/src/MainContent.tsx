@@ -24,7 +24,7 @@ import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
-import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
+
 import {
   notificationCenterContext,
   useNotificationContext,
@@ -331,14 +331,14 @@ export const MainContent = () => {
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
                       pt: {
-                        md: 1.5,
-                        xs: theme.spacing(2),
+                        md: theme.spacingFunction(24),
+                        xs: theme.spacingFunction(16),
                       },
                       px: {
-                        md: theme.spacing(2),
+                        md: theme.spacingFunction(24),
                         xs: 0,
                       },
-                      py: 1.5,
+                      py: theme.spacingFunction(24),
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
@@ -359,7 +359,6 @@ export const MainContent = () => {
                       spacing={0}
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />

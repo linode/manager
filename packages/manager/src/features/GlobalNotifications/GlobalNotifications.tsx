@@ -1,4 +1,5 @@
-import { useSecurityQuestions, useProfile } from '@linode/queries';
+import { useProfile, useSecurityQuestions } from '@linode/queries';
+
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
