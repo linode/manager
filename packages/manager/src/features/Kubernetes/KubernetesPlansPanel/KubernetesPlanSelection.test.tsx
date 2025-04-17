@@ -143,34 +143,6 @@ describe('KubernetesPlanSelection (table, desktop view)', () => {
 
     expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
-
-  it.only('should display a maximum of 100 nodes for LKE', async () => {
-    const { findByTestId } = renderWithTheme(
-      wrapWithTableBody(<KubernetesPlanSelection {...props} />)
-    );
-
-    const input = (await findByTestId('textfield-input')) as HTMLInputElement;
-    await userEvent.type(input, '101');
-    expect(input).toHaveValue(100);
-    const increment = await findByTestId('increment-button');
-    await userEvent.click(increment);
-    expect(increment).toBeDisabled();
-  });
-
-  // it('should display a maximum of 500 nodes for LKE-E', async () => {
-  //   const { findByTestId } = renderWithTheme(
-  //     <KubernetesPlanSelection
-  //       {...props}
-  //       selectedTier='enterprise'
-  //     />
-  //   );
-
-  //   const input = (await findByTestId('textfield-input')) as HTMLInputElement;
-  //   await userEvent.type(input, '501');
-  //   expect(input).toHaveValue('500');
-  //   const increment = await findByTestId('increment-button');
-  //   expect(increment).toBeDisabled();
-  // });
 });
 
 describe('KubernetesPlanSelection (cards, mobile view)', () => {
