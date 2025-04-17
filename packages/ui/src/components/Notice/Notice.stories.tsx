@@ -2,7 +2,6 @@ import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { Link } from '../../../../manager/src/components/Link';
 import { Notice } from './Notice';
 
 import type { NoticeProps } from './Notice';
@@ -26,10 +25,7 @@ export const InfoWithLongTextAndMarkup: StoryObj<NoticeProps> = {
       <Typography variant="h2">
         This is a informational notice with a title.
       </Typography>
-      <Typography>
-        This paragraph under the title should wrap and contain a{' '}
-        <Link to="https://linode.com">link</Link>.
-      </Typography>
+      <Typography>This paragraph under the title should wrap.</Typography>
     </Notice>
   ),
 };

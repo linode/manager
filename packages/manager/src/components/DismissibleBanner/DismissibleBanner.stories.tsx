@@ -65,10 +65,7 @@ export const InfoWithLongTextAndMarkup: StoryObj = {
       <Typography variant="h2">
         This is an important, dismissible informational notice with a title.
       </Typography>
-      <Typography>
-        This notice contains long text that should wrap and contain a{' '}
-        <Link to="https://linode.com">link</Link>.
-      </Typography>
+      <Typography>This notice contains long text that should wrap.</Typography>
     </DismissibleBanner>
   ),
 };
