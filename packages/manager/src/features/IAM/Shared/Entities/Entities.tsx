@@ -1,5 +1,4 @@
 import { Autocomplete, Notice, Typography } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
@@ -97,7 +96,7 @@ export const Entities = ({
         <Notice spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
-              Create a {capitalizeAllWords(type)} Entity
+              Create a {getFormattedEntityType(type)} Entity
             </Link>{' '}
             first or choose a different role to continue assignment.
           </Typography>
