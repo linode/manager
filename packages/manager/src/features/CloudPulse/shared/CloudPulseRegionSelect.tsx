@@ -119,11 +119,15 @@ export const CloudPulseRegionSelect = React.memo(
         ?.filter((region) => supportedRegionsIdList.includes(region.id))
         .filter((region) => regionsWithResources.includes(region.id));
     }, [flags.aclpResourceTypeMap, regions, serviceType, resources]);
+    const resourceLabel =
+      FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
+        (value) => value.name === 'Resources'
+      )?.configuration.name ?? 'Resources';
 
     const errorMessage = isError
       ? `Failed to fetch ${label || 'Regions'}.`
       : isResourcesError
-        ? 'Failed to fetch Resources.'
+        ? `Failed to fetch ${resourceLabel}.`
         : '';
 
     return (

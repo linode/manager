@@ -13,6 +13,7 @@ import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
 import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
+import { prop } from 'ramda';
 
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
@@ -126,9 +127,13 @@ describe('CloudPulseRegionSelect', () => {
       isError: true,
       isLoading: false,
     });
-    renderWithTheme(<CloudPulseRegionSelect {...props} />);
+    const updatedProps = {
+      ...props,
+      selectedDashboard: dashboardFactory.build({ service_type: 'dbaas' }),
+    };
+    renderWithTheme(<CloudPulseRegionSelect {...updatedProps} />);
 
-    const errorMessage = screen.getByText('Failed to fetch Resources.');
+    const errorMessage = screen.getByText('Failed to fetch Database Clusters.');
 
     expect(errorMessage).not.toBeNull();
   });
