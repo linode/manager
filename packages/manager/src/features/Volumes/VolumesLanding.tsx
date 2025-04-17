@@ -176,14 +176,14 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       {_isRestrictedUser && (
         <Notice
-          variant="warning"
           important
           text={getRestrictedResourceText({
             action: ['create', 'edit'],
             resourceType: 'Volumes',
             isSingular: false,
           })}
-        ></Notice>
+          variant="warning"
+        />
       )}
       <LandingHeader
         breadcrumbProps={{
