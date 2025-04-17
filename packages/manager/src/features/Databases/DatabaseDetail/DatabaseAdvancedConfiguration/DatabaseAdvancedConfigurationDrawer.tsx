@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ActionsPanel,
-  Button,
   CircleProgress,
   Divider,
   Drawer,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import { Button } from 'akamai-cds-react-components';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
@@ -48,6 +48,7 @@ import type {
   UpdateDatabasePayload,
 } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
+import { styled } from '@mui/material';
 
 interface Props {
   database: Database | DatabaseInstance;
@@ -58,6 +59,10 @@ interface Props {
 interface FormValues {
   configs: ConfigurationOption[];
 }
+const StyledAddButtonWrapper = styled('div')(({ theme }) => ({
+  minWidth: 'auto', // Ensure no default minimum width
+  width: '70px', // Set the button width to 70px
+}));
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const { database, onClose, open } = props;
@@ -202,15 +207,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             />
           </Grid>
           <Grid size={2}>
-            <Button
-              buttonType="primary"
-              disabled={!selectedConfig}
-              onClick={() => handleAddConfiguration(selectedConfig)}
-              sx={{ minWidth: 'auto', width: '70px' }}
-              title="Add"
-            >
-              Add
-            </Button>
+            <StyledAddButtonWrapper>
+              <Button
+                disabled={!selectedConfig}
+                onClick={() => handleAddConfiguration(selectedConfig)}
+                variant="primary"
+                title="Add"
+              >
+                Add
+              </Button>
+            </StyledAddButtonWrapper>
           </Grid>
         </Grid>
         <Divider spacingBottom={20} spacingTop={24} />

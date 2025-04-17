@@ -34,3 +34,9 @@ export const GroupItems = styled('ul')(({ theme }) => ({
   },
   padding: 0,
 }));
+
+export const StyledButtonWrapper = styled('div')(({ theme }) => ({
+  alignItems: 'center', // Center the button vertically
+  display: 'flex', // Flexbox ensures proper alignment
+  height: '100%', // Ensure the button takes the full height of its parent
+}));

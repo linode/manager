@@ -1,4 +1,5 @@
-import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
+import { TooltipIcon, Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
@@ -38,13 +39,14 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         <StyledTypography variant="h3">Maintenance</StyledTypography>
         <BoldTypography>Version</BoldTypography>
         <StyledTypography>{engineVersion}</StyledTypography>
-        <StyledLinkButton
+        <Button
           data-testid="upgrade"
           disabled={!versions?.length || hasUpdates}
           onClick={onUpgradeVersion}
+          variant="link"
         >
           Upgrade Version
-        </StyledLinkButton>
+        </Button>
         {hasUpdates && (
           <TooltipIcon
             sxTooltipIcon={{
@@ -74,9 +76,13 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           <BoldTypography>
             One or more minor version upgrades or patches will be applied during
             the next maintenance window.{' '}
-            <StyledLinkButton data-testid="review" onClick={onReviewUpdates}>
+            <Button
+              data-testid="review"
+              onClick={onReviewUpdates}
+              variant="link"
+            >
               Click to review
-            </StyledLinkButton>
+            </Button>
           </BoldTypography>
         ) : (
           <BoldTypography>

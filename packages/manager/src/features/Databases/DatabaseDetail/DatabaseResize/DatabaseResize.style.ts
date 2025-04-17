@@ -1,4 +1,4 @@
-import { Button } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 

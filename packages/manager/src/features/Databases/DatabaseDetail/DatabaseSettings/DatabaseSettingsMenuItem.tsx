@@ -1,4 +1,5 @@
-import { Button, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -66,12 +67,12 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         </Typography>
       </div>
       <Button
-        buttonType="outlined"
         className={classes.sectionButton}
         data-qa-settings-button={buttonText}
         disabled={disabled}
         onClick={onClick}
-        title={buttonText}
+        title={buttonText} // Title will be passed automatically to dom since it is standard HTML attribute
+        variant="secondary"
       >
         {buttonText}
       </Button>

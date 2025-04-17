@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Button,
   FormControl,
   FormControlLabel,
   Notice,
@@ -9,6 +8,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -74,18 +74,15 @@ interface Props {
 export const MaintenanceWindow = (props: Props) => {
   const { database, disabled, timezone } = props;
 
-  const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
-    APIError[]
-  >();
+  const [maintenanceUpdateError, setMaintenanceUpdateError] =
+    React.useState<APIError[]>();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
   // "Save Changes" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
-  const [
-    modifiedWeekSelectionMap,
-    setModifiedWeekSelectionMap,
-  ] = React.useState<SelectOption<number>[]>([]);
+  const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
+    React.useState<SelectOption<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -158,23 +155,17 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const {
-    errors,
-    handleSubmit,
-    isSubmitting,
-    setFieldValue,
-    touched,
-    values,
-  } = useFormik({
-    initialValues: {
-      day_of_week: database.updates?.day_of_week ?? 1,
-      frequency: database.updates?.frequency ?? 'weekly',
-      hour_of_day: database.updates?.hour_of_day ?? 20,
-      week_of_month: getInitialWeekOfMonth(),
-    },
-    // validationSchema: updateDatabaseSchema,
-    onSubmit: handleSaveMaintenanceWindow,
-  });
+  const { errors, handleSubmit, isSubmitting, setFieldValue, touched, values } =
+    useFormik({
+      initialValues: {
+        day_of_week: database.updates?.day_of_week ?? 1,
+        frequency: database.updates?.frequency ?? 'weekly',
+        hour_of_day: database.updates?.hour_of_day ?? 20,
+        week_of_month: getInitialWeekOfMonth(),
+      },
+      // validationSchema: updateDatabaseSchema,
+      onSubmit: handleSaveMaintenanceWindow,
+    });
 
   const isLegacy = database.platform === 'rdbms-legacy';
 
@@ -369,13 +360,12 @@ export const MaintenanceWindow = (props: Props) => {
           </div>
         </div>
         <Button
-          buttonType="primary"
           className={classes.sectionButton}
-          compactX
           disabled={!formTouched || isSubmitting || disabled}
-          loading={isSubmitting}
+          processing={isSubmitting}
           title="Save Changes"
           type="submit"
+          variant="primary"
         >
           Save Changes
         </Button>

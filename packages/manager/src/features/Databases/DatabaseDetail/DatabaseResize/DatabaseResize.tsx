@@ -52,10 +52,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     string | undefined
   >(database.type);
 
-  const [
-    isResizeConfirmationDialogOpen,
-    setIsResizeConfirmationDialogOpen,
-  ] = React.useState(false);
+  const [isResizeConfirmationDialogOpen, setIsResizeConfirmationDialogOpen] =
+    React.useState(false);
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
@@ -179,12 +177,11 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
 
-      const nodePricing = type.engines[
-        selectedEngine
-      ].find((cluster: DatabaseClusterSizeObject) =>
-        selectedTab === 1 && database.cluster_size === 2
-          ? cluster.quantity === 3
-          : cluster.quantity === clusterSize
+      const nodePricing = type.engines[selectedEngine].find(
+        (cluster: DatabaseClusterSizeObject) =>
+          selectedTab === 1 && database.cluster_size === 2
+            ? cluster.quantity === 3
+            : cluster.quantity === clusterSize
       );
 
       const price = nodePricing?.price ?? {
@@ -332,9 +329,9 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           onClick={() => {
             setIsResizeConfirmationDialogOpen(true);
           }}
-          buttonType="primary"
           disabled={shouldSubmitBeDisabled || disabled}
           type="submit"
+          variant="primary"
         >
           Resize Database Cluster
         </StyledResizeButton>

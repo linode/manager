@@ -331,10 +331,10 @@ const DatabaseCreate = () => {
             provision.
           </StyledTypography>
           <StyledCreateBtn
-            buttonType="primary"
             disabled={isRestricted}
-            loading={isSubmitting}
+            processing={isSubmitting}
             type="submit"
+            variant="primary"
           >
             Create Database Cluster
           </StyledCreateBtn>

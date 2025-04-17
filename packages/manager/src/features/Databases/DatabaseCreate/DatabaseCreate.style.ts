@@ -1,4 +1,5 @@
-import { Box, Button, TextField, Typography } from '@linode/ui';
+import { Box, TextField, Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { Grid, styled } from '@mui/material';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
