@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@linode/ui';
+import { Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -15,7 +15,10 @@ interface Props {
 
 export const VPCIPv4Addresses = (props: Props) => {
   const { linodeInterface } = props;
-  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<ModifyLinodeInterfacePayload>();
 
   /**
    * We currently enforce a hard limit of one IPv4 address per VPC interface.
@@ -31,6 +34,9 @@ export const VPCIPv4Addresses = (props: Props) => {
   return (
     <Stack spacing={1}>
       <Typography variant="h3">IPv4 Addresses</Typography>
+      {errors.vpc?.ipv4?.addresses?.message && (
+        <Notice text={errors.vpc?.ipv4?.addresses?.message} variant="error" />
+      )}
       <Stack spacing={2}>
         {fields.map((field, index) => (
           <VPCIPv4Address
