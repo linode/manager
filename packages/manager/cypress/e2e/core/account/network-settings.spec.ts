@@ -52,6 +52,69 @@ describe('Account network settings', () => {
 
   describe('Network interface types', () => {
     /*
+     * - Confirms that UI works as expected when `interfaces_for_new_linodes` is initially `undefined`.
+     * - Confirms that UI shows 'Linode Interfaces but allow Configuration Profile Interfaces' as the default selected setting.
+     * - Confirms that setting can be updated when `interfaces_for_new_linodes` is initially unset.
+     * - Confirms that toast appears upon successful settings update operation.
+     */
+    it('can set network interface setting for the first time', () => {
+      const fallbackInterface = 'linode_default_but_legacy_config_allowed';
+      const otherInterface: LinodeInterfaceAccountSetting = randomItem([
+        'legacy_config_default_but_linode_allowed',
+        'legacy_config_only',
+        'linode_only',
+      ]);
+
+      const mockInitialAccountSettings = accountSettingsFactory.build({
+        interfaces_for_new_linodes: undefined,
+      });
+
+      mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
+      cy.visitWithLogin('/account/settings');
+
+      ui.accordion
+        .findByTitle('Network Interface Type')
+        .should('be.visible')
+        .within(() => {
+          // Confirm that Linode Interfaces (with legacy configs allowed) is the default
+          // interface type selection, and that the "Save" button is disabled by default.
+          cy.findByLabelText('Interfaces for new Linodes').should(
+            'have.value',
+            interfaceTypeMap[fallbackInterface]
+          );
+          ui.button.findByTitle('Save').should('be.disabled');
+
+          // Change to another option, save, and confirm outgoing request and toast.
+          cy.findByLabelText('Interfaces for new Linodes')
+            .should('be.visible')
+            .click();
+          ui.autocompletePopper.find().within(() => {
+            cy.findByText(interfaceTypeMap[otherInterface])
+              .should('be.visible')
+              .click();
+          });
+
+          mockUpdateAccountSettings({
+            ...mockInitialAccountSettings,
+            interfaces_for_new_linodes: otherInterface,
+          }).as('updateSettings');
+
+          ui.button
+            .findByTitle('Save')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@updateSettings').then((xhr) => {
+        expect(xhr.request.body.interfaces_for_new_linodes).to.equal(
+          otherInterface
+        );
+      });
+      ui.toast.assertMessage('Network Interface type settings updated.');
+    });
+
+    /*
      * - Confirms that customers can update their account-level Linode interface type.
      * - Confirms that "Interfaces for new Linodes" drop-down displays user's set value on page load.
      * - Confirms that save button is initially disabled, but becomes enabled upon changing the selection.
@@ -133,69 +196,6 @@ describe('Account network settings', () => {
             });
           });
         });
-    });
-
-    /*
-     * - Confirms that UI works as expected when `interfaces_for_new_linodes` is initially `undefined`.
-     * - Confirms that UI shows 'Linode Interfaces but allow Configuration Profile Interfaces' as the default selected setting.
-     * - Confirms that setting can be updated when `interfaces_for_new_linodes` is initially unset.
-     * - Confirms that toast appears upon successful settings update operation.
-     */
-    it('can set network interface setting for the first time', () => {
-      const fallbackInterface = 'linode_default_but_legacy_config_allowed';
-      const otherInterface: LinodeInterfaceAccountSetting = randomItem([
-        'legacy_config_default_but_linode_allowed',
-        'legacy_config_only',
-        'linode_only',
-      ]);
-
-      const mockInitialAccountSettings = accountSettingsFactory.build({
-        interfaces_for_new_linodes: undefined,
-      });
-
-      mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
-      cy.visitWithLogin('/account/settings');
-
-      ui.accordion
-        .findByTitle('Network Interface Type')
-        .should('be.visible')
-        .within(() => {
-          // Confirm that Linode Interfaces (with legacy configs allowed) is the default
-          // interface type selection, and that the "Save" button is disabled by default.
-          cy.findByLabelText('Interfaces for new Linodes').should(
-            'have.value',
-            interfaceTypeMap[fallbackInterface]
-          );
-          ui.button.findByTitle('Save').should('be.disabled');
-
-          // Change to another option, save, and confirm outgoing request and toast.
-          cy.findByLabelText('Interfaces for new Linodes')
-            .should('be.visible')
-            .click();
-          ui.autocompletePopper.find().within(() => {
-            cy.findByText(interfaceTypeMap[otherInterface])
-              .should('be.visible')
-              .click();
-          });
-
-          mockUpdateAccountSettings({
-            ...mockInitialAccountSettings,
-            interfaces_for_new_linodes: otherInterface,
-          }).as('updateSettings');
-
-          ui.button
-            .findByTitle('Save')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      cy.wait('@updateSettings').then((xhr) => {
-        expect(xhr.request.body.interfaces_for_new_linodes).to.equal(
-          otherInterface
-        );
-      });
-      ui.toast.assertMessage('Network Interface type settings updated.');
     });
 
     /*
