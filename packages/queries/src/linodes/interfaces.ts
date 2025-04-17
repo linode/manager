@@ -23,6 +23,7 @@ import type {
   UpgradeInterfacePayload,
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
+import { networkingQueries } from '../networking';
 
 export const useLinodeInterfacesQuery = (
   linodeId: number,
@@ -75,6 +76,12 @@ export const useLinodeInterfaceSettingsMutation = (linodeId: number) => {
       queryClient.invalidateQueries({
         queryKey:
           linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interface._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries._def,
       });
     },
   });
