@@ -3,15 +3,21 @@ import { userPermissionsFactory } from 'src/factories/userPermissions';
 import {
   changeRoleForEntity,
   combineRoles,
+  deleteUserEntity,
   deleteUserRole,
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
+  toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
 import type { CombinedRoles } from './utilities';
-import type { IamAccountPermissions, IamUserPermissions } from '@linode/api-v4';
+import type {
+  EntityAccess,
+  IamAccountPermissions,
+  IamUserPermissions,
+} from '@linode/api-v4';
 
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
@@ -412,6 +418,198 @@ describe('changeRoleForEntity', () => {
         initialRole,
         newRole
       )
+    ).toEqual(expectedRoles);
+  });
+});
+
+describe('toEntityAccess', () => {
+  it('should return the same object of users roles with entity access', () => {
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+    ];
+
+    const roleName = 'linode_contributor';
+    const entityIds = [2, 1];
+    const roleType = 'linode';
+    expect(
+      toEntityAccess(
+        userPermissions.entity_access,
+        entityIds,
+        roleName,
+        roleType
+      )
+    ).toEqual(expectedRoles);
+  });
+
+  it('should return an object of updated users roles with entity access', () => {
+    const userPermissions: EntityAccess[] = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+    const roleName = 'linode_contributor';
+    const entityIds = [2];
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const roleType = 'linode';
+    expect(
+      toEntityAccess(userPermissions, entityIds, roleName, roleType)
+    ).toEqual(expectedRoles);
+  });
+  it('should return an object of updated users roles with entity access', () => {
+    const userPermissions: EntityAccess[] = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+    const roleName = 'linode_contributor';
+    const entityIds = [1];
+    const roleType = 'linode';
+    const expectedRoles = [
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+    expect(
+      toEntityAccess(userPermissions, entityIds, roleName, roleType)
+    ).toEqual(expectedRoles);
+  });
+});
+
+describe('deleteUserEntity', () => {
+  it('should remove the entity with id: 1 from the "linode_contributor" role', () => {
+    const userPermissions: EntityAccess[] = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const roleName = 'linode_contributor';
+    const entityId = 1;
+    const entityType = 'linode';
+    expect(
+      deleteUserEntity(userPermissions, roleName, entityId, entityType)
+    ).toEqual(expectedRoles);
+  });
+
+  it('should remove the entity with id: 1 from the "linode_viewer" role', () => {
+    const userPermissions: EntityAccess[] = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const expectedRoles = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+    ];
+
+    const roleName = 'linode_viewer';
+    const entityId = 1;
+    const entityType = 'linode';
+    expect(
+      deleteUserEntity(userPermissions, roleName, entityId, entityType)
+    ).toEqual(expectedRoles);
+  });
+
+  it('should remove the entity with id: 2 from the "linode_contributor" role', () => {
+    const userPermissions: EntityAccess[] = [
+      {
+        id: 2,
+        roles: ['linode_contributor'],
+        type: 'linode',
+      },
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const expectedRoles = [
+      {
+        id: 1,
+        roles: ['linode_contributor', 'linode_viewer'],
+        type: 'linode',
+      },
+    ];
+
+    const roleName = 'linode_contributor';
+    const entityId = 2;
+    const entityType = 'linode';
+    expect(
+      deleteUserEntity(userPermissions, roleName, entityId, entityType)
     ).toEqual(expectedRoles);
   });
 });

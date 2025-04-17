@@ -7,16 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedPermissionsPanel } from './AssignedPermissionsPanel';
 
-import type {
-  EntityTypePermissions,
-  IamAccessType,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  entity_type: EntityTypePermissions;
-}
+import type { ExtendedRole } from '../utilities';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -64,26 +55,28 @@ const mockEntities = [
 
 describe('AssignedPermissionsPanel', () => {
   it('renders with the correct context when the access is an account', () => {
-    const { getByText } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
+    renderWithTheme(
+      <AssignedPermissionsPanel
+        mode="assign-role"
+        role={mockAccountAcceessRole}
+      />
     );
+    expect(screen.getByText('Entities')).toBeVisible();
     expect(
-      getByText(
+      screen.getByText(
         'Access to perform any supported action on all linode instances in the account'
       )
-    ).toBeInTheDocument();
-    expect(getByText('cancel_account')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    ).toBeVisible();
+    expect(screen.getByText('cancel_account')).toBeVisible();
+    expect(screen.getByText('Description')).toBeVisible();
   });
 
   it('does not render Autocomplete when the access is an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
-      <AssignedPermissionsPanel role={mockAccountAcceessRole} />
-    );
-    const autocomplete = queryAllByRole('combobox');
+    renderWithTheme(<AssignedPermissionsPanel role={mockAccountAcceessRole} />);
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All entities')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
@@ -94,20 +87,20 @@ describe('AssignedPermissionsPanel', () => {
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
-    const { getAllByRole, getAllByTestId, getByText } = renderWithTheme(
+    renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
-    const permissions = getAllByTestId('permission');
+    const permissions = screen.getAllByTestId('permission');
     expect(permissions).toHaveLength(6);
 
     expect(
-      getByText('Access to administer a image instance')
-    ).toBeInTheDocument();
-    expect(getByText('create_image')).toBeInTheDocument();
-    expect(getByText('Entities')).toBeInTheDocument();
+      screen.getByText('Access to administer a image instance')
+    ).toBeVisible();
+    expect(screen.getByText('create_image')).toBeVisible();
+    expect(screen.getByText('Entities')).toBeVisible();
 
-    const autocomplete = getAllByRole('combobox');
+    const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeInTheDocument();
     expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
@@ -117,24 +110,24 @@ describe('AssignedPermissionsPanel', () => {
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
-    const { getAllByRole, getByText } = renderWithTheme(
+    renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
     // Verify comboboxes exist
-    const autocomplete = getAllByRole('combobox')[0];
+    const autocomplete = screen.getAllByRole('combobox')[0];
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
-    expect(getByText('image-1')).toBeInTheDocument();
+    expect(screen.getByText('image-1')).toBeVisible();
   });
 
   it('shows all permissions', () => {
-    const { getAllByTestId } = renderWithTheme(
+    renderWithTheme(
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
     // All chips should now be visible
-    const visibleChips = getAllByTestId('permission');
+    const visibleChips = screen.getAllByTestId('permission');
     expect(visibleChips.length).toBe(
       mockEntitiesAcceessRole.permissions.length
     );

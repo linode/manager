@@ -63,7 +63,9 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleDrawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);
+    const { getByText } = renderWithTheme(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     // Verify title renders
     getByText('Change Role');
@@ -91,7 +93,9 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);
+    const { getByText } = renderWithTheme(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     const autocomplete = screen.getByRole('combobox');
 
