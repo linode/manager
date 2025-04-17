@@ -16,7 +16,6 @@ import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
-  CloudPulseMetricsRequestOlderVersion,
   CloudPulseMetricsResponse,
   DateTimeWithPreset,
   TimeDuration,
@@ -249,13 +248,12 @@ export const generateMaxUnit = (
  * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
  */
 export const getCloudPulseMetricRequest = (
-  props: MetricRequestProps,
-  metricsUrl: string
-): CloudPulseMetricsRequest | CloudPulseMetricsRequestOlderVersion => {
+  props: MetricRequestProps
+): CloudPulseMetricsRequest => {
   const { duration, entityIds, resources, widget } = props;
   const preset = duration.preset;
 
-  const basePayload = {
+  return {
     absolute_time_duration:
       preset !== 'custom_range' &&
       preset !== 'this_month' &&
@@ -268,6 +266,12 @@ export const getCloudPulseMetricRequest = (
     filters: undefined,
     group_by: widget.group_by,
     relative_time_duration: getTimeDurationFromPreset(preset),
+    metrics: [
+      {
+        aggregate_function: widget.aggregate_function,
+        name: widget.metric,
+      },
+    ],
     time_granularity:
       widget.time_granularity.unit === 'Auto'
         ? undefined
@@ -276,22 +280,6 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
   };
-
-  return metricsUrl?.includes('v1beta')
-    ? {
-        ...basePayload,
-        metric: widget.metric,
-        aggregate_function: widget.aggregate_function,
-      }
-    : {
-        ...basePayload,
-        metrics: [
-          {
-            aggregate_function: widget.aggregate_function,
-            name: widget.metric,
-          },
-        ],
-      };
 };
 
 /**

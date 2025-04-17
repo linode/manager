@@ -445,19 +445,15 @@ export const getMetricsCallCustomFilters = (
  */
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[],
-  metricsUrl: string
 ): Filters[] => {
   const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
-    const baseFilter = {
+    return {
+      dimension_label: filter.filterKey,
       operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
       value: Array.isArray(filter.filterValue)
         ? Array.of(filter.filterValue).join(',')
         : String(filter.filterValue),
     };
-
-    return metricsUrl.includes('v1beta')
-      ? { ...baseFilter, key: filter.filterKey }
-      : { ...baseFilter, dimension_label: filter.filterKey };
   });
 
   return filters;

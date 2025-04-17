@@ -427,8 +427,7 @@ it('test constructAdditionalRequestFilters method', () => {
         resource_id: [1, 2, 3],
       },
       'linode'
-    ),
-    '/v1beta/'
+    )
   );
 
   expect(result).toBeDefined();
