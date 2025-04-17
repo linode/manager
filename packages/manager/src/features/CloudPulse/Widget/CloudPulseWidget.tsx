@@ -242,7 +242,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           additionalFilters ?? [],
           flags.aclpReadEndpoint ?? ''
         ),
-        ...(widget.filters ?? []),
+        ...(flags.aclpReadEndpoint?.includes('v1beta')
+          ? [] // no need to pass filters in case of v1
+          : (widget.filters ?? [])),
       ], // any additional dimension filters will be constructed and passed here
     },
     {
