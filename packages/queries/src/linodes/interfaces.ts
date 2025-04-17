@@ -7,6 +7,7 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { networkingQueries } from '../networking';
 import { linodeQueries } from './linodes';
 
 import type {
@@ -23,7 +24,6 @@ import type {
   UpgradeInterfacePayload,
 } from '@linode/api-v4';
 import type { UseMutationOptions } from '@tanstack/react-query';
-import { networkingQueries } from '../networking';
 
 export const useLinodeInterfacesQuery = (
   linodeId: number,
@@ -77,12 +77,6 @@ export const useLinodeInterfaceSettingsMutation = (linodeId: number) => {
         queryKey:
           linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interface._def,
       });
-      queryClient.invalidateQueries({
-        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: networkingQueries._def,
-      });
     },
   });
 };
@@ -132,16 +126,19 @@ export const useUpdateLinodeInterfaceMutation = (
       ...options,
       onSuccess(linodeInterface, variables, context) {
         options?.onSuccess?.(linodeInterface, variables, context);
+
         // Invalidate this Linode's interface queries
         queryClient.invalidateQueries({
           queryKey:
             linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces
               .queryKey,
         });
+
         // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
         });
+
         // Set the specific interface in the cache
         queryClient.setQueryData(
           linodeQueries
@@ -149,6 +146,17 @@ export const useUpdateLinodeInterfaceMutation = (
             ._ctx.interfaces._ctx.interface(linodeInterface.id).queryKey,
           linodeInterface,
         );
+
+        // Invaliate networking queries because IPs likely changed
+        queryClient.invalidateQueries({
+          queryKey: networkingQueries._def,
+        });
+
+        // Invalidate the Linode itself
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+          exact: true,
+        });
       },
     },
   );
@@ -164,8 +172,22 @@ export const useDeleteLinodeInterfaceMutation = (
     ...options,
     onSuccess(...params) {
       options?.onSuccess?.(...params);
+
+      // remove the cached interface
+      queryClient.removeQueries({
+        queryKey: linodeQueries
+          .linode(linodeId)
+          ._ctx.interfaces._ctx.interface(params[1]).queryKey,
+      });
+
+      // Invalidate the interfaces list
       queryClient.invalidateQueries({
         queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
+      });
+
+      // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
       });
     },
   });
