@@ -19,6 +19,7 @@ import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/d
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { nodeWarning } from '../../constants';
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { hasInvalidNodePoolPrice } from './utils';
 
@@ -104,8 +105,10 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    selectedType,
+    clusterRegionId
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -179,17 +182,18 @@ export const AddNodePoolDrawer = (props: Props) => {
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
           addPool={handleAdd}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ count: 1, planId: newType });
+            }
+          }}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
