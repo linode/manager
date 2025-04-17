@@ -237,11 +237,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         },
         flags.aclpReadEndpoint ?? ''
       ),
-      filters: constructAdditionalRequestFilters(
-        additionalFilters ?? [],
-        flags.aclpReadEndpoint ?? '',
-        widget.filters ?? []
-      ), // any additional dimension filters will be constructed and passed here
+      filters: [
+        ...constructAdditionalRequestFilters(
+          additionalFilters ?? [],
+          flags.aclpReadEndpoint ?? ''
+        ),
+        ...(widget.filters ?? []),
+      ], // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
