@@ -11,7 +11,7 @@ type Story = StoryObj<typeof DismissibleBanner>;
 
 export const Default: Story = {
   render: (args) => (
-    <DismissibleBanner {...args} variant="info">
+    <DismissibleBanner {...args} important variant="info">
       <Typography>This is an example of a dismissible banner.</Typography>
     </DismissibleBanner>
   ),
@@ -28,6 +28,8 @@ export const CallToActionBanner: Story = {
           Upgrade Version
         </Button>
       }
+      forceImportantIconVerticalCenter
+      important
       preferenceKey="cluster-v1"
       variant="info"
     >
@@ -51,6 +53,21 @@ export const BetaBanner: Story = {
         </Link>
         .
       </Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      important
+      preferenceKey="lenghty-dismissible-banner"
+      variant="info"
+    >
+      <Typography variant="h2">
+        This is an important, dismissible informational notice with a title.
+      </Typography>
+      <Typography>This notice contains long text that should wrap.</Typography>
     </DismissibleBanner>
   ),
 };

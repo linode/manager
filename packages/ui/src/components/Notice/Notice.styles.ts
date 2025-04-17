@@ -10,16 +10,12 @@ export const useStyles = makeStyles()((theme) => ({
       stroke: theme.tokens.color.Neutrals.White,
     },
     color: theme.tokens.color.Neutrals.White,
-    left: 10,
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
+    width: 20,
+    height: 20,
+    position: 'relative',
   },
   important: {
     font: theme.font.normal,
-    '& p': {
-      paddingLeft: theme.spacingFunction(36),
-    },
   },
   info: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
@@ -28,19 +24,23 @@ export const useStyles = makeStyles()((theme) => ({
   },
   root: {
     display: 'flex',
+    alignItems: 'center',
     '& + .notice': {
       marginTop: `${theme.spacingFunction(8)} !important`,
     },
-    alignItems: 'center',
     borderRadius: 1,
+    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+    '& .MuiTypography-root': {
+      width: '100%',
+    },
     '& p': {
       fontSize: theme.tokens.font.FontSize.Xs,
-      lineHeight: '20px',
       font: theme.font.semibold,
-      padding: `10px ${theme.spacingFunction(16)}`,
+      position: 'relative',
+      top: 1,
+      margin: 0,
     },
     maxWidth: '100%',
-    padding: '0px',
     position: 'relative',
   },
   success: {
