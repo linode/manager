@@ -140,7 +140,6 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const handleRemoveConfig = (index: number) => {
     remove(index);
-    reset(watch(), { keepDirty: true });
   };
 
   const handleClose = () => {
@@ -238,7 +237,10 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
                     fieldState.error?.message ||
                     getConfigAPIError(config, updateDatabaseError)
                   }
-                  onBlur={field.onBlur}
+                  onBlur={() => {
+                    setUpdateDatabaseError(null);
+                    field.onBlur();
+                  }}
                   onChange={field.onChange}
                   onRemove={() => handleRemoveConfig(index)}
                 />
