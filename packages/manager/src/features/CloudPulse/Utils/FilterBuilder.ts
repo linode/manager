@@ -28,7 +28,6 @@ import type {
   AclpConfig,
   Dashboard,
   DateTimeWithPreset,
-  DimensionFilter,
   Filter,
   Filters,
   TimeDuration,
