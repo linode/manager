@@ -12,6 +12,10 @@ interface Props extends NoticeProps {
    */
   actionButton?: JSX.Element;
   /**
+   * If true, the important icon will be vertically centered with the text no matter the height of the text.
+   */
+  forceImportantIconVerticalCenter?: boolean;
+  /**
    * Additional controls to pass to the Dismissible Banner
    */
   options?: DismissibleNotificationOptions;
@@ -67,11 +71,7 @@ export const DismissibleBanner = (props: Props) => {
   );
 
   return (
-    <Notice
-      bgcolor={(theme) => theme.palette.background.paper}
-      gap={1}
-      {...rest}
-    >
+    <Notice bgcolor={(theme) => theme.palette.background.paper} {...rest}>
       <Stack direction="column" flex={1} justifyContent="center">
         {children}
       </Stack>

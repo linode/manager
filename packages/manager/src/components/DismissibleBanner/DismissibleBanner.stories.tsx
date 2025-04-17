@@ -28,6 +28,8 @@ export const CallToActionBanner: Story = {
           Upgrade Version
         </Button>
       }
+      forceImportantIconVerticalCenter
+      important
       preferenceKey="cluster-v1"
       variant="info"
     >

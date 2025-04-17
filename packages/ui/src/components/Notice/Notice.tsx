@@ -32,6 +32,10 @@ export interface NoticeProps extends BoxProps {
    */
   errorGroup?: string;
   /**
+   * If true, the important icon will be vertically centered with the text no matter the height of the text.
+   */
+  forceImportantIconVerticalCenter?: boolean;
+  /**
    * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
    */
   important?: boolean;
@@ -83,6 +87,7 @@ export const Notice = (props: NoticeProps) => {
     className,
     dataTestId,
     errorGroup,
+    forceImportantIconVerticalCenter = false,
     important,
     spacingBottom,
     spacingLeft,
@@ -155,7 +160,15 @@ export const Notice = (props: NoticeProps) => {
       {...rest}
     >
       {important && (
-        <Box sx={{ mr: 1, display: 'flex', alignSelf: 'flex-start' }}>
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            alignSelf: forceImportantIconVerticalCenter
+              ? 'center'
+              : 'flex-start',
+            marginRight: theme.spacingFunction(8),
+          })}
+        >
           {variantMap.error && <ErrorIcon className={classes.icon} />}
           {variantMap.info && <InfoIcon className={classes.icon} />}
           {variantMap.success && <CheckIcon className={classes.icon} />}
