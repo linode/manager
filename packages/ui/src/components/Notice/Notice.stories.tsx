@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -15,6 +16,17 @@ export const Success: StoryObj<NoticeProps> = {
 export const Info: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a informational notice" variant="info" />
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="info">
+      <Typography variant="h2">
+        This is a informational notice with a title.
+      </Typography>
+      <Typography>This paragraph under the title should wrap.</Typography>
+    </Notice>
   ),
 };
 

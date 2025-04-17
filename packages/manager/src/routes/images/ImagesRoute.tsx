@@ -17,7 +17,7 @@ export const ImagesRoute = () => {
         spacingBottom={8}
         variant="info"
       >
-        <Typography fontSize="inherit" py={1}>
+        <Typography fontSize="inherit">
           Custom Images are now encrypted by default for enhanced security.{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
             Learn more
