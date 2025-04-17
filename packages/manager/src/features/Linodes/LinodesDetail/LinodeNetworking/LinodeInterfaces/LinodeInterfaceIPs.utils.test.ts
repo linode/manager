@@ -29,10 +29,10 @@ describe('getLinodeInterfaceIPs', () => {
 
     expect(ips).toStrictEqual([
       '10.0.0.2',
-      '255.255.255.255 (VPC NAT)',
+      '255.255.255.255',
       '10.0.0.1',
       '10.0.0.3',
-      '10.0.0.5/32 (Range)',
+      '10.0.0.5/32',
     ]);
   });
 
@@ -63,8 +63,8 @@ describe('getLinodeInterfaceIPs', () => {
       '10.0.0.2',
       '10.0.0.1',
       '10.0.0.3',
-      '192.168.1.0/24 (Range)',
-      '2600:3c11::f03c:93ff:fe3a:130f (SLAAC)',
+      '192.168.1.0/24',
+      '2600:3c11::f03c:93ff:fe3a:130f',
     ]);
   });
 
@@ -91,6 +91,6 @@ describe('getLinodeInterfaceIPs', () => {
 
     const ips = getLinodeInterfaceIPs(linodeInterface);
 
-    expect(ips).toStrictEqual(['192.168.21.34 (IPAM)']);
+    expect(ips).toStrictEqual(['192.168.21.34']);
   });
 });
