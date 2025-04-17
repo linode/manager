@@ -105,7 +105,6 @@ export const useLinodeRemoveRangeMutation = (range: string) => {
           queryKey: linodeQueries.linode(linode)._ctx.ips.queryKey,
         });
         queryClient.invalidateQueries({
-          exact: true,
           queryKey: linodeQueries.linode(linode)._ctx.interfaces.queryKey,
         });
       }
