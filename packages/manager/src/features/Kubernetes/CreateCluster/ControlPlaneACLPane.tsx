@@ -83,6 +83,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         <Box marginBottom={2}>
           <Box sx={{ marginBottom: 1, maxWidth: 450 }}>
             <MultipleIPInput
+              buttonText="Add IPv4 Address"
+              disabled={isAcknowledgementChecked}
+              ips={ipV4Addr}
+              isLinkStyled
               onBlur={(_ips: ExtendedIP[]) => {
                 const validatedIPs = validateIPs(_ips, {
                   allowEmptyAddress: true,
@@ -90,14 +94,15 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 });
                 handleIPv4Change(validatedIPs);
               }}
-              buttonText="Add IPv4 Address"
-              ips={ipV4Addr}
-              isLinkStyled
               onChange={handleIPv4Change}
               title="IPv4 Addresses or CIDRs"
             />
             <Box marginTop={2}>
               <MultipleIPInput
+                buttonText="Add IPv6 Address"
+                disabled={isAcknowledgementChecked}
+                ips={ipV6Addr}
+                isLinkStyled
                 onBlur={(_ips: ExtendedIP[]) => {
                   const validatedIPs = validateIPs(_ips, {
                     allowEmptyAddress: true,
@@ -105,9 +110,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                   });
                   handleIPv6Change(validatedIPs);
                 }}
-                buttonText="Add IPv6 Address"
-                ips={ipV6Addr}
-                isLinkStyled
                 onChange={handleIPv6Change}
                 title="IPv6 Addresses or CIDRs"
               />
@@ -117,10 +119,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="acl-acknowledgement"
                   onChange={() =>
                     handleIsAcknowledgementChecked(!isAcknowledgementChecked)
                   }
-                  name="acl-acknowledgement"
                 />
               }
               data-qa-checkbox="acl-acknowledgement"

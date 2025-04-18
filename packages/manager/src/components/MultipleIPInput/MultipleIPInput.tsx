@@ -206,7 +206,9 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const addIPButton =
     forVPCIPv4Ranges || isLinkStyled ? (
       <StyledLinkButtonBox sx={{ marginTop: isLinkStyled ? '8px' : '12px' }}>
-        <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
+        <LinkButton isDisabled={disabled} onClick={addNewInput}>
+          {buttonText}
+        </LinkButton>
       </StyledLinkButtonBox>
     ) : (
       <Button

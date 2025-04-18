@@ -115,13 +115,10 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
+  const [selectedTier, setSelectedTier] =
+    React.useState<KubernetesTier>('standard');
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -147,6 +144,7 @@ export const CreateCluster = () => {
     } else {
       setHighAvailability(undefined);
       setControlPlaneACL(false);
+      setIsACLAcknowledgementChecked(false);
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
@@ -174,18 +172,14 @@ export const CreateCluster = () => {
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
-  const {
-    mutateAsync: createKubernetesClusterBeta,
-  } = useCreateKubernetesClusterBetaMutation();
+  const { mutateAsync: createKubernetesClusterBeta } =
+    useCreateKubernetesClusterBetaMutation();
 
-  const {
-    isLkeEnterpriseLAFeatureEnabled,
-    isLkeEnterpriseLAFlagEnabled,
-  } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const {
     isLoadingVersions,
@@ -523,17 +517,19 @@ export const CreateCluster = () => {
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
               />
               <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
                 }}
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
-                handleIsAcknowledgementChecked={(isChecked: boolean) =>
-                  setIsACLAcknowledgementChecked(isChecked)
-                }
-                enableControlPlaneACL={controlPlaneACL}
-                errorText={errorMap.control_plane}
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
                 isAcknowledgementChecked={isACLAcknowledgementChecked}
