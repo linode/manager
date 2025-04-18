@@ -147,7 +147,7 @@ export const KubeCheckoutBar = (props: Props) => {
         )}
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
-            enterprisePrice={enterprisePrice}
+            clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
             key={idx}
             nodeCount={thisPool.count}
             onRemove={() => removePool(idx)}
