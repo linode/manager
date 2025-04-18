@@ -1,6 +1,5 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
   mockGetUser,
