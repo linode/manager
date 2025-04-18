@@ -1,9 +1,9 @@
-import { createLinodeRequestFactory } from '@linode/utilities';
 import {
-  accountUserFactory,
+  createLinodeRequestFactory,
   grantsFactory,
   profileFactory,
-} from '@src/factories';
+} from '@linode/utilities';
+import { accountUserFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { entityTag } from 'support/constants/cypress';
 import { mockGetUser } from 'support/intercepts/account';

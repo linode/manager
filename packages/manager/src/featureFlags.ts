@@ -76,7 +76,7 @@ export interface CloudPulseResourceTypeMapFlag {
   supportedRegionIds?: string;
 }
 
-interface gpuV2 {
+interface GpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
   transferBanner: boolean;
@@ -107,12 +107,13 @@ interface LimitsEvolution {
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpAlerting: AclpAlerting;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
-  apiMaintenance: APIMaintenance;
   apicliButtonCopy: string;
+  apiMaintenance: APIMaintenance;
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -124,7 +125,7 @@ export interface Flags {
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   gecko2: GeckoFeatureFlag;
-  gpuv2: gpuV2;
+  gpuv2: GpuV2;
   iam: BetaFeatureFlag;
   ipv6Sharing: boolean;
   limitsEvolution: LimitsEvolution;
@@ -136,8 +137,8 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   nodebalancerVpc: boolean;
-  objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objMultiCluster: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -148,10 +149,11 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  taxId: BaseFeatureFlag;
   taxes: Taxes;
+  taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
+  vmHostMaintenance: BetaFeatureFlag;
 }
 
 interface MarketplaceAppOverride {
@@ -163,7 +165,7 @@ interface MarketplaceAppOverride {
    *
    * Pass `null` to hide the marketplace app
    */
-  details: Partial<OCA> | null;
+  details: null | Partial<OCA>;
   /**
    * The ID of the StackScript that powers this Marketplace app
    */
@@ -254,8 +256,8 @@ export type ProductInformationBannerLocation =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;

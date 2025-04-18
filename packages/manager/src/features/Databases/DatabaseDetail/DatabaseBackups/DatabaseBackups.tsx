@@ -143,7 +143,7 @@ export const DatabaseBackups = (props: Props) => {
           Databases are automatically backed-up with full daily backups for the
           past 14 days, and binary logs recorded continuously. Full backups are
           version-specific binary backups, which when combined with binary
-          logs allow for consistent recovery to a specific point in time (PITR).
+          logs allow for consistent recovery to a specific point in time (PITR).
         </StyledTypography>
         <Divider spacingBottom={25} spacingTop={25} />
         <Typography variant="h2">Restore a Backup</Typography>

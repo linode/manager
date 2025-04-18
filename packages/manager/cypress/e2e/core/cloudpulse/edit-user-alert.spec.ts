@@ -30,7 +30,6 @@ import { ui } from 'support/ui';
 
 import {
   accountFactory,
-  alertDefinitionFactory,
   alertFactory,
   cpuRulesFactory,
   dashboardMetricFactory,
@@ -48,20 +47,6 @@ import type { Flags } from 'src/featureFlags';
 // Feature flag setup
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
-
-// Mock alert definition
-const customAlertDefinition = alertDefinitionFactory.build({
-  channel_ids: [1],
-  description: 'update-description',
-  entity_ids: ['1', '2', '3', '4', '5'],
-  label: 'Alert-1',
-  rule_criteria: {
-    rules: [cpuRulesFactory.build(), memoryRulesFactory.build()],
-  },
-  severity: 0,
-  tags: [''],
-  trigger_conditions: triggerConditionFactory.build(),
-});
 
 // Mock alert details
 const alertDetails = alertFactory.build({
@@ -150,7 +135,7 @@ describe('Integration Tests for Edit Alert', () => {
     mockUpdateAlertDefinitions(service_type, id, alertDetails).as(
       'updateDefinitions'
     );
-    mockCreateAlertDefinition(service_type, customAlertDefinition).as(
+    mockCreateAlertDefinition(service_type, alertDetails).as(
       'createAlertDefinition'
     );
     mockGetCloudPulseMetricDefinitions(service_type, metricDefinitions);
@@ -202,17 +187,17 @@ describe('Integration Tests for Edit Alert', () => {
       .should('have.value', 'Databases');
     cy.findByLabelText('Severity').should('have.value', 'Severe');
 
-    // Verify alert resource selection
+    // Verify alert entity selection
     cy.get('[data-qa-alert-table="true"]')
-      .contains('[data-qa-alert-cell*="resource"]', 'database-3')
+      .contains('[data-qa-alert-cell*="entity"]', 'database-3')
       .parents('tr')
       .find('[type="checkbox"]')
       .should('be.checked');
 
-    // Verify alert resource selection count message
+    // Verify alert entity selection count message
     cy.get('[data-testid="selection_notice"]').should(
       'contain',
-      '1 of 5 resources are selected.'
+      '1 of 5 entities are selected.'
     );
 
     // Assert rule values 1
@@ -289,6 +274,10 @@ describe('Integration Tests for Edit Alert', () => {
     ui.autocomplete.findByLabel('Severity').clear();
     ui.autocomplete.findByLabel('Severity').type('Info');
     ui.autocompletePopper.findByTitle('Info').should('be.visible').click();
+    cy.get('[data-qa-notice="true"]')
+      .find('button')
+      .contains('Deselect All')
+      .click();
     cy.get('[data-qa-notice="true"]')
       .find('button')
       .contains('Select All')

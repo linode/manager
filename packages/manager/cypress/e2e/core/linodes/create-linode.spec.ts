@@ -3,8 +3,10 @@
  */
 
 import {
+  grantsFactory,
   linodeFactory,
   linodeTypeFactory,
+  profileFactory,
   regionFactory,
 } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
@@ -30,12 +32,7 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { skip } from 'support/util/skip';
 
-import {
-  accountFactory,
-  accountUserFactory,
-  grantsFactory,
-  profileFactory,
-} from 'src/factories';
+import { accountFactory, accountUserFactory } from 'src/factories';
 
 let username: string;
 

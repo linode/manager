@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
-  useLinodeQuery,
   useGrants,
+  useLinodeQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
@@ -144,9 +144,8 @@ export const CreateImageTab = () => {
   /**
    * The 'Object Storage' capability indicates a region can store images
    */
-  const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
-    'Object Storage'
-  );
+  const linodeRegionSupportsImageStorage =
+    selectedLinodeRegion?.capabilities.includes('Object Storage');
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -179,8 +178,12 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              Custom images are billed monthly at $0.10/GB. The disk you target
-              for an image needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. The disk you target for an image
+              needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
                 requirements
               </Link>

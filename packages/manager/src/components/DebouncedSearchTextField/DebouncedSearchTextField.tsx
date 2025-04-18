@@ -1,5 +1,6 @@
 import {
   CircleProgress,
+  CloseIcon,
   IconButton,
   InputAdornment,
   TextField,
@@ -7,7 +8,6 @@ import {
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import Close from 'src/assets/icons/close.svg';
 import Search from 'src/assets/icons/search.svg';
 
 import type { InputProps, TextFieldProps } from '@linode/ui';
@@ -111,7 +111,7 @@ export const DebouncedSearchTextField = React.memo(
                     aria-label="Clear"
                     size="small"
                   >
-                    <Close />
+                    <CloseIcon />
                   </IconButton>
                 )}
               </InputAdornment>
