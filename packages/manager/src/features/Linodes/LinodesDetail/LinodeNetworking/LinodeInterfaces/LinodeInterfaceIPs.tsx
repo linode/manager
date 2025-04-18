@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
@@ -16,7 +16,7 @@ export const LinodeInterfaceIPs = ({ linodeInterface }: Props) => {
   const [primary, ...ips] = getLinodeInterfaceIPs(linodeInterface);
 
   if (!primary && ips.length === 0) {
-    return 'None';
+    return <Typography>None</Typography>;
   }
 
   return (
