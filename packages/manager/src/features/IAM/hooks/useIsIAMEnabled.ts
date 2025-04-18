@@ -8,7 +8,7 @@ import { useAccountPermissions } from 'src/queries/iam/iam';
  */
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
-  const { data: rolePermissions } = useAccountPermissions();
+  const { data: rolePermissions } = useAccountPermissions(flags.iam?.enabled);
 
   const hasAccountAccess = rolePermissions?.account_access?.length;
   const hasEntityAccess = rolePermissions?.entity_access?.length;
