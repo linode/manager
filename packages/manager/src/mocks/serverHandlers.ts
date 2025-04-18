@@ -120,7 +120,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { MTC_TT_2025 } from 'src/features/components/PlansPanel/constants';
+import { MTC_TT } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -839,7 +839,7 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    const mtcTTLinodeDetail = linodeFactory.build({
+    const linodeMTCTTPlanDetail = linodeFactory.build({
       id,
       backups: { enabled: false },
       label: 'mtc-tt-custom-plan-linode',
@@ -853,7 +853,7 @@ export const handlers = [
       region: 'us-den-10',
     });
     const response = [1234, 1235].includes(id)
-      ? mtcTTLinodeDetail
+      ? linodeMTCTTPlanDetail
       : linodeDetail;
     return HttpResponse.json(response);
   }),
@@ -2299,7 +2299,7 @@ export const handlers = [
         region: 'us-east',
       }),
       ...(params.regionId &&
-      MTC_TT_2025['availability_regions'].includes(params.regionId as string)
+      MTC_TT['availability_regions'].includes(params.regionId as string)
         ? [
             regionAvailabilityFactory.build({
               available: true,

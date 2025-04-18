@@ -8,7 +8,7 @@ export const PLAN_IS_SMALLER_THAN_USAGE_COPY =
   'The usage storage in this plan is smaller than your current usage.';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
-export const PLAN_NOT_AVAILABLE_IN_REGION_COPY_2 =
+export const PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY =
   'Currently unavailable for the selected region.';
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
@@ -34,7 +34,7 @@ export const TRANSFER_COSTS_LINK =
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
 
-export const MTC_TT_2025 = {
+export const MTC_TT = {
   availability_regions: ['us-iad', 'no-east'], // Currently available in iad/oslo regions.
   available_types: ['g8-premium-64-ht', 'g8-premium-128-ht'],
 };
