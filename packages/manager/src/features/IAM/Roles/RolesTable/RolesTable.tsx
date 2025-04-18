@@ -1,8 +1,9 @@
-import { Button, Select } from '@linode/ui';
+import { Button, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import {
+  sortRows,
   Table,
   TableBody,
   TableCell,
@@ -10,15 +11,17 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
-  sortRows,
 } from 'akamai-cds-react-components/Table';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { StyledTextTooltip } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
+import { Link } from 'src/components/Link';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
-import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
+import {
+  getFacadeRoleDescription,
+  mapEntityTypesForSelect,
+} from 'src/features/IAM/Shared/utilities';
 
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
@@ -45,16 +48,20 @@ export const RolesTable = ({ roles }: Props) => {
   }, [roles]);
 
   const [filterableEntityType, setFilterableEntityType] =
-    useState<SelectOption | null>(ALL_ROLES_OPTION);
+    useState<null | SelectOption>(ALL_ROLES_OPTION);
 
   const [sort, setSort] = useState<
-    { column: string; order: Order } | undefined
+    undefined | { column: string; order: Order }
   >(undefined);
 
   const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
 
   const areAllSelected = React.useMemo(() => {
-    return !!rows?.length && !!selectedRows?.length && rows?.length === selectedRows?.length;
+    return (
+      !!rows?.length &&
+      !!selectedRows?.length &&
+      rows?.length === selectedRows?.length
+    );
   }, [rows, selectedRows]);
 
   const handleSort = (event: CustomEvent, column: string) => {
@@ -107,20 +114,18 @@ export const RolesTable = ({ roles }: Props) => {
   return (
     <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
       <Grid
-        sx={() => ({
-          justifyContent: 'space-between',
-        })}
         container
         direction="row"
         spacing={2}
+        sx={{ justifyContent: 'space-between' }}
       >
         <Grid
-          sx={() => ({
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-          })}
           container
           direction="row"
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+          }}
         >
           <DebouncedSearchTextField
             clearable
@@ -143,14 +148,14 @@ export const RolesTable = ({ roles }: Props) => {
           />
         </Grid>
         <Button
+          buttonType="primary"
+          disabled={selectedRows.length === 0}
+          onClick={() => handleAssignSelectedRoles()}
           tooltipText={
             selectedRows.length === 0
               ? 'You must select some roles to assign them.'
               : undefined
           }
-          buttonType="primary"
-          disabled={selectedRows.length === 0}
-          onClick={() => handleAssignSelectedRoles()}
         >
           Assign Selected Roles
         </Button>
@@ -176,7 +181,7 @@ export const RolesTable = ({ roles }: Props) => {
               sort={(event) => handleSort(event, 'access')}
               sortable
               sorted={sort?.column === 'access' ? sort.order : undefined}
-              style={{ minWidth: '18%' }}
+              style={{ minWidth: '14%' }}
             >
               Role Type
             </TableHeaderCell>
@@ -184,11 +189,11 @@ export const RolesTable = ({ roles }: Props) => {
               sort={(event) => handleSort(event, 'description')}
               sortable
               sorted={sort?.column === 'description' ? sort.order : undefined}
-              style={{ minWidth: '30%' }}
+              style={{ minWidth: '38%' }}
             >
               Description
             </TableHeaderCell>
-            <TableHeaderCell style={{ minWidth: '14%' }} />
+            <TableHeaderCell style={{ minWidth: '10%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -210,20 +215,21 @@ export const RolesTable = ({ roles }: Props) => {
                 <TableCell style={{ minWidth: '26%' }}>
                   {roleRow.name}
                 </TableCell>
-                <TableCell style={{ minWidth: '18%' }}>
+                <TableCell style={{ minWidth: '14%' }}>
                   {capitalizeAllWords(roleRow.access, '_')}
                 </TableCell>
-                <TableCell style={{ minWidth: '30%' }}>
-                  {roleRow.description.length <= 80 ? (
-                    <>{roleRow.description}</>
+                <TableCell style={{ minWidth: '38%' }}>
+                  {roleRow.permissions.length ? (
+                    roleRow.description
                   ) : (
-                    <span>
-                      {roleRow.description.substring(0, 80)}{'... '}
-                      <StyledTextTooltip tooltipText={roleRow.description} displayText={'Show more'}/>
-                    </span>
+                    // TODO: update the link for the description when it's ready - UIE-8534
+                    <Typography>
+                      {getFacadeRoleDescription(roleRow)}{' '}
+                      <Link to="#">Learn more.</Link>
+                    </Typography>
                   )}
                 </TableCell>
-                <TableCell style={{ minWidth: '14%' }}>
+                <TableCell style={{ minWidth: '10%' }}>
                   <RolesTableActionMenu />
                 </TableCell>
                 <TableRowExpanded

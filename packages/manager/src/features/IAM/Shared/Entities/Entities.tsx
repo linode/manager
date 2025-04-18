@@ -1,5 +1,4 @@
 import { Autocomplete, Notice, Typography } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
@@ -9,6 +8,7 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import {
   getCreateLinkForEntityType,
+  getFormattedEntityType,
   placeholderMap,
   transformedAccountEntities,
 } from '../utilities';
@@ -62,7 +62,9 @@ export const Entities = ({
           </Typography>
         </FormLabel>
         <Typography>
-          {type === 'account' ? 'All entities' : `All ${type}s`}
+          {type === 'account'
+            ? 'All entities'
+            : `All ${getFormattedEntityType(type)}s`}
         </Typography>
       </>
     );
@@ -81,7 +83,11 @@ export const Entities = ({
           onChange(newValue || []);
         }}
         options={memoizedEntities}
-        placeholder={getPlaceholder(type, value.length, memoizedEntities.length)}
+        placeholder={getPlaceholder(
+          type,
+          value.length,
+          memoizedEntities.length
+        )}
         readOnly={getReadonlyState(mode, memoizedEntities.length)}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
         value={value || []}
@@ -90,7 +96,7 @@ export const Entities = ({
         <Notice spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
-              Create a {capitalizeAllWords(type)} Entity
+              Create a {getFormattedEntityType(type)} Entity
             </Link>{' '}
             first or choose a different role to continue assignment.
           </Typography>
