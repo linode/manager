@@ -119,7 +119,6 @@ export const LinodeEntityDetail = (props: Props) => {
     <>
       {isLinodesGrantReadOnly && (
         <Notice
-          important
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
           })}

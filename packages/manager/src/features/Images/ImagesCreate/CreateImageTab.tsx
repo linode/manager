@@ -163,7 +163,6 @@ export const CreateImageTab = () => {
               isSingular: false,
               resourceType: 'Images',
             })}
-            important
             variant="error"
           />
         )}

@@ -25,7 +25,6 @@ export const DomainBanner = React.memo((props: DomainBannerProps) => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: KEY,
       }}
-      important
       preferenceKey={KEY}
       variant="warning"
     >

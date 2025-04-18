@@ -27,7 +27,6 @@ export const ComplianceBanner = () => {
           Review Update
         </StyledActionButton>
       }
-      important
       preferenceKey="gdpr-compliance"
       variant="warning"
     >

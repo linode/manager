@@ -33,7 +33,7 @@ export const AbuseTicketBanner = () => {
 
   const href = multiple
     ? '/support/tickets'
-    : abuseTickets[0].entity?.url ?? '';
+    : (abuseTickets[0].entity?.url ?? '');
   const isViewingTicket = location.pathname.match(href);
 
   return (
@@ -43,7 +43,6 @@ export const AbuseTicketBanner = () => {
           expiry: DateTime.utc().plus({ days: 7 }).toISO(),
           label: preferenceKey,
         }}
-        important
         preferenceKey={preferenceKey}
         variant="warning"
       >

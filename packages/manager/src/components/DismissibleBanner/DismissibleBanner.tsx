@@ -63,6 +63,9 @@ export const DismissibleBanner = (props: Props) => {
         '& svg': {
           width: 16,
           height: 16,
+          '& path': {
+            fill: theme.tokens.component.NotificationBanner.Icon,
+          },
         },
       })}
     >

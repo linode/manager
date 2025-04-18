@@ -67,13 +67,6 @@ describe('Notice Component', () => {
     expect(container.firstChild).toHaveStyle('background: #ffe5e5;');
   });
 
-  it('displays icon for important notices', () => {
-    const { getByTestId } = renderWithTheme(<Notice important />);
-    const icon = getByTestId('notice-important');
-
-    expect(icon).toBeInTheDocument();
-  });
-
   it('handles bypassValidation prop', () => {
     const { container } = renderWithTheme(<Notice bypassValidation />);
 

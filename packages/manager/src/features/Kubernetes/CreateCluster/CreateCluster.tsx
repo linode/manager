@@ -115,13 +115,10 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
+  const [selectedTier, setSelectedTier] =
+    React.useState<KubernetesTier>('standard');
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -174,18 +171,14 @@ export const CreateCluster = () => {
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
-  const {
-    mutateAsync: createKubernetesClusterBeta,
-  } = useCreateKubernetesClusterBetaMutation();
+  const { mutateAsync: createKubernetesClusterBeta } =
+    useCreateKubernetesClusterBetaMutation();
 
-  const {
-    isLkeEnterpriseLAFeatureEnabled,
-    isLkeEnterpriseLAFlagEnabled,
-  } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const {
     isLoadingVersions,
@@ -384,13 +377,12 @@ export const CreateCluster = () => {
         )}
         {isCreateClusterRestricted && (
           <Notice
+            sx={{ marginBottom: 2 }}
             text={getRestrictedResourceText({
               action: 'create',
               isSingular: false,
               resourceType: 'LKE Clusters',
             })}
-            important
-            sx={{ marginBottom: 2 }}
             variant="error"
           />
         )}

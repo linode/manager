@@ -35,7 +35,6 @@ export const CreditCardExpiredBanner = () => {
         </Button>
       }
       forceImportantIconVerticalCenter
-      important
       preferenceKey={'credit-card-expired'}
       variant="error"
     >

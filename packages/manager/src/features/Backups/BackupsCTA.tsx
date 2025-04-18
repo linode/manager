@@ -66,7 +66,12 @@ export const BackupsCTA = () => {
         <IconButton
           aria-label="Dismiss notice enabling Linode backups"
           onClick={handleDismiss}
-          sx={{ padding: 0.25 }}
+          sx={(theme) => ({
+            padding: 0.25,
+            '& path': {
+              fill: theme.tokens.component.NotificationBanner.Icon,
+            },
+          })}
         >
           <CloseIcon />
         </IconButton>

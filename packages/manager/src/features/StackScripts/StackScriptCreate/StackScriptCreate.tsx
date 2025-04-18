@@ -76,13 +76,12 @@ export const StackScriptCreate = () => {
         <Stack spacing={2}>
           {isStackScriptCreationRestricted && (
             <Notice
+              spacingBottom={12}
               text={getRestrictedResourceText({
                 action: 'create',
                 isSingular: false,
                 resourceType: 'StackScripts',
               })}
-              important
-              spacingBottom={12}
               variant="error"
             />
           )}

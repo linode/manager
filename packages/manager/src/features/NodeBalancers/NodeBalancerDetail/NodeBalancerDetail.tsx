@@ -31,15 +31,14 @@ export const NodeBalancerDetail = () => {
   const [label, setLabel] = React.useState<string>();
   const { data: grants } = useGrants();
 
-  const {
-    error: updateError,
-    mutateAsync: updateNodeBalancer,
-  } = useNodebalancerUpdateMutation(Number(id));
+  const { error: updateError, mutateAsync: updateNodeBalancer } =
+    useNodebalancerUpdateMutation(Number(id));
 
-  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(
-    Number(id),
-    Boolean(id)
-  );
+  const {
+    data: nodebalancer,
+    error,
+    isLoading,
+  } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -115,7 +114,6 @@ export const NodeBalancerDetail = () => {
           text={getRestrictedResourceText({
             resourceType: 'NodeBalancers',
           })}
-          important
           variant="warning"
         />
       )}

@@ -33,15 +33,8 @@ export const MigrationNotification = React.memo((props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const {
-    closeDialog,
-    dialog,
-    handleError,
-    openDialog,
-    submitDialog,
-  } = useDialog<number>((linodeID: number) =>
-    scheduleOrQueueMigration(linodeID)
-  );
+  const { closeDialog, dialog, handleError, openDialog, submitDialog } =
+    useDialog<number>((linodeID: number) => scheduleOrQueueMigration(linodeID));
 
   const onSubmit = () => {
     submitDialog(linodeID)
@@ -106,7 +99,7 @@ export const MigrationNotification = React.memo((props: Props) => {
 
   return (
     <>
-      <Notice important variant="warning">
+      <Notice variant="warning">
         <Typography>
           {notificationType === 'migration_scheduled'
             ? migrationScheduledText()

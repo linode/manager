@@ -165,7 +165,6 @@ const AccountLogins = () => {
         isChildUser,
         resourceType: 'Account',
       })}
-      important
       variant="warning"
     />
   );

@@ -183,7 +183,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         </Typography>
         <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
 
-        <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
+        <Notice sx={{ mb: 1, mt: 3 }} variant="info">
           <Typography>{ADVANCED_CONFIG_INFO}</Typography>
         </Notice>
 

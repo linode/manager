@@ -22,9 +22,5 @@ export const ProductNotification = ({
   const level = (severityLevelMap[severity] as NoticeVariant) ?? 'warning';
   const props = { variant: level };
 
-  return (
-    <Notice {...props} important>
-      {text}
-    </Notice>
-  );
+  return <Notice {...props}>{text}</Notice>;
 };

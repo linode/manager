@@ -60,11 +60,10 @@ export const TransferContent = (props: ContentProps) => {
   if (error) {
     return (
       <Notice
+        spacingBottom={0}
         text={
           'Network transfer information for this Linode is currently unavailable.'
         }
-        important
-        spacingBottom={0}
         variant="error"
       />
     );

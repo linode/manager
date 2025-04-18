@@ -187,7 +187,6 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
           )}
           {!mayUserModifyLVSubscription && (
             <Notice
-              important
               text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
               variant="error"
             />
