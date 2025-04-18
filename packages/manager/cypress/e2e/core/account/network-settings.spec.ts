@@ -2,13 +2,6 @@
  * @file Integration tests for account-level network settings.
  */
 
-import { LinodeInterfaceAccountSetting } from '@linode/api-v4';
-import {
-  accountFactory,
-  accountSettingsFactory,
-  firewallFactory,
-  firewallSettingsFactory,
-} from 'src/factories';
 import {
   mockGetAccount,
   mockGetAccountSettings,
@@ -23,6 +16,15 @@ import {
   mockUpdateFirewallSettingsError,
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
+
+import {
+  accountFactory,
+  accountSettingsFactory,
+  firewallFactory,
+  firewallSettingsFactory,
+} from 'src/factories';
+
+import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
 
 const interfaceTypeMap = {
   legacy_config_default_but_linode_allowed:
