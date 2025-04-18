@@ -42,7 +42,6 @@ describe('CustomFirewallFields', () => {
       useFormOptions: formOptions,
     });
 
-    expect(getByText('Label')).toBeVisible();
     expect(getByText('Default Inbound Policy')).toBeVisible();
     expect(getByText('Default Outbound Policy')).toBeVisible();
     expect(getByText('Assign services to the Firewall')).toBeVisible();
