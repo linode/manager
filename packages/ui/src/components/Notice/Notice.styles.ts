@@ -17,9 +17,6 @@ export const useStyles = makeStyles()((theme) => ({
     height: 20,
     position: 'relative',
   },
-  important: {
-    font: theme.font.normal,
-  },
   info: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
     background:
@@ -59,7 +56,8 @@ export const useStyles = makeStyles()((theme) => ({
   warning: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
     background: theme.tokens.component.NotificationBanner.Warning.Background,
-    '& path:first-of-type': {
+    // Only update outer triangle color
+    '& .css-1j6o9qe-icon path:first-of-type': {
       fill: theme.tokens.component.NotificationBanner.Warning.StatusIcon,
     },
   },

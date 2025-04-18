@@ -26,7 +26,7 @@ export const SuccessDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice important variant="success">
+      <Notice variant="success">
         <Typography>
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>

@@ -24,7 +24,7 @@ export const VerificationDetailsBanner = ({
   }
 
   return (
-    <Notice forceImportantIconVerticalCenter important variant="warning">
+    <Notice forceImportantIconVerticalCenter variant="warning">
       <Box
         alignItems="center"
         display="flex"

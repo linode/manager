@@ -97,9 +97,8 @@ export const LinodeCreate = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    handleLinodeCreateAnalyticsFormError,
-  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
+  const { handleLinodeCreateAnalyticsFormError } =
+    useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -218,13 +217,12 @@ export const LinodeCreate = () => {
             </TabList>
             {isLinodeCreateRestricted && (
               <Notice
+                sx={{ marginBottom: 2 }}
                 text={getRestrictedResourceText({
                   action: 'create',
                   isSingular: false,
                   resourceType: 'Linodes',
                 })}
-                important
-                sx={{ marginBottom: 2 }}
                 variant="error"
               />
             )}
