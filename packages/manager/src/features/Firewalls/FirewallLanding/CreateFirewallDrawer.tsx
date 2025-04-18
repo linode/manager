@@ -214,7 +214,7 @@ export const CreateFirewallDrawer = React.memo(
                   name="label"
                   onBlur={field.onBlur}
                   onChange={field.onChange}
-                  required
+                  required={createFirewallFrom !== 'template'}
                   value={field.value}
                 />
               )}

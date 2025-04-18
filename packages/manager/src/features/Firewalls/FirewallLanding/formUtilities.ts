@@ -21,35 +21,24 @@ export interface CreateFirewallFormValues extends CreateFirewallPayload {
   templateSlug?: FirewallTemplateSlug;
 }
 
-interface FirewallTemplateFieldError {
-  message: string;
-  type: 'validate';
-}
-
-interface FirewallTemplateErrors {
-  label?: FirewallTemplateFieldError;
-  templateSlug?: FirewallTemplateFieldError;
-}
-
 export const createFirewallResolver =
   (): Resolver<CreateFirewallFormValues> => {
     return async (values, _, options) => {
-      // if using firewall templates, we need to ensure a label is specified and a template is selected
+      // if creating a firewall from a template, we only care if no template has been selected
       if (values.createFirewallFrom === 'template') {
-        const errors: FirewallTemplateErrors = {};
         if (!values.templateSlug) {
-          errors.templateSlug = {
-            message: 'Please select a template to create a firewall from.',
-            type: 'validate',
+          return {
+            errors: {
+              templateSlug: {
+                message: 'Please select a template to create a firewall from.',
+                type: 'validate',
+              },
+            },
+            values,
           };
+        } else {
+          return { errors: {}, values };
         }
-        if (!values.label) {
-          errors.label = {
-            message: 'Label is required.',
-            type: 'validate',
-          };
-        }
-        return { errors, values };
       }
 
       // otherwise, we need to validate the form based on the CreateFirewallSchema
