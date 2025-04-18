@@ -30,12 +30,10 @@ export const MonitorActionMenu = (props: MonitorActionMenuProps) => {
   const navigate = useNavigate();
   const { monitorId, status } = props;
 
-  const { mutateAsync: enableServiceMonitor } = useEnableMonitorMutation(
-    monitorId
-  );
-  const { mutateAsync: disableServiceMonitor } = useDisableMonitorMutation(
-    monitorId
-  );
+  const { mutateAsync: enableServiceMonitor } =
+    useEnableMonitorMutation(monitorId);
+  const { mutateAsync: disableServiceMonitor } =
+    useDisableMonitorMutation(monitorId);
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);

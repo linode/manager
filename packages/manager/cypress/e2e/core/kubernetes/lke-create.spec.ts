@@ -274,6 +274,11 @@ describe('LKE Cluster Creation', () => {
         .within(() => {
           cy.get(quantityInput).should('be.visible');
           cy.get(quantityInput).click();
+
+          // Ensure the max node count is 100 for LKE
+          cy.get(quantityInput).type(`{selectall}101`);
+          cy.get(quantityInput).should('have.value', 100);
+
           cy.get(quantityInput).type(`{selectall}${nodeCount}`);
 
           ui.button
@@ -1318,6 +1323,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
      * - Confirms that the total node count for each pool is displayed
+     * - Confirms that the max nodes is 500
      */
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
@@ -1503,6 +1509,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
           .within(() => {
             cy.get(quantityInput).should('be.visible');
             cy.get(quantityInput).click();
+
+            // Ensure the max node count is 500 for LKE-E
+            cy.get(quantityInput).type(`{selectall}501`);
+            cy.get(quantityInput).should('have.value', 500);
+
             cy.get(quantityInput).type(`{selectall}${nodeCount}`);
 
             ui.button
