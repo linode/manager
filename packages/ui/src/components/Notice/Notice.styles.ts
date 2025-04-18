@@ -4,6 +4,9 @@ export const useStyles = makeStyles()((theme) => ({
   error: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
     background: theme.tokens.component.NotificationBanner.Error.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Error.StatusIcon,
+    },
   },
   icon: {
     '& g': {
@@ -21,6 +24,9 @@ export const useStyles = makeStyles()((theme) => ({
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
     background:
       theme.tokens.component.NotificationBanner.Informative.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Informative.StatusIcon,
+    },
   },
   root: {
     display: 'flex',
@@ -29,7 +35,7 @@ export const useStyles = makeStyles()((theme) => ({
       marginTop: `${theme.spacingFunction(8)} !important`,
     },
     borderRadius: 1,
-    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(12)}`,
     '& .MuiTypography-root': {
       width: '100%',
     },
@@ -46,9 +52,15 @@ export const useStyles = makeStyles()((theme) => ({
   success: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
     background: theme.tokens.component.NotificationBanner.Success.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Success.StatusIcon,
+    },
   },
   warning: {
     borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
     background: theme.tokens.component.NotificationBanner.Warning.Background,
+    '& path:first-of-type': {
+      fill: theme.tokens.component.NotificationBanner.Warning.StatusIcon,
+    },
   },
 }));
