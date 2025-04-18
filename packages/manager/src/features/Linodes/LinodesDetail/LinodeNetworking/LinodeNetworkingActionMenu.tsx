@@ -57,6 +57,9 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
+  const isAssociatedWithLinodeInterface =
+    'address' in ipAddress && ipAddress.interface_id !== null;
+
   const getAriaLabel = (): string => {
     if ('address' in ipAddress) {
       return `Action menu for IP Address ${ipAddress.address}`;
@@ -66,7 +69,11 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   };
 
   const actions = [
-    onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
+    onRemove &&
+    ipAddress &&
+    !is116Range &&
+    deletableIPTypes.includes(ipType) &&
+    !isAssociatedWithLinodeInterface
       ? {
           disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
           id: 'delete',
@@ -77,10 +84,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
-            : isOnlyPublicIP
-            ? isOnlyPublicIPTooltip
-            : undefined,
+              ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+              : isOnlyPublicIP
+                ? isOnlyPublicIPTooltip
+                : undefined,
         }
       : null,
     onEdit && ipAddress && showEdit
@@ -94,8 +101,8 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
-            : undefined,
+              ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+              : undefined,
         }
       : null,
   ].filter(Boolean) as Action[];

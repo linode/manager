@@ -26,6 +26,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCInterface } from 'src/hooks/useVPCInterface';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -63,6 +64,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
@@ -161,11 +163,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         {isSmallScreen ? (
           <ActionMenu
             actionsList={[
-              {
-                disabled: isLinodesGrantReadOnly,
-                onClick: () => setIsAddDrawerOpen(true),
-                title: 'Add an IP Address',
-              },
+              ...(!isLinodeInterfacesEnabled
+                ? [
+                    {
+                      disabled: isLinodesGrantReadOnly,
+                      onClick: () => setIsAddDrawerOpen(true),
+                      title: 'Add an IP Address',
+                    },
+                  ]
+                : []),
               {
                 disabled: isLinodesGrantReadOnly,
                 onClick: () => setIsTransferDialogOpen(true),
@@ -195,13 +201,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               IP Sharing
             </Button>
-            <Button
-              buttonType="primary"
-              disabled={isLinodesGrantReadOnly}
-              onClick={() => setIsAddDrawerOpen(true)}
-            >
-              Add an IP Address
-            </Button>
+            {!isLinodeInterfacesEnabled && (
+              <Button
+                buttonType="primary"
+                disabled={isLinodesGrantReadOnly}
+                onClick={() => setIsAddDrawerOpen(true)}
+              >
+                Add an IP Address
+              </Button>
+            )}
           </Stack>
         )}
       </Paper>

@@ -8,6 +8,7 @@ import {
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 import type {
@@ -31,7 +32,11 @@ export const VPCIPv4Address = (props: Props) => {
 
   return (
     <Stack spacing={1}>
-      {error && <Notice text={error} variant="error" />}
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage message={error} />
+        </Notice>
+      )}
       <Stack spacing={1.5}>
         <Controller
           control={control}

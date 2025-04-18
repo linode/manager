@@ -15,7 +15,7 @@ import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDesc
 import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
 
 export const VPCIPv4Ranges = () => {
-  const { control } = useFormContext<ModifyLinodeInterfacePayload>();
+  const { control, setFocus } = useFormContext<ModifyLinodeInterfacePayload>();
   const { fields, remove, append } = useFieldArray({
     control,
     name: 'vpc.ipv4.ranges',
@@ -40,6 +40,7 @@ export const VPCIPv4Ranges = () => {
                 containerProps={{ flexGrow: 1 }}
                 errorText={fieldState.error?.message}
                 hideLabel
+                inputRef={field.ref}
                 label={`VPC IPv4 Range ${index}`}
                 onChange={field.onChange}
                 value={field.value}
@@ -47,7 +48,16 @@ export const VPCIPv4Ranges = () => {
             )}
           />
           <IconButton
-            onClick={() => remove(index)}
+            onClick={() => {
+              remove(index);
+
+              const previousRangeIndex = index - 1;
+
+              // If there is a previous range, focus it when the current one is removed
+              if (previousRangeIndex >= 0) {
+                setFocus(`vpc.ipv4.ranges.${previousRangeIndex}.range`);
+              }
+            }}
             sx={{ p: 1 }}
             title="Remove"
           >
