@@ -19,8 +19,8 @@ export const HistoryDrawer = (props: HistoryDrawerProps) => {
   const { isFetching, issues, monitorLabel, onClose, open } = props;
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Issue History: ${monitorLabel}`}

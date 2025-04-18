@@ -51,25 +51,23 @@ export const MonitorTable = () => {
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const { mutateAsync: deleteServiceMonitor } = useDeleteMonitorMutation();
 
-  const { data: issues, isFetching: isFetchingIssues } = useDialogData({
-    enabled: match.routeId === `/managed/monitors/$monitorId/issues`,
+  const { data: issues } = useDialogData({
+    enabled: match.routeId === '/managed/monitors/$monitorId/issues',
     paramKey: 'monitorId',
     queryHook: useAllManagedIssuesQuery,
     redirectToOnNotFound: '/managed/monitors',
   });
 
-  const {
-    data: selectedMonitor,
-    isFetching: isFetchingSelectedMonitor,
-  } = useDialogData({
-    enabled:
-      match.routeId === '/managed/monitors/$monitorId/edit' ||
-      match.routeId === '/managed/monitors/$monitorId/issues' ||
-      match.routeId === '/managed/monitors/$monitorId/delete',
-    paramKey: 'monitorId',
-    queryHook: useGetMonitorQuery,
-    redirectToOnNotFound: '/managed/monitors',
-  });
+  const { data: selectedMonitor, isFetching: isFetchingSelectedMonitor } =
+    useDialogData({
+      enabled:
+        match.routeId === '/managed/monitors/$monitorId/edit' ||
+        match.routeId === '/managed/monitors/$monitorId/issues' ||
+        match.routeId === '/managed/monitors/$monitorId/delete',
+      paramKey: 'monitorId',
+      queryHook: useGetMonitorQuery,
+      redirectToOnNotFound: '/managed/monitors',
+    });
 
   const groups = React.useMemo(() => {
     if (!contacts) {
@@ -131,18 +129,18 @@ export const MonitorTable = () => {
     <>
       <DocumentTitleSegment segment="Monitors" />
       <Grid
+        container
         sx={{
           alignItems: 'flex-end',
           justifyContent: 'flex-end',
         }}
-        container
       >
         <Grid>
           <Grid
+            container
             sx={{
               alignItems: 'flex-end',
             }}
-            container
           >
             <StyledGrid>
               <Button
@@ -220,14 +218,14 @@ export const MonitorTable = () => {
         )}
       </Paginate>
       <DeletionDialog
-        onClose={() => {
-          setDeleteError(undefined);
-          navigate({ to: '/managed/monitors' });
-        }}
         entity="monitor"
         error={deleteError}
         label={selectedMonitor?.label || ''}
         loading={isFetchingSelectedMonitor}
+        onClose={() => {
+          setDeleteError(undefined);
+          navigate({ to: '/managed/monitors' });
+        }}
         onDelete={handleDelete}
         open={isDeleteDialogOpen}
       />
@@ -239,10 +237,10 @@ export const MonitorTable = () => {
         open={isMonitorDrawerOpen}
       />
       <HistoryDrawer
+        isFetching={isFetchingSelectedMonitor}
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(selectedMonitor?.id ?? -1)
         )}
-        isFetching={isFetchingIssues}
         monitorLabel={selectedMonitor?.label}
         onClose={() => navigate({ to: '/managed/monitors' })}
         open={isHistoryDrawerOpen}
