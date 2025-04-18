@@ -1,5 +1,7 @@
 import { capitalize, capitalizeAllWords } from '@linode/utilities';
 
+import { PAID_ENTITY_TYPES } from './constants';
+
 import type {
   AccountAccessRole,
   AccountEntity,
@@ -600,14 +602,9 @@ export const getFacadeRoleDescription = (
   role: ExtendedRole | ExtendedRoleMap
 ): string => {
   if (role.access === 'account_access') {
-    const paidEntity = [
-      'database',
-      'linode',
-      'nodebalancer',
-      'volume',
-      'image',
-    ];
-    const dollarSign = paidEntity.includes(role.entity_type) ? ' ($)' : '';
+    const dollarSign = PAID_ENTITY_TYPES.includes(role.entity_type)
+      ? ' ($)'
+      : '';
 
     return `This role grants the same access as the legacy "Can add ${getFormattedEntityType(role.entity_type)}s to this account${dollarSign}" global permissions.`;
   }
