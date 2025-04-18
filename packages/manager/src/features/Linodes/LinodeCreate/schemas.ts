@@ -10,7 +10,7 @@ import type { LinodeCreateFormValues } from './utilities';
 import type { ObjectSchema } from 'yup';
 
 /**
- * Extends pure `CreateLinodeSchema` because the Lindoe Create form
+ * Extends pure `CreateLinodeSchema` because the Linode Create form
  * has extra fields that we want to validate.
  * In theory, this schema should align with the `LinodeCreateFormValues` type.
  */
