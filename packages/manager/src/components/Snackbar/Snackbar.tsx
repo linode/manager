@@ -63,6 +63,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
       borderLeft: theme.notificationToast.warning.borderLeft,
     },
     '& #notistack-snackbar + div': {
+      alignSelf: 'flex-start',
       paddingLeft: theme.spacingFunction(12),
     },
   })
