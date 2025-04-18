@@ -85,13 +85,13 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       open={open}
       title={`Remove the ${role?.entity_name} entity from the ${role?.role_name} role assignment?`}
     >
-<Notice variant="warning">
-  <Typography>
-    You’re about to remove the <strong>{role?.entity_name}</strong> entity
-    from the <strong>{role?.role_name}</strong> role for{' '}
-    <strong>{username}</strong>. This change will be applied immediately.
-  </Typography>
-</Notice>
+      <Notice variant="warning">
+        <Typography>
+          You’re about to remove the <strong>{role?.entity_name}</strong> entity
+          from the <strong>{role?.role_name}</strong> role for{' '}
+          <strong>{username}</strong>. This change will be applied immediately.
+        </Typography>
+      </Notice>
     </ConfirmationDialog>
   );
 };

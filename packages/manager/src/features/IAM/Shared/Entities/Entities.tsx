@@ -81,7 +81,11 @@ export const Entities = ({
           onChange(newValue || []);
         }}
         options={memoizedEntities}
-        placeholder={getPlaceholder(type, value.length, memoizedEntities.length)}
+        placeholder={getPlaceholder(
+          type,
+          value.length,
+          memoizedEntities.length
+        )}
         readOnly={getReadonlyState(mode, memoizedEntities.length)}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
         value={value || []}
