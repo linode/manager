@@ -52,10 +52,10 @@ export const createFirewallFromTemplate = async (options: {
 }): Promise<Firewall> => {
   const {
     createFirewall,
-    firewallLabel,
     queryClient,
     templateSlug,
     updateProgress,
+    firewallLabel,
   } = options;
   if (updateProgress) {
     updateProgress(0);
@@ -72,9 +72,7 @@ export const createFirewallFromTemplate = async (options: {
     updateProgress(80); // this gives the appearance of linear progress
   }
   // Determine new firewall name
-  const label = firewallLabel
-    ? firewallLabel
-    : getUniqueFirewallLabel(slug, firewalls);
+  const label = firewallLabel ?? getUniqueFirewallLabel(slug, firewalls);
 
   // Create new firewall
   return await createFirewall({ label, rules });
