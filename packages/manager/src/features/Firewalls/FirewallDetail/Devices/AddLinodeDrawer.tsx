@@ -41,7 +41,7 @@ interface InterfaceDeviceInfo {
   linodeLabel: string;
 }
 
-interface LinodeWithMultiLinodeInterfaces {
+interface LinodeWithMultipleLinodeInterfaces {
   linodeId: number;
   linodeInterfaces: LinodeInterfaceOption[];
   linodeLabel: string;
@@ -78,8 +78,8 @@ export const AddLinodeDrawer = (props: Props) => {
   >(new Map());
   // Keep track of the linodes with multiple eligible linode interfaces to determine additional selects to show
   // Once an interface is selected, interfacesToAddMap will be updated for that Linode ID
-  const [linodesWithMultiInterfaces, setLinodesWithMultiInterfaces] =
-    React.useState<LinodeWithMultiLinodeInterfaces[]>([]);
+  const [linodesWithMultipleInterfaces, setLinodesWithMultipleInterfaces] =
+    React.useState<LinodeWithMultipleLinodeInterfaces[]>([]);
 
   const [localError, setLocalError] = React.useState<string | undefined>(
     undefined
@@ -90,7 +90,7 @@ export const AddLinodeDrawer = (props: Props) => {
     let interfaceError: string | undefined = undefined;
     const failedLinodes: Linode[] = [];
     const failedInterfaces: Map<number, InterfaceDeviceInfo | null> = new Map();
-    const failedLinodesWithMultiInterfaces: LinodeWithMultiLinodeInterfaces[] =
+    const failedLinodesWithMultipleInterfaces: LinodeWithMultipleLinodeInterfaces[] =
       [];
 
     const linodeResults = await Promise.allSettled(
@@ -144,11 +144,11 @@ export const AddLinodeDrawer = (props: Props) => {
         return;
       }
       failedInterfaces.set(ifaceInfo.linodeId, ifaceInfo);
-      const failedLinodeWithMultiInterfaces = linodesWithMultiInterfaces.find(
+      const failedLinodeAndInterfaces = linodesWithMultipleInterfaces.find(
         (linode) => linode.linodeId === ifaceInfo.linodeId
       );
-      if (failedLinodeWithMultiInterfaces) {
-        failedLinodesWithMultiInterfaces.push(failedLinodeWithMultiInterfaces);
+      if (failedLinodeAndInterfaces) {
+        failedLinodesWithMultipleInterfaces.push(failedLinodeAndInterfaces);
       }
       const errorReason = getAPIErrorOrDefault(
         result.reason,
@@ -163,7 +163,7 @@ export const AddLinodeDrawer = (props: Props) => {
     setLocalError(linodeError ?? interfaceError);
     setLinodesToAdd(failedLinodes);
     setInterfacesToAddMap(failedInterfaces);
-    setLinodesWithMultiInterfaces(failedLinodesWithMultiInterfaces);
+    setLinodesWithMultipleInterfaces(failedLinodesWithMultipleInterfaces);
 
     if (!linodeError && !interfaceError) {
       handleClose();
@@ -269,7 +269,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
     setLinodesToAdd(legacyLinodes);
 
-    const linodesWithMultiInterfaces = await Promise.all(
+    const linodesWithMultipleInterfaces = await Promise.all(
       interfaceLinodes.map(async (linode) => {
         const linodeId = linode.id;
         const interfaces = await getLinodeInterfaces(linodeId);
@@ -313,18 +313,18 @@ export const AddLinodeDrawer = (props: Props) => {
       })
     );
 
-    const _linodesWithMultiInterfaces = linodesWithMultiInterfaces.filter(
-      (item): item is LinodeWithMultiLinodeInterfaces => item !== null
+    const _linodesWithMultipleInterfaces = linodesWithMultipleInterfaces.filter(
+      (item): item is LinodeWithMultipleLinodeInterfaces => item !== null
     );
 
-    setLinodesWithMultiInterfaces(_linodesWithMultiInterfaces);
+    setLinodesWithMultipleInterfaces(_linodesWithMultipleInterfaces);
     setInterfacesToAddMap(_interfacesToAddMap);
   };
 
   const handleClose = () => {
     setLinodesToAdd([]);
     setInterfacesToAddMap(new Map());
-    setLinodesWithMultiInterfaces([]);
+    setLinodesWithMultipleInterfaces([]);
     setLocalError(undefined);
     onClose();
   };
@@ -391,14 +391,15 @@ export const AddLinodeDrawer = (props: Props) => {
             ...Array.from(interfacesToAddMap.keys()),
           ]}
         />
-        {isLinodeInterfacesEnabled && linodesWithMultiInterfaces.length > 0 && (
-          <Typography marginTop={3}>
-            {`The following ${linodesWithMultiInterfaces.length === 1 ? 'Linode has' : 'Linodes have'} 
-            more than one interface to which a firewall can be applied. Select which interface.`}
-          </Typography>
-        )}
         {isLinodeInterfacesEnabled &&
-          linodesWithMultiInterfaces.map((linode) => (
+          linodesWithMultipleInterfaces.length > 0 && (
+            <Typography marginTop={3}>
+              {`The following ${linodesWithMultipleInterfaces.length === 1 ? 'Linode has' : 'Linodes have'} 
+            more than one interface to which a firewall can be applied. Select which interface.`}
+            </Typography>
+          )}
+        {isLinodeInterfacesEnabled &&
+          linodesWithMultipleInterfaces.map((linode) => (
             <Select
               key={linode.linodeId}
               label={`${linode.linodeLabel} Interface`}
