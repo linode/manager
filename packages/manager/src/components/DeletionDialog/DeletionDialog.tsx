@@ -69,6 +69,7 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
     <ConfirmationDialog
       actions={renderActions}
       error={error}
+      isFetching={loading}
       onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}

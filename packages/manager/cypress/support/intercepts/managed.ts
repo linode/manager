@@ -38,6 +38,24 @@ export const mockUnauthorizedManagedRequests = (): Cypress.Chainable<null> => {
  *
  * @returns Cypress chainable.
  */
+export const mockGetServiceMonitor = (
+  serviceMonitorId: number,
+  serviceMonitor: ManagedServiceMonitor
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`managed/services/${serviceMonitorId}`),
+    makeResponse(serviceMonitor)
+  );
+};
+
+/**
+ * Intercepts GET requests to fetch Managed service monitors and mocks response.
+ *
+ * @param serviceMonitors - Service monitors with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
 export const mockGetServiceMonitors = (
   serviceMonitors: ManagedServiceMonitor[]
 ): Cypress.Chainable<null> => {
@@ -164,6 +182,16 @@ export const mockGetIssues = (
   );
 };
 
+export const mockGetCredential = (
+  credential: ManagedCredential
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`managed/credentials/${credential.id}`),
+    makeResponse(credential)
+  );
+};
+
 /**
  * Intercepts GET request to fetch Managed credentials and mocks response.
  *
@@ -246,6 +274,23 @@ export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
     'POST',
     apiMatcher(`managed/credentials/${id}/revoke`),
     makeResponse({})
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Managed contact and mocks response.
+ *
+ * @param contact - Contact with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetContact = (
+  contact: ManagedContact
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`managed/contacts/${contact.id}`),
+    makeResponse(contact)
   );
 };
 
