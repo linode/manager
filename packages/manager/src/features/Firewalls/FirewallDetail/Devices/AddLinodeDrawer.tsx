@@ -152,7 +152,7 @@ export const AddLinodeDrawer = (props: Props) => {
       }
       const errorReason = getAPIErrorOrDefault(
         result.reason,
-        `Failed to add Interface (ID ${ifaceInfo.interfaceId} from Linode ${ifaceInfo.linodeLabel}.`
+        `Failed to add Interface (ID ${ifaceInfo.interfaceId}) from Linode ${ifaceInfo.linodeLabel}.`
       )[0].reason;
 
       if (!interfaceError) {
