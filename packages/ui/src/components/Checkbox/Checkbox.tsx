@@ -7,13 +7,19 @@ import {
   CheckboxIcon,
   CheckboxIndeterminateIcon,
 } from '../../assets/icons';
-import { TooltipIcon } from '../TooltipIcon';
 import { FormControlLabel } from '../FormControlLabel';
+import { TooltipIcon } from '../TooltipIcon';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props extends CheckboxProps {
+  /**
+   * New custom size prop (Overides and restrict 'size' to only 'small' and 'medium' per ADS)
+   *
+   * @default medium
+   */
+  size?: 'medium' | 'small';
   /**
    * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
    */
@@ -75,7 +81,9 @@ export const Checkbox = (props: Props) => {
   );
 };
 
-const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
+const StyledCheckbox = styled(_Checkbox, {
+  label: 'StyledCheckbox',
+})(({ theme, ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
