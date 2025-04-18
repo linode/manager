@@ -276,6 +276,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
+        isIAMBeta,
+        isIAMEnabled,
       ]
     );
 
