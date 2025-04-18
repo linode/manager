@@ -76,8 +76,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const alertSections = [
     {
-      copy:
-        'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
       error: hasErrorFor('alerts.cpu'),
       hidden: isBareMetalInstance,
@@ -103,8 +102,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       value: formik.values.cpu,
     },
     {
-      copy:
-        'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
       error: hasErrorFor('alerts.io'),
       hidden: isBareMetalInstance,
@@ -225,7 +223,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     <Accordion
       actions={renderExpansionActions}
       defaultExpanded
-      heading="Notification Thresholds"
+      heading="Alerts"
     >
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
