@@ -23,6 +23,7 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { hasInvalidNodePoolPrice } from './utils';
 
@@ -198,6 +199,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           onSelect={(newType: string) => {
             if (selectedTypeInfo?.planId !== newType) {
               setSelectedTypeInfo({ count: 1, planId: newType });

@@ -35,6 +35,7 @@ interface Props {
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
+  notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
@@ -59,6 +60,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     isSelectedRegionEligibleForPlan,
     onAdd,
     onSelect,
+    notice,
     regionsData,
     resetValues,
     selectedId,
@@ -157,6 +159,7 @@ export const KubernetesPlansPanel = (props: Props) => {
   return (
     <TabbedPanel
       copy={copy}
+      notice={notice}
       error={error}
       handleTabChange={() => resetValues()}
       header={header || ' '}

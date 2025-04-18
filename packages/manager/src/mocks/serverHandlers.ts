@@ -1888,7 +1888,7 @@ export const handlers = [
     return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
-    const monitors = monitorFactory.buildList(5);
+    const monitors = monitorFactory.buildList(25);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
       status: 'problem',
