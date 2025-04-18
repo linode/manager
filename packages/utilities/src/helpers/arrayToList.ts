@@ -1,6 +1,6 @@
 export const arrayToList = (
   input: string[],
-  separator: string = ','
+  separator: string = ',',
 ): string => {
   if (!Array.isArray(input) || input.length === 0) {
     return '';

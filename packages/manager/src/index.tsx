@@ -68,7 +68,7 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  hideIconVariant={true}
+                  hideIconVariant={false}
                   maxSnack={3}
                 >
                   <Switch>

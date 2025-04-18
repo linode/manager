@@ -2,53 +2,53 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
   error: {
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
+    background: theme.tokens.component.NotificationBanner.Error.Background,
   },
   icon: {
     '& g': {
       stroke: theme.tokens.color.Neutrals.White,
     },
     color: theme.tokens.color.Neutrals.White,
-    left: -25,
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
+    width: 20,
+    height: 20,
+    position: 'relative',
   },
   important: {
-    backgroundColor: theme.palette.background.paper,
-    borderLeftWidth: 32,
     font: theme.font.normal,
-    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   },
   info: {
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  noticeText: {
-    font: theme.font.bold,
-    fontSize: '1rem',
-    lineHeight: '20px',
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
+    background:
+      theme.tokens.component.NotificationBanner.Informative.Background,
   },
   root: {
-    '& + .notice': {
-      marginTop: `${theme.spacing()} !important`,
-    },
+    display: 'flex',
     alignItems: 'center',
+    '& + .notice': {
+      marginTop: `${theme.spacingFunction(8)} !important`,
+    },
     borderRadius: 1,
-    fontSize: '1rem',
+    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+    '& .MuiTypography-root': {
+      width: '100%',
+    },
+    '& p': {
+      fontSize: theme.tokens.font.FontSize.Xs,
+      font: theme.font.semibold,
+      position: 'relative',
+      top: 1,
+      margin: 0,
+    },
     maxWidth: '100%',
-    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
     position: 'relative',
   },
   success: {
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
+    background: theme.tokens.component.NotificationBanner.Success.Background,
   },
   warning: {
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-  },
-  warningIcon: {
-    '& path:first-of-type': {
-      stroke: theme.tokens.color.Neutrals[80],
-    },
-    color: theme.tokens.color.Neutrals[80],
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
+    background: theme.tokens.component.NotificationBanner.Warning.Background,
   },
 }));

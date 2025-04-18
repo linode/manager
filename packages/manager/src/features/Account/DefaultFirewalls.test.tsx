@@ -1,18 +1,24 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { firewallFactory, firewallSettingsFactory } from 'src/factories';
+import {
+  accountFactory,
+  firewallFactory,
+  firewallSettingsFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DefaultFirewalls } from './DefaultFirewalls';
 
-const loadingTestId = 'circle-progress';
-
 describe('NetworkInterfaces', () => {
   it('renders the NetworkInterfaces accordion', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Linode Interfaces'],
+    });
+
     server.use(
+      http.get('*/v4/account', () => HttpResponse.json(account)),
       http.get('*/v4beta/networking/firewalls/settings', () =>
         HttpResponse.json(firewallSettingsFactory.build())
       ),
@@ -20,14 +26,14 @@ describe('NetworkInterfaces', () => {
         HttpResponse.json(makeResourcePage(firewallFactory.buildList(1)))
       )
     );
-    const { getByTestId, getByText } = renderWithTheme(<DefaultFirewalls />, {
+
+    const { findByText, getByText } = renderWithTheme(<DefaultFirewalls />, {
       flags: { linodeInterfaces: { enabled: true } },
     });
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const title = await findByText('Default Firewalls');
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    expect(title).toBeVisible();
 
     expect(getByText('Default Firewalls')).toBeVisible();
     expect(getByText('Linodes')).toBeVisible();

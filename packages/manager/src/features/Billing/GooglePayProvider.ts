@@ -24,9 +24,7 @@ let googlePaymentInstance: GooglePayment;
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    resolve({ transactionState: 'SUCCESS' });
-  });
+  return Promise.resolve({ transactionState: 'SUCCESS' });
 };
 
 export const initGooglePaymentInstance = async (

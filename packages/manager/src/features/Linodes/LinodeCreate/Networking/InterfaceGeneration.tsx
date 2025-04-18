@@ -1,15 +1,15 @@
 import { useAccountSettings } from '@linode/queries';
 import {
+  Box,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
-  TooltipIcon,
 } from '@linode/ui';
 import React from 'react';
 import { useController } from 'react-hook-form';
 
-import { FormLabel } from 'src/components/FormLabel';
+import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeInterfaceAccountSetting } from '@linode/api-v4';
@@ -37,37 +37,41 @@ export const InterfaceGeneration = () => {
     accountSettings &&
     disabledReasonMap[accountSettings.interfaces_for_new_linodes];
 
+  const disabled = disabledReason !== undefined;
+
   return (
-    <FormControl disabled={Boolean(disabledReason)}>
-      <FormLabel
-        id="interface-generation"
-        sx={{ alignItems: 'center', display: 'flex', mb: 0 }}
+    <Box>
+      <ShowMoreExpansion
+        ButtonProps={{
+          TooltipProps: {
+            placement: 'right',
+          },
+          alwaysShowTooltip: disabled,
+          tooltipText: disabledReason,
+        }}
+        defaultExpanded={!disabled}
+        name="Network Interface Type"
       >
-        Interface Generation
-        {disabledReason && (
-          <TooltipIcon
-            status="help"
-            sxTooltipIcon={{ p: 0.5 }}
-            text={disabledReason}
-          />
-        )}
-      </FormLabel>
-      <RadioGroup
-        aria-labelledby="interface-generation"
-        onChange={field.onChange}
-        value={field.value ?? 'legacy_config'}
-      >
-        <FormControlLabel
-          control={<Radio />}
-          label="Configuration Profile Interfaces (Legacy)"
-          value="legacy_config"
-        />
-        <FormControlLabel
-          control={<Radio />}
-          label="Linode Interfaces (New)"
-          value="linode"
-        />
-      </RadioGroup>
-    </FormControl>
+        <FormControl disabled={disabled} sx={{ my: '0px !important', mx: 0.5 }}>
+          <RadioGroup
+            aria-labelledby="interface-generation"
+            onChange={field.onChange}
+            sx={{ my: '0px !important' }}
+            value={field.value ?? 'legacy_config'}
+          >
+            <FormControlLabel
+              control={<Radio />}
+              label="Configuration Profile Interfaces (Legacy)"
+              value="legacy_config"
+            />
+            <FormControlLabel
+              control={<Radio />}
+              label="Linode Interfaces (New)"
+              value="linode"
+            />
+          </RadioGroup>
+        </FormControl>
+      </ShowMoreExpansion>
+    </Box>
   );
 };

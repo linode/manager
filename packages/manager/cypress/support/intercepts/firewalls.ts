@@ -4,10 +4,12 @@
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
 import type {
   Firewall,
   FirewallDevice,
+  FirewallSettings,
   FirewallTemplate,
 } from '@linode/api-v4';
 
@@ -152,12 +154,46 @@ export const mockAddFirewallDevice = (
  *
  * @returns Cypress chainable.
  */
-export const mockGetTemplate = (
+export const mockGetFirewallTemplate = (
   template: FirewallTemplate
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('networking/firewalls/templates/*'),
+    apiMatcher(`networking/firewalls/templates/${template.slug}`),
     template
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Firewall templates and mocks response.
+ *
+ * @param templates - Array of templates with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallTemplates = (
+  templates: FirewallTemplate[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/templates*`),
+    paginateResponse(templates)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Firewall settings and mocks response.
+ *
+ * @param settings - Firewall settings object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallSettings = (
+  settings: FirewallSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('networking/firewalls/settings'),
+    makeResponse(settings)
   );
 };

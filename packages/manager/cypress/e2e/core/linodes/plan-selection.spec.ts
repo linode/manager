@@ -149,7 +149,9 @@ describe('displays linode plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
@@ -245,7 +247,9 @@ describe('displays kubernetes plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
@@ -381,7 +385,9 @@ describe('displays specific linode plans for GPU', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     // GPU tab
     // Should display two separate tables
@@ -429,7 +435,9 @@ describe('displays specific kubernetes plans for GPU', () => {
     cy.visitWithLogin('/kubernetes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     // GPU tab
     // Should display two separate tables
@@ -535,7 +543,9 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.findByText('Accelerated').click();
         cy.get(linodePlansPanel).within(() => {
@@ -588,7 +598,9 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.wait(['@getRegionAvailability']);
 

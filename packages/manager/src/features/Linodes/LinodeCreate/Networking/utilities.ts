@@ -91,6 +91,7 @@ export const getLegacyInterfaceFromLinodeInterface = (
 };
 
 const legacyFieldToNewFieldMap = {
+  '].ip_ranges': '].vpc.ipv4.ranges',
   '].ipv4.nat_1_1': '].vpc.ipv4.addresses.0.nat_1_1_address',
   '].ipv4.vpc': '].vpc.ipv4.addresses.0.address',
   '].label': '].vlan.vlan_lanel',
@@ -109,18 +110,18 @@ export const transformLegacyInterfaceErrorsToLinodeInterfaceErrors = (
 ) => {
   for (const error of errors) {
     for (const key in legacyFieldToNewFieldMap) {
-      if (error.field && error.field.includes(key)) {
-        error.field = error.field.replace(
-          key,
-          legacyFieldToNewFieldMap[key as keyof typeof legacyFieldToNewFieldMap]
-        );
-      }
-      if (error.field && error.field.includes('ip_ranges')) {
+      if (error.field && error.field.match(/ip_ranges\[(\d+)\]/)) {
         // Handle the more complex case where:
         // `interfaces[0].ip_ranges[1]` should map to `linodeInterfaces.0.vpc.ipv4.ranges.1.range`
         error.field = error.field.replace(
           /ip_ranges\[(\d+)\]/,
           'vpc.ipv4.ranges.$1.range'
+        );
+      }
+      if (error.field && error.field.includes(key)) {
+        error.field = error.field.replace(
+          key,
+          legacyFieldToNewFieldMap[key as keyof typeof legacyFieldToNewFieldMap]
         );
       }
       if (error.field && error.field.startsWith('interfaces')) {

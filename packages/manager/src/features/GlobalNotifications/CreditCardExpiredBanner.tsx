@@ -1,9 +1,9 @@
+import { useAccount } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useAccount } from '@linode/queries';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 export const CreditCardExpiredBanner = () => {
@@ -34,6 +34,7 @@ export const CreditCardExpiredBanner = () => {
           Update Card
         </Button>
       }
+      forceImportantIconVerticalCenter
       important
       preferenceKey={'credit-card-expired'}
       variant="error"

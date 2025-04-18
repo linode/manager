@@ -1,5 +1,5 @@
 import { updateUserPermissions } from '@linode/api-v4';
-import { queryPresets, useProfile } from '@linode/queries';
+import { queryPresets } from '@linode/queries';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { iamQueries } from './queries';
@@ -17,14 +17,12 @@ export const useAccountUserPermissions = (username?: string) => {
   });
 };
 
-export const useAccountPermissions = () => {
-  const { data: profile } = useProfile();
-
+export const useAccountPermissions = (enabled = true) => {
   return useQuery<IamAccountPermissions, APIError[]>({
     ...iamQueries.permissions,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled: !profile?.restricted,
+    enabled,
   });
 };
 

@@ -46,6 +46,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       public: ipAddressFactory.buildList(1, { public: true, type: 'ipv4' }),
       reserved: ipAddressFactory.buildList(1),
       shared: ipAddressFactory.buildList(1),
+      vpc: [],
     },
     ipv6: {
       global: [

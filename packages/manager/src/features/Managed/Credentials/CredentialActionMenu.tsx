@@ -2,8 +2,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -41,7 +41,6 @@ const CredentialActionMenu = (props: CredentialActionMenuProps) => {
   ];
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {matchesSmDown ? (
         <ActionMenu

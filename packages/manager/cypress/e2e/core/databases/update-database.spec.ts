@@ -27,7 +27,7 @@ import {
 
 import { databaseFactory } from 'src/factories/databases';
 
-import type { databaseClusterConfiguration } from 'support/constants/databases';
+import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 /**
  * Updates a database cluster's label.
@@ -183,7 +183,7 @@ const modifyMaintenanceWindow = (label: string, windowValue: string) => {
 
 describe('Update database clusters', () => {
   databaseConfigurations.forEach(
-    (configuration: databaseClusterConfiguration) => {
+    (configuration: DatabaseClusterConfiguration) => {
       describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         /*
          * - Tests active database update UI flows using mocked data.
@@ -332,7 +332,8 @@ describe('Update database clusters', () => {
 
           const errorMessage =
             'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
-          const hostnameRegex = /your hostnames? will appear here once (it is|they are) available./i;
+          const hostnameRegex =
+            /your hostnames? will appear here once (it is|they are) available./i;
 
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');

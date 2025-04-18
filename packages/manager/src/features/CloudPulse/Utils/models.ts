@@ -182,5 +182,6 @@ export enum CloudPulseSelectTypes {
   /**
    * static selection type, where the service owner will give the static options for the filter
    */
+  // eslint-disable-next-line sonarjs/future-reserved-words
   static,
 }

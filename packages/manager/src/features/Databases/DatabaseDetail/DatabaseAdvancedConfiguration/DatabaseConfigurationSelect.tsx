@@ -3,7 +3,7 @@ import React from 'react';
 
 import { GroupHeader, GroupItems } from './DatabaseAdvancedConfiguration.style';
 
-import type { ConfigValue, ConfigurationItem } from '@linode/api-v4';
+import type { ConfigurationItem, ConfigValue } from '@linode/api-v4';
 
 export interface ConfigurationOption extends ConfigurationItem {
   category: string;
@@ -26,6 +26,9 @@ export const DatabaseConfigurationSelect = (props: Props) => {
 
   return (
     <Autocomplete
+      autoHighlight
+      clearIcon={null}
+      getOptionLabel={(option) => option.label}
       groupBy={(option) => {
         if (option.category === 'other') {
           return 'other';
@@ -35,6 +38,7 @@ export const DatabaseConfigurationSelect = (props: Props) => {
       isOptionEqualToValue={(option, selectedValue) =>
         option.label === selectedValue.label
       }
+      label={''}
       onChange={(_, selected) => {
         onChange(selected!);
       }}
@@ -73,10 +77,6 @@ export const DatabaseConfigurationSelect = (props: Props) => {
       sx={{
         width: '316px',
       }}
-      autoHighlight
-      clearIcon={null}
-      getOptionLabel={(option) => option.label}
-      label={''}
       value={selectedConfig ?? null}
     />
   );

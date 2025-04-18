@@ -9,35 +9,39 @@ import { AlertConfirmationDialog } from './AlertConfirmationDialog';
 const entityName = 'entity-1';
 const alert = alertFactory.build({ service_type: 'dbaas' });
 const confirmFunction = vi.fn();
+const messages = {
+  disableMessage: `Are you sure you want to disable the alert for ${entityName}?`,
+  disableTitle: `Disable ${alert.label} Alert?`,
+  enableMessage: `Are you sure you want to enable the alert for ${entityName}?`,
+  enableTitle: `Enable ${alert.label} Alert?`,
+};
 
 describe('Alert confirmation dialog', () => {
   it('should show confirmation dialog', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isActive={true}
+        isEnabled={true}
         isOpen={true}
+        message={messages.disableMessage}
       />
     );
 
     expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
-    expect(getByText(`Disable ${alert.label} Alert?`)).toBeVisible();
-    expect(
-      getByText(`Are you sure you want to disable the alert for ${entityName}?`)
-    ).toBeInTheDocument();
+    expect(getByText(messages.disableTitle)).toBeVisible();
+    expect(getByText(messages.disableMessage)).toBeInTheDocument();
   });
   it('should click confirm button', async () => {
     const { getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isActive={true}
+        isEnabled={true}
         isOpen={true}
+        message={messages.disableMessage}
       />
     );
 
@@ -51,18 +55,16 @@ describe('Alert confirmation dialog', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
         alert={alert}
-        entityName={entityName}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isActive={false}
+        isEnabled={false}
         isOpen={true}
+        message={messages.enableMessage}
       />
     );
 
     expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
-    expect(getByText(`Enable ${alert.label} Alert?`)).toBeVisible();
-    expect(
-      getByText(`Are you sure you want to enable the alert for ${entityName}?`)
-    ).toBeInTheDocument();
+    expect(getByText(messages.enableTitle)).toBeVisible();
+    expect(getByText(messages.enableMessage)).toBeInTheDocument();
   });
 });

@@ -13,11 +13,11 @@ describe('Array to delimiter-separated list', () => {
 
   it('should return a list with three or more items as Oxford comma separated', () => {
     expect(arrayToList(['hello', 'goodbye', 'good riddance'])).toEqual(
-      'hello, goodbye, and good riddance'
+      'hello, goodbye, and good riddance',
     );
 
     expect(arrayToList(['apples', 'peas', 'carrots', 'peaches'])).toEqual(
-      'apples, peas, carrots, and peaches'
+      'apples, peas, carrots, and peaches',
     );
   });
 
@@ -25,8 +25,8 @@ describe('Array to delimiter-separated list', () => {
     expect(
       arrayToList(
         ['Mumbai, IN', 'Toronto, ON', 'Sydney, AU', 'Atlanta, GA'],
-        ';'
-      )
+        ';',
+      ),
     ).toEqual('Mumbai, IN; Toronto, ON; Sydney, AU; and Atlanta, GA');
   });
 

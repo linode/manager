@@ -2,6 +2,7 @@
  * @file Integration tests for personal access token CRUD operations.
  */
 
+import { profileFactory } from '@linode/utilities';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
@@ -14,7 +15,6 @@ import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 
 import { appTokenFactory } from 'src/factories/oauth';
-import { profileFactory } from 'src/factories/profile';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 
 import type { Token } from '@linode/api-v4';

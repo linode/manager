@@ -14,23 +14,17 @@ export const WARNING_ICON_UNRECOMMENDED_CONFIG =
 export const REGION_CAVEAT_HELPER_TEXT =
   'A Linode may be assigned only to a VPC in the same region.';
 
-export const ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE =
-  'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
-
-export const REGIONAL_LINODE_MESSAGE = `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`;
+export const REGIONAL_LINODE_MESSAGE =
+  "Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.";
 
 export const MULTIPLE_CONFIGURATIONS_MESSAGE =
   'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
 
-export const REBOOT_LINODE_WARNING_VPCDETAILS =
-  'Assigned or unassigned Linodes will not take affect until the Linodes are rebooted.';
-
-export const SUBNET_UNASSIGN_LINODES_WARNING = `Unassigning Linodes from a subnet requires you to reboot the Linodes to update its configuration.`;
-
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 
-export const CANNOT_CREATE_VPC_MESSAGE = `You don't have permissions to create a new VPC. Please contact an account administrator for details`;
+export const CANNOT_CREATE_VPC_MESSAGE =
+  "You don't have permissions to create a new VPC. Please contact an account administrator for details.";
 
 export const VPC_CREATE_FORM_SUBNET_HELPER_TEXT =
   'Each VPC can further segment itself into distinct networks through the use of multiple subnets. These subnets can isolate various functionality of an application.';
@@ -44,9 +38,6 @@ export const VPC_REBOOT_MESSAGE =
 export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
-
-export const ASSIGN_IPV4_RANGES_DESCRIPTION =
-  'Assign additional IPv4 address ranges that the VPC can use to reach services running on this Linode.';
 
 // Linode Config dialog helper text for unrecommended configurations
 export const LINODE_UNREACHABLE_HELPER_TEXT =
@@ -70,3 +61,11 @@ export const VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK =
 
 export const ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc';
+
+// constants used for tanstack routing:
+export const VPC_LANDING_TABLE_PREFERENCE_KEY = 'vpcs';
+export const VPC_LANDING_ROUTE = '/vpcs';
+export const VPC_DETAILS_ROUTE = '/vpcs/$vpcId';
+export const VPC_CREATE_ROUTE = '/vpcs/create';
+export const SUBNET_ACTION_PATH =
+  '/vpcs/$vpcId/subnets/$subnetId/$subnetAction';

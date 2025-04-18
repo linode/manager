@@ -1,11 +1,15 @@
-import { regionFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  profileFactory,
+  regionFactory,
+  sshKeyFactory,
+} from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountFactory, profileFactory, sshKeyFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
+import { accountFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Security } from './Security';
@@ -143,13 +147,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
@@ -173,14 +176,12 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText, getByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Distributed Compute Instances are encrypted. This setting can not be changed.'

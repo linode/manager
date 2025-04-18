@@ -82,13 +82,15 @@ export const CloudPulseDashboardLanding = () => {
   );
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <LandingHeader
-        breadcrumbProps={{ pathname: '/metrics' }}
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
-      />
       <DocumentTitleSegment segment="Dashboards" />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ width: 'inherit !important' }}>
+        <Grid item xs>
+          <LandingHeader
+            breadcrumbProps={{ pathname: '/metrics' }}
+            docsLabel="Docs"
+            docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
+          />
+        </Grid>
         <Grid item xs={12}>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">

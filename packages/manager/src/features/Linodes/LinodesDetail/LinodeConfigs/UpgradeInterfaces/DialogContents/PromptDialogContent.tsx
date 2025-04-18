@@ -24,10 +24,8 @@ export const PromptDialogContent = (
 
   const [isDryRun, setIsDryRun] = React.useState<boolean>(true);
 
-  const {
-    data: configs,
-    isLoading: isLoadingConfigs,
-  } = useAllLinodeConfigsQuery(linodeId, open);
+  const { data: configs, isLoading: isLoadingConfigs } =
+    useAllLinodeConfigsQuery(linodeId, open);
 
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
@@ -95,7 +93,7 @@ export const PromptDialogContent = (
         </ListItem>{' '}
         <ListItem disablePadding sx={{ display: 'list-item' }}>
           All networking configurations will be deleted from the configuration
-          profile and re-assigned to the neew interfaces in the Linode Network
+          profile and re-assigned to the new interfaces in the Linode Network
           tab.
         </ListItem>
       </List>

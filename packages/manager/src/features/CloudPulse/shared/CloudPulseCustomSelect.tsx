@@ -115,6 +115,7 @@ export interface CloudPulseCustomSelectProps {
 
 export enum CloudPulseSelectTypes {
   dynamic,
+  // eslint-disable-next-line sonarjs/future-reserved-words
   static,
 }
 

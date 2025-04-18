@@ -13,3 +13,6 @@ export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';
 
 export const ERROR_DRY_RUN_COPY =
   'The configuration dry run found the following issues. Please correct the issues and perform another dry run before upgrading the interface configuration.';
+
+export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT =
+  'Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading.';

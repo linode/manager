@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
@@ -62,8 +63,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeStatus === 'not_ready'
       ? 'other'
       : nodeReadyAndInstanceRunning
-      ? 'active'
-      : 'inactive';
+        ? 'active'
+        : 'inactive';
 
   const displayLabel = label ?? typeLabel;
 
@@ -121,21 +122,14 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
             Error retrieving IP
           </Typography>
         ) : displayIP.length > 0 ? (
-          <Box
-            sx={{
-              '& svg': { height: '12px !important', width: '12px !important' },
-            }}
-            alignItems="center"
-            display="flex"
-            gap={0.5}
-          >
+          <Box alignItems="center" display="flex" gap={0.5}>
             <CopyTooltip
               copyableText
               masked={Boolean(maskSensitiveDataPreference)}
               maskedTextLength="ipv4"
               text={displayIP}
             />
-            <CopyTooltip text={displayIP} />
+            <StyledCopyTooltip text={displayIP} />
           </Box>
         ) : null}
       </TableCell>
@@ -148,4 +142,13 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
       </TableCell>
     </TableRow>
   );
+});
+
+export const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
+})({
+  '& svg': {
+    height: `12px`,
+    width: `12px`,
+  },
 });

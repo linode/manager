@@ -4,7 +4,7 @@ import {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
-import type { Firewall } from 'src/firewalls/types';
+
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -13,18 +13,20 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, ResourcePage as Page, Params } from '../types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateLinodeInterfacePayload,
+  LinodeInterface,
   LinodeInterfaceHistory,
+  LinodeInterfaces,
   LinodeInterfaceSettings,
   LinodeInterfaceSettingsPayload,
-  LinodeInterface,
-  LinodeInterfaces,
   ModifyLinodeInterfacePayload,
   UpgradeInterfaceData,
   UpgradeInterfacePayload,
 } from './types';
+import type { Firewall } from 'src/firewalls/types';
 
 // These endpoints refer to the new Linode Interfaces endpoints.
 // For old Configuration Profile interfaces, see config.ts
@@ -38,16 +40,16 @@ import type {
  */
 export const createLinodeInterface = (
   linodeId: number,
-  data: CreateLinodeInterfacePayload
+  data: CreateLinodeInterfacePayload,
 ) =>
   Request<LinodeInterface>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces`
+        linodeId,
+      )}/interfaces`,
     ),
     setMethod('POST'),
-    setData(data, CreateLinodeInterfaceSchema)
+    setData(data, CreateLinodeInterfaceSchema),
   );
 
 /**
@@ -61,10 +63,10 @@ export const getLinodeInterfaces = (linodeId: number) =>
   Request<LinodeInterfaces>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces`
+        linodeId,
+      )}/interfaces`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -77,17 +79,17 @@ export const getLinodeInterfaces = (linodeId: number) =>
 export const getLinodeInterfacesHistory = (
   linodeId: number,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<LinodeInterfaceHistory>>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/history`
+        linodeId,
+      )}/interfaces/history`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -101,10 +103,10 @@ export const getLinodeInterfacesSettings = (linodeId: number) =>
   Request<LinodeInterfaceSettings>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/settings`
+        linodeId,
+      )}/interfaces/settings`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -117,16 +119,16 @@ export const getLinodeInterfacesSettings = (linodeId: number) =>
  */
 export const updateLinodeInterfacesSettings = (
   linodeId: number,
-  data: LinodeInterfaceSettingsPayload
+  data: LinodeInterfaceSettingsPayload,
 ) =>
   Request<LinodeInterfaceSettings>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/settings`
+        linodeId,
+      )}/interfaces/settings`,
     ),
     setMethod('PUT'),
-    setData(data, UpdateLinodeInterfaceSettingsSchema)
+    setData(data, UpdateLinodeInterfaceSettingsSchema),
   );
 
 /**
@@ -141,10 +143,10 @@ export const getLinodeInterface = (linodeId: number, interfaceId: number) =>
   Request<LinodeInterface>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
+        linodeId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -159,16 +161,16 @@ export const getLinodeInterface = (linodeId: number, interfaceId: number) =>
 export const updateLinodeInterface = (
   linodeId: number,
   interfaceId: number,
-  data: ModifyLinodeInterfacePayload
+  data: ModifyLinodeInterfacePayload,
 ) =>
   Request<LinodeInterface>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
+        linodeId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
     ),
     setMethod('PUT'),
-    setData(data, ModifyLinodeInterfaceSchema)
+    setData(data, ModifyLinodeInterfaceSchema),
   );
 
 /**
@@ -183,10 +185,10 @@ export const deleteLinodeInterface = (linodeId: number, interfaceId: number) =>
   Request<{}>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
+        linodeId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -201,17 +203,17 @@ export const getLinodeInterfaceFirewalls = (
   linodeId: number,
   interfaceId: number,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<Firewall>>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/interfaces/${encodeURIComponent(interfaceId)}/firewalls`
+        linodeId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}/firewalls`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -224,14 +226,14 @@ export const getLinodeInterfaceFirewalls = (
  */
 export const upgradeToLinodeInterface = (
   linodeId: number,
-  data: UpgradeInterfacePayload
+  data: UpgradeInterfacePayload,
 ) =>
   Request<UpgradeInterfaceData>(
     setURL(
       `${BETA_API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/upgrade-interfaces`
+        linodeId,
+      )}/upgrade-interfaces`,
     ),
     setMethod('POST'),
-    setData(data, UpgradeToLinodeInterfaceSchema)
+    setData(data, UpgradeToLinodeInterfaceSchema),
   );

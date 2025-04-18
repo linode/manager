@@ -1,7 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { accountUserFactory, profileFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DeleteUserPanel } from './DeleteUserPanel';

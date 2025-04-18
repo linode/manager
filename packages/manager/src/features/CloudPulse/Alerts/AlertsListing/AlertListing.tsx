@@ -8,6 +8,7 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
+import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
@@ -119,6 +120,13 @@ export const AlertListing = () => {
     statusFilteredAlerts,
     statusFilters,
   ]);
+
+  const { preference: togglePreference, toggle: toggleGroupByTag } =
+    usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
   if (alerts && alerts.length === 0) {
     return (
@@ -237,9 +245,11 @@ export const AlertListing = () => {
       <AlertsListTable
         alerts={getAlertsList}
         error={error ?? undefined}
+        isGroupedByTag={togglePreference}
         isLoading={isLoading}
         scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
+        toggleGroupByTag={() => toggleGroupByTag?.() ?? false}
       />
     </Stack>
   );

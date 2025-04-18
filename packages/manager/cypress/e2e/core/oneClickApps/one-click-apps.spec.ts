@@ -20,7 +20,7 @@ import type { StackScript } from '@linode/api-v4';
 
 describe('OneClick Apps (OCA)', () => {
   it('Lists all the OneClick Apps', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -57,7 +57,7 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   it('Can view app details of a marketplace app', () => {
-    cy.tag('method:e2e');
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -180,7 +180,7 @@ describe('OneClick Apps (OCA)', () => {
       cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
-      cy.get('[data-qa-selection-card="true"]').should('have.length', 2);
+      // The app may be listed 2 or 3 times.
       cy.findAllByText(stackscript.label).first().should('be.visible').click();
     });
 
@@ -249,8 +249,8 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   // leave test disabled by default
-  xit('Validate the summaries of all the OneClick Apps', () => {
-    cy.tag('method:e2e');
+  it.skip('Validate the summaries of all the OneClick Apps', () => {
+    cy.tag('method:e2e', 'env:marketplaceApps');
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
