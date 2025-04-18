@@ -101,7 +101,7 @@ export const WithTooltip: Story = {
 export const WithAdornment: Story = {
   args: {
     InputProps: {
-      startAdornment: <InputAdornment position="end">$</InputAdornment>,
+      startAdornment: <InputAdornment position="start">$</InputAdornment>,
     },
     label: 'Label with an InputAdornment',
     noMarginTop: true,

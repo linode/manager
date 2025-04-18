@@ -1,5 +1,26 @@
-## [2025-04-08] - v0.137.0
+## [2025-04-22] - v0.138.0
 
+### Added:
+
+- `Linode Interfaces` to the `AccountCapability` type ([#11995](https://github.com/linode/manager/pull/11995))
+
+### Changed:
+
+- Add VPC field to `LinodeIPsResponseIPV4` ([#11976](https://github.com/linode/manager/pull/11976))
+
+### Tech Stories:
+
+- Eslint Overhaul ([#11941](https://github.com/linode/manager/pull/11941))
+
+### Upcoming Features:
+
+- Add schema validation for `edit alert` call in cloudpulse alerts ([#11868](https://github.com/linode/manager/pull/11868))
+- Fix the iam api for put method ([#11978](https://github.com/linode/manager/pull/11978))
+- fix the api to the right one for iam ([#11998](https://github.com/linode/manager/pull/11998))
+- Rename `DeleteLinodeConfigInterfacePayload` to `DeleteInterfaceIds` ([#12016](https://github.com/linode/manager/pull/12016))
+- fix the api to the right one for iam ([#12027](https://github.com/linode/manager/pull/12027))
+
+## [2025-04-08] - v0.137.0
 
 ### Added:
 
@@ -26,7 +47,6 @@
 - Add support for IPv6 to `VPCIP` ([#11938](https://github.com/linode/manager/pull/11938))
 
 ## [2025-03-25] - v0.136.0
-
 
 ### Added:
 
@@ -73,7 +93,6 @@
 
 ## [2025-02-11] - v0.134.0
 
-
 ### Added:
 
 - Labels and Taints types and params ([#11528](https://github.com/linode/manager/pull/11528))
@@ -116,7 +135,6 @@
 - Add types for Quotas endpoints ([#11493](https://github.com/linode/manager/pull/11493))
 - Add Notification Channel related types to cloudpulse/alerts.ts ([#11511](https://github.com/linode/manager/pull/11511))
 
-
 ## [2025-01-14] - v0.132.0
 
 ### Added:
@@ -126,7 +144,7 @@
 
 ### Changed:
 
-- Type of `AlertDefinitionType` to `'system'|'user'`   ([#11346](https://github.com/linode/manager/pull/11346))
+- Type of `AlertDefinitionType` to `'system'|'user'` ([#11346](https://github.com/linode/manager/pull/11346))
 - Property names, and types of the CreateAlertDefinitionPayload and Alert interfaces ([#11392](https://github.com/linode/manager/pull/11392))
 - BaseDatabase total_disk_size_gb and used_disk_size_gb are always expected and used_disk_size_gb can be null ([#11426](https://github.com/linode/manager/pull/11426))
 - Renamed `AvailableMetrics` type to `MetricDefinition` ([#11433](https://github.com/linode/manager/pull/11433))

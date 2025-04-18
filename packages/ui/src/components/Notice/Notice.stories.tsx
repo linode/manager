@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -5,10 +6,6 @@ import { Notice } from './Notice';
 
 import type { NoticeProps } from './Notice';
 import type { Meta, StoryObj } from '@storybook/react';
-
-export const Default: StoryObj<NoticeProps> = {
-  render: (args) => <Notice {...args} />,
-};
 
 export const Success: StoryObj<NoticeProps> = {
   render: (args) => (
@@ -19,6 +16,17 @@ export const Success: StoryObj<NoticeProps> = {
 export const Info: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a informational notice" variant="info" />
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="info">
+      <Typography variant="h2">
+        This is a informational notice with a title.
+      </Typography>
+      <Typography>This paragraph under the title should wrap.</Typography>
+    </Notice>
   ),
 };
 
@@ -52,6 +60,17 @@ export const ImportantInfo: StoryObj<NoticeProps> = {
       important
       text="This is an important informational notice"
       variant="info"
+    />
+  ),
+};
+
+export const ImportantTip: StoryObj<NoticeProps> = {
+  render: (args) => (
+    <Notice
+      {...args}
+      important
+      text="This is an important tip notice"
+      variant="tip"
     />
   ),
 };

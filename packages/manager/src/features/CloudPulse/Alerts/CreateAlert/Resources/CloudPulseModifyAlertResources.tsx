@@ -50,7 +50,7 @@ export const CloudPulseModifyAlertResources = React.memo(
         render={({ field, fieldState }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
             <Typography ref={titleRef} variant="h2">
-              2. Resources
+              2. Entities
             </Typography>
             <Box
               sx={(theme) => ({

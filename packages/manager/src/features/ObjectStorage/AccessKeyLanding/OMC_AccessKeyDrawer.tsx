@@ -76,20 +76,20 @@ export interface FormState {
  * sorted by region.
  */
 
-export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
-  a: DisplayedAccessKeyScope,
-  b: DisplayedAccessKeyScope
-) => {
-  if (!a.region || !b.region) {
-    return 0;
-  }
+export const sortByRegion =
+  (regionLookup: { [key: string]: Region }) =>
+  (a: DisplayedAccessKeyScope, b: DisplayedAccessKeyScope) => {
+    if (!a.region || !b.region) {
+      return 0;
+    }
 
-  return sortByString(
-    regionLookup[a.region].label,
-    regionLookup[b.region].label,
-    'asc'
-  );
-};
+    return sortByString(
+      regionLookup[a.region].label,
+      regionLookup[b.region].label,
+      'asc'
+    );
+  };
+
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
@@ -104,14 +104,8 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const {
-    isRestrictedUser,
-    mode,
-    objectStorageKey,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
+  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
+    props;
 
   const { regionsByIdMap } = useObjectStorageRegions();
 
@@ -158,6 +152,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
       // If any/all permissions are 'none' or null, don't include them in the response.
       const access = values.bucket_access ?? [];
+
       const payload = limitedAccessChecked
         ? {
             ...values,
@@ -168,6 +163,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ),
           }
         : { ...values, bucket_access: null };
+
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
@@ -210,6 +206,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     const bucketsInRegions = buckets?.filter(
       (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
     );
+
     formik.setFieldValue(
       'bucket_access',
       getDefaultScopes(bucketsInRegions, regionsByIdMap)

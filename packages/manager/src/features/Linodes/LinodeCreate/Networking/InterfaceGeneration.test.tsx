@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountSettingsFactory } from 'src/factories';
@@ -18,13 +19,23 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const { findByLabelText, getAllByRole } = renderWithThemeAndHookFormContext(
-      {
-        component: <InterfaceGeneration />,
-      }
-    );
+    const {
+      findByText,
+      getAllByRole,
+      getByText,
+    } = renderWithThemeAndHookFormContext({
+      component: <InterfaceGeneration />,
+    });
 
-    await findByLabelText(
+    const button = getByText('Network Interface Type');
+
+    // Expand the "Show More"
+    await userEvent.click(button);
+
+    // Hover to check for the tooltip
+    await userEvent.hover(getByText('Network Interface Type'));
+
+    await findByText(
       'You account administrator has enforced that all new Linodes are created with Linode interfaces.'
     );
 
@@ -44,17 +55,31 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const { findByLabelText, getAllByRole } = renderWithThemeAndHookFormContext(
-      {
-        component: <InterfaceGeneration />,
-      }
-    );
+    const {
+      findByText,
+      getAllByRole,
+      getByText,
+    } = renderWithThemeAndHookFormContext({
+      component: <InterfaceGeneration />,
+    });
 
-    await findByLabelText(
+    const button = getByText('Network Interface Type');
+
+    // Expand the "Show More"
+    await userEvent.click(button);
+
+    // Hover to check for the tooltip
+    await userEvent.hover(getByText('Network Interface Type'));
+
+    await findByText(
       'You account administrator has enforced that all new Linodes are created with legacy configuration interfaces.'
     );
 
-    for (const radio of getAllByRole('radio')) {
+    const radios = getAllByRole('radio');
+
+    expect(radios).toHaveLength(2);
+
+    for (const radio of radios) {
       expect(radio).toBeDisabled();
     }
   });

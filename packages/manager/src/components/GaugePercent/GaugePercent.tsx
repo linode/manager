@@ -106,6 +106,7 @@ export const GaugePercent = React.memo((props: GaugePercentProps) => {
     // we use a reference to access it.
     // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (graphRef.current) {
+      // eslint-disable-next-line sonarjs/constructor-for-side-effects
       new Chart(graphRef.current.getContext('2d'), {
         data: {
           datasets: graphDatasets,

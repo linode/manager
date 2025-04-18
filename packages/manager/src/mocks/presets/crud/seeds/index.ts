@@ -2,6 +2,7 @@ import { domainSeeder } from './domains';
 import { firewallSeeder } from './firewalls';
 import { linodesSeeder } from './linodes';
 import { ipAddressSeeder } from './networking';
+import { nodeBalancerSeeder } from './nodebalancers';
 import { placementGroupSeeder } from './placementGroups';
 import { supportTicketsSeeder } from './supportTickets';
 import { volumesSeeder } from './volumes';
@@ -12,6 +13,7 @@ export const dbSeeders = [
   firewallSeeder,
   ipAddressSeeder,
   linodesSeeder,
+  nodeBalancerSeeder,
   placementGroupSeeder,
   supportTicketsSeeder,
   volumesSeeder,

@@ -6,6 +6,7 @@ import {
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -15,7 +16,6 @@ import { Link } from 'src/components/Link';
 import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Linode } from '@linode/api-v4';
@@ -43,10 +43,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const theme = useTheme();
 
-  const {
-    isPending: addDeviceIsLoading,
-    mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation();
+  const { isPending: addDeviceIsLoading, mutateAsync: addDevice } =
+    useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
 

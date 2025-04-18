@@ -68,18 +68,14 @@ export const KubeControlPlaneACLDrawer = (
 
   const isEnterpriseCluster = clusterTier === 'enterprise';
 
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
-  const {
-    mutateAsync: updateKubernetesClusterControlPlaneACL,
-  } = useKubernetesControlPlaneACLMutation(clusterId);
+  const { mutateAsync: updateKubernetesClusterControlPlaneACL } =
+    useKubernetesControlPlaneACLMutation(clusterId);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterId
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterId);
 
   const {
     control,
@@ -236,7 +232,7 @@ export const KubeControlPlaneACLDrawer = (
                   control={
                     <StyledACLToggle
                       checked={
-                        isEnterpriseCluster ? true : field.value ?? false
+                        isEnterpriseCluster ? true : (field.value ?? false)
                       }
                       onChange={() => {
                         setValue('acl.enabled', !field.value, {
