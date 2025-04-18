@@ -115,28 +115,28 @@ export const borderColors = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `48px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.IconBackground}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `48px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.IconBackground}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `48px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
 } as const;
 
@@ -423,9 +423,10 @@ export const lightTheme: ThemeOptions = {
         },
         root: {
           // Spacing for clear and popup icons (circular loading)
-          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot': {
-            paddingRight: Spacing.S48,
-          },
+          '&.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot':
+            {
+              paddingRight: Spacing.S48,
+            },
           maxWidth: inputMaxWidth,
         },
         tag: {
@@ -550,11 +551,12 @@ export const lightTheme: ThemeOptions = {
         {
           props: { color: 'error' },
           style: {
-            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
-              backgroundColor: Background.Negativesubtle,
-              border: `1px solid ${Border.Negative}`,
-              color: Content.Text.Negative,
-            },
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
+              {
+                backgroundColor: Background.Negativesubtle,
+                border: `1px solid ${Border.Negative}`,
+                color: Content.Text.Negative,
+              },
             '&[aria-disabled="true"]': {
               backgroundColor: 'transparent',
               border: `1px solid ${Button.Secondary.Disabled.Border}`,
@@ -957,15 +959,16 @@ export const lightTheme: ThemeOptions = {
             border: `1px solid ${TextField.Focus.Border}`,
             color: TextField.Focus.Text,
           },
-          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
-            '& .MuiInputAdornment-root': {
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              '& .MuiInputAdornment-root': {
+                cursor: 'not-allowed',
+              },
+              backgroundColor: TextField.Disabled.Background,
+              border: `1px solid ${TextField.Disabled.Border}`,
+              color: TextField.Disabled.Text,
               cursor: 'not-allowed',
             },
-            backgroundColor: TextField.Disabled.Background,
-            border: `1px solid ${TextField.Disabled.Border}`,
-            color: TextField.Disabled.Text,
-            cursor: 'not-allowed',
-          },
           '&:hover': {
             backgroundColor: TextField.Hover.Background,
             border: `1px solid ${TextField.Hover.Border}`,
@@ -1393,9 +1396,11 @@ export const lightTheme: ThemeOptions = {
           // Zebra Striping
           '&.MuiTable-zebra': {
             // Linodes Group by Tag: First Row is the Title
-            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)':
+              MuiTableZebraStyles,
             // Default Striping
-            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)':
+              MuiTableZebraStyles,
             '.MuiTableRow-root:not(:last-of-type)': {
               '.MuiTableCell-root': {
                 borderBottom: 0,
@@ -1491,9 +1496,10 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.Row.Background.Hover,
           },
           // Disable hover for nested rows (VPC)
-          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
-            backgroundColor: Table.Row.Background.Default,
-          },
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
+            {
+              backgroundColor: Table.Row.Background.Default,
+            },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
             backgroundColor: Interaction.Background.Disabled,

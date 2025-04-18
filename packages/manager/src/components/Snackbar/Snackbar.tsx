@@ -25,9 +25,13 @@ declare module 'notistack' {
 
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
+    '#notistack-snackbar': {
+      alignItems: 'flex-start',
+      position: 'relative',
+    },
     '#notistack-snackbar > svg': {
       position: 'absolute',
-      left: '14px',
+      left: '-45px',
     },
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
@@ -60,6 +64,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
       borderLeft: theme.notificationToast.warning.borderLeft,
     },
     '& #notistack-snackbar + div': {
+      alignSelf: 'flex-start',
       paddingLeft: theme.spacingFunction(12),
     },
   })
