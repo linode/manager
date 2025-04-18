@@ -12,16 +12,17 @@ export const ImagesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DismissibleBanner
+        important
         preferenceKey="image-encryption-is-standard"
         spacingBottom={8}
         variant="info"
       >
         <Typography fontSize="inherit" py={1}>
-          Custom Images are now encrypted for enhanced security.{' '}
+          Custom Images are now encrypted by default for enhanced security.{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
             Learn more
-          </Link>{' '}
-          about encryption.
+          </Link>
+          .
         </Typography>
       </DismissibleBanner>
       <DocumentTitleSegment segment="Images" />

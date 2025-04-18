@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 import type { CreateInterfaceFormValues } from '../utilities';
@@ -26,13 +27,14 @@ export const VPCIPv4Address = (props: Props) => {
     formState: { errors },
   } = useFormContext<CreateInterfaceFormValues>();
 
+  const error = errors.vpc?.ipv4?.addresses?.[index]?.message;
+
   return (
     <Stack spacing={1}>
-      {errors.vpc?.ipv4?.addresses?.[index]?.message && (
-        <Notice
-          text={errors.vpc?.ipv4?.addresses?.[index]?.message}
-          variant="error"
-        />
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage message={error} />
+        </Notice>
       )}
       <Controller
         control={control}

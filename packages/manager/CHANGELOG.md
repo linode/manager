@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-04-16] - v1.139.1
+
+### Removed:
+
+- References to disk encryption in relation to LKE ([#12034](https://github.com/linode/manager/pull/12034))
+
 ## [2025-04-08] - v1.139.0
 
 

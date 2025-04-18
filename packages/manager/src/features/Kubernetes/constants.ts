@@ -36,3 +36,6 @@ export const LKE_ENTERPRISE_VPC_WARNING =
 
 export const LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING =
   'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.';
+
+export const MAX_NODES_PER_POOL_ENTERPRISE_TIER = 500;
+export const MAX_NODES_PER_POOL_STANDARD_TIER = 100;

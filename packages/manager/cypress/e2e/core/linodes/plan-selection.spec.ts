@@ -149,7 +149,9 @@ describe('displays linode plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
@@ -245,12 +247,15 @@ describe('displays kubernetes plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
     // Dedicated CPU tab
     // Should be selected/open by default
+    // Should have the premium plans notice above the table
     // Should have the limited availability notice
     // Should contain 5 plans (6 rows including the header row)
     // Should have 3 plans disabled
@@ -258,7 +263,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // All inputs for a row should be enabled if row is enabled (only testing one row in suite)
     // All inputs for a disabled row should be disabled (only testing one row in suite)
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -295,13 +300,13 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // Shared CPU tab
-    // Should have no notices
+    // Should have the premium plans notice above the table
     // Should contain 3 plans (4 rows including the header row)
     // Should have 2 disabled plans
     // Should have tooltip for the disabled plan (not more than half disabled plans in the panel)
     cy.findByText('Shared CPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 0);
+      cy.findAllByRole('alert').should('have.length', 1);
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 4);
@@ -319,13 +324,14 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // High Memory tab
+    // Should have the premium plans notice above the table
     // Should have the limited availability notice
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have no tooltip for the disabled plan (more than half disabled plans in the panel)
     cy.findByText('High Memory').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -339,6 +345,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // Premium CPU
+    // Should have the premium plans notice above the table
     // Should have the unavailable notice
     // Only present since we manually inject the 512 plan for it
     // Should contain 1 plan (2 rows including the header row)
@@ -346,7 +353,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
     cy.findByText('Premium CPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -381,7 +388,9 @@ describe('displays specific linode plans for GPU', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     // GPU tab
     // Should display two separate tables
@@ -429,13 +438,15 @@ describe('displays specific kubernetes plans for GPU', () => {
     cy.visitWithLogin('/kubernetes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     // GPU tab
     // Should display two separate tables
     cy.findByText('GPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 2);
+      cy.findAllByRole('alert').should('have.length', 3);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
@@ -535,7 +546,9 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.findByText('Accelerated').click();
         cy.get(linodePlansPanel).within(() => {
@@ -588,13 +601,15 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.wait(['@getRegionAvailability']);
 
         cy.findByText('Accelerated').click();
         cy.get(k8PlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 2);
+          cy.findAllByRole('alert').should('have.length', 3);
 
           cy.findByRole('table', { name: planSelectionTable }).within(() => {
             cy.findAllByRole('row').should('have.length', 2);

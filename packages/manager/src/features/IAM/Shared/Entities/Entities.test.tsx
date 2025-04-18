@@ -101,7 +101,7 @@ describe('Entities', () => {
     const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeVisible();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
+    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
   });
 
   it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {

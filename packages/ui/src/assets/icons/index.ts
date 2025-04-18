@@ -6,6 +6,7 @@ export { default as CheckboxIndeterminateIcon } from './checkboxIndeterminate.sv
 export { default as ChevronDownIcon } from './chevron-down.svg';
 export { default as ChevronUpIcon } from './chevron-up.svg';
 export { default as CloseIcon } from './close.svg';
+export { default as DeleteIcon } from './delete.svg';
 export { default as ErrorIcon } from './error.svg';
 export { default as ErrorOutlinedIcon } from './error-outlined.svg';
 export { default as InfoIcon } from './info.svg';

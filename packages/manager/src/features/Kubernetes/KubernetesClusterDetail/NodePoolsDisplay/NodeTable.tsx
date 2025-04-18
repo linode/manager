@@ -7,7 +7,6 @@ import * as React from 'react';
 import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -76,9 +75,8 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: profile } = useProfile();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -272,17 +270,8 @@ export const NodeTable = React.memo((props: Props) => {
                         regionSupportsDiskEncryption={
                           regionSupportsDiskEncryption
                         }
-                        /**
-                         * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                         * explaining how LDE can be enabled on LKE-E node pools.
-                         * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                         */
-                        tooltipText={
-                          clusterTier === 'enterprise'
-                            ? undefined
-                            : DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
-                        }
                         encryptionStatus={encryptionStatus}
+                        tooltipText={undefined}
                       />
                     </Box>
                   ) : (

@@ -41,9 +41,6 @@ export const DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES =
   'Distributed Compute Instances are encrypted. This setting can not be changed.';
 
 // Guidance
-export const DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY =
-  'To enable disk encryption, delete the node pool and create a new node pool. New node pools are always encrypted.';
-
 export const UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY =
   'Rebuild this Linode to enable or disable disk encryption.';
 
