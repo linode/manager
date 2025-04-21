@@ -1,5 +1,5 @@
+import { CloseIcon } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
-import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -104,7 +104,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon' | 'breadcrumbText'>()(
       fontSize: '1rem !important',
       paddingLeft: 0,
     },
-  })
+  }),
 );
 
 interface BaseProps extends Omit<TextFieldProps, 'label'> {
@@ -313,7 +313,7 @@ export const EditableText = (props: EditableTextProps) => {
           data-qa-cancel-edit
           onClick={cancelEditing}
         >
-          <Close className={classes.icon} />
+          <CloseIcon className={classes.icon} />
         </Button>
       </div>
     </ClickAwayListener>
