@@ -56,7 +56,11 @@ import {
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
-import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
+import {
+  CLUSTER_VERSIONS_DOCS_LINK,
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
@@ -115,13 +119,10 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
-  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
-    'standard'
-  );
-  const [
-    isACLAcknowledgementChecked,
-    setIsACLAcknowledgementChecked,
-  ] = React.useState(false);
+  const [selectedTier, setSelectedTier] =
+    React.useState<KubernetesTier>('standard');
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -147,9 +148,25 @@ export const CreateCluster = () => {
     } else {
       setHighAvailability(undefined);
       setControlPlaneACL(false);
+      setIsACLAcknowledgementChecked(false);
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
+    }
+
+    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      setNodePools(
+        nodePools.map((nodePool) => ({
+          ...nodePool,
+          count: Math.min(
+            nodePool.count,
+            tier === 'enterprise'
+              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+              : MAX_NODES_PER_POOL_STANDARD_TIER
+          ),
+        }))
+      );
     }
   };
 
@@ -174,18 +191,14 @@ export const CreateCluster = () => {
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
-  const {
-    mutateAsync: createKubernetesCluster,
-  } = useCreateKubernetesClusterMutation();
+  const { mutateAsync: createKubernetesCluster } =
+    useCreateKubernetesClusterMutation();
 
-  const {
-    mutateAsync: createKubernetesClusterBeta,
-  } = useCreateKubernetesClusterBetaMutation();
+  const { mutateAsync: createKubernetesClusterBeta } =
+    useCreateKubernetesClusterBetaMutation();
 
-  const {
-    isLkeEnterpriseLAFeatureEnabled,
-    isLkeEnterpriseLAFlagEnabled,
-  } = useIsLkeEnterpriseEnabled();
+  const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
+    useIsLkeEnterpriseEnabled();
 
   const {
     isLoadingVersions,
@@ -523,17 +536,19 @@ export const CreateCluster = () => {
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
               />
               <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
                 }}
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
-                handleIsAcknowledgementChecked={(isChecked: boolean) =>
-                  setIsACLAcknowledgementChecked(isChecked)
-                }
-                enableControlPlaneACL={controlPlaneACL}
-                errorText={errorMap.control_plane}
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
                 isAcknowledgementChecked={isACLAcknowledgementChecked}

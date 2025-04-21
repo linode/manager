@@ -1,6 +1,5 @@
 import { Autocomplete, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -19,8 +18,10 @@ import { useOrder } from 'src/hooks/useOrder';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
+import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,
+  getFormattedEntityType,
   mapEntityTypes,
   transformedAccountEntities,
 } from '../../Shared/utilities';
@@ -93,6 +94,13 @@ export const AssignedEntitiesTable = () => {
     setSelectedRole(role);
     setDrawerMode(mode);
   };
+  const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
+    React.useState<boolean>(false);
+
+  const handleRemoveAssignment = (role: EntitiesRole) => {
+    setIsRemoveAssignmentDialogOpen(true);
+    setSelectedRole(role);
+  };
 
   const renderTableBody = () => {
     if (entitiesLoading || assignedRolesLoading) {
@@ -134,7 +142,7 @@ export const AssignedEntitiesTable = () => {
               },
               {
                 onClick: () => {
-                  // mock
+                  handleRemoveAssignment(el);
                 },
                 title: 'Remove Assignment',
               },
@@ -146,7 +154,9 @@ export const AssignedEntitiesTable = () => {
                   <Typography>{el.entity_name}</Typography>
                 </TableCell>
                 <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                  <Typography>{capitalize(el.entity_type)}</Typography>
+                  <Typography>
+                    {getFormattedEntityType(el.entity_type)}
+                  </Typography>
                 </TableCell>
                 <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                   <Typography>{el.role_name}</Typography>
@@ -241,6 +251,11 @@ export const AssignedEntitiesTable = () => {
         mode={drawerMode}
         onClose={() => setIsChangeRoleForEntityDrawerOpen(false)}
         open={isChangeRoleForEntityDrawerOpen}
+        role={selectedRole}
+      />
+      <RemoveAssignmentConfirmationDialog
+        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
+        open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />
     </Grid>

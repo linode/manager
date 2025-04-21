@@ -1,4 +1,5 @@
 import { useMediaQuery } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -10,12 +11,11 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface ContactsActionMenuProps {
   contactId: number;
   contactName: string;
-  openDialog: (id: number) => void;
-  openDrawer: (contactId: number) => void;
 }
 
 export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
-  const { contactId, contactName, openDialog, openDrawer } = props;
+  const { contactId, contactName } = props;
+  const navigate = useNavigate();
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
   );
@@ -23,13 +23,23 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        openDrawer(contactId);
+        navigate({
+          params: {
+            contactId,
+          },
+          to: '/managed/contacts/$contactId/edit',
+        });
       },
       title: 'Edit',
     },
     {
       onClick: () => {
-        openDialog(contactId);
+        navigate({
+          params: {
+            contactId,
+          },
+          to: '/managed/contacts/$contactId/delete',
+        });
       },
       title: 'Delete',
     },
@@ -57,5 +67,3 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
     </>
   );
 };
-
-export default ContactsActionMenu;

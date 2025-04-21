@@ -2,7 +2,9 @@
  * @file Integration tests for Managed SSH access.
  */
 
+import { linodeFactory } from '@linode/utilities';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
+import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import {
   mockGetLinodeSettings,
   mockGetSshPublicKey,
@@ -80,6 +82,10 @@ describe('Managed SSH Access tab', () => {
   it('can update managed Linode SSH access', () => {
     const linodeLabel = randomLabel();
     const linodeId = 1;
+    const linode = linodeFactory.build({
+      id: linodeId,
+      label: linodeLabel,
+    });
 
     const newPort = randomNumber(65535);
     const newUser = randomString(8);
@@ -113,6 +119,7 @@ describe('Managed SSH Access tab', () => {
       },
     };
 
+    mockGetLinodeDetails(linodeId, linode).as('getLinode');
     mockGetSshPublicKey(randomPublicSshKey()).as('getSshPublicKey');
     mockGetLinodeSettings([originalLinodeSettings]).as('getLinodeSettings');
     visitUrlWithManagedEnabled('/managed/ssh-access');
@@ -128,6 +135,8 @@ describe('Managed SSH Access tab', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getLinode');
 
     // Fill out and submit SSH access edit form.
     mockUpdateLinodeSettings(linodeId, newLinodeSettings).as(
