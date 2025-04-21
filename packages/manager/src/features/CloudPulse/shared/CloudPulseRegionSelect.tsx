@@ -75,10 +75,15 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     React.useEffect(() => {
       // we clear the selected region if there is already one.
-      if (selectedRegion) {
+      if (selectedRegion && !disabled) {
         setSelectedRegion(undefined);
         handleRegionChange(undefined, [], true);
       }
+
+      if (disabled) {
+        setSelectedRegion(undefined);
+      }
+
       // If component is not disabled, regions have loaded, preferences should be saved,
       // and there's no selected region — attempt to preselect from defaultValue.
       if (!disabled && regions && savePreferences && !selectedRegion) {
