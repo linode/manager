@@ -1,68 +1,105 @@
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NavTabs } from 'src/components/NavTabs/NavTabs';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
-import type { NavTab } from 'src/components/NavTabs/NavTabs';
-
-const Contacts = React.lazy(() => import('./Contacts/Contacts'));
-const Monitors = React.lazy(() => import('./Monitors'));
-const SSHAccess = React.lazy(() => import('./SSHAccess'));
-const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
-
-const tabs: NavTab[] = [
-  {
-    component: ManagedDashboardCard,
-    routeName: `/managed/summary`,
-    title: 'Summary',
-  },
-  {
-    render: <Monitors />,
-    routeName: `/managed/monitors`,
-    title: 'Monitors',
-  },
-  {
-    component: SSHAccess,
-    routeName: `/managed/ssh-access`,
-    title: 'SSH Access',
-  },
-  {
-    render: <CredentialList />,
-    routeName: `/managed/credentials`,
-    title: 'Credentials',
-  },
-  {
-    render: <Contacts />,
-    routeName: `/managed/contacts`,
-    title: 'Contacts',
-  },
-];
+const Contacts = React.lazy(() =>
+  import('./Contacts/Contacts').then((module) => ({
+    default: module.Contacts,
+  }))
+);
+const Monitors = React.lazy(() =>
+  import('./Monitors/MonitorTable').then((module) => ({
+    default: module.MonitorTable,
+  }))
+);
+const SSHAccess = React.lazy(() =>
+  import('./SSHAccess/SSHAccess').then((module) => ({
+    default: module.SSHAccess,
+  }))
+);
+const CredentialList = React.lazy(() =>
+  import('./Credentials/CredentialList').then((module) => ({
+    default: module.CredentialList,
+  }))
+);
 
 export const ManagedLanding = () => {
+  const { handleTabChange, tabIndex, tabs } = useTabs([
+    {
+      title: 'Summary',
+      to: `/managed/summary`,
+    },
+    {
+      title: 'Monitors',
+      to: `/managed/monitors`,
+    },
+    {
+      title: 'SSH Access',
+      to: `/managed/ssh-access`,
+    },
+    {
+      title: 'Credentials',
+      to: `/managed/credentials`,
+    },
+    {
+      title: 'Contacts',
+      to: `/managed/contacts`,
+    },
+  ]);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
       <ProductInformationBanner bannerLocation="Managed" />
       <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Managed',
+              position: 1,
+            },
+          ],
+          pathname: '/managed',
+        }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service"
         entity="Managed"
         extraActions={<SupportWidget />}
         removeCrumbX={1}
         title="Managed"
       />
-      <NavTabs tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <ManagedDashboardCard />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <Monitors />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <SSHAccess />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <CredentialList />
+            </SafeTabPanel>
+            <SafeTabPanel index={4}>
+              <Contacts />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
     </React.Fragment>
   );
 };
-
-export const managedLandingLazyRoute = createLazyRoute('/managed')({
-  component: ManagedLanding,
-});
-
-export default ManagedLanding;

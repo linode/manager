@@ -92,6 +92,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   firewallsRouteTree,
   imagesRouteTree,
   longviewRouteTree,
+  managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
