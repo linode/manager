@@ -33,7 +33,17 @@ interface Props {
 export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
-  const { created_by, id, label, service_type, status, type, updated } = alert;
+  const {
+    created,
+    created_by,
+    id,
+    label,
+    service_type,
+    status,
+    type,
+    updated,
+    updated_by,
+  } = alert;
 
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
@@ -54,12 +64,18 @@ export const AlertTableRow = (props: Props) => {
       <TableCell>
         {services.find((service) => service.value === service_type)?.label}
       </TableCell>
+      <TableCell>
+        {formatDate(created, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })}
+      </TableCell>
       <TableCell>{created_by}</TableCell>
       <TableCell>
         {formatDate(updated, {
           format: 'MMM dd, yyyy, h:mm a',
         })}
       </TableCell>
+      <TableCell>{updated_by}</TableCell>
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu
           alertLabel={label}

@@ -15,12 +15,21 @@ export const AlertListingTableLabelMap = [
     label: 'service_type',
   },
   {
+    colName: 'Created',
+    label: 'created',
+  },
+  {
     colName: 'Created By',
     label: 'created_by',
   },
+
   {
     colName: 'Last Modified',
     label: 'updated',
+  },
+  {
+    colName: 'Last Modified By',
+    label: 'updated_by',
   },
 ];
 
