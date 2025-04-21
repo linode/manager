@@ -1,4 +1,4 @@
-import { Box, Paper, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { ErrorBoundary } from '@sentry/react';
 import { CatchBoundary } from '@tanstack/react-router';
 import * as React from 'react';
@@ -24,10 +24,10 @@ export const ErrorComponent = ({
       }}
     >
       <Paper
-        sx={{
+        sx={(theme) => ({
           maxWidth: 600,
-          boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`,
-        }}
+          border: `1px solid ${theme.tokens.alias.Border.Normal}`,
+        })}
       >
         <Box
           sx={{
@@ -46,15 +46,6 @@ export const ErrorComponent = ({
         </Typography>
         <Typography>
           <ul>
-            <li>
-              <StyledLinkButton onClick={resetError}>
-                Refresh the application
-              </StyledLinkButton>{' '}
-              or{' '}
-              <StyledLinkButton onClick={() => window.location.reload()}>
-                reload the page
-              </StyledLinkButton>
-            </li>
             <li>Update your browser version</li>
             <li>Clear your cookies</li>
             <li>Check your internet connection</li>
@@ -65,15 +56,6 @@ export const ErrorComponent = ({
         </Typography>
         <Typography>
           <ul>
-            <li>
-              <a
-                href="https://techdocs.akamai.com/eaa/docs/app-response-codes-login-events-err"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Application response codes, login events, and errors
-              </a>
-            </li>
             <li>
               <a
                 href="https://www.linode.com/docs/guides/clear-cache-shortguide"
@@ -101,6 +83,19 @@ export const ErrorComponent = ({
             language="typescript"
           />
         </Typography>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          marginTop={3}
+          spacing={2}
+        >
+          <Button buttonType="outlined" onClick={resetError}>
+            Refresh the application
+          </Button>
+          <Button buttonType="primary" onClick={() => window.location.reload()}>
+            Reload the page
+          </Button>
+        </Stack>
       </Paper>
     </Box>
   );
@@ -108,10 +103,10 @@ export const ErrorComponent = ({
 
 export const ErrorBoundaryFallback: React.FC<{
   children?: React.ReactNode;
-  useTanStackBoundary?: boolean;
-}> = ({ children, useTanStackBoundary = false }) => (
+  useTanStackRouterBoundary?: boolean;
+}> = ({ children, useTanStackRouterBoundary = false }) => (
   <ErrorBoundary fallback={ErrorComponent}>
-    {useTanStackBoundary ? (
+    {useTanStackRouterBoundary ? (
       <CatchBoundary getResetKey={() => 'error-boundary-fallback'}>
         {children}
       </CatchBoundary>
