@@ -41,11 +41,11 @@ describe('QuotasTable', () => {
   it('should render', () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       <QuotasTable
+        selectedLocation={null}
         selectedService={{
           label: 'Linodes',
           value: 'linode',
         }}
-        selectedLocation={null}
       />
     );
     expect(
@@ -72,7 +72,7 @@ describe('QuotasTable', () => {
     ];
     const quotaUsage = quotaUsageFactory.build({
       quota_limit: 100,
-      used: 10,
+      usage: 10,
     });
     queryMocks.useQueries.mockReturnValue([
       {
@@ -115,7 +115,7 @@ describe('QuotasTable', () => {
       expect(getByLabelText(quota.description)).toBeInTheDocument();
       expect(getByTestId('linear-progress')).toBeInTheDocument();
       expect(
-        getByText(`${quotaUsage.used} of ${quotaUsage.quota_limit} CPUs used`)
+        getByText(`${quotaUsage.usage} of ${quotaUsage.quota_limit} CPUs used`)
       ).toBeInTheDocument();
       expect(
         getByLabelText(`Action menu for quota ${quota.quota_name}`)

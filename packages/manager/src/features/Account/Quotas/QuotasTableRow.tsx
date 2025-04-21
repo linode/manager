@@ -1,4 +1,5 @@
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -13,6 +14,7 @@ import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { getQuotaError } from './utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
+import type { StorageSymbol } from '@linode/utilities';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -60,6 +62,39 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     title: 'Request an Increase',
   };
 
+  const convertResourceMetric = ({
+    initialResourceMetric,
+    initialUsage,
+    initialLimit,
+  }: {
+    initialLimit: number;
+    initialResourceMetric: StorageSymbol;
+    initialUsage: number;
+  }) => {
+    if (initialResourceMetric === 'byte') {
+      // First determine the appropriate unit based on the larger number (limit)
+      const limitReadable = readableBytes(initialLimit);
+      // Then use that same unit for both values
+      return {
+        usage: readableBytes(initialUsage, { unit: limitReadable.unit }).value,
+        resourceMetric: limitReadable.unit,
+        limit: limitReadable.value,
+      };
+    }
+
+    return {
+      usage: initialUsage,
+      limit: initialLimit,
+      resourceMetric: initialResourceMetric,
+    };
+  };
+
+  const { usage, limit, resourceMetric } = convertResourceMetric({
+    initialResourceMetric: quota.resource_metric,
+    initialUsage: quota.usage?.usage ?? 0,
+    initialLimit: quota.quota_limit,
+  });
+
   return (
     <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
       <TableCell>
@@ -72,17 +107,20 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
             {quota.quota_name}
           </Typography>
           <TooltipIcon
+            placement="top"
+            status="help"
             sxTooltipIcon={{
               position: 'relative',
               top: -2,
             }}
-            placement="top"
-            status="help"
             text={quota.description}
           />
         </Box>
       </TableCell>
-      <TableCell>{quota.quota_limit}</TableCell>
+      <TableCell>
+        {limit} {resourceMetric}
+        {quota.quota_limit > 1 ? 's' : ''}
+      </TableCell>
       <TableCell>
         <Box sx={{ maxWidth: '80%' }}>
           {quotaUsageQueries[index]?.isLoading ? (
@@ -122,11 +160,11 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 max={quota.quota_limit}
                 rounded
                 sx={{ mb: 1, mt: 2, padding: '3px' }}
-                value={quota.usage?.used ?? 0}
+                value={quota.usage?.usage ?? 0}
               />
               <Typography sx={{ mb: 1 }}>
-                {`${quota.usage?.used} of ${quota.quota_limit} ${
-                  quota.resource_metric
+                {`${usage} of ${limit} ${
+                  resourceMetric
                 }${quota.quota_limit > 1 ? 's' : ''} used`}
               </Typography>
             </>

@@ -83,7 +83,11 @@ export const Quotas = () => {
           <Typography>
             This table shows quotas and usage. If you need to increase a quota,
             select Request Increase from the Actions menu. Usage can also be
-            found using the <Link to="#">S3 APIs</Link>.
+            found using the{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage">
+              S3 APIs
+            </Link>
+            .
           </Typography>
           <Stack direction="column" spacing={2}>
             <QuotasTable

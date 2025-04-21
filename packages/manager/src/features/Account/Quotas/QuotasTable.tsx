@@ -112,7 +112,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
           {hasSelectedLocation && isFetchingQuotas ? (
             <TableRowLoading
               columns={4}
-              rows={5}
+              rows={3}
               sx={{ height: quotaRowMinHeight }}
             />
           ) : !selectedLocation ? (
@@ -129,7 +129,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
             />
           ) : (
             quotasWithUsage.map((quota, index) => {
-              const hasQuotaUsage = quota.usage?.used !== null;
+              const hasQuotaUsage = quota.usage?.usage !== null;
 
               return (
                 <QuotasTableRow

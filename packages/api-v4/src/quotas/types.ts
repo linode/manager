@@ -1,25 +1,27 @@
-import { ObjectStorageEndpointTypes } from 'src/object-storage';
-import { Region } from 'src/regions';
-
+import type { StorageSymbol } from '../../../utilities/src/helpers/unitConversions';
+import type { ObjectStorageEndpointTypes } from 'src/object-storage';
+import type { Region } from 'src/regions';
 /**
  * A Quota is a service used limit that is rated based on service metrics such
  * as vCPUs used, instances or storage size.
  */
 export interface Quota {
   /**
-   * A unique identifier for the quota.
-   */
-  quota_id: number;
-
-  /**
-   * Customer facing label describing the quota.
-   */
-  quota_name: string;
-
-  /**
    * Longer explanatory description for the quota.
    */
   description: string;
+
+  /**
+   * The OBJ endpoint type to which this limit applies.
+   *
+   * For OBJ limits only.
+   */
+  endpoint_type?: ObjectStorageEndpointTypes;
+
+  /**
+   * A unique identifier for the quota.
+   */
+  quota_id: number;
 
   /**
    * The account-wide limit for this service, measured in units
@@ -28,18 +30,9 @@ export interface Quota {
   quota_limit: number;
 
   /**
-   * The unit of measurement for this service limit.
+   * Customer facing label describing the quota.
    */
-  resource_metric:
-    | 'instance'
-    | 'CPU'
-    | 'GPU'
-    | 'VPU'
-    | 'cluster'
-    | 'node'
-    | 'bucket'
-    | 'object'
-    | 'byte';
+  quota_name: string;
 
   /**
    * The region slug to which this limit applies.
@@ -47,14 +40,12 @@ export interface Quota {
    * OBJ limits are applied by endpoint, not region.
    * This below really just is a `string` type but being verbose helps with reading comprehension.
    */
-  region_applied?: Region['id'] | 'global';
+  region_applied?: 'global' | Region['id'];
 
   /**
-   * The OBJ endpoint type to which this limit applies.
-   *
-   * For OBJ limits only.
+   * The unit of measurement for this service limit.
    */
-  endpoint_type?: ObjectStorageEndpointTypes;
+  resource_metric: StorageSymbol;
 
   /**
    * The S3 endpoint URL to which this limit applies.
@@ -81,7 +72,7 @@ export interface QuotaUsage {
    *
    * This can be null if the user does not have resources for the given Quota Name.
    */
-  used: number | null;
+  usage: null | number;
 }
 
 export const quotaTypes = {
