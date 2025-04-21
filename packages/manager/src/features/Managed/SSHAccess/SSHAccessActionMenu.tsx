@@ -26,9 +26,8 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
-    linodeId
-  );
+  const { mutateAsync: updateLinodeSettings } =
+    useUpdateLinodeSettingsMutation(linodeId);
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);

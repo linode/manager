@@ -12,13 +12,17 @@ import { TableRow } from 'src/components/TableRow';
 import { DisabledPlanSelectionTooltip } from 'src/features/components/PlansPanel/DisabledPlanSelectionTooltip';
 import { getDisabledPlanReasonCopy } from 'src/features/components/PlansPanel/utils';
 import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
+import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import type { PriceObject } from '@linode/api-v4';
+import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
@@ -31,6 +35,7 @@ export interface KubernetesPlanSelectionProps {
   plan: PlanWithAvailability;
   selectedId?: string;
   selectedRegionId?: Region['id'];
+  selectedTier: KubernetesTier;
   updatePlanCount: (planId: string, newCount: number) => void;
   wholePanelIsDisabled: boolean;
 }
@@ -46,6 +51,7 @@ export const KubernetesPlanSelection = (
     plan,
     selectedId,
     selectedRegionId,
+    selectedTier,
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
@@ -102,6 +108,11 @@ export const KubernetesPlanSelection = (
       <StyledInputOuter>
         <EnhancedNumberInput
           disabled={rowIsDisabled}
+          max={
+            selectedTier === 'enterprise'
+              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+              : MAX_NODES_PER_POOL_STANDARD_TIER
+          }
           setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
           value={count}
         />
@@ -172,10 +183,15 @@ export const KubernetesPlanSelection = (
                   rowIsDisabled ||
                   typeof price?.hourly !== 'number'
                 }
+                inputLabel={`edit-quantity-${plan.id}`}
+                max={
+                  selectedTier === 'enterprise'
+                    ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                    : MAX_NODES_PER_POOL_STANDARD_TIER
+                }
                 setValue={(newCount: number) =>
                   updatePlanCount(plan.id, newCount)
                 }
-                inputLabel={`edit-quantity-${plan.id}`}
                 value={count}
               />
               {onAdd && (

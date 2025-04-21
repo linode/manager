@@ -50,17 +50,15 @@ export const CredentialList = () => {
 
   const credentials = data || [];
 
-  const {
-    data: selectedCredential,
-    isFetching: isFetchingSelectedCredential,
-  } = useDialogData({
-    enabled:
-      match.routeId === '/managed/credentials/$credentialId/edit' ||
-      match.routeId === '/managed/credentials/$credentialId/delete',
-    paramKey: 'credentialId',
-    queryHook: useManagedCredentialQuery,
-    redirectToOnNotFound: '/managed/credentials',
-  });
+  const { data: selectedCredential, isFetching: isFetchingSelectedCredential } =
+    useDialogData({
+      enabled:
+        match.routeId === '/managed/credentials/$credentialId/edit' ||
+        match.routeId === '/managed/credentials/$credentialId/delete',
+      paramKey: 'credentialId',
+      queryHook: useManagedCredentialQuery,
+      redirectToOnNotFound: '/managed/credentials',
+    });
 
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const { mutateAsync: deleteCredential } = useDeleteCredentialMutation();

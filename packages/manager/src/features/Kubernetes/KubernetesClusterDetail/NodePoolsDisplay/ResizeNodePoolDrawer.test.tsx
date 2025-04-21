@@ -24,6 +24,7 @@ vi.mock('src/queries/types', async () => {
 });
 
 const props: Props = {
+  clusterTier: 'standard',
   kubernetesClusterId: 1,
   kubernetesRegionId: 'us-east',
   nodePool: pool,
@@ -53,5 +54,34 @@ describe('ResizeNodePoolDrawer', () => {
     const decrement = await findByTestId('decrement-button');
     fireEvent.click(decrement);
     expect(getByText(/resizing to fewer nodes/i));
+  });
+
+  it('should display a maximum of 100 nodes for LKE', async () => {
+    const { findByTestId } = renderWithTheme(
+      <ResizeNodePoolDrawer
+        {...props}
+        nodePool={nodePoolFactory.build({ count: 101 })}
+      />
+    );
+
+    const input = (await findByTestId('textfield-input')) as HTMLInputElement;
+    expect(input.value).toBe('100');
+    const increment = await findByTestId('increment-button');
+    expect(increment).toBeDisabled();
+  });
+
+  it('should display a maximum of 500 nodes for LKE-E', async () => {
+    const { findByTestId } = renderWithTheme(
+      <ResizeNodePoolDrawer
+        {...props}
+        clusterTier="enterprise"
+        nodePool={nodePoolFactory.build({ count: 501 })}
+      />
+    );
+
+    const input = (await findByTestId('textfield-input')) as HTMLInputElement;
+    expect(input.value).toBe('500');
+    const increment = await findByTestId('increment-button');
+    expect(increment).toBeDisabled();
   });
 });

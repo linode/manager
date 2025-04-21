@@ -12,6 +12,10 @@ import { makeStyles } from 'tss-react/mui';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { NotFound } from 'src/components/NotFound';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -23,7 +27,11 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
 
-import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
+import type {
+  KubeNodePoolResponse,
+  KubernetesTier,
+  Region,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -40,6 +48,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export interface Props {
+  clusterTier: KubernetesTier;
   kubernetesClusterId: number;
   kubernetesRegionId: Region['id'];
   nodePool: KubeNodePoolResponse | undefined;
@@ -52,6 +61,7 @@ the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
   const {
+    clusterTier,
     kubernetesClusterId,
     kubernetesRegionId,
     nodePool,
@@ -71,9 +81,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     isPending,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
-  const [resizeNodePoolError, setResizeNodePoolError] = React.useState<string>(
-    ''
-  );
+  const [resizeNodePoolError, setResizeNodePoolError] =
+    React.useState<string>('');
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -90,7 +99,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   }, [nodePool, open]);
 
   const handleChange = (value: number) => {
-    setUpdatedCount(Math.min(100, Math.floor(value)));
+    setUpdatedCount(Math.floor(value));
   };
 
   React.useEffect(() => {
@@ -111,8 +120,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getLinodeRegionPrice(planType, kubernetesRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    planType,
+    kubernetesRegionId
+  )?.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -158,6 +169,11 @@ export const ResizeNodePoolDrawer = (props: Props) => {
               Adjust the total number of nodes to resize this node pool.
             </Typography>
             <EnhancedNumberInput
+              max={
+                clusterTier === 'enterprise'
+                  ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
+              }
               min={1}
               setValue={handleChange}
               value={updatedCount}
