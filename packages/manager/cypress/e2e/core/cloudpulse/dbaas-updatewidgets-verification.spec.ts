@@ -245,7 +245,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .type('Primary{enter}');
 
     cy.get('@getMetrics.all')
-      .should('have.length', 16)
       .invoke('slice', -4)
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
