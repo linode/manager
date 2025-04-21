@@ -6,6 +6,7 @@ import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateCredential,
   mockDeleteCredential,
+  mockGetCredential,
   mockGetCredentials,
   mockUpdateCredential,
   mockUpdateCredentialUsernamePassword,
@@ -120,6 +121,7 @@ describe('Managed Credentials tab', () => {
     };
 
     mockGetCredentials([credential]).as('getCredentials');
+    mockGetCredential(credential).as('getCredential');
     mockUpdateCredential(credentialId, updatedCredential).as(
       'updateCredential'
     );
@@ -140,6 +142,8 @@ describe('Managed Credentials tab', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getCredential');
 
     // Fill out forms to update credential label, and username/password pair.
     ui.drawer
@@ -203,6 +207,7 @@ describe('Managed Credentials tab', () => {
       label: credentialLabel,
     });
 
+    mockGetCredential(credential).as('getCredential');
     mockGetCredentials([credential]).as('getCredentials');
     mockDeleteCredential(credentialId).as('deleteCredential');
     visitUrlWithManagedEnabled('/managed/credentials');
@@ -234,6 +239,8 @@ describe('Managed Credentials tab', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getCredential');
 
     // Confirm that toast notification is shown and credential is no longer listed.
     cy.wait('@deleteCredential');

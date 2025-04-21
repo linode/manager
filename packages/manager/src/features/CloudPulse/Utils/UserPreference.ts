@@ -108,7 +108,7 @@ export const usePreferencesToggle = <K extends keyof ManagerPreferences>({
 
     // if the preference is undefined, set it to false
     if (preference === undefined) {
-      newPreferenceToSet = defaultValue;
+      newPreferenceToSet = options[defaultValue === options[0] ? 1 : 0];
     } else if (preference === options[0]) {
       newPreferenceToSet = options[1];
     } else {
