@@ -76,8 +76,7 @@ export interface Widgets {
 }
 
 export interface Filters {
-  dimension_label?: string;
-  key?: string;
+  dimension_label: string;
   operator: string;
   value: string;
 }
@@ -143,12 +142,6 @@ export interface CloudPulseMetricsRequest {
   metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
-}
-
-export interface CloudPulseMetricsRequestOlderVersion
-  extends Omit<CloudPulseMetricsRequest, 'metrics'> {
-  aggregate_function: string;
-  metric: string;
 }
 
 export interface CloudPulseMetricsResponse {
