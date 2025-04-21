@@ -30,6 +30,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingRight: theme.spacing(1),
     width: 50,
   },
+
   cellUser: {
     width: '30%',
   },
@@ -57,16 +58,11 @@ interface Props {
 export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const {
-    authorizedUsers,
-    disabled,
-    headingVariant,
-    setAuthorizedUsers,
-  } = props;
+  const { authorizedUsers, disabled, headingVariant, setAuthorizedUsers } =
+    props;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
 
   const pagination = usePagination(1);
 
@@ -206,7 +202,7 @@ export const UserSSHKeyPanel = (props: Props) => {
       <Typography className={classes.title} variant={headingVariant ?? 'h2'}>
         SSH Keys
       </Typography>
-      <Table spacingBottom={16}>
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell className={classes.cellCheckbox} />
@@ -230,6 +226,7 @@ export const UserSSHKeyPanel = (props: Props) => {
         buttonType="outlined"
         disabled={disabled}
         onClick={() => setIsCreateDrawerOpen(true)}
+        sx={{ marginTop: theme.tokens.spacing.S16 }}
       >
         Add an SSH Key
       </Button>
