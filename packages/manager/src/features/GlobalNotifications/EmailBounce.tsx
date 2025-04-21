@@ -131,7 +131,7 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    <Notice forceImportantIconVerticalCenter important variant="warning">
+    <Notice forceImportantIconVerticalCenter variant="warning">
       <Grid
         container
         display="flex"

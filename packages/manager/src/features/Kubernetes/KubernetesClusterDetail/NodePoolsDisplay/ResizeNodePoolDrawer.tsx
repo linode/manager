@@ -51,13 +51,8 @@ const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
-  const {
-    kubernetesClusterId,
-    kubernetesRegionId,
-    nodePool,
-    onClose,
-    open,
-  } = props;
+  const { kubernetesClusterId, kubernetesRegionId, nodePool, onClose, open } =
+    props;
   const { classes } = useStyles();
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
@@ -71,9 +66,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     isPending,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
-  const [resizeNodePoolError, setResizeNodePoolError] = React.useState<string>(
-    ''
-  );
+  const [resizeNodePoolError, setResizeNodePoolError] =
+    React.useState<string>('');
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -111,8 +105,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getLinodeRegionPrice(planType, kubernetesRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    planType,
+    kubernetesRegionId
+  )?.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -186,12 +182,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </div>
 
           {updatedCount < nodePool.count && (
-            <Notice important text={resizeWarning} variant="warning" />
+            <Notice text={resizeWarning} variant="warning" />
           )}
 
-          {updatedCount < 3 && (
-            <Notice important text={nodeWarning} variant="warning" />
-          )}
+          {updatedCount < 3 && <Notice text={nodeWarning} variant="warning" />}
 
           {nodePool.count && hasInvalidPrice && (
             <Notice

@@ -250,12 +250,11 @@ const DatabaseCreate = () => {
         />
         {isRestricted && (
           <Notice
+            spacingTop={16}
             text={getRestrictedResourceText({
               action: 'create',
               resourceType: 'Databases',
             })}
-            important
-            spacingTop={16}
             variant="error"
           />
         )}

@@ -429,7 +429,6 @@ export const ImagesLanding = () => {
     <React.Fragment>
       {isCreateImageRestricted && (
         <Notice
-          important
           sx={{ marginBottom: 2 }}
           text={getRestrictedResourceText({
             action: 'create',

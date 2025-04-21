@@ -293,7 +293,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

@@ -104,8 +104,10 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    selectedType,
+    clusterRegionId
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -203,7 +205,6 @@ export const AddNodePoolDrawer = (props: Props) => {
           selectedTypeInfo.count > 0 &&
           selectedTypeInfo.count < 3 && (
             <Notice
-              important
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}
