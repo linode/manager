@@ -370,7 +370,8 @@ export const defaultValues = async (
     }
   }
 
-  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
+  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
+    undefined;
 
   if (isLinodeInterfacesEnabled) {
     try {
