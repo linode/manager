@@ -38,7 +38,7 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
     .buildList(3)
     .map((credential) => credential.id),
   id: Factory.each((i) => i),
-  label: 'Test service',
+  label: Factory.each((i) => `Test service ${i}`),
   notes: '',
   region: null,
   service_type: 'url',
