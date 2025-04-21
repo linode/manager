@@ -26,8 +26,7 @@
     "typescript-eslint": "^8.29.0",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
-    "@linode/eslint-plugin-cloud-manager": "^0.0.10",
-    "jiti": "^2.4.2"
+    "@linode/eslint-plugin-cloud-manager": "^0.0.10"
   },
   "scripts": {
     "lint:all": "pnpm -r --parallel lint",

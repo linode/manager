@@ -69,9 +69,6 @@ importers:
       husky:
         specifier: ^9.1.6
         version: 9.1.7
-      jiti:
-        specifier: ^2.4.2
-        version: 2.4.2
       lint-staged:
         specifier: ^15.4.3
         version: 15.4.3
@@ -11105,7 +11102,8 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jiti@2.4.2: {}
+  jiti@2.4.2:
+    optional: true
 
   joycon@3.1.1: {}
 
