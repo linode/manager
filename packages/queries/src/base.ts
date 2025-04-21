@@ -74,6 +74,15 @@ export const queryClientFactory = (
   });
 };
 
+// =============================================================================
+// Types
+// =============================================================================
+export type ItemsByID<T> = Record<string, T>;
+
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
 /**
  * getIsAPIErrorArray
  * @param error an unknown error
@@ -91,15 +100,6 @@ function getIsAPIErrorArray(error: unknown): error is APIError[] {
   // we'll assume this is an APIError[]
   return Boolean(error[0]?.reason);
 }
-
-// =============================================================================
-// Types
-// =============================================================================
-export type ItemsByID<T> = Record<string, T>;
-
-// =============================================================================
-// Utility Functions
-// =============================================================================
 
 /**
  * "Indexers" for the following methods are included to handle
