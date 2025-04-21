@@ -58,7 +58,7 @@ export const AssignedEntities = ({
       >
         <Chip
           data-testid="entities"
-          deleteIcon={<CloseIcon />}
+          deleteIcon={<CloseIcon data-testid={'CloseIcon'} />}
           key={entity.id}
           label={entity.name}
           onDelete={() => onRemoveAssignment(entity, role)}
