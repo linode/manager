@@ -85,8 +85,8 @@ export const ClusterTierPanel = (props: Props) => {
           onClick={() => handleClusterTierSelection('enterprise')}
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
-          tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
           sxGrid={xlBreakpointGridStyle}
+          tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
     </Stack>
