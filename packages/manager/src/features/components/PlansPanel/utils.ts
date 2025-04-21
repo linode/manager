@@ -218,7 +218,10 @@ export const getIsLimitedAvailability = ({
  */
 const isMTCTTPlan = (plan: PlanSelectionType) => {
   return (
-    plan.class === 'premium' && MTC_TT['available_types'].includes(plan.id)
+    plan.class === 'premium' &&
+    MTC_TT['available_types'].includes(
+      plan.id as (typeof MTC_TT)['available_types'][number]
+    )
   );
 };
 
@@ -366,7 +369,9 @@ export const extractPlansInformation = ({
         isCustomMTCPlan &&
         !(
           selectedRegionId &&
-          MTC_TT['availability_regions'].includes(selectedRegionId)
+          MTC_TT['availability_regions'].includes(
+            selectedRegionId as (typeof MTC_TT)['availability_regions'][number]
+          )
         );
 
       const planHasLimitedAvailability = getIsLimitedAvailability({
