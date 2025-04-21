@@ -49,7 +49,7 @@ const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
-      dimensionKey: 'cluster_id',
+      dimensionKey: 'entity_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
       supportedRegionIds: 'us-ord',
