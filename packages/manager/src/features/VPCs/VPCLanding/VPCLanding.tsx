@@ -126,6 +126,7 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
+        breadcrumbProps={{ pathname: '/vpcs' }}
         createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
         docsLink={VPC_DOCS_LINK}

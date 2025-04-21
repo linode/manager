@@ -12,15 +12,28 @@ interface Props {
 
 export interface InterfaceActionHandlers {
   onDelete: (interfaceId: number) => void;
+  onEdit: (interfaceId: number) => void;
   onShowDetails: (interfaceId: number) => void;
 }
 
 export const LinodeInterfaceActionMenu = (props: Props) => {
   const { handlers, id, type } = props;
 
+  const editOptions =
+    type === 'VLAN'
+      ? {
+          disabled: true,
+          tooltip: 'VLAN interfaces cannot be edited.',
+        }
+      : {};
+
   const actions = [
     { onClick: () => handlers.onShowDetails(id), title: 'Details' },
-    { onClick: () => alert(`Edit ${id}`), title: 'Edit' },
+    {
+      onClick: () => handlers.onEdit(id),
+      title: 'Edit',
+      ...editOptions,
+    },
     { onClick: () => handlers.onDelete(id), title: 'Delete' },
   ];
 

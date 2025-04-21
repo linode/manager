@@ -18,6 +18,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
+import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -31,33 +33,24 @@ import { VPCRanges } from './VPCRanges';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
-// @TODO Linode Interfaces - need to handle case if interface is not legacy
-
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
-  const {
-    control,
-    formState,
-    setValue,
-  } = useFormContext<CreateLinodeRequest>();
+  const { control, formState, setValue } =
+    useFormContext<CreateLinodeRequest>();
 
   const { data: regions } = useRegionsQuery();
 
-  const [
-    regionId,
-    selectedVPCId,
-    selectedSubnetId,
-    linodeVPCIPAddress,
-  ] = useWatch({
-    control,
-    name: [
-      'region',
-      'interfaces.0.vpc_id',
-      'interfaces.0.subnet_id',
-      'interfaces.0.ipv4.vpc',
-    ],
-  });
+  const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
+    useWatch({
+      control,
+      name: [
+        'region',
+        'interfaces.0.vpc_id',
+        'interfaces.0.subnet_id',
+        'interfaces.0.ipv4.vpc',
+      ],
+    });
 
   const regionSupportsVPCs = doesRegionSupportFeature(
     regionId,
@@ -65,7 +58,11 @@ export const VPC = () => {
     'VPCs'
   );
 
-  const { data: vpcs, error, isLoading } = useAllVPCsQuery({
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region: regionId },
   });
@@ -106,13 +103,21 @@ export const VPC = () => {
         </Typography>
         <Stack spacing={1.5}>
           <Controller
+            control={control}
+            name="interfaces.0.vpc_id"
             render={({ field, fieldState }) => (
               <Autocomplete
+                disabled={!regionSupportsVPCs}
+                errorText={error?.[0].reason ?? fieldState.error?.message}
                 helperText={
                   regionId && !regionSupportsVPCs
                     ? 'VPC is not available in the selected region.'
                     : undefined
                 }
+                label="Assign VPC"
+                loading={isLoading}
+                noMarginTop
+                onBlur={field.onBlur}
                 onChange={(e, vpc) => {
                   field.onChange(vpc?.id ?? null);
 
@@ -144,22 +149,14 @@ export const VPC = () => {
                     });
                   }
                 }}
+                options={vpcs ?? []}
+                placeholder="None"
                 textFieldProps={{
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
-                disabled={!regionSupportsVPCs}
-                errorText={error?.[0].reason ?? fieldState.error?.message}
-                label="Assign VPC"
-                loading={isLoading}
-                noMarginTop
-                onBlur={field.onBlur}
-                options={vpcs ?? []}
-                placeholder="None"
                 value={selectedVPC ?? null}
               />
             )}
-            control={control}
-            name="interfaces.0.vpc_id"
           />
           {regionId && regionSupportsVPCs && (
             <Box>
@@ -179,38 +176,41 @@ export const VPC = () => {
           {selectedVPCId && (
             <>
               <Controller
+                control={control}
+                name="interfaces.0.subnet_id"
                 render={({ field, fieldState }) => (
                   <Autocomplete
+                    errorText={fieldState.error?.message}
                     getOptionLabel={(subnet) =>
                       `${subnet.label} (${subnet.ipv4})`
                     }
-                    value={
-                      selectedVPC?.subnets.find(
-                        (subnet) => subnet.id === field.value
-                      ) ?? null
-                    }
-                    errorText={fieldState.error?.message}
                     label="Subnet"
                     noMarginTop
                     onBlur={field.onBlur}
                     onChange={(e, subnet) => field.onChange(subnet?.id ?? null)}
                     options={selectedVPC?.subnets ?? []}
                     placeholder="Select Subnet"
+                    value={
+                      selectedVPC?.subnets.find(
+                        (subnet) => subnet.id === field.value
+                      ) ?? null
+                    }
                   />
                 )}
-                control={control}
-                name="interfaces.0.subnet_id"
               />
               {selectedSubnetId && (
                 <>
                   <Stack>
                     <Controller
+                      control={control}
+                      name="interfaces.0.ipv4.vpc"
                       render={({ field }) => (
                         <Box>
                           <FormControlLabel
                             checked={
                               field.value === null || field.value === undefined
                             }
+                            control={<Checkbox sx={{ ml: 0.5 }} />}
                             label={
                               <Stack alignItems="center" direction="row">
                                 <Typography>
@@ -230,16 +230,15 @@ export const VPC = () => {
                               // user can enter one.
                               field.onChange(checked ? null : '')
                             }
-                            control={<Checkbox sx={{ ml: 0.5 }} />}
                           />
                         </Box>
                       )}
-                      control={control}
-                      name="interfaces.0.ipv4.vpc"
                     />
                     {linodeVPCIPAddress !== null &&
                       linodeVPCIPAddress !== undefined && (
                         <Controller
+                          control={control}
+                          name="interfaces.0.ipv4.vpc"
                           render={({ field, fieldState }) => (
                             <TextField
                               containerProps={{ sx: { mb: 1, mt: 1 } }}
@@ -252,36 +251,22 @@ export const VPC = () => {
                               value={field.value}
                             />
                           )}
-                          control={control}
-                          name="interfaces.0.ipv4.vpc"
                         />
                       )}
                     <Controller
+                      control={control}
+                      name="interfaces.0.ipv4.nat_1_1"
                       render={({ field }) => (
                         <FormControlLabel
-                          label={
-                            <Stack alignItems="center" direction="row">
-                              <Typography>
-                                Assign a public IPv4 address for this Linode
-                              </Typography>
-                              <TooltipIcon
-                                text={
-                                  'Access the internet through the public IPv4 address using static 1:1 NAT.'
-                                }
-                                status="help"
-                              />
-                            </Stack>
-                          }
+                          checked={field.value === 'any'}
+                          control={<Checkbox sx={{ ml: 0.5 }} />}
+                          label={<VPCPublicIPLabel />}
                           onChange={(e, checked) =>
                             field.onChange(checked ? 'any' : null)
                           }
-                          checked={field.value === 'any'}
-                          control={<Checkbox sx={{ ml: 0.5 }} />}
                           sx={{ mt: 0 }}
                         />
                       )}
-                      control={control}
-                      name="interfaces.0.ipv4.nat_1_1"
                     />
                   </Stack>
                   <Divider />
@@ -289,31 +274,14 @@ export const VPC = () => {
                     Assign additional IPv4 ranges
                   </Typography>
                   {formState.errors.interfaces?.[1] &&
-                    'ip_ranges' in formState.errors.interfaces?.[1] && (
+                    formState.errors.interfaces[1] &&
+                    'ip_ranges' in formState.errors.interfaces[1] && (
                       <Notice
-                        text={
-                          formState.errors.interfaces[1]?.ip_ranges?.message
-                        }
+                        text={formState.errors.interfaces[1].ip_ranges?.message}
                         variant="error"
                       />
                     )}
-                  <Typography>
-                    Assign additional IPv4 address ranges that the VPC can use
-                    to reach services running on this Linode.{' '}
-                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
-                      Learn more
-                    </Link>
-                    .
-                  </Typography>
-                  {formState.errors.interfaces?.[0] &&
-                    'ip_ranges' in formState.errors.interfaces[0] && (
-                      <Notice
-                        text={
-                          formState.errors.interfaces[0]?.ip_ranges?.message
-                        }
-                        variant="error"
-                      />
-                    )}
+                  <VPCRangesDescription />
                   <VPCRanges />
                 </>
               )}
@@ -322,6 +290,7 @@ export const VPC = () => {
         </Stack>
       </Stack>
       <VPCCreateDrawer
+        onClose={() => setIsCreateDrawerOpen(false)}
         onSuccess={(vpc) => {
           setValue('interfaces.0.vpc_id', vpc.id);
 
@@ -331,7 +300,6 @@ export const VPC = () => {
             setValue('interfaces.0.subnet_id', vpc.subnets[0].id);
           }
         }}
-        onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         selectedRegion={regionId}
       />

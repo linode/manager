@@ -10,29 +10,29 @@ import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import {
-  formatConfigValue,
-  isConfigBoolean,
-  isConfigStringWithEnum,
-} from '../../utilities';
-import {
   StyledBox,
   StyledChip,
   StyledWrapper,
 } from './DatabaseConfigurationItem.style';
+import {
+  formatConfigValue,
+  isConfigBoolean,
+  isConfigStringWithEnum,
+} from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type { ConfigValue } from '@linode/api-v4';
 
 interface Props {
   configItem?: ConfigurationOption;
-  engine: string;
   errorText: string | undefined;
+  onBlur?: () => void;
   onChange: (config: ConfigValue) => void;
   onRemove?: (label: string) => void;
 }
 
 export const DatabaseConfigurationItem = (props: Props) => {
-  const { configItem, engine, errorText, onChange, onRemove } = props;
+  const { configItem, errorText, onBlur, onChange, onRemove } = props;
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
@@ -57,34 +57,40 @@ export const DatabaseConfigurationItem = (props: Props) => {
       );
       return (
         <Autocomplete
+          autoHighlight
+          disableClearable
+          isOptionEqualToValue={(option, value) => option.label === value.label}
+          label={''}
           onChange={(_, selected) => {
             onChange(selected?.label ?? '');
           }}
+          options={options}
           renderInput={(params) => (
             <TextField {...params} label="" placeholder="Select an option" />
           )}
-          disableClearable
-          filterOptions={(options) => options}
-          isOptionEqualToValue={(option, value) => option.label === value.label}
-          label={''}
-          options={options}
           value={selectedValue ?? options[0]}
         />
       );
     }
-    if (configItem?.type === 'number' || configItem?.type === 'integer') {
+    if (
+      (configItem?.type === 'number' || configItem?.type === 'integer') &&
+      typeof configItem.value !== 'boolean'
+    ) {
       return (
         <TextField
-          placeholder={
-            configItem.isNew ? String(configItem?.example ?? '') : ''
-          }
           errorText={errorText}
           fullWidth
           label=""
           name={configLabel}
-          onChange={(e) => onChange(Number(e.target.value))}
+          onBlur={onBlur}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          placeholder={
+            configItem.isNew ? String(configItem?.example ?? '') : ''
+          }
           type="number"
-          value={Number(configItem.value)}
+          value={configItem.value}
         />
       );
     }
@@ -101,6 +107,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           fullWidth
           label=""
           name={configLabel}
+          onBlur={onBlur}
           onChange={(e) => onChange(e.target.value)}
           placeholder={String(configItem.example)}
           type="text"
@@ -124,9 +131,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
             mr: 0.5,
           })}
         >
-          {`${engine}.${configLabel}`}
+          {configItem?.category === 'other'
+            ? configLabel
+            : `${configItem?.category}.${configLabel}`}
         </Typography>
-        {configItem?.restart_cluster && (
+        {configItem?.requires_restart && (
           <StyledChip color="warning" label="restarts service" size="small" />
         )}
         {configItem?.description && (

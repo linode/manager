@@ -7,7 +7,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type { FlagSet, Flags } from 'src/featureFlags';
+import type { Flags, FlagSet } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
@@ -21,6 +21,7 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
+  { flag: 'aclpIntegration', label: 'ACLP Integration' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
@@ -44,6 +45,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
+  },
+  {
+    flag: 'vmHostMaintenance',
+    label: 'VM Host Maintenance Policy',
   },
 ];
 

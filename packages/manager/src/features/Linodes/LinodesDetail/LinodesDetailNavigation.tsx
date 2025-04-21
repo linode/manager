@@ -33,6 +33,7 @@ const LinodeBackup = React.lazy(() => import('./LinodeBackup/LinodeBackups'));
 const LinodeActivity = React.lazy(
   () => import('./LinodeActivity/LinodeActivity')
 );
+const LinodeAlerts = React.lazy(() => import('./LinodeAlerts/LinodeAlerts'));
 const LinodeSettings = React.lazy(
   () => import('./LinodeSettings/LinodeSettings')
 );
@@ -54,8 +55,8 @@ const LinodesDetailNavigation = () => {
 
   const tabs = [
     {
-      routeName: `${url}/analytics`,
-      title: 'Analytics',
+      routeName: `${url}/metrics`,
+      title: 'Metrics',
     },
     {
       routeName: `${url}/networking`,
@@ -79,6 +80,10 @@ const LinodesDetailNavigation = () => {
     {
       routeName: `${url}/activity`,
       title: 'Activity Feed',
+    },
+    {
+      routeName: `${url}/alerts`,
+      title: 'Alerts',
     },
     {
       routeName: `${url}/settings`,
@@ -164,6 +169,9 @@ const LinodesDetailNavigation = () => {
               )}
               <SafeTabPanel index={idx++}>
                 <LinodeActivity />
+              </SafeTabPanel>
+              <SafeTabPanel index={idx++}>
+                <LinodeAlerts />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeSettings />

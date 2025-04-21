@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockGetAllImages } from 'support/intercepts/images';
 import {
@@ -9,7 +9,6 @@ import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
 import { imageFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories';
 
 import type { Image } from '@linode/api-v4';
@@ -50,14 +49,14 @@ function checkActionMenu(tableAlias: string, mockImages: any[]) {
 
 describe('image landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
-    const mockImages: Image[] = new Array(3).fill(null).map(
-      (_item: null, index: number): Image => {
+    const mockImages: Image[] = new Array(3)
+      .fill(null)
+      .map((_item: null, index: number): Image => {
         return imageFactory.build({
           label: `Image ${index}`,
           tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
         });
-      }
-    );
+      });
 
     // Mock setup to display the Image landing page in an non-empty state
     mockGetAllImages(mockImages).as('getImages');
