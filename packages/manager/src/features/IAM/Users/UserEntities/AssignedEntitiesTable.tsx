@@ -22,8 +22,8 @@ import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmen
 import {
   getFilteredRoles,
   getFormattedEntityType,
+  groupAccountEntitiesByType,
   mapEntityTypes,
-  transformedAccountEntities,
 } from '../../Shared/utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
@@ -80,7 +80,7 @@ export const AssignedEntitiesTable = () => {
     if (!assignedRoles || !entities) {
       return { entityTypes: [], roles: [] };
     }
-    const transformedEntities = transformedAccountEntities(entities.data);
+    const transformedEntities = groupAccountEntitiesByType(entities.data);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 

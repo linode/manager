@@ -6,20 +6,14 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
-import {
-  getCreateLinkForEntityType,
-  getFormattedEntityType,
-  placeholderMap,
-  transformedAccountEntities,
-} from '../utilities';
-
-import type { DrawerModes, EntitiesOption } from '../utilities';
+import type { EntitiesOption } from '../types';
+import { getFormattedEntityType, type DrawerModes } from '../utilities';
 import type {
-  AccountEntity,
   EntityType,
   EntityTypePermissions,
   IamAccessType,
 } from '@linode/api-v4/lib/iam/types';
+import { getEntitiesByType, getPlaceholder, mapEntitiesToOptions } from './utils';
 
 interface Props {
   access: IamAccessType;
@@ -46,7 +40,7 @@ export const Entities = ({
       return [];
     }
     const typeEntities = getEntitiesByType(type, entities.data);
-    return typeEntities ? transformedEntities(typeEntities) : [];
+    return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
 
   if (access === 'account_access') {
@@ -119,34 +113,4 @@ export const Entities = ({
       )}
     </>
   );
-};
-
-const getPlaceholder = (
-  type: EntityType | EntityTypePermissions,
-  currentValueLength: number,
-  possibleEntitiesLength: number
-): string =>
-  currentValueLength > 0
-    ? ' '
-    : possibleEntitiesLength === 0
-      ? 'None'
-      : placeholderMap[type] || 'Select';
-
-const transformedEntities = (
-  entities: { id: number; label: string }[]
-): EntitiesOption[] => {
-  return entities.map((entity) => ({
-    label: entity.label,
-    value: entity.id,
-  }));
-};
-
-const getEntitiesByType = (
-  roleEntityType: EntityType | EntityTypePermissions,
-  entities: AccountEntity[]
-): Pick<AccountEntity, 'id' | 'label'>[] | undefined => {
-  const entitiesMap = transformedAccountEntities(entities);
-
-  // Find the first matching entity by type
-  return entitiesMap.get(roleEntityType as EntityType);
 };
