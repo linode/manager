@@ -11,6 +11,8 @@ import {
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  grantFactory,
+  grantsFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -27,14 +29,13 @@ import {
   securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
-  VLANFactory,
-  // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
+  // abuseTicketNotificationFactory,
   accountTransferFactory,
   alertDimensionsFactory,
   alertFactory,
@@ -102,6 +103,7 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  VLANFactory,
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
@@ -109,7 +111,6 @@ import {
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { getStorage } from 'src/utilities/storage';
 
@@ -1887,7 +1888,7 @@ export const handlers = [
     return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
-    const monitors = monitorFactory.buildList(5);
+    const monitors = monitorFactory.buildList(25);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
       status: 'problem',

@@ -1,23 +1,26 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface SSHAccessActionMenuProps {
   isEnabled: boolean;
   linodeId: number;
   linodeLabel: string;
-  openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
-  const { isEnabled, linodeId, openDrawer } = props;
+  const { isEnabled, linodeId } = props;
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -35,7 +38,10 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        openDrawer(linodeId);
+        navigate({
+          params: { linodeId },
+          to: '/managed/ssh-access/$linodeId/edit',
+        });
       },
       title: 'Edit',
     },
@@ -96,5 +102,3 @@ export const SSHAccessActionMenu = (props: SSHAccessActionMenuProps) => {
     </>
   );
 };
-
-export default SSHAccessActionMenu;

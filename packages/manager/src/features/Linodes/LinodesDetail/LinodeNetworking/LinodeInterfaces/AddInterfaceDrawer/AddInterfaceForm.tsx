@@ -10,8 +10,9 @@ import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Net
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
+import { PublicInterface } from './Public/PublicInterface';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
-import { VLANInterface } from './VLANInterface';
+import { VLANInterface } from './VLAN/VLANInterface';
 import { VPCInterface } from './VPC/VPCInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
@@ -78,7 +79,7 @@ export const AddInterfaceForm = (props: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Notice
-            text="Adding a network interface requires the Linode to be shut down. Changes will take affect when the Linode is powered on. "
+            text="Adding a network interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
             variant="warning"
           />
           {form.formState.errors.root && (
@@ -90,6 +91,7 @@ export const AddInterfaceForm = (props: Props) => {
             />
           )}
           <InterfaceType />
+          {selectedInterfacePurpose === 'public' && <PublicInterface />}
           {selectedInterfacePurpose === 'vlan' && <VLANInterface />}
           {selectedInterfacePurpose === 'vpc' && (
             <VPCInterface regionId={regionId} />

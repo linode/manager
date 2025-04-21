@@ -57,6 +57,7 @@ interface DisplayGroupedLinodesProps
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -74,6 +75,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     linodesAreGrouped,
     order,
     orderBy,
+    regionFilter,
     toggleGroupLinodes,
     toggleLinodeView,
     ...rest
@@ -123,7 +125,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
         <Grid className={'px0'} size={12}>
           {isGeckoLAEnabled && (
             <Paper sx={{ padding: 1 }}>
-              <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+              <RegionTypeFilter
+                handleRegionFilter={handleRegionFilter}
+                regionFilter={regionFilter}
+              />
             </Paper>
           )}
           <StyledControlHeader>
@@ -255,7 +260,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
       <>
         {isGeckoLAEnabled && (
           <Paper sx={{ padding: 1 }}>
-            <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+            <RegionTypeFilter
+              handleRegionFilter={handleRegionFilter}
+              regionFilter={regionFilter}
+            />
           </Paper>
         )}
         <TableWrapper

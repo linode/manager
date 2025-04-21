@@ -3,7 +3,7 @@ import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 import {
   StyledBox,
   StyledClampedContent,
@@ -16,18 +16,17 @@ import {
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
 type Props = {
+  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+export const Permissions = ({
+  permissions,
+}: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(permissions, showAll);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(permissions, showAll);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
