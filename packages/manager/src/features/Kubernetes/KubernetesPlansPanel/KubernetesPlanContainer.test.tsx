@@ -19,6 +19,7 @@ const props: KubernetesPlanContainerProps = {
   hasMajorityOfPlansDisabled: false,
   onSelect: vi.fn(),
   plans,
+  selectedTier: 'standard',
   selectedRegionId: undefined,
   updatePlanCount: vi.fn(),
   wholePanelIsDisabled: false,
