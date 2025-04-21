@@ -138,7 +138,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
     default: module.HelpAndSupport,
@@ -363,7 +362,6 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            <Route component={Managed} path="/managed" />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />
