@@ -478,7 +478,6 @@ export const SubnetAssignLinodesDrawer = (
     >
       {userCannotAssignLinodes && (
         <Notice
-          important
           text={`You don't have permissions to assign Linodes to ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
         />

@@ -36,10 +36,6 @@ export interface NoticeProps extends BoxProps {
    */
   forceImportantIconVerticalCenter?: boolean;
   /**
-   * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
-   */
-  important?: boolean;
-  /**
    * The amount of spacing to apply to the bottom of the error.
    */
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
@@ -88,7 +84,6 @@ export const Notice = (props: NoticeProps) => {
     dataTestId,
     errorGroup,
     forceImportantIconVerticalCenter = false,
-    important,
     spacingBottom,
     spacingLeft,
     spacingTop,
@@ -133,17 +128,12 @@ export const Notice = (props: NoticeProps) => {
           [classes.info]: variantMap.info || variantMap.tip,
           [classes.success]: variantMap.success,
           [classes.warning]: variantMap.warning,
-          // The order we apply styles matters - important must be applied last
-          [classes.important]: important,
           [errorScrollClassName]: variantMap.error,
         },
         'notice',
         className,
       )}
-      data-testid={
-        dataTestId ??
-        `notice${variant ? `-${variant}` : ''}${important ? '-important' : ''}`
-      }
+      data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
       role="alert"
       sx={[
         (theme) => ({
@@ -159,23 +149,19 @@ export const Notice = (props: NoticeProps) => {
       {...dataAttributes}
       {...rest}
     >
-      {important && (
-        <Box
-          sx={(theme) => ({
-            display: 'flex',
-            alignSelf: forceImportantIconVerticalCenter
-              ? 'center'
-              : 'flex-start',
-            marginRight: theme.spacingFunction(8),
-          })}
-        >
-          {variantMap.error && <ErrorIcon className={classes.icon} />}
-          {variantMap.info && <InfoIcon className={classes.icon} />}
-          {variantMap.success && <CheckIcon className={classes.icon} />}
-          {variantMap.tip && <LightBulbIcon className={classes.icon} />}
-          {variantMap.warning && <WarningIcon className={classes.icon} />}
-        </Box>
-      )}
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          alignSelf: forceImportantIconVerticalCenter ? 'center' : 'flex-start',
+          marginRight: theme.spacingFunction(8),
+        })}
+      >
+        {variantMap.error && <ErrorIcon className={classes.icon} />}
+        {variantMap.info && <InfoIcon className={classes.icon} />}
+        {variantMap.success && <CheckIcon className={classes.icon} />}
+        {variantMap.tip && <LightBulbIcon className={classes.icon} />}
+        {variantMap.warning && <WarningIcon className={classes.icon} />}
+      </Box>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
         {text || typeof children === 'string' ? (
           <Typography {...typeProps}>{text ?? children}</Typography>
