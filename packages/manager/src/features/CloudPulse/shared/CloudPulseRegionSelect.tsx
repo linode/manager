@@ -73,32 +73,30 @@ export const CloudPulseRegionSelect = React.memo(
       : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
-    // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      if (disabled) {
-        // disabled will be true if some dependent filters are not selected, so no need to do anything in this situation
-        if (selectedRegion) {
-          // if there is a region selected already, it means some of dependent filters are recently removed, so clear the region as well
-          handleRegionChange(undefined, [], true);
-          setSelectedRegion(undefined);
-        }
-
-        return;
-      }
-      if (selectedRegion) {
-        // if there is a selected region, and xFilter is changing, better to remove the selected region
-        handleRegionChange(undefined, [], true);
+      // If the component is disabled and there's a previously selected region,
+      // we clear the selected region.
+      if (disabled && selectedRegion) {
         setSelectedRegion(undefined);
       }
-      if (regions && savePreferences && !selectedRegion) {
+
+      // If component is not disabled, regions have loaded, preferences should be saved,
+      // and there's no selected region — attempt to preselect from defaultValue.
+      if (!disabled && regions && savePreferences && !selectedRegion) {
+        // Try to find the region corresponding to the saved default value
         const region = defaultValue
           ? regions.find((regionObj) => regionObj.id === defaultValue)
           : undefined;
+
+        // Notify parent and set internal state
         handleRegionChange(region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions, xFilter]);
+    }, [
+      xFilter, // Reacts to filter changes (to reset region)
+      regions, // Function to call on change
+    ]);
 
     // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
