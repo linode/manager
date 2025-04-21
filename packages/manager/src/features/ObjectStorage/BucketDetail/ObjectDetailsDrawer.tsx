@@ -86,7 +86,7 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <Link external to={url}>
+            <Link bypassSanitization external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
             <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />

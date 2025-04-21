@@ -192,7 +192,7 @@ export const ObjectUploader = React.memo((props: Props) => {
           .catch((_) => handleError());
       } else {
         // Otherwise, we need to make an API request to get the URL.
-        getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+        getObjectURL(clusterId, bucketName, encodeURI(fullObjectName), 'PUT', {
           content_type: file.type,
         })
           .then(({ exists, url }) => {
@@ -300,16 +300,15 @@ export const ObjectUploader = React.memo((props: Props) => {
   );
 });
 
-export const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: AxiosProgressEvent) => {
-  dispatch({
-    data: {
-      percentComplete:
-        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
-    },
-    filesToUpdate: [fileName],
-    type: 'UPDATE_FILES',
-  });
-};
+export const onUploadProgressFactory =
+  (dispatch: (value: ObjectUploaderAction) => void, fileName: string) =>
+  (progressEvent: AxiosProgressEvent) => {
+    dispatch({
+      data: {
+        percentComplete:
+          (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+      },
+      filesToUpdate: [fileName],
+      type: 'UPDATE_FILES',
+    });
+  };

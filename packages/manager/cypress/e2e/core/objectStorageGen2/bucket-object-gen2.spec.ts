@@ -481,4 +481,146 @@ describe('Object Storage Gen2 bucket object tests', () => {
       );
     });
   });
+
+  // Add this test after your existing tests
+  it('handles filenames with special characters properly when uploading objects', () => {
+    const bucketLabel = randomLabel();
+    const bucketCluster = mockRegion.id;
+
+    // Create a filename with special characters
+    const filename = 'test?image.jpg';
+    const encodedFilename = 'test%3Fimage.jpg';
+
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
+      label: bucketLabel,
+      region: mockRegion.id,
+      s3_endpoint: 'us-sea-1.linodeobjects.com',
+    });
+
+    mockCreateBucket({
+      cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
+      region: mockRegion.id,
+    }).as('createBucket');
+
+    mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
+    mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+
+    // Mock the upload request with encoded filename
+    mockUploadBucketObject(bucketLabel, bucketCluster, encodedFilename).as(
+      'uploadBucketObject'
+    );
+
+    mockUploadBucketObjectS3(bucketLabel, bucketCluster, encodedFilename).as(
+      'uploadBucketObjectS3'
+    );
+
+    // Mock getting the file with the encoded name
+    mockGetBucketObjectFilename(bucketLabel, bucketCluster, encodedFilename).as(
+      'getBucketFilename'
+    );
+
+    cy.visitWithLogin(
+      `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
+    );
+
+    // Create a test file with special characters in the name
+    cy.fixture('object-storage-files/1.txt', null).then((fileContents) => {
+      cy.get('[data-qa-drop-zone="true"]').attachFile(
+        {
+          fileContent: fileContents,
+          fileName: filename, // Use the original filename with special chars
+        },
+        {
+          subjectType: 'drag-n-drop',
+        }
+      );
+    });
+
+    // Wait for the upload and verify the proper encoded name is used
+    cy.wait('@uploadBucketObject').then((interception) => {
+      // Check that the request URL contains the encoded filename
+      expect(interception.request.url).to.include(encodedFilename);
+    });
+
+    cy.wait('@uploadBucketObjectS3');
+
+    // The UI should display the original filename
+    cy.findByLabelText('List of Bucket Objects').within(() => {
+      cy.findByText(filename).should('be.visible').click();
+    });
+
+    // Verify the drawer shows the original filename
+    ui.drawer.findByTitle(filename).should('be.visible');
+  });
+
+  // Add another test for filenames with spaces
+  it('properly encodes filenames with spaces when uploading objects', () => {
+    const bucketLabel = randomLabel();
+    const bucketCluster = mockRegion.id;
+
+    const filename = 'test file with spaces.pdf';
+    const encodedFilename = 'test%20file%20with%20spaces.pdf';
+
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
+      label: bucketLabel,
+      region: mockRegion.id,
+      s3_endpoint: undefined,
+    });
+
+    mockCreateBucket({
+      cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
+      region: mockRegion.id,
+    }).as('createBucket');
+
+    mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
+    mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+
+    mockUploadBucketObject(bucketLabel, bucketCluster, encodedFilename).as(
+      'uploadBucketObject'
+    );
+
+    mockUploadBucketObjectS3(bucketLabel, bucketCluster, encodedFilename).as(
+      'uploadBucketObjectS3'
+    );
+
+    cy.visitWithLogin(
+      `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
+    );
+
+    cy.fixture('object-storage-files/1.txt', null).then((fileContents) => {
+      cy.get('[data-qa-drop-zone="true"]').attachFile(
+        {
+          fileContent: fileContents,
+          fileName: filename,
+        },
+        {
+          subjectType: 'drag-n-drop',
+        }
+      );
+    });
+
+    // Verify the request uses the encoded filename
+    cy.wait('@uploadBucketObject').then((interception) => {
+      expect(interception.request.url).to.include(encodedFilename);
+    });
+
+    cy.wait('@uploadBucketObjectS3');
+
+    // UI should display the original filename
+    cy.findByLabelText('List of Bucket Objects').within(() => {
+      cy.findByText(filename).should('be.visible');
+    });
+  });
 });
