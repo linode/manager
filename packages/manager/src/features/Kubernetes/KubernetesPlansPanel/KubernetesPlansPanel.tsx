@@ -136,6 +136,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
+                selectedTier={selectedTier}
                 updatePlanCount={updatePlanCount}
                 wholePanelIsDisabled={
                   isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
