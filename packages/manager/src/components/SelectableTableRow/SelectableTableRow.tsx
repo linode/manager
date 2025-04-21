@@ -28,19 +28,20 @@ export const SelectableTableRow = React.memo(
 
     return (
       <TableRow
-        sx={{
+        sx={(theme) => ({
           '& td': {
-            padding: '0px 15px',
+            padding: `0 ${theme.tokens.spacing.S12}`,
           },
-        }}
+        })}
       >
         <StyledTableCell>
           <Checkbox
+            checked={isChecked}
             inputProps={{
               'aria-label': `Select all entities on page`,
             }}
-            checked={isChecked}
             onChange={handleToggleCheck}
+            size="small"
           />
         </StyledTableCell>
         {props.children}

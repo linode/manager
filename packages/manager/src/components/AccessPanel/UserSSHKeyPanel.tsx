@@ -26,8 +26,6 @@ const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cellCheckbox: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
     width: 50,
   },
   cellUser: {
@@ -57,16 +55,11 @@ interface Props {
 export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
   const theme = useTheme();
-  const {
-    authorizedUsers,
-    disabled,
-    headingVariant,
-    setAuthorizedUsers,
-  } = props;
+  const { authorizedUsers, disabled, headingVariant, setAuthorizedUsers } =
+    props;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
 
   const pagination = usePagination(1);
 
@@ -140,12 +133,13 @@ export const UserSSHKeyPanel = (props: Props) => {
         <TableRow>
           <TableCell className={classes.cellCheckbox}>
             <Checkbox
+              checked={authorizedUsers.includes(profile.username)}
+              disabled={disabled}
               inputProps={{
                 'aria-label': `Enable SSH for ${profile.username}`,
               }}
-              checked={authorizedUsers.includes(profile.username)}
-              disabled={disabled}
               onChange={() => onToggle(profile.username)}
+              size="small"
             />
           </TableCell>
           <TableCell className={classes.cellUser}>
@@ -169,12 +163,13 @@ export const UserSSHKeyPanel = (props: Props) => {
       <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
           <Checkbox
+            checked={authorizedUsers.includes(user.username)}
+            disabled={disabled || user.ssh_keys.length === 0}
             inputProps={{
               'aria-label': `Enable SSH for ${user.username}`,
             }}
-            checked={authorizedUsers.includes(user.username)}
-            disabled={disabled || user.ssh_keys.length === 0}
             onChange={() => onToggle(user.username)}
+            size="small"
           />
         </TableCell>
         <TableCell className={classes.cellUser}>
