@@ -108,28 +108,28 @@ export const CloudPulseRegionSelect = React.memo(
           item.serviceType === serviceType
       );
 
-      const regionsFromResources =
-        resources
-          ?.filter(({ region }) => region !== undefined)
-          .map(({ region }) => region) ?? [];
-
       if (
         resourceTypeFlag?.supportedRegionIds === null ||
         resourceTypeFlag?.supportedRegionIds === undefined
       ) {
-        return regions?.filter(({ id }) => regionsFromResources.includes(id));
+        return regions;
       }
 
       const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
         .split(',')
         .map((regionId: string) => regionId.trim());
 
-      return regions?.filter(
-        ({ id }) =>
-          supportedRegionsIdList.includes(id) &&
-          regionsFromResources.includes(id)
-      );
-    }, [flags.aclpResourceTypeMap, regions, serviceType, resources]);
+      return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
+    }, [flags.aclpResourceTypeMap, regions, serviceType]);
+
+    const regionsFromResources =
+      resources
+        ?.filter(({ region }) => region !== undefined)
+        .map(({ region }) => region) ?? [];
+
+    const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
+      regionsFromResources.includes(id)
+    );
 
     const resourceLabel =
       FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
@@ -163,7 +163,7 @@ export const CloudPulseRegionSelect = React.memo(
           );
         }}
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ?? []}
+        regions={supportedRegionsFromResources ?? []}
         value={selectedRegion}
       />
     );
