@@ -244,48 +244,36 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .type('Primary{enter}');
 
-    const interceptedRequests: Interception[] = [];
-
     cy.get('@getMetrics.all')
-      .each((xhr) => {
-        // Push each intercepted request into the array
-        return interceptedRequests.push(xhr as unknown as Interception);
-      })
-      .then(() => {
-        // Now that all interceptions are captured, get the last 4 calls
-        const lastFourCalls = interceptedRequests.slice(-4);
+      .should('have.length', 16)
+      .invoke('slice', -4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        const {
+          metrics: metric,
+          relative_time_duration: timeRange,
+          entity_ids,
+          filters,
+          group_by,
+        } = requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric[0].name);
 
-        // Iterate over the last 4 calls
-        lastFourCalls.forEach((xhr: unknown) => {
-          const interception = xhr as Interception;
-          const { body: requestPayload } = interception.request;
-          const {
-            metrics: metric,
-            relative_time_duration: timeRange,
-            entity_ids,
-            filters,
-            group_by,
-          } = requestPayload;
-          const metricData = metrics.find(
-            ({ name }) => name === metric[0].name
+        if (!metricData) {
+          throw new Error(
+            `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
           );
-
-          if (!metricData) {
-            throw new Error(
-              `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
-            );
-          }
-          expect(metric[0].name).to.equal(metricData.name);
-          expect(metric[0].aggregate_function).to.equal('min');
-          expect(timeRange).to.have.property('unit', 'days');
-          expect(timeRange).to.have.property('value', 7);
-          expect(entity_ids).to.deep.equal([1]);
-          const filtersStr = JSON.stringify(filters);
-          expect(filtersStr).to.include('"dimension_label":"node_type"');
-          expect(filtersStr).to.include('"operator":"eq"');
-          expect(filtersStr).to.include('"value":"primary"');
-          expect(group_by).to.equal('region');
-        });
+        }
+        expect(metric[0].name).to.equal(metricData.name);
+        expect(metric[0].aggregate_function).to.equal('min');
+        expect(timeRange).to.have.property('unit', 'days');
+        expect(timeRange).to.have.property('value', 7);
+        expect(entity_ids).to.deep.equal([1]);
+        const filtersStr = JSON.stringify(filters);
+        expect(filtersStr).to.include('"dimension_label":"node_type"');
+        expect(filtersStr).to.include('"operator":"eq"');
+        expect(filtersStr).to.include('"value":"primary"');
+        expect(group_by).to.equal('region');
       });
   });
 
@@ -336,7 +324,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
             cy.wrap($dot)
               .trigger('mouseover', { force: true })
               .should('have.css', 'opacity', '1')
-              .wait(250)
+              .wait(500)
               .get('.recharts-tooltip-wrapper', { timeout: 10000 })
               .should('be.visible')
               .invoke('text')
