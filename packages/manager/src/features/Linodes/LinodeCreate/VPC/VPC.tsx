@@ -1,4 +1,4 @@
-import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
+import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -12,7 +12,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { doesRegionSupportFeature } from '@linode/utilities';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -39,8 +38,6 @@ export const VPC = () => {
   const { control, formState, setValue } =
     useFormContext<CreateLinodeRequest>();
 
-  const { data: regions } = useRegionsQuery();
-
   const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
     useWatch({
       control,
@@ -52,11 +49,9 @@ export const VPC = () => {
       ],
     });
 
-  const regionSupportsVPCs = doesRegionSupportFeature(
-    regionId,
-    regions ?? [],
-    'VPCs'
-  );
+  const { data: region } = useRegionQuery(regionId);
+
+  const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
 
   const {
     data: vpcs,
@@ -117,6 +112,7 @@ export const VPC = () => {
                 label="Assign VPC"
                 loading={isLoading}
                 noMarginTop
+                noOptionsText="There are no VPCs in the selected region."
                 onBlur={field.onBlur}
                 onChange={(e, vpc) => {
                   field.onChange(vpc?.id ?? null);
