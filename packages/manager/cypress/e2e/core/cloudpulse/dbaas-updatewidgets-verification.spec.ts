@@ -5,7 +5,7 @@
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
-import { profileFactory, regionFactory } from '@linode/utilities';
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -18,10 +18,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  mockGetProfile,
-  mockGetUserPreferences,
-} from 'support/intercepts/profile';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
@@ -89,11 +86,8 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 });
 
 const databaseMock: Database = databaseFactory.build({
-  region: mockRegion.label,
+  region: mockRegion.id,
   type: engine,
-});
-const mockProfile = profileFactory.build({
-  timezone: 'Etc/GMT',
 });
 
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
@@ -113,7 +107,6 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
-    mockGetProfile(mockProfile);
     mockGetUserPreferences({
       aclpPreference: {
         dashboardId: id,
@@ -227,6 +220,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     ui.autocompletePopper
       .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
+
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
       .click();
 
