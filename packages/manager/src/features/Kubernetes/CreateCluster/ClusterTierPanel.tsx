@@ -1,7 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import { useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Grid2, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -24,20 +23,12 @@ interface Props {
 
 export const ClusterTierPanel = (props: Props) => {
   const { handleClusterTierSelection, isUserRestricted, selectedTier } = props;
-  const theme = useTheme();
 
   const { data: account } = useAccount();
 
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
-
-  const xlBreakpointGridStyle = {
-    [theme.breakpoints.up('xl')]: {
-      width:
-        'calc(100% * 4 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 4) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)))',
-    },
-  };
 
   const isLkeEnterpriseSelectionDisabled = !account?.capabilities?.includes(
     'Kubernetes Enterprise'
@@ -59,19 +50,15 @@ export const ClusterTierPanel = (props: Props) => {
         </StyledDocsLinkContainer>
       </StyledStackWithTabletBreakpoint>
 
-      <Stack
-        flexDirection={smDownBreakpoint ? 'column' : 'row'}
-        gap={2}
-        marginTop={2}
-      >
+      <Grid2 container marginTop={2} spacing={2}>
         <SelectionCard
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
+          gridSize={{ xs: 12, sm: 6, md: 4 }}
           heading="LKE"
           onClick={() => handleClusterTierSelection('standard')}
           subheadings={[StandardSubheadings]}
           sxCardBase={{ padding: '16px' }}
-          sxGrid={xlBreakpointGridStyle}
         />
         <SelectionCard
           tooltip={
@@ -81,14 +68,14 @@ export const ClusterTierPanel = (props: Props) => {
           }
           checked={selectedTier === 'enterprise' && !isUserRestricted}
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
+          gridSize={{ xs: 12, sm: 6, md: 4 }}
           heading="LKE Enterprise"
           onClick={() => handleClusterTierSelection('enterprise')}
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
-          sxGrid={xlBreakpointGridStyle}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
-      </Stack>
+      </Grid2>
     </Stack>
   );
 };
