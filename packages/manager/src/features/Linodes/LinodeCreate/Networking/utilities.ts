@@ -1,3 +1,5 @@
+import { omitProps } from '@linode/ui';
+
 import type {
   APIError,
   CreateLinodeInterfacePayload,
@@ -31,10 +33,7 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
 export const getLinodeInterfacePayload = (
   networkInterface: LinodeCreateInterface
 ) => {
-  const cleanedInterface = {
-    ...networkInterface,
-  };
-  cleanedInterface.purpose = undefined;
+  const cleanedInterface = omitProps(networkInterface, ['purpose']);
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== networkInterface.purpose) {

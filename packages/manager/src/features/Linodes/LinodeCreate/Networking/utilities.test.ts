@@ -1,3 +1,4 @@
+import { omitProps } from '@linode/ui';
 import { linodeInterfaceFactoryPublic } from '@linode/utilities';
 
 import { firewallSettingsFactory } from 'src/factories';
@@ -49,8 +50,7 @@ describe('getLinodeInterfacesPayload', () => {
     };
 
     expect(getLinodeInterfacePayload(networkInterface)).toEqual({
-      ...networkInterface,
-      purpose: undefined,
+      ...omitProps(networkInterface, ['purpose']),
       vlan: null,
       vpc: null,
     });

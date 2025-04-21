@@ -32,13 +32,15 @@ export const IntegrationsTabPanel = ({
     OptionType | undefined
   >();
 
-  const terraformConfig = useMemo(() => generateTerraformConfig(payLoad), [
-    payLoad,
-  ]);
+  const terraformConfig = useMemo(
+    () => generateTerraformConfig(payLoad),
+    [payLoad]
+  );
 
-  const ansibleConfig = useMemo(() => generateAnsibleConfig(payLoad), [
-    payLoad,
-  ]);
+  const ansibleConfig = useMemo(
+    () => generateAnsibleConfig(payLoad),
+    [payLoad]
+  );
 
   const handleIntegrationChange = (option: OptionType) => {
     setSelectedIntegration(option);
@@ -66,6 +68,7 @@ export const IntegrationsTabPanel = ({
             <TerraformIntegrationResources />
           )}
           <CodeBlock
+            analyticsLabel={selectedIntegration.value}
             code={
               selectedIntegration.value === 'ansible'
                 ? ansibleConfig
@@ -74,7 +77,6 @@ export const IntegrationsTabPanel = ({
             language={
               selectedIntegration.value === 'ansible' ? 'yaml' : 'javascript'
             }
-            analyticsLabel={selectedIntegration.value}
           />
         </>
       )}

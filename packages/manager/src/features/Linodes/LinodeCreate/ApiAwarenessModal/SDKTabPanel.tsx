@@ -21,14 +21,15 @@ const sdkOptions = [
   { label: 'Python (linode_api4-python)', value: 'python' },
 ] as const;
 
-type OptionType = typeof sdkOptions[number];
+type OptionType = (typeof sdkOptions)[number];
 
 export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
 
-  const linodegoSnippet = useMemo(() => generateGoLinodeSnippet(payLoad), [
-    payLoad,
-  ]);
+  const linodegoSnippet = useMemo(
+    () => generateGoLinodeSnippet(payLoad),
+    [payLoad]
+  );
 
   const pythonLinodeSnippet = useMemo(
     () => generatePythonLinodeSnippet(payLoad),
@@ -62,10 +63,10 @@ export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
             <PythonSDKResources />
           )}
           <CodeBlock
+            analyticsLabel={selectedSDK.value}
             code={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            analyticsLabel={selectedSDK.value}
             language={selectedSDK.value}
           />
         </>
