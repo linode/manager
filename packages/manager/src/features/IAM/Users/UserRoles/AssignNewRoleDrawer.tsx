@@ -3,17 +3,27 @@ import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import React, { useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import { useAccountPermissions } from 'src/queries/iam/iam';
+import {
+  useAccountPermissions,
+  useAccountUserPermissions,
+  useAccountUserPermissionsMutation,
+} from 'src/queries/iam/iam';
 
 import { getAllRoles } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
+import {
+  AccountAccessRole,
+  EntityAccessRole, EntityTypePermissions,
+  IamUserPermissions
+} from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -22,8 +32,11 @@ interface Props {
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const theme = useTheme();
+  const { username } = useParams<{ username: string }>();
 
   const { data: accountPermissions } = useAccountPermissions();
+
+  const { data: existingRoles } = useAccountUserPermissions(username ?? '');
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
@@ -54,20 +67,59 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     return getAllRoles(accountPermissions);
   }, [accountPermissions]);
 
-  const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
-    // TODO - make this really do something apart from console logging - UIE-8590
+  const { mutateAsync: updateUserRolePermissions } =
+    useAccountUserPermissionsMutation(username);
 
-    // const selectedRoles = values.roles.map((r) => ({
-    //   access: r.role?.access,
-    //   entities: r.entities || null,
-    //   role: r.role?.value,
-    // }));
+  const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
+    const selectedRoles = values.roles.map((r) => ({
+      access: r.role?.access,
+      entities: r.entities || null,
+      role: r.role?.value,
+    }));
+
+    if (selectedRoles.length) {
+      const selectedPlusExistingRoles: IamUserPermissions = {
+        account_access: existingRoles?.account_access || [],
+        entity_access: existingRoles?.entity_access || [],
+      };
+
+      // Add the selected Account level roles to the existing ones
+      selectedRoles
+        .filter((r) => r.access === 'account_access')
+        .forEach((r) => {
+          selectedPlusExistingRoles.account_access.push(
+            r.role as AccountAccessRole
+          );
+        });
+
+      // Add the selected Entity level roles to the existing ones
+      selectedRoles
+        .filter((r) => r.access === 'entity_access')
+        .forEach((r) => {
+          r.entities?.forEach((e) => {
+            const existingEntity = selectedPlusExistingRoles.entity_access.find(
+              (ee) => ee.id === e.value
+            );
+            if (existingEntity) {
+              existingEntity.roles.push(r.role as EntityAccessRole);
+            } else {
+              selectedPlusExistingRoles.entity_access.push({
+                id: e.value,
+                roles: [r.role as EntityAccessRole],
+                type: r.role?.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
+              });
+            }
+          });
+        });
+
+      console.log(selectedRoles, selectedPlusExistingRoles);
+      await updateUserRolePermissions(selectedPlusExistingRoles);
+    }
     handleClose();
   });
 
   const handleClose = () => {
     reset();
-
     onClose();
   };
 
@@ -89,13 +141,13 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             <Link to=""> Learn more about roles and permissions.</Link>
           </Typography>
           <Grid
+            container
+            direction="row"
+            spacing={2}
             sx={() => ({
               justifyContent: 'space-between',
               marginBottom: theme.spacing(2),
             })}
-            container
-            direction="row"
-            spacing={2}
           >
             <Typography variant={'h3'}>Roles</Typography>
             {roles.length > 0 && roles.some((field) => field.role) && (
@@ -112,12 +164,12 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
           {!!accountPermissions &&
             fields.map((field, index) => (
               <AssignSingleRole
+                hideDetails={areDetailsHidden}
                 index={index}
                 key={field.id}
                 onRemove={() => remove(index)}
                 options={allRoles}
                 permissions={accountPermissions}
-                hideDetails={areDetailsHidden}
               />
             ))}
 
