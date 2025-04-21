@@ -64,18 +64,18 @@ export const AlertTableRow = (props: Props) => {
       <TableCell>
         {services.find((service) => service.value === service_type)?.label}
       </TableCell>
-      <TableCell>
+      <TableCell data-testid={`created-${id}`}>
         {formatDate(created, {
           format: 'MMM dd, yyyy, h:mm a',
         })}
       </TableCell>
-      <TableCell>{created_by}</TableCell>
-      <TableCell>
+      <TableCell data-testid={`created-by-${id}`}>{created_by}</TableCell>
+      <TableCell data-testid={`updated-${id}`}>
         {formatDate(updated, {
           format: 'MMM dd, yyyy, h:mm a',
         })}
       </TableCell>
-      <TableCell>{updated_by}</TableCell>
+      <TableCell data-testid={`updated-by-${id}`}>{updated_by}</TableCell>
       <TableCell actionCell data-qa-alert-action-cell={`alert_${id}`}>
         <AlertActionMenu
           alertLabel={label}
