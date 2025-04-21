@@ -9,7 +9,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 import { KubernetesPlanSelectionTable } from './KubernetesPlanSelectionTable';
 
-import type { LinodeTypeClass } from '@linode/api-v4';
+import type { KubernetesTier, LinodeTypeClass } from '@linode/api-v4';
 import type {
   PlanSelectionDividers,
   PlanSelectionFilterOptionsTable,
@@ -22,10 +22,11 @@ export interface KubernetesPlanContainerProps {
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
-  planType?: LinodeTypeClass;
   plans: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   selectedId?: string;
   selectedRegionId?: string;
+  selectedTier: KubernetesTier;
   updatePlanCount: (planId: string, newCount: number) => void;
   wholePanelIsDisabled: boolean;
 }
@@ -42,6 +43,7 @@ export const KubernetesPlanContainer = (
     plans,
     selectedId,
     selectedRegionId,
+    selectedTier,
     updatePlanCount,
     wholePanelIsDisabled,
   } = props;
@@ -89,6 +91,7 @@ export const KubernetesPlanContainer = (
             plan={plan}
             selectedId={selectedId}
             selectedRegionId={selectedRegionId}
+            selectedTier={selectedTier}
             updatePlanCount={updatePlanCount}
             wholePanelIsDisabled={wholePanelIsDisabled}
           />
@@ -104,6 +107,7 @@ export const KubernetesPlanContainer = (
       plans,
       selectedId,
       selectedRegionId,
+      selectedTier,
       updatePlanCount,
     ]
   );
