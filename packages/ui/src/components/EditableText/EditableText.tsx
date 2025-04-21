@@ -313,7 +313,7 @@ export const EditableText = (props: EditableTextProps) => {
           data-qa-cancel-edit
           onClick={cancelEditing}
         >
-          <CloseIcon className={classes.icon} />
+          <CloseIcon className={classes.icon} data-testid={'CloseIcon'} />
         </Button>
       </div>
     </ClickAwayListener>
