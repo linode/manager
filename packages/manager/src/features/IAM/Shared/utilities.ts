@@ -1,7 +1,4 @@
-import { capitalize } from '@linode/utilities';
-import React from 'react';
-
-import { useFlags } from 'src/hooks/useFlags';
+import { capitalizeAllWords } from '@linode/utilities';
 
 import type {
   AccountAccessRole,
@@ -17,23 +14,7 @@ import type {
   PermissionType,
   Roles,
 } from '@linode/api-v4';
-
-/**
- * Hook to determine if the IAM feature should be visible to the user.
- * Based on the user's account capability and the feature flag.
- *
- * @returns {boolean} - Whether the IAM feature is enabled for the current user.
- */
-export const useIsIAMEnabled = () => {
-  const flags = useFlags();
-
-  const isIAMEnabled = flags.iam?.enabled;
-
-  return {
-    isIAMBeta: flags.iam?.beta,
-    isIAMEnabled,
-  };
-};
+import type { SelectOption } from '@linode/ui';
 
 export const placeholderMap: Record<string, string> = {
   account: 'Select Account',
@@ -95,15 +76,15 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
 /**
  * Checks if the given Role has a type
  *
- * @param resourceType The type to check for
+ * @param entityType The type to check for
  * @param role The role to compare against
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  resourceType: EntityType | EntityTypePermissions,
+  entityType: EntityType | EntityTypePermissions,
   role: ExtendedRoleMap
 ) => {
-  return role.entity_type === resourceType;
+  return role.entity_type === entityType;
 };
 
 /**
@@ -195,7 +176,7 @@ export interface EntitiesRole {
 
 export interface EntitiesType {
   label: string;
-  rawValue: EntityType | EntityTypePermissions;
+  rawValue?: EntityType | EntityTypePermissions;
   value?: string;
 }
 
@@ -203,13 +184,27 @@ export const mapEntityTypes = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): EntitiesType[] => {
-  const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
+  const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
-  return resourceTypes.map((resource) => ({
-    label: capitalize(resource) + suffix,
-    rawValue: resource,
-    value: capitalize(resource) + suffix,
+  return entityTypes.map((entity) => ({
+    label: capitalizeAllWords(entity, '_') + suffix,
+    rawValue: entity,
+    value: capitalizeAllWords(entity, '_') + suffix,
   }));
+};
+
+export const mapEntityTypesForSelect = (
+  data: EntitiesRole[] | RoleMap[],
+  suffix: string
+): SelectOption[] => {
+  const entityTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
+
+  return entityTypes
+    .map((entity) => ({
+      label: capitalizeAllWords(entity, '_') + suffix,
+      value: entity,
+    }))
+    .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
 };
 
 export interface CombinedRoles {
@@ -312,6 +307,35 @@ export const mapRolesToPermissions = (
 };
 
 /**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapAccountPermissionsToRoles = (
+  accountPermissions: IamAccountPermissions
+): RoleMap[] => {
+  const mapperFn = (access: string, entity_type: string, role: Roles) => ({
+    access,
+    description: role.description,
+    entity_type,
+    id: role.name,
+    name: role.name,
+    permissions: role.permissions,
+  });
+
+  return [
+    ...accountPermissions.account_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('account_access', ap.type, role) as RoleMap
+      )
+    ),
+    ...accountPermissions.entity_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('entity_access', ap.type, role) as RoleMap
+      )
+    ),
+  ].flat();
+};
+
+/**
  * Add assigned entities to role
  */
 
@@ -337,49 +361,6 @@ export const addEntitiesNamesToRoles = (
     // If no matching entity_type, return the role unchanged
     return { ...role, entity_names: [] };
   });
-};
-
-/**
- * Custom hook to calculate hidden items
- */
-export const useCalculateHiddenItems = (
-  items: PermissionType[] | string[],
-  showAll?: boolean
-) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
-
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
-
-  const calculateHiddenItems = React.useCallback(() => {
-    if (showAll || !containerRef.current) {
-      setNumHiddenItems(0);
-      return;
-    }
-
-    if (!itemRefs.current) {
-      return;
-    }
-
-    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
-
-    const itemsArray = Array.from(itemRefs.current);
-
-    const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLDivElement | HTMLSpanElement) => {
-        const rect = item.getBoundingClientRect();
-        return rect.top >= containerBottom;
-      }
-    );
-
-    const numHiddenItems =
-      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
-
-    setNumHiddenItems(numHiddenItems);
-  }, [items, showAll]);
-
-  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
 };
 
 export interface EntitiesOption {
@@ -578,4 +559,39 @@ export const toEntityAccess = (
     }));
 
   return [...updatedEntityAccess, ...newEntities];
+};
+
+export interface CombinedEntity {
+  id: number;
+  name: string;
+}
+
+export const deleteUserEntity = (
+  entityRoles: EntityAccess[],
+  roleName: EntityAccessRole,
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions
+): EntityAccess[] => {
+  return entityRoles
+    .map((entity) => {
+      if (entity.type === entityType && entity.id === entityId) {
+        const roles = entity.roles.filter(
+          (role: EntityAccessRole) => role !== roleName
+        );
+        return {
+          ...entity,
+          roles,
+        };
+      }
+
+      return entity;
+    })
+    .filter((entity) => entity.roles.length > 0);
+};
+
+export const getCreateLinkForEntityType = (
+  entityType: EntityType | EntityTypePermissions
+): string => {
+  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
+  return `/${entityType}s/create`;
 };

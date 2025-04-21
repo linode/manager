@@ -1,11 +1,17 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
+import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
-import { placeholderMap, transformedAccountEntities } from '../utilities';
+import {
+  getCreateLinkForEntityType,
+  placeholderMap,
+  transformedAccountEntities,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesOption } from '../utilities';
 import type {
@@ -63,27 +69,52 @@ export const Entities = ({
   }
 
   return (
-    <Autocomplete
-      errorText={errorText}
-      getOptionLabel={(option) => option.label}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      label="Entities"
-      multiple
-      noMarginTop
-      onChange={(_, newValue) => {
-        onChange(newValue || []);
-      }}
-      options={memoizedEntities}
-      placeholder={value.length ? ' ' : getPlaceholder(type)}
-      readOnly={mode === 'change-role'}
-      sx={{ marginTop: theme.tokens.spacing.S12 }}
-      value={value || []}
-    />
+    <>
+      <Autocomplete
+        errorText={errorText}
+        getOptionLabel={(option) => option.label}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        label="Entities"
+        multiple
+        noMarginTop
+        onChange={(_, newValue) => {
+          onChange(newValue || []);
+        }}
+        options={memoizedEntities}
+        placeholder={getPlaceholder(type, value.length, memoizedEntities.length)}
+        readOnly={getReadonlyState(mode, memoizedEntities.length)}
+        sx={{ marginTop: theme.tokens.spacing.S12 }}
+        value={value || []}
+      />
+      {!memoizedEntities.length && (
+        <Notice spacingTop={8} variant="warning">
+          <Typography fontSize="inherit">
+            <Link to={getCreateLinkForEntityType(type)}>
+              Create a {capitalizeAllWords(type)} Entity
+            </Link>{' '}
+            first or choose a different role to continue assignment.
+          </Typography>
+        </Notice>
+      )}
+    </>
   );
 };
 
-const getPlaceholder = (type: EntityType | EntityTypePermissions): string =>
-  placeholderMap[type] || 'Select';
+const getPlaceholder = (
+  type: EntityType | EntityTypePermissions,
+  currentValueLength: number,
+  possibleEntitiesLength: number
+): string =>
+  currentValueLength > 0
+    ? ' '
+    : possibleEntitiesLength === 0
+      ? 'None'
+      : placeholderMap[type] || 'Select';
+
+const getReadonlyState = (
+  mode: DrawerModes | undefined,
+  possibleEntitiesLength: number
+): boolean => mode === 'change-role' || possibleEntitiesLength === 0;
 
 const transformedEntities = (
   entities: { id: number; label: string }[]
