@@ -6,7 +6,7 @@ import {
   withDocumentTitleProvider,
 } from 'src/components/DocumentTitle';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { ErrorBoundaryFallback } from 'src/features/ErrorBoundaryFallback';
+import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 
 import { SplashScreen } from './components/SplashScreen';
 import { GoTo } from './GoTo';

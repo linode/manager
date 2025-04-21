@@ -333,6 +333,13 @@ export const baseConfig = [
               ],
             ];
           }
+          // Set prefer-implicit-assert as error and disable prefer-explicit-assert
+          if (rule === 'prefer-implicit-assert') {
+            return [`testing-library/${rule}`, 'warn'];
+          }
+          if (rule === 'prefer-explicit-assert') {
+            return [`testing-library/${rule}`, 'off'];
+          }
           // All other rules just get set to warn
           return [`testing-library/${rule}`, 'warn'];
         })

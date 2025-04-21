@@ -23,7 +23,7 @@ import {
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { ErrorBoundaryFallback } from 'src/features/ErrorBoundaryFallback';
+import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {

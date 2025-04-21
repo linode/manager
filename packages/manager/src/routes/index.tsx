@@ -3,7 +3,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
-import { ErrorComponent } from 'src/features/ErrorBoundaryFallback';
+import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';

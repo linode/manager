@@ -1,6 +1,4 @@
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
-import { ErrorBoundary } from '@sentry/react';
-import { CatchBoundary } from '@tanstack/react-router';
 import * as React from 'react';
 
 import ZeroState from 'src/assets/icons/zero-state.svg';
@@ -44,39 +42,35 @@ export const ErrorComponent = ({
         <Typography style={{ marginBottom: 8 }}>
           Please try the following steps that may help resolve the issue:
         </Typography>
-        <Typography>
-          <ul>
-            <li>Update your browser version</li>
-            <li>Clear your cookies</li>
-            <li>Check your internet connection</li>
-          </ul>
+        <Typography component="ul">
+          <li>Update your browser version</li>
+          <li>Clear your cookies</li>
+          <li>Check your internet connection</li>
         </Typography>
         <Typography>
           <strong>Resources:</strong>{' '}
         </Typography>
-        <Typography>
-          <ul>
-            <li>
-              <a
-                href="https://www.linode.com/docs/guides/clear-cache-shortguide"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Clearing cache and cookies in a browser
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.linode.com/support"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Akamai Compute Support
-              </a>
-            </li>
-          </ul>
+        <Typography component="ul">
+          <li>
+            <a
+              href="https://www.linode.com/docs/guides/clear-cache-shortguide"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Clearing cache and cookies in a browser
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.linode.com/support"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Akamai Compute Support
+            </a>
+          </li>
         </Typography>
-        <Typography>
+        <Typography component="div">
           <strong>Error details:</strong>{' '}
           <CodeBlock
             code={`${error.name}: ${error.message}`}
@@ -100,18 +94,3 @@ export const ErrorComponent = ({
     </Box>
   );
 };
-
-export const ErrorBoundaryFallback: React.FC<{
-  children?: React.ReactNode;
-  useTanStackRouterBoundary?: boolean;
-}> = ({ children, useTanStackRouterBoundary = false }) => (
-  <ErrorBoundary fallback={ErrorComponent}>
-    {useTanStackRouterBoundary ? (
-      <CatchBoundary getResetKey={() => 'error-boundary-fallback'}>
-        {children}
-      </CatchBoundary>
-    ) : (
-      children
-    )}
-  </ErrorBoundary>
-);
