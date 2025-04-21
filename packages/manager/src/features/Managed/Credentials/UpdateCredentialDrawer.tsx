@@ -33,14 +33,8 @@ export interface CredentialDrawerProps {
 }
 
 const CredentialDrawer = (props: CredentialDrawerProps) => {
-  const {
-    isFetching,
-    label,
-    onClose,
-    onSubmitLabel,
-    onSubmitPassword,
-    open,
-  } = props;
+  const { isFetching, label, onClose, onSubmitLabel, onSubmitPassword, open } =
+    props;
 
   return (
     <Drawer
