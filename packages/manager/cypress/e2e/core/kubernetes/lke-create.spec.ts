@@ -1111,8 +1111,7 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0').within(() => {
         cy.get('input').should('be.visible').should('be.disabled');
       });
-
-      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0').within(() => {
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0').within(() => {
         cy.get('input').should('be.visible').should('be.disabled');
       });
 
