@@ -13,7 +13,6 @@ import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
 import type { useRegionsQuery } from '@linode/queries';
 import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
-import { prop } from 'ramda';
 
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
