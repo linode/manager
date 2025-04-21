@@ -76,7 +76,9 @@ export const CloudPulseRegionSelect = React.memo(
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       if (disabled) {
+        // disabled will be true if some dependent filters are not selected, so no need to do anything in this situation
         if (selectedRegion) {
+          // if there is a region selected already, it means some of dependent filters are recently removed, so clear the region as well
           handleRegionChange(undefined, [], true);
           setSelectedRegion(undefined);
         }
@@ -84,6 +86,7 @@ export const CloudPulseRegionSelect = React.memo(
         return;
       }
       if (selectedRegion) {
+        // if there is a selected region, and xFilter is changing, better to remove the selected region
         handleRegionChange(undefined, [], true);
         setSelectedRegion(undefined);
       }
