@@ -60,7 +60,9 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             status={status}
           />
         )}
-        <StyledAlertTypography>{value}</StyledAlertTypography>
+        <StyledAlertTypography data-qa-id={label}>
+          {value}
+        </StyledAlertTypography>
       </Grid>
     </Grid>
   );
