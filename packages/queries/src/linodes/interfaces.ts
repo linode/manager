@@ -7,6 +7,7 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { firewallQueries } from '../firewalls';
 import { networkingQueries } from '../networking';
 import { linodeQueries } from './linodes';
 
@@ -100,7 +101,7 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
   return useMutation<LinodeInterface, APIError[], CreateLinodeInterfacePayload>(
     {
       mutationFn: (data) => createLinodeInterface(linodeId, data),
-      onSuccess() {
+      onSuccess(linodeInterface, variables) {
         // Invalidate the list of interfaces
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
@@ -121,6 +122,19 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
           queryKey: linodeQueries.linode(linodeId).queryKey,
           exact: true,
         });
+
+        // If a Firewall is attached at the time of creation...
+        if (variables.firewall_id) {
+          // Invalidate all Firewall lists
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+
+          // Invalidate the specific firewall
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+          });
+        }
       },
     },
   );
@@ -205,6 +219,17 @@ export const useDeleteLinodeInterfaceMutation = (
       // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
       queryClient.invalidateQueries({
         queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
+
+      // Because we don't easily know the interface's Firewall here,
+      // we'll just invalidate all firewall queries.
+      // If this ever needs to be optimized, we can fetch the interface's firewalls before deletion,
+      // and do a more granular invalidation knowing the firewall ID.
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewall._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
       });
     },
   });
