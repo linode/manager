@@ -1,6 +1,7 @@
 import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -23,12 +24,20 @@ interface Props {
 
 export const ClusterTierPanel = (props: Props) => {
   const { handleClusterTierSelection, isUserRestricted, selectedTier } = props;
+  const theme = useTheme();
 
   const { data: account } = useAccount();
 
   const smDownBreakpoint = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
+
+  const xlBreakpointGridStyle = {
+    [theme.breakpoints.up('xl')]: {
+      width:
+        'calc(100% * 4 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 4) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)))',
+    },
+  };
 
   const isLkeEnterpriseSelectionDisabled = !account?.capabilities?.includes(
     'Kubernetes Enterprise'
@@ -62,6 +71,7 @@ export const ClusterTierPanel = (props: Props) => {
           onClick={() => handleClusterTierSelection('standard')}
           subheadings={[StandardSubheadings]}
           sxCardBase={{ padding: '16px' }}
+          sxGrid={xlBreakpointGridStyle}
         />
         <SelectionCard
           tooltip={
@@ -76,6 +86,7 @@ export const ClusterTierPanel = (props: Props) => {
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
+          sxGrid={xlBreakpointGridStyle}
         />
       </Stack>
     </Stack>
