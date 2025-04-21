@@ -75,7 +75,19 @@ export const CloudPulseRegionSelect = React.memo(
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      if (regions && savePreferences) {
+      if (disabled) {
+        if (selectedRegion) {
+          handleRegionChange(undefined, [], true);
+          setSelectedRegion(undefined);
+        }
+
+        return;
+      }
+      if (selectedRegion) {
+        handleRegionChange(undefined, [], true);
+        setSelectedRegion(undefined);
+      }
+      if (regions && savePreferences && !selectedRegion) {
         const region = defaultValue
           ? regions.find((regionObj) => regionObj.id === defaultValue)
           : undefined;
@@ -83,12 +95,7 @@ export const CloudPulseRegionSelect = React.memo(
         setSelectedRegion(region?.id);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions]);
-
-    React.useEffect(() => {
-      handleRegionChange(undefined, [], true);
-      setSelectedRegion(undefined);
-    }, [handleRegionChange, xFilter]);
+    }, [regions, xFilter]);
 
     // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {

@@ -100,7 +100,7 @@ const databaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: clusterName,
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
@@ -113,7 +113,7 @@ const extendDatabaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: 'updated-dbass-mock',
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
@@ -235,7 +235,14 @@ describe('Integration Tests for Applied Filters', () => {
     });
   });
 
-  it('apply only regions  and verify applied filters', () => {
+  it('apply only database engine and regions  and verify applied filters', () => {
+    // Select a Database Engine from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type(engine);
+    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+
     // Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
@@ -250,16 +257,16 @@ describe('Integration Tests for Applied Filters', () => {
         .should('be.visible')
         .should('have.text', 'US, Chicago, IL');
     });
+
+    // verify engine as well
+    cy.get('[data-testid="applied-filter"]').within(() => {
+      cy.get(`[data-qa-value="Database Engine ${engine}"]`)
+        .should('be.visible')
+        .should('have.text', engine);
+    });
   });
 
   it('should update and verify that the applied global filters are reflected in the filter section', () => {
-    // Select a region from the dropdown.
-    ui.regionSelect.find().click();
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
@@ -268,6 +275,13 @@ describe('Integration Tests for Applied Filters', () => {
 
     ui.autocompletePopper
       .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
+
+    // Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegion.id, [mockRegion])
       .should('be.visible')
       .click();
 

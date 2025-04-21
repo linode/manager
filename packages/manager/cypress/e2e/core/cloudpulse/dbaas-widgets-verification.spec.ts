@@ -101,6 +101,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
 const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: clusterName,
+  region: 'us-ord',
 });
 
 const mockAccount = accountFactory.build();
@@ -173,7 +174,7 @@ const databaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: clusterName,
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
@@ -420,7 +421,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         });
     });
   });
-  it.skip('should trigger the global refresh button and verify the corresponding network calls', () => {
+  it.only('should trigger the global refresh button and verify the corresponding network calls', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );

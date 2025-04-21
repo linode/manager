@@ -383,11 +383,6 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when instance API fails', () => {
-    // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
-    mockGetDatabasesError('Internal Server Error').as(
-      'getDatabaseInstancesError'
-    );
-
     cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
@@ -404,14 +399,6 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
@@ -419,6 +406,19 @@ describe('Tests for API error handling', () => {
       .type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+
+    // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
+    mockGetDatabasesError('Internal Server Error').as(
+      'getDatabaseInstancesError'
+    );
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+
+    ui.regionSelect
+      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .should('be.visible')
+      .click();
 
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');
