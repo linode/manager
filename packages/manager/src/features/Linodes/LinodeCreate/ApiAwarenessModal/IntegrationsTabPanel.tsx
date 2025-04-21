@@ -1,4 +1,4 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
@@ -28,6 +28,10 @@ const integrationsOptions: OptionType[] = [
 export const IntegrationsTabPanel = ({
   payLoad,
 }: IntegrationsTabPanelProps) => {
+  // @TODO - Linode Interfaces
+  // DX support (CLI, integrations, sdks) for Linode Interfaces is not yet available. Remove this when it is.
+  const showDXCodeSnippets = payLoad.interface_generation !== 'linode';
+
   const [selectedIntegration, setSelectedIntegration] = useState<
     OptionType | undefined
   >();
@@ -62,22 +66,32 @@ export const IntegrationsTabPanel = ({
       />
       {selectedIntegration && (
         <>
+          {!showDXCodeSnippets && (
+            <Notice
+              spacingTop={16}
+              text={`Integration support for ${selectedIntegration.label} to create Linodes using Linode Interfaces is
+              coming soon.`}
+              variant="info"
+            />
+          )}
           {selectedIntegration.value === 'ansible' ? (
             <AnsibleIntegrationResources />
           ) : (
             <TerraformIntegrationResources />
           )}
-          <CodeBlock
-            analyticsLabel={selectedIntegration.value}
-            code={
-              selectedIntegration.value === 'ansible'
-                ? ansibleConfig
-                : terraformConfig
-            }
-            language={
-              selectedIntegration.value === 'ansible' ? 'yaml' : 'javascript'
-            }
-          />
+          {showDXCodeSnippets && (
+            <CodeBlock
+              analyticsLabel={selectedIntegration.value}
+              code={
+                selectedIntegration.value === 'ansible'
+                  ? ansibleConfig
+                  : terraformConfig
+              }
+              language={
+                selectedIntegration.value === 'ansible' ? 'yaml' : 'javascript'
+              }
+            />
+          )}
         </>
       )}
     </SafeTabPanel>
