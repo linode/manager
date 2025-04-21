@@ -108,28 +108,29 @@ export const CloudPulseRegionSelect = React.memo(
           item.serviceType === serviceType
       );
 
-      const regionsWithResources =
+      const regionsFromResources =
         resources
-          ?.filter((resource) => resource.region)
-          .map((resource) => resource.region) ?? [];
+          ?.filter(({ region }) => region !== undefined)
+          .map(({ region }) => region) ?? [];
 
       if (
         resourceTypeFlag?.supportedRegionIds === null ||
         resourceTypeFlag?.supportedRegionIds === undefined
       ) {
-        return regions?.filter((region) =>
-          regionsWithResources.includes(region.id)
-        );
+        return regions?.filter(({ id }) => regionsFromResources.includes(id));
       }
 
       const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
         .split(',')
         .map((regionId: string) => regionId.trim());
 
-      return regions
-        ?.filter((region) => supportedRegionsIdList.includes(region.id))
-        .filter((region) => regionsWithResources.includes(region.id));
+      return regions?.filter(
+        ({ id }) =>
+          supportedRegionsIdList.includes(id) &&
+          regionsFromResources.includes(id)
+      );
     }, [flags.aclpResourceTypeMap, regions, serviceType, resources]);
+
     const resourceLabel =
       FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
         (value) => value.name === 'Resources'
