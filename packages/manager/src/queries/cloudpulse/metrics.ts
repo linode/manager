@@ -7,7 +7,6 @@ import { queryFactory } from './queries';
 import type {
   APIError,
   CloudPulseMetricsRequest,
-  CloudPulseMetricsRequestOlderVersion,
   CloudPulseMetricsResponse,
   JWEToken,
 } from '@linode/api-v4';
@@ -17,7 +16,7 @@ const axiosInstance = Axios.create({});
 
 export const useCloudPulseMetricsQuery = (
   serviceType: string,
-  request: CloudPulseMetricsRequest | CloudPulseMetricsRequestOlderVersion,
+  request: CloudPulseMetricsRequest,
   obj: {
     authToken?: string;
     isFlags: boolean;
@@ -76,7 +75,7 @@ export const fetchCloudPulseMetrics = (
   token: string,
   readApiEndpoint: string,
   serviceType: string,
-  requestData: CloudPulseMetricsRequest | CloudPulseMetricsRequestOlderVersion
+  requestData: CloudPulseMetricsRequest
 ) => {
   const config: AxiosRequestConfig = {
     data: requestData,

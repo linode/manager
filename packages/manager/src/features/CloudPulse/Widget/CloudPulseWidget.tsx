@@ -228,23 +228,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = useCloudPulseMetricsQuery(
     serviceType,
     {
-      ...getCloudPulseMetricRequest(
-        {
-          duration,
-          entityIds,
-          resources,
-          widget,
-        },
-        flags.aclpReadEndpoint ?? ''
-      ),
+      ...getCloudPulseMetricRequest({
+        duration,
+        entityIds,
+        resources,
+        widget,
+      }),
       filters: [
-        ...constructAdditionalRequestFilters(
-          additionalFilters ?? [],
-          flags.aclpReadEndpoint ?? ''
-        ),
-        ...(flags.aclpReadEndpoint?.includes('v1beta')
-          ? [] // no need to pass filters in case of v1
-          : (widget.filters ?? [])),
+        ...constructAdditionalRequestFilters(additionalFilters ?? []),
+        ...(widget.filters ?? []),
       ], // any additional dimension filters will be constructed and passed here
     },
     {
