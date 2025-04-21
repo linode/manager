@@ -49,8 +49,19 @@ describe('ObjectDetailsDrawer', () => {
       screen.findByText(/^Last modified: 2019-12-31/)
     ).resolves.toBeInTheDocument();
 
-    expect(screen.getByText('12.3 KB')).toBeVisible();
     expect(screen.getByText(/^https:\/\/my-bucket/)).toBeVisible();
+  });
+
+  it('uses base2 calculations for storage size display (displaying GB but representing GiB)', async () => {
+    const propsWithExactKB = {
+      ...props,
+      size: 1024,
+    };
+
+    renderWithTheme(<ObjectDetailsDrawer {...propsWithExactKB} />);
+
+    // 1024 bytes should display as exactly "1 KB" in base2 (not "1.02 KB" as it would in base10)
+    expect(screen.getByText('1 KB')).toBeVisible();
   });
 
   it("doesn't show last modified if the the time is invalid", async () => {
