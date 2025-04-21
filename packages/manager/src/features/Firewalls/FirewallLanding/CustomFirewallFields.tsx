@@ -3,6 +3,7 @@ import { LinodeSelect } from '@linode/shared';
 import {
   Box,
   FormControlLabel,
+  Notice,
   Radio,
   RadioGroup,
   TextField,
@@ -17,6 +18,7 @@ import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import {
   FIREWALL_HELPER_TEXT,
@@ -50,6 +52,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
     open,
     userCannotAddFirewall,
   } = props;
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { control } = useFormContext<CreateFirewallFormValues>();
   const { data } = useAllFirewallsQuery(open);
   const { _isRestrictedUser } = useAccountManagement();
@@ -82,7 +85,8 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const linodeOptionsFilter = (linode: Linode) => {
     return (
       !readOnlyLinodeIds.includes(linode.id) &&
-      !assignedLinodes?.some((service) => service.id === linode.id)
+      !assignedLinodes?.some((service) => service.id === linode.id) &&
+      linode.interface_generation !== 'linode'
     );
   };
 
@@ -112,6 +116,8 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   return (
     <>
       <Controller
+        control={control}
+        name="label"
         render={({ field, fieldState }) => (
           <TextField
             aria-label="Label for your new Firewall"
@@ -125,13 +131,13 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="label"
       />
       <Typography style={{ marginTop: 24 }}>
         <strong>Default Inbound Policy</strong>
       </Typography>
       <Controller
+        control={control}
+        name="rules.inbound_policy"
         render={({ field }) => (
           <RadioGroup
             aria-label="default inbound policy "
@@ -154,13 +160,13 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             />
           </RadioGroup>
         )}
-        control={control}
-        name="rules.inbound_policy"
       />
       <Typography style={{ marginTop: 16 }}>
         <strong>Default Outbound Policy</strong>
       </Typography>
       <Controller
+        control={control}
+        name="rules.outbound_policy"
         render={({ field }) => (
           <RadioGroup
             aria-label="default outbound policy "
@@ -183,8 +189,6 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             />
           </RadioGroup>
         )}
-        control={control}
-        name="rules.outbound_policy"
       />
       <Box>
         <Typography
@@ -209,49 +213,55 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
           {learnMoreLink}.
         </Typography>
       </Box>
+      {isLinodeInterfacesEnabled && (
+        <Notice variant="info">
+          Linodes using Linode Interfaces must be assigned after firewall
+          creation.
+        </Notice>
+      )}
       <Controller
+        control={control}
+        name="devices.linodes"
         render={({ field, fieldState }) => (
           <LinodeSelect
-            label={
-              createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
-            }
-            onSelectionChange={(linodes) => {
-              field.onChange(linodes.map((linode) => linode.id));
-            }}
             disabled={userCannotAddFirewall}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
+            label={
+              createFlow === 'linode' ? LINODE_CREATE_FLOW_TEXT : 'Linodes'
+            }
             multiple
+            onSelectionChange={(linodes) => {
+              field.onChange(linodes.map((linode) => linode.id));
+            }}
             optionsFilter={linodeOptionsFilter}
             value={field.value ?? null}
           />
         )}
-        control={control}
-        name="devices.linodes"
       />
       <Controller
+        control={control}
+        name="devices.nodebalancers"
         render={({ field, fieldState }) => (
           <NodeBalancerSelect
+            disabled={userCannotAddFirewall}
+            errorText={fieldState.error?.message}
+            helperText={deviceSelectGuidance}
             label={
               createFlow === 'nodebalancer'
                 ? NODEBALANCER_CREATE_FLOW_TEXT
                 : 'NodeBalancers'
             }
+            multiple
             onSelectionChange={(nodebalancers) => {
               field.onChange(
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
-            disabled={userCannotAddFirewall}
-            errorText={fieldState.error?.message}
-            helperText={deviceSelectGuidance}
-            multiple
             optionsFilter={nodebalancerOptionsFilter}
             value={field.value ?? null}
           />
         )}
-        control={control}
-        name="devices.nodebalancers"
       />
     </>
   );
