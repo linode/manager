@@ -444,7 +444,7 @@ export const getMetricsCallCustomFilters = (
  * @returns The list of filters for the metric API call, based the additional custom select components
  */
 export const constructAdditionalRequestFilters = (
-  additionalFilters: CloudPulseMetricsAdditionalFilters[],
+  additionalFilters: CloudPulseMetricsAdditionalFilters[]
 ): Filters[] => {
   const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
     return {
