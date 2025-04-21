@@ -139,6 +139,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 plans={plansForThisLinodeTypeClass}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
+                selectedTier={selectedTier}
                 updatePlanCount={updatePlanCount}
               />
             </>

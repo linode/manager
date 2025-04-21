@@ -274,6 +274,11 @@ describe('LKE Cluster Creation', () => {
         .within(() => {
           cy.get(quantityInput).should('be.visible');
           cy.get(quantityInput).click();
+
+          // Ensure the max node count is 100 for LKE
+          cy.get(quantityInput).type(`{selectall}101`);
+          cy.get(quantityInput).should('have.value', 100);
+
           cy.get(quantityInput).type(`{selectall}${nodeCount}`);
 
           ui.button
@@ -335,8 +340,10 @@ describe('LKE Cluster Creation', () => {
       // how many identical labels for each plan will exist and confirm that
       // the expected number is present.
       const nodePoolLabel = clusterPlan.planName;
-      const similarNodePoolCount = getSimilarPlans(clusterPlan, clusterPlans)
-        .length;
+      const similarNodePoolCount = getSimilarPlans(
+        clusterPlan,
+        clusterPlans
+      ).length;
 
       // Confirm that the cluster created with the expected parameters.
       cy.findAllByText(`${clusterRegion.label}`).should('be.visible');
@@ -379,7 +386,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       region: clusterRegion.id,
     });
     const mockedLKEClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
-    const mockedLKEClusterControlPlane = kubernetesControlPlaneACLFactory.build();
+    const mockedLKEClusterControlPlane =
+      kubernetesControlPlaneACLFactory.build();
     const dedicated4Type = dedicatedTypeFactory.build({
       disk: 163840,
       id: 'g6-dedicated-4',
@@ -1078,7 +1086,7 @@ describe('LKE Cluster Creation with ACL', () => {
         'At least one IP address or CIDR range is required for LKE Enterprise.'
       ).should('be.visible');
 
-      // Add an IP,
+      // Add an IP.
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
@@ -1104,12 +1112,13 @@ describe('LKE Cluster Creation with ACL', () => {
       // Check the acknowledgement to prevent IP validation.
       cy.findByRole('checkbox', { name: /Provide an ACL later/ }).check();
 
-      // Clear the IP address field and check the acknowledgement to confirm the form can now submit without IP address validation.
-      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
-        .should('be.visible')
-        .click();
-      cy.focused().clear();
-      cy.findByRole('checkbox', { name: /Provide an ACL later/ }).check();
+      // Confirm the fields are disabled.
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0').within(() => {
+        cy.get('input').should('be.visible').should('be.disabled');
+      });
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0').within(() => {
+        cy.get('input').should('be.visible').should('be.disabled');
+      });
 
       // Finally, add a label, so the form will submit.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -1318,6 +1327,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
      * - Confirms the checkout bar displays the correct LKE-E info
      * - Confirms an enterprise cluster can be created with the correct chip, version, and price
      * - Confirms that the total node count for each pool is displayed
+     * - Confirms that the max nodes is 500
      */
     it('creates an LKE-E cluster with the account capability', () => {
       const clusterLabel = randomLabel();
@@ -1503,6 +1513,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
           .within(() => {
             cy.get(quantityInput).should('be.visible');
             cy.get(quantityInput).click();
+
+            // Ensure the max node count is 500 for LKE-E
+            cy.get(quantityInput).type(`{selectall}501`);
+            cy.get(quantityInput).should('have.value', 500);
+
             cy.get(quantityInput).type(`{selectall}${nodeCount}`);
 
             ui.button

@@ -337,6 +337,7 @@ export const NodePoolsDisplay = (props: Props) => {
         open={isLabelsAndTaintsDrawerOpen}
       />
       <ResizeNodePoolDrawer
+        clusterTier={clusterTier}
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}
         nodePool={selectedPool}
