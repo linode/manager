@@ -58,7 +58,6 @@ describe('Alert List Table test', () => {
   it('should render the alert row', async () => {
     const updated = new Date().toISOString();
     const alert = alertFactory.build({
-      created: updated,
       created_by: 'user1',
       label: 'Test Alert',
       service_type: 'linode',
@@ -78,11 +77,6 @@ describe('Alert List Table test', () => {
     expect(getByText('Linode')).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
 
-    expect(getByTestId(`created-${alert.id}`).textContent).toBe(
-      formatDate(updated, {
-        format: 'MMM dd, yyyy, h:mm a',
-      })
-    );
     expect(getByTestId(`created-by-${alert.id}`).textContent).toBe('user1');
     expect(getByTestId(`updated-by-${alert.id}`).textContent).toBe('user2');
 

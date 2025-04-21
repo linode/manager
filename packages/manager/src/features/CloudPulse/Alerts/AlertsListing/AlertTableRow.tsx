@@ -34,7 +34,6 @@ export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const location = useLocation();
   const {
-    created,
     created_by,
     id,
     label,
@@ -63,11 +62,6 @@ export const AlertTableRow = (props: Props) => {
       </TableCell>
       <TableCell>
         {services.find((service) => service.value === service_type)?.label}
-      </TableCell>
-      <TableCell data-testid={`created-${id}`}>
-        {formatDate(created, {
-          format: 'MMM dd, yyyy, h:mm a',
-        })}
       </TableCell>
       <TableCell data-testid={`created-by-${id}`}>{created_by}</TableCell>
       <TableCell data-testid={`updated-${id}`}>
