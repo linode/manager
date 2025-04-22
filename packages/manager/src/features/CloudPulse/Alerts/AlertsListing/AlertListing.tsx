@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Button, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Link } from '@mui/material';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
@@ -244,6 +252,25 @@ export const AlertListing = () => {
           Create Alert
         </Button>
       </Box>
+      {!hasFailedAlerts && (
+        <Notice variant="error">
+          <Typography
+            sx={(theme) => ({
+              font: theme.font.bold,
+              fontSize: theme.spacingFunction(16),
+            })}
+          >
+            Creation of some alerts has failed. Please{' '}
+            <Link
+              href="https://cloud.linode.com/support/tickets"
+              underline="hover"
+            >
+              contact support
+            </Link>{' '}
+            for assistance
+          </Typography>
+        </Notice>
+      )}
       {hasFailedAlerts && (
         <AlertListNoticeMessages
           errorMessage="Creation of some alerts has failed. Please contact support for assistance."
