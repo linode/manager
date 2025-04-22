@@ -99,6 +99,13 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     <>
       <StyledAutocompleteContainer sx={{ width }}>
         <Autocomplete
+          autoHighlight
+          clearOnBlur
+          data-testid="region-select"
+          disableClearable={!isClearable}
+          disabled={disabled}
+          errorText={errorText}
+          getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
           groupBy={(option) => {
             if (!option.site_type) {
               // Render empty group for "Select All / Deselect All"
@@ -106,9 +113,15 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             }
             return getRegionCountryGroup(option);
           }}
+          label={label ?? 'Regions'}
+          loading={accountAvailabilityLoading}
+          multiple
+          noOptionsText="No results"
           onChange={(_, selectedOptions) =>
             onChange(selectedOptions?.map((region) => region.id) ?? [])
           }
+          options={regionOptions}
+          placeholder={placeholder ?? 'Select Regions'}
           renderOption={(props, option, { selected }) => {
             const { key, ...rest } = props;
             if (!option.site_type) {
@@ -157,31 +170,18 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             },
             tooltipText: helperText,
           }}
-          autoHighlight
-          clearOnBlur
-          data-testid="region-select"
-          disableClearable={!isClearable}
-          disabled={disabled}
-          errorText={errorText}
-          getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
-          label={label ?? 'Regions'}
-          loading={accountAvailabilityLoading}
-          multiple
-          noOptionsText="No results"
-          options={regionOptions}
-          placeholder={placeholder ?? 'Select Regions'}
           value={selectedRegions}
           {...rest}
         />
       </StyledAutocompleteContainer>
       {selectedRegions.length > 0 && SelectedRegionsList && (
         <SelectedRegionsList
+          onRemove={handleRemoveOption}
           selectedRegions={
             sortRegionOptions
               ? [...selectedRegions].sort(sortRegionOptions)
               : selectedRegions
           }
-          onRemove={handleRemoveOption}
         />
       )}
     </>
