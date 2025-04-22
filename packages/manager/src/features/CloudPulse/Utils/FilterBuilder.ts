@@ -28,9 +28,10 @@ import type {
   AclpConfig,
   Dashboard,
   DateTimeWithPreset,
+  DimensionFilter,
   Filter,
-  Filters,
   TimeDuration,
+  WidgetDimensionFilter,
 } from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
@@ -445,13 +446,13 @@ export const getMetricsCallCustomFilters = (
  */
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[]
-): Filters[] => {
-  const filters: Filters[] = [];
+): WidgetDimensionFilter[] => {
+  const filters: WidgetDimensionFilter[] = [];
   for (const filter of additionalFilters) {
     if (filter) {
       // push to the filters
       filters.push({
-        key: filter.filterKey,
+        dimension_label: filter.filterKey,
         operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
         value: Array.isArray(filter.filterValue)
           ? Array.of(filter.filterValue).join(',')

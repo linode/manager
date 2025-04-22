@@ -7,7 +7,8 @@ export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
   | 'startswith'
-  | 'endswith' | 'in';
+  | 'endswith';
+export type WidgetDimensionFilterOperatorType = DimensionFilterOperatorType | 'in';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'enabled' | 'disabled' | 'in progress' | 'failed';
 export type CriteriaConditionType = 'ALL';
@@ -60,7 +61,7 @@ export interface Widgets {
   chart_type: 'line' | 'area';
   color: string;
   entity_ids: string[];
-  filters: DimensionFilter[];
+  filters: WidgetDimensionFilter[];
   group_by: string;
   label: string;
   metric: string;
@@ -133,7 +134,7 @@ export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   aggregate_function: string;
   entity_ids: number[];
-  filters?: DimensionFilter[];
+  filters?: WidgetDimensionFilter[];
   group_by: string;
   metric: string;
   relative_time_duration: TimeDuration | undefined;
@@ -198,6 +199,12 @@ export interface AlertDefinitionMetricCriteria
 export interface DimensionFilter {
   dimension_label: string;
   operator: DimensionFilterOperatorType;
+  value: string;
+}
+
+export interface WidgetDimensionFilter {
+  dimension_label: string;
+  operator: WidgetDimensionFilterOperatorType;
   value: string;
 }
 
