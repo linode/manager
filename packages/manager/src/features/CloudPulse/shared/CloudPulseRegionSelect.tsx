@@ -74,19 +74,17 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     React.useEffect(() => {
-      // we clear the selected region if there is already one.
-      if (selectedRegion && !disabled) {
-        setSelectedRegion(undefined);
-        handleRegionChange(undefined, [], true);
+      if (disabled && !selectedRegion) {
+        return; // no need to do anything
       }
-
-      if (disabled) {
-        setSelectedRegion(undefined);
-      }
-
       // If component is not disabled, regions have loaded, preferences should be saved,
       // and there's no selected region — attempt to preselect from defaultValue.
-      if (!disabled && regions && savePreferences && !selectedRegion) {
+      if (
+        !disabled &&
+        regions &&
+        savePreferences &&
+        selectedRegion === undefined
+      ) {
         // Try to find the region corresponding to the saved default value
         const region = defaultValue
           ? regions.find((regionObj) => regionObj.id === defaultValue)
@@ -94,6 +92,8 @@ export const CloudPulseRegionSelect = React.memo(
         // Notify parent and set internal state
         handleRegionChange(region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
+      } else if (selectedRegion) {
+        setSelectedRegion(''); // reset the selection as some dependent filters are not selected / changing
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
@@ -155,7 +155,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading || isResourcesLoading}
         noMarginTop
         onChange={(_, region) => {
-          setSelectedRegion(region?.id);
+          setSelectedRegion(region?.id ?? '');
           handleRegionChange(
             region?.id,
             region ? [region.label] : [],
