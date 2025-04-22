@@ -30,7 +30,7 @@ export const hasUnrecommendedConfigurationLinodeInterface = (
 ) => {
   return (
     isInterfaceActive &&
-    linodeInterface?.vpc?.ipv4.addresses.some(
+    linodeInterface?.vpc?.ipv4?.addresses.some(
       (address) => address.nat_1_1_address
     ) &&
     !linodeInterface?.default_route.ipv4
@@ -83,10 +83,10 @@ export const getIsVPCLKEEnterpriseCluster = (vpc: VPC) =>
   /^lke\d+/i.test(vpc.label);
 
 export const getLinodeInterfacePrimaryIPv4 = (iface: LinodeInterface) =>
-  iface.vpc?.ipv4.addresses.find((address) => address.primary)?.address;
+  iface.vpc?.ipv4?.addresses.find((address) => address.primary)?.address;
 
 export const getLinodeInterfaceRanges = (iface: LinodeInterface) =>
-  iface.vpc?.ipv4.ranges.map((range) => range.range);
+  iface.vpc?.ipv4?.ranges.map((range) => range.range);
 
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload

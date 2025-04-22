@@ -51,7 +51,7 @@ export const VPCIPv4Address = (props: Props) => {
                   field.onChange(
                     checked
                       ? 'auto'
-                      : (linodeInterface.vpc?.ipv4.addresses[index].address ??
+                      : (linodeInterface.vpc?.ipv4?.addresses[index].address ??
                           '')
                   )
                 }
