@@ -1,8 +1,9 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { kubernetesClusterFactory } from 'src/factories';
+import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
+import type { MockKubeNodePoolResponse } from '../handlers/kubernetes';
 import type { MockSeeder, MockState } from 'src/mocks/types';
 
 export const kubernetesSeeder: MockSeeder = {
@@ -21,21 +22,24 @@ export const kubernetesSeeder: MockSeeder = {
       seedEntities: kubernetesClusterFactory.buildList(count),
     });
 
-    // const kubernetesNodePoolSeeds = seedWithUniqueIds<'kubernetesNodePools'>({
-    //   dbEntities: await mswDB.getAll('kubernetesNodePools'),
-    //   seedEntities: kubernetesClusterSeeds.map((cluster) => {
-    //     const nodePool: MockKubeNodePoolResponse = {
-    //       ...nodePoolFactory.build(),
-    //       clusterId: cluster?.id ?? -1,
-    //     };
-    //     return nodePool;
-    //   }),
-    // });
+    const kubernetesNodePoolSeeds = seedWithUniqueIds<'kubernetesNodePools'>({
+      dbEntities: await mswDB.getAll('kubernetesNodePools'),
+      seedEntities: kubernetesClusterSeeds.map((cluster) => {
+        const nodePool: MockKubeNodePoolResponse = {
+          ...nodePoolFactory.build(),
+          clusterId: cluster?.id ?? -1,
+        };
+        return nodePool;
+      }),
+    });
 
     const updatedMockState = {
       ...mockState,
-      kubernetesClusters: mockState.kubernetesClusters.concat(
+      kubernetesClusters: (mockState.kubernetesClusters ?? []).concat(
         kubernetesClusterSeeds
+      ),
+      kubernetesNodePools: (mockState.kubernetesNodePools ?? []).concat(
+        kubernetesNodePoolSeeds
       ),
     };
 
