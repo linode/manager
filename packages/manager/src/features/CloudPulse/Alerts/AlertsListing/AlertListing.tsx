@@ -10,6 +10,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 
@@ -120,10 +121,10 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const {
-    preference,
-    toggle: toggleAlertsGroupedByTag,
-  } = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
+    'aclpAlertsGroupByTag',
+    [false, true]
+  );
 
   if (alerts && alerts.length === 0) {
     return (
@@ -144,8 +145,11 @@ export const AlertListing = () => {
       />
     );
   }
+
+  const hasFailedAlerts = alerts?.some((alert) => alert.status === 'failed');
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       <Box
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
@@ -156,58 +160,52 @@ export const AlertListing = () => {
         ref={topRef}
       >
         <Box
+          display="flex"
           flexDirection={{
             lg: 'row',
             md: 'column',
             sm: 'column',
             xs: 'column',
           }}
-          display="flex"
           gap={2}
         >
           <DebouncedSearchTextField
-            sx={{
-              maxHeight: '34px',
-              width: searchAndSelectSx,
-            }}
             data-qa-filter="alert-search"
             label=""
             noMarginTop
             onSearch={setSearchText}
             placeholder="Search for Alerts"
+            sx={{
+              maxHeight: '34px',
+              width: searchAndSelectSx,
+            }}
             value={searchText}
           />
           <Autocomplete
+            autoHighlight
+            data-qa-filter="alert-service-filter"
+            data-testid="alert-service-filter"
             errorText={
               serviceTypesError
                 ? 'There was an error in fetching the services.'
                 : ''
             }
-            onChange={(_, selected) => {
-              setServiceFilters(selected);
-            }}
-            sx={{
-              width: searchAndSelectSx,
-            }}
-            autoHighlight
-            data-qa-filter="alert-service-filter"
-            data-testid="alert-service-filter"
             label=""
             limitTags={1}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setServiceFilters(selected);
+            }}
             options={getServicesList}
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
-            value={serviceFilters}
-          />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setStatusFilters(selected);
-            }}
             sx={{
               width: searchAndSelectSx,
             }}
+            value={serviceFilters}
+          />
+          <Autocomplete
             autoHighlight
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
@@ -215,15 +213,25 @@ export const AlertListing = () => {
             limitTags={1}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setStatusFilters(selected);
+            }}
             options={alertStatusOptions}
             placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
+            sx={{
+              width: searchAndSelectSx,
+            }}
             value={statusFilters}
           />
         </Box>
         <Button
+          buttonType="primary"
+          data-qa-button="create-alert"
+          data-qa-buttons="true"
           onClick={() => {
             history.push(`${url}/create`);
           }}
+          ref={topRef}
           sx={{
             height: '34px',
             paddingBottom: 0,
@@ -231,15 +239,24 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          buttonType="primary"
-          data-qa-button="create-alert"
-          data-qa-buttons="true"
-          ref={topRef}
           variant="contained"
         >
           Create Alert
         </Button>
       </Box>
+      {hasFailedAlerts && (
+        <AlertListNoticeMessages
+          errorMessage="Creation of some alerts has failed. Please contact support for assistance."
+          separator=","
+          sx={(theme) => ({
+            '&>p': {
+              fontWeight: theme.typography.fontWeightBold,
+              fontSize: theme.spacingFunction(16),
+            },
+          })}
+          variant="error"
+        />
+      )}
       <AlertsListTable
         alerts={getAlertsList}
         alertsGroupedByTag={preference}
