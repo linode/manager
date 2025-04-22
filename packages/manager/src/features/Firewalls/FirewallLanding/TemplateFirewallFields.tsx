@@ -55,32 +55,32 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
   return (
     <>
       {!selectedTemplate && (
-        <Typography>
+        <Typography sx={{ mt: 2 }}>
           Firewall templates enable you to quickly create firewalls with
           reasonable firewall rules for Public and VPC interfaces that can be
           edited.
         </Typography>
       )}
       <Controller
+        control={control}
+        name="templateSlug"
         render={({ field, fieldState }) => (
           <Select
+            disabled={userCannotAddFirewall}
+            errorText={fieldState.error?.message}
+            label="Firewall Template"
             onChange={(_, item) => {
               field.onChange(item.value);
             }}
+            options={firewallTemplateOptions}
+            placeholder="Select a Template"
             value={
               firewallTemplateOptions.find(
                 (option) => option.value === field.value
               ) ?? null
             }
-            disabled={userCannotAddFirewall}
-            errorText={fieldState.error?.message}
-            label="Firewall Template"
-            options={firewallTemplateOptions}
-            placeholder="Select a Template"
           />
         )}
-        control={control}
-        name="templateSlug"
       />
       {selectedTemplate && descriptionMap[selectedTemplate]}
     </>
