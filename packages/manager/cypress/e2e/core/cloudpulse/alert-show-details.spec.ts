@@ -67,7 +67,7 @@ const alertDetails = alertFactory.build({
   type: 'user',
   created_by: 'user1',
   updated_by: 'user2',
-  created: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString(),
+  created: '2023-10-01T12:00:00Z',
   updated: new Date().toISOString(),
 });
 const {

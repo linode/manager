@@ -35,11 +35,11 @@ const mockAlerts = [
     status: 'enabled',
     type: 'user',
     updated: new Date(now.getTime() - 86400).toISOString(),
-    updated_by: 'user1',
+    updated_by: 'uuser1',
   }),
   alertFactory.build({
     created_by: 'user4',
-    updated_by: 'user4',
+    updated_by: 'uuser4',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-2',
     service_type: 'dbaas',
@@ -50,7 +50,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user2',
-    updated_by: 'user2',
+    updated_by: 'uuser2',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-3',
     service_type: 'linode',
@@ -61,7 +61,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user3',
-    updated_by: 'user3',
+    updated_by: 'uuser3',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-4',
     service_type: 'linode',
