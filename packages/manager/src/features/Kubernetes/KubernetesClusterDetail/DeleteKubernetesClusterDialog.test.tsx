@@ -6,12 +6,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 
-import type { Props } from './DeleteKubernetesClusterDialog';
+import type { DeleteKubernetesClusterDialogProps } from './DeleteKubernetesClusterDialog';
 import type { ManagerPreferences } from '@linode/utilities';
 
-const props: Props = {
+const props: DeleteKubernetesClusterDialogProps = {
   clusterId: 1,
   clusterLabel: 'this-cluster',
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
 };

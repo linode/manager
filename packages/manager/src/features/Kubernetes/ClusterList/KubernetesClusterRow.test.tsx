@@ -15,7 +15,6 @@ const cluster = kubernetesClusterFactory.build({ region: 'us-central' });
 
 const props: Props = {
   cluster,
-  openDeleteDialog: vi.fn(),
   openUpgradeDialog: vi.fn(),
 };
 

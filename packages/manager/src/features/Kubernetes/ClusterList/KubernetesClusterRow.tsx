@@ -1,6 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Chip, Stack } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -20,20 +21,16 @@ import {
 import { ClusterActionMenu } from './ClusterActionMenu';
 import { ClusterChips } from './ClusterChips';
 
-import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
+import type { KubernetesCluster } from '@linode/api-v4';
 
 export interface Props {
   cluster: KubernetesCluster;
-  openDeleteDialog: (
-    clusterID: number,
-    clusterLabel: string,
-    clusterNodePools: KubeNodePoolResponse[]
-  ) => void;
   openUpgradeDialog: () => void;
 }
 
 export const KubernetesClusterRow = (props: Props) => {
-  const { cluster, openDeleteDialog, openUpgradeDialog } = props;
+  const { cluster, openUpgradeDialog } = props;
+  const navigate = useNavigate();
 
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
@@ -112,7 +109,7 @@ export const KubernetesClusterRow = (props: Props) => {
           clusterLabel={cluster.label}
           disabled={isLKEClusterReadOnly}
           openDialog={() =>
-            openDeleteDialog(cluster.id, cluster.label, pools ?? [])
+            navigate({ to: `/kubernetes/clusters/${cluster.id}/delete` })
           }
         />
       </TableCell>

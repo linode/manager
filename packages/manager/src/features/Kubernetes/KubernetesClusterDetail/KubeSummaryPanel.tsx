@@ -8,6 +8,7 @@ import {
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useMatch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -20,8 +21,10 @@ import {
   getKubeControlPlaneACL,
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
+  useKubernetesClusterQuery,
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
@@ -43,7 +46,7 @@ interface Props {
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
-
+  const match = useMatch({ strict: false });
   const { data: account } = useAccount();
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
 
@@ -75,6 +78,14 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
+
+  const { data: selectedCluster, isFetching: isFetchingSelectedCluster } =
+    useDialogData({
+      enabled: match.routeId === '/kubernetes/clusters/$clusterID',
+      queryHook: useKubernetesClusterQuery,
+      paramKey: 'id',
+      redirectToOnNotFound: '/kubernetes/clusters',
+    });
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
@@ -214,8 +225,9 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
-        clusterId={cluster.id}
-        clusterLabel={cluster.label}
+        clusterId={selectedCluster?.id ?? 0}
+        clusterLabel={selectedCluster?.label ?? ''}
+        isFetching={isFetchingSelectedCluster}
         onClose={() => setIsDeleteDialogOpen(false)}
         open={isDeleteDialogOpen}
       />
