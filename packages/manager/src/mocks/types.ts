@@ -20,8 +20,8 @@ import type {
   Subnet,
   SupportReply,
   SupportTicket,
-  VPC,
   Volume,
+  VPC,
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
 
@@ -91,8 +91,8 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id: // eslint-disable-next-line sonarjs/max-union-size
-  | 'Domains'
+  id:
+    | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
     | 'Kubernetes'
