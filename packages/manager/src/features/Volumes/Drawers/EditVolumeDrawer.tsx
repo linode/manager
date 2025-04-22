@@ -1,13 +1,19 @@
-import { ActionsPanel, Box, Checkbox, Notice, TextField } from '@linode/ui';
+import { useGrants, useUpdateVolumeMutation } from '@linode/queries';
+import {
+  ActionsPanel,
+  Box,
+  Checkbox,
+  Drawer,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import { UpdateVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { useGrants } from '@linode/queries';
-import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
+import { NotFound } from 'src/components/NotFound';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -79,6 +85,7 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

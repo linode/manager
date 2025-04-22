@@ -11,30 +11,33 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
+import {
+  CREATE_ALERT_ERROR_FIELD_MAP as EDIT_ALERT_ERROR_FIELD_MAP,
+  MULTILINE_ERROR_SEPARATOR,
+  SINGLELINE_ERROR_SEPARATOR,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+} from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
+import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
+import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
   convertAlertDefinitionValues,
+  getSchemaWithEntityIdValidation,
   handleMultipleError,
-  getEditSchemaWithEntityIdValidation,
 } from '../Utils/utils';
-import { editAlertDefinitionFormSchema } from './schemas';
 
+import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   APIError,
   Alert,
   AlertServiceType,
-  EditAlertDefinitionPayload,
+  EditAlertPayloadWithService,
 } from '@linode/api-v4';
-import {
-  EDIT_ALERT_ERROR_FIELD_MAP,
-  MULTILINE_ERROR_SEPARATOR,
-  SINGLELINE_ERROR_SEPARATOR,
-} from '../constants';
 
 export interface EditAlertProps {
   /**
@@ -51,7 +54,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
   const history = useHistory();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -59,17 +61,19 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     alertDetails,
     serviceType
   );
-  const formMethods = useForm<EditAlertDefinitionPayload>({
-    defaultValues: filteredAlertDefinitionValues,
+  const flags = useFlags();
+  const formMethods = useForm<EditAlertDefintionForm>({
+    defaultValues: {
+      ...filteredAlertDefinitionValues,
+      serviceType,
+    },
     mode: 'onBlur',
     resolver: yupResolver(
-      getEditSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: alertDetails.service_type,
-        },
-        editAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: alertDefinitionFormSchema,
+        serviceTypeObj: alertDetails.service_type,
+      })
     ),
   });
 
@@ -79,20 +83,26 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
+    const editPayload: EditAlertPayloadWithService = filterEditFormValues(
+      values,
+      serviceType,
+      alertDetails.severity,
+      alertId
+    );
     try {
-      await editAlert({ alertId, serviceType, ...values });
-      enqueueSnackbar('Alert successfully updated.', {
+      await editAlert(editPayload);
+      enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       history.push(definitionLanding);
     } catch (errors) {
-      handleMultipleError<EditAlertDefinitionPayload>(
+      handleMultipleError<EditAlertDefintionForm>({
+        errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
         errors,
-        EDIT_ALERT_ERROR_FIELD_MAP,
-        MULTILINE_ERROR_SEPARATOR,
-        SINGLELINE_ERROR_SEPARATOR,
-        setError
-      );
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {

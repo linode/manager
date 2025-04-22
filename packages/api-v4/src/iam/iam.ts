@@ -14,9 +14,9 @@ import { IamUserPermissions, IamAccountPermissions } from './types';
 export const getUserPermissions = (username: string) =>
   Request<IamUserPermissions>(
     setURL(
-      `${BETA_API_ROOT}/iam/role-permissions/users/${encodeURIComponent(
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
         username
-      )}`
+      )}/role-permissions`
     ),
     setMethod('GET')
   );
@@ -31,7 +31,7 @@ export const getUserPermissions = (username: string) =>
  */
 export const updateUserPermissions = (
   username: string,
-  data: Partial<IamUserPermissions>
+  data: IamUserPermissions
 ) =>
   Request<IamUserPermissions>(
     setURL(

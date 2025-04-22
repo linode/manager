@@ -8,6 +8,7 @@
  * error messages or fallback behavior when necessary.
  */
 
+import { regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -20,12 +21,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import {
-  accountFactory,
-  dashboardFactory,
-  regionFactory,
-  widgetFactory,
-} from 'src/factories';
+import { accountFactory, dashboardFactory, widgetFactory } from 'src/factories';
 
 import type { Flags } from 'src/featureFlags';
 
@@ -133,7 +129,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
         .should('have.text', 'US, Chicago, IL');
     });
   });
-
+  // Reason: Not needed
   it.skip('If the supportedRegionIds column is removed, all mocked regions will be considered supported by default', () => {
     const flags: Partial<Flags> = {
       aclp: { beta: true, enabled: true },

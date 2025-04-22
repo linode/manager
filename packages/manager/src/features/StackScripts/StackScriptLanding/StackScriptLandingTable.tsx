@@ -1,3 +1,7 @@
+import {
+  useStackScriptQuery,
+  useStackScriptsInfiniteQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
 import {
@@ -25,8 +29,6 @@ import {
 } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
-import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
 import { StackScriptsEmptyLandingState } from '../StackScriptBase/StackScriptsEmptyLandingPage';
@@ -134,7 +136,7 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
-        InputProps={
+        inputSlotProps={
           searchParseError
             ? {
                 endAdornment: (

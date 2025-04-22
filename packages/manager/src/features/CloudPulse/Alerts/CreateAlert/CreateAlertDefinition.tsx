@@ -4,12 +4,7 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useWatch,
-} from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -19,17 +14,21 @@ import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
   CREATE_ALERT_ERROR_FIELD_MAP,
+  CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
-import { handleMultipleError, getCreateSchemaWithEntityIdValidation } from '../Utils/utils';
+import {
+  getSchemaWithEntityIdValidation,
+  handleMultipleError,
+} from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
-import { createAlertDefinitionFormSchema } from './schemas';
+import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
 import type {
@@ -38,7 +37,6 @@ import type {
   TriggerConditionForm,
 } from './types';
 import type { APIError } from '@linode/api-v4';
-import type { ObjectSchema } from 'yup';
 
 const triggerConditionInitialValues: TriggerConditionForm = {
   criteria_condition: 'ALL',
@@ -55,10 +53,8 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  engineType: null,
   entity_ids: [],
   label: '',
-  region: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
   },
@@ -87,16 +83,12 @@ export const CreateAlertDefinition = () => {
   const flags = useFlags();
 
   // Default resolver
-  const [validationSchema, setValidationSchema] = React.useState<
-    ObjectSchema<CreateAlertDefinitionForm>
-  >(
-    getCreateSchemaWithEntityIdValidation(
-      {
-        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-        serviceTypeObj: null,
-      },
-      createAlertDefinitionFormSchema
-    )
+  const [validationSchema, setValidationSchema] = React.useState(
+    getSchemaWithEntityIdValidation({
+      aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+      baseSchema: alertDefinitionFormSchema,
+      serviceTypeObj: null,
+    })
   );
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
@@ -125,18 +117,18 @@ export const CreateAlertDefinition = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
-      enqueueSnackbar('Alert successfully created.', {
+      enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
       alertCreateExit();
     } catch (errors) {
-      handleMultipleError<CreateAlertDefinitionForm>(
+      handleMultipleError<CreateAlertDefinitionForm>({
+        errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
         errors,
-        CREATE_ALERT_ERROR_FIELD_MAP,
-        MULTILINE_ERROR_SEPARATOR,
-        SINGLELINE_ERROR_SEPARATOR,
-        setError
-      );
+        multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
+        setError,
+        singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
+      });
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {
@@ -156,27 +148,18 @@ export const CreateAlertDefinition = () => {
 
   const handleServiceTypeChange = React.useCallback(() => {
     // Reset the criteria to initial state
-    setValue('rule_criteria.rules', [
-      {
-        aggregate_function: null,
-        dimension_filters: [],
-        metric: null,
-        operator: null,
-        threshold: 0,
-      },
-    ]);
+    setValue('rule_criteria.rules', [{ ...criteriaInitialValues }]);
     setValue('entity_ids', []);
+    setValue('trigger_conditions', triggerConditionInitialValues);
   }, [setValue]);
 
   React.useEffect(() => {
     setValidationSchema(
-      getCreateSchemaWithEntityIdValidation(
-        {
-          aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
-          serviceTypeObj: serviceTypeWatcher,
-        },
-        createAlertDefinitionFormSchema
-      )
+      getSchemaWithEntityIdValidation({
+        aclpAlertServiceTypeConfig: flags.aclpAlertServiceTypeConfig ?? [],
+        baseSchema: alertDefinitionFormSchema,
+        serviceTypeObj: serviceTypeWatcher,
+      })
     );
   }, [flags.aclpAlertServiceTypeConfig, serviceTypeWatcher]);
 

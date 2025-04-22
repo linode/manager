@@ -14,7 +14,6 @@ import { makeResponse } from 'support/util/response';
 import type {
   Alert,
   CloudPulseMetricsResponse,
-  CreateAlertDefinitionPayload,
   Dashboard,
   MetricDefinition,
   NotificationChannel,
@@ -353,12 +352,12 @@ export const mockGetAlertChannels = (
  */
 export const mockCreateAlertDefinition = (
   serviceType: string,
-  createAlertRequest: CreateAlertDefinitionPayload
+  alert: Alert
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     apiMatcher(`/monitor/services/${serviceType}/alert-definitions`),
-    paginateResponse(createAlertRequest)
+    makeResponse(alert)
   );
 };
 /**

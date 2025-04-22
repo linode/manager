@@ -1,11 +1,9 @@
-import { CreateAlertDefinitionForm } from './CreateAlert/types';
-
+import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
   DimensionFilterOperatorType,
-  EditAlertDefinitionPayload,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
@@ -191,16 +189,15 @@ export const CREATE_ALERT_ERROR_FIELD_MAP: Record<
   FieldPath<CreateAlertDefinitionForm>
 > = {
   channel_ids: 'channel_ids',
-  rule_criteria: 'rule_criteria.rules',
-};
-
-export const EDIT_ALERT_ERROR_FIELD_MAP: Record<
-  string,
-  FieldPath<EditAlertDefinitionPayload>
-> = {
-  channel_ids: 'channel_ids',
+  entity_ids: 'entity_ids',
   rule_criteria: 'rule_criteria.rules',
 };
 
 export const MULTILINE_ERROR_SEPARATOR = '|';
-export const SINGLELINE_ERROR_SEPARATOR = ' ';
+export const SINGLELINE_ERROR_SEPARATOR = '\t';
+
+export const CREATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+
+export const UPDATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully updated. It may take a few minutes for your changes to take effect.';

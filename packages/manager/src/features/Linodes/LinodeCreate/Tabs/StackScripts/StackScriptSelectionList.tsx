@@ -1,3 +1,7 @@
+import {
+  useStackScriptQuery,
+  useStackScriptsInfiniteQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Box,
@@ -27,10 +31,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrder } from 'src/hooks/useOrder';
-import {
-  useStackScriptQuery,
-  useStackScriptsInfiniteQuery,
-} from 'src/queries/stackscripts';
 
 import {
   getGeneratedLinodeLabel,

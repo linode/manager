@@ -1,8 +1,7 @@
-import { arrayToList } from '@linode/utilities';
+import { useAccount } from '@linode/queries';
+import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from '@linode/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -118,7 +117,7 @@ export const getPlanSelectionsByPlanType = <
         plansByType['shared'].push(type);
         break;
       default:
-        if (plansByType.hasOwnProperty(type.class)) {
+        if (Object.prototype.hasOwnProperty.call(plansByType, type.class)) {
           plansByType[type.class].push(type);
         }
         break;

@@ -32,7 +32,6 @@ import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidge
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 import type { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -107,7 +106,6 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
-    flags: { enabled: true } as Partial<Flags>,
     label,
     metricsList: responsePayload,
     resources: [
@@ -117,7 +115,6 @@ const getWidgetLegendRowValuesFromResponse = (
         region: 'us-ord',
       },
     ],
-    serviceType,
     status: 'success',
     unit,
   });
@@ -168,7 +165,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // navigate to the Monitor
     cy.visitWithLogin(
-      `/databases/${databaseMock.engine}/${databaseMock.id}/monitor`
+      `/databases/${databaseMock.engine}/${databaseMock.id}/metrics`
     );
 
     cy.wait(['@getDashboard', '@getServiceType', '@getDatabase']);
@@ -313,7 +310,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             expect(testData.expectedAggregation).to.equal(
-              interception.request.body.aggregate_function
+              interception.request.body.metrics[0].aggregate_function
             );
           });
 

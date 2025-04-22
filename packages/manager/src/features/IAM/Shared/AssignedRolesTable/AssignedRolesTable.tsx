@@ -4,11 +4,11 @@ import {
   StyledLinkButton,
   Typography,
 } from '@linode/ui';
+import { capitalize, truncate } from '@linode/utilities';
 import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { TableCell } from 'src/components/TableCell';
@@ -16,27 +16,29 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
+import { useAccountEntities } from 'src/queries/entities/entities';
 import {
   useAccountPermissions,
   useAccountUserPermissions,
 } from 'src/queries/iam/iam';
-import { useAccountResources } from 'src/queries/resources/resources';
 
+import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
 import {
-  addResourceNamesToRoles,
+  addEntitiesNamesToRoles,
   combineRoles,
   getFilteredRoles,
   mapEntityTypes,
   mapRolesToPermissions,
+  transformedAccountEntities,
 } from '../utilities';
-import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
+import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
+import { ChangeRoleDrawer } from './ChangeRoleDrawer';
+import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
 import type { EntitiesType, ExtendedRoleMap, RoleMap } from '../utilities';
 import type { AccountAccessType, RoleType } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
-import { capitalize, truncate } from '@linode/utilities';
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
@@ -44,14 +46,31 @@ export const AssignedRolesTable = () => {
   const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
 
+  const [
+    isChangeRoleDrawerOpen,
+    setIsChangeRoleDrawerOpen,
+  ] = React.useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+  const [
+    isUnassignRoleDialogOpen,
+    setIsUnassignRoleDialogOpen,
+  ] = React.useState<boolean>(false);
+
+  const handleChangeRole = (role: ExtendedRoleMap) => {
+    setIsChangeRoleDrawerOpen(true);
+    setSelectedRole(role);
+  };
+
+  const handleUnassignRole = (role: ExtendedRoleMap) => {
+    setIsUnassignRoleDialogOpen(true);
+    setSelectedRole(role);
+  };
+
   const {
     data: accountPermissions,
     isLoading: accountPermissionsLoading,
   } = useAccountPermissions();
-  const {
-    data: resources,
-    isLoading: resourcesLoading,
-  } = useAccountResources();
+  const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
   const {
     data: assignedRoles,
     isLoading: assignedRolesLoading,
@@ -67,12 +86,14 @@ export const AssignedRolesTable = () => {
 
     const resourceTypes = getResourceTypes(roles);
 
-    if (resources) {
-      roles = addResourceNamesToRoles(roles, resources);
+    if (entities) {
+      const transformedEntities = transformedAccountEntities(entities.data);
+
+      roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
     return { resourceTypes, roles };
-  }, [assignedRoles, accountPermissions, resources]);
+  }, [assignedRoles, accountPermissions, entities]);
 
   const [query, setQuery] = React.useState('');
 
@@ -80,7 +101,7 @@ export const AssignedRolesTable = () => {
 
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
-  const handleClick = (roleName: AccountAccessType | RoleType) => {
+  const handleViewEntities = (roleName: AccountAccessType | RoleType) => {
     const selectedRole = roleName;
     history.push({
       pathname: `/iam/users/${username}/entities`,
@@ -97,69 +118,32 @@ export const AssignedRolesTable = () => {
     });
 
     return filteredRoles.map((role: ExtendedRoleMap) => {
-      const accountMenu: Action[] = [
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Change Role',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Unassign Role',
-        },
-      ];
-
-      const entitiesMenu: Action[] = [
-        {
-          onClick: () => handleClick(role.name),
-          title: 'View Entities',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Update List of Entities',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Change Role',
-        },
-        {
-          onClick: () => {
-            // mock
-          },
-          title: 'Unassign Role',
-        },
-      ];
-
-      const actions = role.access === 'account' ? accountMenu : entitiesMenu;
-
       const OuterTableCells = (
         <>
-          {role.access === 'account' ? (
+          {role.access === 'account_access' ? (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <Typography>
-                {role.resource_type === 'account'
+                {role.entity_type === 'account'
                   ? 'All Entities'
-                  : `All ${capitalize(role.resource_type)}s`}
+                  : `All ${capitalize(role.entity_type)}s`}
               </Typography>
             </TableCell>
           ) : (
             <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
               <AssignedEntities
-                entities={role.resource_names!}
-                onButtonClick={handleClick}
+                entities={role.entity_names!}
+                onButtonClick={handleViewEntities}
                 roleName={role.name}
               />
             </TableCell>
           )}
           <TableCell actionCell>
-            <ActionMenu actionsList={actions} ariaLabel="action menu" />
+            <AssignedRolesActionMenu
+              handleChangeRole={handleChangeRole}
+              handleUnassignRole={handleUnassignRole}
+              handleViewEntities={handleViewEntities}
+              role={role}
+            />
           </TableCell>
         </>
       );
@@ -177,7 +161,7 @@ export const AssignedRolesTable = () => {
         >
           <Typography
             sx={{
-              font: theme.tokens.typography.Label.Bold.S,
+              font: theme.tokens.alias.Typography.Label.Bold.S,
             }}
           >
             Description
@@ -190,7 +174,7 @@ export const AssignedRolesTable = () => {
             {description.length > 150 && (
               <StyledLinkButton
                 sx={{
-                  font: theme.tokens.typography.Label.Semibold.Xs,
+                  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
                   width: 'max-content',
                 }}
                 onClick={() => setShowFullDescription((show) => !show)}
@@ -212,7 +196,7 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, query, entityType, showFullDescription]);
 
-  if (accountPermissionsLoading || resourcesLoading || assignedRolesLoading) {
+  if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
   }
 
@@ -289,6 +273,16 @@ export const AssignedRolesTable = () => {
         TableItems={memoizedTableItems}
         TableRowHead={RoleTableRowHead}
       />
+      <ChangeRoleDrawer
+        onClose={() => setIsChangeRoleDrawerOpen(false)}
+        open={isChangeRoleDrawerOpen}
+        role={selectedRole}
+      />
+      <UnassignRoleConfirmationDialog
+        onClose={() => setIsUnassignRoleDialogOpen(false)}
+        open={isUnassignRoleDialogOpen}
+        role={selectedRole}
+      />
     </Grid>
   );
 };
@@ -297,14 +291,13 @@ const getResourceTypes = (data: RoleMap[]): EntitiesType[] =>
   mapEntityTypes(data, ' Roles');
 
 const getSearchableFields = (role: ExtendedRoleMap): string[] => {
-  const resourceNames = role.resource_names || [];
+  const entityNames = role.entity_names || [];
   return [
     String(role.id),
-    role.resource_type,
+    role.entity_type,
     role.name,
-    role.access,
     role.description,
-    ...resourceNames,
+    ...entityNames,
     ...role.permissions,
   ];
 };

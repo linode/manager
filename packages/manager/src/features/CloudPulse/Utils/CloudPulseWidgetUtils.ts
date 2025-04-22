@@ -1,6 +1,5 @@
 import { Alias } from '@linode/design-language-system';
-
-import { getMetrics } from 'src/utilities/statMetrics';
+import { getMetrics } from '@linode/utilities';
 
 import {
   convertValueToUnit,
@@ -26,14 +25,8 @@ import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
-  /**
-   * flags received from config
-   */
-  flags: FlagSet;
-
   /**
    * label for the graph title
    */
@@ -50,22 +43,12 @@ interface LabelNameOptionsProps {
   resources: CloudPulseResources[];
 
   /**
-   * service type of the selected dashboard
-   */
-  serviceType: string;
-
-  /**
    * unit of the data
    */
   unit: string;
 }
 
 interface GraphDataOptionsProps {
-  /**
-   * flags associated with metricsList
-   */
-  flags: FlagSet;
-
   /**
    * label for the graph title
    */
@@ -80,11 +63,6 @@ interface GraphDataOptionsProps {
    * list of CloudPulse resources
    */
   resources: CloudPulseResources[];
-
-  /**
-   * service type of the selected dashboard
-   */
-  serviceType: string;
 
   /**
    * status returned from react query ( pending | error | success)
@@ -120,11 +98,6 @@ interface MetricRequestProps {
 }
 
 interface DimensionNameProperties {
-  /**
-   * flag dimension key mapping for service type
-   */
-  flag: CloudPulseResourceTypeMapFlag | undefined;
-
   /**
    * metric key-value to generate dimension name
    */
@@ -163,15 +136,7 @@ interface GraphData {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
-  const {
-    flags,
-    label,
-    metricsList,
-    resources,
-    serviceType,
-    status,
-    unit,
-  } = props;
+  const { label, metricsList, resources, status, unit } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
@@ -196,11 +161,9 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         };
 
         const labelOptions: LabelNameOptionsProps = {
-          flags,
           label,
           metric: transformedData.metric,
           resources,
-          serviceType,
           unit,
         };
         const labelName = getLabelName(labelOptions);
@@ -274,7 +237,7 @@ export const generateMaxUnit = (
 ) => {
   const maxValue = Math.max(
     0,
-    ...legendRowsData?.map((row) => row?.data.max ?? 0)
+    ...legendRowsData.map((row) => row?.data.max ?? 0)
   );
 
   return generateUnitByBaseUnit(maxValue, unit);
@@ -297,14 +260,18 @@ export const getCloudPulseMetricRequest = (
       preset !== 'last_month'
         ? undefined
         : { end: duration.end, start: duration.start },
-    aggregate_function: widget.aggregate_function,
     entity_ids: resources
       ? entityIds.map((id) => parseInt(id, 10))
       : widget.entity_ids.map((id) => parseInt(id, 10)),
     filters: undefined,
     group_by: widget.group_by,
-    metric: widget.metric,
     relative_time_duration: getTimeDurationFromPreset(preset),
+    metrics: [
+      {
+        aggregate_function: widget.aggregate_function,
+        name: widget.metric,
+      },
+    ],
     time_granularity:
       widget.time_granularity.unit === 'Auto'
         ? undefined
@@ -320,36 +287,33 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { flags, label, metric, resources, serviceType, unit } = props;
+  const { label, metric, resources, unit } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
     return `${label} (${unit})`;
   }
 
-  const flag = flags?.aclpResourceTypeMap?.find(
-    (obj: CloudPulseResourceTypeMapFlag) => obj.serviceType === serviceType
-  );
-
-  return getDimensionName({ flag, metric, resources });
+  return getDimensionName({ metric, resources });
 };
 
 /**
  *
  * @returns generated dimension name based on resources
  */
+// ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { flag, metric, resources } = props;
+  const { metric, resources } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
-      if (key === flag?.dimensionKey) {
+      if (key === 'entity_id') {
         return mapResourceIdToName(value, resources);
       }
 
       return value ?? '';
     })
     .filter(Boolean)
-    .join('_');
+    .join(' | ');
 };
 
 /**

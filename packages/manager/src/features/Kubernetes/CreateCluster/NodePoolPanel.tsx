@@ -1,15 +1,18 @@
+import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { doesRegionSupportFeature } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
-import { useRegionsQuery } from '@linode/queries';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION,
 } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 
@@ -70,6 +73,8 @@ const Panel = (props: NodePoolPanelProps) => {
     types,
   } = props;
 
+  const flags = useFlags();
+
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const regions = useRegionsQuery().data ?? [];
@@ -84,6 +89,7 @@ const Panel = (props: NodePoolPanelProps) => {
   const addPool = (selectedPlanType: string, nodeCount: number) => {
     addNodePool({
       count: nodeCount,
+      // eslint-disable-next-line sonarjs/pseudo-random
       id: Math.random(),
       type: selectedPlanType,
     });
@@ -94,21 +100,34 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  const regionSupportsDiskEncryption = doesRegionSupportFeature(
-    selectedRegionId ?? '',
-    regions,
-    'Disk Encryption'
-  );
+  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
+  const regionSupportsDiskEncryption =
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'Disk Encryption'
+    ) ||
+    doesRegionSupportFeature(
+      selectedRegionId ?? '',
+      regions,
+      'LA Disk Encryption'
+    );
+
+  const getPlansPanelCopy = () => {
+    // TODO - LKE-E: Remove the 'ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION' copy once LDE is enabled on LKE-E.
+    if (selectedTier === 'enterprise') {
+      return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
+    }
+    // @TODO LDE: once LDE has been fully rolled out and is in GA in all regions, remove the feature flag condition
+    return regionSupportsDiskEncryption && flags.linodeDiskEncryption
+      ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
 
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
-          copy={
-            regionSupportsDiskEncryption
-              ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
-              : ADD_NODE_POOLS_DESCRIPTION
-          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
@@ -121,6 +140,7 @@ const Panel = (props: NodePoolPanelProps) => {
             // No Nanodes in Kubernetes clusters
             return t.class !== 'nanode';
           })}
+          copy={getPlansPanelCopy()}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

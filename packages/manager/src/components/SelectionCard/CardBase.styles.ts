@@ -49,19 +49,18 @@ export const CardBaseGrid = styled(Grid, {
 
 export const CardBaseIcon = styled(Grid, {
   label: 'CardBaseIcon',
-})(({ theme }) => ({
+})({
   '& img': {
     maxHeight: 32,
     maxWidth: 32,
   },
   '& svg, & span': {
-    color: theme.tokens.color.Neutrals[50],
     fontSize: 32,
   },
   alignItems: 'flex-end',
   display: 'flex',
   justifyContent: 'flex-end',
-}));
+});
 
 export const CardBaseHeadings = styled(Grid, {
   label: 'CardBaseHeadings',
@@ -90,7 +89,7 @@ export const CardBaseSubheading = styled('div', {
   label: 'CardBaseSubheading',
 })<Partial<CardBaseProps>>(({ theme, ...props }) => ({
   color: props.checked
-    ? theme.tokens.content.Text.Primary.Default
+    ? theme.tokens.alias.Content.Text.Primary.Default
     : theme.palette.text.primary,
   fontSize: '0.875rem',
 }));

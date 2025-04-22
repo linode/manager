@@ -2,6 +2,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
   CircleProgress,
+  Drawer,
   ErrorState,
   IconButton,
   InputAdornment,
@@ -22,9 +23,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Drawer } from 'src/components/Drawer';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -79,7 +81,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     padding: 0,
   },
   imageTableHeader: {
-    border: `1px solid ${theme.tokens.border.Normal}`,
+    border: `1px solid ${theme.tokens.alias.Border.Normal}`,
     borderBottom: 0,
     padding: theme.spacing(),
     paddingLeft: theme.spacing(1.5),
@@ -452,8 +454,11 @@ export const ImagesLanding = () => {
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
+              {isFetching && <CircleProgress noPadding size="xs" />}
               <IconButton
+                sx={{
+                  padding: 0,
+                }}
                 aria-label="Clear"
                 data-testid="clear-images-search"
                 onClick={resetSearch}
@@ -478,9 +483,13 @@ export const ImagesLanding = () => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            These are images you manually uploaded or captured from an existing
-            compute instance disk. You can deploy an image to a compute instance
-            in any region.
+            These are{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+              encrypted
+            </Link>{' '}
+            images you manually uploaded or captured from an existing compute
+            instance disk. You can deploy an image to a compute instance in any
+            region.
           </Typography>
         </div>
         <Table>
@@ -650,6 +659,7 @@ export const ImagesLanding = () => {
         open={action === 'rebuild'}
       />
       <Drawer
+        NotFoundComponent={NotFound}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}

@@ -1,27 +1,28 @@
 import {
-  ActionsPanel,
-  Autocomplete,
-  Box,
-  Notice,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { useQueryClient } from '@tanstack/react-query';
-import { useFormik } from 'formik';
-import * as React from 'react';
-
-import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { Drawer } from 'src/components/Drawer';
-import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
-import { useFormattedDate } from 'src/hooks/useFormattedDate';
-import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import {
   linodeQueries,
   useAllLinodesQuery,
   useGrants,
   useProfile,
 } from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Drawer,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { useFormattedDate } from '@linode/utilities';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFormik } from 'formik';
+import * as React from 'react';
+
+import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { NotFound } from 'src/components/NotFound';
+import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
+import { SUBNET_UNASSIGN_LINODES_WARNING } from 'src/features/VPCs/constants';
+import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import type {
@@ -34,6 +35,7 @@ import type {
 } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   singleLinodeToBeUnassigned?: Linode;
@@ -48,7 +50,14 @@ interface ConfigInterfaceAndLinodeData extends Linode {
 }
 
 export const SubnetUnassignLinodesDrawer = React.memo(
-  ({ onClose, open, singleLinodeToBeUnassigned, subnet, vpcId }: Props) => {
+  ({
+    isFetching,
+    onClose,
+    open,
+    singleLinodeToBeUnassigned,
+    subnet,
+    vpcId,
+  }: Props) => {
     const { data: profile } = useProfile();
     const { data: grants } = useGrants();
     const subnetId = subnet?.id;
@@ -118,7 +127,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
           const updatedConfigInterfaces = await Promise.all(
             selectedLinodes.map(async (linode) => {
               const response = await queryClient.fetchQuery(
-                linodeQueries.linode(linode.id)._ctx.configs
+                linodeQueries.linode(linode.id)._ctx.configs._ctx.configs
               );
 
               if (response) {
@@ -280,6 +289,8 @@ export const SubnetUnassignLinodesDrawer = React.memo(
         title={`Unassign Linodes from subnet: ${subnet?.label} (${
           subnet?.ipv4 ?? subnet?.ipv6
         })`}
+        NotFoundComponent={NotFound}
+        isFetching={isFetching}
         onClose={handleOnClose}
         open={open}
       >

@@ -1,15 +1,20 @@
-import { Button, Notice, Typography } from '@linode/ui';
+import { Button, Notice, Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import type { SelectUnselectAll } from './AlertsResources';
+import { AlertMaxSelectionText } from './AlertMaxSelectionText';
+
+import type { SelectDeselectAll } from './AlertsResources';
 
 interface AlertResourceNoticeProps {
   /**
-   * Callback to handle selection changes (select all or unselect all).
+   * Callback to handle selection changes (select all or deselect all).
    */
-  handleSelectionChange: (action: SelectUnselectAll) => void;
+  handleSelectionChange: (action: SelectDeselectAll) => void;
 
+  /**
+   * The maximum number of resources that can be selected based on service type.
+   */
   maxSelectionCount?: number;
 
   /**
@@ -31,55 +36,52 @@ export const AlertsResourcesNotice = React.memo(
       selectedResources,
       totalResources,
     } = props;
-    const isSelectAll = selectedResources !== totalResources;
+    const isSelectAll =
+      maxSelectionCount !== undefined
+        ? selectedResources === 0
+        : selectedResources < totalResources;
+    const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
+    const isButtonDisabled =
+      isSelectAll && maxSelectionCount !== undefined
+        ? totalResources > maxSelectionCount
+        : false;
 
     return (
       <StyledNotice gap={1} variant="info">
         <Typography
           sx={(theme) => ({
-            fontFamily: theme.font.bold,
+            fontFamily: theme.tokens.alias.Typography.Body.Bold,
           })}
           data-testid="selection_notice"
-          variant="body2"
         >
-          {selectedResources} of {totalResources} resources are selected.
+          {selectedResources} of {totalResources} entities are selected.
         </Typography>
-        {isSelectAll && (
+        <Tooltip
+          slotProps={{
+            tooltip: {
+              sx: {
+                maxWidth: '250px',
+              },
+            },
+          }}
+          title={
+            isButtonDisabled && maxSelectionCount !== undefined ? (
+              <AlertMaxSelectionText maxSelectionCount={maxSelectionCount} />
+            ) : undefined
+          }
+          placement="right-start"
+        >
           <Button
-            disabled={
-              maxSelectionCount !== undefined &&
-              totalResources > maxSelectionCount
+            data-testid={
+              isSelectAll ? 'select_all_notice' : 'deselect_all_notice'
             }
-            onClick={() => {
-              handleSelectionChange('Select All');
-            }}
-            sx={{
-              margin: 0,
-              padding: 0,
-            }}
-            aria-label="Select All Resources"
-            data-testid="select_all_notice"
-            variant="text"
+            disabled={isButtonDisabled}
+            onClick={() => handleSelectionChange(buttonText)}
+            sx={{ p: 0 }}
           >
-            Select All
+            {buttonText}
           </Button>
-        )}
-        {!isSelectAll && (
-          <Button
-            onClick={() => {
-              handleSelectionChange('Unselect All');
-            }}
-            sx={{
-              margin: 0,
-              padding: 0,
-            }}
-            aria-label="Unselect All Resources"
-            data-testid="unselect_all_notice"
-            variant="text"
-          >
-            Deselect All
-          </Button>
-        )}
+        </Tooltip>
       </StyledNotice>
     );
   }
@@ -88,11 +90,11 @@ export const AlertsResourcesNotice = React.memo(
 export const StyledNotice = styled(Notice, { label: 'StyledNotice' })(
   ({ theme }) => ({
     alignItems: 'center',
-    background: theme.tokens.background.Normal,
+    background: theme.tokens.alias.Background.Normal,
     borderRadius: 1,
     display: 'flex',
     flexWrap: 'nowrap',
     marginBottom: 0,
-    padding: theme.spacing(2),
+    padding: theme.tokens.spacing.S16,
   })
 );

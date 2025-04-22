@@ -15,8 +15,12 @@ import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
+  NodebalancerVpcConfig,
 } from './types';
-import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
+import {
+  combineNodeBalancerConfigNodeAddressAndPort,
+  combineNodeBalancerConfigNodeAddressAndPortBeta,
+} from './utils';
 import type { Firewall } from '../firewalls/types';
 
 /**
@@ -96,6 +100,22 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
   );
 
 /**
+ * createNodeBalancerBeta
+ *
+ * Add a NodeBalancer to your account using the beta API
+ */
+export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
+  Request<NodeBalancer>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/nodebalancers`),
+    setData(
+      data,
+      NodeBalancerSchema,
+      combineNodeBalancerConfigNodeAddressAndPortBeta
+    )
+  );
+
+/**
  * deleteNodeBalancer
  *
  * Remove a NodeBalancer from your account.
@@ -157,4 +177,46 @@ export const getNodeBalancerTypes = (params?: Params) =>
     setURL(`${API_ROOT}/nodebalancers/types`),
     setMethod('GET'),
     setParams(params)
+  );
+
+/**
+ * getNodeBalancerVPCConfigsBeta
+ *
+ * View all VPC Config information for this NodeBalancer
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
+ */
+export const getNodeBalancerVPCConfigsBeta = (
+  nodeBalancerId: number,
+  params?: Params,
+  filter?: Filter
+) =>
+  Request<Page<NodebalancerVpcConfig>>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/vpcs`
+    ),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
+  );
+/**
+ * getNodeBalancerVPCConfigBeta
+ *
+ * View VPC Config information for this NodeBalancer and VPC Config id
+ *
+ * @param nodeBalancerId { number } The ID of the NodeBalancer to view vpc config info for.
+ */
+export const getNodeBalancerVPCConfigBeta = (
+  nodeBalancerId: number,
+  nbVpcConfigId: number
+) =>
+  Request<NodebalancerVpcConfig>(
+    setURL(
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
+        nodeBalancerId
+      )}/vpcs/${encodeURIComponent(nbVpcConfigId)}`
+    ),
+    setMethod('GET')
   );

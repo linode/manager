@@ -10,7 +10,6 @@ import type {
   AlertDefinitionMetricCriteria,
   AlertDefinitionType,
   AlertServiceType,
-  EditAlertDefinitionPayload,
   EditAlertPayloadWithService,
   NotificationChannel,
   ServiceTypesList,
@@ -68,12 +67,66 @@ export interface AlertValidationSchemaProps {
    * The config that holds the maxResourceSelection count per service type like linode, dbaas etc.,
    */
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+
+  /**
+   * The base schema which needs to be enhanced with the entity_ids validation
+   */
+  baseSchema: ObjectSchema<CreateAlertDefinitionForm>;
+
   /**
    * The service type that is linked with alert and for which the validation schema needs to be built
    */
   serviceTypeObj: null | string;
 }
+interface HandleMultipleErrorProps<T extends FieldValues> {
+  /**
+   *  A mapping of API error field names to form field paths. Use this to redirect API errors
+   *  to specific form fields. For example, if the API returns an error for "user.name" but
+   *  your form field is called "fullName", you would map "user" to "fullName".
+   */
+  errorFieldMap: Record<string, FieldPath<T>>;
+  /**
+   * List of errors returned from the API
+   */
+  errors: APIError[];
+  /**
+   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
+   */
+  multiLineErrorSeparator: string;
+  /**
+   * React Hook Form's setError function to register errors with the form
+   */
+  setError: UseFormSetError<T>;
+  /**
+   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+   */
+  singleLineErrorSeparator: string;
+}
 
+interface HandleMultipleErrorProps<T extends FieldValues> {
+  /**
+   *  A mapping of API error field names to form field paths. Use this to redirect API errors
+   *  to specific form fields. For example, if the API returns an error for "user.name" but
+   *  your form field is called "fullName", you would map "user" to "fullName".
+   */
+  errorFieldMap: Record<string, FieldPath<T>>;
+  /**
+   * List of errors returned from the API
+   */
+  errors: APIError[];
+  /**
+   * Separator for multiple errors on fields that are rendered explicitly. Ex : Usage in @AlertListNoticeMessages component
+   */
+  multiLineErrorSeparator: string;
+  /**
+   * React Hook Form's setError function to register errors with the form
+   */
+  setError: UseFormSetError<T>;
+  /**
+   * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
+   */
+  singleLineErrorSeparator: string;
+}
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypeList List of available service types in Cloud Pulse
@@ -99,7 +152,7 @@ export const getServiceTypeLabel = (
  * @returns The style object for the box used in alert details page
  */
 export const getAlertBoxStyles = (theme: Theme) => ({
-  backgroundColor: theme.tokens.background.Neutral,
+  backgroundColor: theme.tokens.alias.Background.Neutral,
   padding: theme.spacing(3),
 });
 /**
@@ -277,70 +330,63 @@ export const processMetricCriteria = (
   );
 };
 
-export const getCreateSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  createSchema: ObjectSchema<CreateAlertDefinitionForm>
+/**
+ * @param props The props required for the max selection count calculation
+ * @param baseSchema The schema in which the entity id max validation will be added
+ * @returns The updated schema with entity id max validation based on max selection count
+ */
+export const getSchemaWithEntityIdValidation = (
+  props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
+  const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
+
+  if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
+    return baseSchema;
+  }
+
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    ({ serviceType }) => serviceTypeObj === serviceType
+    (config) => config && serviceTypeObj === config.serviceType
   )?.maxResourceSelectionCount;
 
-  return maxSelectionCount === undefined
-    ? createSchema
-    : createSchema.concat(getEntityIdWithMax(maxSelectionCount));
+  return maxSelectionCount
+    ? baseSchema.concat(getEntityIdWithMax(maxSelectionCount))
+    : baseSchema;
 };
 
-export const getEditSchemaWithEntityIdValidation = (
-  props: AlertValidationSchemaProps,
-  editSchema: ObjectSchema<EditAlertDefinitionPayload>
-): ObjectSchema<EditAlertDefinitionPayload> => {
-  const { aclpAlertServiceTypeConfig, serviceTypeObj } = props;
-  const maxSelectionCount = aclpAlertServiceTypeConfig.find(
-    ({ serviceType }) => serviceTypeObj === serviceType
-  )?.maxResourceSelectionCount;
-
-  return maxSelectionCount === undefined
-    ? editSchema
-    : editSchema.concat(getEntityIdWithMax(maxSelectionCount));
-};
-
+/**
+ * @param maxSelectionCount The max selection count that needs to be applied for entity_id property
+ * @returns The entity_ids prop with max validation based on the max selection count passed
+ */
 const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
-      .of(string().required())
-      .defined()
+      .of(string().defined())
+      .required()
       .max(
         maxSelectionCount,
-        `The overall number of resources assigned to an alert can't exceed ${maxSelectionCount}.`
+        `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
       ),
   });
 };
 
 /**
  * Handles multiple API errors and maps them to form fields, setting form errors appropriately.
- * 
- * @param errors - List of errors returned from the API
- * @param errorFieldMap - A mapping of API error field names to form field paths. Use this to redirect API errors 
- *                        to specific form fields. For example, if the API returns an error for "user.name" but 
- *                        your form field is called "fullName", you would map "user" to "fullName".
- * @param multiLineErrorSeparator - Separator for multiple errors on fields that are rendered explicitly. Ex: @AlertListNoticeMessages component
- * @param singleLineErrorSeparator - Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
- * @param setError - React Hook Form's setError function to register errors with the form
- * 
+ *
+ * @param props @interface HandleMultipleErrorProps - Props required for the HandleMultiplError component
+ *
  * @example
  * // Example usage:
  * const errors = [
  *   { field: "email", reason: "Email already exists" },
  *   { field: "password.length", reason: "Password is too short" }
  * ];
- * 
+ *
  * // Map API field names to form field paths
  * const errorFieldMap = {
  *   "email": "userEmail" as FieldPath<RegisterForm>,
  *   "password": "userPassword" as FieldPath<RegisterForm>
  * };
- * 
+ *
  * handleMultipleError(
  *   errors,
  *   errorFieldMap,
@@ -350,31 +396,39 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
  * );
  */
 export const handleMultipleError = <T extends FieldValues>(
-  errors: APIError[],
-  errorFieldMap: Record<string, FieldPath<T>>,
-  multiLineErrorSeparator: string,
-  singleLineErrorSeparator: string,
-  setError: UseFormSetError<T>
+  props: HandleMultipleErrorProps<T>
 ) => {
+  const {
+    errorFieldMap,
+    errors,
+    multiLineErrorSeparator,
+    setError,
+    singleLineErrorSeparator,
+  } = props;
   const errorMap: Map<FieldPath<T>, string> = new Map();
 
   for (const error of errors) {
     if (!error.field) {
       continue;
     }
-
+    // Extract the root field name
     const errorField = error.field.split('.')[0];
+
+    // Ensure error reason ends with a period for consistent formatting
     const errorFieldToSet: FieldPath<T> =
       errorFieldMap[errorField] ?? error.field;
 
+    // Ensure error reason ends with a period for consistent formatting
     const formattedReason = error.reason.endsWith('.')
       ? error.reason
       : `${error.reason}.`;
 
+    // Use different separators for multiline vs singleline error message fields
     const separator = errorFieldMap[errorField]
       ? multiLineErrorSeparator
       : singleLineErrorSeparator;
 
+    // Avoid duplicate error messages and append new error with appropriate separator if field already has errors
     if (errorMap.has(errorFieldToSet)) {
       const existingMessage = errorMap.get(errorFieldToSet)!;
       if (!existingMessage.includes(formattedReason)) {
@@ -386,6 +440,7 @@ export const handleMultipleError = <T extends FieldValues>(
     } else {
       errorMap.set(errorFieldToSet, formattedReason);
     }
+    // Apply the consolidated error message to the form field
     setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
   }
 };

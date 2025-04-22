@@ -31,7 +31,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -48,7 +48,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -75,7 +75,7 @@ describe('Alert Row', () => {
           handlers={{
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
-            handleEnableDisable: vi.fn(),
+            handleStatusChange: vi.fn(),
           }}
           alert={alert}
           services={mockServices}
@@ -95,7 +95,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -115,7 +115,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -133,7 +133,7 @@ describe('Alert Row', () => {
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -144,14 +144,14 @@ describe('Alert Row', () => {
     expect(getByText('Disable')).toBeInTheDocument();
   });
 
-  it('should have disable action item present inside action menu in disabled state if the user created alert does not have enabled or disabled status', async () => {
+  it("should disable 'Disable' action item in menu if alert has no enabled/disabled status", async () => {
     const alert = alertFactory.build({ status: 'in progress', type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
-          handleEnableDisable: vi.fn(),
+          handleStatusChange: vi.fn(),
         }}
         alert={alert}
         services={mockServices}
@@ -161,6 +161,28 @@ describe('Alert Row', () => {
     await userEvent.click(ActionMenu);
     expect(getByText('In Progress')).toBeInTheDocument();
     expect(getByText('Disable').closest('li')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    );
+  });
+
+  it("should disable 'Edit' action item in menu if alert has no enabled/disabled status", async () => {
+    const alert = alertFactory.build({ status: 'in progress', type: 'user' });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        handlers={{
+          handleDetails: vi.fn(),
+          handleEdit: vi.fn(),
+          handleStatusChange: vi.fn(),
+        }}
+        alert={alert}
+        services={mockServices}
+      />
+    );
+    const ActionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(ActionMenu);
+    expect(getByText('In Progress')).toBeInTheDocument();
+    expect(getByText('Edit').closest('li')).toHaveAttribute(
       'aria-disabled',
       'true'
     );

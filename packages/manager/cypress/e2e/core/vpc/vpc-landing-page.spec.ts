@@ -3,6 +3,7 @@ import {
   MOCK_DELETE_VPC_ERROR,
   mockDeleteVPC,
   mockDeleteVPCError,
+  mockGetVPC,
   mockGetVPCs,
   mockUpdateVPC,
 } from 'support/intercepts/vpc';
@@ -18,7 +19,9 @@ describe('VPC landing page', () => {
    * - Confirms that VPCs are listed on the VPC landing page.
    */
   it('lists VPC instances', () => {
-    const mockVPCs = vpcFactory.buildList(5);
+    const mockVPCs = vpcFactory.buildList(5, {
+      region: chooseRegion().id,
+    });
     mockGetVPCs(mockVPCs).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');
@@ -98,6 +101,7 @@ describe('VPC landing page', () => {
     };
 
     mockGetVPCs([mockVPCs[1]]).as('getVPCs');
+    mockGetVPC(mockVPCs[1]).as('getVPC');
     mockUpdateVPC(mockVPCs[1].id, mockUpdatedVPC).as('updateVPC');
 
     cy.visitWithLogin('/vpcs');
@@ -163,6 +167,7 @@ describe('VPC landing page', () => {
 
     // Delete VPCs Flow
     mockGetVPCs(mockVPCs).as('getVPCs');
+    mockGetVPC(mockVPCs[0]).as('getVPC');
     mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
 
     cy.visitWithLogin('/vpcs');
@@ -252,6 +257,7 @@ describe('VPC landing page', () => {
     ];
 
     mockGetVPCs(mockVPCs).as('getVPCs');
+    mockGetVPC(mockVPCs[0]).as('getVPC');
     mockDeleteVPCError(mockVPCs[0].id).as('deleteVPCError');
 
     cy.visitWithLogin('/vpcs');
@@ -300,6 +306,7 @@ describe('VPC landing page', () => {
           .click();
       });
 
+    mockGetVPC(mockVPCs[1]).as('getVPC');
     cy.findByText(mockVPCs[1].label)
       .should('be.visible')
       .closest('tr')

@@ -1,12 +1,15 @@
+import { useIsGeckoEnabled } from '@linode/shared';
+import { sortByString } from '@linode/utilities';
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { sortByString } from 'src/utilities/sort-by';
+import { useFlags } from 'src/hooks/useFlags';
 
-import type { Region } from '@linode/api-v4';
 import { useIsObjectStorageGen2Enabled } from '../../hooks/useIsObjectStorageGen2Enabled';
 import { WHITELISTED_REGIONS } from '../../utilities';
+
+import type { Region } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
@@ -24,6 +27,11 @@ const sortRegionOptions = (a: Region, b: Region) => {
 export const AccessKeyRegions = (props: Props) => {
   const { disabled, error, onChange, required, selectedRegion } = props;
 
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const {
     allRegionsError,
     availableStorageRegions,
@@ -46,6 +54,7 @@ export const AccessKeyRegions = (props: Props) => {
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
+      isGeckoLAEnabled={isGeckoLAEnabled}
       label="Regions"
       onChange={onChange}
       regions={availableStorageRegions ?? []}

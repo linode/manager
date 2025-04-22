@@ -1,5 +1,5 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
-import { createLinodeRequestFactory } from '@src/factories';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
@@ -7,6 +7,8 @@ import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 import { depaginate } from './paginate';
 
@@ -77,7 +79,7 @@ export const defaultCreateTestLinodeOptions = {
  * @returns Promise that resolves to the created Linode.
  */
 export const createTestLinode = async (
-  createRequestPayload?: Partial<CreateLinodeRequest> | null,
+  createRequestPayload?: null | Partial<CreateLinodeRequest>,
   options?: Partial<CreateTestLinodeOptions>
 ): Promise<Linode> => {
   const resolvedOptions = {
@@ -90,29 +92,32 @@ export const createTestLinode = async (
     regionId = chooseRegion().id;
   }
 
-  const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
-    switch (resolvedOptions.securityMethod) {
-      case 'firewall':
-      default:
-        const firewall = await findOrCreateDependencyFirewall();
-        return {
-          firewall_id: firewall.id,
-        };
+  const securityMethodPayload: Partial<CreateLinodeRequest> =
+    await (async () => {
+      switch (resolvedOptions.securityMethod) {
+        case 'firewall':
+          const firewall = await findOrCreateDependencyFirewall();
+          return {
+            firewall_id: firewall.id,
+          };
 
-      case 'vlan_no_internet':
-        const vlanConfig = linodeVlanNoInternetConfig;
-        const vlanLabel = await findOrCreateDependencyVlan(regionId);
-        vlanConfig[0].label = vlanLabel;
-        return {
-          interfaces: vlanConfig,
-        };
+        case 'powered_off':
+          return {
+            booted: false,
+          };
 
-      case 'powered_off':
-        return {
-          booted: false,
-        };
-    }
-  })();
+        case 'vlan_no_internet':
+          const vlanConfig = linodeVlanNoInternetConfig;
+          const vlanLabel = await findOrCreateDependencyVlan(regionId);
+          vlanConfig[0].label = vlanLabel;
+          return {
+            interfaces: vlanConfig,
+          };
+
+        default:
+          return {};
+      }
+    })();
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
@@ -147,7 +152,7 @@ export const createTestLinode = async (
     );
   }
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line @linode/cloud-manager/no-createLinode
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.
@@ -184,6 +189,7 @@ export const createTestLinode = async (
     },
     message: `Create Linode '${linode.label}' (ID ${linode.id})`,
     name: 'createTestLinode',
+    timeout: LINODE_CREATE_TIMEOUT,
   });
 
   return {

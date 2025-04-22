@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -10,11 +11,7 @@ import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-import {
-  accountFactory,
-  objectStorageBucketFactory,
-  regionFactory,
-} from 'src/factories';
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 
 describe('Object Storage Multicluster Bucket create', () => {
   /*
@@ -68,16 +65,14 @@ describe('Object Storage Multicluster Bucket create', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getRegions', '@getBuckets']);
 
-    ui.entityHeader.find().within(() => {
-      ui.button.findByTitle('Create Bucket').should('be.visible').click();
-    });
+    ui.button.findByTitle('Create Bucket').should('be.visible').click();
 
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
         // Enter label.
-        cy.contains('Label').click();
+        cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(mockBucket.label);
         cy.log(`${mockRegionWithObj.label}`);
         cy.contains('Region').click();
@@ -125,7 +120,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     // property in its payload when creating a bucket.
     cy.wait('@createBucket').then((xhr) => {
       const body = xhr.request.body;
-      expect(body.cluster).to.be.undefined;
+      expect(body.cluster).to.eq(undefined);
       expect(body.region).to.eq(mockRegionWithObj.id);
     });
 

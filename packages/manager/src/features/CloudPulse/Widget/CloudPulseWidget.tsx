@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import { Box, Grid, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
@@ -5,7 +6,6 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
-import { useProfile } from '@linode/queries';
 
 import {
   generateGraphData,
@@ -25,17 +25,17 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   DateTimeWithPreset,
-  Widgets,
   MetricDefinition,
   TimeGranularity,
+  Widgets,
 } from '@linode/api-v4';
+import type { Metrics } from '@linode/utilities';
 import type {
-  DataSet,
   AreaProps,
   ChartVariant,
+  DataSet,
 } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -234,7 +234,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         resources,
         widget,
       }),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      filters: [
+        ...constructAdditionalRequestFilters(additionalFilters ?? []),
+        ...(widget.filters ?? []),
+      ], // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
@@ -252,11 +255,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
-      flags,
       label: widget.label,
       metricsList,
       resources,
-      serviceType,
       status,
       unit,
     });
@@ -276,17 +277,16 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack
-        spacing={2}
         sx={{
           flexGrow: 1,
         }}
+        spacing={2}
       >
         <Paper
           data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}
           sx={{ flexGrow: 1 }}
         >
           <Stack
-            direction={{ sm: 'row' }}
             sx={{
               alignItems: 'center',
               gap: { sm: 0, xs: 2 },
@@ -294,6 +294,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               marginBottom: 1,
               padding: 1,
             }}
+            direction={{ sm: 'row' }}
           >
             <Typography marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} (
@@ -301,7 +302,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
-              direction={{ sm: 'row' }}
               sx={{
                 alignItems: 'center',
                 gap: 2,
@@ -309,6 +309,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 overflow: 'auto',
                 width: { sm: 'inherit', xs: '100%' },
               }}
+              direction={{ sm: 'row' }}
             >
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect

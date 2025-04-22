@@ -1,8 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
-import { regionFactory } from 'src/factories/regions';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseSummaryClusterConfiguration } from './DatabaseSummaryClusterConfiguration';
@@ -28,9 +28,13 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
 
-vi.mock('src/queries/databases/databases', () => ({
-  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
-}));
+vi.mock(import('src/queries/databases/databases'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+  };
+});
 
 describe('DatabaseSummaryClusterConfiguration', () => {
   it('should display correctly for default db', async () => {
@@ -98,75 +102,6 @@ describe('DatabaseSummaryClusterConfiguration', () => {
 
       expect(queryAllByText('Total Disk Size')).toHaveLength(1);
       expect(queryAllByText('130 GB')).toHaveLength(1);
-    });
-  });
-
-  it('should display correctly for legacy db', async () => {
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: regionFactory.buildList(1, {
-        country: 'us',
-        id: 'us-southeast',
-        label: 'Atlanta, GA, USA',
-        status: 'ok',
-      }),
-    });
-
-    queryMocks.useDatabaseTypesQuery.mockReturnValue({
-      data: databaseTypeFactory.buildList(1, {
-        class: 'nanode',
-        disk: 25600,
-        id: 'g6-nanode-1',
-        label: 'DBaaS - Nanode 1GB',
-        memory: 1024,
-        vcpus: 1,
-      }),
-    });
-
-    const database = databaseFactory.build({
-      cluster_size: 1,
-      engine: 'mysql',
-      platform: 'rdbms-legacy',
-      region: 'us-southeast',
-      replication_type: 'none',
-      status: 'provisioning',
-      total_disk_size_gb: 15,
-      type: 'g6-nanode-1',
-      used_disk_size_gb: 2,
-      version: '8.0.30',
-    }) as Database;
-
-    const { queryAllByText } = renderWithTheme(
-      <DatabaseSummaryClusterConfiguration database={database} />
-    );
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenCalledWith({
-      platform: 'rdbms-legacy',
-    });
-
-    await waitFor(() => {
-      expect(queryAllByText('Status')).toHaveLength(1);
-      expect(queryAllByText('Provisioning')).toHaveLength(1);
-
-      expect(queryAllByText('Plan')).toHaveLength(1);
-      expect(queryAllByText('Nanode 1 GB')).toHaveLength(1);
-
-      expect(queryAllByText('Nodes')).toHaveLength(1);
-      expect(queryAllByText('Primary (1 Node)')).toHaveLength(1);
-
-      expect(queryAllByText('CPUs')).toHaveLength(1);
-      expect(queryAllByText(1)).toHaveLength(1);
-
-      expect(queryAllByText('Engine')).toHaveLength(1);
-      expect(queryAllByText('MySQL v8.0.30')).toHaveLength(1);
-
-      expect(queryAllByText('Region')).toHaveLength(1);
-      expect(queryAllByText('Atlanta, GA, USA')).toHaveLength(1);
-
-      expect(queryAllByText('RAM')).toHaveLength(1);
-      expect(queryAllByText('1 GB')).toHaveLength(1);
-
-      expect(queryAllByText('Total Disk Size')).toHaveLength(1);
-      expect(queryAllByText('15 GB')).toHaveLength(1);
     });
   });
 

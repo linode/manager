@@ -1,14 +1,16 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { useRegionsQuery } from '@linode/queries';
 
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
+import { MULTILINE_ERROR_SEPARATOR } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
   getAlertResourceFilterProps,
   getFilteredResources,
@@ -17,7 +19,6 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
-import { AlertsNoticeMessage } from '../Utils/AlertsNoticeMessage';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
 import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
@@ -93,7 +94,7 @@ export interface AlertResourcesProp {
   serviceType?: AlertServiceType;
 }
 
-export type SelectUnselectAll = 'Select All' | 'Unselect All';
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -111,10 +112,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = props;
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
-  const [selectedResources, setSelectedResources] = React.useState<string[]>(
-    alertResourceIds
-  );
-
+  const [selectedResources, setSelectedResources] =
+    React.useState<string[]>(alertResourceIds);
   const [selectedOnly, setSelectedOnly] = React.useState<boolean>(false);
   const [additionalFilters, setAdditionalFilters] = React.useState<
     Record<AlertAdditionalFilterKey, AlertFilterType>
@@ -127,6 +126,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   } = useRegionsQuery();
 
   const flags = useFlags();
+  const theme = useTheme();
 
   // Validate launchDarkly region ids with the ids from regionOptions prop
   const supportedRegionIds = getSupportedRegionIds(
@@ -281,15 +281,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   const handleAllSelection = React.useCallback(
-    (action: SelectUnselectAll) => {
+    (action: SelectDeselectAll) => {
       if (!resources) {
         return;
       }
 
       let currentSelections: string[] = [];
 
-      if (action === 'Unselect All') {
-        // Unselect all
+      if (action === 'Deselect All') {
+        // Deselect all
         setSelectedResources([]);
       } else {
         // Select all
@@ -318,7 +318,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       <Stack gap={2}>
         {!hideLabel && (
           <Typography ref={titleRef} variant="h2">
-            {alertLabel || 'Resources'}
+            {alertLabel || 'Entities'}
             {/* It can be either the passed alert label or just Resources */}
           </Typography>
         )}
@@ -329,27 +329,39 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             },
           }}
           icon={EntityIcon}
-          subtitle="Once you assign the resources, they will show up here."
-          title="No resources associated with this alert definition."
+          subtitle="Once you assign the entities, they will show up here."
+          title="No entities associated with this alert definition."
         />
       </Stack>
     );
   }
 
   const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
-
+  const noticeStyles: React.CSSProperties = {
+    alignItems: 'center',
+    backgroundColor: theme.tokens.alias.Background.Normal,
+    borderRadius: 1,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    marginBottom: 0,
+    padding: theme.spacingFunction(16),
+  };
+  const selectionsRemaining =
+    maxSelectionCount && selectedResources
+      ? Math.max(0, maxSelectionCount - selectedResources.length)
+      : undefined;
   return (
     <Stack gap={2}>
       {!hideLabel && (
         <Typography ref={titleRef} variant="h2">
-          {alertLabel || 'Resources'}
+          {alertLabel || 'Entities'}
           {/* It can be either the passed alert label or just Resources */}
         </Typography>
       )}
       {showEditInformation && (
         <Typography ref={titleRef} variant="body1">
-          You can enable or disable this system alert for each resource you have
-          access to. Select the resources listed below you want to enable the
+          You can enable or disable this system alert for each entities you have
+          access to. Select the entities listed below you want to enable the
           alert for.
         </Typography>
       )}
@@ -371,9 +383,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               }}
               clearable
               hideLabel
-              label="Search for a Region or Resource"
+              label="Search for a Region or Entity"
               onSearch={handleSearchTextChange}
-              placeholder="Search for a Region or Resource"
+              placeholder="Search for a Region or Entity"
               value={searchText || ''}
             />
           </Grid>
@@ -407,6 +419,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   backgroundColor: theme.tokens.color.Neutrals.White,
                 },
               })}
+              sxFormLabel={{
+                marginLeft: -1,
+              }}
               data-testid="show_selected_only"
               disabled={!(selectedResources.length || selectedOnly)}
               onClick={() => setSelectedOnly(!selectedOnly)}
@@ -415,15 +430,26 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </Grid>
         )}
-        <AlertsNoticeMessage text={errorText} variant="error" />
-        <AlertsNoticeMessage
-          text={
-            maxSelectionCount !== undefined
-              ? `You can select up to ${maxSelectionCount} resources.`
-              : undefined
-          }
-          variant="warning"
-        />
+        {errorText?.length && (
+          <Grid item xs={12}>
+            <AlertListNoticeMessages
+              errorMessage={errorText}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
+              variant="error"
+            />
+          </Grid>
+        )}
+        {maxSelectionCount !== undefined && (
+          <Grid item xs={12}>
+            <AlertListNoticeMessages
+              errorMessage={`You can select up to ${maxSelectionCount} entities.`}
+              separator={MULTILINE_ERROR_SEPARATOR}
+              style={noticeStyles}
+              variant="warning"
+            />
+          </Grid>
+        )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
@@ -447,6 +473,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
+            maxSelectionCount={maxSelectionCount}
+            selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
         </Grid>

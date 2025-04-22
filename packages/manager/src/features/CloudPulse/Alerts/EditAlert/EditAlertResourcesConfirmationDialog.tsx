@@ -60,11 +60,11 @@ export const EditAlertResourcesConfirmDialog = React.memo(
       >
         <Typography
           sx={(theme) => ({
-            font: theme.tokens.typography.Body,
+            font: theme.tokens.alias.Typography.Body,
           })}
           variant="body1"
         >
-          You have changed the resource settings for your alert.
+          You have changed the entity settings for your alert.
           <br />
           This also updates your alert definition.
         </Typography>

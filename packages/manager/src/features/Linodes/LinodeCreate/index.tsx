@@ -36,11 +36,12 @@ import {
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
-import { Error } from './Error';
+import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
 import { Networking } from './Networking/Networking';
+import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
@@ -158,17 +159,11 @@ export const LinodeCreate = () => {
         });
       }
     } catch (errors) {
+      if (isLinodeInterfacesEnabled) {
+        transformLegacyInterfaceErrorsToLinodeInterfaceErrors(errors);
+      }
       for (const error of errors) {
         if (error.field) {
-          if (
-            isLinodeInterfacesEnabled &&
-            error.field.startsWith('interfaces')
-          ) {
-            form.setError(
-              error.field.replace('interfaces', 'linodeInterfaces'),
-              { message: error.reason }
-            );
-          }
           form.setError(error.field, { message: error.reason });
         } else {
           form.setError('root', { message: error.reason });
@@ -210,7 +205,7 @@ export const LinodeCreate = () => {
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Error />
+        <LinodeCreateError />
         <Stack gap={3}>
           <Tabs index={currentTabIndex} onChange={onTabChange}>
             <TabList>

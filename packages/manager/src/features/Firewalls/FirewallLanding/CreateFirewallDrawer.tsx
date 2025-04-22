@@ -1,6 +1,7 @@
 import { useCreateFirewall } from '@linode/queries';
 import {
   ActionsPanel,
+  Drawer,
   FormControlLabel,
   Notice,
   Radio,
@@ -16,9 +17,9 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
-import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialog/useCreateFirewallFromTemplate';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -142,6 +143,7 @@ export const CreateFirewallDrawer = React.memo(
     return (
       <FormProvider {...form}>
         <Drawer
+          NotFoundComponent={NotFound}
           onClose={onClose}
           onTransitionExited={() => reset()}
           open={open}
@@ -181,11 +183,13 @@ export const CreateFirewallDrawer = React.memo(
                     >
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="Custom Firewall"
                         value="custom"
                       />
                       <FormControlLabel
                         control={<Radio />}
+                        disabled={userCannotAddFirewall}
                         label="From a Template"
                         value="template"
                       />

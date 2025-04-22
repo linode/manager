@@ -1,9 +1,17 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
+  getAllLinodeConfigs,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   Button,
   Checkbox,
+  Drawer,
   FormControlLabel,
   FormHelperText,
   Notice,
@@ -11,27 +19,20 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { useFormattedDate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
-import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
-import {
-  useAllLinodesQuery,
-  getAllLinodeConfigs,
-  useGrants,
-  useProfile,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
@@ -56,6 +57,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
 interface SubnetAssignLinodesDrawerProps {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -72,7 +74,7 @@ interface LinodeAndConfigData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -411,6 +413,8 @@ export const SubnetAssignLinodesDrawer = (
       title={`Assign Linodes to subnet: ${subnet?.label} (${
         subnet?.ipv4 ?? subnet?.ipv6
       })`}
+      NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
     >
@@ -442,12 +446,17 @@ export const SubnetAssignLinodesDrawer = (
           // We only want to be able to assign linodes that were not already assigned to this subnet
           options={linodeOptionsToAssign}
           placeholder="Select Linode or type to search"
-          sx={{ marginBottom: '8px' }}
+          sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
           value={values.selectedLinode?.id || null}
         />
         {values.selectedLinode?.id && (
           <>
-            <Box alignItems="center" display="flex" flexDirection="row">
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              sx={(theme) => ({ marginLeft: theme.spacingFunction(2) })}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -475,7 +484,7 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
-                sx={{ marginBottom: '8px' }}
+                sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
                 value={values.chosenIP}
               />
             )}
@@ -509,11 +518,11 @@ export const SubnetAssignLinodesDrawer = (
               linodeConfigs.length === 1) && (
               <AssignIPRanges
                 sx={{
-                  marginBottom: theme.spacing(),
+                  marginBottom: theme.spacingFunction(8),
                   marginTop:
                     linodeConfigs.length > 1
-                      ? theme.spacing(2)
-                      : theme.spacing(),
+                      ? theme.spacingFunction(16)
+                      : theme.spacingFunction(8),
                 }}
                 handleIPRangeChange={handleIPRangeChange}
                 ipRanges={values.ipRanges}

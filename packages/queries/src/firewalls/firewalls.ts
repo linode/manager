@@ -6,15 +6,18 @@ import {
   getFirewall,
   getFirewallDevices,
   getFirewalls,
+  getFirewallSettings,
   getTemplate,
   getTemplates,
   updateFirewall,
   updateFirewallRules,
+  updateFirewallSettings,
 } from '@linode/api-v4/lib/firewalls';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -33,24 +36,27 @@ import type {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallSettings,
   FirewallTemplate,
   FirewallTemplateSlug,
   Params,
   ResourcePage,
   UpdateFirewallRules,
+  UpdateFirewallSettings,
 } from '@linode/api-v4';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 const getAllFirewallDevices = (
   id: number,
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) =>
   getAll<FirewallDevice>((params, filter) =>
     getFirewallDevices(
       id,
       { ...params, ...passedParams },
-      { ...filter, ...passedFilter }
-    )
+      { ...filter, ...passedFilter },
+    ),
   )().then((data) => data.data);
 
 const getAllFirewallTemplates = () =>
@@ -58,7 +64,7 @@ const getAllFirewallTemplates = () =>
 
 const getAllFirewallsRequest = () =>
   getAll<Firewall>((passedParams, passedFilter) =>
-    getFirewalls(passedParams, passedFilter)
+    getFirewalls(passedParams, passedFilter),
   )().then((data) => data.data);
 
 export const firewallQueries = createQueryKeys('firewalls', {
@@ -78,11 +84,20 @@ export const firewallQueries = createQueryKeys('firewalls', {
         queryFn: getAllFirewallsRequest,
         queryKey: null,
       },
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) =>
+          getFirewalls({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getFirewalls(params, filter),
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  settings: {
+    queryFn: getFirewallSettings,
     queryKey: null,
   },
   template: (slug: FirewallTemplateSlug) => ({
@@ -95,10 +110,29 @@ export const firewallQueries = createQueryKeys('firewalls', {
   },
 });
 
-export const useAllFirewallDevicesQuery = (id: number) =>
-  useQuery<FirewallDevice[], APIError[]>(
-    firewallQueries.firewall(id)._ctx.devices
-  );
+export const useAllFirewallDevicesQuery = (
+  id: number,
+  enabled: boolean = true,
+) =>
+  useQuery<FirewallDevice[], APIError[]>({
+    ...firewallQueries.firewall(id)._ctx.devices,
+    enabled,
+  });
+
+export const useFirewallsInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Firewall>, APIError[]>({
+    ...firewallQueries.firewalls._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useAddFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();
@@ -120,7 +154,7 @@ export const useAddFirewallDeviceMutation = () => {
           }
 
           const indexOfFirewall = page.data.findIndex(
-            (firewall) => firewall.id === id
+            (firewall) => firewall.id === id,
           );
 
           // If the firewall does not exist on this page, don't change anything
@@ -137,7 +171,7 @@ export const useAddFirewallDeviceMutation = () => {
             entities: [...firewall.entities, firewallDevice.entity],
           };
           return { ...page, data: newData };
-        }
+        },
       );
 
       // Append the new entity to the Firewall object in the "all firewalls" store
@@ -149,7 +183,7 @@ export const useAddFirewallDeviceMutation = () => {
           }
 
           const indexOfFirewall = firewalls.findIndex(
-            (firewall) => firewall.id === id
+            (firewall) => firewall.id === id,
           );
 
           // If the firewall does not exist in the list, don't do anything
@@ -167,7 +201,7 @@ export const useAddFirewallDeviceMutation = () => {
           };
 
           return newFirewalls;
-        }
+        },
       );
 
       // Append the new entity to the Firewall object
@@ -181,7 +215,7 @@ export const useAddFirewallDeviceMutation = () => {
             ...oldFirewall,
             entities: [...oldFirewall.entities, firewallDevice.entity],
           };
-        }
+        },
       );
 
       // Add device to the dedicated devices store
@@ -192,7 +226,7 @@ export const useAddFirewallDeviceMutation = () => {
             return [firewallDevice];
           }
           return [...existingFirewallDevices, firewallDevice];
-        }
+        },
       );
 
       // Refresh the cached result of the linode-specific firewalls query
@@ -216,7 +250,7 @@ export const useAddFirewallDeviceMutation = () => {
 
 export const useRemoveFirewallDeviceMutation = (
   firewallId: number,
-  deviceId: number
+  deviceId: number,
 ) => {
   const queryClient = useQueryClient();
 
@@ -239,7 +273,7 @@ export const useRemoveFirewallDeviceMutation = (
         firewallQueries.firewall(firewallId)._ctx.devices.queryKey,
         (oldData) => {
           return oldData?.filter((device) => device.id !== deviceId) ?? [];
-        }
+        },
       );
     },
   });
@@ -252,19 +286,44 @@ export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   });
 };
 
+export const useFirewallSettingsQuery = (
+  options?: Partial<UseQueryOptions<FirewallSettings, APIError[]>>,
+) => {
+  return useQuery<FirewallSettings, APIError[]>({
+    ...firewallQueries.settings,
+    ...options,
+  });
+};
+
 export const useFirewallTemplatesQuery = () => {
   return useQuery<FirewallTemplate[], APIError[]>({
     ...firewallQueries.templates,
   });
 };
 
-export const useFirewallQuery = (id: number) =>
-  useQuery<Firewall, APIError[]>(firewallQueries.firewall(id));
+export const useFirewallQuery = (id: number, enabled: boolean = true) =>
+  useQuery<Firewall, APIError[]>({
+    ...firewallQueries.firewall(id),
+    enabled,
+  });
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>({
     ...firewallQueries.firewalls._ctx.all,
     enabled,
+  });
+};
+
+export const useMutateFirewallSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation<FirewallSettings, APIError[], UpdateFirewallSettings>({
+    mutationFn: (data) => updateFirewallSettings(data),
+    onSuccess(firewallSettings) {
+      queryClient.setQueryData<FirewallSettings>(
+        firewallQueries.settings.queryKey,
+        firewallSettings,
+      );
+    },
   });
 };
 
@@ -276,7 +335,7 @@ export const useMutateFirewall = (id: number) => {
       // Update the firewall in the store
       queryClient.setQueryData<Firewall>(
         firewallQueries.firewall(firewall.id).queryKey,
-        firewall
+        firewall,
       );
 
       // Invalidate firewall lists
@@ -300,7 +359,7 @@ export const useCreateFirewall = () => {
       // Set the firewall in the store
       queryClient.setQueryData<Firewall>(
         firewallQueries.firewall(firewall.id).queryKey,
-        firewall
+        firewall,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -359,7 +418,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
             return undefined;
           }
           return { ...oldData, rules: updatedRules };
-        }
+        },
       );
 
       // Update the Firewall object in the paginated store
@@ -371,7 +430,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           }
 
           const indexOfFirewall = page.data.findIndex(
-            (firewall) => firewall.id === firewallId
+            (firewall) => firewall.id === firewallId,
           );
 
           // If the firewall does not exist on this page, don't change anything
@@ -388,7 +447,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
             rules: updatedRules,
           };
           return { ...page, data: newData };
-        }
+        },
       );
 
       // Update the the Firewall object in the "all firewalls" store
@@ -400,7 +459,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           }
 
           const indexOfFirewall = firewalls.findIndex(
-            (firewall) => firewall.id === firewallId
+            (firewall) => firewall.id === firewallId,
           );
 
           // If the firewall does not exist in the list, don't do anything
@@ -418,7 +477,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
           };
 
           return newFirewalls;
-        }
+        },
       );
     },
   });
@@ -435,6 +494,12 @@ export const firewallEventsHandler = ({
   }
 
   switch (event.action) {
+    case 'firewall_create':
+      // Invalidate firewall lists
+      invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
+      });
+      break;
     case 'firewall_delete':
       // Invalidate firewall lists
       invalidateQueries({
@@ -445,12 +510,9 @@ export const firewallEventsHandler = ({
       queryClient.removeQueries({
         queryKey: firewallQueries.firewall(event.entity.id).queryKey,
       });
-    case 'firewall_create':
-      // Invalidate firewall lists
-      invalidateQueries({
-        queryKey: firewallQueries.firewalls.queryKey,
-      });
+      break;
     case 'firewall_device_add':
+      break;
     case 'firewall_device_remove':
       // For a firewall device event, the primary entity is the fireall and
       // the secondary entity is the device that is added/removed
@@ -483,6 +545,7 @@ export const firewallEventsHandler = ({
       invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
+      break;
     case 'firewall_disable':
     case 'firewall_enable':
     case 'firewall_rules_update':

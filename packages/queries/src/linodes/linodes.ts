@@ -3,8 +3,11 @@ import {
   cloneLinode,
   createLinode,
   deleteLinode,
+  getConfigInterface,
+  getConfigInterfaces,
   getLinode,
   getLinodeBackups,
+  getLinodeConfig,
   getLinodeFirewalls,
   getLinodeIPs,
   getLinodeInterface,
@@ -89,7 +92,27 @@ export const linodeQueries = createQueryKeys('linodes', {
         queryKey: null,
       },
       configs: {
-        queryFn: () => getAllLinodeConfigs(id),
+        contextQueries: {
+          config: (configId: number) => ({
+            contextQueries: {
+              interface: (interfaceId: number) => ({
+                queryFn: () => getConfigInterface(id, configId, interfaceId),
+                queryKey: [interfaceId],
+              }),
+              interfaces: {
+                queryFn: () => getConfigInterfaces(id, configId),
+                queryKey: null,
+              },
+              queryKey: null,
+            },
+            queryFn: () => getLinodeConfig(id, configId),
+            queryKey: [configId],
+          }),
+          configs: {
+            queryFn: () => getAllLinodeConfigs(id),
+            queryKey: null,
+          },
+        },
         queryKey: null,
       },
       disks: {
@@ -206,9 +229,13 @@ export const useAllLinodesQuery = (
   });
 };
 
-export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
+export const useInfiniteLinodesQuery = (
+  filter: Filter = {},
+  enabled: boolean
+) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>({
     ...linodeQueries.linodes._ctx.infinite(filter),
+    enabled,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;
@@ -216,6 +243,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
       return page + 1;
     },
     initialPageParam: 1,
+    retry: false,
   });
 
 export const useLinodeQuery = (id: number, enabled = true) => {
@@ -329,6 +357,20 @@ export const useCreateLinodeMutation = () => {
           queryClient.invalidateQueries({
             queryKey: vpcQueries.vpc(vpcId).queryKey,
           });
+        }
+      } else {
+        // invalidate firewall queries if a new Linode interface is assigned to a firewall
+        if (variables.interfaces?.some((iface) => iface.firewall_id)) {
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+        }
+        for (const iface of variables.interfaces ?? []) {
+          if (iface.firewall_id) {
+            queryClient.invalidateQueries({
+              queryKey: firewallQueries.firewall(iface.firewall_id).queryKey,
+            });
+          }
         }
       }
 

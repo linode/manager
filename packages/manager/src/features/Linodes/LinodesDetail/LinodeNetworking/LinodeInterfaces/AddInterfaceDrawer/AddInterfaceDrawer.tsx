@@ -1,6 +1,7 @@
+import { Drawer } from '@linode/ui';
 import React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 
 import { AddInterfaceForm } from './AddInterfaceForm';
 
@@ -8,14 +9,24 @@ interface Props {
   linodeId: number;
   onClose: () => void;
   open: boolean;
+  regionId: string;
 }
 
 export const AddInterfaceDrawer = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, onClose, open, regionId } = props;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add Network Interface">
-      <AddInterfaceForm linodeId={linodeId} onClose={onClose} />
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add Network Interface"
+    >
+      <AddInterfaceForm
+        linodeId={linodeId}
+        onClose={onClose}
+        regionId={regionId}
+      />
     </Drawer>
   );
 };

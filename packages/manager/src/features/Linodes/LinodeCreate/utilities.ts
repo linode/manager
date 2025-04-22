@@ -1,21 +1,26 @@
-import { accountQueries, linodeQueries } from '@linode/queries';
+import {
+  accountQueries,
+  firewallQueries,
+  linodeQueries,
+  stackscriptQueries,
+} from '@linode/queries';
 import { omitProps } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isNotNullOrUndefined,
+  utoa,
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
-import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
-import { utoa } from 'src/utilities/metadata';
 
 import {
+  getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
   getLinodeInterfacePayload,
 } from './Networking/utilities';
@@ -23,16 +28,17 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
-import type { LinodeCreateType } from './types';
 import type {
   AccountSettings,
   CreateLinodeRequest,
+  FirewallSettings,
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
   Profile,
   StackScript,
 } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
 
@@ -211,7 +217,7 @@ export const getLinodeCreatePayload = (
  */
 export const getInterfacesPayload = (
   interfaces: InterfacePayload[] | undefined,
-  hasPrivateIP: boolean | undefined
+  hasPrivateIP: LinodeCreateFormValues['backups_enabled']
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
     return undefined;
@@ -269,17 +275,6 @@ const defaultInterfaces: InterfacePayload[] = [
   },
 ];
 
-const defaultLinodeInterfaces: LinodeCreateInterface[] = [
-  {
-    default_route: null,
-    firewall_id: null,
-    public: {},
-    purpose: 'public',
-    vlan: null,
-    vpc: null,
-  },
-];
-
 /**
  * We extend the API's payload type so that we can hold some extra state
  * in the react-hook-form form.
@@ -306,7 +301,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: Linode | null;
+  linode?: {
+    id: number;
+    label: string;
+    region: string;
+    type: string | null;
+  } | null;
   /**
    * Form state for the new Linode interface
    */
@@ -385,16 +385,32 @@ export const defaultValues = async (
     }
   }
 
+  let firewallSettings: FirewallSettings | null = null;
+
+  if (isLinodeInterfacesEnabled) {
+    try {
+      firewallSettings = await queryClient.ensureQueryData(
+        firewallQueries.settings
+      );
+    } catch {
+      // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
+    }
+  }
+
   const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
     backups_enabled: linode?.backups.enabled,
+    firewall_id:
+      firewallSettings && firewallSettings.default_firewall_ids.linode
+        ? firewallSettings.default_firewall_ids.linode
+        : undefined,
     image: getDefaultImageId(params),
     interface_generation: interfaceGeneration,
     interfaces: defaultInterfaces,
     linode,
-    linodeInterfaces: defaultLinodeInterfaces,
+    linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

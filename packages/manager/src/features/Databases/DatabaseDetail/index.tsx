@@ -1,9 +1,9 @@
-import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { useEditableLabelState } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -11,7 +11,6 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -127,9 +126,9 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: <BetaChip />,
-      routeName: `/databases/${engine}/${id}/monitor`,
-      title: 'Monitor',
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+      routeName: `/databases/${engine}/${id}/metrics`,
+      title: 'Metrics',
     });
   }
 
@@ -255,18 +254,18 @@ export const DatabaseDetail = () => {
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
-          <SafeTabPanel index={5}>
+          {isAdvancedConfigEnabled && (
+            <SafeTabPanel index={5}>
+              <DatabaseAdvancedConfiguration database={database} />
+            </SafeTabPanel>
+          )}
+          <SafeTabPanel index={6}>
             <DatabaseAlert
               entityId={String(database.id)}
               entityName={database.label}
               serviceType="dbaas"
             />
           </SafeTabPanel>
-          {isAdvancedConfigEnabled && (
-            <SafeTabPanel index={tabs.length - 1}>
-              <DatabaseAdvancedConfiguration database={database} />
-            </SafeTabPanel>
-          )}
         </TabPanels>
       </Tabs>
       {isDefault && <DatabaseLogo />}

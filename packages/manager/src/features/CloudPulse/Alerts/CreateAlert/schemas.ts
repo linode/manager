@@ -1,6 +1,5 @@
 import {
   createAlertDefinitionSchema,
-  dimensionFilters,
   metricCriteria,
   triggerConditionValidation,
 } from '@linode/validation';
@@ -10,23 +9,21 @@ import type { AlertSeverityType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
-export const dimensionFiltersSchema = dimensionFilters.concat(
-  object({
-    dimension_label: string()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    operator: string()
-      .oneOf(['eq', 'neq', 'startswith', 'endswith'])
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-    value: string()
-      .required(fieldErrorMessage)
-      .nullable()
-      .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  })
-);
+export const dimensionFiltersSchema = object({
+  dimension_label: string()
+    .required(fieldErrorMessage)
+    .nullable()
+    .test('nonNull', fieldErrorMessage, (value) => value !== null),
+  operator: string()
+    .oneOf(['eq', 'neq', 'startswith', 'endswith'])
+    .required(fieldErrorMessage)
+    .nullable()
+    .test('nonNull', fieldErrorMessage, (value) => value !== null),
+  value: string()
+    .required(fieldErrorMessage)
+    .nullable()
+    .test('nonNull', fieldErrorMessage, (value) => value !== null),
+});
 
 export const metricCriteriaSchema = metricCriteria.concat(
   object({
@@ -64,16 +61,15 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
   })
 );
 
-export const createAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
+export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    engineType: string().defined().nullable(),
-    region: string().defined(),
+    entity_ids: array().of(string().defined()).required(),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
         .required()
         .min(1, 'At least one metric criteria is required.'),
-    }),
+    }).required(),
     serviceType: string()
       .oneOf(['linode', 'dbaas'])
       .required(fieldErrorMessage)
