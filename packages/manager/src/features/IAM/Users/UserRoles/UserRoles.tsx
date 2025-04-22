@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Typography } from '@linode/ui';
+import { Button, CircleProgress, Paper, Stack, Typography } from '@linode/ui';
 import { isEmpty } from 'ramda';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,7 +14,9 @@ import { AssignNewRoleDrawer } from './AssignNewRoleDrawer';
 export const UserRoles = () => {
   const { username } = useParams<{ username: string }>();
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading } = useAccountUserPermissions(
+    username ?? ''
+  );
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const hasAssignedRoles = assignedRoles
@@ -22,10 +24,14 @@ export const UserRoles = () => {
       !isEmpty(assignedRoles.entity_access)
     : false;
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   return (
     <>
       <DocumentTitleSegment segment={`${username} - User Roles`} />
-      <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Stack spacing={3}>
           <Stack
             alignItems="center"

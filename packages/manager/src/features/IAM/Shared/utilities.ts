@@ -17,20 +17,7 @@ import type {
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-
-export const placeholderMap: Record<string, string> = {
-  account: 'Select Account',
-  database: 'Select Databases',
-  domain: 'Select Domains',
-  firewall: 'Select Firewalls',
-  image: 'Select Images',
-  linode: 'Select Linodes',
-  longview: 'Select Longviews',
-  nodebalancer: 'Select Nodebalancers',
-  stackscript: 'Select Stackscripts',
-  volume: 'Select Volumes',
-  vpc: 'Select VPCs',
-};
+import { EntitiesOption } from './types';
 
 export interface RoleMap {
   access: 'account_access' | 'entity_access';
@@ -365,11 +352,6 @@ export const addEntitiesNamesToRoles = (
   });
 };
 
-export interface EntitiesOption {
-  label: string;
-  value: number;
-}
-
 interface UpdateUserRolesProps {
   access: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -472,7 +454,7 @@ export const deleteUserRole = ({
   return assignedRoles;
 };
 
-export const transformedAccountEntities = (
+export const groupAccountEntitiesByType = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
   const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
@@ -589,13 +571,6 @@ export const deleteUserEntity = (
       return entity;
     })
     .filter((entity) => entity.roles.length > 0);
-};
-
-export const getCreateLinkForEntityType = (
-  entityType: EntityType | EntityTypePermissions
-): string => {
-  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
-  return `/${entityType}s/create`;
 };
 
 export const getFacadeRoleDescription = (
