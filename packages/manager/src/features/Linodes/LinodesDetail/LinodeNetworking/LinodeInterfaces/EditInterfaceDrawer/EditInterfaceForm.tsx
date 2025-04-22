@@ -44,11 +44,13 @@ export const EditInterfaceForm = (props: Props) => {
     reset,
   } = useUpdateLinodeInterfaceFirewallMutation(linodeId, linodeInterface.id);
 
+  const defaultValues = {
+    ...linodeInterface,
+    firewall_id: firewall?.id ?? null,
+  };
+
   const form = useForm<InferType<typeof EditLinodeInterfaceFormSchema>>({
-    defaultValues: {
-      ...linodeInterface,
-      firewall_id: firewall?.id ?? null,
-    },
+    defaultValues,
     resolver: yupResolver(EditLinodeInterfaceFormSchema),
   });
 
@@ -96,7 +98,14 @@ export const EditInterfaceForm = (props: Props) => {
       // It ensures the `Reset` button works as expected.
       if (results[0].status === 'fulfilled') {
         const updatedInterfaceValues = results[0].value;
-        form.reset((prev) => ({ ...prev, ...updatedInterfaceValues }));
+        form.reset(
+          { firewall_id: defaultValues.firewall_id, ...updatedInterfaceValues },
+          {
+            keepErrors: true,
+            keepDirty: true,
+            keepDirtyValues: true,
+          }
+        );
       }
 
       // If the firewall was updated successfully,
