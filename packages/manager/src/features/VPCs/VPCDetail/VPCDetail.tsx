@@ -9,9 +9,8 @@ import {
 } from '@linode/ui';
 import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
@@ -34,15 +33,43 @@ import {
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
 
+import type { VPC } from '@linode/api-v4';
+
 const VPCDetail = () => {
-  const { vpcId } = useParams<{ vpcId: string }>();
+  const params = useParams({ strict: false });
+  const { vpcId } = params;
+  const navigate = useNavigate();
   const theme = useTheme();
 
-  const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
+  const {
+    data: vpc,
+    error,
+    isFetching: isFetchingVPC,
+    isLoading,
+  } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
   const { data: regions } = useRegionsQuery();
 
-  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
-  const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+  const handleEditVPC = (vpc: VPC) => {
+    navigate({
+      params: { action: 'edit', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/detail/$action',
+    });
+  };
+
+  const handleDeleteVPC = (vpc: VPC) => {
+    navigate({
+      params: { action: 'delete', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/detail/$action',
+    });
+  };
+
+  const onCloseVPCDrawer = () => {
+    navigate({
+      params: { vpcId: vpc?.id ?? -1 },
+      to: '/vpcs/$vpcId',
+    });
+  };
+
   const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   if (isLoading) {
@@ -134,13 +161,13 @@ const VPCDetail = () => {
         <Box display="flex" justifyContent="end">
           <StyledActionButton
             disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => setEditVPCDrawerOpen(true)}
+            onClick={() => handleEditVPC(vpc)}
           >
             Edit
           </StyledActionButton>
           <StyledActionButton
             disabled={isVPCLKEEnterpriseCluster}
-            onClick={() => setDeleteVPCDialogOpen(true)}
+            onClick={() => handleDeleteVPC(vpc)}
           >
             Delete
           </StyledActionButton>
@@ -185,14 +212,15 @@ const VPCDetail = () => {
         )}
       </StyledBox>
       <VPCDeleteDialog
-        id={vpc.id}
-        label={vpc.label}
-        onClose={() => setDeleteVPCDialogOpen(false)}
-        open={deleteVPCDialogOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'delete'}
+        vpc={vpc}
       />
       <VPCEditDrawer
-        onClose={() => setEditVPCDrawerOpen(false)}
-        open={editVPCDrawerOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'edit'}
         vpc={vpc}
       />
       {isVPCLKEEnterpriseCluster && (
@@ -206,12 +234,12 @@ const VPCDetail = () => {
         </Notice>
       )}
       <Box
+        padding={`${theme.spacingFunction(16)} ${theme.spacingFunction(8)}`}
         sx={(theme) => ({
           [theme.breakpoints.up('lg')]: {
             paddingLeft: 0,
           },
         })}
-        padding={`${theme.spacing(2)} ${theme.spacing()}`}
       >
         <Typography sx={{ fontSize: '1rem' }} variant="h2">
           Subnets ({vpc.subnets.length})
@@ -225,9 +253,5 @@ const VPCDetail = () => {
     </>
   );
 };
-
-export const vpcDetailLazyRoute = createLazyRoute('/vpcs/$vpcId')({
-  component: VPCDetail,
-});
 
 export default VPCDetail;

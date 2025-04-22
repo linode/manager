@@ -23,19 +23,19 @@ describe('UserDetailsPanel', () => {
     expect(getByText(user.email)).toBeVisible();
   });
 
-  it("renders 'No Roles Assigned' if the user doesn't have the assigned roles", async () => {
+  it("renders '0' if the user doesn't have the assigned roles", async () => {
     const user = accountUserFactory.build({ restricted: true });
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getByText } = renderWithTheme(
+    const { getAllByText, getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('No Roles Assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getAllByText('0')[0]).toBeVisible();
   });
 
-  it("renders '5 roles assigned' if the user has 5 different roles", async () => {
+  it("renders '5' if the user has 5 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserPermissions = {
       account_access: [
@@ -46,13 +46,13 @@ describe('UserDetailsPanel', () => {
       entity_access: [
         {
           id: 12345678,
-          type: 'linode',
           roles: ['linode_contributor', 'linode_creator'],
+          type: 'linode',
         },
         {
           id: 45678901,
-          type: 'firewall',
           roles: ['firewall_admin', 'firewall_creator'],
+          type: 'firewall',
         },
       ],
     };
@@ -61,11 +61,11 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('5 roles assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText('5')).toBeVisible();
   });
 
-  it("renders '3 roles assigned' if the user has 3 different roles", async () => {
+  it("renders '3' if the user has 3 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserPermissions = {
       account_access: [
@@ -76,8 +76,8 @@ describe('UserDetailsPanel', () => {
       entity_access: [
         {
           id: 12345678,
-          type: 'linode',
           roles: ['linode_contributor', 'linode_creator'],
+          type: 'linode',
         },
       ],
     };
@@ -86,8 +86,8 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('3 roles assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText('3')).toBeVisible();
   });
 
   it("renders the user's phone number", async () => {

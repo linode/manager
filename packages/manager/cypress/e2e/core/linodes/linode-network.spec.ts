@@ -1,15 +1,17 @@
-import { linodeFactory } from '@linode/utilities';
 import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
+import { linodeFactory } from '@linode/utilities';
 import {
+  accountFactory,
   firewallDeviceFactory,
   firewallFactory,
   ipAddressFactory,
   subnetFactory,
   vpcFactory,
 } from '@src/factories';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockAddFirewallDevice,
@@ -66,6 +68,7 @@ describe('IP Addresses', () => {
         public: [ipAddress],
         reserved: [],
         shared: [],
+        vpc: [],
       },
       ipv6: {
         global: [_ipv6Range],
@@ -248,6 +251,11 @@ describe('Firewalls', () => {
 
 describe('Linode Interfaces', () => {
   beforeEach(() => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['Linode Interfaces'],
+      })
+    );
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: true },
     });
@@ -376,7 +384,9 @@ describe('Linode Interfaces', () => {
 
       // Select a Subnet
       ui.autocomplete.findByLabel('Subnet').click();
-      ui.autocompletePopper.findByTitle(selectedSubnet.label).click();
+      ui.autocompletePopper
+        .findByTitle(`${selectedSubnet.label} (${selectedSubnet.ipv4})`)
+        .click();
 
       // Verify the error goes away
       cy.findByText('Subnet is required.').should('not.exist');
@@ -390,9 +400,9 @@ describe('Linode Interfaces', () => {
       const requestPayload = xhr.request.body;
 
       // Confirm that request payload includes VPC interface only
-      expect(requestPayload['public']).to.be.null;
+      expect(requestPayload['public']).to.equal(null);
       expect(requestPayload['vpc']['subnet_id']).to.equal(selectedSubnet.id);
-      expect(requestPayload['vlan']).to.null;
+      expect(requestPayload['vlan']).to.equal(null);
     });
 
     ui.toast.assertMessage('Successfully added network interface.');

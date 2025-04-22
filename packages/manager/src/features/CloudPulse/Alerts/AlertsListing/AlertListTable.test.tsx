@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -23,6 +24,7 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 const mockScroll = vi.fn();
+
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
     const { getByText } = renderWithTheme(
@@ -86,35 +88,47 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable')); // click the enable button to enable alert
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
+
     expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable')); // click the enable button to enable alert
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
+
     expect(getByText(UPDATE_ALERT_SUCCESS_MESSAGE)).toBeInTheDocument(); // validate whether snackbar is displayed properly
   });
 
@@ -126,18 +140,23 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Enable'));
+
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Enable' }));
 
     expect(getByText('Enabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while enabling an alert
   });
@@ -150,19 +169,41 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const { getByLabelText, getByText } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Disable'));
 
+    expect(getByTestId('confirmation-dialog')).toBeInTheDocument();
+
+    await userEvent.click(getByRole('button', { name: 'Disable' }));
+
     expect(getByText('Disabling alert failed')).toBeInTheDocument(); // validate whether snackbar is displayed properly if an error is encountered while disabling an alert
+  });
+
+  it('should toggle alerts grouped by tag', async () => {
+    renderWithTheme(
+      <AlertsListTable
+        alerts={[alertFactory.build({ label: 'Test Alert' })]}
+        isGroupedByTag={true}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[{ label: 'Linode', value: 'linode' }]}
+        toggleGroupByTag={() => true}
+      />
+    );
+    const toggleButton = screen.getByLabelText('Toggle group by tag');
+    await userEvent.click(toggleButton);
+    expect(screen.getByText('tag1')).toBeVisible();
+    expect(screen.getByText('tag2')).toBeVisible();
   });
 });

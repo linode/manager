@@ -65,11 +65,8 @@ export const DatabaseDetail = () => {
     id,
   });
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   if (error) {
     return (
@@ -115,8 +112,8 @@ export const DatabaseDetail = () => {
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
       chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
-      routeName: `/databases/${engine}/${id}/monitor`,
-      title: 'Monitor',
+      routeName: `/databases/${engine}/${id}/metrics`,
+      title: 'Metrics',
     });
   }
 
@@ -207,7 +204,6 @@ export const DatabaseDetail = () => {
             text={
               "You don't have permissions to modify this Database. Please contact an account administrator for details."
             }
-            important
             variant="warning"
           />
         )}

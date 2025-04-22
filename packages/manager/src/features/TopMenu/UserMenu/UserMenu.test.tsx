@@ -1,9 +1,9 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
 
-import { accountFactory, profileFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { accountFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserMenu } from './UserMenu';
