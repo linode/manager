@@ -63,7 +63,10 @@ describe('useIsIAMEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isIAMBeta).toBe(false);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(true);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
+      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(true);
     });
   });
 
@@ -87,7 +90,10 @@ describe('useIsIAMEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isIAMBeta).toBe(false);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
+      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(false);
     });
   });
 
@@ -110,7 +116,10 @@ describe('useIsIAMEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isIAMBeta).toBe(true);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
+      // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
+      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(true);
     });
   });
 });

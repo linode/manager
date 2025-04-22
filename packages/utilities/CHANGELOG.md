@@ -1,5 +1,16 @@
-## [2025-04-08] - v0.2.0
+## [2025-04-22] - v0.3.0
 
+### Added:
+
+- Move `getUserTimeZone` and its associated profile factories to `@linode/utilities` ([#11955](https://github.com/linode/manager/pull/11955))
+- Move `betaUtils` and its associated factories to `utilities` package ([#11986](https://github.com/linode/manager/pull/11986))
+- Move `grants` and its associated factories to `utilities` package ([#12025](https://github.com/linode/manager/pull/12025))
+
+### Tech Stories:
+
+- Eslint Overhaul ([#11941](https://github.com/linode/manager/pull/11941))
+
+## [2025-04-08] - v0.2.0
 
 ### Added:
 
@@ -15,7 +26,6 @@
 - Unused utils with security vulnerabilities ([#11899](https://github.com/linode/manager/pull/11899))
 
 ## [2025-03-25] - v0.1.0
-
 
 ### Added:
 
