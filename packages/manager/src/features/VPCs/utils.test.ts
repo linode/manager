@@ -17,7 +17,10 @@ import {
   getVPCInterfacePayload,
   hasUnrecommendedConfiguration,
   hasUnrecommendedConfigurationLinodeInterface,
+  transformLinodeInterfaceErrorsToFormikErrors,
 } from './utils';
+
+import type { APIError } from '@linode/api-v4';
 
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
 const subnetLinodeInfoId1 = subnetAssignedLinodeDataFactory.build({ id: 1 });
@@ -252,5 +255,57 @@ describe('Linode Interface utility functions', () => {
       });
       expect('purpose' in iface).toBe(false);
     });
+  });
+});
+
+describe('transformLinodeInterfaceErrorsToFormikErrors', () => {
+  it('handles vpc range errors', () => {
+    const error: APIError[] = [
+      { field: 'vpc.ipv4.ranges[3].range', reason: 'Range is invalid.' },
+    ];
+
+    expect(transformLinodeInterfaceErrorsToFormikErrors(error)).toStrictEqual([
+      {
+        field: 'ip_ranges[3]',
+        reason: 'Range is invalid.',
+      },
+    ]);
+
+    const generalRangeError: APIError[] = [
+      { field: 'vpc.ipv4.ranges', reason: 'Range is invalid.' },
+    ];
+
+    expect(
+      transformLinodeInterfaceErrorsToFormikErrors(generalRangeError)
+    ).toStrictEqual([
+      {
+        field: 'ip_ranges',
+        reason: 'Range is invalid.',
+      },
+    ]);
+  });
+
+  it('handles vpc address errors', () => {
+    const error: APIError[] = [
+      { field: 'vpc.ipv4.addresses[0]', reason: 'address is invalid.' },
+    ];
+
+    expect(transformLinodeInterfaceErrorsToFormikErrors(error)).toStrictEqual([
+      {
+        field: 'ipv4.vpc',
+        reason: 'address is invalid.',
+      },
+    ]);
+
+    const error2: APIError[] = [
+      { field: 'vpc.ipv4.addresses', reason: 'address 2 is invalid.' },
+    ];
+
+    expect(transformLinodeInterfaceErrorsToFormikErrors(error2)).toStrictEqual([
+      {
+        field: 'ipv4.vpc',
+        reason: 'address 2 is invalid.',
+      },
+    ]);
   });
 });

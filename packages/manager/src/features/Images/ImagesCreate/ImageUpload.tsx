@@ -192,7 +192,6 @@ export const ImageUpload = () => {
                 isSingular: false,
                 resourceType: 'Images',
               })}
-              important
               variant="error"
             />
           )}

@@ -33,8 +33,8 @@ export interface PlanContainerProps {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planType?: LinodeTypeClass;
   plans: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
