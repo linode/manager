@@ -228,11 +228,11 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
           <TooltipIcon
+            status="help"
             sxTooltipIcon={{
               marginLeft: '-4px',
               marginTop: '-15px',
             }}
-            status="help"
             text={tooltip}
             tooltipPosition="right"
           />
@@ -263,21 +263,23 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
         >
           <Grid size={11}>
             <TextField
-              InputProps={{
-                'aria-label': `${title} ip-address-${idx}`,
-                disabled,
-                ...props.inputProps,
-              }}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(e, idx)
-              }
               className={classes.input}
               errorText={thisIP.error}
               hideLabel
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
               label={`domain-transfer-ip-${idx}`}
               onBlur={(e) => handleBlur(e, idx)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(e, idx)
+              }
               placeholder={placeholder}
+              slotProps={{
+                input: {
+                  'aria-label': `${title} ip-address-${idx}`,
+                  disabled,
+                  ...props.inputProps,
+                },
+              }}
               value={thisIP.address}
             />
           </Grid>

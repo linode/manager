@@ -56,10 +56,8 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -152,8 +150,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             },
           })}
           textFieldProps={{
-            InputProps: {
-              required,
+            slotProps: {
+              input: {
+                required,
+              },
             },
             tooltipText: helperText,
           }}
