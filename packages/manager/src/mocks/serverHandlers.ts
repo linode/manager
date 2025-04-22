@@ -666,11 +666,16 @@ export const handlers = [
   http.get('*/linode/types-legacy', () => {
     return HttpResponse.json(makeResourcePage(linodeTypeFactory.buildList(0)));
   }),
-  ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
-    (type) =>
-      http.get(`*/linode/types/${type.id}`, () => {
-        return HttpResponse.json(type);
-      })
+  ...[
+    nanodeType,
+    ...standardTypes,
+    ...dedicatedTypes,
+    ...premiumTypes,
+    proDedicatedType,
+  ].map((type) =>
+    http.get(`*/linode/types/${type.id}`, () => {
+      return HttpResponse.json(type);
+    })
   ),
   http.get(`*/linode/types/*`, () => {
     return HttpResponse.json(linodeTypeFactory.build());

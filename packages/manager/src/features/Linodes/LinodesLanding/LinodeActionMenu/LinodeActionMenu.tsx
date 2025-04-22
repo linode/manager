@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -6,9 +7,9 @@ import { useHistory } from 'react-router-dom';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { isMTCTTPlan } from 'src/features/components/PlansPanel/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRegionsQuery } from '@linode/queries';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
@@ -42,13 +43,8 @@ interface ActionConfig {
 }
 
 export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
-  const {
-    inListView,
-    linodeId,
-    linodeRegion,
-    linodeStatus,
-    linodeType,
-  } = props;
+  const { inListView, linodeId, linodeRegion, linodeStatus, linodeType } =
+    props;
 
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
@@ -82,6 +78,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
 
   const distributedRegionTooltipText =
     'Cloning is currently not supported for distributed region instances.';
+
+  const linodeMTCTTToolTipText =
+    'Resizing is not supported for custom plan instances.';
+
+  const isCustomMTCLinode = Boolean(linodeType && isMTCTTPlan(linodeType));
 
   const actionConfigs: ActionConfig[] = [
     {
@@ -145,12 +146,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance,
+      disabled: isLinodeReadOnly || hasHostMaintenance || isCustomMTCLinode,
       isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenResizeDialog,
       title: 'Resize',
       tooltipAction: 'resize',
-      tooltipText: maintenanceTooltipText,
+      tooltipText: isCustomMTCLinode
+        ? linodeMTCTTToolTipText
+        : maintenanceTooltipText,
     },
     {
       condition: true,
