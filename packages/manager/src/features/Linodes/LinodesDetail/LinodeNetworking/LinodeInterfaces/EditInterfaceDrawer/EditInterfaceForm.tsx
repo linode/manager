@@ -1,6 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  firewallQueries,
+  useAddFirewallDeviceMutation,
+  useLinodeInterfaceFirewallsQuery,
   useLinodeInterfaceQuery,
+  useRemoveFirewallDeviceMutation,
   useUpdateLinodeInterfaceMutation,
 } from '@linode/queries';
 import {
@@ -12,18 +16,21 @@ import {
   Notice,
   Stack,
 } from '@linode/ui';
-import { ModifyLinodeInterfaceSchema } from '@linode/validation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+
+import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 
 import { getLinodeInterfaceType } from '../utilities';
+import { EditLinodeInterfaceFormSchema } from './EditInterfaceForm.utils';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
 import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
 import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
-import type { ModifyLinodeInterfacePayload } from '@linode/api-v4';
+import type { InferType } from 'yup';
 
 interface Props {
   interfaceId: number;
@@ -36,6 +43,7 @@ export const EditInterfaceForm = (props: Props) => {
   const { interfaceId, linodeId, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   const {
     data: linodeInterface,
@@ -43,20 +51,80 @@ export const EditInterfaceForm = (props: Props) => {
     isPending,
   } = useLinodeInterfaceQuery(linodeId, interfaceId);
 
-  const { mutateAsync } = useUpdateLinodeInterfaceMutation(
+  const { data: firewalls } = useLinodeInterfaceFirewallsQuery(
     linodeId,
     interfaceId
   );
 
-  const form = useForm<ModifyLinodeInterfacePayload>({
-    defaultValues: linodeInterface,
-    resolver: yupResolver(ModifyLinodeInterfaceSchema),
-    values: linodeInterface,
+  const firewall = firewalls?.data[0] ?? null;
+
+  const { mutateAsync: createFirewallDevice } = useAddFirewallDeviceMutation();
+  const { mutateAsync: deleteFirewallDevice } =
+    useRemoveFirewallDeviceMutation();
+  const { mutateAsync: updateInterface } = useUpdateLinodeInterfaceMutation(
+    linodeId,
+    interfaceId
+  );
+
+  const values = {
+    ...linodeInterface,
+    firewall_id: firewall?.id ?? null,
+  };
+
+  const form = useForm<InferType<typeof EditLinodeInterfaceFormSchema>>({
+    defaultValues: values,
+    resolver: yupResolver(EditLinodeInterfaceFormSchema),
+    values,
   });
 
-  const onSubmit = async (values: ModifyLinodeInterfacePayload) => {
+  const onSubmit = async (
+    values: InferType<typeof EditLinodeInterfaceFormSchema>
+  ) => {
+    // User is changing the firewall
+    if (values.firewall_id && firewall && values.firewall_id !== firewall.id) {
+      // Get the firewall device to delete
+      const devices = await queryClient.ensureQueryData(
+        firewallQueries.firewall(firewall.id)._ctx.devices
+      );
+      const device = devices.find(
+        (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
+      );
+      if (device) {
+        await deleteFirewallDevice({
+          firewallId: firewall.id,
+          deviceId: device.id,
+        });
+        await createFirewallDevice({
+          firewallId: values.firewall_id,
+          id: interfaceId,
+          type: 'interface',
+        });
+      } else {
+        // @todo handle error
+      }
+    } else if (!firewall && values.firewall_id) {
+      await createFirewallDevice({
+        firewallId: values.firewall_id,
+        id: interfaceId,
+        type: 'interface',
+      });
+    } else if (firewall && !values.firewall_id) {
+      const devices = await queryClient.ensureQueryData(
+        firewallQueries.firewall(firewall.id)._ctx.devices
+      );
+      const device = devices.find(
+        (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
+      );
+      if (device) {
+        await deleteFirewallDevice({
+          firewallId: firewall.id,
+          deviceId: device.id,
+        });
+      }
+    }
+
     try {
-      await mutateAsync(values);
+      await updateInterface(values);
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
@@ -117,6 +185,17 @@ export const EditInterfaceForm = (props: Props) => {
               variant="warning"
             />
           )}
+          <Controller
+            control={form.control}
+            name="firewall_id"
+            render={({ field, fieldState }) => (
+              <FirewallSelect
+                errorText={fieldState.error?.message}
+                onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
+                value={field.value}
+              />
+            )}
+          />
         </Stack>
         <Stack direction="row" justifyContent="flex-end" mt={2} spacing={1}>
           <Button onClick={onClose}>Cancel</Button>
