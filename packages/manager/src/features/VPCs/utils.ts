@@ -158,8 +158,15 @@ export const transformLinodeInterfaceErrorsToFormikErrors = (
   errors: APIError[]
 ): APIError[] => {
   for (const error of errors) {
-    if (error.field && error.field.match(/vpc.ipv4.ranges\[(\d+)\]/)) {
-      error.field = 'ip_ranges[$1]';
+    if (error.field && error.field.includes('vpc.ipv4.ranges')) {
+      if (error.field.match(/vpc.ipv4.ranges\[(\d+)\].range/)) {
+        error.field = error.field.replace(
+          /vpc.ipv4.ranges\[(\d+)\].range/,
+          'ip_ranges[$1]'
+        );
+      } else {
+        error.field = 'ip_ranges';
+      }
     }
     if (error.field && error.field.includes('vpc.ipv4.addresses')) {
       error.field = 'ipv4.vpc';

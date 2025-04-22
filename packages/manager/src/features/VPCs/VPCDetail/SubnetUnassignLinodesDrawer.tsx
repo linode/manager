@@ -318,7 +318,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
       >
         {userCannotUnassignLinodes && (
           <Notice
-            important
             text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
             variant="error"
           />

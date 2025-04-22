@@ -176,7 +176,6 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       {_isRestrictedUser && (
         <Notice
-          important
           text={getRestrictedResourceText({
             action: ['create', 'edit'],
             resourceType: 'Volumes',

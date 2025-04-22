@@ -218,7 +218,6 @@ export const AddNodePoolDrawer = (props: Props) => {
           selectedTypeInfo.count > 0 &&
           selectedTypeInfo.count < 3 && (
             <Notice
-              important
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}

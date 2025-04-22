@@ -397,13 +397,12 @@ export const CreateCluster = () => {
         )}
         {isCreateClusterRestricted && (
           <Notice
+            sx={{ marginBottom: 2 }}
             text={getRestrictedResourceText({
               action: 'create',
               isSingular: false,
               resourceType: 'LKE Clusters',
             })}
-            important
-            sx={{ marginBottom: 2 }}
             variant="error"
           />
         )}

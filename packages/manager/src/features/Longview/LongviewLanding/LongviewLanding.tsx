@@ -120,7 +120,6 @@ export const LongviewLanding = (props: LongviewProps) => {
     <>
       {isLongviewCreationRestricted && (
         <Notice
-          important
           sx={{ marginBottom: 2 }}
           text={getRestrictedResourceText({
             action: 'create',

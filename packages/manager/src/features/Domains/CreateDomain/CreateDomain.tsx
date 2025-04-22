@@ -81,18 +81,14 @@ export const CreateDomain = () => {
     },
   ];
 
-  const [
-    defaultRecordsSetting,
-    setDefaultRecordsSetting,
-  ] = React.useState<DefaultRecordsSetting>(defaultRecords[0]);
+  const [defaultRecordsSetting, setDefaultRecordsSetting] =
+    React.useState<DefaultRecordsSetting>(defaultRecords[0]);
 
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);
-  const [
-    selectedDefaultNodeBalancer,
-    setSelectedDefaultNodeBalancer,
-  ] = React.useState<NodeBalancer | undefined>(undefined);
+  const [selectedDefaultNodeBalancer, setSelectedDefaultNodeBalancer] =
+    React.useState<NodeBalancer | undefined>(undefined);
 
   const { values, ...formik } = useFormik({
     initialValues: {
@@ -303,7 +299,6 @@ export const CreateDomain = () => {
             text={
               "You don't have permissions to create a new Domain. Please contact an account administrator for details."
             }
-            important
             variant="error"
           />
         )}

@@ -171,12 +171,7 @@ export const KubeCheckoutBar = (props: Props) => {
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice
-            important
-            spacingTop={16}
-            text={nodeWarning}
-            variant="warning"
-          />
+          <Notice spacingTop={16} text={nodeWarning} variant="warning" />
         )}
       </>
     </CheckoutBar>

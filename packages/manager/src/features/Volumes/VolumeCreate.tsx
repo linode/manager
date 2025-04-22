@@ -148,9 +148,8 @@ export const VolumeCreate = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const regionsWithBlockStorage =
     regions
@@ -193,15 +192,8 @@ export const VolumeCreate = () => {
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      const {
-        config_id,
-        encryption,
-        label,
-        linode_id,
-        region,
-        size,
-        tags,
-      } = values;
+      const { config_id, encryption, label, linode_id, region, size, tags } =
+        values;
 
       setSubmitting(true);
 
@@ -339,12 +331,11 @@ export const VolumeCreate = () => {
       />
       {doesNotHavePermission && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'create',
             resourceType: 'Volumes',
           })}
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
@@ -394,7 +385,7 @@ export const VolumeCreate = () => {
                   touched.tags
                     ? errors.tags
                       ? getErrorStringOrDefault(
-                          (errors.tags as unknown) as APIError[],
+                          errors.tags as unknown as APIError[],
                           'Unable to tag volume.'
                         )
                       : undefined

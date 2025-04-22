@@ -24,7 +24,7 @@ export const ErrorDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice important variant="error">
+      <Notice variant="error">
         <Typography>
           {isDryRun ? ERROR_DRY_RUN_COPY : 'Unable to upgrade interfaces.'}
         </Typography>

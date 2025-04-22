@@ -413,7 +413,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
         cy.findByText(mockRegions[0].label).should('be.visible');
       });
     // warning message
-    cy.findByTestId('notice-warning-important').within(() => {
+    cy.findByTestId('notice-warning').within(() => {
       cy.contains(
         `There was an error loading buckets in ${mockRegions[1].label}`
       );
@@ -463,7 +463,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
     // table with retrieved bucket
     cy.get('table tbody tr').should('have.length', 1);
     // warning message
-    cy.findByTestId('notice-warning-important').within(() => {
+    cy.findByTestId('notice-warning').within(() => {
       cy.contains(
         'There was an error loading buckets in the following regions:'
       );
