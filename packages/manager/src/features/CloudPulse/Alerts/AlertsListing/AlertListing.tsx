@@ -18,7 +18,6 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
-import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 
@@ -271,19 +270,7 @@ export const AlertListing = () => {
           </Typography>
         </Notice>
       )}
-      {hasFailedAlerts && (
-        <AlertListNoticeMessages
-          errorMessage="Creation of some alerts has failed. Please contact support for assistance."
-          separator=","
-          sx={(theme) => ({
-            '&>p': {
-              fontWeight: theme.typography.fontWeightBold,
-              fontSize: theme.spacingFunction(16),
-            },
-          })}
-          variant="error"
-        />
-      )}
+
       <AlertsListTable
         alerts={getAlertsList}
         alertsGroupedByTag={preference}
