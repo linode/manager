@@ -150,13 +150,12 @@ describe('AlertDetail component tests', () => {
       isLoadiing: false,
     });
 
-    const { getByText } = renderWithTheme(<AlertDetail />);
+    const { getByTestId } = renderWithTheme(<AlertDetail />);
 
-    expect(
-      getByText(
-        `${alert.label} alert creation has failed. Please contact support to resolve the issue.`
-      )
-    ).toBeInTheDocument();
+    const element = getByTestId('notice-error').textContent;
+    expect(element).toEqual(
+      `${alert.label} alert creation has failed. Please contact support to resolve the issue.`
+    );
   });
 });
 

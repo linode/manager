@@ -247,12 +247,11 @@ describe('Alert Listing', () => {
       isLoading: false,
     });
 
-    const { getByText } = renderWithTheme(<AlertListing />);
+    const { getByTestId } = renderWithTheme(<AlertListing />);
 
-    expect(
-      getByText(
-        'Creation of some alerts has failed. Please contact support for assistance.'
-      )
-    ).toBeInTheDocument();
+    const element = getByTestId('notice-error').textContent;
+    expect(element).toEqual(
+      'Creation of some alerts has failed. Please contact support for assistance.'
+    );
   });
 });

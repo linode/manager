@@ -261,16 +261,12 @@ export const AlertListing = () => {
         </Box>
         <Button
           buttonType="primary"
-          buttonType="primary"
           data-qa-button="create-alert"
-          data-qa-button="create-alert"
-          data-qa-buttons="true"
           data-qa-buttons="true"
           disabled={isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
             history.push(`${url}/create`);
           }}
-          ref={topRef}
           ref={topRef}
           sx={{
             height: '34px',
@@ -300,7 +296,7 @@ export const AlertListing = () => {
             >
               contact support
             </Link>{' '}
-            for assistance
+            for assistance.
           </Typography>
         </Notice>
       )}
