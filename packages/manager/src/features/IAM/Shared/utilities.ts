@@ -573,13 +573,6 @@ export const deleteUserEntity = (
     .filter((entity) => entity.roles.length > 0);
 };
 
-export const getCreateLinkForEntityType = (
-  entityType: EntityType | EntityTypePermissions
-): string => {
-  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
-  return `/${entityType}s/create`;
-};
-
 export const getFacadeRoleDescription = (
   role: ExtendedRole | ExtendedRoleMap
 ): string => {

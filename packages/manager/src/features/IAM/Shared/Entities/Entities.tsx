@@ -6,14 +6,20 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
+import { type DrawerModes, getFormattedEntityType } from '../utilities';
+import {
+  getCreateLinkForEntityType,
+  getEntitiesByType,
+  getPlaceholder,
+  mapEntitiesToOptions,
+} from './utils';
+
 import type { EntitiesOption } from '../types';
-import { getFormattedEntityType, type DrawerModes } from '../utilities';
 import type {
   EntityType,
   EntityTypePermissions,
   IamAccessType,
 } from '@linode/api-v4/lib/iam/types';
-import { getEntitiesByType, getPlaceholder, mapEntitiesToOptions } from './utils';
 
 interface Props {
   access: IamAccessType;
