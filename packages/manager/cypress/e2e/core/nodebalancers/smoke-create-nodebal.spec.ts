@@ -172,7 +172,7 @@ describe('create NodeBalancer', () => {
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     // test fails in environments w/ only one region
-    cy.tag('env:multipleRegions');
+    cy.addTag('env:multipleRegions');
     const initialRegion = getRegionById('us-west');
     const linodePayload = {
       // NodeBalancers require Linodes with private IPs.
