@@ -32,12 +32,19 @@ export const getPlaceholder = (
   type: EntityType | EntityTypePermissions,
   currentValueLength: number,
   possibleEntitiesLength: number
-): string =>
-  currentValueLength > 0
-    ? ' '
-    : possibleEntitiesLength === 0
-      ? 'None'
-      : placeholderMap[type] || 'Select';
+): string => {
+  let placeholder: string;
+
+  if (currentValueLength > 0) {
+    placeholder = ' ';
+  } else if (possibleEntitiesLength === 0) {
+    placeholder = 'None';
+  } else {
+    placeholder = placeholderMap[type] || 'Select';
+  }
+
+  return placeholder;
+};
 
 export const mapEntitiesToOptions = (
   entities: { id: number; label: string }[]
