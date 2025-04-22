@@ -73,7 +73,6 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
       variant={
         variantMap.error ? 'error' : variantMap.warning ? 'warning' : undefined
       }
-      important
       preferenceKey={preferenceKey}
       sx={{ marginBottom: theme.spacing() }}
     >
