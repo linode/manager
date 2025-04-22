@@ -1,3 +1,4 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
@@ -6,11 +7,11 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCTTPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from '@linode/queries';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
@@ -80,14 +81,20 @@ export const KubernetesPlansPanel = (props: Props) => {
   const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
     plan === 'shared' && Boolean(isAPLEnabled);
 
-  const _types = types.filter(
-    (type) =>
+  const _types = types.filter((type) => {
+    // Do not display MTC_TT plans if the feature flag is not enabled.
+    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
+      return false;
+    }
+
+    return (
       !type.id.includes('dedicated-edge') &&
       !type.id.includes('nanode-edge') &&
       // Filter out GPU types for enterprise; otherwise, return the rest of the types.
       // TODO: remove this once GPU plans are supported in LKE-E (Q3 2025)
       (selectedTier === 'enterprise' ? !type.id.includes('gpu') : true)
-  );
+    );
+  });
 
   const plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
@@ -116,31 +123,31 @@ export const KubernetesPlansPanel = (props: Props) => {
           return (
             <>
               <PlanInformation
-                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                  plan
-                )}
                 flow="kubernetes"
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 isAPLEnabled={isAPLEnabled}
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
                 planType={plan}
                 regionsData={regionsData}
               />
               <KubernetesPlanContainer
-                wholePanelIsDisabled={
-                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
-                }
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
                 selectedTier={selectedTier}
                 updatePlanCount={updatePlanCount}
+                wholePanelIsDisabled={
+                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
+                }
               />
             </>
           );

@@ -20,9 +20,7 @@ type Props = {
   permissions: PermissionType[];
 };
 
-export const Permissions = ({
-  permissions,
-}: Props) => {
+export const Permissions = ({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
