@@ -97,9 +97,8 @@ export const LinodeCreate = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    handleLinodeCreateAnalyticsFormError,
-  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
+  const { handleLinodeCreateAnalyticsFormError } =
+    useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -110,16 +109,16 @@ export const LinodeCreate = () => {
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
+
+      // Update tab "type" query param. (This changes the selected tab)
+      setParams({ type: newTab });
+
+      // Get the default values for the new tab and reset the form
       defaultValues(
         { ...params, type: newTab },
         queryClient,
         isLinodeInterfacesEnabled
-      ).then((values) => {
-        // Reset the form values
-        form.reset(values);
-        // Update tab "type" query param. (This changes the selected tab)
-        setParams({ type: newTab });
-      });
+      ).then(form.reset);
     }
   };
 

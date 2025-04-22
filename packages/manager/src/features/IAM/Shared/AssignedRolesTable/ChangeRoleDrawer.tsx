@@ -21,12 +21,8 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
 
-import type {
-  DrawerModes,
-  EntitiesOption,
-  ExtendedRoleMap,
-  RolesType,
-} from '../utilities';
+import type { EntitiesOption } from '../types';
+import type { DrawerModes, ExtendedRoleMap, RolesType } from '../utilities';
 
 interface Props {
   mode: DrawerModes;
@@ -76,7 +72,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
     reset,
     setError,
     watch,
-  } = useForm<{ roleName: RolesType | null }>({
+  } = useForm<{ roleName: null | RolesType }>({
     defaultValues: {
       roleName: null,
     },
@@ -149,6 +145,8 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
         </Typography>
 
         <Controller
+          control={control}
+          name="roleName"
           render={({ field, fieldState }) => (
             <Autocomplete
               errorText={fieldState.error?.message}
@@ -161,8 +159,6 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
               value={field.value || null}
             />
           )}
-          control={control}
-          name="roleName"
           rules={{ required: 'Role is required.' }}
         />
 

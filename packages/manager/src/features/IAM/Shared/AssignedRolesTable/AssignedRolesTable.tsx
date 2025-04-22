@@ -29,7 +29,7 @@ import {
   getFormattedEntityType,
   mapEntityTypes,
   mapRolesToPermissions,
-  transformedAccountEntities,
+  groupAccountEntitiesByType,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -112,7 +112,7 @@ export const AssignedRolesTable = () => {
     const resourceTypes = getResourceTypes(roles);
 
     if (entities) {
-      const transformedEntities = transformedAccountEntities(entities.data);
+      const transformedEntities = groupAccountEntitiesByType(entities.data);
 
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
