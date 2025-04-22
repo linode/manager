@@ -170,8 +170,10 @@ export const AlertListing = () => {
     );
   }
 
+  const hasFailedAlerts = alerts?.some((alert) => alert.status === 'failed');
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
@@ -259,6 +261,7 @@ export const AlertListing = () => {
           onClick={() => {
             history.push(`${url}/create`);
           }}
+          ref={topRef}
           sx={{
             height: '34px',
             paddingBottom: 0,
@@ -272,6 +275,19 @@ export const AlertListing = () => {
           Create Alert
         </Button>
       </Box>
+      {hasFailedAlerts && (
+        <AlertListNoticeMessages
+          errorMessage="Creation of some alerts has failed. Please contact support for assistance."
+          separator=","
+          sx={(theme) => ({
+            '&>p': {
+              fontWeight: theme.typography.fontWeightBold,
+              fontSize: theme.spacingFunction(16),
+            },
+          })}
+          variant="error"
+        />
+      )}
       <AlertsListTable
         alerts={getAlertsList}
         error={error ?? undefined}
