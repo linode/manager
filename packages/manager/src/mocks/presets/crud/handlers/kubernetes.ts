@@ -170,6 +170,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
         ...payload,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
+        tier: 'standard',
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
@@ -219,7 +220,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
         ...payload,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
-        tier: 'enterprise',
+        tier: payload.tier,
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
@@ -537,17 +538,25 @@ export const updateKubernetesNodePools = (mockState: MockState) => [
       }
 
       const payload = await request.clone().json();
+      const nodeCount = payload?.count ?? existingPool.count;
 
       const updatedPool = {
         ...existingPool,
         ...payload,
-        nodes: kubeLinodeFactory.buildList(payload.count),
+        nodes: kubeLinodeFactory.buildList(nodeCount),
         updated: DateTime.now().toISO(),
       };
 
       await mswDB.update('kubernetesNodePools', poolId, updatedPool, mockState);
 
       return makeResponse(updatedPool);
+    }
+  ),
+
+  http.post(
+    '*/v4/lke/clusters/:id/pools/:poolId/recycle',
+    async ({}): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      return makeResponse({});
     }
   ),
 ];
