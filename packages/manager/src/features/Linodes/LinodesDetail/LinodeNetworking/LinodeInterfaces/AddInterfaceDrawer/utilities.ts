@@ -12,7 +12,9 @@ export const CreateLinodeInterfaceFormSchema =
   CreateLinodeInterfaceSchema.concat(
     object({
       purpose: string().oneOf(['vpc', 'vlan', 'public'] as InterfacePurpose[]),
-      vpc: CreateVPCInterfaceSchema.concat(object({ vpc_id: number() }))
+      vpc: CreateVPCInterfaceSchema.concat(
+        object({ vpc_id: number().nullable() })
+      )
         .optional()
         .nullable()
         .default(null),

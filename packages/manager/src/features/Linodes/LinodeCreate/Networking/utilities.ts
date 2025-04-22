@@ -13,7 +13,7 @@ import type {
  * The new endpoint only uses subnet_id and I guess it derives the VPC from that?
  */
 interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
-  vpc_id?: number;
+  vpc_id?: null | number;
 }
 
 /**
@@ -152,7 +152,7 @@ export const getDefaultInterfacePayload = (
       ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
       // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       subnet_id: null,
-      vpc_id: undefined,
+      vpc_id: null,
     },
   };
 };
