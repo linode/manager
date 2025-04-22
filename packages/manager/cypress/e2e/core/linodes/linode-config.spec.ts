@@ -1,4 +1,5 @@
 import {
+  configFactory,
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
@@ -6,6 +7,7 @@ import {
 } from '@linode/utilities';
 import {
   VLANFactory,
+  accountFactory,
   kernelFactory,
   linodeConfigFactory,
   subnetFactory,
@@ -14,15 +16,18 @@ import {
 import { authenticate } from 'support/api/authentication';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { LINODE_CLONE_TIMEOUT } from 'support/constants/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   interceptCreateLinodeConfigs,
   interceptDeleteLinodeConfig,
   interceptGetLinodeConfigs,
   interceptUpdateLinodeConfigs,
   mockCreateLinodeConfigs,
+  mockGetLinodeConfig,
   mockGetLinodeConfigs,
   mockUpdateLinodeConfigs,
 } from 'support/intercepts/configs';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptRebootLinode,
   mockGetLinodeDetails,
@@ -491,6 +496,72 @@ describe('Linode Config management', () => {
     });
 
     const mockVLANs: VLAN[] = VLANFactory.buildList(2);
+
+    /*
+     * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
+     */
+    it('Does not show interfaces section when using new Linode interfaces', () => {
+      // TODO M3-9775: Remove mock when `linodeInterfaces` feature flag is removed.
+      mockAppendFeatureFlags({
+        linodeInterfaces: {
+          enabled: true,
+        },
+      });
+
+      // TODO Remove account mock when 'Linode Interfaces' capability is generally available.
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['Linodes', 'Linode Interfaces'],
+        })
+      );
+
+      const mockLinode = linodeFactory.build({
+        id: randomNumber(1000, 99999),
+        label: randomLabel(),
+        region: chooseRegion().id,
+        interface_generation: 'linode',
+      });
+
+      const mockConfig = configFactory.build({
+        label: randomLabel(),
+        id: randomNumber(1000, 99999),
+        interfaces: null,
+      });
+
+      mockGetLinodeDetails(mockLinode.id, mockLinode);
+      mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
+      mockGetLinodeConfig(mockLinode.id, mockConfig);
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+
+      cy.findByLabelText('List of Configurations')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Edit')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      ui.dialog
+        .findByTitle('Edit Configuration')
+        .should('be.visible')
+        .within(() => {
+          // Scroll "Networking" section into view, and confirm that Interfaces
+          // options are absent and informational text is shown instead.
+          cy.findByText('Networking').scrollIntoView();
+          cy.contains(
+            "Go to Network to view your Linode's Network interfaces."
+          ).should('be.visible');
+          cy.findByText('Primary Interface (Default Route)').should(
+            'not.exist'
+          );
+          cy.findByText('eth0').should('not.exist');
+          cy.findByText('eth1').should('not.exist');
+          cy.findByText('eth2').should('not.exist');
+        });
+    });
 
     /*
      * - Tests Linode config create and VPC interface assignment UI flows using mock API data.
