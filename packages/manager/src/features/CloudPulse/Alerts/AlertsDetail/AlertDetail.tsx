@@ -3,10 +3,11 @@ import {
   Chip,
   CircleProgress,
   ErrorState,
+  Notice,
   Stack,
   Typography,
 } from '@linode/ui';
-import { styled, useTheme } from '@mui/material';
+import { Link, styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,7 +18,6 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertResources } from '../AlertsResources/AlertsResources';
-import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
@@ -113,19 +113,27 @@ export const AlertDetail = () => {
       <DocumentTitleSegment segment={`${alertDetails.label}`} />
       <Stack spacing={2}>
         <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+
         {status === 'failed' && (
-          <AlertListNoticeMessages
-            errorMessage={`${label} alert creation has failed. Please contact support to resolve the issue.`}
-            separator=","
-            sx={(theme) => ({
-              '&>p': {
-                fontWeight: theme.typography.fontWeightBold,
+          <Notice variant="error">
+            <Typography
+              sx={(theme) => ({
+                font: theme.font.bold,
                 fontSize: theme.spacingFunction(16),
-              },
-            })}
-            variant="error"
-          />
+              })}
+            >
+              {label} alert creation has failed. Please{' '}
+              <Link
+                href="https://cloud.linode.com/support/tickets"
+                underline="hover"
+              >
+                contact support
+              </Link>{' '}
+              to resolve the issue.
+            </Typography>
+          </Notice>
         )}
+
         <Box display="flex" flexDirection="column" gap={2}>
           <Box
             display="flex"
