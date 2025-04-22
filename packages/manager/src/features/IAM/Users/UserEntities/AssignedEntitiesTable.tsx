@@ -1,6 +1,5 @@
 import { Autocomplete, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -22,8 +21,9 @@ import { useAccountUserPermissions } from 'src/queries/iam/iam';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,
+  getFormattedEntityType,
+  groupAccountEntitiesByType,
   mapEntityTypes,
-  transformedAccountEntities,
 } from '../../Shared/utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
@@ -80,7 +80,7 @@ export const AssignedEntitiesTable = () => {
     if (!assignedRoles || !entities) {
       return { entityTypes: [], roles: [] };
     }
-    const transformedEntities = transformedAccountEntities(entities.data);
+    const transformedEntities = groupAccountEntitiesByType(entities.data);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
@@ -154,7 +154,9 @@ export const AssignedEntitiesTable = () => {
                   <Typography>{el.entity_name}</Typography>
                 </TableCell>
                 <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                  <Typography>{capitalize(el.entity_type)}</Typography>
+                  <Typography>
+                    {getFormattedEntityType(el.entity_type)}
+                  </Typography>
                 </TableCell>
                 <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
                   <Typography>{el.role_name}</Typography>

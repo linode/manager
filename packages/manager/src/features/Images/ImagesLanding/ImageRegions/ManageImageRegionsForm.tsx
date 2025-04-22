@@ -113,7 +113,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Link>{' '}
         for details on managing your Linux system's disk space.
       </Typography>
-      <Notice important spacingTop={16} variant="info">
+      <Notice spacingTop={16} variant="info">
         <Typography fontSize="inherit">
           As part of our limited promotional period, image replicas are free of
           charge until Q4 2025. Starting in Q4, replicas will be subject to our

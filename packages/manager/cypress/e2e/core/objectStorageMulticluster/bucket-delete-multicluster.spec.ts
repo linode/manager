@@ -6,6 +6,7 @@ import {
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 
@@ -17,12 +18,13 @@ describe('Object Storage Multicluster Bucket delete', () => {
    */
   it('can delete object storage bucket with OBJ Multicluster', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const region = chooseRegion().id;
     const bucketMock = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
-      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
+      cluster: region,
+      hostname: `${bucketLabel}.${region}.linodeobjects.com`,
       label: bucketLabel,
       objects: 0,
+      region,
     });
 
     mockGetAccount(
@@ -34,10 +36,8 @@ describe('Object Storage Multicluster Bucket delete', () => {
       objMultiCluster: true,
       objectStorageGen2: { enabled: false },
     });
-
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketMock.region!).as('deleteBucket');
-
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
 
