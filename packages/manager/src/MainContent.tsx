@@ -38,7 +38,7 @@ import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
-import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
+import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { migrationRouter } from './routes';
@@ -138,7 +138,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
     default: module.HelpAndSupport,
@@ -363,7 +362,6 @@ export const MainContent = () => {
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
                             <Route component={LinodesRoutes} path="/linodes" />
-                            <Route component={Managed} path="/managed" />
                             <Route component={Kubernetes} path="/kubernetes" />
                             {isIAMEnabled && (
                               <Route component={IAM} path="/iam" />

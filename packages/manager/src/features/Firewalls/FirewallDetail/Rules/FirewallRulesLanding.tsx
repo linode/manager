@@ -53,9 +53,8 @@ interface Drawer {
 
 export const FirewallRulesLanding = React.memo((props: Props) => {
   const { disabled, firewallID, rules } = props;
-  const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
-    firewallID
-  );
+  const { mutateAsync: updateFirewallRules } =
+    useUpdateFirewallRulesMutation(firewallID);
   const { data: devices } = useAllFirewallDevicesQuery(firewallID);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -95,10 +94,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const [generalErrors, setGeneralErrors] = React.useState<
     APIError[] | undefined
   >();
-  const [
-    discardChangesModalOpen,
-    setDiscardChangesModalOpen,
-  ] = React.useState<boolean>(false);
+  const [discardChangesModalOpen, setDiscardChangesModalOpen] =
+    React.useState<boolean>(false);
 
   const openRuleDrawer = (
     category: Category,
@@ -116,10 +113,10 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         category === 'inbound' && mode === 'create'
           ? '/firewalls/$id/rules/add/inbound'
           : category === 'inbound' && mode === 'edit'
-          ? `/firewalls/$id/rules/edit/inbound/$ruleId`
-          : category === 'outbound' && mode === 'create'
-          ? '/firewalls/$id/rules/add/outbound'
-          : `/firewalls/$id/rules/edit/outbound/$ruleId`,
+            ? `/firewalls/$id/rules/edit/inbound/$ruleId`
+            : category === 'outbound' && mode === 'create'
+              ? '/firewalls/$id/rules/add/outbound'
+              : `/firewalls/$id/rules/edit/outbound/$ruleId`,
     });
   };
 
@@ -319,12 +316,14 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     }
   }, [status, reset]);
 
-  const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
-    inboundState,
-  ]);
-  const outboundRules = React.useMemo(() => editorStateToRules(outboundState), [
-    outboundState,
-  ]);
+  const inboundRules = React.useMemo(
+    () => editorStateToRules(inboundState),
+    [inboundState]
+  );
+  const outboundRules = React.useMemo(
+    () => editorStateToRules(outboundState),
+    [outboundState]
+  );
 
   // This is for the Rule Drawer. If there is a rule to modify,
   // we need to pass it to the drawer to pre-populate the form fields.
@@ -385,7 +384,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          important
           variant="error"
         />
       ) : null}
@@ -495,8 +493,8 @@ interface DiscardChangesDialogProps {
   isOpen: boolean;
 }
 
-export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
-  (props) => {
+export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> =
+  React.memo((props) => {
     const { handleClose, handleDiscard, isOpen } = props;
 
     const actions = React.useCallback(
@@ -527,5 +525,4 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
         </Typography>
       </ConfirmationDialog>
     );
-  }
-);
+  });

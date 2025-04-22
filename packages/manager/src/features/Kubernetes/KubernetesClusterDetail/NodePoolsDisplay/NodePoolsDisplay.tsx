@@ -91,14 +91,11 @@ export const NodePoolsDisplay = (props: Props) => {
   const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
 
   const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
-  const [
-    isLabelsAndTaintsDrawerOpen,
-    setIsLabelsAndTaintsDrawerOpen,
-  ] = useState(false);
+  const [isLabelsAndTaintsDrawerOpen, setIsLabelsAndTaintsDrawerOpen] =
+    useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
-  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
-    false
-  );
+  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] =
+    useState(false);
   const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
   const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
 
@@ -340,6 +337,7 @@ export const NodePoolsDisplay = (props: Props) => {
         open={isLabelsAndTaintsDrawerOpen}
       />
       <ResizeNodePoolDrawer
+        clusterTier={clusterTier}
         kubernetesClusterId={clusterID}
         kubernetesRegionId={clusterRegionId}
         nodePool={selectedPool}
@@ -348,6 +346,7 @@ export const NodePoolsDisplay = (props: Props) => {
       />
       <AutoscalePoolDialog
         clusterId={clusterID}
+        clusterTier={clusterTier}
         handleOpenResizeDrawer={handleOpenResizeDrawer}
         nodePool={selectedPool}
         onClose={() => setIsAutoscaleDialogOpen(false)}

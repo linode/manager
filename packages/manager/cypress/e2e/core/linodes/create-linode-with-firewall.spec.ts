@@ -4,8 +4,9 @@ import {
   mockCreateFirewall,
   mockCreateFirewallError,
   mockGetFirewalls,
-  mockGetTemplate,
+  mockGetFirewallTemplate,
 } from 'support/intercepts/firewalls';
+import { mockApiInternalUser } from 'support/intercepts/general';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -184,19 +185,6 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can generate and assign a compliant Firewall during Linode Create flow', () => {
-    cy.intercept(
-      {
-        middleware: true,
-        url: /\/v4(?:beta)?\/.*/,
-      },
-      (req) => {
-        // Re-add internal-only header
-        req.on('response', (res) => {
-          res.headers['akamai-internal-account'] = '*';
-        });
-      }
-    );
-
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -214,9 +202,10 @@ describe('Create Linode with Firewall', () => {
       slug: 'akamai-non-prod',
     });
 
+    mockApiInternalUser();
     mockCreateFirewall(mockFirewall).as('createFirewall');
     mockGetFirewalls([mockFirewall]).as('getFirewall');
-    mockGetTemplate(mockTemplate).as('getTemplate');
+    mockGetFirewallTemplate(mockTemplate).as('getTemplate');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
 
@@ -297,19 +286,6 @@ describe('Create Linode with Firewall', () => {
    * - Mocks an error response to the Create Firewall call.
    */
   it('displays errors encountered while trying to generate a compliant firewall', () => {
-    cy.intercept(
-      {
-        middleware: true,
-        url: /\/v4(?:beta)?\/.*/,
-      },
-      (req) => {
-        // Re-add internal-only header
-        req.on('response', (res) => {
-          res.headers['akamai-internal-account'] = '*';
-        });
-      }
-    );
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -321,8 +297,9 @@ describe('Create Linode with Firewall', () => {
 
     const mockError = 'Mock error';
 
+    mockApiInternalUser();
     mockGetFirewalls([mockFirewall]).as('getFirewall');
-    mockGetTemplate(mockTemplate).as('getTemplate');
+    mockGetFirewallTemplate(mockTemplate).as('getTemplate');
     mockCreateFirewallError(mockError).as('createFirewall');
 
     cy.visitWithLogin('/linodes/create');
