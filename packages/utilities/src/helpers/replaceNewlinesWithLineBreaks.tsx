@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 export const replaceNewlinesWithLineBreaks = (text: string) =>
   text.split('\n').map((text, i, lines) =>
@@ -9,5 +9,5 @@ export const replaceNewlinesWithLineBreaks = (text: string) =>
         {text}
         <br />
       </React.Fragment>
-    )
+    ),
   );

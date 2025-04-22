@@ -1,5 +1,5 @@
 import { default as _RadioGroup } from '@mui/material/RadioGroup';
-import React from 'react';
+import * as React from 'react';
 
 import type { RadioGroupProps } from '@mui/material/RadioGroup';
 

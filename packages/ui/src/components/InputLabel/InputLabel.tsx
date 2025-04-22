@@ -1,5 +1,5 @@
 import _InputLabel from '@mui/material/InputLabel';
-import React from 'react';
+import * as React from 'react';
 
 import type { InputLabelProps } from '@mui/material/InputLabel';
 

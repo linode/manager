@@ -1,5 +1,5 @@
 import { default as _Stack } from '@mui/material/Stack';
-import React from 'react';
+import * as React from 'react';
 
 import type { StackProps } from '@mui/material/Stack';
 

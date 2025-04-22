@@ -1,5 +1,5 @@
 import { default as _FormControl } from '@mui/material/FormControl';
-import React from 'react';
+import * as React from 'react';
 
 import type { FormControlProps } from '@mui/material/FormControl';
 

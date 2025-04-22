@@ -1,5 +1,5 @@
 import _InputAdornment from '@mui/material/InputAdornment';
-import React from 'react';
+import * as React from 'react';
 
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 

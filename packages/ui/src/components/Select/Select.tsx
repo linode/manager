@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Autocomplete } from '../Autocomplete';
 import { CircleProgress } from '../CircleProgress';

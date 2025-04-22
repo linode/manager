@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 /**
  * @param href string
@@ -14,7 +14,7 @@ export const opensInNewTab = (href: string) => {
  * @returns string
  */
 export const flattenChildrenIntoAriaLabel = (
-  children: React.ReactNode
+  children: React.ReactNode,
 ): string => {
   if (typeof children === 'string') {
     return children;

@@ -1,7 +1,7 @@
 import DoneIcon from '@mui/icons-material/Done';
 import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
-import React from 'react';
+import * as React from 'react';
 
 import { omittedProps } from '../../utilities';
 

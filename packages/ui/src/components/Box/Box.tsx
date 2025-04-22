@@ -1,5 +1,5 @@
 import { default as _Box } from '@mui/material/Box';
-import React from 'react';
+import * as React from 'react';
 
 import type { BoxProps } from '@mui/material/Box';
 
