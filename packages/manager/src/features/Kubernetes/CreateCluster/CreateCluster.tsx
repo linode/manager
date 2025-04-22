@@ -148,6 +148,7 @@ export const CreateCluster = () => {
     } else {
       setHighAvailability(undefined);
       setControlPlaneACL(false);
+      setIsACLAcknowledgementChecked(false);
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
@@ -396,13 +397,12 @@ export const CreateCluster = () => {
         )}
         {isCreateClusterRestricted && (
           <Notice
+            sx={{ marginBottom: 2 }}
             text={getRestrictedResourceText({
               action: 'create',
               isSingular: false,
               resourceType: 'LKE Clusters',
             })}
-            important
-            sx={{ marginBottom: 2 }}
             variant="error"
           />
         )}
@@ -535,17 +535,19 @@ export const CreateCluster = () => {
                 sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
               />
               <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
                 }}
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
-                handleIsAcknowledgementChecked={(isChecked: boolean) =>
-                  setIsACLAcknowledgementChecked(isChecked)
-                }
-                enableControlPlaneACL={controlPlaneACL}
-                errorText={errorMap.control_plane}
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
                 isAcknowledgementChecked={isACLAcknowledgementChecked}

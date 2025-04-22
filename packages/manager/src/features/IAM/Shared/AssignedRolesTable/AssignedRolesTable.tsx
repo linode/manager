@@ -1,16 +1,12 @@
-import {
-  Autocomplete,
-  CircleProgress,
-  StyledLinkButton,
-  Typography,
-} from '@linode/ui';
-import { capitalize, truncate } from '@linode/utilities';
-import { Grid, useTheme } from '@mui/material';
+import { Autocomplete, CircleProgress, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -28,10 +24,12 @@ import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmat
 import {
   addEntitiesNamesToRoles,
   combineRoles,
+  getFacadeRoleDescription,
   getFilteredRoles,
+  getFormattedEntityType,
   mapEntityTypes,
   mapRolesToPermissions,
-  transformedAccountEntities,
+  groupAccountEntitiesByType,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -114,7 +112,7 @@ export const AssignedRolesTable = () => {
     const resourceTypes = getResourceTypes(roles);
 
     if (entities) {
-      const transformedEntities = transformedAccountEntities(entities.data);
+      const transformedEntities = groupAccountEntitiesByType(entities.data);
 
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
@@ -125,8 +123,6 @@ export const AssignedRolesTable = () => {
   const [query, setQuery] = React.useState('');
 
   const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
-
-  const [showFullDescription, setShowFullDescription] = React.useState(false);
 
   const handleViewEntities = (
     roleName: AccountAccessRole | EntityAccessRole
@@ -154,7 +150,7 @@ export const AssignedRolesTable = () => {
               <Typography>
                 {role.entity_type === 'account'
                   ? 'All Entities'
-                  : `All ${capitalize(role.entity_type)}s`}
+                  : `All ${getFormattedEntityType(role.entity_type)}s`}
               </Typography>
             </TableCell>
           ) : (
@@ -177,12 +173,7 @@ export const AssignedRolesTable = () => {
           </TableCell>
         </>
       );
-
-      const description =
-        role.description.length < 150 || showFullDescription
-          ? role.description
-          : truncate(role.description, 150);
-
+      // TODO: update the link for 'Learn more' in the description when it's ready - UIE-8534
       const InnerTable = (
         <Grid
           sx={{
@@ -197,20 +188,16 @@ export const AssignedRolesTable = () => {
             Description
           </Typography>
           <Typography
-            sx={{ display: 'flex', flexDirection: 'column', marginBottom: 1 }}
+            sx={{
+              marginBottom: theme.tokens.spacing.S8,
+            }}
           >
-            {' '}
-            {description}{' '}
-            {description.length > 150 && (
-              <StyledLinkButton
-                onClick={() => setShowFullDescription((show) => !show)}
-                sx={{
-                  font: theme.tokens.alias.Typography.Label.Semibold.Xs,
-                  width: 'max-content',
-                }}
-              >
-                {showFullDescription ? 'Hide' : 'Expand'}
-              </StyledLinkButton>
+            {role.permissions.length ? (
+              role.description
+            ) : (
+              <>
+                {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
+              </>
             )}
           </Typography>
           <Permissions permissions={role.permissions} />
@@ -224,7 +211,7 @@ export const AssignedRolesTable = () => {
         label: role.name,
       };
     });
-  }, [roles, query, entityType, showFullDescription]);
+  }, [roles, query, entityType]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;

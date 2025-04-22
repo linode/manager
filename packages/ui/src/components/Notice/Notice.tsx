@@ -32,9 +32,9 @@ export interface NoticeProps extends BoxProps {
    */
   errorGroup?: string;
   /**
-   * If true, an icon will be displayed to the left of the error, reflecting the variant of the error.
+   * If true, the important icon will be vertically centered with the text no matter the height of the text.
    */
-  important?: boolean;
+  forceImportantIconVerticalCenter?: boolean;
   /**
    * The amount of spacing to apply to the bottom of the error.
    */
@@ -83,7 +83,7 @@ export const Notice = (props: NoticeProps) => {
     className,
     dataTestId,
     errorGroup,
-    important,
+    forceImportantIconVerticalCenter = false,
     spacingBottom,
     spacingLeft,
     spacingTop,
@@ -128,49 +128,47 @@ export const Notice = (props: NoticeProps) => {
           [classes.info]: variantMap.info || variantMap.tip,
           [classes.success]: variantMap.success,
           [classes.warning]: variantMap.warning,
-          // The order we apply styles matters, therefore we:
-          // eslint-disable-next-line perfectionist/sort-objects
-          [classes.important]: important,
           [errorScrollClassName]: variantMap.error,
         },
         'notice',
         className,
       )}
-      data-testid={
-        dataTestId ??
-        `notice${variant ? `-${variant}` : ''}${important ? '-important' : ''}`
-      }
+      data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
+      role="alert"
       sx={[
         (theme) => ({
           marginBottom:
             spacingBottom !== undefined
               ? `${spacingBottom}px`
-              : theme.spacing(1),
+              : theme.spacingFunction(8),
           marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
           marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      role="alert"
       {...dataAttributes}
       {...rest}
     >
-      {important && variantMap.error && <ErrorIcon className={classes.icon} />}
-      {important && variantMap.info && <InfoIcon className={classes.icon} />}
-      {important && variantMap.success && (
-        <CheckIcon className={classes.icon} />
-      )}
-      {important && variantMap.tip && (
-        <LightBulbIcon className={classes.icon} />
-      )}
-      {important && variantMap.warning && (
-        <WarningIcon className={classes.icon} />
-      )}
-      {text || typeof children === 'string' ? (
-        <Typography {...typeProps}>{text ?? children}</Typography>
-      ) : (
-        children
-      )}
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          alignSelf: forceImportantIconVerticalCenter ? 'center' : 'flex-start',
+          marginRight: theme.spacingFunction(8),
+        })}
+      >
+        {variantMap.error && <ErrorIcon className={classes.icon} />}
+        {variantMap.info && <InfoIcon className={classes.icon} />}
+        {variantMap.success && <CheckIcon className={classes.icon} />}
+        {variantMap.tip && <LightBulbIcon className={classes.icon} />}
+        {variantMap.warning && <WarningIcon className={classes.icon} />}
+      </Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        {text || typeof children === 'string' ? (
+          <Typography {...typeProps}>{text ?? children}</Typography>
+        ) : (
+          children
+        )}
+      </Box>
     </Box>
   );
 };
