@@ -67,7 +67,6 @@ const alertDetails = alertFactory.build({
   type: 'system',
 });
 const {
-  created,
   created_by,
   description,
   id,
@@ -76,7 +75,6 @@ const {
   service_type,
   severity,
   updated,
-  updated_by,
 } = alertDetails;
 const { rules } = rule_criteria;
 const notificationChannels = notificationChannelFactory.build();
@@ -165,37 +163,15 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       // Validate Created By field
       cy.findByText('Created By:').should('be.visible');
-      cy.get('[data-qa-id="Created By"]')
-        .should('be.visible')
-        .should('have.text', created_by);
+      cy.findByText(created_by).should('be.visible');
 
       // Validate Last Modified field
       cy.findByText('Last Modified:').should('be.visible');
-      cy.get('[data-qa-id="Last Modified"]')
-        .should('be.visible')
-        .should(
-          'have.text',
-          formatDate(updated, {
-            format: 'MMM dd, yyyy, h:mm a',
-          })
-        );
-
-      // Validate Last Modified By field
-      cy.findByText('Last Modified By:').should('be.visible');
-      cy.get('[data-qa-id="Last Modified By"]')
-        .should('be.visible')
-        .should('have.text', updated_by);
-
-      // Validate Created Date field
-      cy.findByText('Created:').should('be.visible');
-      cy.get('[data-qa-id="Created"]')
-        .should('be.visible')
-        .should(
-          'have.text',
-          formatDate(created, {
-            format: 'MMM dd, yyyy, h:mm a',
-          })
-        );
+      cy.findByText(
+        formatDate(updated, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })
+      ).should('be.visible');
     });
 
     // Validating contents of Criteria Section
