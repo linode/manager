@@ -20,27 +20,21 @@ const kubernetesIndexRoute = createRoute({
   getParentRoute: () => kubernetesRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Kubernetes/KubernetesLanding/KubernetesLanding').then(
-    (m) => m.kubernetesLandingLazyRoute
-  )
+  import('./kubernetesLazyRoutes').then((m) => m.kubernetesLandingLazyRoute)
 );
 
 const kubernetesClustersRoute = createRoute({
   getParentRoute: () => kubernetesRoute,
   path: 'clusters',
 }).lazy(() =>
-  import('src/features/Kubernetes/KubernetesLanding/KubernetesLanding').then(
-    (m) => m.kubernetesLandingLazyRoute
-  )
+  import('./kubernetesLazyRoutes').then((m) => m.kubernetesLandingLazyRoute)
 );
 
 const kubernetesCreateRoute = createRoute({
   getParentRoute: () => kubernetesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Kubernetes/CreateCluster/CreateCluster').then(
-    (m) => m.createClusterLazyRoute
-  )
+  import('./kubernetesLazyRoutes').then((m) => m.createClusterLazyRoute)
 );
 
 const kubernetesClusterDetailRoute = createRoute({
@@ -50,18 +44,18 @@ const kubernetesClusterDetailRoute = createRoute({
   }),
   path: 'clusters/$clusterID',
 }).lazy(() =>
-  import(
-    'src/features/Kubernetes/KubernetesClusterDetail/KubernetesClusterDetail'
-  ).then((m) => m.kubernetesClusterDetailLazyRoute)
+  import('./kubernetesLazyRoutes').then(
+    (m) => m.kubernetesClusterDetailLazyRoute
+  )
 );
 
 const kubernetesClusterDetailSummaryRoute = createRoute({
   getParentRoute: () => kubernetesClusterDetailRoute,
   path: 'summary',
 }).lazy(() =>
-  import(
-    'src/features/Kubernetes/KubernetesClusterDetail/KubernetesClusterDetail'
-  ).then((m) => m.kubernetesClusterDetailLazyRoute)
+  import('./kubernetesLazyRoutes').then(
+    (m) => m.kubernetesClusterDetailLazyRoute
+  )
 );
 
 export const kubernetesRouteTree = kubernetesRoute.addChildren([

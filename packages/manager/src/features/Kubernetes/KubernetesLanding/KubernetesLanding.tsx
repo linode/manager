@@ -1,8 +1,7 @@
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -64,7 +63,7 @@ const defaultUpgradeDialogState = {
 const preferenceKey = 'kubernetes';
 
 export const KubernetesLanding = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const pagination = usePagination(1, preferenceKey);
 
   const [dialog, setDialogState] =
@@ -176,7 +175,7 @@ export const KubernetesLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         entity="Cluster"
-        onButtonClick={() => push('/kubernetes/create')}
+        onButtonClick={() => navigate({ to: '/kubernetes/create' })}
         removeCrumbX={1}
         title="Kubernetes"
       />
@@ -266,9 +265,3 @@ export const KubernetesLanding = () => {
     </>
   );
 };
-
-export const kubernetesLandingLazyRoute = createLazyRoute(
-  '/kubernetes/clusters'
-)({
-  component: KubernetesLanding,
-});

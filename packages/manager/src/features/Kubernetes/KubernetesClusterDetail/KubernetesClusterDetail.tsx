@@ -1,8 +1,7 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -25,7 +24,7 @@ import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterID } = useParams<{ clusterID: string }>();
+  const { clusterID } = useParams({ strict: false });
   const id = Number(clusterID);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
@@ -148,9 +147,3 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
-
-export const kubernetesClusterDetailLazyRoute = createLazyRoute(
-  '/kubernetes/clusters/$clusterID'
-)({
-  component: KubernetesClusterDetail,
-});

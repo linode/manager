@@ -410,6 +410,7 @@ export const baseConfig = [
       'src/features/Firewalls/**/*',
       'src/features/Help/**/*',
       'src/features/Images/**/*',
+      'src/features/Kubernetes/**/*',
       'src/features/Longview/**/*',
       'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
