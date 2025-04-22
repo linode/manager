@@ -696,6 +696,7 @@ export const handlers = [
       label: 'Gecko Distributed Region Test',
       region: 'us-den-10',
       site_type: 'distributed',
+      id: 1000,
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -729,13 +730,13 @@ export const handlers = [
         label: 'mtc-tt-custom-plan-linode-1',
         region: 'us-iad',
         type: 'g8-premium-128-ht',
-        id: 1234,
+        id: 1001,
       }),
       linodeFactory.build({
         label: 'mtc-tt-custom-plan-linode-2',
         region: 'no-east',
         type: 'g8-premium-128-ht',
-        id: 1235,
+        id: 1002,
       }),
     ];
     const linodes = [
@@ -843,23 +844,39 @@ export const handlers = [
   }),
 
   http.get('*/linode/instances/:id', async ({ params }) => {
+    const mockLinodeDetailById = (id: number) => {
+      const linodeMTCTTPlanDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'mtc-tt-custom-plan-linode',
+        region: 'us-iad',
+        type: 'g8-premium-128-ht',
+      });
+      const linodeInDistributedRegionDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'Gecko Distributed Region Test',
+        region: 'us-den-10',
+      });
+      const linodeDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'linode-detail',
+        region: 'us-ord',
+      });
+
+      switch (id) {
+        case 1000:
+          return linodeInDistributedRegionDetail;
+        case 1001:
+        case 1002:
+          return linodeMTCTTPlanDetail;
+        default:
+          return linodeDetail;
+      }
+    };
     const id = Number(params.id);
-    const linodeMTCTTPlanDetail = linodeFactory.build({
-      id,
-      backups: { enabled: false },
-      label: 'mtc-tt-custom-plan-linode',
-      region: 'us-iad',
-      type: 'g8-premium-128-ht',
-    });
-    const linodeDetail = linodeFactory.build({
-      id,
-      backups: { enabled: false },
-      label: 'Gecko Distributed Region Test',
-      region: 'us-den-10',
-    });
-    const response = [1234, 1235].includes(id)
-      ? linodeMTCTTPlanDetail
-      : linodeDetail;
+    const response = mockLinodeDetailById(id);
     return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
