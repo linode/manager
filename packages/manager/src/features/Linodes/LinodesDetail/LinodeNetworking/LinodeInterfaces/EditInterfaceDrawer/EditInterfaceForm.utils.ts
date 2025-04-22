@@ -25,7 +25,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
   const { mutateAsync: createFirewallDevice } = useAddFirewallDeviceMutation();
 
   return useMutation<
-    Firewall | null,
+    number | null | false, // Null means the firewall was removed, false means nothing chnaged, number means firewall was set to that Firewall ID
     APIError[],
     { firewall_id: null | number | undefined }
   >({
@@ -72,7 +72,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
             { reason: "Unable to find this Interface's Firewall device." },
           ]);
         }
-        return null;
+        return firewall_id;
       }
 
       // 2. Interface does not have a Firewall and the user is assigning one
@@ -83,7 +83,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
           type: 'interface',
         });
 
-        return null;
+        return firewall_id;
       }
 
       // 3. Interface has a firewall and the user is removing it
@@ -106,9 +106,11 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
             { reason: "Unable to find this Interface's Firewall device." },
           ]);
         }
+
+        return null;
       }
 
-      return null;
+      return false;
     },
   });
 };
