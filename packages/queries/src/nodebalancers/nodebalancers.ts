@@ -44,17 +44,17 @@ import type {
 
 const getAllNodeBalancerTypes = () =>
   getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
-    (results) => results.data
+    (results) => results.data,
   );
 
 export const getAllNodeBalancerConfigs = (id: number) =>
   getAll<NodeBalancerConfig>((params) =>
-    getNodeBalancerConfigs(id, params)
+    getNodeBalancerConfigs(id, params),
   )().then((data) => data.data);
 
 export const getAllNodeBalancers = () =>
   getAll<NodeBalancer>((params) => getNodeBalancers(params))().then(
-    (data) => data.data
+    (data) => data.data,
   );
 
 export const nodebalancerQueries = createQueryKeys('nodebalancers', {
@@ -68,10 +68,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
         queryFn: () => getNodeBalancerFirewalls(id),
         queryKey: null,
       },
-      nodebalancer: () => ({
-        queryFn: (useBetaEndpoint) =>
-          useBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
-        queryKey: ['v4'],
+      nodebalancer: (isUsingBetaEndpoint: boolean = false) => ({
+        queryFn: () =>
+          isUsingBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
+        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
       }),
       stats: {
         queryFn: () => getNodeBalancerStats(id),
@@ -91,7 +91,7 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
         queryFn: ({ pageParam }) =>
           getNodeBalancers(
             { page: pageParam as number, page_size: 25 },
-            filter
+            filter,
           ),
         queryKey: [filter],
       }),
@@ -122,9 +122,15 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (id: number, enabled = true) => {
+export const useNodeBalancerQuery = (
+  id: number,
+  enabled = true,
+  isUsingBetaEndpoint = false,
+) => {
   return useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries.nodebalancer(id)._ctx.nodebalancer(),
+    ...nodebalancerQueries
+      .nodebalancer(id)
+      ._ctx.nodebalancer(isUsingBetaEndpoint),
     enabled,
   });
 };
@@ -141,7 +147,7 @@ export const useNodebalancerUpdateMutation = (id: number) => {
       // Update the NodeBalancer store
       queryClient.setQueryData<NodeBalancer>(
         nodebalancerQueries.nodebalancer(id).queryKey,
-        nodebalancer
+        nodebalancer,
       );
     },
   });
@@ -176,7 +182,7 @@ export const useNodebalancerCreateMutation = () => {
       // Prime the cache for this specific NodeBalancer
       queryClient.setQueryData<NodeBalancer>(
         nodebalancerQueries.nodebalancer(nodebalancer.id).queryKey,
-        nodebalancer
+        nodebalancer,
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
@@ -213,7 +219,7 @@ export const useNodebalancerConfigCreateMutation = (id: number) => {
             return [config];
           }
           return [...previousData, config];
-        }
+        },
       );
     },
   });
@@ -243,7 +249,7 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
             return [config];
           }
           const indexOfConfig = previousData.findIndex(
-            (c) => c.id === config.id
+            (c) => c.id === config.id,
           );
           if (indexOfConfig === -1) {
             return [...previousData, config];
@@ -251,7 +257,7 @@ export const useNodebalancerConfigUpdateMutation = (nodebalancerId: number) => {
           const newConfigs = [...previousData];
           newConfigs[indexOfConfig] = config;
           return newConfigs;
-        }
+        },
       );
     },
   });
@@ -268,9 +274,9 @@ export const useNodebalancerConfigDeleteMutation = (nodebalancerId: number) => {
           .queryKey,
         (oldData) => {
           return (oldData ?? []).filter(
-            (config) => config.id !== vars.configId
+            (config) => config.id !== vars.configId,
           );
-        }
+        },
       );
     },
   });
@@ -291,7 +297,7 @@ export const useAllNodeBalancersQuery = (enabled = true) =>
 
 export const useInfiniteNodebalancersQuery = (
   filter: Filter,
-  enabled: boolean
+  enabled: boolean,
 ) =>
   useInfiniteQuery<ResourcePage<NodeBalancer>, APIError[]>({
     ...nodebalancerQueries.nodebalancers._ctx.infinite(filter),
@@ -308,7 +314,7 @@ export const useInfiniteNodebalancersQuery = (
 
 export const useNodeBalancersFirewallsQuery = (nodebalancerId: number) =>
   useQuery<ResourcePage<Firewall>, APIError[]>(
-    nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.firewalls
+    nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.firewalls,
   );
 
 export const useNodeBalancerTypesQuery = () =>
@@ -336,8 +342,9 @@ export const nodebalancerEventHandler = ({
   if (event.action.startsWith('nodebalancer_config')) {
     // If the event is about a NodeBalancer's configs, just invalidate the configs
     invalidateQueries({
-      queryKey: nodebalancerQueries.nodebalancer(nodebalancerId)._ctx
-        .configurations.queryKey,
+      queryKey:
+        nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.configurations
+          .queryKey,
     });
   } else {
     // If we've made it here, the event is about a NodeBalancer

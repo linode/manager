@@ -65,9 +65,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getRegions', '@getBuckets']);
 
-    ui.entityHeader.find().within(() => {
-      ui.button.findByTitle('Create Bucket').should('be.visible').click();
-    });
+    ui.button.findByTitle('Create Bucket').should('be.visible').click();
 
     ui.drawer
       .findByTitle('Create Bucket')
@@ -122,7 +120,7 @@ describe('Object Storage Multicluster Bucket create', () => {
     // property in its payload when creating a bucket.
     cy.wait('@createBucket').then((xhr) => {
       const body = xhr.request.body;
-      expect(body.cluster).to.be.undefined;
+      expect(body.cluster).to.eq(undefined);
       expect(body.region).to.eq(mockRegionWithObj.id);
     });
 

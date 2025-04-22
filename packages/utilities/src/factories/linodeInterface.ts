@@ -59,7 +59,7 @@ export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterfac
             primary: false,
           },
         ],
-        ranges: [],
+        ranges: [{ range: '10.0.0.1' }],
       },
       subnet_id: 1,
       vpc_id: 1,

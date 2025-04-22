@@ -223,7 +223,7 @@ all new Linodes will automatically be backed up.`
   );
 };
 
-const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(({}) => ({
+const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(() => ({
   alignItems: 'center',
   display: 'flex',
 }));

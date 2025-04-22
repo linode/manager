@@ -15,7 +15,11 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
     'getNotifications'
   );
 
-  withLogin ? cy.visitWithLogin(path) : cy.visit(path);
+  if (withLogin) {
+    cy.visitWithLogin(path);
+  } else {
+    cy.visit(path);
+  }
   cy.wait([
     '@getAccount',
     '@getAccountSettings',

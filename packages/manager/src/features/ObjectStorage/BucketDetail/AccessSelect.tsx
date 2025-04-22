@@ -100,7 +100,7 @@ export const AccessSelect = React.memo((props: Props) => {
       return { acl: _acl as ACLType, cors_enabled };
     }
     return { acl: 'private' as ACLType, cors_enabled: true };
-  }, [bucketAccessData, objectAccessData, , variant]);
+  }, [bucketAccessData, objectAccessData, variant]);
 
   const {
     control,

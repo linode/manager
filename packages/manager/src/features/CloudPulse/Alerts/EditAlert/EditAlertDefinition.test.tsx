@@ -42,21 +42,21 @@ describe('EditAlertDefinition component', () => {
   it(
     'renders the components of the form',
     async () => {
-      const {
-        findByPlaceholderText,
-        getByLabelText,
-        getByText,
-      } = renderWithTheme(
-        <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
-      );
+      const { findByPlaceholderText, getByLabelText, getByText } =
+        renderWithTheme(
+          <EditAlertDefinition
+            alertDetails={alertDetails}
+            serviceType="linode"
+          />
+        );
       expect(getByText('1. General Information')).toBeVisible();
       expect(getByLabelText('Name')).toBeVisible();
       expect(getByLabelText('Description (optional)')).toBeVisible();
       expect(getByLabelText('Severity')).toBeVisible();
       expect(getByLabelText('Service')).toBeVisible();
-      expect(getByText('2. Resources')).toBeVisible();
+      expect(getByText('2. Entities')).toBeVisible();
       expect(
-        await findByPlaceholderText('Search for a Region or Resource')
+        await findByPlaceholderText('Search for a Region or Entity')
       ).toBeInTheDocument();
       expect(await findByPlaceholderText('Select Regions')).toBeInTheDocument();
       expect(getByText('3. Criteria')).toBeVisible();

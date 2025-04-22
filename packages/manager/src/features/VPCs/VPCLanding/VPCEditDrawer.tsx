@@ -10,13 +10,14 @@ import { NotFound } from 'src/components/NotFound';
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
 }
 
 export const VPCEditDrawer = (props: Props) => {
-  const { onClose, open, vpc } = props;
+  const { isFetching, onClose, open, vpc } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -45,8 +46,8 @@ export const VPCEditDrawer = (props: Props) => {
     mode: 'onBlur',
     resolver: yupResolver(updateVPCSchema),
     values: {
-      description: vpc?.description,
-      label: vpc?.label,
+      description: vpc?.description ?? '',
+      label: vpc?.label ?? '',
     },
   });
 
@@ -70,6 +71,7 @@ export const VPCEditDrawer = (props: Props) => {
   return (
     <Drawer
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
       title="Edit VPC"
@@ -79,7 +81,6 @@ export const VPCEditDrawer = (props: Props) => {
       )}
       {readOnly && (
         <Notice
-          important
           text={`You don't have permissions to edit ${vpc?.label}. Please contact an account administrator for details.`}
           variant="error"
         />

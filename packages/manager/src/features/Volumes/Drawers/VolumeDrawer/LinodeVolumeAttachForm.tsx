@@ -115,7 +115,6 @@ export const LinodeVolumeAttachForm = (props: Props) => {
           text={
             "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
           }
-          important
           variant="error"
         />
       )}

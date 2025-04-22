@@ -116,24 +116,19 @@ const NodeBalancerCreate = () => {
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
-  const [
-    nodeBalancerFields,
-    setNodeBalancerFields,
-  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+  const [nodeBalancerFields, setNodeBalancerFields] =
+    React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
-  const [
-    deleteConfigConfirmDialog,
-    setDeleteConfigConfirmDialog,
-  ] = React.useState<{
-    errors?: APIError[];
-    idxToDelete?: number;
-    open: boolean;
-    submitting: boolean;
-  }>(defaultDeleteConfigConfirmDialogState);
+  const [deleteConfigConfirmDialog, setDeleteConfigConfirmDialog] =
+    React.useState<{
+      errors?: APIError[];
+      idxToDelete?: number;
+      open: boolean;
+      submitting: boolean;
+    }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
@@ -164,16 +159,15 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
 
-  const removeNodeBalancerConfigNode = (configIdx: number) => (
-    nodeIdx: number
-  ) =>
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs];
-      newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
-        (_, idx) => idx !== nodeIdx
-      );
-      return { ...prev, configs: newConfigs };
-    });
+  const removeNodeBalancerConfigNode =
+    (configIdx: number) => (nodeIdx: number) =>
+      setNodeBalancerFields((prev) => {
+        const newConfigs = [...prev.configs];
+        newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
+          (_, idx) => idx !== nodeIdx
+        );
+        return { ...prev, configs: newConfigs };
+      });
 
   const setNodeValue = (
     cidx: number,
@@ -358,7 +352,7 @@ const NodeBalancerCreate = () => {
   };
 
   const onConfigValueChange = <
-    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors,
   >(
     configId: number,
     key: Key,
@@ -438,8 +432,9 @@ const NodeBalancerCreate = () => {
     selectedRegionId: nodeBalancerFields.region ?? '',
   });
 
-  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
-    ?.label;
+  const regionLabel = regions?.find(
+    (r) => r.id === nodeBalancerFields.region
+  )?.label;
 
   const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
@@ -501,12 +496,11 @@ const NodeBalancerCreate = () => {
       )}
       {isRestricted && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'create',
             resourceType: 'NodeBalancers',
           })}
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
@@ -583,9 +577,9 @@ const NodeBalancerCreate = () => {
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
-          const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
-            value: any
-          ) => onConfigValueChange(idx, key, value);
+          const onChange =
+            (key: keyof NodeBalancerConfigFieldsWithStatus) => (value: any) =>
+              onConfigValueChange(idx, key, value);
 
           return (
             <Accordion
@@ -746,9 +740,9 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom = (p1: (number | string)[]) => (
-  p2: (number | string)[]
-) => lensPath([...p1, ...p2]);
+export const lensFrom =
+  (p1: (number | string)[]) => (p2: (number | string)[]) =>
+    lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;

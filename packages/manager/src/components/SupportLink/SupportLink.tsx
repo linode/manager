@@ -9,7 +9,7 @@ import type {
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-interface SupportLinkProps {
+export interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
   formPayloadValues?: FormPayloadValues;

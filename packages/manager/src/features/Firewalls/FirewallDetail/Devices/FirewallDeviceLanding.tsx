@@ -82,7 +82,6 @@ export const FirewallDeviceLanding = React.memo(
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
             }
-            important
             variant="error"
           />
         ) : null}

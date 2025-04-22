@@ -7,10 +7,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
@@ -59,10 +59,8 @@ export const OMC_BucketLanding = (props: Props) => {
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
@@ -142,6 +140,27 @@ export const OMC_BucketLanding = (props: Props) => {
     return Array.from(regionMap.values());
   }, [objectStorageBucketsResponse, availableStorageRegions]);
 
+  const buckets = objectStorageBucketsResponse?.buckets ?? [];
+  const totalUsage = sumBucketUsage(buckets);
+  const bucketLabel = selectedBucket ? selectedBucket.label : '';
+
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: orderedData,
+  } = useOrderV2({
+    data: buckets,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/object-storage/buckets',
+    },
+    preferenceKey: 'object-storage-buckets',
+  });
+
   if (isRestrictedUser) {
     return <RenderEmpty />;
   }
@@ -170,10 +189,6 @@ export const OMC_BucketLanding = (props: Props) => {
     );
   }
 
-  const buckets = objectStorageBucketsResponse.buckets;
-  const totalUsage = sumBucketUsage(buckets);
-  const bucketLabel = selectedBucket ? selectedBucket.label : '';
-
   return (
     <React.Fragment>
       <DocumentTitleSegment
@@ -183,19 +198,14 @@ export const OMC_BucketLanding = (props: Props) => {
         <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
       )}
       <Grid size={12}>
-        <OrderBy data={buckets} order={'asc'} orderBy={'label'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              data: orderedData,
-              handleClickDetails,
-              handleClickRemove,
-              handleOrderChange,
-              order,
-              orderBy,
-            };
-            return <BucketTable {...bucketTableProps} />;
-          }}
-        </OrderBy>
+        <BucketTable
+          data={orderedData ?? []}
+          handleClickDetails={handleClickDetails}
+          handleClickRemove={handleClickRemove}
+          handleOrderChange={handleOrderChange}
+          order={order}
+          orderBy={orderBy}
+        />
         {/* If there's more than one Bucket, display the total usage. */}
         {buckets.length > 1 ? (
           <Typography
@@ -283,7 +293,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

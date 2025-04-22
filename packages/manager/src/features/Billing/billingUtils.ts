@@ -11,6 +11,7 @@ import { parseAPIDate } from 'src/utilities/date';
 
 export const cleanCVV = (input: string): string => {
   // All characters except numbers
+  // eslint-disable-next-line sonarjs/single-char-in-character-classes
   const regex = /(([\D]))/g;
 
   // Prevents more than 4 characters from being submitted

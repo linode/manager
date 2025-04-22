@@ -93,9 +93,11 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   imagesRouteTree,
   longviewRouteTree,
   nodeBalancersRouteTree,
+  objectStorageRouteTree,
   placementGroupsRouteTree,
   stackScriptsRouteTree,
   volumesRouteTree,
+  vpcsRouteTree,
 ]);
 export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({

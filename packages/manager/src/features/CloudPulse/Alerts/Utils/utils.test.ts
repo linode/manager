@@ -1,18 +1,16 @@
-import { object } from 'yup';
-
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
+import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
-  enhanceValidationSchemaWithEntityIdValidation,
   filterAlertsByStatusAndType,
+  getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
 } from './utils';
 
-import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type { AlertValidationSchemaProps } from './utils';
 import type {
   APIError,
@@ -20,7 +18,6 @@ import type {
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
-import type { ObjectSchema } from 'yup';
 
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
@@ -92,8 +89,8 @@ it('should correctly convert an alert definition values to the required format',
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);
 });
 
-describe('getValidationSchema', () => {
-  const baseSchema = object({}) as ObjectSchema<CreateAlertDefinitionForm>;
+describe('getSchemaWithEntityIdValidation', () => {
+  const baseSchema = alertDefinitionFormSchema;
   const aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[] = [
     { maxResourceSelectionCount: 3, serviceType: 'dbaas' },
     { maxResourceSelectionCount: 5, serviceType: 'linode' },
@@ -105,7 +102,7 @@ describe('getValidationSchema', () => {
   };
 
   it('should return baseSchema if maxSelectionCount is undefined', () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({
+    const schema = getSchemaWithEntityIdValidation({
       ...props,
       serviceTypeObj: 'unknown',
     });
@@ -113,27 +110,28 @@ describe('getValidationSchema', () => {
   });
 
   it("should return schema with maxSelectionCount for 'dbaas'", async () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({ ...props });
+    const schema = getSchemaWithEntityIdValidation({ ...props });
 
     await expect(
-      schema.validate({ entity_ids: ['id1', 'id2', 'id3', 'id4'] })
+      schema.pick(['entity_ids']).validate({
+        entity_ids: ['id1', 'id2', 'id3', 'id4'],
+      })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 3."
+      "The overall number of entities assigned to an alert can't exceed 3."
     );
   });
 
   it("should return schema with correct maxSelectionCount for 'linode'", async () => {
-    const schema = enhanceValidationSchemaWithEntityIdValidation({
+    const schema = getSchemaWithEntityIdValidation({
       ...props,
       serviceTypeObj: 'linode',
     });
-
     await expect(
-      schema.validate({
+      schema.pick(['entity_ids']).validate({
         entity_ids: ['id1', 'id2', 'id3', 'id4', 'id5', 'id6'],
       })
     ).rejects.toThrow(
-      "The overall number of resources assigned to an alert can't exceed 5."
+      "The overall number of entities assigned to an alert can't exceed 5."
     );
   });
   it('should combine all the API errors to the parent field and return in errorMap properly', () => {
@@ -179,11 +177,11 @@ describe('getValidationSchema', () => {
     const setError = vi.fn();
 
     handleMultipleError({
-      errors,
       errorFieldMap: CREATE_ALERT_ERROR_FIELD_MAP,
+      errors,
       multiLineErrorSeparator: MULTILINE_ERROR_SEPARATOR,
-      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
       setError,
+      singleLineErrorSeparator: SINGLELINE_ERROR_SEPARATOR,
     });
 
     // Check that setError was called for each field correctly

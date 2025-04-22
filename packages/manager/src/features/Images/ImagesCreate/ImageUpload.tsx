@@ -192,7 +192,6 @@ export const ImageUpload = () => {
                 isSingular: false,
                 resourceType: 'Images',
               })}
-              important
               variant="error"
             />
           )}
@@ -201,8 +200,12 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly at $0.10/GB. An uploaded image
-              file needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#upload-an-image-file">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. An uploaded image file needs to
+              meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements
               </Link>

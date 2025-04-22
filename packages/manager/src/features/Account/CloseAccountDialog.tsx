@@ -19,9 +19,8 @@ interface Props {
 }
 
 const CloseAccountDialog = ({ closeDialog, open }: Props) => {
-  const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
-    false
-  );
+  const [isClosingAccount, setIsClosingAccount] =
+    React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
   const history = useHistory();
@@ -103,11 +102,10 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       ) : null}
       <StyledNoticeWrapper>
         <Notice
+          spacingBottom={12}
           sx={(theme) => ({
             border: `1px solid ${theme.tokens.alias.Action.Negative.Default}`,
           })}
-          important
-          spacingBottom={12}
           variant="error"
         >
           <Typography sx={{ fontSize: '0.875rem' }}>

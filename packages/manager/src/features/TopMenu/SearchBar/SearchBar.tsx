@@ -354,6 +354,7 @@ export const SearchBar = () => {
           data-qa-main-search
           disableClearable
           inputValue={searchText}
+          keepSearchEnabledOnMobile
           label={label}
           loading={isLoading}
           multiple={false}

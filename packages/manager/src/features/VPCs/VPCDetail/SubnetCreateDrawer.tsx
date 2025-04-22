@@ -61,12 +61,12 @@ export const SubnetCreateDrawer = (props: Props) => {
     setError,
     watch,
   } = useForm<CreateSubnetPayload>({
-    defaultValues: {
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchemaIPv4),
+    values: {
       ipv4: recommendedIPv4,
       label: '',
     },
-    mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchemaIPv4),
   });
 
   const ipv4 = watch('ipv4');
@@ -101,12 +101,11 @@ export const SubnetCreateDrawer = (props: Props) => {
       )}
       {userCannotAddSubnet && (
         <Notice
+          spacingBottom={8}
+          spacingTop={16}
           text={
             "You don't have permissions to create a new Subnet. Please contact an account administrator for details."
           }
-          important
-          spacingBottom={8}
-          spacingTop={16}
           variant="error"
         />
       )}

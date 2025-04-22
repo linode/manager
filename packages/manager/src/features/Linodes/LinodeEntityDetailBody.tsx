@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, Typography } from '@linode/ui';
+import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -14,11 +14,12 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
+import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { HighPerformanceVolumeIcon } from './HighPerformanceVolumeIcon';
 import {
   StyledBodyGrid,
@@ -32,6 +33,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
@@ -43,6 +45,7 @@ import type {
   InterfaceGenerationType,
   Linode,
   LinodeCapabilities,
+  LinodeInterface,
   Subnet,
   VPC,
 } from '@linode/api-v4';
@@ -61,12 +64,12 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export interface BodyProps {
-  configInterfaceWithVPC?: Interface;
   encryptionStatus: EncryptionStatus | undefined;
   firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
   interfaceGeneration: InterfaceGenerationType | undefined;
+  interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
@@ -85,12 +88,12 @@ export interface BodyProps {
 
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
-    configInterfaceWithVPC,
     encryptionStatus,
     firewalls,
     gbRAM,
     gbStorage,
     interfaceGeneration,
+    interfaceWithVPC,
     ipv4,
     ipv6,
     isLKELinode,
@@ -110,6 +113,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const location = useLocation();
   const history = useHistory();
 
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -119,12 +126,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const theme = useTheme();
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
+  const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
+
+  const { canUpgradeInterfaces, unableToUpgradeReasons } =
+    useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
+
+  const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
+    unableToUpgradeReasons
+  );
+
   // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
   // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
   // since each interface can have a firewall.
@@ -139,10 +154,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     (subnet) => subnet.linodes.some((linode) => linode.id === linodeId)
   );
 
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
-
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
@@ -152,10 +163,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
-  } = useKubernetesBetaEndpoint();
+  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
+    useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
@@ -338,7 +347,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
           }}
           container
           direction="column"
@@ -381,18 +390,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            {configInterfaceWithVPC?.ipv4?.vpc && (
+            {vpcIPv4 && (
               <StyledIPv4Box>
                 <StyledIPv4Label data-testid="vpc-ipv4">
                   VPC IPv4
                 </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <CopyTooltip
-                    copyableText
-                    text={configInterfaceWithVPC.ipv4.vpc}
-                  />
+                  <CopyTooltip copyableText text={vpcIPv4} />
                   <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                    <StyledCopyTooltip text={vpcIPv4} />
                   </Box>
                 </StyledIPv4Item>
               </StyledIPv4Box>
@@ -406,9 +412,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-              1
-            )} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
+              16
+            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
             [theme.breakpoints.down('md')]: {
               paddingLeft: 2,
             },
@@ -472,17 +478,27 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   sx={{ alignItems: 'center', display: 'flex' }}
                 >
                   Configuration Profile
-                  <Chip
-                    sx={(theme) => ({
-                      backgroundColor: theme.color.tagButtonBg,
-                      color: theme.tokens.color.Neutrals[80],
-                      marginLeft: theme.spacing(0.5),
-                    })}
-                    component="span"
-                    label="UPGRADE"
-                    onClick={openUpgradeInterfacesDialog}
-                    size="small"
-                  />
+                  <span>
+                    <Chip
+                      sx={(theme) => ({
+                        backgroundColor: theme.color.tagButtonBg,
+                        color: theme.tokens.color.Neutrals[80],
+                        marginLeft: theme.spacingFunction(12),
+                      })}
+                      component="span"
+                      disabled={!canUpgradeInterfaces}
+                      label="UPGRADE"
+                      onClick={openUpgradeInterfacesDialog}
+                      size="small"
+                    />
+                    {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
+                      <TooltipIcon
+                        status="help"
+                        sxTooltipIcon={{ padding: 0 }}
+                        text={unableToUpgradeTooltipText}
+                      />
+                    )}
+                  </span>
                 </Box>
               )}
             </StyledListItem>
@@ -501,4 +517,19 @@ export const getSubnetsString = (data: Subnet[]) => {
   return data.length > 3
     ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
     : firstThreeSubnetsString;
+};
+
+export const getVPCIPv4 = (
+  interfaceWithVPC: Interface | LinodeInterface | undefined
+) => {
+  if (interfaceWithVPC) {
+    if ('purpose' in interfaceWithVPC) {
+      return interfaceWithVPC.ipv4?.vpc;
+    }
+    return interfaceWithVPC.vpc?.ipv4?.addresses.find(
+      (address) => address.primary
+    )?.address;
+  }
+
+  return undefined;
 };

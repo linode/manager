@@ -7,6 +7,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
+import Lock from 'src/assets/icons/lock.svg';
+import { Stack, Typography } from '@linode/ui';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
@@ -100,6 +102,17 @@ export const EditImageDrawer = (props: Props) => {
           text={formState.errors.root.message}
           variant="error"
         />
+      )}
+
+      {image?.capabilities?.includes('distributed-sites') && (
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Lock />
+          <Typography
+            sx={(theme) => ({ color: theme.textColors.textAccessTable })}
+          >
+            Encrypted
+          </Typography>
+        </Stack>
       )}
 
       <Controller

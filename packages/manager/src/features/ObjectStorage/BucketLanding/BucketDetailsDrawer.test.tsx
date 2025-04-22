@@ -1,4 +1,5 @@
 import {
+  profileFactory,
   readableBytes,
   regionFactory,
   truncateMiddle,
@@ -10,7 +11,6 @@ import { vi } from 'vitest';
 import {
   objectStorageBucketFactory,
   objectStorageBucketFactoryGen2,
-  profileFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';

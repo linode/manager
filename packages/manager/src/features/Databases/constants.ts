@@ -29,8 +29,13 @@ export const DELETE_CLUSTER_TEXT =
 export const DELETE_CLUSTER_TEXT_LEGACY =
   'Deleting a database cluster is permanent and cannot be undone.';
 
+export const ADVANCED_CONFIG_INFO =
+  'There is no way to reset advanced configuration options to default. Options that you add cannot be removed. Changing or adding some options causes the service to restart.';
+
 // Links
 export const LEARN_MORE_LINK_LEGACY =
   'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
 export const LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support';
+export const ADVANCED_CONFIG_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters';

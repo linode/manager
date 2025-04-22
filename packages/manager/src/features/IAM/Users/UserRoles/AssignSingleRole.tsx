@@ -1,5 +1,4 @@
-import { Autocomplete, Button } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Autocomplete, Button, DeleteIcon } from '@linode/ui';
 import { Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
@@ -15,6 +14,7 @@ import type {
 } from 'src/features/IAM/Shared/utilities';
 
 interface Props {
+  hideDetails: boolean;
   index: number;
   onRemove: (idx: number) => void;
   options: RolesType[];
@@ -26,6 +26,7 @@ export const AssignSingleRole = ({
   onRemove,
   options,
   permissions,
+  hideDetails,
 }: Props) => {
   const theme = useTheme();
 
@@ -43,27 +44,38 @@ export const AssignSingleRole = ({
         )}
 
         <Controller
+          control={control}
+          name={`roles.${index}`}
           render={({ field: { onChange, value } }) => (
             <>
               <Autocomplete
-                onChange={(event, newValue) => {
-                  onChange(newValue);
-                }}
                 label="Assign New Roles"
+                onChange={(event, newValue) => {
+                  onChange({
+                    ...value,
+                    role: newValue,
+                  });
+                }}
                 options={options}
                 placeholder="Select a Role"
                 textFieldProps={{ hideLabel: true }}
-                value={value || null}
+                value={value?.role || null}
               />
-              {value && (
+              {value?.role && !hideDetails && (
                 <AssignedPermissionsPanel
-                  role={getRoleByName(permissions, value.value)!}
+                  mode="assign-role"
+                  onChange={(updatedEntities) => {
+                    onChange({
+                      ...value,
+                      entities: updatedEntities,
+                    });
+                  }}
+                  role={getRoleByName(permissions, value.role?.value)!}
+                  value={value.entities || []}
                 />
               )}
             </>
           )}
-          control={control}
-          name={`roles.${index}.role`}
         />
       </Box>
       <Box
@@ -75,7 +87,7 @@ export const AssignSingleRole = ({
         }}
       >
         <Button disabled={index === 0} onClick={() => onRemove(index)}>
-          <Close />
+          <DeleteIcon />
         </Button>
       </Box>
     </Box>
