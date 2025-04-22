@@ -701,6 +701,7 @@ export const handlers = [
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
+      region: 'us-ord',
     });
     const linodeWithEligibleVolumes = linodeFactory.build({
       id: 20,
