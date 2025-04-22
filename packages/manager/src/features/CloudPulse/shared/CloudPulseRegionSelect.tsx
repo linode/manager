@@ -4,14 +4,17 @@ import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { deepEqual } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
-import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
+import type { Dashboard, Filter, FilterValue, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
+  disabled: boolean | undefined;
   handleRegionChange: (
     region: string | undefined,
     labels: string[],
@@ -21,6 +24,7 @@ export interface CloudPulseRegionSelectProps {
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
+  xFilter?: Filter;
 }
 
 export const CloudPulseRegionSelect = React.memo(
@@ -32,9 +36,30 @@ export const CloudPulseRegionSelect = React.memo(
       placeholder,
       savePreferences,
       selectedDashboard,
+      disabled = false,
+      xFilter,
     } = props;
 
+    const resourceFilterMap: Record<string, Filter> = {
+      dbaas: {
+        platform: 'rdbms-default',
+      },
+    };
+
     const { data: regions, isError, isLoading } = useRegionsQuery();
+    const {
+      data: resources,
+      isError: isResourcesError,
+      isLoading: isResourcesLoading,
+    } = useResourcesQuery(
+      selectedDashboard !== undefined && Boolean(regions?.length),
+      selectedDashboard?.service_type,
+      {},
+      {
+        ...(resourceFilterMap[selectedDashboard?.service_type ?? ''] ?? {}),
+        ...(xFilter ?? {}), // the usual xFilters
+      }
+    );
 
     const flags = useFlags();
     const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -48,17 +73,36 @@ export const CloudPulseRegionSelect = React.memo(
       : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
-    // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      if (regions && savePreferences) {
+      // we clear the selected region if there is already one.
+      if (selectedRegion) {
+        setSelectedRegion(undefined);
+        if (!disabled) {
+          handleRegionChange(undefined, [], true);
+        }
+      }
+
+      // If component is not disabled, regions have loaded, preferences should be saved,
+      // and there's no selected region — attempt to preselect from defaultValue.
+      if (!disabled && regions && savePreferences && !selectedRegion) {
+        // Try to find the region corresponding to the saved default value
         const region = defaultValue
           ? regions.find((regionObj) => regionObj.id === defaultValue)
           : undefined;
+        // Notify parent and set internal state
         handleRegionChange(region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions]);
+    }, [
+      xFilter, // Reacts to filter changes (to reset region)
+      regions, // Function to call on change
+    ]);
+
+    const regionsFromResources =
+      resources
+        ?.filter(({ region }) => region !== undefined)
+        .map(({ region }) => region) ?? [];
 
     // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
@@ -78,13 +122,36 @@ export const CloudPulseRegionSelect = React.memo(
         .split(',')
         .map((regionId: string) => regionId.trim());
 
-      return regions?.filter((region) =>
-        supportedRegionsIdList.includes(region.id)
-      );
+      return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
     }, [flags.aclpResourceTypeMap, regions, serviceType]);
+
+    const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
+      regionsFromResources.includes(id)
+    );
+
+    const resourceLabel =
+      FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
+        (value) => value.name === 'Resources'
+      )?.configuration.name ?? 'Resources';
+
+    const errorMessage = isError
+      ? `Failed to fetch ${label || 'Regions'}.`
+      : isResourcesError
+        ? `Failed to fetch ${resourceLabel}.`
+        : '';
 
     return (
       <RegionSelect
+        currentCapability={capability}
+        data-testid="region-select"
+        disableClearable={false}
+        disabled={!selectedDashboard || !regions || disabled || !resources}
+        errorText={errorMessage}
+        fullWidth
+        isGeckoLAEnabled={isGeckoLAEnabled}
+        label={label || 'Region'}
+        loading={isLoading || isResourcesLoading}
+        noMarginTop
         onChange={(_, region) => {
           setSelectedRegion(region?.id);
           handleRegionChange(
@@ -93,22 +160,13 @@ export const CloudPulseRegionSelect = React.memo(
             savePreferences
           );
         }}
-        currentCapability={capability}
-        data-testid="region-select"
-        disableClearable={false}
-        disabled={!selectedDashboard || !regions}
-        errorText={isError ? `Failed to fetch ${label || 'Regions'}.` : ''}
-        fullWidth
-        isGeckoLAEnabled={isGeckoLAEnabled}
-        label={label || 'Region'}
-        loading={isLoading}
-        noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ?? []}
+        regions={supportedRegionsFromResources ?? []}
         value={selectedRegion}
       />
     );
   },
   (prevProps, nextProps) =>
-    prevProps.selectedDashboard?.id === nextProps.selectedDashboard?.id
+    prevProps.selectedDashboard?.id === nextProps.selectedDashboard?.id &&
+    deepEqual(prevProps.xFilter, nextProps.xFilter)
 );
