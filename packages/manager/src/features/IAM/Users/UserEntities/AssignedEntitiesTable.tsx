@@ -14,7 +14,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
@@ -44,6 +43,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface LocationState {
   selectedRole?: string;
 }
+type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
 export const AssignedEntitiesTable = () => {
   const { username } = useParams<{ username: string }>();
@@ -51,7 +51,17 @@ export const AssignedEntitiesTable = () => {
 
   const locationState = location.state as LocationState;
 
-  const { handleOrderChange, order, orderBy } = useOrder();
+  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
+
+  const handleOrderChange = (newOrderBy: OrderByKeys) => {
+    if (orderBy === newOrderBy) {
+      setOrder(order === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderBy(newOrderBy);
+      setOrder('asc');
+    }
+  };
 
   const [query, setQuery] = React.useState(locationState?.selectedRole ?? '');
 
@@ -121,6 +131,19 @@ export const AssignedEntitiesTable = () => {
       getSearchableFields,
       query,
       roles,
+    }) as EntitiesRole[];
+
+    const sortedRoles = [...filteredRoles].sort((a, b) => {
+      const aValue = a[orderBy];
+      const bValue = b[orderBy];
+
+      if (aValue < bValue) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
     });
 
     if (!entities || !assignedRoles || filteredRoles.length === 0) {
@@ -132,7 +155,7 @@ export const AssignedEntitiesTable = () => {
     if (assignedRoles && entities) {
       return (
         <>
-          {filteredRoles.map((el: EntitiesRole) => {
+          {sortedRoles.map((el: EntitiesRole) => {
             const actions: Action[] = [
               {
                 onClick: () => {
@@ -217,26 +240,26 @@ export const AssignedEntitiesTable = () => {
         <TableHead>
           <TableRow>
             <TableSortCell
-              active={orderBy === 'entity'}
+              active={orderBy === 'entity_name'}
               direction={order}
-              handleClick={handleOrderChange}
+              handleClick={() => handleOrderChange('entity_name')}
               label="entity"
             >
               Entity
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'entityType'}
+              active={orderBy === 'entity_type'}
               direction={order}
-              handleClick={handleOrderChange}
+              handleClick={() => handleOrderChange('entity_type')}
               label="entityType"
               sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
               Entity type
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'role'}
+              active={orderBy === 'role_name'}
               direction={order}
-              handleClick={handleOrderChange}
+              handleClick={() => handleOrderChange('role_name')}
               label="role"
               sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >

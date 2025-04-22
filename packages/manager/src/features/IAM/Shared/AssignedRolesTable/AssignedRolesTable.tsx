@@ -11,7 +11,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import {
   useAccountPermissions,
@@ -50,11 +49,24 @@ import type {
 } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
+type OrderByKeys = 'name';
+
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
   const history = useHistory();
-  const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
+
+  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
+
+  const handleOrderChange = (newOrderBy: OrderByKeys) => {
+    if (orderBy === newOrderBy) {
+      setOrder(order === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderBy(newOrderBy);
+      setOrder('asc');
+    }
+  };
 
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
@@ -140,9 +152,30 @@ export const AssignedRolesTable = () => {
       getSearchableFields,
       query,
       roles,
+    }) as RoleMap[];
+
+    // Sort the filtered roles: Account Access Roles on top, Entity Access Roles on bottom,
+    // and alphabetically sorted by Role name within each group
+    const sortedRoles = [...filteredRoles].sort((a, b) => {
+      // Sort by `access` property: 'account_access' comes before 'entity_access'
+      if (a.access !== b.access) {
+        return a.access === 'account_access' ? -1 : 1;
+      }
+
+      // Then sort by the column specified in `orderBy`
+      const aValue = a[orderBy];
+      const bValue = b[orderBy];
+
+      if (aValue < bValue) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
     });
 
-    return filteredRoles.map((role: ExtendedRoleMap) => {
+    return sortedRoles.map((role: ExtendedRoleMap) => {
       const OuterTableCells = (
         <>
           {role.access === 'account_access' ? (
@@ -211,7 +244,7 @@ export const AssignedRolesTable = () => {
         label: role.name,
       };
     });
-  }, [roles, query, entityType]);
+  }, [roles, query, entityType, order]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -220,24 +253,20 @@ export const AssignedRolesTable = () => {
   const RoleTableRowHead = (
     <TableRow>
       <TableSortCell
-        active={orderBy === 'role'}
+        active={orderBy === 'name'}
         direction={order}
-        handleClick={handleOrderChange}
+        handleClick={() => handleOrderChange('name')}
         label="role"
         style={{ width: '20%' }}
       >
         Role
       </TableSortCell>
-      <TableSortCell
-        active={orderBy === 'entities'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="entities"
+      <TableCell
         style={{ width: '65%' }}
         sx={{ display: { sm: 'table-cell', xs: 'none' } }}
       >
         Entities
-      </TableSortCell>
+      </TableCell>
       <TableCell />
     </TableRow>
   );
