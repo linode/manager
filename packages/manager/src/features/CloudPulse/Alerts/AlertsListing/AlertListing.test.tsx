@@ -232,4 +232,23 @@ describe('Alert Listing', () => {
       expect(screen.getByText(alertToolTipText)).toBeVisible();
     });
   });
+
+  it('should show error notice for failed alerts', () => {
+    const alerts = alertFactory.buildList(3, {
+      status: 'failed',
+    });
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: alerts,
+      isError: false,
+      isLoading: false,
+    });
+
+    const { getByText } = renderWithTheme(<AlertListing />);
+
+    expect(
+      getByText(
+        'Creation of some alerts has failed. Please contact support for assistance.'
+      )
+    ).toBeInTheDocument();
+  });
 });

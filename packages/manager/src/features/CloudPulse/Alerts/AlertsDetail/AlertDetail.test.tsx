@@ -126,6 +126,25 @@ describe('AlertDetail component tests', () => {
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
   });
+
+  it('should show error notice for failed alert', () => {
+    const alert = alertFactory.build({
+      status: 'failed',
+    });
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: alert,
+      isError: false,
+      isLoadiing: false,
+    });
+
+    const { getByText } = renderWithTheme(<AlertDetail />);
+
+    expect(
+      getByText(
+        `${alert.label} alert creation has failed. Please contact support to resolve the issue.`
+      )
+    ).toBeInTheDocument();
+  });
 });
 
 const validateBreadcrumbs = (link: HTMLElement) => {
