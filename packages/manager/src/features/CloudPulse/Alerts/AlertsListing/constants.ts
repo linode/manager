@@ -18,9 +18,14 @@ export const AlertListingTableLabelMap = [
     colName: 'Created By',
     label: 'created_by',
   },
+
   {
     colName: 'Last Modified',
     label: 'updated',
+  },
+  {
+    colName: 'Last Modified By',
+    label: 'updated_by',
   },
 ];
 

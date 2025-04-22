@@ -22,6 +22,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
   const { alertDetails } = props;
 
   const {
+    created,
     created_by: createdBy,
     description,
     label,
@@ -30,6 +31,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     status,
     type,
     updated,
+    updated_by: updatedBy,
   } = alertDetails;
 
   const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
@@ -44,11 +46,11 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         Overview
       </Typography>
       <Grid
-        container
-        spacing={2}
         sx={{
           alignItems: 'center',
         }}
+        container
+        spacing={2}
       >
         <AlertDetailRow label="Name" value={label} />
         <AlertDetailRow label="Description" value={description} />
@@ -66,6 +68,12 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           label="Type"
           value={convertStringToCamelCasesWithSpaces(type)}
         />
+        <AlertDetailRow
+          value={formatDate(created, {
+            format: 'MMM dd, yyyy, h:mm a',
+          })}
+          label="Created"
+        />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
           value={formatDate(updated, {
@@ -73,6 +81,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           })}
           label="Last Modified"
         />
+        <AlertDetailRow label="Last Modified By" value={updatedBy} />
       </Grid>
     </>
   );
