@@ -215,7 +215,7 @@
   width: 100%;
   display: flex;
   gap: 8px;
-  justify-content: end;
+  justify-content: start;
 }
 
 .dev-tools__body .dev-tools__content button.toggle-button.toggle-button--on {
