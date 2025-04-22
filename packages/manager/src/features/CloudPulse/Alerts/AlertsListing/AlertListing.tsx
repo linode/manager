@@ -283,7 +283,7 @@ export const AlertListing = () => {
           Create Alert
         </Button>
       </Box>
-      {!hasFailedAlerts && (
+      {hasFailedAlerts && (
         <Notice variant="error">
           <Typography
             sx={(theme) => ({
