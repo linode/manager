@@ -64,7 +64,11 @@ const alertDetails = alertFactory.build({
   service_type: 'dbaas',
   severity: 1,
   status: 'enabled',
-  type: 'system',
+  type: 'user',
+  created_by: 'user1',
+  updated_by: 'user2',
+  created: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString(),
+  updated: new Date().toISOString(),
 });
 const {
   created_by,
@@ -74,6 +78,7 @@ const {
   rule_criteria,
   service_type,
   severity,
+  created,
   updated,
 } = alertDetails;
 const { rules } = rule_criteria;
@@ -159,7 +164,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       // Validate Type field
       cy.findByText('Type:').should('be.visible');
-      cy.findByText('System').should('be.visible');
+      cy.findByText('User').should('be.visible');
 
       // Validate Created By field
       cy.findByText('Created By:').should('be.visible');
@@ -169,6 +174,13 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       cy.findByText('Last Modified:').should('be.visible');
       cy.findByText(
         formatDate(updated, {
+          format: 'MMM dd, yyyy, h:mm a',
+        })
+      ).should('be.visible');
+
+      cy.findByText('Created:').should('be.visible');
+      cy.findByText(
+        formatDate(created, {
           format: 'MMM dd, yyyy, h:mm a',
         })
       ).should('be.visible');
