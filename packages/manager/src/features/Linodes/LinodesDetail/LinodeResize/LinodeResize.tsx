@@ -171,10 +171,8 @@ export const LinodeResize = (props: Props) => {
 
   const type = types?.find((t) => t.id === linode?.type);
 
-  const [
-    diskToResize,
-    _shouldEnableAutoResizeDiskOption,
-  ] = shouldEnableAutoResizeDiskOption(disks ?? []);
+  const [diskToResize, _shouldEnableAutoResizeDiskOption] =
+    shouldEnableAutoResizeDiskOption(disks ?? []);
 
   const isSmaller = isSmallerThanCurrentPlan(
     formik.values.type,
@@ -239,6 +237,7 @@ export const LinodeResize = (props: Props) => {
             <PlansPanel
               currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
               disabled={tableDisabled}
+              isActionResize={true}
               onSelect={(type) => formik.setFieldValue('type', type)}
               regionsData={regionsData}
               selectedId={formik.values.type}

@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { PLAN_DOES_NOT_SUPPORT_RESIZING_COPY } from 'src/features/components/PlansPanel/constants';
 import { isMTCTTPlan } from 'src/features/components/PlansPanel/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -79,9 +80,6 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const distributedRegionTooltipText =
     'Cloning is currently not supported for distributed region instances.';
 
-  const linodeMTCTTToolTipText =
-    'Resizing is not supported for custom plan instances.';
-
   const isCustomMTCLinode = Boolean(linodeType && isMTCTTPlan(linodeType));
 
   const actionConfigs: ActionConfig[] = [
@@ -152,7 +150,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       title: 'Resize',
       tooltipAction: 'resize',
       tooltipText: isCustomMTCLinode
-        ? linodeMTCTTToolTipText
+        ? PLAN_DOES_NOT_SUPPORT_RESIZING_COPY
         : maintenanceTooltipText,
     },
     {

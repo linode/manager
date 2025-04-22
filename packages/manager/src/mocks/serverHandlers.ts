@@ -726,6 +726,11 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
+    const nonMTCTTPlanInMTCSupportedRegionsLinode = linodeFactory.build({
+      label: 'non-mtc-tt-plan-in-mtc-supported-regions-linode',
+      region: 'us-iad',
+      id: 1003,
+    });
     const mtcTTLinodes = [
       linodeFactory.build({
         label: 'mtc-tt-custom-plan-linode-1',
@@ -742,6 +747,7 @@ export const handlers = [
     ];
     const linodes = [
       ...mtcTTLinodes,
+      nonMTCTTPlanInMTCSupportedRegionsLinode,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -853,6 +859,12 @@ export const handlers = [
         region: 'us-iad',
         type: 'g8-premium-128-ht',
       });
+      const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'non-mtc-tt-plan-in-mtc-supported-regions-linode',
+        region: 'us-iad',
+      });
       const linodeInDistributedRegionDetail = linodeFactory.build({
         id,
         backups: { enabled: false },
@@ -872,6 +884,8 @@ export const handlers = [
         case 1001:
         case 1002:
           return linodeMTCTTPlanDetail;
+        case 1003:
+          return linodeNonMTCPlanInMTCSupportedRegionsDetail;
         default:
           return linodeDetail;
       }

@@ -10,6 +10,8 @@ export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
 export const PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY =
   'Currently unavailable for the selected region.';
+export const PLAN_DOES_NOT_SUPPORT_RESIZING_COPY =
+  'Resizing is not supported for custom plan instances.';
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
 export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
