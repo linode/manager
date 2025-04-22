@@ -22,6 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCTTPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -106,6 +107,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const _types = types.filter((type) => {
     if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC_TT plans if the feature flag is not enabled.
+    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
       return false;
     }
 

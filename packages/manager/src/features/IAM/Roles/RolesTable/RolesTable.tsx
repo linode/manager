@@ -117,7 +117,7 @@ export const RolesTable = ({ roles }: Props) => {
         container
         direction="row"
         spacing={2}
-        sx={() => ({ justifyContent: 'space-between' })}
+        sx={{ justifyContent: 'space-between' }}
       >
         <Grid
           container
