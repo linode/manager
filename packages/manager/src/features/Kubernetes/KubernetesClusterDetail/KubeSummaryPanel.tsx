@@ -8,7 +8,7 @@ import {
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useMatch } from '@tanstack/react-router';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -46,6 +46,7 @@ interface Props {
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
+  const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const { data: account } = useAccount();
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
@@ -55,7 +56,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [isControlPlaneACLDrawerOpen, setControlPlaneACLDrawerOpen] =
     React.useState<boolean>(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   // Access to the Kubernetes Dashboard is not supported for LKE-E clusters.
   const { data: dashboard, error: dashboardError } =
@@ -81,10 +81,11 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const { data: selectedCluster, isFetching: isFetchingSelectedCluster } =
     useDialogData({
-      enabled: match.routeId === '/kubernetes/clusters/$clusterID',
+      enabled:
+        match.routeId === '/kubernetes/clusters/$clusterID/summary/delete',
       queryHook: useKubernetesClusterQuery,
-      paramKey: 'id',
-      redirectToOnNotFound: '/kubernetes/clusters',
+      paramKey: 'clusterID',
+      redirectToOnNotFound: '/kubernetes/clusters/$clusterID/summary',
     });
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
@@ -182,11 +183,17 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                       title: 'Kubernetes Dashboard',
                     },
                     {
-                      onClick: () => setIsDeleteDialogOpen(true),
+                      onClick: () =>
+                        navigate({
+                          to: '/kubernetes/clusters/$clusterID/summary/delete',
+                          params: {
+                            clusterID: (selectedCluster?.id ?? 0).toString(),
+                          },
+                        }),
                       title: 'Delete Cluster',
                     },
                   ]}
-                  ariaLabel={`Action menu for Kubernetes Cluster ${cluster.label}`}
+                  ariaLabel={`Action menu for Kubernetes Cluster ${selectedCluster?.label ?? ''}`}
                 />
               </Hidden>
               <Hidden smDown>
@@ -200,7 +207,16 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                     Kubernetes Dashboard
                   </StyledActionButton>
                 )}
-                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
+                <StyledActionButton
+                  onClick={() =>
+                    navigate({
+                      to: '/kubernetes/clusters/$clusterID/summary/delete',
+                      params: {
+                        clusterID: cluster.id.toString(),
+                      },
+                    })
+                  }
+                >
                   Delete Cluster
                 </StyledActionButton>
               </Hidden>
@@ -228,8 +244,17 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         clusterId={selectedCluster?.id ?? 0}
         clusterLabel={selectedCluster?.label ?? ''}
         isFetching={isFetchingSelectedCluster}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        onClose={() =>
+          navigate({
+            to: '/kubernetes/clusters/$clusterID/summary',
+            params: {
+              clusterID: cluster.id,
+            },
+          })
+        }
+        open={
+          match.routeId === '/kubernetes/clusters/$clusterID/summary/delete'
+        }
       />
       <ConfirmationDialog
         actions={
