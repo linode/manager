@@ -1,10 +1,11 @@
-// packages/manager/src/mocks/presets/crud/handlers/kubernetes.ts
-
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
 import {
+  kubeEndpointFactory,
+  kubeLinodeFactory,
   kubernetesClusterFactory,
+  kubernetesControlPlaneACLFactory,
   kubernetesEnterpriseTierVersionFactory,
   kubernetesStandardTierVersionFactory,
   kubernetesVersionFactory,
@@ -22,6 +23,8 @@ import { mswDB } from '../../../indexedDB';
 import type {
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesControlPlaneACLPayload,
+  KubernetesEndpointResponse,
   KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4';
@@ -94,29 +97,48 @@ export const getKubernetesClusters = (mockState: MockState) => [
   ),
 
   http.get(
-    '*/v4/lke/clusters/:id/pools',
+    '*/v4/lke/clusters/:id/api-endpoints',
     async ({
       params,
       request,
     }): Promise<
       StrictResponse<
-        APIErrorResponse | APIPaginatedResponse<KubeNodePoolResponse>
+        APIErrorResponse | APIPaginatedResponse<KubernetesEndpointResponse>
       >
     > => {
       const id = Number(params.id);
       const cluster = await mswDB.get('kubernetesClusters', id);
-      const nodePools = await mswDB.getAll('kubernetesNodePools');
 
-      if (!cluster || !nodePools) {
+      if (!cluster) {
         return makeNotFoundResponse();
       }
 
-      const clusterPools = nodePools.filter((pool) => pool.id === id);
+      const endpoints = kubeEndpointFactory.buildList(2);
 
       return makePaginatedResponse({
-        data: clusterPools,
+        data: endpoints,
         request,
       });
+    }
+  ),
+
+  http.get(
+    '*/v4/lke/clusters/:id/control_plane_acl',
+    async ({
+      params,
+    }): Promise<
+      StrictResponse<APIErrorResponse | KubernetesControlPlaneACLPayload>
+    > => {
+      const id = Number(params.id);
+      const cluster = await mswDB.get('kubernetesClusters', id);
+
+      if (!cluster) {
+        return makeNotFoundResponse();
+      }
+
+      const acl = kubernetesControlPlaneACLFactory.build();
+
+      return makeResponse(acl);
     }
   ),
 ];
@@ -136,12 +158,16 @@ export const createKubernetesCluster = (mockState: MockState) => [
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
-        (poolData: KubeNodePoolResponse) =>
+        (poolData: MockKubeNodePoolResponse) =>
           mswDB.add(
             'kubernetesNodePools',
-            nodePoolFactory.build({
-              ...poolData,
-            }),
+            {
+              ...nodePoolFactory.build({
+                ...poolData,
+                nodes: kubeLinodeFactory.buildList(poolData.count),
+              }),
+              clusterId: cluster.id,
+            } as MockKubeNodePoolResponse,
             mockState
           )
       );
@@ -178,15 +204,20 @@ export const createKubernetesCluster = (mockState: MockState) => [
         ...payload,
         created: DateTime.now().toISO(),
         updated: DateTime.now().toISO(),
+        tier: 'enterprise',
       });
 
       const createNodePoolPromises = (payload.node_pools || []).map(
-        (poolData: KubeNodePoolResponse) =>
+        (poolData: MockKubeNodePoolResponse) =>
           mswDB.add(
             'kubernetesNodePools',
-            nodePoolFactory.build({
-              ...poolData,
-            }),
+            {
+              ...nodePoolFactory.build({
+                ...poolData,
+                nodes: kubeLinodeFactory.buildList(poolData.count),
+              }),
+              clusterId: cluster.id,
+            } as MockKubeNodePoolResponse,
             mockState
           )
       );
@@ -252,6 +283,33 @@ export const updateKubernetesCluster = (mockState: MockState) => [
       return makeResponse(updatedCluster);
     }
   ),
+
+  http.put(
+    '*/v4/lke/clusters/:id/control_plane_acl',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | KubernetesControlPlaneACLPayload>
+    > => {
+      const id = Number(params.id);
+      const cluster = await mswDB.get('kubernetesClusters', id);
+
+      if (!cluster) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = {
+        ...(await request.clone().json()),
+        updated: DateTime.now().toISO(),
+      };
+      const updatedCluster = { ...cluster, ...payload };
+
+      await mswDB.update('kubernetesClusters', id, updatedCluster, mockState);
+
+      return makeResponse(updatedCluster);
+    }
+  ),
 ];
 
 export const deleteKubernetesCluster = (mockState: MockState) => [
@@ -311,6 +369,7 @@ export const getKubernetesVersions = () => [
       });
     }
   ),
+
   http.get(
     '*/v4beta/lke/tiers/standard/versions',
     ({
@@ -325,6 +384,7 @@ export const getKubernetesVersions = () => [
       });
     }
   ),
+
   http.get(
     '*/v4beta/lke/tiers/enterprise/versions',
     ({
@@ -337,6 +397,158 @@ export const getKubernetesVersions = () => [
         data: versions,
         request,
       });
+    }
+  ),
+];
+
+// The pools endpoint doesn't contain the clusterId needed for linkage in the mock DB, so extend the type here.
+interface MockKubeNodePoolResponse extends KubeNodePoolResponse {
+  clusterId: number;
+}
+
+export const createKubernetesNodePools = (mockState: MockState) => [
+  http.post(
+    '*/v4/lke/clusters/:id/pools',
+    async ({
+      request,
+      params,
+    }): Promise<
+      StrictResponse<APIErrorResponse | MockKubeNodePoolResponse>
+    > => {
+      const clusterId = Number(params.id);
+      const payload = await request.clone().json();
+      const clusters = await mswDB.getAll('kubernetesClusters');
+
+      if (!clusters) {
+        return makeNotFoundResponse();
+      }
+
+      const nodePool: MockKubeNodePoolResponse = {
+        ...nodePoolFactory.build({
+          nodes: kubeLinodeFactory.buildList(payload.count),
+          ...payload,
+        }),
+        clusterId,
+      };
+      await mswDB.add('kubernetesNodePools', nodePool, mockState);
+
+      return makeResponse(nodePool);
+    }
+  ),
+];
+
+export const getKubernetesNodePools = () => [
+  http.get(
+    '*/v4/lke/clusters/:id/pools',
+    async ({
+      params,
+      request,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<MockKubeNodePoolResponse>
+      >
+    > => {
+      const clusterId = Number(params.id);
+      const clusters = await mswDB.getAll('kubernetesClusters');
+      const nodePools = (await mswDB.getAll(
+        'kubernetesNodePools'
+      )) as MockKubeNodePoolResponse[];
+
+      if (!clusters || !nodePools) {
+        return makeNotFoundResponse();
+      }
+
+      const clusterNodePools = nodePools.filter(
+        (pool) => pool.clusterId === clusterId
+      );
+
+      return makePaginatedResponse({ data: clusterNodePools, request });
+    }
+  ),
+
+  http.get(
+    '*/v4/lke/clusters/:id/pools/:poolId',
+    async ({
+      params,
+    }): Promise<
+      StrictResponse<APIErrorResponse | MockKubeNodePoolResponse[]>
+    > => {
+      const clusterId = Number(params.id);
+      const poolId = Number(params?.poolId);
+      const clusters = await mswDB.getAll('kubernetesClusters');
+      const nodePools = (await mswDB.getAll(
+        'kubernetesNodePools'
+      )) as MockKubeNodePoolResponse[];
+
+      if (!clusters || !nodePools) {
+        return makeNotFoundResponse();
+      }
+
+      const clusterNodePools = nodePools.filter(
+        (pool) => pool.clusterId === clusterId
+      );
+      const nodePool = clusterNodePools.filter((pool) => pool.id === poolId);
+
+      return makeResponse(nodePool);
+    }
+  ),
+];
+
+export const updateKubernetesNodePools = (mockState: MockState) => [
+  http.put(
+    '*/v4/lke/clusters/:id/pools/:poolId',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | KubeNodePoolResponse>> => {
+      const poolId = Number(params.poolId);
+      const nodePools = await mswDB.getAll('kubernetesNodePools');
+
+      if (!nodePools) {
+        return makeNotFoundResponse();
+      }
+
+      const existingPool = nodePools.find((pool) => pool.id === poolId);
+
+      if (!existingPool) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+
+      const updatedPool = {
+        ...existingPool,
+        ...payload,
+        nodes: kubeLinodeFactory.buildList(payload.count),
+        updated: DateTime.now().toISO(),
+      };
+
+      await mswDB.update('kubernetesNodePools', poolId, updatedPool, mockState);
+
+      return makeResponse(updatedPool);
+    }
+  ),
+];
+
+export const deleteKubernetesNodePools = (mockState: MockState) => [
+  http.delete(
+    '*/v4/lke/clusters/:id/pools/:poolId',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const id = Number(params.poolId);
+      const nodePools = await mswDB.getAll('kubernetesNodePools');
+
+      const deleteNodePoolPromises = nodePools
+        ? nodePools
+            .filter((pool) => pool.id === id)
+            .map((pool) =>
+              mswDB.delete('kubernetesNodePools', pool.id, mockState)
+            )
+        : [];
+
+      await Promise.all(deleteNodePoolPromises);
+      await mswDB.delete('kubernetesClusters', id, mockState);
+
+      return makeResponse({});
     }
   ),
 ];
