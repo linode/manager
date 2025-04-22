@@ -53,10 +53,6 @@ export const SelectableTableRow = React.memo(
 const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })({
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
   paddingLeft: 0,
   paddingRight: 0,
   textAlign: 'center',
