@@ -56,7 +56,11 @@ import {
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
-import { CLUSTER_VERSIONS_DOCS_LINK } from '../constants';
+import {
+  CLUSTER_VERSIONS_DOCS_LINK,
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
@@ -144,9 +148,25 @@ export const CreateCluster = () => {
     } else {
       setHighAvailability(undefined);
       setControlPlaneACL(false);
+      setIsACLAcknowledgementChecked(false);
 
       // Clear the ACL error if the tier is switched, since standard tier doesn't require it
       setErrors(undefined);
+    }
+
+    // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      setNodePools(
+        nodePools.map((nodePool) => ({
+          ...nodePool,
+          count: Math.min(
+            nodePool.count,
+            tier === 'enterprise'
+              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+              : MAX_NODES_PER_POOL_STANDARD_TIER
+          ),
+        }))
+      );
     }
   };
 
@@ -377,7 +397,6 @@ export const CreateCluster = () => {
         )}
         {isCreateClusterRestricted && (
           <Notice
-            important
             sx={{ marginBottom: 2 }}
             text={getRestrictedResourceText({
               action: 'create',
@@ -523,9 +542,11 @@ export const CreateCluster = () => {
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
                   setIPv6Addr(newIpV6Addr);
                 }}
-                handleIsAcknowledgementChecked={(isChecked: boolean) =>
-                  setIsACLAcknowledgementChecked(isChecked)
-                }
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
                 ipV4Addr={ipV4Addr}
                 ipV6Addr={ipV6Addr}
                 isAcknowledgementChecked={isACLAcknowledgementChecked}

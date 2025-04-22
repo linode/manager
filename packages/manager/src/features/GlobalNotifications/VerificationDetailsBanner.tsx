@@ -24,12 +24,15 @@ export const VerificationDetailsBanner = ({
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice forceImportantIconVerticalCenter variant="warning">
       <Box
         alignItems="center"
         display="flex"
         gap={1}
         justifyContent="space-between"
+        sx={{
+          width: '100%',
+        }}
       >
         <Typography variant="body1">
           Add verification details to enhance account security and ensure prompt
@@ -39,6 +42,9 @@ export const VerificationDetailsBanner = ({
           buttonType="primary"
           data-testid="confirmButton"
           onClick={() => history.push('/profile/auth', focusOptions)}
+          sx={{
+            width: 250,
+          }}
         >
           Add verification details
         </Button>

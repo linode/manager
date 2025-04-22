@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -24,7 +25,6 @@ import { VPCAvailability } from './VPCAvailability';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 interface Props {
   index: number;
@@ -80,6 +80,7 @@ export const VPC = ({ index }: Props) => {
               label="VPC"
               loading={isLoading}
               noMarginTop
+              noOptionsText="There are no VPCs in the selected region."
               onBlur={field.onBlur}
               onChange={(e, vpc) => {
                 field.onChange(vpc?.id ?? null);

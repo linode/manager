@@ -23,8 +23,8 @@ const sxTextField = {
   height: 34,
   margin: '0 5px',
   minHeight: 30,
-  minWidth: 40,
-  width: 53,
+  minWidth: 53,
+  maxWidth: 70,
 };
 
 interface EnhancedNumberInputProps {

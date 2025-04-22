@@ -2,6 +2,8 @@ import { Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import { ErrorMessage } from 'src/components/ErrorMessage';
+
 import { VPCIPv4Address } from './VPCIPv4Address';
 
 import type {
@@ -35,7 +37,9 @@ export const VPCIPv4Addresses = (props: Props) => {
     <Stack spacing={1}>
       <Typography variant="h3">IPv4 Addresses</Typography>
       {errors.vpc?.ipv4?.addresses?.message && (
-        <Notice text={errors.vpc?.ipv4?.addresses?.message} variant="error" />
+        <Notice variant="error">
+          <ErrorMessage message={errors.vpc?.ipv4?.addresses?.message} />
+        </Notice>
       )}
       <Stack spacing={2}>
         {fields.map((field, index) => (

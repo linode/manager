@@ -1,4 +1,6 @@
-import { capitalizeAllWords } from '@linode/utilities';
+import { capitalize, capitalizeAllWords } from '@linode/utilities';
+
+import { PAID_ENTITY_TYPES } from './constants';
 
 import type {
   AccountAccessRole,
@@ -15,20 +17,7 @@ import type {
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-
-export const placeholderMap: Record<string, string> = {
-  account: 'Select Account',
-  database: 'Select Databases',
-  domain: 'Select Domains',
-  firewall: 'Select Firewalls',
-  image: 'Select Images',
-  linode: 'Select Linodes',
-  longview: 'Select Longviews',
-  nodebalancer: 'Select Nodebalancers',
-  stackscript: 'Select Stackscripts',
-  volume: 'Select Volumes',
-  vpc: 'Select VPCs',
-};
+import { EntitiesOption } from './types';
 
 export interface RoleMap {
   access: 'account_access' | 'entity_access';
@@ -187,7 +176,7 @@ export const mapEntityTypes = (
   const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
   return entityTypes.map((entity) => ({
-    label: capitalizeAllWords(entity, '_') + suffix,
+    label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
     rawValue: entity,
     value: capitalizeAllWords(entity, '_') + suffix,
   }));
@@ -201,7 +190,7 @@ export const mapEntityTypesForSelect = (
 
   return entityTypes
     .map((entity) => ({
-      label: capitalizeAllWords(entity, '_') + suffix,
+      label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
       value: entity,
     }))
     .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
@@ -363,11 +352,6 @@ export const addEntitiesNamesToRoles = (
   });
 };
 
-export interface EntitiesOption {
-  label: string;
-  value: number;
-}
-
 interface UpdateUserRolesProps {
   access: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -470,7 +454,7 @@ export const deleteUserRole = ({
   return assignedRoles;
 };
 
-export const transformedAccountEntities = (
+export const groupAccountEntitiesByType = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
   const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
@@ -589,9 +573,33 @@ export const deleteUserEntity = (
     .filter((entity) => entity.roles.length > 0);
 };
 
-export const getCreateLinkForEntityType = (
-  entityType: EntityType | EntityTypePermissions
+export const getFacadeRoleDescription = (
+  role: ExtendedRole | ExtendedRoleMap
 ): string => {
-  // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
-  return `/${entityType}s/create`;
+  if (role.access === 'account_access') {
+    const dollarSign = PAID_ENTITY_TYPES.includes(role.entity_type)
+      ? ' ($)'
+      : '';
+
+    return `This role grants the same access as the legacy "Can add ${getFormattedEntityType(role.entity_type)}s to this account${dollarSign}" global permissions.`;
+  }
+
+  if (role.access === 'entity_access') {
+    const access = role.name.includes('admin') ? 'Read-Write' : 'Read-Only';
+
+    return `This role grants the same access as the legacy ${access} special permission for the ${getFormattedEntityType(role.entity_type)}s attached to this role.`;
+  }
+
+  return role.description;
+};
+
+export const getFormattedEntityType = (entityType: string): string => {
+  const overrideCapitalization: Record<string, string> = {
+    vpc: 'VPC',
+    stackscript: 'StackScript',
+    nodebalancer: 'NodeBalancer',
+  };
+
+  // Return the overridden capitalization if it exists, otherwise capitalize normally
+  return overrideCapitalization[entityType] || capitalize(entityType);
 };

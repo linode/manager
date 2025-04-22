@@ -28,6 +28,7 @@ export const CallToActionBanner: Story = {
           Upgrade Version
         </Button>
       }
+      forceImportantIconVerticalCenter
       preferenceKey="cluster-v1"
       variant="info"
     >
@@ -51,6 +52,20 @@ export const BetaBanner: Story = {
         </Link>
         .
       </Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="lenghty-dismissible-banner"
+      variant="info"
+    >
+      <Typography variant="h2">
+        This is a dismissible informational notice with a title.
+      </Typography>
+      <Typography>This notice contains long text that should wrap.</Typography>
     </DismissibleBanner>
   ),
 };
