@@ -97,9 +97,8 @@ export const LinodeCreate = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    handleLinodeCreateAnalyticsFormError,
-  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
+  const { handleLinodeCreateAnalyticsFormError } =
+    useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
