@@ -39,6 +39,7 @@ export const determineIPType = (ip: string) => {
  * @param { shouldHaveIPMask } - a boolean indicating whether the value should have a mask (e.g., /32) or not
  * @param { mustBeIPMask } - a boolean indicating whether the value MUST be an IP mask/prefix length or not
  * @param { isIPv6Subnet } - a boolean indicating whether the IPv6 value is for a subnet
+ * @param { checkIPv6PrefixLengthIs64 } – a boolean indicating whether the IPv6 value prefix length is 64 (for nested `range` fields in config/Linode interface objects)
  */
 
 export const vpcsValidateIP = ({
@@ -46,11 +47,13 @@ export const vpcsValidateIP = ({
   shouldHaveIPMask,
   mustBeIPMask,
   isIPv6Subnet,
+  checkIPv6PrefixLengthIs64,
 }: {
   value: string | undefined | null;
   shouldHaveIPMask: boolean;
   mustBeIPMask: boolean;
   isIPv6Subnet?: boolean;
+  checkIPv6PrefixLengthIs64?: boolean;
 }): boolean => {
   if (!value) {
     return false;
@@ -97,6 +100,12 @@ export const vpcsValidateIP = ({
     }
 
     if (isIPv6) {
+      // Range values specified for legacy config interfaces (ipv6.slaac[].range, ipv6.ranges[].range) and Linode interfaces
+      // (vpc.ipv6.slaac[].range, vpc.ipv6.ranges[].range) must be a /64 IPv6 network CIDR
+      if (checkIPv6PrefixLengthIs64) {
+        return mask === '64';
+      }
+
       // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
       const invalidVPCIPv6Prefix = !['52', '48', '44'].includes(mask);
       if (!isIPv6Subnet && invalidVPCIPv6Prefix) {
