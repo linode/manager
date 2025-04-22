@@ -383,12 +383,11 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when instance API fails', () => {
-    // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
+    cy.visitWithLogin('/metrics');
+
     mockGetDatabasesError('Internal Server Error').as(
       'getDatabaseInstancesError'
     );
-
-    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -404,14 +403,6 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
@@ -423,7 +414,7 @@ describe('Tests for API error handling', () => {
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');
 
-    cy.get('[data-qa-textfield-error-text="Database Clusters"]')
+    cy.get('[data-qa-textfield-error-text="Region"]')
       .should('be.visible')
       .should('have.text', 'Failed to fetch Database Clusters.');
   });

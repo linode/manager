@@ -97,6 +97,7 @@ const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: resource,
   tags: ['tag-2', 'tag-3'],
+  region: 'us-ord',
 });
 
 const mockAccount = accountFactory.build();

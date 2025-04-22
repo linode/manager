@@ -444,7 +444,6 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           <Grid item xs={12}>
             <AlertListNoticeMessages
               errorMessage={`You can select up to ${maxSelectionCount} entities.`}
-              separator={MULTILINE_ERROR_SEPARATOR}
               style={noticeStyles}
               variant="warning"
             />
