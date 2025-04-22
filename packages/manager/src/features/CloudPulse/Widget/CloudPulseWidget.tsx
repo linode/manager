@@ -234,7 +234,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         resources,
         widget,
       }),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      filters: [
+        ...constructAdditionalRequestFilters(additionalFilters ?? []),
+        ...(widget.filters ?? []),
+      ], // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
