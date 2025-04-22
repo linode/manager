@@ -1,23 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  useLinodeInterfaceFirewallsQuery,
-  useLinodeInterfaceQuery,
-  useUpdateLinodeInterfaceMutation,
-} from '@linode/queries';
-import {
-  Box,
-  Button,
-  CircleProgress,
-  Divider,
-  ErrorState,
-  Notice,
-  Stack,
-} from '@linode/ui';
+import { useUpdateLinodeInterfaceMutation } from '@linode/queries';
+import { Button, Divider, Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { getLinodeInterfaceType } from '../utilities';
+import { EditInterfaceFirewall } from './EditInterfaceFirewall';
 import {
   EditLinodeInterfaceFormSchema,
   useUpdateLinodeInterfaceFirewallMutation,
@@ -27,43 +16,33 @@ import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
 import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
 import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
-import type { APIError } from '@linode/api-v4';
+import type { APIError, Firewall, LinodeInterface } from '@linode/api-v4';
 import type { InferType } from 'yup';
-import { EditInterfaceFirewall } from './EditInterfaceFirewall';
 
 interface Props {
-  interfaceId: number;
   linodeId: number;
+  linodeInterface: LinodeInterface;
+  linodeInterfaceFirewalls: Firewall[];
   onClose: () => void;
   regionId: string;
 }
 
 export const EditInterfaceForm = (props: Props) => {
-  const { interfaceId, linodeId, onClose } = props;
+  const { linodeInterface, linodeInterfaceFirewalls, linodeId, onClose } =
+    props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    data: linodeInterface,
-    error,
-    isPending,
-  } = useLinodeInterfaceQuery(linodeId, interfaceId);
-
-  const { data: firewalls } = useLinodeInterfaceFirewallsQuery(
-    linodeId,
-    interfaceId
-  );
-
-  const firewall = firewalls?.data[0] ?? null;
+  const firewall = linodeInterfaceFirewalls[0] as Firewall | undefined;
 
   const { mutateAsync: updateInterface, data: updatedInterface } =
-    useUpdateLinodeInterfaceMutation(linodeId, interfaceId);
+    useUpdateLinodeInterfaceMutation(linodeId, linodeInterface.id);
 
   const {
     mutateAsync: updateInterfaceFirewall,
     data: wasFirewallUpdated,
     reset,
-  } = useUpdateLinodeInterfaceFirewallMutation(linodeId, interfaceId);
+  } = useUpdateLinodeInterfaceFirewallMutation(linodeId, linodeInterface.id);
 
   const form = useForm<InferType<typeof EditLinodeInterfaceFormSchema>>({
     defaultValues: {
@@ -125,23 +104,6 @@ export const EditInterfaceForm = (props: Props) => {
       onClose();
     }
   };
-
-  if (error) {
-    return <ErrorState errorText={error?.[0].reason} />;
-  }
-
-  if (isPending) {
-    return (
-      <Box
-        alignItems="center"
-        display="flex"
-        height="calc(100vh - 150px)"
-        justifyContent="center"
-      >
-        <CircleProgress size="md" />
-      </Box>
-    );
-  }
 
   const interfaceType = getLinodeInterfaceType(linodeInterface);
 

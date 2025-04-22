@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
-import { EditInterfaceForm } from './EditInterfaceDrawer/EditInterfaceForm';
+import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
@@ -90,7 +90,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         title="Edit Network Interface"
       >
         {selectedInterfaceId && (
-          <EditInterfaceForm
+          <EditInterfaceDrawerContents
             interfaceId={selectedInterfaceId}
             linodeId={linodeId}
             onClose={() => setIsEditDrawerOpen(false)}

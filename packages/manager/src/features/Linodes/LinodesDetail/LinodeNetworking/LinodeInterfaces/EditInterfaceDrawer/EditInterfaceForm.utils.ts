@@ -25,7 +25,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
   const { mutateAsync: createFirewallDevice } = useAddFirewallDeviceMutation();
 
   return useMutation<
-    number | null | false, // Null means the firewall was removed, false means nothing chnaged, number means firewall was set to that Firewall ID
+    false | null | number, // Null means the firewall was removed, false means nothing changed, number means firewall was set to that Firewall ID
     APIError[],
     { firewall_id: null | number | undefined }
   >({
@@ -111,6 +111,13 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
       }
 
       return false;
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries
+          .linode(linodeId)
+          ._ctx.interfaces._ctx.interface(interfaceId)._ctx.firewalls.queryKey,
+      });
     },
   });
 };

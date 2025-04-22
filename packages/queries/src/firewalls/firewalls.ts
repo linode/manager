@@ -244,15 +244,6 @@ export const useAddFirewallDeviceMutation = () => {
             ._ctx.firewalls.queryKey,
         });
       }
-
-      if (firewallDevice.entity.type === 'interface') {
-        queryClient.invalidateQueries({
-          predicate: (query) =>
-            query.queryKey.includes('linodes') &&
-            query.queryKey.includes('interface') &&
-            query.queryKey.includes('firewalls'),
-        });
-      }
     },
   });
 };
@@ -260,8 +251,9 @@ export const useAddFirewallDeviceMutation = () => {
 export const useRemoveFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], { firewallId: number, deviceId: number }>({
-    mutationFn: ({ firewallId, deviceId }) => deleteFirewallDevice(firewallId, deviceId),
+  return useMutation<{}, APIError[], { firewallId: number; deviceId: number }>({
+    mutationFn: ({ firewallId, deviceId }) =>
+      deleteFirewallDevice(firewallId, deviceId),
     onSuccess(data, { firewallId, deviceId }) {
       // Invalidate firewall lists because GET /v4/firewalls returns all entities for each firewall
       queryClient.invalidateQueries({
@@ -281,13 +273,6 @@ export const useRemoveFirewallDeviceMutation = () => {
           return oldData?.filter((device) => device.id !== deviceId) ?? [];
         },
       );
-
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey.includes('linodes') &&
-          query.queryKey.includes('interface') &&
-          query.queryKey.includes('firewalls'),
-      });
     },
   });
 };
