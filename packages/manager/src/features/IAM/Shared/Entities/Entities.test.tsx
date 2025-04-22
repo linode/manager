@@ -73,7 +73,7 @@ describe('Entities', () => {
     const autocomplete = screen.queryAllByRole('combobox');
 
     expect(screen.getByText('Entities')).toBeVisible();
-    expect(screen.getByText('All firewalls')).toBeVisible();
+    expect(screen.getByText('All Firewalls')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);

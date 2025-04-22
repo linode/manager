@@ -1,4 +1,6 @@
-import { capitalizeAllWords } from '@linode/utilities';
+import { capitalize, capitalizeAllWords } from '@linode/utilities';
+
+import { PAID_ENTITY_TYPES } from './constants';
 
 import type {
   AccountAccessRole,
@@ -187,7 +189,7 @@ export const mapEntityTypes = (
   const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
   return entityTypes.map((entity) => ({
-    label: capitalizeAllWords(entity, '_') + suffix,
+    label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
     rawValue: entity,
     value: capitalizeAllWords(entity, '_') + suffix,
   }));
@@ -201,7 +203,7 @@ export const mapEntityTypesForSelect = (
 
   return entityTypes
     .map((entity) => ({
-      label: capitalizeAllWords(entity, '_') + suffix,
+      label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
       value: entity,
     }))
     .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
@@ -594,4 +596,35 @@ export const getCreateLinkForEntityType = (
 ): string => {
   // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
   return `/${entityType}s/create`;
+};
+
+export const getFacadeRoleDescription = (
+  role: ExtendedRole | ExtendedRoleMap
+): string => {
+  if (role.access === 'account_access') {
+    const dollarSign = PAID_ENTITY_TYPES.includes(role.entity_type)
+      ? ' ($)'
+      : '';
+
+    return `This role grants the same access as the legacy "Can add ${getFormattedEntityType(role.entity_type)}s to this account${dollarSign}" global permissions.`;
+  }
+
+  if (role.access === 'entity_access') {
+    const access = role.name.includes('admin') ? 'Read-Write' : 'Read-Only';
+
+    return `This role grants the same access as the legacy ${access} special permission for the ${getFormattedEntityType(role.entity_type)}s attached to this role.`;
+  }
+
+  return role.description;
+};
+
+export const getFormattedEntityType = (entityType: string): string => {
+  const overrideCapitalization: Record<string, string> = {
+    vpc: 'VPC',
+    stackscript: 'StackScript',
+    nodebalancer: 'NodeBalancer',
+  };
+
+  // Return the overridden capitalization if it exists, otherwise capitalize normally
+  return overrideCapitalization[entityType] || capitalize(entityType);
 };

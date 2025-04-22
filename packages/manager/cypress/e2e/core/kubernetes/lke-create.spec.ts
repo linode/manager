@@ -1086,7 +1086,7 @@ describe('LKE Cluster Creation with ACL', () => {
         'At least one IP address or CIDR range is required for LKE Enterprise.'
       ).should('be.visible');
 
-      // Add an IP,
+      // Add an IP.
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click();
@@ -1112,12 +1112,13 @@ describe('LKE Cluster Creation with ACL', () => {
       // Check the acknowledgement to prevent IP validation.
       cy.findByRole('checkbox', { name: /Provide an ACL later/ }).check();
 
-      // Clear the IP address field and check the acknowledgement to confirm the form can now submit without IP address validation.
-      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
-        .should('be.visible')
-        .click();
-      cy.focused().clear();
-      cy.findByRole('checkbox', { name: /Provide an ACL later/ }).check();
+      // Confirm the fields are disabled.
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0').within(() => {
+        cy.get('input').should('be.visible').should('be.disabled');
+      });
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0').within(() => {
+        cy.get('input').should('be.visible').should('be.disabled');
+      });
 
       // Finally, add a label, so the form will submit.
       cy.findByLabelText('Cluster Label').should('be.visible').click();

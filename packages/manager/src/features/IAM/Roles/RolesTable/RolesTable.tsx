@@ -1,4 +1,4 @@
-import { Button, Select } from '@linode/ui';
+import { Button, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
@@ -15,10 +15,13 @@ import {
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { StyledTextTooltip } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
+import { Link } from 'src/components/Link';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
-import { mapEntityTypesForSelect } from 'src/features/IAM/Shared/utilities';
+import {
+  getFacadeRoleDescription,
+  mapEntityTypesForSelect,
+} from 'src/features/IAM/Shared/utilities';
 
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
@@ -114,17 +117,15 @@ export const RolesTable = ({ roles }: Props) => {
         container
         direction="row"
         spacing={2}
-        sx={() => ({
-          justifyContent: 'space-between',
-        })}
+        sx={() => ({ justifyContent: 'space-between' })}
       >
         <Grid
           container
           direction="row"
-          sx={() => ({
+          sx={{
             alignItems: 'center',
             justifyContent: 'flex-start',
-          })}
+          }}
         >
           <DebouncedSearchTextField
             clearable
@@ -180,7 +181,7 @@ export const RolesTable = ({ roles }: Props) => {
               sort={(event) => handleSort(event, 'access')}
               sortable
               sorted={sort?.column === 'access' ? sort.order : undefined}
-              style={{ minWidth: '18%' }}
+              style={{ minWidth: '14%' }}
             >
               Role Type
             </TableHeaderCell>
@@ -188,11 +189,11 @@ export const RolesTable = ({ roles }: Props) => {
               sort={(event) => handleSort(event, 'description')}
               sortable
               sorted={sort?.column === 'description' ? sort.order : undefined}
-              style={{ minWidth: '30%' }}
+              style={{ minWidth: '38%' }}
             >
               Description
             </TableHeaderCell>
-            <TableHeaderCell style={{ minWidth: '14%' }} />
+            <TableHeaderCell style={{ minWidth: '10%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -214,24 +215,21 @@ export const RolesTable = ({ roles }: Props) => {
                 <TableCell style={{ minWidth: '26%' }}>
                   {roleRow.name}
                 </TableCell>
-                <TableCell style={{ minWidth: '18%' }}>
+                <TableCell style={{ minWidth: '14%' }}>
                   {capitalizeAllWords(roleRow.access, '_')}
                 </TableCell>
-                <TableCell style={{ minWidth: '30%' }}>
-                  {roleRow.description.length <= 80 ? (
-                    <>{roleRow.description}</>
+                <TableCell style={{ minWidth: '38%' }}>
+                  {roleRow.permissions.length ? (
+                    roleRow.description
                   ) : (
-                    <span>
-                      {roleRow.description.substring(0, 80)}
-                      {'... '}
-                      <StyledTextTooltip
-                        displayText={'Show more'}
-                        tooltipText={roleRow.description}
-                      />
-                    </span>
+                    // TODO: update the link for the description when it's ready - UIE-8534
+                    <Typography>
+                      {getFacadeRoleDescription(roleRow)}{' '}
+                      <Link to="#">Learn more.</Link>
+                    </Typography>
                   )}
                 </TableCell>
-                <TableCell style={{ minWidth: '14%' }}>
+                <TableCell style={{ minWidth: '10%' }}>
                   <RolesTableActionMenu />
                 </TableCell>
                 <TableRowExpanded
