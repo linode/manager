@@ -377,13 +377,8 @@ export const extractPlansInformation = ({
           )
         );
 
-      const planIsMTCTTInSupportedRegionWithResizingDisabled = Boolean(
-        isCustomMTCPlan &&
-          selectedRegionId &&
-          MTC_TT['availability_regions'].includes(
-            selectedRegionId as (typeof MTC_TT)['availability_regions'][number]
-          ) &&
-          isActionResize
+      const planIsMTCTTWithResizing = Boolean(
+        isCustomMTCPlan && isActionResize
       );
 
       const planHasLimitedAvailability = getIsLimitedAvailability({
@@ -413,7 +408,7 @@ export const extractPlansInformation = ({
         planHasLimitedAvailability,
         planIsDisabled512Gb,
         planIsMTCTTAndUnavailableInSelectedRegion,
-        planIsMTCTTInSupportedRegionWithResizingDisabled,
+        planIsMTCTTWithResizing,
         planIsSmallerThanUsage,
         planIsTooSmall,
         planIsTooSmallForAPL,
@@ -427,7 +422,7 @@ export const extractPlansInformation = ({
       planHasLimitedAvailability,
       planIsDisabled512Gb,
       planIsMTCTTAndUnavailableInSelectedRegion,
-      planIsMTCTTInSupportedRegionWithResizingDisabled,
+      planIsMTCTTWithResizing,
       planIsSmallerThanUsage,
       planIsTooSmall,
       planIsTooSmallForAPL,
@@ -442,7 +437,7 @@ export const extractPlansInformation = ({
       planHasLimitedAvailability ||
       planIsDisabled512Gb ||
       planIsMTCTTAndUnavailableInSelectedRegion ||
-      planIsMTCTTInSupportedRegionWithResizingDisabled ||
+      planIsMTCTTWithResizing ||
       planIsSmallerThanUsage ||
       planIsTooSmall ||
       planIsTooSmallForAPL
@@ -473,7 +468,7 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability,
   planIsDisabled512Gb,
   planIsMTCTTAndUnavailableInSelectedRegion,
-  planIsMTCTTInSupportedRegionWithResizingDisabled,
+  planIsMTCTTWithResizing,
   planIsSmallerThanUsage,
   planIsTooSmall,
   planIsTooSmallForAPL,
@@ -483,7 +478,7 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsMTCTTAndUnavailableInSelectedRegion?: DisabledTooltipReasons['planIsMTCTTAndUnavailableInSelectedRegion'];
-  planIsMTCTTInSupportedRegionWithResizingDisabled?: DisabledTooltipReasons['planIsMTCTTInSupportedRegionWithResizingDisabled'];
+  planIsMTCTTWithResizing?: DisabledTooltipReasons['planIsMTCTTWithResizing'];
   planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
@@ -493,12 +488,12 @@ export const getDisabledPlanReasonCopy = ({
     return PLAN_NOT_AVAILABLE_IN_REGION_COPY;
   }
 
-  if (planIsMTCTTAndUnavailableInSelectedRegion) {
-    return PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY;
+  if (planIsMTCTTWithResizing) {
+    return PLAN_DOES_NOT_SUPPORT_RESIZING_COPY;
   }
 
-  if (planIsMTCTTInSupportedRegionWithResizingDisabled) {
-    return PLAN_DOES_NOT_SUPPORT_RESIZING_COPY;
+  if (planIsMTCTTAndUnavailableInSelectedRegion) {
+    return PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY;
   }
 
   if (planBelongsToDisabledClass) {
