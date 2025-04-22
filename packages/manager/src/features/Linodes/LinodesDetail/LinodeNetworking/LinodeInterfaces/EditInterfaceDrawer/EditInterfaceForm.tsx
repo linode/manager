@@ -1,10 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  firewallQueries,
-  useAddFirewallDeviceMutation,
   useLinodeInterfaceFirewallsQuery,
   useLinodeInterfaceQuery,
-  useRemoveFirewallDeviceMutation,
   useUpdateLinodeInterfaceMutation,
 } from '@linode/queries';
 import {
@@ -16,7 +13,6 @@ import {
   Notice,
   Stack,
 } from '@linode/ui';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -24,7 +20,10 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 
 import { getLinodeInterfaceType } from '../utilities';
-import { EditLinodeInterfaceFormSchema } from './EditInterfaceForm.utils';
+import {
+  EditLinodeInterfaceFormSchema,
+  useUpdateLinodeInterfaceFirewallMutation,
+} from './EditInterfaceForm.utils';
 import { PublicIPv4Addresses } from './PublicInterface/IPv4Addresses';
 import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
 import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
@@ -43,7 +42,6 @@ export const EditInterfaceForm = (props: Props) => {
   const { interfaceId, linodeId, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
 
   const {
     data: linodeInterface,
@@ -58,13 +56,13 @@ export const EditInterfaceForm = (props: Props) => {
 
   const firewall = firewalls?.data[0] ?? null;
 
-  const { mutateAsync: createFirewallDevice } = useAddFirewallDeviceMutation();
-  const { mutateAsync: deleteFirewallDevice } =
-    useRemoveFirewallDeviceMutation();
   const { mutateAsync: updateInterface } = useUpdateLinodeInterfaceMutation(
     linodeId,
     interfaceId
   );
+
+  const { mutateAsync: updateInterfaceFirewall } =
+    useUpdateLinodeInterfaceFirewallMutation(linodeId, interfaceId);
 
   const values = {
     ...linodeInterface,
@@ -80,46 +78,11 @@ export const EditInterfaceForm = (props: Props) => {
   const onSubmit = async (
     values: InferType<typeof EditLinodeInterfaceFormSchema>
   ) => {
-    // User is changing the firewall
-    if (values.firewall_id && firewall && values.firewall_id !== firewall.id) {
-      // Get the firewall device to delete
-      const devices = await queryClient.ensureQueryData(
-        firewallQueries.firewall(firewall.id)._ctx.devices
-      );
-      const device = devices.find(
-        (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
-      );
-      if (device) {
-        await deleteFirewallDevice({
-          firewallId: firewall.id,
-          deviceId: device.id,
-        });
-        await createFirewallDevice({
-          firewallId: values.firewall_id,
-          id: interfaceId,
-          type: 'interface',
-        });
-      } else {
-        // @todo handle error
-      }
-    } else if (!firewall && values.firewall_id) {
-      await createFirewallDevice({
-        firewallId: values.firewall_id,
-        id: interfaceId,
-        type: 'interface',
-      });
-    } else if (firewall && !values.firewall_id) {
-      const devices = await queryClient.ensureQueryData(
-        firewallQueries.firewall(firewall.id)._ctx.devices
-      );
-      const device = devices.find(
-        (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
-      );
-      if (device) {
-        await deleteFirewallDevice({
-          firewallId: firewall.id,
-          deviceId: device.id,
-        });
+    try {
+      await updateInterfaceFirewall({ firewall_id: values.firewall_id });
+    } catch (errors) {
+      for (const error of errors) {
+        form.setError('firewall_id', { message: error.reason });
       }
     }
 
