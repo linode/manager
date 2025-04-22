@@ -164,7 +164,9 @@ export const CloudPulseRegionSelect = React.memo(
         }}
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources ?? []}
-        value={selectedRegion}
+        value={
+          supportedRegionsFromResources?.length ? selectedRegion : undefined
+        }
       />
     );
   },
