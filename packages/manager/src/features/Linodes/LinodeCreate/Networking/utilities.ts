@@ -42,7 +42,7 @@ export const getLinodeInterfacePayload = (
   }
 
   if (cleanedInterface.vpc) {
-    cleanedInterface.vpc.vpc_id = undefined;
+    cleanedInterface.vpc = omitProps(cleanedInterface.vpc, ['vpc_id']);
   }
 
   return cleanedInterface;
