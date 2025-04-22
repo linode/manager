@@ -297,7 +297,7 @@ export const AlertListing = () => {
             >
               contact support
             </Link>{' '}
-            for assistance
+            for assistance.
           </Typography>
         </Notice>
       )}
