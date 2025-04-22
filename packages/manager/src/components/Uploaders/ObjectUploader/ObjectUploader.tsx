@@ -192,7 +192,7 @@ export const ObjectUploader = React.memo((props: Props) => {
           .catch((_) => handleError());
       } else {
         // Otherwise, we need to make an API request to get the URL.
-        getObjectURL(clusterId, bucketName, encodeURI(fullObjectName), 'PUT', {
+        getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
           content_type: file.type,
         })
           .then(({ exists, url }) => {
