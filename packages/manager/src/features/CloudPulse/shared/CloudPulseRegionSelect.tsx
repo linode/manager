@@ -92,8 +92,11 @@ export const CloudPulseRegionSelect = React.memo(
         // Notify parent and set internal state
         handleRegionChange(region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
-      } else if (selectedRegion) {
-        setSelectedRegion(''); // reset the selection as some dependent filters are not selected / changing
+      } else {
+        if (selectedRegion !== undefined) {
+          setSelectedRegion('');
+        }
+        handleRegionChange(undefined, []);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
