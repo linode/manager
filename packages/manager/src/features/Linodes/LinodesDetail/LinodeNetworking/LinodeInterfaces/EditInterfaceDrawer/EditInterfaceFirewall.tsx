@@ -17,7 +17,8 @@ interface Props {
 }
 
 export const EditInterfaceFirewall = ({ showSuccessNotice }: Props) => {
-  const { control } = useFormContext<InferType<typeof EditLinodeInterfaceFormSchema>>();
+  const { control } =
+    useFormContext<InferType<typeof EditLinodeInterfaceFormSchema>>();
 
   return (
     <Stack spacing={1}>
@@ -25,6 +26,9 @@ export const EditInterfaceFirewall = ({ showSuccessNotice }: Props) => {
       {showSuccessNotice && (
         <Notice text="Firewall successfully updated." variant="success" />
       )}
+      <Typography>
+        Secure your Linode by assigning a Firewall to your interface.
+      </Typography>
       <Controller
         control={control}
         name="firewall_id"
