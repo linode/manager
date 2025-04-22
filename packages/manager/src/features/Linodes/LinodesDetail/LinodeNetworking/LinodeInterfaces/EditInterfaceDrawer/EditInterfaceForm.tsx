@@ -91,16 +91,18 @@ export const EditInterfaceForm = (props: Props) => {
         }
       }
       // If the interface was updated successfully,
-      // update the form values so that any auto-allocated IPs propgate.
+      // update the form values so that any auto-allocated IPs propagate in the form state.
       // We do this in case the firewall request fails and the drawer stays open.
+      // It ensures the `Reset` button works as expected.
       if (results[0].status === 'fulfilled') {
         const updatedInterfaceValues = results[0].value;
         form.reset((prev) => ({ ...prev, ...updatedInterfaceValues }));
       }
 
       // If the firewall was updated successfully,
-      // update the form values so that new firewall is propogated in the form state.
+      // update the form values so that new firewall is propagated in the form state.
       // We do this in case the interface update request failed and the drawer stays open.
+      // It ensures the `Reset` button works as expected.
       if (results[1].status === 'fulfilled') {
         const updatedFirewallId = results[1].value;
         if (updatedFirewallId !== false) {
