@@ -48,12 +48,8 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const {
-      getAllByLabelText,
-      getByLabelText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(<AlertListing />);
+    const { getAllByLabelText, getByLabelText, getByTestId, getByText } =
+      renderWithTheme(<AlertListing />);
     expect(getByText('Alert Name')).toBeInTheDocument();
     expect(getByText('Service')).toBeInTheDocument();
     expect(getByText('Status')).toBeInTheDocument();
@@ -177,5 +173,24 @@ describe('Alert Listing', () => {
       expect(getByText(alert1.label)).toBeVisible();
       expect(queryByText(alert2.label)).not.toBeInTheDocument();
     });
+  });
+
+  it('should show error notice for failed alerts', () => {
+    const alerts = alertFactory.buildList(3, {
+      status: 'failed',
+    });
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: alerts,
+      isError: false,
+      isLoading: false,
+    });
+
+    const { getByText } = renderWithTheme(<AlertListing />);
+
+    expect(
+      getByText(
+        'Creation of some alerts has failed. Please contact support for assistance.'
+      )
+    ).toBeInTheDocument();
   });
 });
