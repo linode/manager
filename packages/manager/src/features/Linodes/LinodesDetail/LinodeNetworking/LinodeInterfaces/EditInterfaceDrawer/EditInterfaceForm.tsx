@@ -67,41 +67,46 @@ export const EditInterfaceForm = (props: Props) => {
       return errorCount;
     }, 0);
 
-    // Handle Interface update errors
-    if (results[0].status === 'rejected') {
-      for (const error of results[0].reason) {
-        form.setError(error.field ?? 'root', { message: error.reason });
-      }
-    }
-    // If the interface was updated successfully, update the form values so that
-    // allocated IPs propgate in case the firewall request failed and the drawer stays open.
-    if (results[0].status === 'fulfilled') {
-      const updatedInterfaceValues = results[0].value;
-      form.reset((prev) => ({ ...prev, ...updatedInterfaceValues }));
-    }
-
-    // Handle Firewall update errors
-    if (results[1].status === 'rejected') {
-      for (const error of results[1].reason) {
-        form.setError('firewall_id', { message: error.reason });
-      }
-    }
-
-    // If the firewall was updated successfully, update the form values so that
-    // new firewall is updated in the form state in case the interface update request
-    // failed and the drawer stays open.
-    if (results[1].status === 'fulfilled') {
-      const updatedFirewallId = results[1].value;
-      if (updatedFirewallId !== false) {
-        form.resetField('firewall_id', { defaultValue: updatedFirewallId });
-      }
-    }
-
     if (totalNumberOfErrors === 0) {
+      // If everything went okay...
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
+
       onClose();
+    } else {
+      // If something didn't go okay...
+
+      // Handle Interface update errors
+      if (results[0].status === 'rejected') {
+        for (const error of results[0].reason) {
+          form.setError(error.field ?? 'root', { message: error.reason });
+        }
+      }
+
+      // Handle Firewall update errors
+      if (results[1].status === 'rejected') {
+        for (const error of results[1].reason) {
+          form.setError('firewall_id', { message: error.reason });
+        }
+      }
+      // If the interface was updated successfully,
+      // update the form values so that any auto-allocated IPs propgate.
+      // We do this in case the firewall request fails and the drawer stays open.
+      if (results[0].status === 'fulfilled') {
+        const updatedInterfaceValues = results[0].value;
+        form.reset((prev) => ({ ...prev, ...updatedInterfaceValues }));
+      }
+
+      // If the firewall was updated successfully,
+      // update the form values so that new firewall is propogated in the form state.
+      // We do this in case the interface update request failed and the drawer stays open.
+      if (results[1].status === 'fulfilled') {
+        const updatedFirewallId = results[1].value;
+        if (updatedFirewallId !== false) {
+          form.resetField('firewall_id', { defaultValue: updatedFirewallId });
+        }
+      }
     }
   };
 
