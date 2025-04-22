@@ -10,8 +10,10 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
+import { alertLimitMessage, metricLimitMessage } from './constants';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
@@ -22,7 +24,13 @@ const searchAndSelectSx = {
   sm: '400px',
   xs: '300px',
 };
-
+// hardcoding the value is temporary solution until something from the API side is confirmed.
+const maxAllowedAlerts = 100;
+const maxAllowedMetrics = 100;
+interface AlertsLimitErrorMessageProps {
+  isAlertLimitReached: boolean;
+  isMetricLimitReached: boolean;
+}
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
@@ -33,6 +41,20 @@ export const AlertListing = () => {
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const topRef = React.useRef<HTMLButtonElement>(null);
+
+  const isAlertLimitReached = alerts
+    ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
+    : false;
+
+  const isMetricLimitReached = alerts
+    ? alerts
+        .filter(({ type }) => type === 'user')
+        .reduce(
+          (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
+          0
+        ) >= maxAllowedMetrics
+    : false;
+
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -146,6 +168,12 @@ export const AlertListing = () => {
   }
   return (
     <Stack spacing={2}>
+      {(isAlertLimitReached || isMetricLimitReached) && (
+        <AlertsLimitErrorMessage
+          isAlertLimitReached={isAlertLimitReached}
+          isMetricLimitReached={isMetricLimitReached}
+        />
+      )}
       <Box
         alignItems={{ lg: 'flex-end', md: 'flex-start' }}
         display="flex"
@@ -234,7 +262,9 @@ export const AlertListing = () => {
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
+          disabled={isAlertLimitReached || isMetricLimitReached}
           ref={topRef}
+          tooltipText="You have reached your limit of definitions for this account."
           variant="contained"
         >
           Create Alert
@@ -251,4 +281,39 @@ export const AlertListing = () => {
       />
     </Stack>
   );
+};
+
+const AlertsLimitErrorMessage = ({
+  isAlertLimitReached,
+  isMetricLimitReached,
+}: AlertsLimitErrorMessageProps) => {
+  if (isAlertLimitReached && isMetricLimitReached) {
+    return (
+      <AlertListNoticeMessages
+        errorMessage={`${alertLimitMessage}:${metricLimitMessage}`}
+        separator=":"
+        variant="warning"
+      />
+    );
+  }
+
+  if (isAlertLimitReached) {
+    return (
+      <AlertListNoticeMessages
+        errorMessage={alertLimitMessage}
+        variant="warning"
+      />
+    );
+  }
+
+  if (isMetricLimitReached) {
+    return (
+      <AlertListNoticeMessages
+        errorMessage={metricLimitMessage}
+        variant="warning"
+      />
+    );
+  }
+
+  return null;
 };
