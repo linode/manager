@@ -74,17 +74,17 @@ export const CloudPulseRegionSelect = React.memo(
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     React.useEffect(() => {
-      // we clear the selected region if there is already one.
-      if (selectedRegion) {
-        setSelectedRegion(undefined);
-        if (!disabled) {
-          handleRegionChange(undefined, [], true);
-        }
+      if (disabled && !selectedRegion) {
+        return; // no need to do anything
       }
-
       // If component is not disabled, regions have loaded, preferences should be saved,
       // and there's no selected region — attempt to preselect from defaultValue.
-      if (!disabled && regions && savePreferences && !selectedRegion) {
+      if (
+        !disabled &&
+        regions &&
+        savePreferences &&
+        selectedRegion === undefined
+      ) {
         // Try to find the region corresponding to the saved default value
         const region = defaultValue
           ? regions.find((regionObj) => regionObj.id === defaultValue)
@@ -92,17 +92,14 @@ export const CloudPulseRegionSelect = React.memo(
         // Notify parent and set internal state
         handleRegionChange(region?.id, region ? [region.label] : []);
         setSelectedRegion(region?.id);
+      } else if (selectedRegion) {
+        setSelectedRegion(''); // reset the selection as some dependent filters are not selected / changing
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       xFilter, // Reacts to filter changes (to reset region)
       regions, // Function to call on change
     ]);
-
-    const regionsFromResources =
-      resources
-        ?.filter(({ region }) => region !== undefined)
-        .map(({ region }) => region) ?? [];
 
     // validate launchDarkly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
@@ -124,6 +121,11 @@ export const CloudPulseRegionSelect = React.memo(
 
       return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
     }, [flags.aclpResourceTypeMap, regions, serviceType]);
+
+    const regionsFromResources =
+      resources
+        ?.filter(({ region }) => region !== undefined)
+        .map(({ region }) => region) ?? [];
 
     const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
       regionsFromResources.includes(id)
@@ -153,7 +155,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading || isResourcesLoading}
         noMarginTop
         onChange={(_, region) => {
-          setSelectedRegion(region?.id);
+          setSelectedRegion(region?.id ?? '');
           handleRegionChange(
             region?.id,
             region ? [region.label] : [],
@@ -162,7 +164,9 @@ export const CloudPulseRegionSelect = React.memo(
         }}
         placeholder={placeholder ?? 'Select a Region'}
         regions={supportedRegionsFromResources ?? []}
-        value={selectedRegion}
+        value={
+          supportedRegionsFromResources?.length ? selectedRegion : undefined
+        }
       />
     );
   },
