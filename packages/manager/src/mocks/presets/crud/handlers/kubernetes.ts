@@ -6,6 +6,7 @@ import {
   kubeLinodeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
+  kubernetesDashboardUrlFactory,
   kubernetesEnterpriseTierVersionFactory,
   kubernetesStandardTierVersionFactory,
   kubernetesVersionFactory,
@@ -24,6 +25,7 @@ import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
+  KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesTieredVersion,
   KubernetesVersion,
@@ -139,6 +141,19 @@ export const getKubernetesClusters = (mockState: MockState) => [
       const acl = kubernetesControlPlaneACLFactory.build();
 
       return makeResponse(acl);
+    }
+  ),
+
+  http.get(
+    '*/v4/lke/clusters/:id/dashboard',
+    async ({
+      params,
+    }): Promise<
+      StrictResponse<APIErrorResponse | KubernetesDashboardResponse>
+    > => {
+      const dashboard = kubernetesDashboardUrlFactory.build();
+
+      return makeResponse(dashboard);
     }
   ),
 ];
@@ -310,6 +325,13 @@ export const updateKubernetesCluster = (mockState: MockState) => [
       return makeResponse(updatedCluster);
     }
   ),
+
+  http.post(
+    '*/v4/lke/clusters/:id/recycle',
+    async ({}): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      return makeResponse({});
+    }
+  ),
 ];
 
 export const deleteKubernetesCluster = (mockState: MockState) => [
@@ -402,7 +424,7 @@ export const getKubernetesVersions = () => [
 ];
 
 // The pools endpoint doesn't contain the clusterId needed for linkage in the mock DB, so extend the type here.
-interface MockKubeNodePoolResponse extends KubeNodePoolResponse {
+export interface MockKubeNodePoolResponse extends KubeNodePoolResponse {
   clusterId: number;
 }
 

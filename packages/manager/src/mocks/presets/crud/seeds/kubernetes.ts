@@ -15,10 +15,22 @@ export const kubernetesSeeder: MockSeeder = {
   seeder: async (mockState: MockState) => {
     const seedsCountMap = getSeedsCountMap();
     const count = seedsCountMap[kubernetesSeeder.id] ?? 0;
+
     const kubernetesClusterSeeds = seedWithUniqueIds<'kubernetesClusters'>({
       dbEntities: await mswDB.getAll('kubernetesClusters'),
       seedEntities: kubernetesClusterFactory.buildList(count),
     });
+
+    // const kubernetesNodePoolSeeds = seedWithUniqueIds<'kubernetesNodePools'>({
+    //   dbEntities: await mswDB.getAll('kubernetesNodePools'),
+    //   seedEntities: kubernetesClusterSeeds.map((cluster) => {
+    //     const nodePool: MockKubeNodePoolResponse = {
+    //       ...nodePoolFactory.build(),
+    //       clusterId: cluster?.id ?? -1,
+    //     };
+    //     return nodePool;
+    //   }),
+    // });
 
     const updatedMockState = {
       ...mockState,
