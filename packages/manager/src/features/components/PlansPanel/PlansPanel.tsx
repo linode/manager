@@ -22,6 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCTTPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -51,8 +52,8 @@ export interface PlansPanelProps {
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
-  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
+  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
@@ -106,6 +107,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const _types = types.filter((type) => {
     if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC_TT plans if the feature flag is not enabled.
+    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
       return false;
     }
 
@@ -173,6 +179,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                disabledClasses={disabledClasses}
+                flow="linode"
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
                   showDistributedRegionPlanTable ||
                   !flags.disableLargestGbPlans ||
@@ -181,10 +191,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
-                disabledClasses={disabledClasses}
-                flow="linode"
-                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-                hasSelectedRegion={hasSelectedRegion}
                 planType={plan}
                 regionsData={regionsData || []}
               />
@@ -201,8 +207,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionID}
                 showLimits={showLimits}
