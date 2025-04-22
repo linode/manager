@@ -102,7 +102,7 @@ const databaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: clusterName,
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
@@ -115,7 +115,7 @@ const extendDatabaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: 'updated-dbass-mock',
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
@@ -244,6 +244,14 @@ describe('DBaaS Dashboard - Max Resource Selection Limit', () => {
       .findByTitle(dashboardName)
       .should('be.visible')
       .click();
+
+    // Select a Database Engine from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type(engine);
+
+    ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
     // Select a region.
     ui.regionSelect.find().click().clear();

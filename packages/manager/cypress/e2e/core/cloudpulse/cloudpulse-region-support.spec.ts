@@ -21,9 +21,11 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import { accountFactory, dashboardFactory, widgetFactory } from 'src/factories';
+import { accountFactory, dashboardFactory, databaseFactory, widgetFactory } from 'src/factories';
 
 import type { Flags } from 'src/featureFlags';
+import { Database } from '@linode/api-v4';
+import { mockGetDatabases } from 'support/intercepts/databases';
 
 const { dashboardName, id, metrics, serviceType } = widgetDetails.dbaas;
 
@@ -54,6 +56,16 @@ const extendedMockRegion = regionFactory.build({
   label: 'Newark,NL',
 });
 
+const databaseMock: Database = databaseFactory.build({
+  cluster_size: 3,
+  engine: 'mysql',
+  label: 'mysql-cluster',
+  region: mockRegion.id,
+  status: 'provisioning',
+  type: 'PostgreSQL',
+  version: '1',
+});
+
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
@@ -62,6 +74,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseDashboard(id, dashboard);
     mockGetRegions([mockRegion, extendedMockRegion]).as('fetchRegion');
     mockGetUserPreferences({});
+    mockGetDatabases([databaseMock]).as('getDatabases');
   });
 
   it('should only display the Chicago region in the dropdown when supportedRegionIds is set to Chicago (us-ord)', () => {
@@ -99,6 +112,17 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Wait for the services and dashboard ,Region API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
+
+    // Select a Database Engine from the autocomplete input. (This is now mandatory to see the regions, because of the dependent filter)
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('PostgreSQL');
+
+    ui.autocompletePopper
+      .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
@@ -215,6 +239,17 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     // Wait for the services and dashboard ,Region API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
 
+    // Select a Database Engine from the autocomplete input. (This is now mandatory to see the regions, because of the dependent filter)
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('PostgreSQL');
+
+    ui.autocompletePopper
+      .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
+
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
       cy.get('[data-option-index]').should('have.length', 0);
@@ -225,7 +260,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Verify that the applied filters
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('h3').should('not.exist');
+      cy.get('h3').should('have.length', '1'); // because cluster is mandatory
     });
   });
 
@@ -263,7 +298,23 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     // Wait for the services and dashboard ,Region API calls to complete before proceeding
-    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
+    cy.wait([
+      '@fetchServices',
+      '@fetchDashboard',
+      '@fetchRegion',
+      '@getDatabases',
+    ]);
+
+    // Select a Database Engine from the autocomplete input. (This is now mandatory to see the regions, because of the dependent filter)
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('PostgreSQL');
+
+    ui.autocompletePopper
+      .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
 
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
@@ -275,7 +326,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Verify that the applied filters
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('h3').should('not.exist');
+      cy.get('h3').should('have.length', '1'); // because cluster is mandatory
     });
   });
 
@@ -320,6 +371,17 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     // Wait for the services and dashboard ,Region API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
 
+    // Select a Database Engine from the autocomplete input. (This is now mandatory to see the regions, because of the dependent filter)
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('PostgreSQL');
+
+    ui.autocompletePopper
+      .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
+
     ui.regionSelect.find().click();
     ui.autocompletePopper.find().within(() => {
       cy.get('[data-option-index]').should('have.length', 0);
@@ -330,7 +392,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Verify that the applied filters
     cy.get('[data-qa-applied-filter-id="applied-filter"]').within(() => {
-      cy.get('h3').should('not.exist');
+      cy.get('h3').should('have.length', '1'); // because cluster is mandatory
     });
   });
 
@@ -370,6 +432,17 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Wait for the services and dashboard ,Region API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchRegion']);
+
+    // Select a Database Engine from the autocomplete input. (This is now mandatory to see the regions, because of the dependent filter)
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type('PostgreSQL');
+
+    ui.autocompletePopper
+      .findByTitle('PostgreSQL')
+      .should('be.visible')
+      .click();
 
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
