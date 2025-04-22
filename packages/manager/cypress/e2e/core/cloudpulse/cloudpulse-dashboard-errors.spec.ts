@@ -404,14 +404,6 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
@@ -420,10 +412,18 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+
+    ui.regionSelect
+      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .should('be.visible')
+      .click();
+
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');
 
-    cy.get('[data-qa-textfield-error-text="Database Clusters"]')
+    cy.get('[data-qa-textfield-error-text="Region"]') // since region itself dependent on the instance call, the error message is shown
       .should('be.visible')
       .should('have.text', 'Failed to fetch Database Clusters.');
   });

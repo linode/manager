@@ -175,7 +175,7 @@ const databaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: clusterName,
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
