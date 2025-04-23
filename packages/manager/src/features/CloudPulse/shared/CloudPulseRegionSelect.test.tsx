@@ -31,7 +31,7 @@ const flags: Partial<Flags> = {
   aclpResourceTypeMap: [
     {
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-west, us-east, ,',
+      supportedRegionIds: 'us-west, us-east',
     },
     {
       serviceType: 'linode',
