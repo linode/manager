@@ -125,22 +125,10 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       {assignedLinodesCount > 0 ? (
         <>
           <Notice spacingTop={8} variant="warning">
-            <Typography>
+            <Typography sx={{ pl: 0.5 }}>
               <strong>Warning:</strong>
             </Typography>
-            <List
-              sx={(theme) => ({
-                '& > li': {
-                  display: 'list-item',
-                  fontSize: '0.875rem',
-                  pb: 0,
-                  pl: 0,
-                },
-                listStyle: 'disc',
-                ml: theme.spacing(2),
-                mt: theme.spacing(),
-              })}
-            >
+            <List>
               <ListItem>
                 Deleting a placement group is permanent and cannot be undone.
               </ListItem>
