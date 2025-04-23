@@ -7,7 +7,7 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Extend the API's new interface type with a vpc_id so that state managment is easier for us
+ * Extend the API's new interface type with a vpc_id so that state management is easier for us
  * The new endpoint only uses subnet_id and I guess it derives the VPC from that?
  */
 interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
