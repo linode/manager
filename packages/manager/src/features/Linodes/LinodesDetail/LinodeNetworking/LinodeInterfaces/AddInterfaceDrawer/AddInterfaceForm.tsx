@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
+import { getCleanedLinodeInterfaceValues } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
@@ -41,7 +41,7 @@ export const AddInterfaceForm = (props: Props) => {
       },
     },
     async resolver(rawValues, context, options) {
-      const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
+      const valuesWithOnlySelectedInterface = getCleanedLinodeInterfaceValues(
         structuredClone(rawValues)
       );
 

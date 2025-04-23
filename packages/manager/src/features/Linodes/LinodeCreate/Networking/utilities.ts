@@ -1,5 +1,3 @@
-import { omitProps } from '@linode/ui';
-
 import type {
   APIError,
   CreateLinodeInterfacePayload,
@@ -13,14 +11,14 @@ import type {
  * The new endpoint only uses subnet_id and I guess it derives the VPC from that?
  */
 interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
-  vpc_id?: null | number;
+  vpc_id: number;
 }
 
 /**
  * We extend the new `CreateLinodeInterfacePayload` to add extra state we need to track
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
-  purpose?: InterfacePurpose;
+  purpose: InterfacePurpose;
   vpc: null | VPC;
 }
 
@@ -30,19 +28,15 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
  * this function to mutate the `CreateLinodeInterfacePayload` so that only the desired values
  * are kept for the selected interface type (Public, VPC, VLAN).
  */
-export const getLinodeInterfacePayload = (
+export const getCleanedLinodeInterfaceValues = (
   networkInterface: LinodeCreateInterface
 ) => {
-  const cleanedInterface = omitProps(networkInterface, ['purpose']);
+  const cleanedInterface = { ...networkInterface };
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== networkInterface.purpose) {
       cleanedInterface[key] = null;
     }
-  }
-
-  if (cleanedInterface.vpc) {
-    cleanedInterface.vpc = omitProps(cleanedInterface.vpc, ['vpc_id']);
   }
 
   return cleanedInterface;
@@ -152,6 +146,7 @@ export const getDefaultInterfacePayload = (
       ipv4: { addresses: [{ address: 'auto', nat_1_1_address: null }] },
       // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       subnet_id: null,
+      // @ts-expect-error the user must select this (I can't find a way to make these types partial)
       vpc_id: null,
     },
   };

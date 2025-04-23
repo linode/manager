@@ -1,11 +1,10 @@
-import { omitProps } from '@linode/ui';
 import { linodeInterfaceFactoryPublic } from '@linode/utilities';
 
 import { firewallSettingsFactory } from 'src/factories';
 
 import {
+  getCleanedLinodeInterfaceValues,
   getDefaultFirewallForInterfacePurpose,
-  getLinodeInterfacePayload,
   transformLegacyInterfaceErrorsToLinodeInterfaceErrors,
 } from './utilities';
 
@@ -49,8 +48,8 @@ describe('getLinodeInterfacesPayload', () => {
       purpose: 'public' as const,
     };
 
-    expect(getLinodeInterfacePayload(networkInterface)).toEqual({
-      ...omitProps(networkInterface, ['purpose']),
+    expect(getCleanedLinodeInterfaceValues(networkInterface)).toEqual({
+      ...networkInterface,
       vlan: null,
       vpc: null,
     });

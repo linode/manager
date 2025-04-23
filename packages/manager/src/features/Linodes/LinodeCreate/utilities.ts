@@ -22,7 +22,7 @@ import { isPrivateIP } from 'src/utilities/ipUtils';
 import {
   getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
-  getLinodeInterfacePayload,
+  getCleanedLinodeInterfaceValues,
 } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
@@ -190,7 +190,7 @@ export const getLinodeCreatePayload = (
 
     if (shouldUseNewInterfaces) {
       values.interfaces = formValues.linodeInterfaces.map(
-        getLinodeInterfacePayload
+        getCleanedLinodeInterfaceValues
       );
       values.firewall_id = undefined;
     } else {
