@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Button, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Link } from '@mui/material';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
@@ -13,7 +21,11 @@ import { alertStatusOptions } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
-import { alertLimitMessage, metricLimitMessage } from './constants';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
@@ -142,10 +154,10 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const {
-    preference,
-    toggle: toggleAlertsGroupedByTag,
-  } = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
+    'aclpAlertsGroupByTag',
+    [false, true]
+  );
 
   if (alerts && alerts.length === 0) {
     return (
@@ -166,8 +178,12 @@ export const AlertListing = () => {
       />
     );
   }
+
+  const failedAlertsCount =
+    alerts?.filter((alert: Alert) => alert.status === 'failed').length ?? 0;
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
@@ -184,58 +200,52 @@ export const AlertListing = () => {
         ref={topRef}
       >
         <Box
+          display="flex"
           flexDirection={{
             lg: 'row',
             md: 'column',
             sm: 'column',
             xs: 'column',
           }}
-          display="flex"
           gap={2}
         >
           <DebouncedSearchTextField
-            sx={{
-              maxHeight: '34px',
-              width: searchAndSelectSx,
-            }}
             data-qa-filter="alert-search"
             label=""
             noMarginTop
             onSearch={setSearchText}
             placeholder="Search for Alerts"
+            sx={{
+              maxHeight: '34px',
+              width: searchAndSelectSx,
+            }}
             value={searchText}
           />
           <Autocomplete
+            autoHighlight
+            data-qa-filter="alert-service-filter"
+            data-testid="alert-service-filter"
             errorText={
               serviceTypesError
                 ? 'There was an error in fetching the services.'
                 : ''
             }
-            onChange={(_, selected) => {
-              setServiceFilters(selected);
-            }}
-            sx={{
-              width: searchAndSelectSx,
-            }}
-            autoHighlight
-            data-qa-filter="alert-service-filter"
-            data-testid="alert-service-filter"
             label=""
             limitTags={1}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setServiceFilters(selected);
+            }}
             options={getServicesList}
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
-            value={serviceFilters}
-          />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setStatusFilters(selected);
-            }}
             sx={{
               width: searchAndSelectSx,
             }}
+            value={serviceFilters}
+          />
+          <Autocomplete
             autoHighlight
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
@@ -243,15 +253,26 @@ export const AlertListing = () => {
             limitTags={1}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setStatusFilters(selected);
+            }}
             options={alertStatusOptions}
             placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
+            sx={{
+              width: searchAndSelectSx,
+            }}
             value={statusFilters}
           />
         </Box>
         <Button
+          buttonType="primary"
+          data-qa-button="create-alert"
+          data-qa-buttons="true"
+          disabled={isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
             history.push(`${url}/create`);
           }}
+          ref={topRef}
           sx={{
             height: '34px',
             paddingBottom: 0,
@@ -259,17 +280,33 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          buttonType="primary"
-          data-qa-button="create-alert"
-          data-qa-buttons="true"
-          disabled={isAlertLimitReached || isMetricLimitReached}
-          ref={topRef}
-          tooltipText="You have reached your limit of definitions for this account."
+          tooltipText={alertToolTipText}
           variant="contained"
         >
           Create Alert
         </Button>
       </Box>
+      {failedAlertsCount > 0 && (
+        <Notice variant="error">
+          <Typography
+            sx={(theme) => ({
+              font: theme.font.bold,
+              fontSize: theme.spacingFunction(16),
+            })}
+          >
+            Creation of {failedAlertsCount} alerts has failed as indicated in
+            the status column. Please{' '}
+            <Link
+              href="https://cloud.linode.com/support/tickets"
+              underline="hover"
+            >
+              open a support ticket
+            </Link>{' '}
+            for assistance.
+          </Typography>
+        </Notice>
+      )}
+
       <AlertsListTable
         alerts={getAlertsList}
         alertsGroupedByTag={preference}

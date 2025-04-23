@@ -1,5 +1,13 @@
-import { Box, Chip, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { styled, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { Link, styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -29,10 +37,11 @@ export interface AlertRouteParams {
 export const AlertDetail = () => {
   const { alertId, serviceType } = useParams<AlertRouteParams>();
 
-  const { data: alertDetails, isError, isLoading } = useAlertDefinitionQuery(
-    alertId,
-    serviceType
-  );
+  const {
+    data: alertDetails,
+    isError,
+    isLoading,
+  } = useAlertDefinitionQuery(alertId, serviceType);
 
   const { crumbOverrides, pathname } = React.useMemo(() => {
     const overrides = [
@@ -95,61 +104,90 @@ export const AlertDetail = () => {
     entity_ids: entityIds,
     service_type: alertServiceType,
     type,
+    status,
+    label,
   } = alertDetails;
 
   return (
     <>
       <DocumentTitleSegment segment={`${alertDetails.label}`} />
-      <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
-      <Box display="flex" flexDirection="column" gap={2}>
-        <Box display="flex" flexDirection={{ md: 'row', xs: 'column' }} gap={2}>
+      <Stack spacing={2}>
+        <Breadcrumb crumbOverrides={crumbOverrides} pathname={pathname} />
+
+        {status === 'failed' && (
+          <Notice variant="error">
+            <Typography
+              sx={(theme) => ({
+                font: theme.font.bold,
+                fontSize: theme.spacingFunction(16),
+              })}
+            >
+              {label} alert creation has failed. Please{' '}
+              <Link
+                href="https://cloud.linode.com/support/tickets"
+                underline="hover"
+              >
+                open a support ticket
+              </Link>{' '}
+              for assistance.
+            </Typography>
+          </Notice>
+        )}
+
+        <Box display="flex" flexDirection="column" gap={2}>
           <Box
-            data-qa-section="Overview"
-            flexBasis="50%"
-            maxHeight={sectionMaxHeight}
-            sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+            display="flex"
+            flexDirection={{ md: 'row', xs: 'column' }}
+            gap={2}
           >
-            <AlertDetailOverview alertDetails={alertDetails} />
+            <Box
+              data-qa-section="Overview"
+              flexBasis="50%"
+              maxHeight={sectionMaxHeight}
+              sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+            >
+              <AlertDetailOverview alertDetails={alertDetails} />
+            </Box>
+            <Box
+              data-qa-section="Criteria"
+              flexBasis="50%"
+              maxHeight={sectionMaxHeight}
+              sx={{
+                ...getAlertBoxStyles(theme),
+                overflow: 'auto',
+              }}
+            >
+              <AlertDetailCriteria alertDetails={alertDetails} />
+            </Box>
           </Box>
           <Box
+            data-qa-section="Resources"
+            maxHeight={sectionMaxHeight}
             sx={{
               ...getAlertBoxStyles(theme),
               overflow: 'auto',
             }}
-            data-qa-section="Criteria"
-            flexBasis="50%"
-            maxHeight={sectionMaxHeight}
           >
-            <AlertDetailCriteria alertDetails={alertDetails} />
+            <AlertResources
+              alertClass={alertClass}
+              alertResourceIds={entityIds}
+              alertType={type}
+              serviceType={alertServiceType}
+            />
+          </Box>
+          <Box
+            data-qa-section="Notification Channels"
+            sx={{
+              ...getAlertBoxStyles(theme),
+              overflow: 'auto',
+            }}
+          >
+            <AlertDetailNotification
+              channelIds={alertDetails.alert_channels.map(({ id }) => id)}
+            />
           </Box>
         </Box>
-        <Box
-          sx={{
-            ...getAlertBoxStyles(theme),
-            overflow: 'auto',
-          }}
-          data-qa-section="Resources"
-          maxHeight={sectionMaxHeight}
-        >
-          <AlertResources
-            alertClass={alertClass}
-            alertResourceIds={entityIds}
-            alertType={type}
-            serviceType={alertServiceType}
-          />
-        </Box>
-        <Box
-          sx={{
-            ...getAlertBoxStyles(theme),
-            overflow: 'auto',
-          }}
-          data-qa-section="Notification Channels"
-        >
-          <AlertDetailNotification
-            channelIds={alertDetails.alert_channels.map(({ id }) => id)}
-          />
-        </Box>
-      </Box>
+      </Stack>
     </>
   );
 };
