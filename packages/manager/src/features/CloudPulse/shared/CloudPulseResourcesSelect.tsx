@@ -63,14 +63,14 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-            ...xFilter, // the usual xFilters
-          }
+          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+          ...xFilter, // the usual xFilters
+        }
         : {
-            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
-            region,
-            ...(tags ?? []),
-          }
+          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+          region,
+          ...(tags ?? []),
+        }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -183,15 +183,17 @@ export const CloudPulseResourcesSelect = React.memo(
             </ListItem>
           );
         }}
-        sx={{
-          '& .MuiInputBase-root': {
-            maxHeight: '55px',
-            overflow: 'auto',
-            '::-webkit-scrollbar': {
-              display: 'none',
+        textFieldProps={{
+          InputProps: {
+            sx: {
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
+              maxHeight: '55px',
+              msOverflowStyle: 'none',
+              overflow: 'auto',
+              scrollbarWidth: 'none',
             },
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none',
           },
         }}
         autoHighlight
