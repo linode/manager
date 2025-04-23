@@ -185,13 +185,13 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="status"
-              sx={{ width: '15%' }}
+              sx={{ width: '10%' }}
             >
               Status
             </TableSortCell>
             <Hidden smDown>
               <TableCell sx={{ width: '15%' }}>Rules</TableCell>
-              <TableCell sx={{ width: '40%' }}>Services</TableCell>
+              <TableCell sx={{ width: '45%' }}>Services</TableCell>
             </Hidden>
             <TableCell sx={{ width: '10%' }} />
           </TableRow>
