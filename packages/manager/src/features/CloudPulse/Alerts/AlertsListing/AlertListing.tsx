@@ -21,7 +21,11 @@ import { alertStatusOptions } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
-import { alertLimitMessage, metricLimitMessage } from './constants';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
@@ -276,7 +280,7 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          tooltipText="You have reached your limit of definitions for this account."
+          tooltipText={alertToolTipText}
           variant="contained"
         >
           Create Alert
