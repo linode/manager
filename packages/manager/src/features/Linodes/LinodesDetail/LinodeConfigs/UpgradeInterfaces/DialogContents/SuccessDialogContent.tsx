@@ -26,7 +26,7 @@ export const SuccessDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice important variant="success">
+      <Notice variant="success">
         <Typography>
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>
@@ -108,9 +108,9 @@ type VPCInterfaceInfo = VPCInterfaceData &
 
 const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
   const { default_route, ipv4, subnet_id, vpc_id } = props;
-  const { addresses, ranges } = ipv4;
+  const { addresses, ranges } = ipv4 || {};
 
-  const primaryAddress = addresses.find((address) => address.primary === true);
+  const primaryAddress = addresses?.find((address) => address.primary === true);
 
   return (
     <>
@@ -127,13 +127,13 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
         <Typography>VPC ID: {vpc_id}</Typography>
         <Typography>Subnet ID: {subnet_id}</Typography>
         <Typography>
-          Addresses: {addresses.map((address) => address.address).join(', ')}
+          Addresses: {addresses?.map((address) => address.address).join(', ')}
         </Typography>
         {primaryAddress && (
           <Typography>Primary Address: {primaryAddress.address}</Typography>
         )}
-        {ranges.length > 0 && (
-          <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
+        {ranges?.length && ranges?.length > 0 && (
+          <Typography>Routed Ranges: {ranges?.join(', ')}</Typography>
         )}
       </Stack>
     </>
