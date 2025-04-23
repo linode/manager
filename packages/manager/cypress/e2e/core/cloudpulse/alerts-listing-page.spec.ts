@@ -14,8 +14,8 @@ import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory } from 'src/factories';
 import {
-  UPDATE_ALERT_SUCCESS_MESSAGE,
   alertStatuses,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -35,9 +35,11 @@ const mockAlerts = [
     status: 'enabled',
     type: 'user',
     updated: new Date(now.getTime() - 86400).toISOString(),
+    updated_by: 'uuser1',
   }),
   alertFactory.build({
     created_by: 'user4',
+    updated_by: 'uuser4',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-2',
     service_type: 'dbaas',
@@ -48,6 +50,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user2',
+    updated_by: 'uuser2',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-3',
     service_type: 'linode',
@@ -58,6 +61,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user3',
+    updated_by: 'uuser3',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-4',
     service_type: 'linode',
@@ -201,6 +205,11 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         descending: [2, 4, 3, 1],
       },
       { ascending: [2, 3, 4, 1], column: 'updated', descending: [1, 4, 3, 2] },
+      {
+        ascending: [1, 3, 4, 2],
+        column: 'updated_by',
+        descending: [2, 4, 3, 1],
+      },
     ];
 
     sortCases.forEach(({ ascending, column, descending }) => {
