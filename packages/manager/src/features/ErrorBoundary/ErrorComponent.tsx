@@ -22,9 +22,14 @@ export const ErrorComponent = ({
       }}
     >
       <Paper
-        sx={{
-          maxWidth: 600,
-        }}
+        sx={(theme) => ({
+          [theme.breakpoints.down('md')]: {
+            maxWidth: 380,
+          },
+          [theme.breakpoints.up('md')]: {
+            maxWidth: 600,
+          },
+        })}
         variant="outlined"
       >
         <Box
