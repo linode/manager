@@ -175,7 +175,8 @@ export const AlertListing = () => {
     );
   }
 
-  const hasFailedAlerts = alerts?.some((alert) => alert.status === 'failed');
+  const failedAlertsCount =
+    alerts?.filter((alert: Alert) => alert.status === 'failed').length ?? 0;
 
   return (
     <Stack spacing={3}>
@@ -281,7 +282,7 @@ export const AlertListing = () => {
           Create Alert
         </Button>
       </Box>
-      {hasFailedAlerts && (
+      {failedAlertsCount > 0 && (
         <Notice variant="error">
           <Typography
             sx={(theme) => ({
@@ -289,12 +290,13 @@ export const AlertListing = () => {
               fontSize: theme.spacingFunction(16),
             })}
           >
-            Creation of some alerts has failed. Please{' '}
+            Creation of {failedAlertsCount} alerts has failed as indicated in
+            the status column. Please{' '}
             <Link
               href="https://cloud.linode.com/support/tickets"
               underline="hover"
             >
-              contact support
+              open a support ticket
             </Link>{' '}
             for assistance.
           </Typography>
