@@ -21,32 +21,32 @@ import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
-  addEntitiesNamesToRoles,
-  combineRoles,
   getFacadeRoleDescription,
   getFilteredRoles,
   getFormattedEntityType,
-  mapEntityTypes,
-  mapRolesToPermissions,
+  getResourceTypes,
   groupAccountEntitiesByType,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
+import {
+  addEntitiesNamesToRoles,
+  combineRoles,
+  getSearchableFields,
+  mapRolesToPermissions,
+} from './utils';
 
 import type {
   CombinedEntity,
   DrawerModes,
+  EntitiesRole,
   EntitiesType,
   ExtendedRoleMap,
   RoleMap,
-} from '../utilities';
-import type {
-  AccountAccessRole,
-  EntityAccessRole,
-  EntityTypePermissions,
-} from '@linode/api-v4';
+} from '../types';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 type OrderByKeys = 'name';
@@ -154,15 +154,15 @@ export const AssignedRolesTable = () => {
       roles,
     }) as RoleMap[];
 
-    // Sort the filtered roles: Account Access Roles on top, Entity Access Roles on bottom,
-    // and alphabetically sorted by Role name within each group
+    // Sorting logic:
+    // 1. Account Access Roles are placed at the top.
+    // 2. Entity Access Roles are placed at the bottom.
+    // 3. Within each group, roles are sorted alphabetically by Role name.
     const sortedRoles = [...filteredRoles].sort((a, b) => {
-      // Sort by `access` property: 'account_access' comes before 'entity_access'
       if (a.access !== b.access) {
         return a.access === 'account_access' ? -1 : 1;
       }
 
-      // Then sort by the column specified in `orderBy`
       const aValue = a[orderBy];
       const bValue = b[orderBy];
 
@@ -244,7 +244,7 @@ export const AssignedRolesTable = () => {
         label: role.name,
       };
     });
-  }, [roles, query, entityType, order]);
+  }, [roles, query, entityType, order, orderBy]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -270,6 +270,20 @@ export const AssignedRolesTable = () => {
       <TableCell />
     </TableRow>
   );
+
+  // used to pass the selected role and entity to the RemoveAssignmentConfirmationDialog
+  let selectedRoleDetails: EntitiesRole | undefined = undefined;
+
+  if (selectedRole && selectedEntity) {
+    selectedRoleDetails = {
+      entity_type: selectedRole.entity_type,
+      id: selectedRole.id,
+      entity_id: selectedEntity.id,
+      entity_name: selectedEntity.name,
+      role_name: selectedRole.name as EntityAccessRole,
+      access: 'entity_access',
+    };
+  }
 
   return (
     <Grid>
@@ -338,30 +352,8 @@ export const AssignedRolesTable = () => {
       <RemoveAssignmentConfirmationDialog
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}
         open={isRemoveAssignmentDialogOpen}
-        role={{
-          entity_type: selectedRole?.entity_type as EntityTypePermissions,
-          id: selectedRole?.id as EntityAccessRole,
-          entity_id: selectedEntity?.id as number,
-          entity_name: selectedEntity?.name as string,
-          role_name: selectedRole?.name as EntityAccessRole,
-          access: 'entity_access',
-        }}
+        role={selectedRoleDetails}
       />
     </Grid>
   );
-};
-
-const getResourceTypes = (data: RoleMap[]): EntitiesType[] =>
-  mapEntityTypes(data, ' Roles');
-
-const getSearchableFields = (role: ExtendedRoleMap): string[] => {
-  const entityNames = role.entity_names || [];
-  return [
-    String(role.id),
-    role.entity_type,
-    role.name,
-    role.description,
-    ...entityNames,
-    ...role.permissions,
-  ];
 };
