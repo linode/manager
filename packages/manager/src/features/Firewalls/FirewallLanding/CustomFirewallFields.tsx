@@ -6,7 +6,6 @@ import {
   Notice,
   Radio,
   RadioGroup,
-  TextField,
   Typography,
 } from '@linode/ui';
 import { getEntityIdsByPermission } from '@linode/utilities';
@@ -115,23 +114,6 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
 
   return (
     <>
-      <Controller
-        control={control}
-        name="label"
-        render={({ field, fieldState }) => (
-          <TextField
-            aria-label="Label for your new Firewall"
-            disabled={userCannotAddFirewall}
-            errorText={fieldState.error?.message}
-            label="Label"
-            name="label"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            required
-            value={field.value}
-          />
-        )}
-      />
       <Typography style={{ marginTop: 24 }}>
         <strong>Default Inbound Policy</strong>
       </Typography>
