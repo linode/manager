@@ -6,14 +6,10 @@ import { Link } from 'src/components/Link';
 
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
+import { getFacadeRoleDescription } from '../utilities';
 
 import type { EntitiesOption } from '../types';
-import {
-  getFacadeRoleDescription,
-  type DrawerModes,
-  type ExtendedRole,
-  type ExtendedRoleMap,
-} from '../utilities';
+import type { DrawerModes, ExtendedRole, ExtendedRoleMap } from '../utilities';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
