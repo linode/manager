@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -45,6 +45,18 @@ export const Error: StoryObj<NoticeProps> = {
 export const Warning: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a warning notice" variant="warning" />
+  ),
+};
+
+export const WarningInsidePaper: StoryObj<NoticeProps> = {
+  render: (args) => (
+    <Paper>
+      <Notice
+        {...args}
+        text="This is a warning notice inside a paper"
+        variant="warning"
+      />
+    </Paper>
   ),
 };
 
