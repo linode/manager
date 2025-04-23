@@ -68,7 +68,6 @@ export const TaxCollectionBanner = () => {
     !isBannerDateWithinFiveWeeksPrior ? (
     <DismissibleBanner
       actionButton={actionButton}
-      important
       preferenceKey="tax-collection-banner"
       variant="warning"
     >

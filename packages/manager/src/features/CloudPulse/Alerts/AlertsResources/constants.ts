@@ -10,7 +10,6 @@ import type { AlertInstance } from './DisplayAlertResources';
 import type { TextWithInfoProp } from './TextWithExtraInfo';
 import type {
   AlertAdditionalFilterKey,
-  EngineType,
   ServiceColumns,
   ServiceFilterConfig,
 } from './types';
@@ -96,17 +95,6 @@ export const alertAdditionalFilterKeyMap: Record<
   engineType: 'engineType', // engineType filter selected here, will map to engineType property on AlertInstance
   tags: 'tags',
 };
-
-export const engineOptions: EngineType[] = [
-  {
-    id: 'mysql',
-    label: 'MySQL',
-  },
-  {
-    id: 'postgresql',
-    label: 'PostgreSQL',
-  },
-];
 
 export const databaseTypeClassMap: Record<DatabaseTypeClass, string> = {
   dedicated: 'dedicated',
