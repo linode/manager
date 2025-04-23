@@ -1,4 +1,4 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
+import { useSupportTicketsQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -14,10 +14,11 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSupportTicketsQuery } from 'src/queries/support';
 
 import { TicketRow } from './TicketRow';
 import { getStatusFilter, useTicketSeverityCapability } from './ticketUtils';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support';
 
 export interface Props {
   filterStatus: 'closed' | 'open';
@@ -63,9 +64,12 @@ export const TicketList = (props: Props) => {
       return (
         <TableRowLoading
           responsive={{
-            1: { smDown: true },
-            3: { xsDown: true },
-            5: { smDown: true },
+            1: { mdDown: true },
+            2: { mdDown: true },
+            3: !hasSeverityCapability ? { smDown: true } : { smDown: false },
+            4: hasSeverityCapability ? { smDown: true } : { smDown: false },
+            5: !hasSeverityCapability ? { mdDown: true } : { mdDown: false },
+            6: hasSeverityCapability ? { mdDown: true } : { mdDown: false },
           }}
           columns={hasSeverityCapability ? 7 : 6}
         />
@@ -183,5 +187,3 @@ export const TicketList = (props: Props) => {
     </>
   );
 };
-
-export default TicketList;

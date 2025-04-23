@@ -1,17 +1,15 @@
+import { Box, Button, Stack, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { styled } from '@mui/material';
 import { Duration } from 'luxon';
 import * as React from 'react';
-import { DropzoneProps, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { AxiosProgressEvent } from 'axios';
+import type { DropzoneProps } from 'react-dropzone';
 
 interface Props extends Partial<DropzoneProps> {
   /**
@@ -45,18 +43,25 @@ export const ImageUploader = React.memo((props: Props) => {
   return (
     <Dropzone active={isDragActive} {...getRootProps()}>
       <input {...getInputProps()} />
-      <Box display="flex" justifyContent="center">
+      <Stack alignItems="center" justifyContent="center" textAlign="center">
         {acceptedFiles.length === 0 && (
-          <Typography variant="subtitle2">
-            You can browse your device to upload an image file or drop it here.
-          </Typography>
+          <>
+            <Typography variant="subtitle2">
+              An image file needs to be raw disk format (.img) that&rsquo;s
+              compressed using gzip.
+            </Typography>
+            <Typography variant="subtitle2">
+              The maximum compressed file size is 5 GB and the file can&rsquo;t
+              exceed 6 GB when uncompressed.
+            </Typography>
+          </>
         )}
         {acceptedFiles.map((file) => (
           <Typography key={file.name} variant="subtitle2">
             {file.name} ({readableBytes(file.size, { base10: true }).formatted})
           </Typography>
         ))}
-      </Box>
+      </Stack>
       {isUploading && (
         <Stack gap={1}>
           <Box width="100%">
@@ -82,7 +87,7 @@ export const ImageUploader = React.memo((props: Props) => {
       {!isUploading && (
         <Box display="flex" justifyContent="center">
           <Button buttonType="primary" disabled={dropzoneProps.disabled}>
-            Browse Files
+            Choose File
           </Button>
         </Box>
       )}
@@ -91,7 +96,7 @@ export const ImageUploader = React.memo((props: Props) => {
 });
 
 const Dropzone = styled('div')<{ active: boolean }>(({ active, theme }) => ({
-  borderColor: 'gray',
+  borderColor: theme.tokens.color.Neutrals[60],
   borderStyle: 'dashed',
   borderWidth: 1,
   display: 'flex',

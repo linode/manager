@@ -1,9 +1,7 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 
 interface Actions {
   cancel: () => void;
@@ -18,7 +16,7 @@ interface Props extends Actions {
 }
 
 export const CreditCardDialog = (props: Props) => {
-  const { cancel, error, open, usd, isMakingPayment, executePayment } = props;
+  const { cancel, error, executePayment, isMakingPayment, open, usd } = props;
 
   return (
     <ConfirmationDialog
@@ -37,11 +35,11 @@ export const CreditCardDialog = (props: Props) => {
           }}
         />
       }
+      error={error ?? undefined}
       onClose={cancel}
       open={open}
       title="Confirm Payment"
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>
     </ConfirmationDialog>
   );

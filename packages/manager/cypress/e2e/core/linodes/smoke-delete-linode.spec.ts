@@ -1,27 +1,24 @@
+import { createLinodeRequestFactory } from '@linode/utilities';
+import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { authenticate } from 'support/api/authentication';
-import { createTestLinode } from 'support/util/linodes';
-import { createLinodeRequestFactory } from '@src/factories/linodes';
+import { mockGetAccountSettings } from 'support/intercepts/account';
+import { interceptDeleteLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { Linode } from '@linode/api-v4';
-import { accountSettingsFactory } from '@src/factories/accountSettings';
+import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
-import { getClick, getVisible } from 'support/helpers';
-import { interceptDeleteLinode } from 'support/intercepts/linodes';
-import { mockGetAccountSettings } from 'support/intercepts/account';
+import { chooseRegion } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 const confirmDeletion = (linodeLabel: string) => {
   cy.url().should('endWith', '/linodes');
   cy.findByText(linodeLabel).should('not.exist');
 
   // Confirm the linode instance is removed
-  cy.findByText(
-    'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-  )
-    .click()
-    .type(`${linodeLabel}{enter}`);
+  ui.mainSearch.find().type(`${linodeLabel}{enter}`);
   cy.findByText('You searched for ...').should('be.visible');
-  cy.findByText('Sorry, no results for this one').should('be.visible');
+  cy.findByText('Sorry, no results for this one.').should('be.visible');
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel: string) => {
@@ -36,10 +33,8 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     .findByTitle(`Delete ${linodeLabel}?`)
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Linode Label')
-        .should('be.visible')
-        .click()
-        .type(linodeLabel);
+      cy.findByLabelText('Linode Label').should('be.visible').click();
+      cy.focused().type(linodeLabel);
 
       ui.buttonGroup
         .findButtonByTitle('Delete')
@@ -49,18 +44,18 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     });
 
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-  cy.findByText(linodeLabel).should('not.exist');
+  cy.findAllByText(linodeLabel).should('not.exist');
 };
 
 const preferenceOverrides = {
-  linodes_view_style: 'list',
-  linodes_group_by_tag: false,
-  volumes_group_by_tag: false,
   desktop_sidebar_open: false,
+  linodes_group_by_tag: false,
+  linodes_view_style: 'list',
   sortKeys: {
     'linodes-landing': { order: 'asc', orderBy: 'label' },
     volume: { order: 'asc', orderBy: 'label' },
   },
+  volumes_group_by_tag: false,
 };
 
 authenticate();
@@ -68,10 +63,14 @@ describe('delete linode', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   it('deletes linode from linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -98,10 +97,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -119,6 +116,7 @@ describe('delete linode', () => {
   it('deletes linode from setting tab in linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -134,7 +132,6 @@ describe('delete linode', () => {
       // Check elements in setting tab
       cy.findByText('Linode Label').should('be.visible');
       cy.findByText('Reset Root Password').should('be.visible');
-      cy.findByText('Notification Thresholds').should('be.visible');
       cy.findByText('Shutdown Watchdog').should('be.visible');
       cy.findByText('Delete Linode').should('be.visible');
 
@@ -149,10 +146,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -170,6 +165,7 @@ describe('delete linode', () => {
   it('deletes linode from linode landing page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -194,10 +190,8 @@ describe('delete linode', () => {
         .findByTitle(`Delete ${linode.label}?`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Linode Label')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode Label').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.buttonGroup
             .findButtonByTitle('Delete')
@@ -220,10 +214,16 @@ describe('delete linode', () => {
     const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
       return Promise.all([
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
       ]);
     };
@@ -235,9 +235,9 @@ describe('delete linode', () => {
       interceptDeleteLinode(linodeB.id).as('deleteLinode');
       cy.visitWithLogin('/linodes', { preferenceOverrides });
       cy.wait('@getAccountSettings');
-      getVisible('[data-qa-header="Linodes"]');
+      cy.get('[data-qa-header="Linodes"]').should('be.visible');
       if (!cy.get('[data-qa-sort-label="asc"]')) {
-        getClick('[aria-label="Sort by label"]');
+        cy.get('[aria-label="Sort by label"]').click();
       }
       deleteLinodeFromActionMenu(linodeA.label);
       deleteLinodeFromActionMenu(linodeB.label);

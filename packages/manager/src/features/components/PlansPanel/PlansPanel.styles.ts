@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Typography } from 'src/components/Typography';
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
@@ -9,10 +8,10 @@ export const StyledTypography = styled(Typography, {
     color: theme.textColors.linkActiveLight,
   },
   '& a:hover': {
-    color: '#3683dc',
+    color: theme.tokens.color.Ultramarine[70],
   },
   '& p': {
-    fontFamily: '"LatoWebBold", sans-serif',
+    font: theme.font.bold,
   },
   fontSize: '0.9em',
 }));

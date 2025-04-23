@@ -1,25 +1,14 @@
-import {
-  ActiveLongviewPlan,
-  LongviewClient,
-  LongviewSubscription,
-} from '@linode/api-v4/lib/longview/types';
-import { isEmpty, pathOr } from 'ramda';
+import { Autocomplete, Typography } from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Typography } from 'src/components/Typography';
-import withLongviewClients, {
-  Props as LongviewProps,
-} from 'src/containers/longview.container';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
-import { MapState } from 'src/store/types';
+import { Link } from 'src/components/Link';
+import withLongviewClients from 'src/containers/longview.container';
+import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
@@ -36,22 +25,36 @@ import { LongviewDeleteDialog } from './LongviewDeleteDialog';
 import { LongviewList } from './LongviewList';
 import { SubscriptionDialog } from './SubscriptionDialog';
 
+import type {
+  ActiveLongviewPlan,
+  LongviewClient,
+  LongviewSubscription,
+} from '@linode/api-v4/lib/longview/types';
+import type { Props as LongviewProps } from 'src/containers/longview.container';
+import type { LongviewState } from 'src/routes/longview';
+import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import type { MapState } from 'src/store/types';
+
 interface Props {
   activeSubscription: ActiveLongviewPlan;
   handleAddClient: () => void;
   newClientLoading: boolean;
 }
 
-export type LongviewClientsCombinedProps = Props &
-  RouteComponentProps &
-  LongviewProps &
-  StateProps;
+interface SortOption {
+  label: string;
+  value: SortKey;
+}
+
+export type LongviewClientsCombinedProps = Props & LongviewProps & StateProps;
 
 type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 
 export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LongviewState;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();
@@ -70,8 +73,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
 
   /** Handlers/tracking variables for sorting by different client attributes */
-
-  const sortOptions: Item<string>[] = [
+  const sortOptions: SortOption[] = [
     {
       label: 'Client Name',
       value: 'name',
@@ -126,21 +128,16 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   }, []);
 
   const handleSubmit = () => {
-    const {
-      history: { push },
-    } = props;
-
     if (isManaged) {
-      push({
-        pathname: '/support/tickets',
-        state: {
-          open: true,
-          title: 'Request for additional Longview clients',
-        },
+      navigate({
+        state: (prev) => ({ ...prev, ...locationState }),
+        to: '/support/tickets',
       });
       return;
     }
-    props.history.push('/longview/plan-details');
+    navigate({
+      to: '/longview/plan-details',
+    });
   };
 
   /**
@@ -172,15 +169,14 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
     setQuery(newQuery);
   };
 
-  const handleSortKeyChange = (selected: Item<string>) => {
-    setSortKey(selected.value as SortKey);
+  const handleSortKeyChange = (selected: SortOption) => {
+    setSortKey(selected.value);
   };
 
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
 
-  const isLongviewPro = !isEmpty(activeSubscription);
-
+  const isLongviewPro = Object.keys(activeSubscription).length > 0;
   /**
    * Do the actual sorting & filtering
    */
@@ -199,25 +195,32 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       <StyledHeadingGrid container spacing={2}>
         <StyledSearchbarGrid>
           <DebouncedSearchTextField
+            clearable
             debounceTime={250}
             hideLabel
             label="Filter by client label or hostname"
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
+            value={query}
           />
         </StyledSearchbarGrid>
         <StyledSortSelectGrid>
           <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
-          <Select
+          <Autocomplete
+            onChange={(_, value) => {
+              handleSortKeyChange(value);
+            }}
+            textFieldProps={{
+              hideLabel: true,
+            }}
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
             )}
-            hideLabel
-            isClearable={false}
+            disableClearable
+            fullWidth
             label="Sort by"
-            onChange={handleSortKeyChange}
             options={sortOptions}
-            small
+            size="small"
           />
         </StyledSortSelectGrid>
       </StyledHeadingGrid>
@@ -251,7 +254,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       />
       <SubscriptionDialog
         clientLimit={
-          isEmpty(activeSubscription)
+          Object.entries(activeSubscription).length === 0
             ? 10
             : (activeSubscription as LongviewSubscription).clients_included
         }
@@ -288,9 +291,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-interface ComposeProps extends Props, RouteComponentProps {}
-
-export default compose<LongviewClientsCombinedProps, ComposeProps>(
+export default compose<LongviewClientsCombinedProps, Props>(
   React.memo,
   connected,
   withLongviewClients()
@@ -336,59 +337,42 @@ export const sortClientsBy = (
       });
     case 'cpu':
       return clients.sort((a, b) => {
-        const aCPU = getFinalUsedCPU(pathOr(0, [a.id, 'data'], clientData));
-        const bCPU = getFinalUsedCPU(pathOr(0, [b.id, 'data'], clientData));
-
+        const aCPU = getFinalUsedCPU(clientData?.[a.id]?.data ?? {});
+        const bCPU = getFinalUsedCPU(clientData?.[b.id]?.data ?? {});
         return sortFunc(aCPU, bCPU);
       });
     case 'ram':
       return clients.sort((a, b) => {
-        const aRam = sumUsedMemory(pathOr({}, [a.id, 'data'], clientData));
-        const bRam = sumUsedMemory(pathOr({}, [b.id, 'data'], clientData));
+        const aRam = sumUsedMemory(clientData?.[a.id]?.data ?? {});
+        const bRam = sumUsedMemory(clientData?.[b.id]?.data ?? {});
         return sortFunc(aRam, bRam);
       });
     case 'swap':
       return clients.sort((a, b) => {
-        const aSwap = pathOr<number>(
-          0,
-          [a.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
-          clientData
-        );
-        const bSwap = pathOr<number>(
-          0,
-          [b.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
-          clientData
-        );
+        const aSwap = clientData?.[a.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
+        const bSwap = clientData?.[b.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
         return sortFunc(aSwap, bSwap);
       });
     case 'load':
       return clients.sort((a, b) => {
-        const aLoad = pathOr<number>(
-          0,
-          [a.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
-        const bLoad = pathOr<number>(
-          0,
-          [b.id, 'data', 'Load', 0, 'y'],
-          clientData
-        );
+        const aLoad = clientData?.[a.id]?.data?.Load?.[0]?.y ?? 0;
+        const bLoad = clientData?.[b.id]?.data?.Load?.[0]?.y ?? 0;
         return sortFunc(aLoad, bLoad);
       });
     case 'network':
       return clients.sort((a, b) => {
         const aNet = generateUsedNetworkAsBytes(
-          pathOr(0, [a.id, 'data', 'Network', 'Interface'], clientData)
+          clientData?.[a.id]?.data?.Network?.Interface ?? {}
         );
         const bNet = generateUsedNetworkAsBytes(
-          pathOr(0, [b.id, 'data', 'Network', 'Interface'], clientData)
+          clientData?.[b.id]?.data?.Network?.Interface ?? {}
         );
         return sortFunc(aNet, bNet);
       });
     case 'storage':
       return clients.sort((a, b) => {
-        const aStorage = getUsedStorage(pathOr(0, [a.id, 'data'], clientData));
-        const bStorage = getUsedStorage(pathOr(0, [b.id, 'data'], clientData));
+        const aStorage = getUsedStorage(clientData?.[a.id]?.data ?? {});
+        const bStorage = getUsedStorage(clientData?.[b.id]?.data ?? {});
         return sortFunc(aStorage, bStorage);
       });
     default:
@@ -421,11 +405,7 @@ export const filterLongviewClientsByQuery = (
     }
 
     // If the label didn't match, check the hostname
-    const hostname = pathOr<string>(
-      '',
-      ['data', 'SysInfo', 'hostname'],
-      clientData[thisClient.id]
-    );
+    const hostname = clientData[thisClient.id]?.data?.SysInfo?.hostname ?? '';
     if (hostname.match(queryRegex)) {
       return true;
     }

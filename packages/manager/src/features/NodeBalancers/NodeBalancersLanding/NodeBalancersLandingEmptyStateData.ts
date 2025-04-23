@@ -21,22 +21,22 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     {
       text: 'Getting Started with NodeBalancers',
       to:
-        'https://www.linode.com/docs/products/networking/nodebalancers/get-started/',
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers',
     },
     {
       text: 'Create a NodeBalancer',
       to:
-        'https://www.linode.com/docs/products/networking/nodebalancers/guides/create/',
+        'https://techdocs.akamai.com/cloud-computing/docs/create-a-nodebalancer',
     },
     {
       text: 'Configuration Options for NodeBalancers',
       to:
-        'https://www.linode.com/docs/products/networking/nodebalancers/guides/configure/',
+        'https://techdocs.akamai.com/cloud-computing/docs/configuration-options-for-nodebalancers',
     },
   ],
   moreInfo: {
     text: 'View additional NodeBalancer documentation',
-    to: ' https://www.linode.com/docs/products/networking/nodebalancers/',
+    to: ' https://techdocs.akamai.com/cloud-computing/docs/nodebalancer',
   },
   title: 'Getting Started Guides',
 };

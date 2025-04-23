@@ -3,7 +3,6 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import path from "path";
 import { deleteChangesets } from "./utils/deleteChangesets.mjs";
-import { incrementSemver } from "./utils/incrementSemver.mjs";
 import { initiateChangelogEntry } from "./utils/initiateChangelogEntry.mjs";
 import { logger } from "./utils/logger.mjs";
 import { populateChangelogEntry } from "./utils/populateChangelogEntry.mjs";
@@ -77,9 +76,9 @@ try {
             if (file === "README.md") {
               return;
             }
-
+            
             // Logic to parse the changeset file and generate the changelog content
-            const filePath = path.join(changesetDirectory(linodePackage), file);
+            const filePath = changesetDirectory(linodePackage) + path.sep + file;
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
               new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)

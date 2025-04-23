@@ -1,37 +1,69 @@
+import { useLinodeQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
   Redirect,
   Route,
   Switch,
+  useHistory,
   useLocation,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 
-const LinodesDetailHeader = React.lazy(
-  () => import('./LinodesDetailHeader/LinodeDetailHeader')
+import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
+
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
+const CloneLanding = React.lazy(() =>
+  import('src/features/Linodes/CloneLanding/CloneLanding').then((module) => ({
+    default: module.CloneLanding,
+  }))
+);
 
-const LinodeDetail = () => {
+export const LinodeDetail = () => {
   const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
   const location = useLocation();
+  const history = useHistory();
 
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams =
+    getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+      location.search
+    );
+
+  const pathname = location.pathname;
+
+  const closeUpgradeInterfacesDialog = () => {
+    const newPath = pathname.includes('upgrade-interfaces')
+      ? pathname.split('/').slice(0, -1).join('/')
+      : pathname;
+    history.replace(newPath);
+  };
 
   const id = Number(linodeId);
 
   const { data: linode, error, isLoading } = useLinodeQuery(id);
+  const { canUpgradeInterfaces } = useCanUpgradeInterfaces(
+    linode?.lke_cluster_id,
+    linode?.region,
+    linode?.interface_generation
+  );
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -53,6 +85,8 @@ const LinodeDetail = () => {
         <Route component={CloneLanding} path={`${path}/clone`} />
         {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
           <Redirect
+            from={`${url}/${path}`}
+            key={path}
             to={{
               pathname: url,
               search: new URLSearchParams({
@@ -60,8 +94,6 @@ const LinodeDetail = () => {
                 [path]: 'true',
               }).toString(),
             }}
-            from={`${url}/${path}`}
-            key={path}
           />
         ))}
         <Route
@@ -69,6 +101,14 @@ const LinodeDetail = () => {
             <React.Fragment>
               <LinodesDetailHeader />
               <LinodesDetailNavigation />
+              <UpgradeInterfacesDialog
+                linodeId={id}
+                onClose={closeUpgradeInterfacesDialog}
+                open={
+                  pathname.includes('upgrade-interfaces') &&
+                  canUpgradeInterfaces
+                }
+              />
             </React.Fragment>
           )}
         />
@@ -77,4 +117,6 @@ const LinodeDetail = () => {
   );
 };
 
-export default LinodeDetail;
+export const linodeDetailLazyRoute = createLazyRoute('/linodes/$linodeId')({
+  component: LinodeDetail,
+});

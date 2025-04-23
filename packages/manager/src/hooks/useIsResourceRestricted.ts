@@ -1,4 +1,4 @@
-import { useGrants } from 'src/queries/profile/profile';
+import { useGrants } from '@linode/queries';
 
 import type { GrantLevel, GrantType } from '@linode/api-v4';
 
@@ -19,7 +19,9 @@ export const useIsResourceRestricted = ({
   if (!grants) {
     return false;
   }
-  return grants[grantType].some(
-    (grant) => grant.id === id && grant.permissions === grantLevel
+  return (
+    grants[grantType].some(
+      (grant) => grant.id === id && grant.permissions === grantLevel
+    ) || !grants[grantType].some((grant) => grant.id === id)
   );
 };

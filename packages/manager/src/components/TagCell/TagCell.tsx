@@ -1,17 +1,22 @@
+import {
+  CircleProgress,
+  IconButton,
+  StyledPlusIcon,
+  StyledTagButton,
+  omittedProps,
+} from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { omittedProps } from 'src/utilities/omittedProps';
 
-import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
-import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
+import { TagDrawer } from './TagDrawer';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface TagCellProps {
   /**
@@ -20,15 +25,14 @@ export interface TagCellProps {
   disabled?: boolean;
 
   /**
-   * An optional callback that is invoked when the tag list
-   * overflows and the user clicks to view all tags.
+   * An optional label to display in the overflow drawer header.
    */
-  listAllTags?: () => void;
+  entityLabel?: string;
 
   /**
    * Additional styles to apply to the tag list.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 
   /**
    * The list of tags to display.
@@ -40,6 +44,12 @@ export interface TagCellProps {
    * the tag list (i.e., by adding or deleting a tag).
    */
   updateTags: (tags: string[]) => Promise<any>;
+
+  /**
+   * Determines whether to allow tags to wrap in a panel or
+   * to overflow inline into a drawer.
+   */
+  view: 'inline' | 'panel';
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -58,10 +68,11 @@ const checkOverflow = (el: HTMLElement) => {
 };
 
 export const TagCell = (props: TagCellProps) => {
-  const { disabled, listAllTags, sx, tags } = props;
+  const { disabled, sx, tags, updateTags, view } = props;
 
   const [addingTag, setAddingTag] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const [elRef, setElRef] = React.useState<HTMLDivElement | null>(null);
 
@@ -69,20 +80,23 @@ export const TagCell = (props: TagCellProps) => {
 
   const [hasOverflow, setHasOverflow] = React.useState(false);
   React.useLayoutEffect(() => {
-    setHasOverflow(!!elRef && checkOverflow(elRef));
+    setHasOverflow(!!elRef && tags.length > 0 && checkOverflow(elRef));
   }, [windowDimensions, tags, elRef]);
 
   const handleUpdateTag = (updatedTags: string[]) => {
     setLoading(true);
-    return props.updateTags(updatedTags).finally(() => {
+    return updateTags(updatedTags).finally(() => {
       setLoading(false);
     });
   };
 
-  const panelView = listAllTags == undefined;
-
   const AddButton = (props: { panel?: boolean }) => (
     <StyledTagButton
+      tooltipText={`${
+        disabled
+          ? 'You must be an unrestricted User in order to add or modify tags on Linodes.'
+          : ''
+      }`}
       buttonType="outlined"
       disabled={disabled}
       endIcon={<StyledPlusIcon disabled={disabled} />}
@@ -96,18 +110,18 @@ export const TagCell = (props: TagCellProps) => {
 
   return (
     <>
-      {(addingTag || panelView) && (
+      {(addingTag || view === 'panel') && (
         <div
           style={{
             display: 'flex',
             flexDirection: 'row',
             height: 40,
-            justifyContent: panelView ? 'flex-start' : 'flex-end',
-            marginBottom: panelView ? 4 : 0,
+            justifyContent: view === 'panel' ? 'flex-start' : 'flex-end',
+            marginBottom: view === 'panel' ? 4 : 0,
             width: '100%',
           }}
         >
-          {panelView && !addingTag && <AddButton panel />}
+          {view === 'panel' && !addingTag && <AddButton panel />}
           {addingTag && (
             <AddTag
               addTag={(tag) => handleUpdateTag([...tags, tag])}
@@ -117,18 +131,18 @@ export const TagCell = (props: TagCellProps) => {
           )}
         </div>
       )}
-      {(!addingTag || panelView) && (
+      {(!addingTag || view === 'panel') && (
         <StyledGrid
           alignItems="center"
           container
           direction="row"
           sx={sx}
-          wrap={panelView ? 'wrap' : 'nowrap'}
+          wrap={view === 'panel' ? 'wrap' : 'nowrap'}
         >
           <StyledTagListDiv
-            hasOverflow={hasOverflow && listAllTags != undefined}
+            hasOverflow={hasOverflow && view === 'inline'}
             ref={setElRef}
-            wrap={listAllTags == undefined}
+            wrap={view === 'panel'}
           >
             {loading ? (
               <StyledCircleDiv>
@@ -151,26 +165,33 @@ export const TagCell = (props: TagCellProps) => {
               />
             ))}
           </StyledTagListDiv>
-          {hasOverflow && !panelView ? (
+          {hasOverflow && view === 'inline' ? (
             <StyledIconButton
               aria-label="Display all tags"
               disableRipple
-              onClick={() => listAllTags()}
-              onKeyPress={() => listAllTags()}
+              onClick={() => setDrawerOpen(true)}
+              onKeyDown={() => setDrawerOpen(true)}
               size="large"
             >
               <MoreHoriz />
             </StyledIconButton>
           ) : null}
-          {!panelView && <AddButton />}
+          {view === 'inline' && <AddButton />}
         </StyledGrid>
+      )}
+      {view === 'inline' && (
+        <TagDrawer
+          {...props}
+          onClose={() => setDrawerOpen(false)}
+          open={drawerOpen}
+        />
       )}
     </>
   );
 };
 
 const StyledGrid = styled(Grid)((props) => ({
-  justifyContent: props.wrap == 'wrap' ? 'flex-start' : 'flex-end',
+  justifyContent: props.wrap === 'wrap' ? 'flex-start' : 'flex-end',
   minHeight: 40,
   position: 'relative',
 }));
@@ -217,10 +238,10 @@ const StyledTag = styled(Tag, {
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: '#ffff',
+    color: theme.tokens.color.Neutrals.White,
   },
-  backgroundColor: theme.color.tagButton,
-  borderRadius: 0,
+  backgroundColor: theme.color.tagButtonBg,
+  borderRadius: theme.tokens.alias.Radius.Default,
   color: theme.color.tagIcon,
   height: 30,
   marginLeft: theme.spacing(0.5),

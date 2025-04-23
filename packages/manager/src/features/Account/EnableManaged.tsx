@@ -1,19 +1,16 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
+import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
+import { Accordion, ActionsPanel, Button, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
-import { updateAccountSettingsData } from 'src/queries/account/settings';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { pluralize } from 'src/utilities/pluralize';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   isManaged: boolean;

@@ -1,28 +1,30 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useRegionsQuery } from '@linode/queries';
+import { Stack, Typography } from '@linode/ui';
+import {
+  getRegionsByRegionId,
+  isFeatureEnabledV2,
+  readableBytes,
+} from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
+import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { getRegionsByRegionId } from 'src/utilities/regions';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 
 import { BucketActionMenu } from './BucketActionMenu';
 import {
-  StyledBucketLabelLink,
-  StyledBucketNameWrapper,
   StyledBucketObjectsCell,
   StyledBucketRegionCell,
-  StyledBucketRow,
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
+
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketTableRowProps extends ObjectStorageBucket {
   onDetails: () => void;
@@ -33,6 +35,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
     cluster,
     created,
+    endpoint_type,
     hostname,
     label,
     objects,
@@ -47,7 +50,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -62,36 +65,43 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  return (
-    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
-      <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
-          <Grid>
-            <StyledBucketNameWrapper>
-              <Typography component="h3" data-qa-label variant="body1">
-                <StyledBucketLabelLink
-                  to={`/object-storage/buckets/${
-                    isObjMultiClusterEnabled ? region : cluster
-                  }/${label}`}
-                >
-                  {label}{' '}
-                </StyledBucketLabelLink>
-              </Typography>
-            </StyledBucketNameWrapper>
+  const isLegacy = endpoint_type === 'E0';
+  const typeLabel = isLegacy ? 'Legacy' : 'Standard';
 
+  return (
+    <TableRow data-qa-bucket-cell={label} key={label}>
+      <TableCell>
+        <MaskableText isToggleable text={hostname}>
+          <Stack>
+            <Link
+              to={`/object-storage/buckets/${
+                isObjMultiClusterEnabled ? region : cluster
+              }/${label}`}
+            >
+              {label}
+            </Link>
             {hostname}
-          </Grid>
-        </Grid>
+          </Stack>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
             {isObjMultiClusterEnabled && regionsLookup && region
               ? regionsLookup[region].label
-              : clusterRegion?.label ?? cluster}
+              : (clusterRegion?.label ?? cluster)}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
+      {Boolean(endpoint_type) && (
+        <Hidden lgDown>
+          <TableCell>
+            <Typography data-qa-size variant="body1">
+              {typeLabel} ({endpoint_type})
+            </Typography>
+          </TableCell>
+        </Hidden>
+      )}
       <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay data-qa-created value={created} />
@@ -111,7 +121,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
         </StyledBucketObjectsCell>
       </Hidden>
 
-      <TableCell>
+      <TableCell sx={{ paddingRight: 0 }}>
         <BucketActionMenu
           cluster={cluster}
           data-qa-action-menu
@@ -120,6 +130,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           onRemove={onRemove}
         />
       </TableCell>
-    </StyledBucketRow>
+    </TableRow>
   );
 };

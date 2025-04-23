@@ -1,4 +1,3 @@
-import { LinodeBackups, LinodeType } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -6,23 +5,21 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import {
-  ActionType,
-  getRestrictedResourceText,
-} from 'src/features/Account/utils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useSpecificTypes } from 'src/queries/types';
+import { useRegionsQuery } from '@linode/queries';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { extendType } from 'src/utilities/extendType';
 
-import { LinodeHandlers } from '../LinodesLanding';
 import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
+
+import type { LinodeHandlers } from '../LinodesLanding';
+import type { LinodeBackups, LinodeType } from '@linode/api-v4';
+import type { ActionType } from 'src/features/Account/utils';
 
 export interface LinodeActionMenuProps extends LinodeHandlers {
   inListView?: boolean;
@@ -53,9 +50,6 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     linodeType,
   } = props;
 
-  const typesQuery = useSpecificTypes(linodeType?.id ? [linodeType.id] : []);
-  const type = typesQuery[0]?.data;
-  const extendedType = type ? extendType(type) : undefined;
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -138,7 +132,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
             linodeId,
             linodeRegion,
             linodeType?.id ?? null,
-            extendedType ? [extendedType] : null,
+            linodeType ? [linodeType] : undefined,
             regions
           ),
         });

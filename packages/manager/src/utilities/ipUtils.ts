@@ -1,3 +1,4 @@
+import { PRIVATE_IPv4_REGEX } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 
 /**
@@ -8,9 +9,12 @@ import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 export const removePrefixLength = (ip: string) => ip.replace(/\/\d+/, '');
 
 /**
- * Regex for determining if a string is a private IP Addresses
+ * Determines if an IPv4 address is private
+ * @returns true if the given IPv4 address is private
  */
-export const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+export const isPrivateIP = (ip: string) => {
+  return PRIVATE_IPv4_REGEX.test(ip);
+};
 
 export interface ExtendedIP {
   address: string;
@@ -20,6 +24,7 @@ export interface ExtendedIP {
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;
 export const ipFieldPlaceholder = '192.0.2.1/32';
+export const ipV6FieldPlaceholder = '2600:1401:4000::1726:XXXX';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 

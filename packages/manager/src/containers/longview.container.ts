@@ -1,17 +1,19 @@
-import { Filter, Params } from '@linode/api-v4';
-import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { InferableComponentEnhancerWithProps, connect } from 'react-redux';
+import { connect } from 'react-redux';
 
-import { ApplicationState } from 'src/store';
-import { State } from 'src/store/longview/longview.reducer';
 import {
   deleteLongviewClient as _delete,
   createLongviewClient as create,
   getAllLongviewClients,
   updateLongviewClient as update,
 } from 'src/store/longview/longview.requests';
-import { ThunkDispatch } from 'src/store/types';
-import { GetAllData } from 'src/utilities/getAll';
+
+import type { Filter, Params } from '@linode/api-v4';
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
+import type { GetAllData } from '@linode/utilities';
+import type { InferableComponentEnhancerWithProps } from 'react-redux';
+import type { ApplicationState } from 'src/store';
+import type { State } from 'src/store/longview/longview.reducer';
+import type { ThunkDispatch } from 'src/store/types';
 
 export interface DispatchProps {
   createLongviewClient: (label?: string) => Promise<LongviewClient>;

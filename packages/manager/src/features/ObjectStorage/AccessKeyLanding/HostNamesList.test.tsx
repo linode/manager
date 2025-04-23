@@ -1,9 +1,9 @@
+import { regionFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesList } from './HostNamesList';
@@ -33,7 +33,7 @@ describe('HostNamesList', () => {
     renderWithTheme(<HostNamesList objectStorageKey={mockObjectStorageKey} />);
 
     const copyButton = await screen.findByLabelText(
-      'Copy Fake Region, NC: http://example.com to clipboard'
+      'Copy US, Fake Region, NC: http://example.com to clipboard'
     );
     expect(copyButton).toBeInTheDocument();
   });

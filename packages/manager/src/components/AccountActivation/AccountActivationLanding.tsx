@@ -1,29 +1,14 @@
+import { ErrorState, StyledLinkButton, Typography } from '@linode/ui';
 import Warning from '@mui/icons-material/CheckCircle';
-import { Theme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
-import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  cta: {
-    ...theme.applyLinkStyles,
-  },
-  errorHeading: {
-    marginBottom: theme.spacing(2),
-  },
-  subheading: {
-    margin: '0 auto',
-    maxWidth: '60%',
-  },
-}));
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 const AccountActivationLanding = () => {
-  const { classes } = useStyles();
   const history = useHistory();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
@@ -46,19 +31,24 @@ const AccountActivationLanding = () => {
     <ErrorState
       errorText={
         <React.Fragment>
-          <Typography className={classes.errorHeading} variant="h2">
+          <Typography
+            sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+            variant="h2"
+          >
             Your account is currently being reviewed.
           </Typography>
-          <Typography className={classes.subheading}>
+          <Typography
+            sx={{
+              margin: '0 auto',
+              maxWidth: '60%',
+            }}
+          >
             Thanks for signing up! You&rsquo;ll receive an email from us once
             our review is complete, so hang tight. If you have questions during
             this process{' '}
-            <button
-              className={classes.cta}
-              onClick={() => toggleSupportDrawer(true)}
-            >
+            <StyledLinkButton onClick={() => toggleSupportDrawer(true)}>
               please open a Support ticket
-            </button>
+            </StyledLinkButton>
             .
           </Typography>
           <SupportTicketDialog
@@ -76,5 +66,11 @@ const AccountActivationLanding = () => {
     />
   );
 };
+
+export const accountActivationLandingLazyRoute = createLazyRoute(
+  '/account-activation'
+)({
+  component: AccountActivationLanding,
+});
 
 export default React.memo(AccountActivationLanding);

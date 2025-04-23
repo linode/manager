@@ -23,17 +23,16 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     {
       text: 'Get Started with the Linode Kubernetes Engine (LKE)',
       to:
-        'https://www.linode.com/docs/products/compute/kubernetes/get-started/',
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine',
     },
     {
       text: 'Create and Administer a Kubernetes Cluster on LKE',
-      to:
-        'https://www.linode.com/docs/products/compute/kubernetes/guides/create-lke-cluster',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-cluster',
     },
     {
       text: 'Using the Kubernetes Dashboard',
       to:
-        'https://www.linode.com/docs/guides/using-the-kubernetes-dashboard-on-lke/',
+        'https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-the-kubernetes-dashboard-on-lke',
     },
     {
       text: 'A Beginner\u{2019}s Guide to Kubernetes',

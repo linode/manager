@@ -1,12 +1,11 @@
+import { truncateEnd } from '@linode/utilities';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { truncateEnd } from 'src/utilities/truncate';
-
 import { StyledChip, StyledDeleteButton } from './Tag.styles';
 
-import type { ChipProps } from 'src/components/Chip';
+import type { ChipProps } from '@linode/ui';
 
 type Variants = 'blue' | 'lightBlue';
 
@@ -59,7 +58,7 @@ export const Tag = (props: TagProps) => {
     if (closeMenu) {
       closeMenu();
     }
-    history.push(`/search/?query=tag:${label}`);
+    history.push(`/search?query=tag:${label}`);
   };
 
   // If maxLength is set, truncate display to that length.

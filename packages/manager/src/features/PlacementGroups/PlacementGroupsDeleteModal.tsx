@@ -1,19 +1,13 @@
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
-import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import {
   useDeletePlacementGroup,
   useUnassignLinodesFromPlacementGroup,
-} from 'src/queries/placementGroups';
+} from '@linode/queries';
+import { Button, List, ListItem, Notice, Typography } from '@linode/ui';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
 import { getPlacementGroupLinodes } from './utils';
 
@@ -22,10 +16,11 @@ import type {
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
-import type { ButtonProps } from 'src/components/Button/Button';
+import type { ButtonProps } from '@linode/ui';
 
 interface Props {
   disableUnassignButton: boolean;
+  isFetching: boolean;
   linodes: Linode[] | undefined;
   onClose: () => void;
   open: boolean;
@@ -35,6 +30,7 @@ interface Props {
 export const PlacementGroupsDeleteModal = (props: Props) => {
   const {
     disableUnassignButton,
+    isFetching,
     linodes,
     onClose,
     open,
@@ -43,7 +39,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error: deletePlacementError,
-    isLoading: deletePlacementLoading,
+    isPending: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
     reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);
@@ -99,52 +95,28 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const assignedLinodesCount = assignedLinodes?.length ?? 0;
   const isDisabled = !selectedPlacementGroup || assignedLinodesCount > 0;
 
-  if (!selectedPlacementGroup) {
-    return null;
-  }
-
-  if (!assignedLinodes) {
-    return (
-      <ConfirmationDialog
-        sx={{
-          '& .MuiDialog-paper': {
-            '& > .MuiDialogContent-root > div': {
-              maxHeight: 300,
-              padding: 4,
-            },
-            maxHeight: 500,
-            width: 500,
-          },
-        }}
-        onClose={handleClose}
-        open={open}
-        title="Delete Placement Group"
-      >
-        <CircleProgress />
-      </ConfirmationDialog>
-    );
-  }
-
   return (
     <TypeToConfirmDialog
       entity={{
         action: 'deletion',
-        name: selectedPlacementGroup.label,
+        name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
       }}
       disableTypeToConfirmInput={isDisabled}
       disableTypeToConfirmSubmit={isDisabled}
+      expand
+      isFetching={isFetching}
       label="Placement Group"
       loading={deletePlacementLoading}
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup.label}`}
+      title={`Delete Placement Group ${selectedPlacementGroup?.label}`}
     >
       {error && (
         <Notice
-          key={selectedPlacementGroup.id}
+          key={selectedPlacementGroup?.id}
           text={error?.[0]?.reason}
           variant="error"
         />
@@ -183,7 +155,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
               <Button
                 {...props}
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
                 disabled={disableUnassignButton || props.disabled}
@@ -194,7 +166,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             )}
             disableItemsOnRemove
             hasEncounteredMutationError={Boolean(unassignLinodeError)}
-            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup.label}`}
+            headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup?.label}`}
             id="assigned-linodes"
             maxWidth={540}
             noDataText="No Linodes assigned to this Placement Group."

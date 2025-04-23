@@ -1,5 +1,200 @@
-## [2024-06-10] - v0.48.0
+## [2025-04-22] - v0.64.0
 
+### Added:
+
+- custom validation for `wal_sender_timeout` and `max_failover_replication_time_lag` ([#12022](https://github.com/linode/manager/pull/12022))
+
+### Changed:
+
+- Validation message for threshold field in Metric Threshold ([#11963](https://github.com/linode/manager/pull/11963))
+
+### Removed:
+
+- AutoscaleNodePoolSchema from kubenetes.schema.ts ([#12033](https://github.com/linode/manager/pull/12033))
+
+### Tech Stories:
+
+- Eslint Overhaul ([#11941](https://github.com/linode/manager/pull/11941))
+
+### Upcoming Features:
+
+- Enhance the validation schema for create flow and new schema for edit alert flow in cloudpulse ([#11868](https://github.com/linode/manager/pull/11868))
+
+## [2025-04-08] - v0.63.0
+
+### Upcoming Features:
+
+- Update `ipv6` vpc schema validation for subnets, separate `createSubnetSchema` into `createSubnetSchemaIPv4` and `createSubnetSchemaWithIPv6` ([#11896](https://github.com/linode/manager/pull/11896))
+
+## [2025-03-25] - v0.62.0
+
+### Added:
+
+- Validation messages for required Autoscale min and max values ([#11664](https://github.com/linode/manager/pull/11664))
+- Optional IPv6 to `createVPCIPv6Schema` ([#11852](https://github.com/linode/manager/pull/11852))
+
+### Changed:
+
+- Update CreateFirewallSchema to match API types ([#11677](https://github.com/linode/manager/pull/11677))
+- Improve accuracy of schemas related to Linode creation ([#11847](https://github.com/linode/manager/pull/11847))
+- Bucket create schema `Label` to `Bucket name` ([#11877](https://github.com/linode/manager/pull/11877))
+
+### Fixed:
+
+- Improve clarity for Object Storage bucket creation validation message ([#11712](https://github.com/linode/manager/pull/11712))
+
+### Tech Stories:
+
+- Upgrade tsup to 8.4.0 ([#11866](https://github.com/linode/manager/pull/11866))
+
+### Upcoming Features:
+
+- Validation for required ACL enablement on LKE-E clusters ([#11746](https://github.com/linode/manager/pull/11746))
+- New rule for Name and Description of Create Alert form ([#11773](https://github.com/linode/manager/pull/11773))
+
+## [2025-02-25] - v0.61.0
+
+### Removed:
+
+- Required `entity_ids` from `createAlertDefinitionSchema` ([#11649](https://github.com/linode/manager/pull/11649))
+
+## [2025-02-19] - v0.60.1
+
+### Fixed:
+
+- Inability to add LKE Node Pool Labels with underscore in key ([#11682](https://github.com/linode/manager/pull/11682))
+
+## [2025-02-11] - v0.60.0
+
+### Added:
+
+- Taint and label schemas for Node Pool Labels and Taints ([#11553](https://github.com/linode/manager/pull/11553))
+
+### Changed:
+
+- Rename old `LinodeInterfaceSchema` to `ConfigProfileInterfaceSchema` ([#11527](https://github.com/linode/manager/pull/11527))
+
+### Upcoming Features:
+
+- Add new validation schemas for Linode Interfaces project: `CreateLinodeInterfaceSchema` and `ModifyLinodeInterfaceSchema` ([#11527](https://github.com/linode/manager/pull/11527))
+- Revised validation error messages for the CreateAlertDefinition schema ([#11543](https://github.com/linode/manager/pull/11543))
+- Add `UpdateFirewallSettingsSchema`for Linode Interfaces project ([#11559](https://github.com/linode/manager/pull/11559))
+- Update `CreateLinodeSchema` for Linode Interfaces project ([#11566](https://github.com/linode/manager/pull/11566))
+- Update `UpdateAccountSettingsSchema` validation schema for Linode Interfaces project ([#11562](https://github.com/linode/manager/pull/11562))
+
+## [2025-01-28] - v0.59.0
+
+### Changed:
+
+- Allow `cipher_suite` to be `none` in NodeBalancer schemas ([#11515](https://github.com/linode/manager/pull/11515))
+
+### Tech Stories:
+
+- Update `tsconfig.json` to use `bundler` moduleResolution ([#11487](https://github.com/linode/manager/pull/11487))
+
+## [2025-01-14] - v0.58.0
+
+### Added:
+
+- Validation for UDP NodeBalancer support ([#11321](https://github.com/linode/manager/pull/11321))
+
+### Changed:
+
+- Update VPC validation to temporarily hide mention of IPv6 in UI, fix punctuation ([#11357](https://github.com/linode/manager/pull/11357))
+- Update VPC label validation schema punctuation, fix label validation regex ([#11393](https://github.com/linode/manager/pull/11393))
+- Error messages for few attributes ([#11445](https://github.com/linode/manager/pull/11445))
+
+## [2024-12-10] - v0.57.0
+
+### Added:
+
+- Punctuation for CloudPulse Alert error messages ([#11286](https://github.com/linode/manager/pull/11286))
+- Maximum and minimum values for `check_attempts`, `check_interval`, and `check_timeout` in `createNodeBalancerConfigSchema` ([#11306](https://github.com/linode/manager/pull/11306))
+- Maximum and minimum values for `check_attempts`, `check_interval`, and `check_timeout` to `UpdateNodeBalancerConfigSchema` ([#11306](https://github.com/linode/manager/pull/11306))
+
+### Tech Stories:
+
+- Update yup from `0.32.9` to `1.4.0` (#11324)
+- Update Linter rules for common pr feedback points ([#11258](https://github.com/linode/manager/pull/11258))
+
+### Upcoming Features:
+
+- Add `cloudpulse.schema` to validate the various fields for the Create Alert Form ([#11255](https://github.com/linode/manager/pull/11255))
+
+## [2024-11-12] - v0.56.0
+
+### Tech Stories:
+
+- Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
+
+## [2024-10-28] - v0.55.0
+
+### Added:
+
+- Validation schema for LKE ACL payload ([#10968](https://github.com/linode/manager/pull/10968))
+- `PRIVATE_IPv4_REGEX` for determining if an IPv4 address is private ([#11069](https://github.com/linode/manager/pull/11069))
+
+### Changed:
+
+- Update `nodeBalancerConfigNodeSchema` to allow any private IPv4 rather than just \`192\.168\` IPs ([#11069](https://github.com/linode/manager/pull/11069))
+
+## [2024-10-14] - v0.54.0
+
+### Changed:
+
+- Update validation schema to account for clearing value in ImageSelect ([#11007](https://github.com/linode/manager/pull/11007))
+
+## [2024-09-30] - v0.53.0
+
+### Changed:
+
+- Make `replication_type` and `replication_commit_type` optional in `databases.schema.ts` ([#10980](https://github.com/linode/manager/pull/10980))
+
+## [2024-09-03] - v0.52.0
+
+### Fixed:
+
+- Lack of `label` error validation for letter casing and symbols when creating Object Storage bucket ([#10842](https://github.com/linode/manager/pull/10842), [#10847](https://github.com/linode/manager/pull/10847))
+
+### Changed:
+
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
+
+## [2024-08-05] - v0.51.0
+
+### Added:
+
+- Unique label validation for Object Storage label ([#10699](https://github.com/linode/manager/pull/10699))
+
+### Changed:
+
+- Include optional 'encryption' field in CreateVolumeSchema ([#10716](https://github.com/linode/manager/pull/10716))
+
+### Fixed:
+
+- Allow null values in Linode configuration ([#10690](https://github.com/linode/manager/pull/10690))
+
+### Upcoming Features:
+
+- Update create bucket schema validation for `endpoint_type` and `cors_enabled` ([#10677](https://github.com/linode/manager/pull/10677))
+
+## [2024-07-22] - v0.50.0
+
+### Added:
+
+- `createAccountLimitSupportTicketSchema` to support schemas ([#10620](https://github.com/linode/manager/pull/10620))
+
+### Changed:
+
+- Breaking: change Placement Group `is_strict` to `placement_group_policy` and `affinity_type` to `placement_group_type` ([#10651](https://github.com/linode/manager/pull/10651))
+
+## [2024-07-08] - v0.49.0
+
+### Added:
+
+- `createSMTPSupportTicketSchema` to support schemas ([#10557](https://github.com/linode/manager/pull/10557))
+
+## [2024-06-10] - v0.48.0
 
 ### Added:
 
@@ -7,7 +202,6 @@
 - `updateImageRegionsSchema` ([#10541](https://github.com/linode/manager/pull/10541))
 
 ## [2024-05-28] - v0.47.0
-
 
 ### Added:
 
@@ -18,18 +212,14 @@
 - Adjust DiskEncryptionSchema so it is not an object ([#10462](https://github.com/linode/manager/pull/10462))
 - Improve Image `label` validation ([#10471](https://github.com/linode/manager/pull/10471))
 
-
 ## [2024-05-13] - v0.46.0
-
 
 ### Changed:
 
 - Include disk_encryption in CreateLinodeSchema and RebuildLinodeSchema ([#10413](https://github.com/linode/manager/pull/10413))
 - Allow `backup_id` to be nullable in `CreateLinodeSchema` ([#10421](https://github.com/linode/manager/pull/10421))
 
-
 ## [2024-04-29] - v0.45.0
-
 
 ### Changed:
 
@@ -52,11 +242,9 @@
 
 ## [2024-03-18] - v0.42.0
 
-
 ### Changed:
 
 - Update TCP rules to not include a `match_condition` ([#10264](https://github.com/linode/manager/pull/10264))
-
 
 ## [2024-03-04] - v0.41.0
 

@@ -2,13 +2,18 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
 import { VPCRow } from './VPCRow';
 
 describe('VPC Table Row', () => {
   it('should render a VPC row', () => {
     const vpc = vpcFactory.build();
+    resizeScreenSize(1600);
 
     const { getAllByText, getByText } = renderWithTheme(
       wrapWithTableBody(
@@ -57,5 +62,19 @@ describe('VPC Table Row', () => {
     const editButton = getAllByRole('button')[0];
     fireEvent.click(editButton);
     expect(handleEdit).toHaveBeenCalled();
+  });
+
+  it('should disable edit and delete buttons for LKE-E VPCs', () => {
+    const vpc = vpcFactory.build({
+      description: 'workload VPC for LKE Enterprise Cluster lke1234567',
+      label: 'lke1234567',
+    });
+    const { getAllByRole } = renderWithTheme(
+      wrapWithTableBody(
+        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
+      )
+    );
+    const actionButtons = getAllByRole('button');
+    actionButtons.forEach((button) => expect(button).toBeDisabled());
   });
 });

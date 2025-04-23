@@ -1,11 +1,10 @@
-import { Engine } from '@linode/api-v4/lib/databases';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { useDatabaseCredentialsMutation } from 'src/queries/databases/databases';
+
+import type { Engine } from '@linode/api-v4';
 
 interface Props {
   databaseEngine: Engine;
@@ -36,7 +35,7 @@ const renderActions = (
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   const { databaseEngine, databaseID, onClose, open } = props;
 
-  const { error, isLoading, mutateAsync } = useDatabaseCredentialsMutation(
+  const { error, isPending, mutateAsync } = useDatabaseCredentialsMutation(
     databaseEngine,
     databaseID
   );
@@ -48,7 +47,7 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
 
   return (
     <ConfirmationDialog
-      actions={renderActions(onClose, onResetRootPassword, isLoading)}
+      actions={renderActions(onClose, onResetRootPassword, isPending)}
       onClose={onClose}
       open={open}
       title="Reset Root Password"

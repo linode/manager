@@ -19,32 +19,32 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Object Storage',
-      to: 'https://www.linode.com/docs/products/storage/object-storage/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/object-storage',
     },
     {
       text: 'Using the Linode CLI with Object Storage',
       to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/linode-cli',
+        'https://techdocs.akamai.com/cloud-computing/docs/using-the-linode-cli-with-object-storage',
     },
     {
       text: 'Use Object Storage with s3cmd',
       to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/s3cmd',
+        'https://techdocs.akamai.com/cloud-computing/docs/using-s3cmd-with-object-storage',
     },
     {
       text: 'Use Object Storage with s4cmd',
       to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/s4cmd',
+        'https://techdocs.akamai.com/cloud-computing/docs/using-s4cmd-with-object-storage',
     },
     {
       text: 'Use Object Storage with Cyberduck',
       to:
-        'https://www.linode.com/docs/products/storage/object-storage/guides/cyberduck',
+        'https://techdocs.akamai.com/cloud-computing/docs/using-cyberduck-with-object-storage',
     },
   ],
   moreInfo: {
     text: 'View additional Object Storage documentation',
-    to: 'https://www.linode.com/docs/products/storage/object-storage/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/object-storage',
   },
   title: 'Getting Started Guides',
 };

@@ -1,17 +1,16 @@
-import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { deletePaymentMethod } from '@linode/api-v4/lib/account';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -22,6 +21,8 @@ import {
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 import type { Profile } from '@linode/api-v4';
+import type { PaymentMethod } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   error?: APIError[] | null;
@@ -63,7 +64,9 @@ const PaymentInformation = (props: Props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.paymentMethods.queryKey,
+        });
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);
@@ -97,7 +100,12 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>

@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 
 import type { CardBaseProps } from './CardBase';
 
@@ -18,42 +18,49 @@ export const CardBaseGrid = styled(Grid, {
     width: 5,
   },
   '&:hover': {
-    backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.main,
+    backgroundColor: props.checked
+      ? theme.name === 'dark'
+        ? `rgba(0, 49, 77, .2)`
+        : `rgba(1, 116, 188, .2)`
+      : theme.bg.interactionBgPrimary,
     borderColor: props.checked
       ? theme.palette.primary.main
-      : theme.color.border2,
+      : theme.borderColors.borderHover,
   },
   alignItems: 'center',
-  backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.offWhite,
+  backgroundColor: props.checked
+    ? theme.name === 'dark'
+      ? `rgba(0, 49, 77, .2)`
+      : `rgba(1, 116, 188, .2)`
+    : theme.bg.interactionBgPrimary,
   border: `1px solid ${theme.bg.main}`,
-  borderColor: props.checked ? theme.palette.primary.main : undefined,
+  borderColor: props.checked
+    ? theme.palette.primary.main
+    : theme.borderColors.divider,
   height: '100%',
   margin: 0,
   minHeight: 60,
-  padding: `0 ${theme.spacing(1)} !important`,
+  padding: theme.spacing(1.5),
   position: 'relative',
-
   transition:
     'background-color 225ms ease-in-out, border-color 225ms ease-in-out',
-
   width: '100%',
 }));
 
 export const CardBaseIcon = styled(Grid, {
   label: 'CardBaseIcon',
-})(() => ({
+})({
   '& img': {
     maxHeight: 32,
     maxWidth: 32,
   },
   '& svg, & span': {
-    color: '#939598',
     fontSize: 32,
   },
   alignItems: 'flex-end',
   display: 'flex',
   justifyContent: 'flex-end',
-}));
+});
 
 export const CardBaseHeadings = styled(Grid, {
   label: 'CardBaseHeadings',
@@ -73,14 +80,16 @@ export const CardBaseHeading = styled('div', {
   color: theme.color.headline,
   columnGap: theme.spacing(2),
   display: 'flex',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   wordBreak: 'break-word',
 }));
 
 export const CardBaseSubheading = styled('div', {
   label: 'CardBaseSubheading',
-})(({ theme }) => ({
-  color: theme.palette.text.primary,
+})<Partial<CardBaseProps>>(({ theme, ...props }) => ({
+  color: props.checked
+    ? theme.tokens.alias.Content.Text.Primary.Default
+    : theme.palette.text.primary,
   fontSize: '0.875rem',
 }));

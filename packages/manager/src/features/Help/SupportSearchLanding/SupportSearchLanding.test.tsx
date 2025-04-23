@@ -1,9 +1,9 @@
+import { H1Header } from '@linode/ui';
 import { screen } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import SupportSearchLanding from './SupportSearchLanding';

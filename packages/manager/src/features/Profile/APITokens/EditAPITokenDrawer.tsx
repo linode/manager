@@ -1,13 +1,12 @@
-import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
+import { useUpdatePersonalAccessTokenMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { useUpdatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
+import { NotFound } from 'src/components/NotFound';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { Token, TokenRequest } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -20,7 +19,7 @@ export const EditAPITokenDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updatePersonalAccessToken,
   } = useUpdatePersonalAccessTokenMutation(token?.id ?? -1);
 
@@ -38,7 +37,12 @@ export const EditAPITokenDrawer = (props: Props) => {
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Personal Access Token">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Edit Personal Access Token"
+    >
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}
@@ -52,7 +56,7 @@ export const EditAPITokenDrawer = (props: Props) => {
           'data-testid': 'save-button',
           disabled: !form.dirty,
           label: 'Save',
-          loading: isLoading,
+          loading: isPending,
           onClick: () => form.handleSubmit(),
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

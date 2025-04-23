@@ -1,11 +1,8 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsAssignLinodesDrawer } from './PlacementGroupsAssignLinodesDrawer';
@@ -16,26 +13,12 @@ const queryMocks = vi.hoisted(() => ({
   useAssignLinodesToPlacementGroup: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
-  };
-});
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
-  return {
-    ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
-  };
-});
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
-  return {
-    ...actual,
     useAssignLinodesToPlacementGroup:
       queryMocks.useAssignLinodesToPlacementGroup,
   };
@@ -68,7 +51,7 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
       ],
     });
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
-      data: placementGroupFactory.build(),
+      data: placementGroupFactory.buildList(1),
     });
     queryMocks.useAssignLinodesToPlacementGroup.mockReturnValue(
       placementGroupFactory.build({
@@ -120,8 +103,8 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
     const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
         selectedPlacementGroup={placementGroupFactory.build({
-          affinity_type: 'anti_affinity:local',
           label: 'PG-1',
+          placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
         onClose={vi.fn()}

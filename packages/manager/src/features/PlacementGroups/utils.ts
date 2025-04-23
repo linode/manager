@@ -1,24 +1,14 @@
-import { AFFINITY_TYPES } from '@linode/api-v4/lib/placement-groups';
+import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4/lib/placement-groups';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 import type {
-  AffinityTypeEnforcement,
   CreatePlacementGroupPayload,
   Linode,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
-
-/**
- * Helper to get the affinity type enforcement readable string.
- */
-export const getAffinityTypeEnforcement = (
-  is_strict: boolean
-): AffinityTypeEnforcement => {
-  return is_strict ? 'Strict' : 'Flexible';
-};
 
 /**
  * Helper to get the full linodes objects assigned to a Placement Group.
@@ -95,15 +85,15 @@ export const hasRegionReachedPlacementGroupCapacity = ({
 };
 
 /**
- * Helper to populate the affinity_type select options.
+ * Helper to populate the placement_group_type select options.
  */
-export const affinityTypeOptions = Object.entries(AFFINITY_TYPES).map(
-  ([key, value]) => ({
-    disabled: false,
-    label: value,
-    value: key as CreatePlacementGroupPayload['affinity_type'],
-  })
-);
+export const placementGroupTypeOptions = Object.entries(
+  PLACEMENT_GROUP_TYPES
+).map(([key, value]) => ({
+  disabled: false,
+  label: value,
+  value: key as CreatePlacementGroupPayload['placement_group_type'],
+}));
 
 /**
  * Helper to get all linodes assigned to any placement group. (and reduce to unique linodes)
@@ -142,12 +132,8 @@ export const useIsPlacementGroupsEnabled = (): {
     return { isPlacementGroupsEnabled: false };
   }
 
-  const hasAccountCapability = account?.capabilities?.includes(
-    'Placement Group'
-  );
-  const isFeatureFlagEnabled = flags.placementGroups?.enabled;
   const isPlacementGroupsEnabled = Boolean(
-    hasAccountCapability && isFeatureFlagEnabled
+    account?.capabilities?.includes('Placement Group')
   );
 
   return { isPlacementGroupsEnabled };

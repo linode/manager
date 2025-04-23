@@ -1,13 +1,11 @@
+import { Box, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
-import { Paper } from 'src/components/Paper';
 
 export const StyledPaper = styled(Paper, { label: 'StyledPaper' })(
   ({ theme }) => ({
     '& > p:first-of-type': {
       color: theme.color.label,
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       marginBottom: theme.spacing(),
       marginTop: theme.spacing(2),
     },
@@ -29,7 +27,7 @@ export const StyledSpan = styled('span', {
 })(({ theme }) => ({
   color: theme.color.label,
   display: 'block',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: theme.typography.body1.fontSize,
   lineHeight: '1.43rem',
   marginBottom: theme.spacing(1),

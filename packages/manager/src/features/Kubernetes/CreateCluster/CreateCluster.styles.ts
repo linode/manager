@@ -1,8 +1,8 @@
-import { Theme, styled } from '@mui/material/styles';
+import { Box, Stack } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
-import { Stack } from 'src/components/Stack';
+import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
@@ -41,8 +41,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const StyledRegionSelectStack = styled(Stack, {
-  label: 'StyledRegionSelectStack',
+export const StyledStackWithTabletBreakpoint = styled(Stack, {
+  label: 'StyledStackWithTabletBreakpoint',
 })(({ theme }) => ({
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {
@@ -51,11 +51,10 @@ export const StyledRegionSelectStack = styled(Stack, {
 }));
 
 export const StyledDocsLinkContainer = styled(Box, {
-  label: 'StyledRegionSelectStack',
+  label: 'StyledDocsLinkContainer',
 })(({ theme }) => ({
   alignSelf: 'flex-start',
   marginLeft: 'auto',
-  marginTop: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     marginLeft: 'unset',
     marginTop: theme.spacing(2),

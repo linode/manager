@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { Button } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from '../Button/Button';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 import type { RemovableItem } from './RemovableSelectionsList';
@@ -132,7 +132,7 @@ export const WithReadableRemoveCTA: Story = {
             RemoveButton={() => (
               <Button
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
                 variant="text"

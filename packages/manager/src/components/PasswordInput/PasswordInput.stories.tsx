@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 
-import PasswordInput from './PasswordInput';
+import { PasswordInput } from './PasswordInput';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof PasswordInput> = {
   component: PasswordInput,
-  title: 'Components/Password Input',
+  title: 'Components/Input/Password Input',
 };
 
 type Story = StoryObj<typeof PasswordInput>;

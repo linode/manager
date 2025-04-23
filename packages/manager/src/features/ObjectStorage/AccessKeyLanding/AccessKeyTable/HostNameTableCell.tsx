@@ -1,55 +1,66 @@
-import {
-  ObjectStorageKey,
-  RegionS3EndpointAndID,
-} from '@linode/api-v4/lib/object-storage';
+import { StyledLinkButton } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionsByRegionId } from 'src/utilities/regions';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
-type Props = {
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
+
+interface Props {
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
-};
+}
 
-export const HostNameTableCell = ({
-  setHostNames,
-  setShowHostNamesDrawers,
-  storageKeyData,
-}: Props) => {
-  const { data: regionsData } = useRegionsQuery();
+export const HostNameTableCell = (props: Props) => {
+  const { setHostNames, setShowHostNamesDrawers, storageKeyData } = props;
 
-  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
+  const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
 
   const { regions } = storageKeyData;
 
-  if (!regionsLookup || !regionsData || !regions || regions.length === 0) {
+  if (
+    !regionsByIdMap ||
+    !availableStorageRegions ||
+    !regions ||
+    regions.length === 0
+  ) {
     return <TableCell>None</TableCell>;
   }
+  const formatEndpoint = (region: ObjectStorageKeyRegions) => {
+    const label = regionsByIdMap[region.id]?.label;
+    const endpointType = region.endpoint_type
+      ? ` (${region.endpoint_type})`
+      : '';
+    return `${label}${endpointType}: ${region.s3_endpoint}`;
+  };
+
+  const firstRegion = regions[0];
+  const formattedFirstEndpoint = formatEndpoint(firstRegion);
+  const allEndpoints = regions.map(formatEndpoint).join('\n');
+  const showMultipleRegions = regions.length > 1;
 
   return (
     <TableCell>
-      {`${regionsLookup[storageKeyData.regions[0].id].label}: ${
-        storageKeyData?.regions[0]?.s3_endpoint
-      } `}
-      {storageKeyData?.regions?.length === 1 && (
-        <StyledCopyIcon text={storageKeyData.regions[0].s3_endpoint} />
-      )}
-      {storageKeyData.regions.length > 1 && (
-        <StyledLinkButton
-          onClick={() => {
-            setHostNames(storageKeyData.regions);
-            setShowHostNamesDrawers(true);
-          }}
-          type="button"
-        >
-          and {storageKeyData.regions.length - 1} more...
-        </StyledLinkButton>
+      {formattedFirstEndpoint}&nbsp;
+      {showMultipleRegions ? (
+        <>
+          | + {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
+          <StyledLinkButton
+            onClick={() => {
+              setHostNames(regions);
+              setShowHostNamesDrawers(true);
+            }}
+          >
+            Show All
+          </StyledLinkButton>
+          <StyledCopyIcon text={allEndpoints} />
+        </>
+      ) : (
+        <StyledCopyIcon text={firstRegion.s3_endpoint} />
       )}
     </TableCell>
   );
@@ -61,5 +72,5 @@ const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
     top: 1,
     width: 12,
   },
-  marginLeft: theme.spacing(),
+  marginLeft: theme.spacing(0.5),
 }));

@@ -1,13 +1,16 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
+  ControlPlaneACLOptions,
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
+  KubernetesTieredVersion,
   KubernetesVersion,
   PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes/types';
-import * as Factory from 'factory.ts';
-import { v4 } from 'uuid';
+} from '@linode/api-v4';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each((id) => `id-${id}`),
@@ -24,7 +27,16 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   count: 3,
   disk_encryption: 'enabled',
   id: Factory.each((id) => id),
+  labels: {},
   nodes: kubeLinodeFactory.buildList(3),
+  tags: [],
+  taints: [
+    {
+      effect: 'NoExecute',
+      key: 'example.com/my-app',
+      value: 'my-taint',
+    },
+  ],
   type: 'g6-standard-1',
 });
 
@@ -44,13 +56,13 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
 
 export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
   {
-    endpoint: `https://${v4()}`,
+    endpoint: `https://${crypto.randomUUID && crypto.randomUUID()}`,
   }
 );
 
 export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
   {
-    url: `https://${v4()}`,
+    url: `https://${crypto.randomUUID && crypto.randomUUID()}`,
   }
 );
 
@@ -71,5 +83,38 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
 export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
   {
     id: '1.24',
+  }
+);
+
+export const kubernetesStandardTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
+  {
+    id: Factory.each((id) => `'v1.3${id}'`),
+    tier: 'standard',
+  }
+);
+
+export const kubernetesEnterpriseTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
+  {
+    id: Factory.each((id) => `'v1.31.${id}+lke1'`),
+    tier: 'enterprise',
+  }
+);
+
+export const kubernetesControlPlaneACLOptionsFactory = Factory.Sync.makeFactory<ControlPlaneACLOptions>(
+  {
+    addresses: {
+      ipv4: ['10.0.0.0/24', '10.0.1.0/24'],
+      ipv6: ['8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'],
+    },
+    enabled: true,
+    'revision-id': '67497a9c5fc8491889a7ef8107493e92',
+  }
+);
+
+export const kubernetesControlPlaneACLFactory = Factory.Sync.makeFactory<KubernetesControlPlaneACLPayload>(
+  {
+    acl: {
+      ...kubernetesControlPlaneACLOptionsFactory.build(),
+    },
   }
 );

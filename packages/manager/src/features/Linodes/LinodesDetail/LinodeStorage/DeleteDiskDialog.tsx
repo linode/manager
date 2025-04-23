@@ -1,8 +1,8 @@
+import { ActionsPanel } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLinodeDeleteDiskMutation } from 'src/queries/linodes/disks';
+import { useLinodeDeleteDiskMutation } from '@linode/queries';
 
 import type { Disk } from '@linode/api-v4';
 
@@ -18,7 +18,7 @@ export const DeleteDiskDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteDisk,
     reset,
   } = useLinodeDeleteDiskMutation(linodeId, disk?.id ?? -1);
@@ -41,7 +41,7 @@ export const DeleteDiskDialog = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-delete',
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

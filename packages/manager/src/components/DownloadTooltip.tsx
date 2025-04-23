@@ -1,11 +1,9 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { Tooltip, Typography } from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
 import * as React from 'react';
 
 import FileDownload from 'src/assets/icons/download.svg';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import { downloadFile } from 'src/utilities/downloadFile';
+import { StyledIconButton } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface Props {
   /**
@@ -31,41 +29,7 @@ interface Props {
   text: string;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  displayText: {
-    color: theme.textColors.linkActiveLight,
-    marginLeft: 6,
-  },
-  flex: {
-    display: 'flex',
-    width: 'auto !important',
-  },
-  root: {
-    '& svg': {
-      color: theme.color.grey1,
-      height: 20,
-      margin: 0,
-      position: 'relative',
-      transition: theme.transitions.create(['color']),
-      width: 20,
-    },
-    '&:hover': {
-      backgroundColor: theme.color.white,
-    },
-    backgroundColor: 'transparent',
-    border: 'none',
-    borderRadius: 4,
-    color: theme.color.grey1,
-    cursor: 'pointer',
-    padding: 4,
-    position: 'relative',
-    transition: theme.transitions.create(['background-color']),
-  },
-}));
-
 export const DownloadTooltip = (props: Props) => {
-  const { classes, cx } = useStyles();
-
   const { className, displayText, fileName, onClickCallback, text } = props;
 
   const handleIconClick = () => {
@@ -77,24 +41,16 @@ export const DownloadTooltip = (props: Props) => {
 
   return (
     <Tooltip data-qa-copied placement="top" title="Download">
-      <button
-        className={cx(
-          {
-            [classes.flex]: Boolean(displayText),
-            [classes.root]: true,
-          },
-          className
-        )}
+      <StyledIconButton
         aria-label={`Download ${text}`}
+        className={className}
         name={text}
         onClick={handleIconClick}
         type="button"
       >
         <FileDownload />
-        {displayText && (
-          <Typography className={classes.displayText}>{displayText}</Typography>
-        )}
-      </button>
+        {displayText && <Typography>{displayText}</Typography>}
+      </StyledIconButton>
     </Tooltip>
   );
 };

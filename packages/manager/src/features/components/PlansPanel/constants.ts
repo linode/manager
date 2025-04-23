@@ -1,29 +1,46 @@
-import type { PlanSelectionType } from './types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const LIMITED_AVAILABILITY_COPY =
   'This plan has limited deployment availability.';
 export const SMALLER_PLAN_DISABLED_COPY =
   'Resizing to smaller plans is not supported.';
+export const PLAN_IS_SMALLER_THAN_USAGE_COPY =
+  'The usage storage in this plan is smaller than your current usage.';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
+export const PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY =
+  'Currently unavailable for the selected region.';
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
+export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
+  'This plan is too small for Akamai App Platform.';
+export const APL_NOTICE_COPY =
+  'Shared CPU instances are currently not available for Akamai App Platform.';
 
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/dedicated-cpu-compute-instances';
 export const SHARED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/shared-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/shared-cpu-compute-instances';
 export const HIGH_MEMORY_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/high-memory/';
+  'https://techdocs.akamai.com/cloud-computing/docs/high-memory-compute-instances';
 export const PREMIUM_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/premium/';
+  'https://techdocs.akamai.com/cloud-computing/docs/premium-compute-instances';
 export const GPU_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/gpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
+export const TRANSFER_COSTS_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs';
+export const ACCELERATED_COMPUTE_INSTANCES_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
+
+export const MTC_TT = {
+  availability_regions: ['us-iad', 'no-east'], // Currently available in iad/oslo regions.
+  available_types: ['g8-premium-64-ht', 'g8-premium-128-ht'],
+} as const;
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -81,71 +98,8 @@ export const DEDICATED_512_GB_PLAN: ExtendedType = {
   vcpus: 64,
 };
 
-export const DBAAS_DEDICATED_512_GB_PLAN: PlanSelectionType = {
-  class: 'dedicated',
-  disk: 7372800,
-  // engines: {
-  //   mysql: [
-  //     {
-  //       price: {
-  //         hourly: 12.48,
-  //         monthly: 8320,
-  //       },
-  //       quantity: 1,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 24.96,
-  //         monthly: 16640,
-  //       },
-  //       quantity: 2,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 37.44,
-  //         monthly: 24960,
-  //       },
-  //       quantity: 3,
-  //     },
-  //   ],
-  //   postgresql: [
-  //     {
-  //       price: {
-  //         hourly: 12.48,
-  //         monthly: 8320,
-  //       },
-  //       quantity: 1,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 24.96,
-  //         monthly: 16640,
-  //       },
-  //       quantity: 2,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 37.44,
-  //         monthly: 24960,
-  //       },
-  //       quantity: 3,
-  //     },
-  //   ],
-  // },
-  formattedLabel: 'Dedicated 512 GB',
-  heading: 'Dedicated 512 GB',
-  id: 'g6-dedicated-64',
-  label: 'DBaaS - Dedicated 512GB',
-  memory: 524288,
-  price: {
-    hourly: 12.48,
-    monthly: 8320,
-  },
-  subHeadings: ['$8320/mo ($12.48/hr)', '64 CPU, 7200 GB Storage, 512 GB RAM'],
-  vcpus: 64,
-};
-
 export const PREMIUM_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {

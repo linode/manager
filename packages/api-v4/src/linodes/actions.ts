@@ -110,7 +110,7 @@ export const resizeLinode = (linodeId: number, data: ResizeLinodePayload) =>
  * automatically appended to the root user's authorized keys file.
  */
 export const rebuildLinode = (linodeId: number, data: RebuildRequest) =>
-  Request<{}>(
+  Request<Linode>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/rebuild`
     ),

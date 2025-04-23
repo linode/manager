@@ -1,15 +1,17 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { OrderByProps } from 'src/components/OrderBy';
-import { Table, TableProps } from 'src/components/Table';
+import { Table } from 'src/components/Table';
+import { usePreferences } from '@linode/queries';
 
 import { SortableTableHead } from './SortableTableHead';
+
+import type { OrderByProps } from 'src/components/OrderBy';
+import type { TableProps } from 'src/components/Table';
 
 interface Props {
   children: React.ReactNode;
   dataLength: number;
-  isVLAN?: boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
   tableProps?: TableProps;
@@ -23,7 +25,6 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
   const {
     dataLength,
     handleOrderChange,
-    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
     order,
@@ -33,19 +34,24 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
     toggleLinodeView,
   } = props;
 
+  const { data: isTableStripingEnabled } = usePreferences(
+    (preferences) => preferences?.isTableStripingEnabled
+  );
+
   return (
     <Grid className="m0" container spacing={0} style={{ width: '100%' }}>
-      <Grid className="p0" xs={12}>
+      <Grid className="p0" size={12}>
         <Table
           aria-label="List of Linodes"
           colCount={5}
           rowCount={dataLength}
           stickyHeader
+          striped={!linodesAreGrouped && isTableStripingEnabled}
+          tableClass={linodesAreGrouped ? 'MuiTable-groupByTag' : ''}
           {...tableProps}
         >
           <SortableTableHead
             handleOrderChange={handleOrderChange}
-            isVLAN={isVLAN}
             linodeViewPreference={linodeViewPreference}
             linodesAreGrouped={linodesAreGrouped}
             order={order}

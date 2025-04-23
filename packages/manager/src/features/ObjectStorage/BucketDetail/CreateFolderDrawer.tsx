@@ -1,10 +1,9 @@
+import { ActionsPanel, Drawer, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
-import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
+import { NotFound } from 'src/components/NotFound';
+import { useCreateObjectUrlMutation } from 'src/queries/object-storage/queries';
 
 interface Props {
   bucketName: string;
@@ -25,7 +24,7 @@ export const CreateFolderDrawer = (props: Props) => {
     prefix,
   } = props;
 
-  const { error, isLoading, mutateAsync } = useCreateObjectUrlMutation(
+  const { error, isPending, mutateAsync } = useCreateObjectUrlMutation(
     clusterId,
     bucketName
   );
@@ -77,7 +76,12 @@ export const CreateFolderDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create Folder">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Create Folder"
+    >
       <form onSubmit={formik.handleSubmit}>
         <TextField
           errorText={formik.errors.name ?? error?.[0]?.reason}
@@ -88,7 +92,7 @@ export const CreateFolderDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Create',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

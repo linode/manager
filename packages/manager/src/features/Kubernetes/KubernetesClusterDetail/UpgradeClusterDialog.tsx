@@ -1,17 +1,19 @@
+import {
+  ActionsPanel,
+  Checkbox,
+  CircleProgress,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import {
   localStorageWarning,
   nodesDeletionWarning,
-} from 'src/features/Kubernetes/kubeUtils';
+} from 'src/features/Kubernetes/constants';
 import {
   useKubernetesClusterMutation,
   useKubernetesTypesQuery,

@@ -1,24 +1,12 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import {
-  ACLType,
-  ObjectStorageClusterID,
-  ObjectStorageObject,
-} from '@linode/api-v4/lib/object-storage';
-import { FormikProps } from 'formik';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import type { AccountSettings } from '@linode/api-v4/lib/account';
+import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
+import type { FormikProps } from 'formik';
 
-export const generateObjectUrl = (
-  clusterId: ObjectStorageClusterID,
-  bucketName: string,
-  objectName: string
-) => {
-  const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
-  return {
-    absolute: 'https://' + path,
-    path,
-  };
+export const generateObjectUrl = (hostname: string, objectName: string) => {
+  return `https://${hostname}/${encodeURIComponent(objectName)}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent
@@ -51,17 +39,20 @@ export const basename = (
   return path.substr(idx + 1);
 };
 
+export interface ACLType {
+  label: string;
+  value: string;
+}
+
 export interface ExtendedObject extends ObjectStorageObject {
   _displayName: string;
   _isFolder: boolean;
-  _manuallyCreated: boolean;
   _shouldDisplayObject: boolean;
 }
 
 export const extendObject = (
   object: ObjectStorageObject,
-  prefix: string,
-  manuallyCreated = false
+  prefix: string
 ): ExtendedObject => {
   const _isFolder = isFolder(object);
 
@@ -76,9 +67,6 @@ export const extendObject = (
     ...object,
     _displayName,
     _isFolder,
-    // If we're in a folder called "my-folder", we don't want to show the object
-    // called "my-folder/". We can look at the prefix to make this decision,
-    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
   };
@@ -147,29 +135,67 @@ export const confirmObjectStorage = async <T extends {}>(
     // on fields that have been touched (handleSubmit() does this
     // implicitly).
     Object.keys(validationErrors).forEach((key) => {
-      formikProps.setFieldTouched(key, validationErrors[key]);
-      formikProps.setFieldError(key, validationErrors[key]);
+      formikProps.setFieldTouched(
+        key,
+        Boolean(validationErrors[key as keyof T])
+      );
+      formikProps.setFieldError(
+        key,
+        validationErrors[key as keyof T] as string
+      );
     });
   } else {
     openConfirmationDialog();
   }
 };
 
-export const objectACLOptions: Item<ACLType>[] = [
+export const objectACLOptions: ACLType[] = [
   { label: 'Private', value: 'private' },
   { label: 'Authenticated Read', value: 'authenticated-read' },
   { label: 'Public Read', value: 'public-read' },
 ];
 
-export const bucketACLOptions: Item<ACLType>[] = [
+export const bucketACLOptions: ACLType[] = [
   ...objectACLOptions,
   { label: 'Public Read/Write', value: 'public-read-write' },
 ];
 
-export const objectACLHelperText: Record<ACLType, string> = {
+export const objectACLHelperText: Record<string, string> = {
   'authenticated-read': 'Authenticated Read ACL',
   custom: 'Custom ACL',
   private: 'Private ACL',
   'public-read': 'Public Read ACL',
   'public-read-write': 'Public Read/Write ACL',
+};
+
+// @TODO: OBJ Gen2: This should be removed once these regions obtain the `Object Storage` capability.
+export const WHITELISTED_REGIONS = new Set([
+  'gb-lon',
+  'au-mel',
+  'in-bom-2',
+  'de-fra-2',
+  'sg-sin-2',
+]);
+
+/**
+ * For OBJ Gen2 users, filter regions based on available Object Storage endpoints.
+ * Otherwise, we return the regions as is.
+ */
+export const filterRegionsByEndpoints = <T extends { id: string }>(
+  regions: T[] | undefined,
+  objecStorageEndpoints: ObjectStorageEndpoint[] | undefined
+): T[] => {
+  if (!regions) {
+    return [];
+  }
+
+  if (!objecStorageEndpoints) {
+    return regions;
+  }
+
+  const endpointRegions = new Set(
+    objecStorageEndpoints.map((endpoint) => endpoint.region)
+  );
+
+  return regions.filter((region) => endpointRegions.has(region.id));
 };

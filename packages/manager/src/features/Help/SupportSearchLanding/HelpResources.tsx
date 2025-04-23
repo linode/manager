@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -7,9 +7,10 @@ import { makeStyles } from 'tss-react/mui';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
 import { Tile } from 'src/components/Tile/Tile';
-import { Typography } from 'src/components/Typography';
-import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+
+import type { Theme } from '@mui/material/styles';
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   heading: {
@@ -57,7 +58,7 @@ export const HelpResources = () => {
   return (
     <>
       <Grid className={classes.wrapper} container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography className={classes.heading} variant="h2">
             Didn&rsquo;t find what you need? Get help.
           </Typography>
@@ -69,7 +70,13 @@ export const HelpResources = () => {
           }}
           container
         >
-          <Grid md={4} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <Tile
               description="Find help from other Linode users in the Community Find help from other Linode "
               icon={<Community />}
@@ -77,10 +84,16 @@ export const HelpResources = () => {
               title="Create a Community Post"
             />
           </Grid>
-          <Grid md={4} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <Tile
               description="If you are not able to solve an issue with the resources listed above,
-                you can contact Linode Support"
+              you can contact Linode Support"
               icon={<Support />}
               link={openTicketDrawer}
               title="Open a ticket"

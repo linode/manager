@@ -1,22 +1,22 @@
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
-import { useAccount } from 'src/queries/account/account';
-import { useAllPaymentMethodsQuery } from 'src/queries/account/payment';
-import { useProfile } from 'src/queries/profile/profile';
+import {
+  useAccount,
+  useAllPaymentMethodsQuery,
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
+import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
-import ContactInfo from './BillingPanels/ContactInfoPanel';
+import { ContactInformation } from './BillingPanels/ContactInfoPanel/ContactInformation';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 export const BillingDetail = () => {
@@ -68,7 +68,7 @@ export const BillingDetail = () => {
           paymentMethods={paymentMethods}
           promotions={account?.active_promotions}
         />
-        <ContactInfo
+        <ContactInformation
           address1={account.address_1}
           address2={account.address_2}
           city={account.city}
@@ -114,11 +114,9 @@ export const BillingActionButton = styled(Button)(({ theme, ...props }) => ({
       textDecoration: 'underline',
     },
   }),
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '.875rem',
   minHeight: 'unset',
   minWidth: 'auto',
   padding: 0,
 }));
-
-export default BillingDetail;

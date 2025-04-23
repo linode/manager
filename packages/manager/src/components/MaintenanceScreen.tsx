@@ -1,13 +1,12 @@
+import { Box, ErrorState, Stack, Typography } from '@linode/ui';
 import BuildIcon from '@mui/icons-material/Build';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import Logo from 'src/assets/logo/akamai-logo.svg';
-import { Box } from 'src/components/Box';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 export const MaintenanceScreen = () => {
   const theme = useTheme<Theme>();

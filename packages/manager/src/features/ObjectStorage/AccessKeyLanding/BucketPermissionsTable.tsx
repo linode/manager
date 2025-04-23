@@ -1,15 +1,13 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
+import { Radio } from '@linode/ui';
 import { update } from 'ramda';
 import * as React from 'react';
 
-import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getRegionsByRegionId } from 'src/utilities/regions';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { AccessCell } from './AccessCell';
 import {
@@ -22,11 +20,15 @@ import {
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
+import type {
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
+  oldScopes: ObjectStorageKeyBucketAccess[],
+  newScope: ObjectStorageKeyBucketAccess
+): ObjectStorageKeyBucketAccess[] => {
   // Region and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
     (thisScope) =>
@@ -39,36 +41,36 @@ export const getUpdatedScopes = (
   return update(scopeToUpdate, newScope, oldScopes);
 };
 
-export const SCOPES: Record<string, AccessType> = {
+export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',
   read: 'read_only',
   write: 'read_write',
 };
 
 interface Props {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
   mode: MODE;
   selectedRegions?: string[];
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const BucketPermissionsTable = React.memo((props: Props) => {
   const { bucket_access, checked, mode, selectedRegions, updateScopes } = props;
+  const { regionsByIdMap } = useObjectStorageRegions();
 
-  const { data: regionsData } = useRegionsQuery();
-  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
-
-  if (!bucket_access || !regionsLookup) {
+  if (!bucket_access || !regionsByIdMap) {
     return null;
   }
 
-  const updateSingleScope = (newScope: Scope) => {
+  const updateSingleScope = (newScope: ObjectStorageKeyBucketAccess) => {
     const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };
 
-  const updateAllScopes = (accessType: AccessType) => {
+  const updateAllScopes = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
       permissions: accessType,
@@ -76,7 +78,9 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
     updateScopes(newScopes);
   };
 
-  const allScopesEqual = (accessType: AccessType) => {
+  const allScopesEqual = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     return (
       bucket_access.length > 0 &&
       bucket_access.every((thisScope) => thisScope.permissions === accessType)
@@ -108,10 +112,10 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
       <TableBody>
         {mode === 'creating' && (
           <StyledSelectAllRadioRow data-qa-row="Select All" disabled={disabled}>
-            <TableCell colSpan={2} padding="checkbox" parentColumn="Region">
+            <TableCell colSpan={2} padding="checkbox">
               <strong>Select All</strong>
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="None">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select none for all',
@@ -125,7 +129,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="none"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read Only">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read-only for all',
@@ -139,7 +143,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                 value="read-only"
               />
             </TableCell>
-            <TableCell padding="checkbox" parentColumn="Read/Write">
+            <TableCell padding="checkbox">
               <Radio
                 inputProps={{
                   'aria-label': 'Select read/write for all',
@@ -178,7 +182,7 @@ export const BucketPermissionsTable = React.memo((props: Props) => {
                   padding="checkbox"
                   sx={{ minWidth: '150px' }}
                 >
-                  {regionsLookup[thisScope.region ?? '']?.label}
+                  {regionsByIdMap[thisScope.region ?? '']?.label}
                 </StyledClusterCell>
                 <StyledBucketCell padding="checkbox">
                   {thisScope.bucket_name}

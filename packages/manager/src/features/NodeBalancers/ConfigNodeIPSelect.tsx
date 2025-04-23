@@ -1,96 +1,102 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Box } from '@mui/material';
-import * as React from 'react';
+import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { useAllLinodesQuery } from '@linode/queries';
 
-import type { TextFieldProps } from 'src/components/TextField';
+import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';
 
-interface ConfigNodeIPSelectProps {
+interface Props {
+  /**
+   * Disables the select
+   */
   disabled?: boolean;
-  errorText?: string;
+  /**
+   * Validation error text
+   */
+  errorText: string | undefined;
+  /**
+   * Function that is called when the select's value changes
+   */
   handleChange: (nodeIndex: number, ipAddress: null | string) => void;
+  /**
+   * Override the default input `id` for the select
+   */
   inputId?: string;
-  nodeAddress?: string;
+  /**
+   * The selected private IP address
+   */
+  nodeAddress: string | undefined;
+  /**
+   * The index of the config node in state
+   */
   nodeIndex: number;
-  selectedRegion?: string;
-  textfieldProps: Omit<TextFieldProps, 'label'>;
+  /**
+   * The region for which to load Linodes and to show private IPs
+   * @note IPs won't load until a region is passed
+   */
+  region: string | undefined;
 }
 
-export const ConfigNodeIPSelect = React.memo(
-  (props: ConfigNodeIPSelectProps) => {
-    const {
-      handleChange: _handleChange,
-      inputId,
-      nodeAddress,
-      nodeIndex,
-    } = props;
+export const ConfigNodeIPSelect = React.memo((props: Props) => {
+  const {
+    disabled,
+    errorText,
+    handleChange,
+    inputId,
+    nodeAddress,
+    nodeIndex,
+    region,
+  } = props;
 
-    const handleChange = (linode: Linode | null) => {
-      if (!linode) {
-        _handleChange(nodeIndex, null);
-      }
+  const { data: linodes, error, isLoading } = useAllLinodesQuery(
+    {},
+    { region },
+    region !== undefined
+  );
 
-      const thisLinodesPrivateIP = linode?.ipv4.find((ipv4) =>
-        ipv4.match(privateIPRegex)
-      );
+  const options = getPrivateIPOptions(linodes);
 
-      if (!thisLinodesPrivateIP) {
-        return;
-      }
-
-      /**
-       * we can be sure the selection has a private IP because of the
-       * filterCondition prop in the render method below
-       */
-      _handleChange(nodeIndex, thisLinodesPrivateIP);
-    };
-
-    return (
-      <LinodeSelect
-        noOptionsMessage={`No options - please ensure you have at least 1 Linode
-      with a private IP located in the selected region.`}
-        optionsFilter={(linode) => {
-          /**
-           * if the Linode doesn't have an private IP OR if the Linode
-           * is in a different region that the NodeBalancer, don't show it
-           * in the select dropdown
-           */
-          return (
-            !!linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) &&
-            linode.region === props.selectedRegion
-          );
-        }}
-        renderOption={(linode, selected) => (
-          <>
+  return (
+    <Autocomplete
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+        return (
+          <li {...rest} key={key}>
             <Box
-              sx={{
-                flexGrow: 1,
-              }}
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              gap={1}
+              justifyContent="space-between"
+              width="100%"
             >
-              <strong>
-                {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
-              </strong>
-              <div>{linode.label}</div>
+              <Stack>
+                <Typography
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
+                  color="inherit"
+                >
+                  {option.label}
+                </Typography>
+                <Typography color="inherit">{option.linode.label}</Typography>
+              </Stack>
+              {selected && <SelectedIcon visible />}
             </Box>
-            <SelectedIcon visible={selected} />
-          </>
-        )}
-        renderOptionLabel={(linode) =>
-          linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) ?? ''
-        }
-        clearable
-        disabled={props.disabled}
-        errorText={props.errorText}
-        id={inputId}
-        label="IP Address"
-        noMarginTop
-        onSelectionChange={handleChange}
-        placeholder="Enter IP Address"
-        value={(linode) => linode.ipv4.some((ip) => ip === nodeAddress)}
-      />
-    );
-  }
-);
+          </li>
+        );
+      }}
+      disabled={disabled}
+      errorText={errorText ?? error?.[0].reason}
+      id={inputId}
+      label="IP Address"
+      loading={isLoading}
+      noMarginTop
+      noOptionsText="No options - please ensure you have at least 1 Linode with a private IP located in the selected region."
+      onChange={(e, value) => handleChange(nodeIndex, value?.label ?? null)}
+      options={options}
+      placeholder="Enter IP Address"
+      value={options.find((o) => o.label === nodeAddress) ?? null}
+    />
+  );
+});

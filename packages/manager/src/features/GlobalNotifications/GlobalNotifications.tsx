@@ -1,3 +1,4 @@
+import { useSecurityQuestions, useProfile } from '@linode/queries';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
@@ -7,17 +8,18 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile/profile';
-import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 
 import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpirationDialog';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
+import { CreditCardExpiredBanner } from './CreditCardExpiredBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
+import { DesignUpdateBanner } from './TokensUpdateBanner';
 import { VerificationDetailsBanner } from './VerificationDetailsBanner';
+
 export const GlobalNotifications = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
@@ -51,6 +53,8 @@ export const GlobalNotifications = () => {
 
   return (
     <>
+      <CreditCardExpiredBanner />
+      <DesignUpdateBanner />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
       <AbuseTicketBanner />

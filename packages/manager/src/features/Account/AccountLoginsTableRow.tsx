@@ -1,17 +1,20 @@
-import {
-  AccountLogin,
-  AccountLoginStatus,
-} from '@linode/api-v4/lib/account/types';
+import { useProfile } from '@linode/queries';
+import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
+
+import type {
+  AccountLogin,
+  AccountLoginStatus,
+} from '@linode/api-v4/lib/account/types';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 const accessIconMap: Record<AccountLoginStatus, Status> = {
   failed: 'other',
@@ -30,10 +33,14 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
         })}
       </TableCell>
       <TableCell noWrap>
-        <Link to={`/account/users/${username}`}>{username}</Link>
+        <MaskableText isToggleable text={username}>
+          <Link to={`/account/users/${username}`}>{username}</Link>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
-        <TableCell>{ip}</TableCell>
+        <TableCell>
+          <MaskableText isToggleable text={ip} />
+        </TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell noWrap>

@@ -1,14 +1,12 @@
-import { NodeBalancer } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useAllNodeBalancersQuery } from '@linode/queries';
+import { Autocomplete, CustomPopper } from '@linode/ui';
+import { mapIdsToDevices } from '@linode/utilities';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+import type { APIError, NodeBalancer } from '@linode/api-v4';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface NodeBalancerSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
@@ -44,7 +42,7 @@ interface NodeBalancerSelectProps {
   /* Displays an indication that the input is required. */
   required?: boolean;
   /* Adds custom styles to the component. */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export interface NodeBalancerMultiSelectProps extends NodeBalancerSelectProps {
@@ -132,8 +130,9 @@ export const NodeBalancerSelect = (
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
+              const { key, ...rest } = props;
               return (
-                <li {...props} data-qa-linode-option>
+                <li {...rest} data-qa-linode-option key={key}>
                   {renderOption(option, selected)}
                 </li>
               );

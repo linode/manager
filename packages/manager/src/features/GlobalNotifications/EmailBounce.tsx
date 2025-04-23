@@ -1,18 +1,21 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme, useTheme } from '@mui/material/styles';
+import {
+  useAccount,
+  useMutateAccount,
+  useMutateProfile,
+  useNotificationsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Button, Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { useAccount, useMutateAccount } from 'src/queries/account/account';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-
 import { StyledGrid } from './EmailBounce.styles';
+
+import type { Theme } from '@mui/material/styles';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
@@ -54,6 +57,7 @@ export const EmailBounceNotificationSection = React.memo(() => {
               focusEmail: true,
             })
           }
+          confirmEmail={confirmAccountEmail}
           text={
             <Typography data-testid="billing_email_bounce">
               An email to your account&rsquo;s email address couldn&rsquo;t be
@@ -61,7 +65,6 @@ export const EmailBounceNotificationSection = React.memo(() => {
               correct address?
             </Typography>
           }
-          confirmEmail={confirmAccountEmail}
         />
       )}
       {userEmailBounceNotification && profileEmailRef && (
@@ -69,6 +72,7 @@ export const EmailBounceNotificationSection = React.memo(() => {
           changeEmail={() =>
             history.push('/profile/display', { focusEmail: true })
           }
+          confirmEmail={confirmProfileEmail}
           text={
             <Typography data-testid="user_email_bounce">
               An email to your user profile&rsquo;s email address couldn&rsquo;t
@@ -76,7 +80,6 @@ export const EmailBounceNotificationSection = React.memo(() => {
               correct address?
             </Typography>
           }
-          confirmEmail={confirmProfileEmail}
         />
       )}
     </>
@@ -128,12 +131,26 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important spacing={2} variant="warning">
-      <Grid alignItems="center" container>
-        <Grid lg={8} md={6} xs={12}>
+    <Notice forceImportantIconVerticalCenter variant="warning">
+      <Grid
+        container
+        display="flex"
+        justifyContent="space-between"
+        sx={{
+          alignItems: 'center',
+        }}
+        width="100%"
+      >
+        <Grid
+          size={{
+            lg: 8,
+            md: 6,
+            xs: 12,
+          }}
+        >
           {text}
         </Grid>
-        <StyledGrid container lg={4} md={6} xs={12}>
+        <StyledGrid>
           <Button
             buttonType="primary"
             data-testid="confirmButton"
@@ -143,12 +160,12 @@ const EmailBounceNotification = React.memo((props: Props) => {
             {confirmationText}
           </Button>
           <Button
-            sx={(theme) => ({
-              marginLeft: theme.spacing(2),
-            })}
             buttonType="secondary"
             data-testid="updateButton"
             onClick={changeEmail}
+            sx={(theme) => ({
+              marginLeft: theme.spacing(2),
+            })}
           >
             {updateText}
           </Button>

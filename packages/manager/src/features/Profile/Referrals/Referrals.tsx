@@ -1,17 +1,15 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -49,7 +47,7 @@ export const Referrals = () => {
     return <CircleProgress />;
   }
 
-  const { completed, credit, pending, total, url } = profile?.referrals;
+  const { completed, credit, pending, total, url } = profile.referrals;
   const allowReferral = Boolean(url);
 
   return (
@@ -74,7 +72,7 @@ export const Referrals = () => {
           </Typography>
         </Grid>
         <>
-          <Grid xs={12}>
+          <Grid size={12}>
             {allowReferral ? (
               <CopyableTextField
                 expand
@@ -162,3 +160,7 @@ export const Referrals = () => {
     </Paper>
   );
 };
+
+export const ReferralsLazyRoute = createLazyRoute('/profile/referrals')({
+  component: Referrals,
+});

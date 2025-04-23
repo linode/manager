@@ -1,8 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Typography } from 'src/components/Typography';
 
 import { formatPoolUsagePct } from './utils';
 
@@ -15,20 +16,29 @@ export interface TransferDisplayUsageProps {
 export const TransferDisplayUsage = React.memo(
   (props: TransferDisplayUsageProps) => {
     const { pullUsagePct, quota, used } = props;
+
+    const theme = useTheme();
+
     // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
     const isEmptyPool = quota === 0;
 
     return (
       <>
+        {!isEmptyPool && (
+          <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
+        )}
         <Grid
           container
-          justifyContent="space-between"
           spacing={2}
-          sx={{ marginBottom: 0 }}
+          sx={{
+            justifyContent: 'space-between',
+            marginBottom: 0,
+            marginTop: (theme) => theme.spacing(0.5),
+          }}
         >
           <Grid style={{ marginRight: 10 }}>
             {!isEmptyPool ? (
-              <Typography>
+              <Typography fontSize={theme.typography.h3.fontSize}>
                 {used} GB Used ({formatPoolUsagePct(pullUsagePct)})
               </Typography>
             ) : (
@@ -40,7 +50,7 @@ export const TransferDisplayUsage = React.memo(
           </Grid>
           <Grid>
             {!isEmptyPool && (
-              <Typography>
+              <Typography fontSize={theme.typography.h3.fontSize}>
                 {quota >= used ? (
                   <span>{quota - used} GB Available</span>
                 ) : (
@@ -52,9 +62,6 @@ export const TransferDisplayUsage = React.memo(
             )}
           </Grid>
         </Grid>
-        {!isEmptyPool && (
-          <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
-        )}
       </>
     );
   }

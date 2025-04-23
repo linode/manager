@@ -2,29 +2,22 @@ import { pages } from 'support/ui/constants';
 
 import type { Page } from 'support/ui/constants';
 
-describe('smoke - deep link', () => {
-  pages.forEach((page: Page) => {
-    describe(`Go to ${page.name}`, () => {
-      // check if we run only one test
-      if (!page.goWithUI) {
-        return;
-      }
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
+describe('smoke - deep links', () => {
+  beforeEach(() => {
+    cy.visitWithLogin('/null');
+  });
 
-      // Here we use login to /null here
-      // so this is independant from what is coded in constants and which path are skipped
-      beforeEach(() => {
-        cy.visitWithLogin('/null');
-      });
-
-      page.goWithUI.forEach((uiPath) => {
-        (page.first ? it.only : page.skip ? it.skip : it)(
-          `by ${uiPath.name}`,
-          () => {
-            expect(uiPath.name).not.to.be.empty;
-            uiPath.go();
-            cy.url().should('be.eq', `${Cypress.config('baseUrl')}${page.url}`);
-          }
-        );
+  it('Go to each route and validate deep links', () => {
+    pages.forEach((page: Page) => {
+      cy.log(`Go to ${page.name}`);
+      page.goWithUI?.forEach((uiPath) => {
+        cy.log(`by ${uiPath.name}`);
+        cy.findByText(uiPath.name).should('not.be.empty');
+        uiPath.go();
+        cy.url().should('be.eq', `${Cypress.config('baseUrl')}${page.url}`);
       });
     });
   });

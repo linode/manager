@@ -11,6 +11,7 @@ interface MonthlyPriceOptions {
 }
 
 interface TotalClusterPriceOptions {
+  enterprisePrice?: number;
   highAvailabilityPrice?: number;
   pools: KubeNodePoolResponse[];
   region: Region['id'] | undefined;
@@ -42,6 +43,7 @@ export const getKubernetesMonthlyPrice = ({
  * @returns The total monthly cluster price
  */
 export const getTotalClusterPrice = ({
+  enterprisePrice,
   highAvailabilityPrice,
   pools,
   region,
@@ -57,5 +59,12 @@ export const getTotalClusterPrice = ({
     return accumulator + (kubernetesMonthlyPrice ?? 0);
   }, 0);
 
-  return highAvailabilityPrice ? price + highAvailabilityPrice : price;
+  if (enterprisePrice) {
+    return price + enterprisePrice;
+  }
+  if (highAvailabilityPrice) {
+    return price + highAvailabilityPrice;
+  }
+
+  return price;
 };

@@ -1,13 +1,14 @@
+import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
-import { SuppliedMaintenanceData } from 'src/featureFlags';
-import { queryPresets } from 'src/queries/base';
-import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
+import { queryPresets } from '@linode/queries';
+import { useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { SuppliedMaintenanceData } from 'src/featureFlags';
+import type { Maintenance } from 'src/queries/statusPage';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
@@ -63,7 +64,6 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
 
     return (
       <DismissibleBanner
-        important
         key={scheduledAPIMaintenance.id}
         preferenceKey={scheduledAPIMaintenance.id}
         variant="warning"

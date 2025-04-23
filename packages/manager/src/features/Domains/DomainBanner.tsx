@@ -1,10 +1,10 @@
+import { Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 interface DomainBannerProps {
   hidden: boolean;
@@ -25,34 +25,27 @@ export const DomainBanner = React.memo((props: DomainBannerProps) => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: KEY,
       }}
-      important
       preferenceKey={KEY}
       variant="warning"
     >
-      <>
-        <StyledTypography>
+      <Stack>
+        <Typography>
           <strong>Your DNS zones are not being served.</strong>
-        </StyledTypography>
+        </Typography>
         <Typography>
           Your domains will not be served by Linode&rsquo;s nameservers unless
           you have at least one active Linode on your account.{` `}
           <Link to="/linodes/create">You can create one here.</Link>
         </Typography>
-      </>
+      </Stack>
     </StyledDismissibleBanner>
   );
 });
-
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    marginBottom: theme.spacing(),
-  })
-);
 
 const StyledDismissibleBanner = styled(DismissibleBanner, {
   label: 'StyledDismissableBanner',
 })(({ theme }) => ({
   '& h3:first-of-type': {
-    marginBottom: theme.spacing(1),
+    margin: theme.spacing(1),
   },
 }));

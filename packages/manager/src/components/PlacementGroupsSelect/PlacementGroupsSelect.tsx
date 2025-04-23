@@ -1,15 +1,15 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { TextFieldProps } from 'src/components/TextField';
+import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
+import { useAllPlacementGroupsQuery } from '@linode/queries';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
-import type { PlacementGroup, Region } from '@linode/api-v4';
-import type { SxProps } from '@mui/system';
+import type { APIError, PlacementGroup, Region } from '@linode/api-v4';
+import type { TextFieldProps } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface PlacementGroupsSelectProps {
   /**
@@ -44,7 +44,7 @@ export interface PlacementGroupsSelectProps {
   /**
    * Any additional styles to apply to the root element.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /**
    * Any additional props to pass to the TextField component.
    */
@@ -104,14 +104,19 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         handlePlacementGroupChange(selectedOption ?? null);
       }}
       renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+
         return (
           <PlacementGroupSelectOption
-            disabled={isDisabledPlacementGroup(option, selectedRegion)}
-            key={option.id}
-            label={option.label}
-            props={props}
+            disabledOptions={
+              isDisabledPlacementGroup(option, selectedRegion)
+                ? { reason: PLACEMENT_GROUP_HAS_NO_CAPACITY }
+                : undefined
+            }
+            item={option}
+            key={key}
+            props={rest}
             selected={selected}
-            value={option}
           />
         );
       }}

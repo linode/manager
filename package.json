@@ -2,76 +2,91 @@
   "name": "root",
   "private": true,
   "license": "Apache-2.0",
+  "type": "module",
   "devDependencies": {
-    "husky": "^3.0.1",
-    "npm-run-all": "^4.1.5",
-    "patch-package": "^7.0.0",
-    "postinstall": "^0.6.0",
-    "typescript": "^5.4.5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn workspaces run precommit"
-    }
+    "@eslint/js": "^9.23.0",
+    "concurrently": "9.1.0",
+    "husky": "^9.1.6",
+    "typescript": "^5.7.3",
+    "vitest": "^3.1.2",
+    "@vitest/ui": "^3.1.2",
+    "lint-staged": "^15.4.3",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-cypress": "^4.2.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-perfectionist": "^4.10.1",
+    "eslint-plugin-prettier": "~5.2.6",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-sonarjs": "^3.0.2",
+    "eslint-plugin-testing-library": "^7.1.1",
+    "eslint-plugin-xss": "^0.1.12",
+    "prettier": "~3.5.3",
+    "typescript-eslint": "^8.29.0",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
+    "@linode/eslint-plugin-cloud-manager": "^0.0.10"
   },
   "scripts": {
-    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
-    "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
-    "install:all": "yarn install --frozen-lockfile",
-    "upgrade:sdk": "yarn workspace @linode/api-v4 version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade @linode/api-v4",
-    "postinstall": "echo \"Skipping Patching: yarn workspaces run postinstall && patch-package\"",
-    "build:sdk": "yarn workspace @linode/api-v4 build",
-    "build:validation": "yarn workspace @linode/validation build",
-    "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
-    "build:analyze": "yarn workspace linode-manager build:analyze",
-    "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
-    "up:expose": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all:expose",
-    "dev": "yarn install:all && yarn start:all",
-    "start:all": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start\"",
-    "start:all:expose": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start:expose\"",
-    "start:manager": "yarn workspace linode-manager start",
-    "start:manager:ci": "yarn workspace linode-manager start:ci",
-    "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
-    "test": "yarn workspace linode-manager test",
-    "package-versions": "node ./scripts/package-versions/index.js",
-    "storybook": "yarn workspace linode-manager storybook",
-    "cy:run": "yarn workspace linode-manager cy:run",
-    "cy:e2e": "yarn workspace linode-manager cy:e2e",
-    "cy:ci": "yarn cy:e2e",
-    "cy:debug": "yarn workspace linode-manager cy:debug",
-    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
-    "changeset": "node scripts/changelog/changeset.mjs",
-    "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
-    "coverage": "yarn workspace linode-manager coverage",
-    "coverage:summary": "yarn workspace linode-manager coverage:summary",
-    "junit:summary": "ts-node scripts/junit-summary/index.ts",
-    "generate-tod": "ts-node scripts/tod-payload/index.ts",
-    "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
+    "lint:all": "pnpm -r --parallel lint",
+    "install:all": "pnpm install --frozen-lockfile",
+    "build:sdk": "pnpm run --filter @linode/api-v4 build",
+    "build:validation": "pnpm run --filter @linode/validation build",
+    "build": "pnpm build:validation && pnpm build:sdk && pnpm --filter linode-manager build",
+    "build:analyze": "pnpm run --filter linode-manager build:analyze",
+    "bootstrap": "pnpm install:all && pnpm build:validation && pnpm build:sdk",
+    "up:expose": "npm_config_package_import_method=clone-or-copy pnpm install:all && pnpm build:validation && pnpm build:sdk && pnpm start:all:expose",
+    "dev": "concurrently -n api-v4,validation,ui,utilities,queries,shared,manager -c blue,yellow,magenta,cyan,gray,blue,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter @linode/utilities start\" \"pnpm run --filter @linode/queries start\" \"pnpm run --filter @linode/shared start\" \"pnpm run --filter linode-manager start\"",
+    "start:all:expose": "concurrently -n api-v4,validation,ui,utilities,queries,shared,manager -c blue,yellow,magenta,cyan,gray,blue,green \"pnpm run --filter @linode/api-v4 start\" \"pnpm run --filter @linode/validation start\" \"pnpm run --filter @linode/ui start\" \"pnpm run --filter @linode/utilities start\" \"pnpm run --filter @linode/queries start\" \"pnpm run --filter @linode/shared start\" \"pnpm run --filter linode-manager start:expose\"",
+    "start:manager": "pnpm --filter linode-manager start",
+    "start:manager:ci": "pnpm run --filter linode-manager start:ci",
+    "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
+    "storybook": "pnpm run --filter linode-manager storybook",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:manager": "pnpm run --filter linode-manager test",
+    "test:sdk": "pnpm run --filter @linode/api-v4 test",
+    "test:search": "pnpm run --filter @linode/search test",
+    "test:ui": "pnpm run --filter @linode/ui test",
+    "test:utilities": "pnpm run --filter @linode/utilities test",
+    "coverage": "pnpm run --filter linode-manager coverage",
+    "coverage:summary": "pnpm run --filter linode-manager coverage:summary",
+    "cy:run": "pnpm run --filter linode-manager cy:run",
+    "cy:e2e": "pnpm run --filter linode-manager cy:e2e",
+    "cy:ci": "pnpm cy:e2e",
+    "cy:debug": "pnpm run --filter linode-manager cy:debug",
+    "cy:component": "pnpm run --filter linode-manager cy:component",
+    "cy:component:run": "pnpm run --filter linode-manager cy:component:run",
+    "cy:rec-snap": "pnpm run --filter linode-manager cy:rec-snap",
+    "changeset": "pnpm run --filter @linode/scripts changeset",
+    "generate-changelogs": "pnpm run --filter @linode/scripts generate-changelogs",
+    "package-versions": "pnpm run --filter @linode/scripts package-versions",
+    "junit:summary": "pnpm run --filter @linode/scripts --silent junit:summary",
+    "generate-tod": "pnpm run --filter @linode/scripts --silent generate-tod",
+    "clean": "concurrently \"rm -rf node_modules\" \"pnpm -r exec rm -rf node_modules lib dist\" \"pnpm store prune\"",
+    "prepare": "husky"
   },
   "resolutions": {
-    "@babel/traverse": "^7.23.3",
-    "minimist": "^1.2.3",
-    "yargs-parser": "^21.1.1",
-    "kind-of": "^6.0.3",
     "node-fetch": "^2.6.7",
-    "ua-parser-js": "^0.7.33",
-    "immer": "^9.0.6",
-    "glob-parent": "^5.1.2",
-    "hosted-git-info": "^5.0.0",
     "yaml": "^2.3.0",
-    "word-wrap": "^1.2.4",
     "semver": "^7.5.2",
-    "tough-cookie": "^4.1.3",
-    "jackspeak": "2.1.1"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
+    "cookie": "^0.7.0",
+    "nanoid": "^3.3.8"
   },
   "version": "0.0.0",
   "volta": {
-    "node": "18.14.1"
+    "node": "20.17.0"
   },
-  "dependencies": {}
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "scripts"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "cypress"
+    ]
+  }
 }

@@ -1,10 +1,11 @@
 import * as React from 'react';
 
 import { longviewProcessFactory } from 'src/factories/longviewProcess';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { extendData } from './ProcessesLanding';
 import { ProcessesTable } from './ProcessesTable';
+
 import type { ProcessesTableProps } from './ProcessesTable';
 
 const mockSetSelectedRow = vi.fn();
@@ -19,8 +20,8 @@ const props: ProcessesTableProps = {
 describe('ProcessTable', () => {
   const extendedData = extendData(longviewProcessFactory.build());
 
-  it('renders all columns for each row', () => {
-    const { getAllByTestId, getAllByText } = renderWithTheme(
+  it('renders all columns for each row', async () => {
+    const { getAllByTestId, getAllByText } = await renderWithThemeAndRouter(
       <ProcessesTable {...props} processesData={extendedData} />
     );
     extendedData.forEach((row) => {
@@ -33,15 +34,15 @@ describe('ProcessTable', () => {
     });
   });
 
-  it('renders loading state', () => {
-    const { getByTestId } = renderWithTheme(
+  it('renders loading state', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(
       <ProcessesTable {...props} processesLoading={true} />
     );
     getByTestId('table-row-loading');
   });
 
-  it('renders error state', () => {
-    const { getByText } = renderWithTheme(
+  it('renders error state', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
       <ProcessesTable {...props} error="Error!" />
     );
     getByText('Error!');

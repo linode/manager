@@ -2,8 +2,9 @@ import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
-import { RenderLinodesProps } from './DisplayLinodes';
 import { LinodeRow } from './LinodeRow/LinodeRow';
+
+import type { RenderLinodesProps } from './DisplayLinodes';
 
 export const ListView = (props: RenderLinodesProps) => {
   const { data, openDialog, openPowerActionDialog } = props;
@@ -18,7 +19,6 @@ export const ListView = (props: RenderLinodesProps) => {
   return (
     // eslint-disable-next-line
     <>
-      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode, idx: number) => (
         <LinodeRow
           handlers={{
@@ -37,11 +37,13 @@ export const ListView = (props: RenderLinodesProps) => {
           }}
           alerts={linode.alerts}
           backups={linode.backups}
+          capabilities={linode.capabilities}
           created={linode.created}
           group={linode.group}
           hypervisor={linode.hypervisor}
           id={linode.id}
           image={linode.image}
+          interface_generation={linode.interface_generation}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6 || ''}
           key={`linode-row-${idx}`}
@@ -50,6 +52,7 @@ export const ListView = (props: RenderLinodesProps) => {
           maintenance={linode.maintenance}
           placement_group={linode.placement_group}
           region={linode.region}
+          site_type={linode.site_type}
           specs={linode.specs}
           status={linode.status}
           tags={linode.tags}

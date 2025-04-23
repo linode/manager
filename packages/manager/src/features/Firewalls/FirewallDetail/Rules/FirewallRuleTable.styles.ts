@@ -1,56 +1,35 @@
+import { Box, Button, StyledLinkButton, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
 type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
 
-interface FirewallRuleTableRowPropsWithRuleId
+interface FirewallRuleTableRowPropsWithRuleIndex
   extends Pick<FirewallRuleTableRowProps, 'disabled' | 'originalIndex'> {
-  ruleId: number;
+  ruleIndex: number;
 }
 
-interface StyledFirewallRuleBoxProps
-  extends FirewallRuleTableRowPropsWithRuleId {
+interface StyledFirewallRuleTableRowProps
+  extends FirewallRuleTableRowPropsWithRuleIndex {
   status: FirewallRuleTableRowProps['status'];
 }
 
-export const sxBox = {
-  alignItems: 'center',
-  display: 'flex',
-  width: '100%',
-};
-
-export const sxItemSpacing = {
-  padding: `0 8px`,
-};
-
-export const StyledFirewallRuleBox = styled(Box, {
-  label: 'StyledFirewallRuleBox',
-  shouldForwardProp: omittedProps(['originalIndex', 'ruleId']),
-})<StyledFirewallRuleBoxProps>(
-  ({ disabled, originalIndex, ruleId, status, theme }) => ({
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-    fontSize: '0.875rem',
-    margin: 0,
-    ...sxBox,
-
+// Note: Use 'tr' instead of 'TableRow' here for a smoother draggable user experience.
+export const StyledTableRow = styled('tr', {
+  label: 'StyledTableRow',
+  shouldForwardProp: omittedProps(['originalIndex', 'ruleIndex']),
+})<StyledFirewallRuleTableRowProps>(
+  ({ disabled, originalIndex, ruleIndex, status, theme }) => ({
     // Conditional styles
-    // Highlight the row if it's been modified or reordered. ID is the current index,
+    // Highlight the row if it's been modified or reordered. ruleIndex is the current index,
     // so if it doesn't match the original index we know that the rule has been moved.
     ...(status === 'PENDING_DELETION' || disabled
-      ? {
-          '& td': { color: '#D2D3D4' },
-          backgroundColor: 'rgba(247, 247, 247, 0.25)',
-        }
+      ? { backgroundColor: theme.color.grey7 }
       : {}),
-    ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleId
+    ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleIndex
       ? { backgroundColor: theme.bg.lightBlue1 }
       : {}),
     ...(status === 'NOT_MODIFIED' ? { backgroundColor: theme.bg.bgPaper } : {}),
@@ -60,38 +39,17 @@ export const StyledFirewallRuleBox = styled(Box, {
 export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
   ({ theme }) => ({
     backgroundColor: theme.bg.tableHeader,
-    color: theme.textColors.tableHeader,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '.875rem',
-    height: '46px',
-  })
-);
-
-export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    backgroundColor: theme.bg.bgPaper,
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    fontSize: '0.875rem',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    width: '100%',
   })
 );
 
 export const StyledFirewallRuleButton = styled('button', {
   label: 'StyledFirewallRuleButton',
-})<StyledFirewallRuleButtonProps>(({ status, theme }) => ({
+})<StyledFirewallRuleButtonProps>(() => ({
   backgroundColor: 'transparent',
   border: 'none',
   cursor: 'pointer',
-
-  // Conditional styles
-  ...(status !== 'PENDING_DELETION'
-    ? { backgroundColor: theme.bg.lightBlue1 }
-    : {}),
 }));
 
 export const StyledFirewallTableButton = styled(Button, {
@@ -139,12 +97,4 @@ export const StyledDragIndicator = styled(DragIndicator, {
   marginRight: theme.spacing(1.5),
   position: 'relative',
   top: 2,
-}));
-
-export const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
-  backgroundColor: theme.color.border3,
-  listStyle: 'none',
-  margin: 0,
-  paddingLeft: 0,
-  width: '100%',
 }));

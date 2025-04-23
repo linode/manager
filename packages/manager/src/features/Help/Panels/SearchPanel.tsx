@@ -1,8 +1,6 @@
+import { H1Header, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { H1Header } from 'src/components/H1Header/H1Header';
-import { Paper } from 'src/components/Paper';
 
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
@@ -22,7 +20,10 @@ const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
 })(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.color.green,
+  backgroundColor:
+    theme.name === 'dark'
+      ? theme.palette.primary.light
+      : theme.palette.primary.dark,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -36,7 +37,7 @@ const StyledRootContainer = styled(Paper, {
 const StyledH1Header = styled(H1Header, {
   label: 'StyledH1Header',
 })(({ theme }) => ({
-  color: theme.name === 'dark' ? theme.color.black : theme.color.white,
+  color: theme.color.white,
   marginBottom: theme.spacing(),
   position: 'relative',
   textAlign: 'center',

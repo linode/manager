@@ -4,18 +4,55 @@
 
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
+import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
+import type {
+  Disk,
+  Firewall,
+  Kernel,
+  Linode,
+  LinodeInterface,
+  LinodeInterfaces,
+  LinodeIPsResponse,
+  LinodeType,
+  Volume,
+} from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Linode.
  *
+ * The outgoing request payload is modified to create a Linode without access
+ * to the internet.
+ *
  * @returns Cypress chainable.
  */
 export const interceptCreateLinode = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('linode/instances'));
+  return cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
+    req.body = {
+      ...req.body,
+      interfaces: linodeVlanNoInternetConfig,
+    };
+  });
+};
+
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeAccountLimitError = (
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };
 
 /**
@@ -30,6 +67,24 @@ export const mockCreateLinode = (linode: Linode): Cypress.Chainable<null> => {
     'POST',
     apiMatcher('linode/instances'),
     makeResponse(linode)
+  );
+};
+
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeError = (
+  errorMessage: string,
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
   );
 };
 
@@ -64,7 +119,7 @@ export const interceptGetLinodes = (): Cypress.Chainable<null> => {
 export const mockGetLinodes = (linodes: Linode[]): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('linode/instances/*'),
+    apiMatcher('linode/instances*'),
     paginateResponse(linodes)
   );
 };
@@ -133,6 +188,25 @@ export const interceptRebuildLinode = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/rebuild`)
+  );
+};
+
+/**
+ * Intercepts POST request to rebuild a Linode and mocks the response.
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ * @param linode - Linode for the mocked response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRebuildLinode = (
+  linodeId: number,
+  linode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/rebuild`),
+    makeResponse(linode)
   );
 };
 
@@ -243,6 +317,51 @@ export const mockGetLinodeDisks = (
 };
 
 /**
+ * Intercepts DELETE request to delete a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptDeleteDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`linode/instances/${linodeId}/disks/*`)
+  );
+};
+
+/**
+ * Intercepts POST request to add a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptAddDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/disks`));
+};
+
+/**
+ * Intercepts POST request to resize a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptResizeDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/disks/*/resize`)
+  );
+};
+
+/**
  * Intercepts DELETE request to delete linode and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.
@@ -317,6 +436,24 @@ export const interceptCloneLinode = (
   linodeId: number
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/clone`));
+};
+
+/**
+ * Intercepts POST request to clone a Linode and mock responses.
+ *
+ * @param linodeId - ID of Linode being cloned.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCloneLinode = (
+  linodeId: number,
+  linode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/clone`),
+    makeResponse(linode)
+  );
 };
 
 /**
@@ -437,7 +574,8 @@ export const mockGetLinodeKernel = (
   );
 };
 
-/* Intercepts POST request to get a Linode Resize.
+/**
+ * Intercepts POST request to get a Linode Resize.
  *
  * @param linodeId - ID of Linode to fetch.
  *
@@ -449,5 +587,97 @@ export const interceptLinodeResize = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/resize`)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's firewalls.
+ *
+ * @param linodeId - ID of Linode to get firewalls associated with it.
+ * @param firewalls - the firewalls with which to mock the response.
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeFirewalls = (
+  linodeId: number,
+  firewalls: Firewall[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/firewalls`),
+    paginateResponse(firewalls)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's IP addresses.
+ *
+ * @param linodeId - ID of Linode to get IP addresses for.
+ * @param ipAddresses: the IP Addresses with which to mock the response.
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeIPAddresses = (
+  linodeId: number,
+  ipAddresses: LinodeIPsResponse
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/ips`),
+    makeResponse(ipAddresses)
+  );
+};
+
+/**
+ * Intercepts POST request to cancel backups for a Linode.
+ *
+ * @param linodeId - ID of Linode for which to enable backups.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCancelLinodeBackups = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/backups/cancel`)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's Interfaces.
+ *
+ * @param linodeId - ID of Linode to get interfaces associated with it
+ * @param interfaces - the mocked Linode interfaces
+ *
+ * @returns Cypress Chainable.
+ */
+export const mockGetLinodeInterfaces = (
+  linodeId: number,
+  interfaces: LinodeInterfaces
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/interfaces`),
+    interfaces
+  );
+};
+
+/**
+ * Intercepts POST request to create a Linode Interface.
+ *
+ * @param linodeId - the Linodes ID to add the interface to.
+ * @param linodeInterface - a mock linode interface object.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeInterface = (
+  linodeId: number,
+  linodeInterface: LinodeInterface
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/interfaces`),
+    makeResponse(linodeInterface)
   );
 };

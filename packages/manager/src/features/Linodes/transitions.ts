@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { capitalizeAllWords } from '@linode/utilities';
 
 import {
   isEventRelevantToLinode,
@@ -6,7 +6,8 @@ import {
   isPrimaryEntity,
   isSecondaryEntity,
 } from 'src/queries/events/event.helpers';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+
+import type { Event, EventAction } from '@linode/api-v4/lib/account';
 
 export const transitionStatus = [
   'booting',
@@ -45,7 +46,10 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionActionMap.hasOwnProperty(recentEvent.action) &&
+    Object.prototype.hasOwnProperty.call(
+      transitionActionMap,
+      recentEvent.action
+    ) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );

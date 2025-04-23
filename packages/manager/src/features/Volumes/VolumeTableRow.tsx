@@ -1,26 +1,27 @@
+import { Box, Chip, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';
 import {
   getDerivedVolumeStatusFromStatusAndEvent,
   getEventProgress,
   volumeStatusIconMap,
 } from './utils';
-import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
+import { VolumesActionMenu } from './VolumesActionMenu';
 
-import type { Volume } from '@linode/api-v4';
+import type { ActionHandlers } from './VolumesActionMenu';
+import type { LinodeCapabilities, Volume } from '@linode/api-v4';
 
 export const useStyles = makeStyles()({
   volumePath: {
@@ -31,13 +32,21 @@ export const useStyles = makeStyles()({
 
 interface Props {
   handlers: ActionHandlers;
+  isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
+  linodeCapabilities?: LinodeCapabilities[];
   volume: Volume;
 }
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  const { handlers, isDetailsPageRow, volume } = props;
+  const {
+    handlers,
+    isBlockStorageEncryptionFeatureEnabled,
+    isDetailsPageRow,
+    linodeCapabilities,
+    volume,
+  } = props;
 
   const history = useHistory();
 
@@ -94,6 +103,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const regionLabel =
     regions?.find((r) => r.id === volume.region)?.label ?? volume.region;
 
+  const encryptionStatus =
+    volume.encryption === 'enabled' ? 'Encrypted' : 'Not Encrypted';
+
   return (
     <TableRow data-qa-volume-cell={volume.id} key={`volume-row-${volume.id}`}>
       <TableCell data-qa-volume-cell-label={volume.label}>
@@ -106,7 +118,21 @@ export const VolumeTableRow = React.memo((props: Props) => {
             wrap: 'nowrap',
           }}
         >
-          {volume.label}
+          <Box
+            sx={(theme) => ({
+              alignItems: 'center',
+              display: 'flex',
+              gap: theme.spacing(),
+            })}
+          >
+            {volume.label}
+            {linodeCapabilities && (
+              <HighPerformanceVolumeIcon
+                linodeCapabilities={linodeCapabilities}
+              />
+            )}
+          </Box>
+
           {isEligibleForUpgradeToNVMe && (
             <Chip
               clickable
@@ -131,7 +157,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       )}
       <TableCell data-qa-volume-size>{volume.size} GB</TableCell>
       {!isVolumesLanding && (
-        <Hidden smDown>
+        <Hidden xsDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {volume.filesystem_path}
           </TableCell>
@@ -150,6 +176,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
             <Typography data-qa-unattached>Unattached</Typography>
           )}
         </TableCell>
+      )}
+      {isBlockStorageEncryptionFeatureEnabled && (
+        <TableCell noWrap>{encryptionStatus}</TableCell>
       )}
       <TableCell actionCell>
         <VolumesActionMenu

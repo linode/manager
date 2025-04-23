@@ -5,7 +5,7 @@ import { Flag } from './Flag';
 
 const meta: Meta<typeof Flag> = {
   component: Flag,
-  title: 'Components/Flag',
+  title: 'Icons/Flag',
 };
 
 type Story = StoryObj<typeof Flag>;

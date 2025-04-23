@@ -2,7 +2,7 @@ import {
   ActiveLongviewPlan,
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
 
 export const longviewSubscriptionFactory = Factory.Sync.makeFactory<LongviewSubscription>(
   {

@@ -1,8 +1,6 @@
+import { TooltipIcon, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   dataTestId: string;
@@ -17,7 +15,7 @@ export const TransferDisplayDialogHeader = React.memo((props: Props) => {
   return (
     <Typography
       data-testid={dataTestId}
-      fontFamily={theme.font.bold}
+      sx={{ font: theme.font.bold }}
       fontSize={theme.typography.h3.fontSize}
     >
       {headerText}

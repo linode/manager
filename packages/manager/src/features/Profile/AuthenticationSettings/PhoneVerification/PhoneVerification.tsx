@@ -1,42 +1,44 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Box, Button, InputAdornment, TextField, Typography } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
-import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+import { parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import {
   profileQueries,
   updateProfileData,
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile/profile';
+} from '@linode/queries';
 
+import { countries } from './countries';
+import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
   StyledFormHelperText,
+  StyledISOCodeSelect,
   StyledInputContainer,
   StyledLabel,
   StyledPhoneNumberInput,
   StyledPhoneNumberTitle,
-  StyledSelect,
 } from './PhoneVerification.styles';
-import { countries } from './countries';
-import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 
 import type {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { CountryCode } from 'libphonenumber-js';
+
+export interface SelectPhoneVerificationOption {
+  label: string;
+  value: string;
+}
 
 export const PhoneVerification = ({
   phoneNumberRef,
@@ -62,23 +64,27 @@ export const PhoneVerification = ({
   const {
     data,
     error: sendPhoneVerificationCodeError,
-    isLoading: isResending,
+    isPending: isResending,
     mutateAsync: resendPhoneVerificationCode,
     mutateAsync: sendPhoneVerificationCode,
     reset: resetSendCodeMutation,
   } = useSendPhoneVerificationCodeMutation();
+
   const {
     error: verifyError,
     mutateAsync: sendVerificationCode,
     reset: resetCodeMutation,
   } = useVerifyPhoneVerificationCodeMutation();
+
   const isCodeSent = data !== undefined;
+
   const onSubmitPhoneNumber = async (
     values: SendPhoneVerificationCodePayload
   ) => {
     resetCodeMutation();
     return await sendPhoneVerificationCode(values);
   };
+
   const onSubmitVerificationCode = async (
     values: VerifyVerificationCodePayload
   ) => {
@@ -98,7 +104,9 @@ export const PhoneVerification = ({
       );
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
-      queryClient.invalidateQueries(profileQueries.profile().queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.profile().queryKey,
+      });
     }
 
     // reset form states
@@ -164,22 +172,10 @@ export const PhoneVerification = ({
       );
   };
 
-  const customStyles = {
-    menu: () => ({
-      marginLeft: '-1px !important',
-      marginTop: '0px !important',
-      width: '500px',
-    }),
-    singleValue: (provided: React.CSSProperties) =>
-      ({
-        ...provided,
-        fontSize: '20px',
-        textAlign: 'center',
-      } as const),
-  };
   const selectedCountry = countries.find(
     (country) => country.code === sendCodeForm.values.iso_code
   );
+
   const isFormSubmitting = isCodeSent
     ? verifyCodeForm.isSubmitting
     : sendCodeForm.isSubmitting;
@@ -202,6 +198,7 @@ export const PhoneVerification = ({
           </Typography>
         </StyledCodeSentMessageBox>
       ) : null}
+
       <Box>
         <form
           onSubmit={
@@ -215,9 +212,14 @@ export const PhoneVerification = ({
               </StyledPhoneNumberTitle>
               <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
-                  {profile?.verified_phone_number
-                    ? getFormattedNumber(profile.verified_phone_number)
-                    : 'No Phone Number'}
+                  <MaskableText
+                    text={
+                      profile?.verified_phone_number
+                        ? getFormattedNumber(profile.verified_phone_number)
+                        : 'No Phone Number'
+                    }
+                    isToggleable
+                  />
                 </Typography>
                 <LinkButton
                   style={{
@@ -257,33 +259,48 @@ export const PhoneVerification = ({
                 display="flex"
                 isPhoneInputFocused={isPhoneInputFocused}
               >
-                <StyledSelect
-                  isOptionSelected={(option) =>
-                    sendCodeForm.values.iso_code === option.value
+                <StyledISOCodeSelect
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
                   }
-                  onChange={(item: Item) =>
-                    sendCodeForm.setFieldValue('iso_code', item.value)
-                  }
-                  options={countries.map((counrty) => ({
-                    label: `${getCountryName(counrty.name)} ${
-                      counrty.dialingCode
-                    } ${getCountryFlag(counrty.code)}`,
-                    value: counrty.code,
+                  onChange={(_, item: SelectPhoneVerificationOption) => {
+                    sendCodeForm.setFieldValue('iso_code', item.value);
+                  }}
+                  options={countries.map((country) => ({
+                    label: `${getCountryName(country.name)} ${
+                      country.dialingCode
+                    } ${getCountryFlag(country.code)}`,
+                    value: country.code,
                   }))}
+                  slotProps={{
+                    paper: {
+                      sx: (theme) => ({
+                        border: `1px solid ${theme.tokens.color.Ultramarine[80]}`,
+                        maxHeight: '285px',
+                        overflow: 'hidden',
+                        textWrap: 'nowrap',
+                        width: 'fit-content',
+                      }),
+                    },
+                  }}
+                  textFieldProps={{
+                    hideLabel: true,
+                    style: {
+                      border: 'none',
+                      minWidth: '72px',
+                    },
+                  }}
                   value={{
                     label: getCountryFlag(sendCodeForm.values.iso_code),
-                    value: sendCodeForm.values.iso_code,
                   }}
-                  hideLabel
+                  autoHighlight
+                  disableClearable
+                  disablePortal={true}
                   id="iso_code"
-                  isClearable={false}
                   label="ISO Code"
-                  menuPlacement="bottom"
-                  name="iso_code"
-                  noMarginTop
                   onBlur={() => setIsPhoneInputFocused(false)}
                   onFocus={() => setIsPhoneInputFocused(true)}
-                  styles={customStyles}
+                  placeholder=""
                 />
                 <StyledPhoneNumberInput
                   InputProps={{

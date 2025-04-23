@@ -1,61 +1,108 @@
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
+import { Button, ErrorState, Stack } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Stack } from 'src/components/Stack';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import {
   MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE,
+  PG_LANDING_TABLE_DEFAULT_ORDER,
+  PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+  PG_LINODES_TABLE_PREFERENCE_KEY,
   PLACEMENT_GROUP_LINODES_ERROR_MESSAGE,
+  PLACEMENT_GROUPS_DETAILS_ROUTE,
 } from '../../constants';
 import { PlacementGroupsAssignLinodesDrawer } from '../../PlacementGroupsAssignLinodesDrawer';
 import { PlacementGroupsUnassignModal } from '../../PlacementGroupsUnassignModal';
 import { PlacementGroupsLinodesTable } from './PlacementGroupsLinodesTable';
 
-import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
+import type { Filter, Linode, PlacementGroup, Region } from '@linode/api-v4';
 
 interface Props {
-  assignedLinodes: Linode[] | undefined;
-  isFetchingLinodes: boolean;
   isLinodeReadOnly: boolean;
   placementGroup: PlacementGroup | undefined;
   region: Region | undefined;
 }
 
 export const PlacementGroupsLinodes = (props: Props) => {
-  const {
-    assignedLinodes,
-    isFetchingLinodes,
-    isLinodeReadOnly,
-    placementGroup,
-    region,
-  } = props;
-  const history = useHistory();
-  const [searchText, setSearchText] = React.useState('');
-  const [selectedLinode, setSelectedLinode] = React.useState<
-    Linode | undefined
-  >();
+  const { isLinodeReadOnly, placementGroup, region } = props;
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
+
+  const search = useSearch({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+  });
+  const { query } = search;
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: PG_LANDING_TABLE_DEFAULT_ORDER,
+        orderBy: PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+      },
+      from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    },
+    preferenceKey: `${PG_LINODES_TABLE_PREFERENCE_KEY}-order`,
+  });
+
+  const pagination = usePaginationV2({
+    currentRoute: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    preferenceKey: PG_LINODES_TABLE_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+
+  const filter: Filter = {
+    ['+or']: placementGroup?.members.map((member) => ({
+      id: member.linode_id,
+    })),
+    ['+order']: order,
+    ['+order_by']: orderBy,
+    ...(query && { label: { '+contains': query } }),
+  };
+
+  const { data: linodes, isFetching: isFetchingLinodes } = useAllLinodesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+
+  const assignedLinodes = linodes?.filter((linode) =>
+    placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
+  );
+
+  const { data: selectedLinode, isFetching: isFetchingLinode } = useDialogData({
+    enabled: !!params.linodeId,
+    paramKey: 'linodeId',
+    queryHook: useLinodeQuery,
+    redirectToOnNotFound: '/placement-groups/$id',
+  });
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
 
-  const getLinodesList = () => {
-    if (!assignedLinodes) {
-      return [];
-    }
-
-    if (searchText) {
-      return assignedLinodes.filter((linode: Linode) => {
-        return linode.label.toLowerCase().includes(searchText.toLowerCase());
-      });
-    }
-
-    return assignedLinodes;
+  const onSearch = (searchString: string) => {
+    navigate({
+      params: { id: placementGroup.id },
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: searchString || undefined,
+      }),
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    });
   };
 
   const hasReachedCapacity = hasPlacementGroupReachedCapacity({
@@ -64,40 +111,59 @@ export const PlacementGroupsLinodes = (props: Props) => {
   });
 
   const handleAssignLinodesDrawer = () => {
-    history.replace(`/placement-groups/${placementGroup.id}/linodes/assign`);
+    navigate({
+      params: { action: 'assign', id: placementGroup.id },
+      search: (prev) => prev,
+      to: '/placement-groups/$id/linodes/$action',
+    });
   };
+
   const handleUnassignLinodeModal = (linode: Linode) => {
-    setSelectedLinode(linode);
-    history.replace(
-      `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
-    );
+    navigate({
+      params: {
+        action: 'unassign',
+        id: placementGroup.id,
+        linodeId: linode.id,
+      },
+      search: (prev) => prev,
+      to: '/placement-groups/$id/linodes/$action/$linodeId',
+    });
   };
-  const handleExitedUnassignModal = () => {
-    setSelectedLinode(undefined);
-  };
+
   const handleCloseDrawer = () => {
-    history.replace(`/placement-groups/${placementGroup.id}/linodes`);
+    navigate({
+      params: { id: placementGroup.id },
+      search: (prev) => prev,
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
+    });
   };
-  const isAssignLinodesDrawerOpen = history.location.pathname.includes(
-    '/assign'
-  );
-  const isUnassignLinodesDrawerOpen = history.location.pathname.includes(
-    '/unassign'
-  );
 
   return (
     <Stack spacing={2}>
-      <Grid container justifyContent="space-between">
-        <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
+      <Grid
+        sx={{
+          justifyContent: 'space-between',
+        }}
+        container
+      >
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12,
+          }}
+          sx={{
+            flexGrow: 1,
+            mb: 1,
+          }}
+        >
           <DebouncedSearchTextField
-            onSearch={(value) => {
-              setSearchText(value);
-            }}
+            clearable
             debounceTime={250}
             hideLabel
             label="Search Linodes"
+            onSearch={onSearch}
             placeholder="Search Linodes"
-            value={searchText}
+            value={query ?? ''}
           />
         </Grid>
         <Grid>
@@ -119,18 +185,27 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <PlacementGroupsLinodesTable
         handleUnassignLinodeModal={handleUnassignLinodeModal}
         isFetchingLinodes={isFetchingLinodes}
-        linodes={getLinodesList() ?? []}
+        linodes={assignedLinodes ?? []}
+        orderByProps={{ handleOrderChange, order, orderBy }}
+      />
+      <PaginationFooter
+        count={assignedLinodes?.length ?? 0}
+        eventCategory="Placement Group Linodes Table"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
-        open={isAssignLinodesDrawerOpen}
+        open={params.action === 'assign'}
         region={region}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
+        isFetching={isFetchingLinode}
         onClose={handleCloseDrawer}
-        onExited={handleExitedUnassignModal}
-        open={isUnassignLinodesDrawerOpen}
+        open={params.action === 'unassign'}
         selectedLinode={selectedLinode}
       />
     </Stack>

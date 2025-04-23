@@ -1,3 +1,4 @@
+import { breakpoints } from '@linode/ui';
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -6,10 +7,9 @@ import {
   planSelectionTypeFactory,
 } from 'src/factories/types';
 import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
-import { breakpoints } from 'src/foundations/breakpoints';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
@@ -120,6 +120,28 @@ describe('PlanSelection (table, desktop)', () => {
     expect(container.querySelector('[data-qa-cpu]')).toHaveTextContent('8');
     expect(container.querySelector('[data-qa-storage]')).toHaveTextContent(
       '1024 GB'
+    );
+  });
+
+  it('shows the same network_in and network_out values for distributed regions', () => {
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...defaultProps}
+          plan={{
+            ...mockPlan,
+            class: 'dedicated',
+            id: 'g6-dedicated-edge-2',
+            // eslint-disable-next-line camelcase
+            network_out: 4000,
+          }}
+          selectedRegionId={'us-den-1'}
+          showNetwork
+        />
+      )
+    );
+    expect(container.querySelector('[data-qa-network]')).toHaveTextContent(
+      '4 Gbps / 4 Gbps'
     );
   });
 

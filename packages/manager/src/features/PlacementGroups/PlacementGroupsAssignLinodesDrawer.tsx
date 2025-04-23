@@ -1,26 +1,31 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
+} from '@linode/api-v4';
+import {
+  useAllLinodesQuery,
+  useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
+  ActionsPanel,
+  Box,
+  Divider,
+  Drawer,
+  Notice,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Divider } from 'src/components/Divider';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllPlacementGroupsQuery,
-  useAssignLinodesToPlacementGroup,
-} from 'src/queries/placementGroups';
+import { NotFound } from 'src/components/NotFound';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
-  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
 } from './utils';
@@ -54,7 +59,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     region,
   });
   const {
-    isLoading,
+    isPending,
     mutateAsync: assignLinodes,
   } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
@@ -96,7 +101,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const { affinity_type, is_strict, label } = selectedPlacementGroup;
+  const {
+    label,
+    placement_group_policy,
+    placement_group_type,
+  } = selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
@@ -134,6 +143,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title={`Assign Linodes to Placement Group ${label}`}
@@ -142,12 +152,12 @@ export const PlacementGroupsAssignLinodesDrawer = (
       <DescriptionList
         items={[
           {
-            description: AFFINITY_TYPES[affinity_type],
-            title: 'Affinity Type',
+            description: PLACEMENT_GROUP_TYPES[placement_group_type],
+            title: 'Placement Group Type',
           },
           {
-            description: getAffinityTypeEnforcement(is_strict),
-            title: 'Affinity Type Enforcement',
+            description: PLACEMENT_GROUP_POLICIES[placement_group_policy],
+            title: 'Placement Group Policy',
           },
         ]}
         sx={{ my: 2 }}
@@ -170,7 +180,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
                 setSelectedLinode(value);
               }}
               checkIsOptionEqualToValue
-              disabled={hasReachedCapacity || isLoading}
+              disabled={hasReachedCapacity || isPending}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"

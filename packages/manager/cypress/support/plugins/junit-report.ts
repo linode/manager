@@ -8,26 +8,36 @@ const capitalize = (str: string): string => {
 };
 
 /**
- * Enables and configures JUnit reporting when `CY_TEST_JUNIT_REPORT` is defined.
- *
  * @returns Cypress configuration object.
  */
-export const enableJunitReport: CypressPlugin = (_on, config) => {
+export const enableJunitE2eReport: CypressPlugin = (_on, config) => {
+  const testSuiteName = 'core';
+  return getCommonJunitConfig(testSuiteName, config);
+};
+
+/**
+ * @returns Cypress configuration object.
+ */
+export const enableJunitComponentReport: CypressPlugin = (_on, config) => {
+  const testSuiteName = 'component';
+  return getCommonJunitConfig(testSuiteName, config);
+};
+
+const getCommonJunitConfig = (
+  testSuite: string,
+  config: Cypress.PluginConfigOptions
+) => {
   if (!!config.env[envVarName]) {
-    const testSuite = config.env['cypress_test_suite'] || 'core';
+    if (!config.reporterOptions) {
+      config.reporterOptions = {};
+    }
     const testSuiteName = `${capitalize(testSuite)} Test Suite`;
-
-    // Cypress doesn't know to look for modules in the root `node_modules`
-    // directory, so we have to pass a relative path.
-    // See also: https://github.com/cypress-io/cypress/issues/6406
-    config.reporter = '../../node_modules/mocha-junit-reporter';
-
-    // See also: https://www.npmjs.com/package/mocha-junit-reporter#full-configuration-options
-    config.reporterOptions = {
+    config.reporterOptions.mochaJunitReporterReporterOptions = {
       mochaFile: 'cypress/results/test-results-[hash].xml',
       rootSuiteTitle: 'Cloud Manager Cypress Tests',
       testsuitesTitle: testSuiteName,
-      jenkinsMode: false,
+      jenkinsMode: true,
+      suiteTitleSeparatedBy: '→',
     };
   }
   return config;

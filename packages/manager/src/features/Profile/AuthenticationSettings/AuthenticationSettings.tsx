@@ -1,20 +1,23 @@
+import {
+  CircleProgress,
+  Divider,
+  ErrorState,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';
-import { SMSMessaging } from './SMSMessaging';
 import { SecurityQuestions } from './SecurityQuestions/SecurityQuestions';
+import { SMSMessaging } from './SMSMessaging';
 import { TPAProviders } from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import { TwoFactor } from './TwoFactor/TwoFactor';
@@ -108,7 +111,7 @@ export const AuthenticationSettings = () => {
           with a verification code. Standard carrier messaging fees may apply.
           By clicking Send Verification Code you are opting in to receive SMS
           messages. You may opt out at any time.{' '}
-          <Link to="https://www.linode.com/docs/guides/user-security-controls#phone-verification">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/security-controls-for-user-accounts#phone-verification">
             Learn more about security options.
           </Link>
         </StyledMainCopy>
@@ -126,6 +129,12 @@ export const AuthenticationSettings = () => {
     </>
   );
 };
+
+export const authenticationSettingsLazyRoute = createLazyRoute('/profile/auth')(
+  {
+    component: AuthenticationSettings,
+  }
+);
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',

@@ -1,14 +1,9 @@
-import {
-  Disk,
-  Linode,
-  cloneLinode,
-  cloneLinodeDisk,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
+import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { castDraft } from 'immer';
-import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -18,24 +13,19 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
   useAllLinodesQuery,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
@@ -46,13 +36,21 @@ import {
   defaultState,
 } from './utilities';
 
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(
-  () => import('../LinodesDetail/LinodesDetailHeader/LinodeDetailHeader')
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 
-const CloneLanding = () => {
+export const CloneLanding = () => {
   const { linodeId: _linodeId } = useParams<{ linodeId: string }>();
   const history = useHistory();
   const match = useRouteMatch();
@@ -126,7 +124,10 @@ const CloneLanding = () => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(
-    () => getQueryParamsFromQueryString(location.search),
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
     [location.search]
   );
 
@@ -171,7 +172,7 @@ const CloneLanding = () => {
 
   // The configs we know about in our configSelection state.
   const configsInState = configs.filter((eachConfig) =>
-    state.configSelection.hasOwnProperty(eachConfig.id)
+    Object.prototype.hasOwnProperty.call(state.configSelection, eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
@@ -182,7 +183,7 @@ const CloneLanding = () => {
 
   // The disks we know about in our diskSelection state.
   const disksInState = disks.filter((eachDisk) =>
-    state.diskSelection.hasOwnProperty(eachDisk.id)
+    Object.prototype.hasOwnProperty.call(state.diskSelection, eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(
@@ -270,11 +271,18 @@ const CloneLanding = () => {
       <LinodesDetailHeader />
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
+          sx={{
+            justifyContent: 'space-between',
+            marginTop: theme.spacing(1),
+          }}
           container
-          justifyContent="space-between"
-          sx={{ marginTop: theme.spacing(1) }}
         >
-          <Grid md={7} xs={12}>
+          <Grid
+            size={{
+              md: 7,
+              xs: 12,
+            }}
+          >
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -329,7 +337,12 @@ const CloneLanding = () => {
               </Tabs>
             </Paper>
           </Grid>
-          <Grid md={4} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              xs: 12,
+            }}
+          >
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -339,15 +352,12 @@ const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
-                  intersection(
-                    pathOr(
-                      [],
-                      [disk.id, 'associatedConfigIds'],
-                      state.diskSelection
-                    ),
-                    selectedConfigIds
-                  ).length === 0
+                  // ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected &&
+                  (
+                    state.diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                  ).filter((num) => selectedConfigIds.includes(num)).length ===
+                    0
                 );
               })}
               // If a selected disk is associated with a selected config, we
@@ -371,5 +381,3 @@ const CloneLanding = () => {
     </React.Fragment>
   );
 };
-
-export default CloneLanding;

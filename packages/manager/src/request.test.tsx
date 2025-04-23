@@ -1,17 +1,14 @@
-import { AxiosError, AxiosHeaders, AxiosResponse } from 'axios';
+import { profileFactory } from '@linode/utilities';
+import { AxiosHeaders } from 'axios';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
-import { profileFactory } from './factories';
-import {
-  LinodeError,
-  getURL,
-  handleError,
-  injectEuuidToProfile,
-} from './request';
+import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
 
+import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 const store = storeFactory();
 
@@ -116,33 +113,37 @@ describe('getURL', () => {
   });
 });
 
-describe('injectEuuidToProfile', () => {
+describe('injectAkamaiAccountHeader', () => {
   const profile = profileFactory.build();
   const response: Partial<AxiosResponse> = {
     config: { headers: new AxiosHeaders(), method: 'get', url: '/profile' },
     data: profile,
-    headers: { 'x-customer-uuid': '1234' },
+    headers: { 'akamai-internal-account': '*' },
     status: 200,
   };
 
-  it('injects the euuid on successful GET profile response ', () => {
-    const results = injectEuuidToProfile(response as any);
-    expect(results.data).toHaveProperty('_euuidFromHttpHeader', '1234');
+  it('injects akamai account header on successful GET profile response ', () => {
+    const results = injectAkamaiAccountHeader(response as any);
+    expect(results.data).toHaveProperty('_akamaiAccount', true);
     // eslint-disable-next-line
-    const { _euuidFromHttpHeader, ...originalData } = results.data;
+    const { _akamaiAccount, ...originalData } = results.data;
     expect(originalData).toEqual(profile);
   });
 
   it('returns the original profile data if no header is present', () => {
     const responseWithNoHeaders = { ...response, headers: {} };
-    expect(injectEuuidToProfile(responseWithNoHeaders as any).data).toEqual(
-      profile
-    );
+    const results = injectAkamaiAccountHeader(responseWithNoHeaders as any);
+    expect(results.data).toHaveProperty('_akamaiAccount', false);
+    // eslint-disable-next-line
+    const { _akamaiAccount, ...originalData } = results.data;
+    expect(originalData).toEqual(profile);
   });
 
-  it("doesn't inject the euuid on other endpoints", () => {
+  it("doesn't inject the header on other endpoints", () => {
     const accountResponse = { ...response, config: { url: '/account' } };
-    expect(injectEuuidToProfile(accountResponse as any).data).toEqual(profile);
+    expect(injectAkamaiAccountHeader(accountResponse as any).data).toEqual(
+      profile
+    );
   });
 });
 

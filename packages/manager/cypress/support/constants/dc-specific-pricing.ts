@@ -2,8 +2,9 @@
  * @file Constants related to DC-specific pricing.
  */
 
-import { linodeTypeFactory } from '@src/factories';
-import { LkePlanDescription } from 'support/api/lke';
+import { linodeTypeFactory } from '@linode/utilities';
+
+import type { LkePlanDescription } from 'support/api/lke';
 
 /** Notice shown to users when selecting a region with a different price structure. */
 export const dcPricingRegionDifferenceNotice =
@@ -127,9 +128,11 @@ export const dcPricingMockLinodeTypesForBackups = linodeTypeFactory.buildList(
 export const dcPricingLkeClusterPlans: LkePlanDescription[] = dcPricingMockLinodeTypes.map(
   (type) => {
     return {
+      nodeCount: 1,
+      planName: 'Linode 2 GB',
       size: parseInt(type.id.split('-')[2], 10),
       tab: 'Shared CPU',
-      type: 'Linode',
+      type: 'nanode',
     };
   }
 );

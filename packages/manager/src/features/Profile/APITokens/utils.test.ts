@@ -38,6 +38,7 @@ describe('APIToken utils', () => {
         ['linodes', 2],
         ['lke', 2],
         ['longview', 2],
+        ['monitor', 2],
         ['nodebalancers', 2],
         ['object_storage', 2],
         ['stackscripts', 2],
@@ -63,6 +64,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -89,6 +91,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -115,6 +118,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -141,6 +145,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -169,6 +174,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 2],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -199,6 +205,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -229,6 +236,7 @@ describe('APIToken utils', () => {
         ['linodes', 0],
         ['lke', 0],
         ['longview', 0],
+        ['monitor', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
         ['stackscripts', 0],
@@ -255,6 +263,7 @@ describe('APIToken utils', () => {
           ['linodes', 0],
           ['lke', 0],
           ['longview', 0],
+          ['monitor', 0],
           ['nodebalancers', 0],
           ['object_storage', 0],
           ['stackscripts', 0],
@@ -276,6 +285,7 @@ describe('APIToken utils', () => {
           ['linodes', 1],
           ['lke', 1],
           ['longview', 1],
+          ['monitor', 1],
           ['nodebalancers', 1],
           ['object_storage', 1],
           ['stackscripts', 1],
@@ -296,6 +306,7 @@ describe('APIToken utils', () => {
           ['linodes', 2],
           ['lke', 2],
           ['longview', 2],
+          ['monitor', 2],
           ['nodebalancers', 2],
           ['object_storage', 2],
           ['stackscripts', 2],
@@ -317,6 +328,7 @@ describe('APIToken utils', () => {
           ['linodes', 1],
           ['lke', 2],
           ['longview', 2],
+          ['monitor', 2],
           ['nodebalancers', 0],
           ['object_storage', 2],
           ['stackscripts', 2],
@@ -339,6 +351,7 @@ describe('APIToken utils', () => {
         ['linodes', 1],
         ['lke', 1],
         ['longview', 2],
+        ['monitor', 1],
         ['nodebalancers', 1],
         ['object_storage', 1],
         ['stackscripts', 1],
@@ -375,6 +388,7 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
     ['linodes', -1],
     ['lke', -1],
     ['longview', -1],
+    ['monitor', -1],
     ['nodebalancers', -1],
     ['object_storage', -1],
     ['stackscripts', -1],
@@ -394,6 +408,7 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
     ['linodes', -1],
     ['lke', -1],
     ['longview', -1],
+    ['monitor', -1],
     ['nodebalancers', -1],
     ['object_storage', -1],
     ['stackscripts', -1],
@@ -413,11 +428,17 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
     ['linodes', 2],
     ['lke', 0],
     ['longview', 0],
+    ['monitor', 0],
     ['nodebalancers', 0],
     ['object_storage', 0],
     ['stackscripts', 0],
     ['volumes', 0],
     ['vpc', 0],
+  ];
+
+  const allExceptChildAccountSelectedScopes: Permission[] = [
+    ...allSelectedScopes,
+    ['child_account', -1],
   ];
 
   it('should return false if scopes are all set to a default of no selection', () => {
@@ -430,5 +451,12 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
   });
   it('should return true if all scopes have a valid selection', () => {
     expect(hasAccessBeenSelectedForAllScopes(allSelectedScopes)).toBe(true);
+  });
+  it('should return true if all scopes except those excluded have a valid selection', () => {
+    expect(
+      hasAccessBeenSelectedForAllScopes(allExceptChildAccountSelectedScopes, [
+        'child_account',
+      ])
+    ).toBe(true);
   });
 });

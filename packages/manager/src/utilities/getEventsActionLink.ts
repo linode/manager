@@ -1,9 +1,13 @@
-import { Entity, EventAction } from '@linode/api-v4/lib/account';
-
 import { nonClickEvents } from 'src/constants';
+
+import type { Entity, EventAction } from '@linode/api-v4/lib/account';
 
 export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
+};
+
+export const getRegionFromObjectStorageEntityURL = (url: string) => {
+  return url.match(/\/buckets\/([^/]+)/)?.[1];
 };
 
 export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
@@ -143,10 +147,16 @@ export const getLinkTargets = (entity: Entity | null) => {
       return '/images';
     case 'longview':
       return '/longview';
-    case 'volume':
-      return '/volumes';
+    case 'object_storage_bucket':
+      return `/object-storage/buckets/${getRegionFromObjectStorageEntityURL(
+        entity.url
+      )}/${entity.label}`;
     case 'placement_group':
       return `/placement-groups/${entity.id}`;
+    case 'volume':
+      return '/volumes';
+    case 'vpc':
+      return `/vpcs/${entity.id}`;
     default:
       return null;
   }

@@ -1,25 +1,23 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
+import { AccessRow } from './AccessRow';
 import {
   StyledColumnLabelGrid,
-  StyledCopyTooltip,
-  StyledGradientDiv,
   StyledTable,
-  StyledTableCell,
   StyledTableGrid,
-  StyledTableRow,
 } from './LinodeEntityDetail.styles';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
 interface AccessTableRow {
   heading?: string;
+  isMasked?: boolean;
+  maskedTextLength?: MaskableTextLength;
   text: null | string;
 }
 
@@ -31,45 +29,37 @@ interface AccessTableProps {
   };
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   title: string;
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
   const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
+
+  const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
+
   return (
-    <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
+    <Grid
+      size={{
+        lg: gridSize.lg,
+        xs: gridSize.xs,
+      }}
+      sx={sx}
+    >
       <StyledColumnLabelGrid>
-        {title}{' '}
-        {isVPCOnlyLinode &&
-          title.includes('Public IP Address') &&
-          PublicIpsUnassignedTooltip}
+        {title} {isDisabled && PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
             {rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow disabled={isVPCOnlyLinode} key={thisRow.text}>
-                  {thisRow.heading ? (
-                    <TableCell component="th" scope="row">
-                      {thisRow.heading}
-                    </TableCell>
-                  ) : null}
-                  <StyledTableCell>
-                    <StyledGradientDiv>
-                      <CopyTooltip
-                        copyableText
-                        disabled={isVPCOnlyLinode}
-                        text={thisRow.text}
-                      />
-                    </StyledGradientDiv>
-                    <StyledCopyTooltip
-                      disabled={isVPCOnlyLinode}
-                      text={thisRow.text}
-                    />
-                  </StyledTableCell>
-                </StyledTableRow>
+                <AccessRow
+                  heading={thisRow.heading}
+                  isDisabled={isDisabled}
+                  key={thisRow.text}
+                  text={thisRow.text}
+                />
               ) : null;
             })}
           </TableBody>

@@ -1,14 +1,19 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useLinodeQuery } from '@linode/queries';
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 interface Props {
-  customizeOptions?: (options: Item<string>[]) => Item<string>[];
+  customizeOptions?: (options: Option[]) => Option[];
   errorText?: string;
   handleChange: (ip: string) => void;
   linodeId: number;
-  value: Item<string>;
+  value: Option;
 }
 
 export const IPSelect = (props: Props) => {
@@ -28,8 +33,8 @@ export const IPSelect = (props: Props) => {
     }
   }
 
-  // Create React-Select-friendly options.
-  let options: Item<string>[] = ips.map((ip) => ({ label: ip, value: ip }));
+  // Create Select-friendly options.
+  let options = ips.map((ip) => ({ label: ip, value: ip }));
 
   // If a customizeOptions function was provided, apply it here.
   if (customizeOptions) {
@@ -46,12 +51,13 @@ export const IPSelect = (props: Props) => {
   }
 
   return (
-    <Select
+    <Autocomplete
+      disableClearable
       errorText={errorText}
-      isClearable={false}
-      isLoading={isLoading}
       label="IP Address"
-      onChange={(selected) => handleChange(selected.value)}
+      loading={isLoading}
+      noMarginTop
+      onChange={(_, selected) => handleChange(selected.value)}
       options={options}
       placeholder="Select an IP Address..."
       value={options.find((option) => option.value === value.value)}

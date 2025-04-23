@@ -1,13 +1,11 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { List, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 export interface Props {
   clusterId: number;
@@ -36,7 +34,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterId, clusterLabel, onClose, open } = props;
   const {
     error,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
   const history = useHistory();
@@ -57,6 +55,8 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Kubernetes',
       }}
+      errors={error}
+      expand
       label={'Cluster Name'}
       loading={isDeleting}
       onClick={onDelete}
@@ -64,7 +64,6 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       open={open}
       title={`Delete Cluster ${clusterLabel}`}
     >
-      {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
         <Typography component="div" sx={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong>

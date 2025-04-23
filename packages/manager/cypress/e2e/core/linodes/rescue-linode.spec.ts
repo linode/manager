@@ -1,6 +1,6 @@
-import type { Linode } from '@linode/api-v4';
-import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
+import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   interceptGetLinodeDetails,
   interceptRebootLinodeIntoRescueMode,
@@ -14,6 +14,8 @@ import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {
@@ -38,6 +40,7 @@ describe('Rescue Linodes', () => {
    * - Confirms that toast appears confirming successful reboot into rescue mode.
    */
   it('Can reboot a Linode into rescue mode', () => {
+    cy.tag('method:e2e');
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
@@ -62,7 +65,9 @@ describe('Rescue Linodes', () => {
       cy.wait('@getLinode');
 
       // Wait for Linode to boot.
-      cy.findByText('RUNNING').should('be.visible');
+      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       // Open rescue dialog using action menu..
       ui.actionMenu

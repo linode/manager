@@ -63,10 +63,12 @@ export const doesEventMatchAPIFilter = (event: Event, filter: Filter) => {
     return false;
   }
 
+  // @ts-expect-error todo improve indexability of filter type
   if (filter?.['entity.id'] && filter['entity.id'] !== event.entity?.id) {
     return false;
   }
 
+  // @ts-expect-error todo improve indexability of filter type
   if (filter?.['entity.type'] && filter['entity.type'] !== event.entity?.type) {
     return false;
   }

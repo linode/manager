@@ -1,5 +1,4 @@
 ---
-version: '3.4'
 
 # Environment variables that will be exposed to every Cypress runner.
 x-e2e-env:
@@ -35,14 +34,22 @@ x-e2e-env:
   # Cloud Manager-specific test configuration.
   CY_TEST_SUITE: ${CY_TEST_SUITE}
   CY_TEST_REGION: ${CY_TEST_REGION}
+  CY_TEST_FEATURE_FLAGS: ${CY_TEST_FEATURE_FLAGS}
+  CY_TEST_TAGS: ${CY_TEST_TAGS}
+  CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+  CY_TEST_RESET_PREFERENCES: ${CY_TEST_RESET_PREFERENCES}
 
   # Cypress environment variables for alternative parallelization.
   CY_TEST_SPLIT_RUN: ${CY_TEST_SPLIT_RUN}
   CY_TEST_SPLIT_RUN_TOTAL: ${CY_TEST_SPLIT_RUN_TOTAL}
   CY_TEST_SPLIT_RUN_INDEX: ${CY_TEST_SPLIT_RUN_INDEX}
 
+  # Cypress performance.
+  CY_TEST_ACCOUNT_CACHE_DIR: ${CY_TEST_ACCOUNT_CACHE_DIR}
+
   # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+  CY_TEST_HTML_REPORT: ${CY_TEST_HTML_REPORT}
   CY_TEST_USER_REPORT: ${CY_TEST_USER_REPORT}
 
   # Cloud Manager build environment.
@@ -61,9 +68,8 @@ x-e2e-env:
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
-  - ./packages/manager:/home/node/app/packages/manager
-  - ./packages/validation:/home/node/app/packages/validation
-  - ./packages/api-v4:/home/node/app/packages/api-v4
+  - ./cache:/home/node/app/cache
+  - ./packages:/home/node/app/packages
   - ./package.json:/home/node/app/package.json
   - ./node_modules:/home/node/app/node_modules
 
@@ -76,12 +82,9 @@ x-e2e-runners:
     context: .
     dockerfile: ./packages/manager/Dockerfile
     target: e2e
-  depends_on:
-    web:
-      condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  entrypoint: ['yarn', 'cy:e2e']
+  entrypoint: 'pnpm'
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
@@ -104,19 +107,109 @@ services:
       timeout: 10s
       retries: 10
 
-  e2e:
+  # Cypress test runner service to run tests against a remotely-served Cloud instance.
+  #
+  # This is useful when testing against a standard Cloud Manager environment,
+  # like Production at cloud.linode.com, but can also be used to run tests against
+  # pre-Prod environments, PR preview links, and more.
+  cypress_remote:
     <<: *default-runner
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
 
-  region-1:
+  # Cypress test runner service to run tests against a local Cloud instance.
+  #
+  # This is useful when testing against a Cloud Manager instance served locally at
+  # `localhost:3000`, e.g. during development.
+  #
+  # If the local Cloud Manager instance is not served at `localhost:3000` (when
+  # served from a container, for example), prefer the `cypress_containerized`
+  # service instead.
+  cypress_local:
+    <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+    depends_on:
+      web:
+        condition: service_healthy
+
+  # Cypress test runner service to run tests against a containerized Cloud instance.
+  #
+  # This service reverse proxies the given $CYPRESS_BASE_URL to `localhost:3000`.
+  # This is necessary for certain tests which require a secure context, which
+  # can typically only be achieved when Cloud is served at `localhost` or
+  # remotely behind SSL.
+  #
+  # For more information, refer to:
+  # https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
+  #
+  # If the local Cloud Manager instance is served at `localhost:3000` (when
+  # running Cloud Manager locally during development, for example), prefer the
+  # `cypress_local` service instead.
+  cypress_containerized:
+    <<: *default-runner
     build:
       context: .
       dockerfile: ./packages/manager/Dockerfile
-      target: e2e
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
+      target: e2e-reverse-proxy
     environment:
       <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+      CYPRESS_BASE_URL: "http://localhost:3000"
+      REVERSE_PROXY_URL: ${CYPRESS_BASE_URL}
+    depends_on:
+      web:
+        condition: service_healthy
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} > /dev/null 2>&1 & pnpm $0 $@"
+
+  # Cypress component test runner service.
+  #
+  # Unlike other Cloud Manager Cypress tests, these tests can be run without
+  # requiring a Cloud Manager environment.
+  cypress_component:
+    <<: *default-runner
+    environment:
+      CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+      CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+
+
+  # --> ! DEPRECATION NOTICE ! <--
+  # The services below this line are deprecated, and will be deleted soon.
+  # Don't build any pipelines or write any scripts that depend on these.
+  # Instead, opt to use `cypress_local` in places where you would've used `e2e`,
+  # use `cypress_remote` in places where you would've used `e2e_heimdall`, and
+  # use `cypress_component` in places where you would've used `component`.
+
+  # Generic end-to-end test runner for Cloud's primary testing pipeline.
+  # Configured to run against a local Cloud instance.
+  e2e:
+    <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+    entrypoint: ['pnpm', 'cy:e2e']
+
+  # Component test runner.
+  # Does not require any Cloud Manager environment to run.
+  component:
+    <<: *default-runner
+    depends_on: []
+    environment:
+      CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+      CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+    entrypoint: ['pnpm', 'cy:component:run']
+
+  # End-to-end test runner for Cloud's synthetic monitoring tests.
+  # Configured to run against a remote Cloud instance hosted at some URL.
+  e2e_heimdall:
+    <<: *default-runner
+    depends_on: []
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+    entrypoint: ['pnpm', 'cy:e2e']

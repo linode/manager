@@ -1,12 +1,10 @@
+import { useRegionsQuery } from '@linode/queries';
+import { Box, List, omittedProps } from '@linode/ui';
+import { getRegionsByRegionId } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React, { useRef } from 'react';
 
-import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { List } from 'src/components/List';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { omittedProps } from 'src/utilities/omittedProps';
-import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
@@ -28,7 +26,11 @@ export const HostNamesList = ({ objectStorageKey }: Props) => {
       <StyledBoxShadowWrapper
         sx={(theme) => ({
           backgroundColor: theme.bg.main,
-          border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+          border: `1px solid ${
+            theme.name === 'light'
+              ? theme.tokens.color.Neutrals[40]
+              : theme.tokens.color.Neutrals.Black
+          }`,
           minHeight: '34px',
         })}
         displayShadow={currentListHeight > maxHeight}

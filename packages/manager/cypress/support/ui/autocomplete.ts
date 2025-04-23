@@ -1,13 +1,45 @@
 import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
 import type { SelectorMatcherOptions } from '@testing-library/cypress';
+import type { Region } from '@linode/api-v4';
 
+/**
+ * Returns a regular expression object to match against region select items.
+ *
+ * This expression accounts for these cases:
+ * - Gecko LA is disabled (region ID is present in line with label)
+ * - Gecko LA is enabled (region ID is not in line with label, rendered in separate element)
+ * - Avoids selecting similarly named regions (e.g. "UK, London" and "UK, London 2")
+ *
+ * @param region - Region for which to return RegEx.
+ *
+ * @returns Regular expression object to match menu item of given Region.
+ */
+// TODO Remove this and use exact string matching once Gecko feature flag is retired.
+const getRegionItemRegEx = (region: Region) => {
+  return new RegExp(`${region.label}(\\s?\\(${region.id}\\)|$)`);
+};
+
+/**
+ * Autocomplete UI element.
+ */
 export const autocomplete = {
   /**
    * Finds a autocomplete popper that has the given title.
    */
   find: (): Cypress.Chainable => {
     return cy.get('[data-qa-autocomplete] input');
+  },
+
+  /**
+   * Finds an autocomplete element by its label.
+   *
+   * @param label - Label of the autocomplete to select.
+   *
+   * @returns A Cypress chainable object that represents the located element.
+   */
+  findByLabel: (label: string): Cypress.Chainable => {
+    return cy.get(`[data-qa-autocomplete="${label}"] input`);
   },
 };
 
@@ -29,14 +61,20 @@ export const autocompletePopper = {
    * Finds an item within an autocomplete popper that has the given title.
    */
   findByTitle: (
-    title: string,
+    title: string | RegExp,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
-    return cy
-      .document()
-      .its('body')
-      .find('[data-qa-autocomplete-popper]')
-      .findByText(title, options);
+    return (
+      cy
+        .document()
+        .its('body')
+        .find('[data-qa-autocomplete-popper]')
+        .findByText(title, options)
+        // Scroll to the desired item before yielding.
+        // Apply a negative top offset to account for cases where the desired
+        // item may be obscured by the drop-down sticky category heading.
+        .scrollIntoView({ offset: { left: 0, top: -45 } })
+    );
   },
 };
 
@@ -45,12 +83,25 @@ export const autocompletePopper = {
  */
 export const regionSelect = {
   /**
-   * Finds and open the region select input.
+   * Finds a region select input.
+   *
+   * This finds any element with the `region-select` test ID. In cases where
+   * more than one region select may be on the screen, consider narrowing
+   * your selection before using this helper.
+   *
+   * @returns Cypress chainable.
    */
   find: (): Cypress.Chainable => {
     return cy.get('[data-testid="region-select"] input');
   },
 
+  /**
+   * Finds a region select input by its current value.
+   *
+   * @param selectedRegion - Current selection for desired Region Select.
+   *
+   * @returns Cypress chainable.
+   */
   findBySelectedItem: (selectedRegion: string) => {
     return cy.get(`[value="${selectedRegion}"]`);
   },
@@ -60,13 +111,14 @@ export const regionSelect = {
    *
    * This assumes that the Region Select menu is already open.
    *
-   * @param regionId - ID of region for which to find Region Select menu item.
+   * @param regionId - ID of region to find in selection drop-down.
+   * @param searchRegions - Optional array of regions from which to search.
    *
    * @returns Cypress chainable.
    */
-  findItemByRegionId: (regionId: string) => {
-    const region = getRegionById(regionId);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+  findItemByRegionId: (regionId: string, searchRegions?: Region[]) => {
+    const region = getRegionById(regionId, searchRegions);
+    return autocompletePopper.findByTitle(getRegionItemRegEx(region));
   },
 
   /**
@@ -74,12 +126,13 @@ export const regionSelect = {
    *
    * This assumes that the Region Select menu is already open.
    *
-   * @param regionLabel - Region label.
+   * @param regionLabel - Label of region to find in selection drop-down.
+   * @param searchRegions - Optional array of regions from which to search.
    *
    * @returns Cypress chainable.
    */
-  findItemByRegionLabel: (regionLabel: string) => {
-    const region = getRegionByLabel(regionLabel);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+  findItemByRegionLabel: (regionLabel: string, searchRegions?: Region[]) => {
+    const region = getRegionByLabel(regionLabel, searchRegions);
+    return autocompletePopper.findByTitle(getRegionItemRegEx(region));
   },
 };

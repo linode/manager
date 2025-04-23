@@ -6,33 +6,33 @@
  * I'll create a tech debt ticket in jira to keep track of this issue.
  */
 
+import { Box, FormControlLabel, Radio, Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
-import { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
-import { Box } from 'src/components/Box';
-import { Theme } from '@mui/material/styles';
+
+import { createDisplayPage } from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { TableCell } from 'src/components/TableCell';
-import { Radio } from 'src/components/Radio/Radio';
-import { TableBody } from 'src/components/TableBody';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { usePagination } from 'src/hooks/usePagination';
-import { createDisplayPage } from 'src/components/Paginate';
-import { Typography } from 'src/components/Typography';
-import { useTheme } from '@mui/material/styles';
-import { StyledGrantsTable } from './UserPermissionsEntitySection.styles';
 import { grantTypeMap } from 'src/features/Account/constants';
+import { usePagination } from 'src/hooks/usePagination';
+
+import type { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   entity: GrantType;
+  entitySetAllTo: (entity: GrantType, value: GrantLevel) => () => void;
   grants: Grant[] | undefined;
   setGrantTo: (entity: string, idx: number, value: GrantLevel) => () => void;
-  entitySetAllTo: (entity: GrantType, value: GrantLevel) => () => void;
   showHeading?: boolean;
 }
 
 export const UserPermissionsEntitySection = React.memo(
-  ({ entity, grants, setGrantTo, entitySetAllTo, showHeading }: Props) => {
+  ({ entity, entitySetAllTo, grants, setGrantTo, showHeading }: Props) => {
     const theme: Theme = useTheme();
     const pagination = usePagination(1);
 
@@ -54,61 +54,79 @@ export const UserPermissionsEntitySection = React.memo(
     };
 
     return (
-      <Box key={entity} paddingBottom="0" marginTop={`${theme.spacing(2)}`}>
+      <Box key={entity} marginTop={`${theme.spacing(2)}`} paddingBottom="0">
         {showHeading && (
           <Typography
-            variant="h3"
             sx={{
-              marginTop: theme.spacing(3),
               marginBottom: theme.spacing(2),
+              marginTop: theme.spacing(3),
             }}
             data-qa-permissions-header={entity}
+            variant="h3"
           >
             {grantTypeMap[entity]}
           </Typography>
         )}
-        <StyledGrantsTable aria-label="User Permissions" noBorder>
+        <Table aria-label="User Permissions">
           <TableHead data-qa-table-head>
-            <TableRow>
+            <TableRow
+              sx={(theme) => ({
+                'span.MuiFormControlLabel-label': {
+                  font: theme.font.bold,
+                },
+              })}
+            >
               <TableCell>Label</TableCell>
               <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label style={{ marginLeft: -35, cursor: 'pointer' }}>
-                  None
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={entityIsAll(null)}
-                    value="null"
-                    onChange={entitySetAllTo(entity, null)}
-                    data-qa-permission-header="None"
-                  />
-                </label>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      inputProps={{
+                        'aria-label': `${entity}s, set-all-permissions-to-none`,
+                      }}
+                      checked={entityIsAll(null)}
+                      data-qa-permission-header="None"
+                      name={`${entity}-select-all`}
+                      onChange={entitySetAllTo(entity, null)}
+                      value="null"
+                    />
+                  }
+                  label="None"
+                />
               </TableCell>
               <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label style={{ marginLeft: -65, cursor: 'pointer' }}>
-                  Read Only
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={entityIsAll('read_only')}
-                    value="read_only"
-                    onChange={entitySetAllTo(entity, 'read_only')}
-                    data-qa-permission-header="Read Only"
-                  />
-                </label>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      inputProps={{
+                        'aria-label': `${entity}s, set-all-permissions-to-read-only`,
+                      }}
+                      checked={entityIsAll('read_only')}
+                      data-qa-permission-header="Read Only"
+                      name={`${entity}-select-all`}
+                      onChange={entitySetAllTo(entity, 'read_only')}
+                      value="read_only"
+                    />
+                  }
+                  label="Read Only"
+                />
               </TableCell>
               <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label style={{ marginLeft: -73, cursor: 'pointer' }}>
-                  Read-Write
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={entityIsAll('read_write')}
-                    value="read_write"
-                    onChange={entitySetAllTo(entity, 'read_write')}
-                    data-qa-permission-header="Read-Write"
-                  />
-                </label>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      inputProps={{
+                        'aria-label': `${entity}s, set-all-permissions-to-read-write`,
+                      }}
+                      checked={entityIsAll('read_write')}
+                      data-qa-permission-header="Read-Write"
+                      name={`${entity}-select-all`}
+                      onChange={entitySetAllTo(entity, 'read_write')}
+                      value="read_write"
+                    />
+                  }
+                  label="Read-Write"
+                />
               </TableCell>
             </TableRow>
           </TableHead>
@@ -117,7 +135,7 @@ export const UserPermissionsEntitySection = React.memo(
               // Index must be corrected to account for pagination
               const idx = (pagination.page - 1) * pagination.pageSize + _idx;
               return (
-                <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
+                <TableRow data-qa-specific-grant={grant.label} key={grant.id}>
                   <TableCell
                     sx={{
                       '& div': {
@@ -126,52 +144,60 @@ export const UserPermissionsEntitySection = React.memo(
                         },
                       },
                     }}
-                    parentColumn="Label"
                   >
                     {grant.label}
                   </TableCell>
-                  <TableCell parentColumn="None" padding="checkbox">
+                  <TableCell padding="checkbox">
                     <Radio
-                      aria-label={`Disallow access for ${grant.label}`}
-                      name={`${grant.id}-perms`}
+                      inputProps={{
+                        'aria-label': `Disallow access for ${grant.label}`,
+                        name: `${grant.label}-permissions`,
+                      }}
                       checked={grant.permissions === null}
-                      value="null"
-                      onChange={setGrantTo(entity, idx, null)}
                       data-qa-permission="None"
+                      edge="start"
+                      onChange={setGrantTo(entity, idx, null)}
+                      value="null"
                     />
                   </TableCell>
-                  <TableCell parentColumn="Read Only" padding="checkbox">
+                  <TableCell padding="checkbox">
                     <Radio
-                      aria-label={`Allow read-only access for ${grant.label}`}
-                      name={`${grant.id}-perms`}
+                      inputProps={{
+                        'aria-label': `Allow read-only access for ${grant.label}`,
+                        name: `${grant.label}-permissions`,
+                      }}
                       checked={grant.permissions === 'read_only'}
-                      value="read_only"
-                      onChange={setGrantTo(entity, idx, 'read_only')}
                       data-qa-permission="Read Only"
+                      edge="start"
+                      onChange={setGrantTo(entity, idx, 'read_only')}
+                      value="read_only"
                     />
                   </TableCell>
-                  <TableCell parentColumn="Read-Write" padding="checkbox">
+                  <TableCell padding="checkbox">
                     <Radio
-                      aria-label={`Allow read-write access for ${grant.label}`}
-                      name={`${grant.id}-perms`}
+                      inputProps={{
+                        'aria-label': `Allow read-write access for ${grant.label}`,
+                        name: `${grant.label}-permissions`,
+                      }}
                       checked={grant.permissions === 'read_write'}
-                      value="read_write"
-                      onChange={setGrantTo(entity, idx, 'read_write')}
                       data-qa-permission="Read-Write"
+                      edge="start"
+                      onChange={setGrantTo(entity, idx, 'read_write')}
+                      value="read_write"
                     />
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
-        </StyledGrantsTable>
+        </Table>
         <PaginationFooter
           count={grants.length}
+          eventCategory={`User Permissions for ${entity}`}
           handlePageChange={pagination.handlePageChange}
           handleSizeChange={pagination.handlePageSizeChange}
           page={pagination.page}
           pageSize={pagination.pageSize}
-          eventCategory={`User Permissions for ${entity}`}
         />
       </Box>
     );

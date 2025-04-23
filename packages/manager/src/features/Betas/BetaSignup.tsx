@@ -1,21 +1,27 @@
-import { Stack } from '@mui/system';
+import {
+  ActionsPanel,
+  Checkbox,
+  CircleProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import {
+  createLazyRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { NotFound } from 'src/components/NotFound';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
+import { useCreateAccountBetaMutation } from '@linode/queries';
 import { useBetaQuery } from 'src/queries/betas';
 
-const BetaSignup = () => {
-  const betaAgreement = `# Early Adopter Testing Program
+export const BetaSignup = () => {
+  const betaAgreement = `### Early Adopter Testing Program
 This Early Adopter Testing Program Service Level Agreement (the “EAP”) is between Linode LLC (“Linode”) and
 you, the customer who requests access and participation (the “Participant”) to the Linode Early Access Program
 (the “Program”). This EAP is attached to and amends the master services agreement between you and Linode
@@ -107,10 +113,9 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
 10. Feedback, Data Analysis. Tester agrees to provide reasonably prompt Project Feedback regarding Tester’s experience with a Project Service in accordance to the appropriate Project Addendum, and that Linode may use and store Tester’s Project Feedback for any purpose relating to the development of Linode services. Linode, with Participant’s consent, may publicize Tester’s Project Feedback for promotional or marketing purposes.
 `;
 
-  const location = useLocation<{ betaId: string }>();
-  const history = useHistory();
-  const betaId = location?.state?.betaId;
-  const { data: beta, isError, isLoading } = useBetaQuery(betaId);
+  const navigate = useNavigate();
+  const { betaId } = useParams({ from: '/betas/signup/$betaId' });
+  const { data: beta, isError, isLoading } = useBetaQuery(betaId, !!betaId);
   const [hasAgreed, setHasAgreed] = React.useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const { mutateAsync: createAccountBeta } = useCreateAccountBetaMutation();
@@ -120,7 +125,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
     setIsSubmitting(true);
     try {
       await createAccountBeta({ id: betaId });
-      history.push('/betas');
+      navigate({ to: '/betas' });
     } catch (errors) {
       enqueueSnackbar(errors[0]?.reason, {
         autoHideDuration: 10000,
@@ -136,9 +141,14 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
 
   return (
     <>
-      <LandingHeader title="Sign Up" />
+      <LandingHeader
+        breadcrumbProps={{
+          pathname: `/betas/${betaId}`,
+        }}
+        title={beta?.label}
+      />
       <Paper>
-        {isLoading ? (
+        {isLoading || !beta ? (
           <CircleProgress />
         ) : (
           <Stack>
@@ -146,11 +156,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
               {beta.label}
             </Typography>
             <Typography paddingBottom={2}>{beta.description}</Typography>
-            <HighlightedMarkdown
-              language="plaintext"
-              sanitizeOptions={{}}
-              textOrMarkdown={betaAgreement}
-            />
+            <Markdown textOrMarkdown={betaAgreement} />
             <Checkbox
               onChange={() => {
                 setHasAgreed(!hasAgreed);
@@ -172,7 +178,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
                 'data-testid': 'cancel',
                 label: 'Cancel',
                 onClick: () => {
-                  history.push('/betas');
+                  navigate({ to: '/betas' });
                 },
               }}
             />
@@ -183,4 +189,6 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
   );
 };
 
-export default BetaSignup;
+export const betaSignupLazyRoute = createLazyRoute('/betas/signup/$betaId')({
+  component: BetaSignup,
+});

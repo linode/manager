@@ -1,80 +1,58 @@
-import { styled } from '@mui/material/styles';
+import { Divider } from '@linode/ui';
 import * as React from 'react';
 
-import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { ImageSelect } from 'src/features/Images/ImageSelect';
-import { useAllImagesQuery } from 'src/queries/images';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { PasswordInput } from 'src/components/PasswordInput/PasswordInput';
 
-import { LinodePermissionsError } from '../LinodePermissionsError';
+import type { Image } from '@linode/api-v4';
 
 interface Props {
   authorizedUsers: string[];
-  imageFieldError?: string;
-  linodeId: number;
-  onImageChange: (selected: Item<string>) => void;
+  disabled: boolean;
+  imageFieldError: string | undefined;
+  onImageChange: (image: Image) => void;
   onPasswordChange: (password: string) => void;
   password: string;
-  passwordError?: string;
+  passwordError: string | undefined;
+  selectedImage: Image['id'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
 export const ImageAndPassword = (props: Props) => {
   const {
     authorizedUsers,
+    disabled,
     imageFieldError,
-    linodeId,
     onImageChange,
     onPasswordChange,
     password,
     passwordError,
+    selectedImage,
     setAuthorizedUsers,
   } = props;
 
-  const { data: grants } = useGrants();
-  const { data: profile } = useProfile();
-
-  const { data: imagesData, error: imagesError } = useAllImagesQuery();
-  const _imagesError = imagesError
-    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
-    : undefined;
-
-  const disabled =
-    profile?.restricted &&
-    grants?.linode.find((g) => g.id === linodeId)?.permissions !== 'read_write';
-
   return (
     <React.Fragment>
-      {disabled && <LinodePermissionsError />}
       <ImageSelect
         disabled={disabled}
-        imageError={_imagesError}
-        imageFieldError={imageFieldError}
-        images={imagesData ?? []}
-        onSelect={onImageChange}
+        errorText={imageFieldError}
+        onChange={onImageChange}
+        value={selectedImage}
+        variant="all"
       />
-      <StyledAccessPanel
-        disabledReason={
-          disabled
-            ? "You don't have permissions to modify this Linode"
-            : undefined
-        }
+      <PasswordInput
+        errorText={passwordError}
+        label="Root Password"
+        onChange={(e) => onPasswordChange(e.target.value)}
+        value={password || ''}
+      />
+      <Divider spacingBottom={20} spacingTop={24} />
+      <UserSSHKeyPanel
         authorizedUsers={authorizedUsers}
         disabled={disabled}
-        error={passwordError}
-        handleChange={onPasswordChange}
-        password={password || ''}
         setAuthorizedUsers={setAuthorizedUsers}
       />
     </React.Fragment>
   );
 };
-
-const StyledAccessPanel = styled(AccessPanel, { label: 'StyledAccessPanel' })(
-  ({ theme }) => ({
-    margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
-    padding: 0,
-  })
-);

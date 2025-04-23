@@ -1,26 +1,29 @@
+import {
+  firewallEventsHandler,
+  nodebalancerEventHandler,
+  oauthClientsEventHandler,
+  placementGroupEventHandler,
+  sshKeyEventHandler,
+  taxIdEventHandler,
+  tokenEventHandler,
+} from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { oauthClientsEventHandler } from 'src/queries/account/oauth';
 import { databaseEventsHandler } from 'src/queries/databases/events';
 import { domainEventsHandler } from 'src/queries/domains';
-import { firewallEventsHandler } from 'src/queries/firewalls';
 import { imageEventsHandler } from 'src/queries/images';
-import { diskEventHandler } from 'src/queries/linodes/events';
-import { linodeEventsHandler } from 'src/queries/linodes/events';
-import { nodebalancerEventHandler } from 'src/queries/nodebalancers';
-import { sshKeyEventHandler } from 'src/queries/profile/profile';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
 import { supportTicketEventHandler } from 'src/queries/support';
-import { tokenEventHandler } from 'src/queries/profile/tokens';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
 
-import type { Event } from '@linode/api-v4';
-import type { QueryClient } from '@tanstack/react-query';
+import {
+  diskEventHandler,
+  linodeEventsHandler,
+} from '../queries/linodes/events';
 
-export interface EventHandlerData {
-  event: Event;
-  queryClient: QueryClient;
-}
+import type { Event } from '@linode/api-v4';
+import type { EventHandlerData } from '@linode/queries';
+import type { InvalidateQueryFilters } from '@tanstack/react-query';
 
 export const eventHandlers: {
   filter: (event: Event) => boolean;
@@ -65,6 +68,10 @@ export const eventHandlers: {
     handler: oauthClientsEventHandler,
   },
   {
+    filter: (event) => event.action.startsWith('placement_group'),
+    handler: placementGroupEventHandler,
+  },
+  {
     filter: (event) =>
       event.action.startsWith('linode') || event.action.startsWith('backups'),
     handler: linodeEventsHandler,
@@ -81,10 +88,24 @@ export const eventHandlers: {
     filter: (event) => event.action.startsWith('stackscript'),
     handler: stackScriptEventHandler,
   },
+  {
+    filter: (event) => event.action.startsWith('tax_id'),
+    handler: taxIdEventHandler,
+  },
 ];
 
 export const useEventHandlers = () => {
   const queryClient = useQueryClient();
+
+  /*
+   * We wrap invalidateQueries because we need to enforce some options.
+   *
+   * We set `cancelRefetch` to `false` because it ensures no refetch will
+   * be made if there is already a request running. This is important for
+   * event handlers because they are envoked once for every event polled.
+   */
+  const invalidateQueries = (filters: InvalidateQueryFilters) =>
+    queryClient.invalidateQueries(filters, { cancelRefetch: false });
 
   /**
    * Given an event, this function finds the corresponding
@@ -93,7 +114,7 @@ export const useEventHandlers = () => {
   const handleEvent = (event: Event) => {
     for (const eventHandler of eventHandlers) {
       if (eventHandler.filter(event)) {
-        eventHandler.handler({ event, queryClient });
+        eventHandler.handler({ event, invalidateQueries, queryClient });
         return;
       }
     }

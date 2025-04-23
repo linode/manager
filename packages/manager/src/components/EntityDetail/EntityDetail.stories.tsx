@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories/linodes';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 
 import { EntityDetail } from './EntityDetail';
@@ -38,7 +38,6 @@ export const LinodeExample: Story = {
           }}
           id={0}
           linode={linodeFactory.build()}
-          openTagDrawer={action('openTagDrawer')}
         />
       </div>
     );

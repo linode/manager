@@ -6,6 +6,7 @@
  * @returns Cypress run command to run `testFiles`.
  */
 export const cypressRunCommand = (testFiles: string[]): string => {
-  const testFilesList = testFiles.join(',');
-  return `yarn cy:run -s "${testFilesList}"`;
+  const dedupedTestFiles = Array.from(new Set(testFiles));
+  const testFilesList = dedupedTestFiles.join(',');
+  return `pnpm cy:run -s "${testFilesList}"`;
 };

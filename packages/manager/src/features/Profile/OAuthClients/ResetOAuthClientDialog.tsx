@@ -1,9 +1,8 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useResetOAuthClientMutation } from 'src/queries/account/oauth';
+import { useResetOAuthClientMutation } from '@linode/queries';
 
 interface Props {
   id: string;
@@ -20,7 +19,7 @@ export const ResetOAuthClientDialog = ({
   open,
   showSecret,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useResetOAuthClientMutation(id);
+  const { error, isPending, mutateAsync } = useResetOAuthClientMutation(id);
 
   const onReset = () => {
     mutateAsync().then((data) => {
@@ -35,7 +34,7 @@ export const ResetOAuthClientDialog = ({
         <ActionsPanel
           primaryButtonProps={{
             label: 'Reset Secret',
-            loading: isLoading,
+            loading: isPending,
             onClick: onReset,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

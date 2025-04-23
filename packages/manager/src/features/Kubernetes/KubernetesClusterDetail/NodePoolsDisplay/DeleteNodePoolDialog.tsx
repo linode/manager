@@ -1,11 +1,18 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
+import { ActionsPanel, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
-import { pluralize } from 'src/utilities/pluralize';
+
+import {
+  MULTI_NODE_POD_DELETION_WARNING,
+  SINGLE_NODE_POD_DELETION_WARNING,
+} from '../../constants';
+import { LocalStorageWarningNotice } from '../LocalStorageWarningNotice';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface Props {
   kubernetesClusterId: number;
@@ -17,7 +24,7 @@ interface Props {
 export const DeleteNodePoolDialog = (props: Props) => {
   const { kubernetesClusterId, nodePool, onClose, open } = props;
 
-  const { error, isLoading, mutateAsync } = useDeleteNodePoolMutation(
+  const { error, isPending, mutateAsync } = useDeleteNodePoolMutation(
     kubernetesClusterId,
     nodePool?.id ?? -1
   );
@@ -35,7 +42,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Delete',
-        loading: isLoading,
+        loading: isPending,
         onClick: onDelete,
       }}
       secondaryButtonProps={{
@@ -56,10 +63,20 @@ export const DeleteNodePoolDialog = (props: Props) => {
       title={'Delete Node Pool?'}
     >
       <Typography>
-        Are you sure you want to delete this Node Pool?{' '}
+        Delete {nodeCount > 1 ? 'all' : 'the'}{' '}
         {nodeCount > 0 &&
-          `${pluralize('node', 'nodes', nodeCount)} will be deleted.`}
+          `${pluralize('node', 'nodes', nodeCount)} in this node pool.`}{' '}
+        {nodeCount > 1
+          ? MULTI_NODE_POD_DELETION_WARNING
+          : SINGLE_NODE_POD_DELETION_WARNING}{' '}
+        Consider draining the node pool first.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#remove-a-node-pool">
+          Learn more
+        </Link>
+        .
       </Typography>
+
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };

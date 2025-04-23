@@ -1,70 +1,53 @@
-import { TicketSeverity, uploadAttachment } from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { useCreateSupportTicketMutation } from '@linode/queries';
+import {
+  Accordion,
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Dialog,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
 
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { useAccount } from 'src/queries/account/account';
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllFirewallsQuery } from 'src/queries/firewalls';
-import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useCreateSupportTicketMutation } from 'src/queries/support';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import {
-  getAPIErrorOrDefault,
-  getErrorMap,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
-import { reduceAsync } from 'src/utilities/reduceAsync';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import { storage } from 'src/utilities/storage';
+import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
-import { FileAttachment } from '../index';
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import { TabbedReply } from '../SupportTicketDetail/TabbedReply/TabbedReply';
-import { TICKET_SEVERITY_TOOLTIP_TEXT } from './constants';
-import SupportTicketSMTPFields, {
-  fieldNameToLabelMap,
-  smtpDialogTitle,
-  smtpHelperText,
-} from './SupportTicketSMTPFields';
-import { severityLabelMap, useTicketSeverityCapability } from './ticketUtils';
+import {
+  ENTITY_ID_TO_NAME_MAP,
+  SCHEMA_MAP,
+  SEVERITY_LABEL_MAP,
+  SEVERITY_OPTIONS,
+  TICKET_SEVERITY_TOOLTIP_TEXT,
+  TICKET_TYPE_MAP,
+} from './constants';
+import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
+import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
+import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
+import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  expPanelSummary: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    borderTop: `1px solid ${theme.bg.main}`,
-    paddingTop: theme.spacing(1),
-  },
-  innerReply: {
-    '& div[role="tablist"]': {
-      marginBottom: theme.spacing(),
-      marginTop: theme.spacing(),
-    },
-    padding: 0,
-  },
-  rootReply: {
-    marginBottom: theme.spacing(2),
-    padding: 0,
-  },
-}));
+import type { FileAttachment } from '../index';
+import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
+import type { SMTPCustomFields } from './SupportTicketSMTPFields';
+import type {
+  CreateKubeClusterPayload,
+  CreateLinodeRequest,
+  TicketSeverity,
+} from '@linode/api-v4';
+import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -77,6 +60,7 @@ interface AttachmentWithTarget {
 }
 
 export type EntityType =
+  | 'bucket'
   | 'database_id'
   | 'domain_id'
   | 'firewall_id'
@@ -85,13 +69,23 @@ export type EntityType =
   | 'lkecluster_id'
   | 'nodebalancer_id'
   | 'none'
-  | 'volume_id';
+  | 'volume_id'
+  | 'vpc_id';
 
-export type TicketType = 'general' | 'smtp';
+export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
-interface TicketTypeData {
+export type AllSupportTicketFormFields = SupportTicketFormFields &
+  SMTPCustomFields &
+  AccountLimitCustomFields;
+
+export type FormPayloadValues =
+  | Partial<CreateKubeClusterPayload>
+  | Partial<CreateLinodeRequest>;
+
+export interface TicketTypeData {
   dialogTitle: string;
   helperText: JSX.Element | string;
+  ticketTitle?: string;
 }
 
 export interface SupportTicketDialogProps {
@@ -107,53 +101,15 @@ export interface SupportTicketDialogProps {
   prefilledTitle?: string;
 }
 
-const ticketTypeMap: Record<TicketType, TicketTypeData> = {
-  general: {
-    dialogTitle: 'Open a Support Ticket',
-    helperText: (
-      <>
-        {`We love our customers, and we\u{2019}re here to help if you need us.
-        Please keep in mind that not all topics are within the scope of our support.
-        For overall system status, please see `}
-        <Link to="https://status.linode.com">status.linode.com</Link>.
-      </>
-    ),
-  },
-  smtp: {
-    dialogTitle: smtpDialogTitle,
-    helperText: smtpHelperText,
-  },
-};
-
-const entityMap: Record<string, EntityType> = {
-  Databases: 'database_id',
-  Domains: 'domain_id',
-  Firewalls: 'firewall_id',
-  Kubernetes: 'lkecluster_id',
-  Linodes: 'linode_id',
-  NodeBalancers: 'nodebalancer_id',
-  Volumes: 'volume_id',
-};
-
-const entityIdToNameMap: Record<EntityType, string> = {
-  database_id: 'Database Cluster',
-  domain_id: 'Domain',
-  firewall_id: 'Firewall',
-  general: '',
-  linode_id: 'Linode',
-  lkecluster_id: 'Kubernetes Cluster',
-  nodebalancer_id: 'NodeBalancer',
-  none: '',
-  volume_id: 'Volume',
-};
-
-const severityOptions: {
-  label: string;
-  value: TicketSeverity;
-}[] = Array.from(severityLabelMap).map(([severity, label]) => ({
-  label,
-  value: severity,
-}));
+export interface SupportTicketFormFields {
+  description: string;
+  entityId: string;
+  entityInputValue: string;
+  entityType: EntityType;
+  selectedSeverity: TicketSeverity | undefined;
+  summary: string;
+  ticketType: TicketType;
+}
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
@@ -180,51 +136,64 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const { data: account } = useAccount();
+  const location = useLocation<any>();
+  const stateParams = location.state;
+
+  // Collect prefilled data from props or Link parameters.
+  const _prefilledDescription: string =
+    prefilledDescription ?? stateParams?.description ?? undefined;
+  const _prefilledEntity: EntityForTicketDetails =
+    prefilledEntity ?? stateParams?.entity ?? undefined;
+  const _prefilledTitle: string =
+    prefilledTitle ?? stateParams?.title ?? undefined;
+  const prefilledFormPayloadValues: FormPayloadValues =
+    stateParams?.formPayloadValues ?? undefined;
+  const _prefilledTicketType: TicketType =
+    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+
+  // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const newPrefilledTitle = _prefilledTitle
+    ? _prefilledTitle
+    : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
+    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+    : undefined;
+
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const valuesFromStorage = storage.supportText.get();
+  const valuesFromStorage = storage.supportTicket.get();
 
   // Ticket information
-  const [summary, setSummary] = React.useState<string>(
-    getInitialValue(prefilledTitle, valuesFromStorage.title)
-  );
-  const [
-    selectedSeverity,
-    setSelectedSeverity,
-  ] = React.useState<TicketSeverity>();
-  const [description, setDescription] = React.useState<string>(
-    getInitialValue(prefilledDescription, valuesFromStorage.description)
-  );
-  const [entityType, setEntityType] = React.useState<EntityType>(
-    prefilledEntity?.type ?? 'general'
-  );
-  const [entityInputValue, setEntityInputValue] = React.useState<string>('');
-  const [entityID, setEntityID] = React.useState<string>(
-    prefilledEntity ? String(prefilledEntity.id) : ''
-  );
-  const [ticketType, setTicketType] = React.useState<TicketType>(
-    prefilledTicketType ?? 'general'
-  );
-
-  // SMTP ticket information
-  const [smtpFields, setSMTPFields] = React.useState({
-    companyName: '',
-    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
-    emailDomains: '',
-    publicInfo: '',
-    useCase: '',
+  const form = useForm<SupportTicketFormFields>({
+    defaultValues: {
+      description: getInitialValue(
+        _prefilledDescription,
+        valuesFromStorage.description
+      ),
+      entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
+      entityInputValue: '',
+      entityType: _prefilledEntity?.type ?? 'general',
+      summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
+      ticketType: _prefilledTicketType ?? 'general',
+    },
+    resolver: yupResolver(SCHEMA_MAP[_prefilledTicketType ?? 'general']),
   });
+
+  const {
+    description,
+    entityId,
+    entityType,
+    selectedSeverity,
+    summary,
+    ticketType,
+  } = form.watch();
 
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-
-  const { classes } = useStyles();
 
   React.useEffect(() => {
     if (!open) {
@@ -232,76 +201,40 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  // React Query entities
-  const {
-    data: databases,
-    error: databasesError,
-    isLoading: databasesLoading,
-  } = useAllDatabasesQuery(entityType === 'database_id');
-
-  const {
-    data: firewalls,
-    error: firewallsError,
-    isLoading: firewallsLoading,
-  } = useAllFirewallsQuery(entityType === 'firewall_id');
-
-  const {
-    data: domains,
-    error: domainsError,
-    isLoading: domainsLoading,
-  } = useAllDomainsQuery(entityType === 'domain_id');
-  const {
-    data: nodebalancers,
-    error: nodebalancersError,
-    isLoading: nodebalancersLoading,
-  } = useAllNodeBalancersQuery(entityType === 'nodebalancer_id');
-
-  const {
-    data: clusters,
-    error: clustersError,
-    isLoading: clustersLoading,
-  } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
-
-  const {
-    data: linodes,
-    error: linodesError,
-    isLoading: linodesLoading,
-  } = useAllLinodesQuery({}, {}, entityType === 'linode_id');
-
-  const {
-    data: volumes,
-    error: volumesError,
-    isLoading: volumesLoading,
-  } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
-
-  const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ description: _description, title: _title });
+  /**
+   * Store 'general' support ticket data in local storage if it exists.
+   * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
+   */
+  const saveFormData = (values: SupportTicketFormFields) => {
+    storage.supportTicket.set(values);
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
+    .current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    debouncedSave(summary, description);
-  }, [summary, description]);
+    debouncedSave(form.getValues());
+  }, [summary, description, entityId, entityType, selectedSeverity]);
 
+  /**
+   * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
+   * or reset to the default values (from localStorage) otherwise.
+   */
   const resetTicket = (clearValues: boolean = false) => {
-    /**
-     * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
-     * or reset to the default values (from props or localStorage) otherwise.
-     */
-    const _summary = clearValues
-      ? ''
-      : getInitialValue(prefilledTitle, valuesFromStorage.title);
-    const _description = clearValues
-      ? ''
-      : getInitialValue(prefilledDescription, valuesFromStorage.description);
-    setSummary(_summary);
-    setDescription(_description);
-    setEntityID('');
-    setEntityType('general');
-    setTicketType('general');
+    form.reset({
+      ...form.formState.defaultValues,
+      description: clearValues ? '' : valuesFromStorage.description,
+      entityId: clearValues ? '' : valuesFromStorage.entityId,
+      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
+      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      selectedSeverity: clearValues
+        ? undefined
+        : valuesFromStorage.selectedSeverity,
+      summary: clearValues ? '' : valuesFromStorage.summary,
+      ticketType: 'general',
+    });
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -309,57 +242,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles([]);
 
     if (clearValues) {
-      saveText('', '');
+      saveFormData(supportTicketStorageDefaults);
     }
   };
 
-  const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSummary(e.target.value);
-  };
-
-  const handleDescriptionInputChange = (value: string) => {
-    setDescription(value);
-    // setErrors?
-  };
-
-  const handleEntityTypeChange = (type: EntityType) => {
-    // Don't reset things if the type hasn't changed
-    if (type === entityType) {
-      return;
-    }
-    setEntityType(type);
-    setEntityID('');
-    setEntityInputValue('');
-  };
-
-  const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
-  };
-
-  /**
-   * When variant ticketTypes include additional fields, fields must concat to one description string.
-   * For readability, replace field names with field labels and format the description in Markdown.
-   */
-  const formatDescription = (fields: Record<string, string>) => {
-    return Object.entries(fields)
-      .map(
-        ([key, value]) =>
-          `**${fieldNameToLabelMap[key]}**\n${value ? value : 'No response'}`
-      )
-      .join('\n\n');
-  };
-
-  const close = () => {
-    props.onClose();
-    if (ticketType === 'smtp') {
+  const handleClose = () => {
+    if (ticketType !== 'general') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
+    props.onClose();
+    sendSupportTicketExitEvent('Close');
   };
 
-  const onCancel = () => {
+  const handleCancel = () => {
     props.onClose();
     window.setTimeout(() => resetDrawer(true), 500);
+    sendSupportTicketExitEvent('Cancel');
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -430,38 +328,57 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     });
   };
 
-  const onSubmit = () => {
+  const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
-    const _description =
-      ticketType === 'smtp' ? formatDescription(smtpFields) : description;
-    if (!['general', 'none'].includes(entityType) && !entityID) {
-      setErrors([
-        {
-          field: 'input',
-          reason: `Please select a ${entityIdToNameMap[entityType]}.`,
-        },
-      ]);
+
+    const _description = formatDescription(values, ticketType);
+
+    // If this is an account limit ticket, we needed the entity type but won't actually send a valid entity selection.
+    // Reset the entity type and id back to defaults.
+    const _entityType =
+      ticketType === 'accountLimit' ? 'general' : values.entityType;
+    const _entityId = ticketType === 'accountLimit' ? '' : values.entityId;
+
+    if (!['general', 'none'].includes(_entityType) && !_entityId) {
+      form.setError('entityId', {
+        message: `Please select a ${ENTITY_ID_TO_NAME_MAP[entityType]}.`,
+      });
+
       return;
     }
-    setErrors(undefined);
     setSubmitting(true);
 
-    createSupportTicket({
+    const baseRequestPayload = {
       description: _description,
-      [entityType]: Number(entityID),
       severity: selectedSeverity,
       summary,
-    })
+    };
+
+    let requestPayload;
+    if (entityType === 'bucket') {
+      const bucketLabel = values.entityInputValue;
+      requestPayload = {
+        bucket: bucketLabel,
+        region: _entityId,
+        ...baseRequestPayload,
+      };
+    } else {
+      requestPayload = {
+        [_entityType]: Number(_entityId),
+        ...baseRequestPayload,
+      };
+    }
+
+    createSupportTicket(requestPayload)
       .then((response) => {
-        setErrors(undefined);
-        setSubmitting(false);
-        window.setTimeout(() => resetDrawer(true), 500);
         return response;
       })
       .then((response) => {
         attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
+          setSubmitting(false);
           if (!props.keepOpenOnSuccess) {
-            close();
+            window.setTimeout(() => resetDrawer(true), 500);
+            props.onClose();
           }
           /* Errors will be an array of errors, or empty if all attachments succeeded. */
           onSuccess(response!.id, _errors);
@@ -470,115 +387,23 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       .catch((errResponse) => {
         /* This block will only handle errors in creating the actual ticket; attachment
          * errors are handled above. */
-        setErrors(getAPIErrorOrDefault(errResponse));
+        for (const error of errResponse) {
+          if (error.field) {
+            form.setError(error.field, { message: error.reason });
+          } else {
+            form.setError('root', { message: error.reason });
+          }
+        }
+
         setSubmitting(false);
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(formContainerRef);
       });
-  };
-
-  const renderEntityTypes = () => {
-    return Object.keys(entityMap).map((key: string) => {
-      return { label: key, value: entityMap[key] };
-    });
-  };
-
-  const smtpRequirementsMet =
-    smtpFields.customerName.length > 0 &&
-    smtpFields.useCase.length > 0 &&
-    smtpFields.emailDomains.length > 0 &&
-    smtpFields.publicInfo.length > 0;
-  const requirementsMet =
-    summary.length > 0 &&
-    (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
-
-  const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
-  const summaryError = hasErrorFor.summary;
-  const descriptionError = hasErrorFor.description;
-  const generalError = hasErrorFor.none;
-  const inputError = hasErrorFor.input;
-
-  const topicOptions: { label: string; value: EntityType }[] = [
-    { label: 'General/Account/Billing', value: 'general' },
-    ...renderEntityTypes(),
-  ];
-
-  const selectedTopic = topicOptions.find((eachTopic) => {
-    return eachTopic.value === entityType;
   });
 
-  const getEntityOptions = (): { label: string; value: number }[] => {
-    const reactQueryEntityDataMap = {
-      database_id: databases,
-      domain_id: domains,
-      firewall_id: firewalls,
-      linode_id: linodes,
-      lkecluster_id: clusters,
-      nodebalancer_id: nodebalancers,
-      volume_id: volumes,
-    };
-
-    if (!reactQueryEntityDataMap[entityType]) {
-      return [];
-    }
-
-    // domain's don't have a label so we map the domain as the label
-    if (entityType === 'domain_id') {
-      return (
-        reactQueryEntityDataMap[entityType]?.map(({ domain, id }) => ({
-          label: domain,
-          value: id,
-        })) || []
-      );
-    }
-
-    return (
-      reactQueryEntityDataMap[entityType]?.map(
-        ({ id, label }: { id: number; label: string }) => ({
-          label,
-          value: id,
-        })
-      ) || []
-    );
-  };
-
-  const loadingMap: Record<EntityType, boolean> = {
-    database_id: databasesLoading,
-    domain_id: domainsLoading,
-    firewall_id: firewallsLoading,
-    general: false,
-    linode_id: linodesLoading,
-    lkecluster_id: clustersLoading,
-    nodebalancer_id: nodebalancersLoading,
-    none: false,
-    volume_id: volumesLoading,
-  };
-
-  const errorMap: Record<EntityType, APIError[] | null> = {
-    database_id: databasesError,
-    domain_id: domainsError,
-    firewall_id: firewallsError,
-    general: null,
-    linode_id: linodesError,
-    lkecluster_id: clustersError,
-    nodebalancer_id: nodebalancersError,
-    none: null,
-    volume_id: volumesError,
-  };
-
-  const entityOptions = getEntityOptions();
-  const areEntitiesLoading = loadingMap[entityType];
-  const entityError = Boolean(errorMap[entityType])
-    ? `Error loading ${entityIdToNameMap[entityType]}s`
-    : undefined;
-
-  const selectedEntity =
-    entityOptions.find((thisEntity) => String(thisEntity.value) === entityID) ||
-    null;
-
   const selectedSeverityLabel =
-    selectedSeverity && severityLabelMap.get(selectedSeverity);
+    selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
-    selectedSeverity != undefined && selectedSeverityLabel != undefined
+    selectedSeverity !== undefined && selectedSeverityLabel !== undefined
       ? {
           label: selectedSeverityLabel,
           value: selectedSeverity,
@@ -586,133 +411,126 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       : undefined;
 
   return (
-    <Dialog
-      fullHeight
-      fullWidth
-      onClose={close}
-      open={open}
-      title={ticketTypeMap[ticketType].dialogTitle}
-    >
-      {props.children || (
-        <React.Fragment>
-          {generalError && (
-            <Notice data-qa-notice text={generalError} variant="error" />
-          )}
-
-          <Typography data-qa-support-ticket-helper-text>
-            {ticketTypeMap[ticketType].helperText}
-          </Typography>
-          <TextField
-            data-qa-ticket-summary
-            errorText={summaryError}
-            inputProps={{ maxLength: 64 }}
-            label="Title"
-            onChange={handleSummaryInputChange}
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-          />
-          {hasSeverityCapability && (
-            <Autocomplete
-              onChange={(e, severity) =>
-                setSelectedSeverity(
-                  severity != null ? severity.value : undefined
-                )
-              }
-              textFieldProps={{
-                tooltipPosition: 'right',
-                tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
-              }}
-              autoHighlight
-              clearOnBlur
-              data-qa-ticket-severity
-              label="Severity"
-              options={severityOptions}
-              sx={{ maxWidth: 'initial' }}
-              value={selectedSeverityOption ?? null}
-            />
-          )}
-          {ticketType === 'smtp' ? (
-            <SupportTicketSMTPFields
-              formState={smtpFields}
-              handleChange={handleSMTPFieldChange}
-            />
-          ) : (
-            <React.Fragment>
-              {props.hideProductSelection ? null : (
-                <React.Fragment>
-                  <Autocomplete
-                    data-qa-ticket-entity-type
-                    disableClearable
-                    label="What is this regarding?"
-                    onChange={(e, type) => handleEntityTypeChange(type.value)}
-                    options={topicOptions}
-                    value={selectedTopic}
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit} ref={formContainerRef}>
+        <Dialog
+          fullHeight
+          fullWidth
+          onClose={handleClose}
+          open={open}
+          title={TICKET_TYPE_MAP[ticketType].dialogTitle}
+        >
+          {props.children || (
+            <>
+              <Typography data-qa-support-ticket-helper-text>
+                {TICKET_TYPE_MAP[ticketType].helperText}
+              </Typography>
+              <Controller
+                render={({ field, fieldState }) => (
+                  <TextField
+                    data-qa-ticket-summary
+                    errorText={fieldState.error?.message}
+                    inputProps={{ maxLength: 64 }}
+                    label="Title"
+                    onChange={field.onChange}
+                    placeholder="Enter a title for your ticket."
+                    required
+                    value={summary}
                   />
-                  {!['general', 'none'].includes(entityType) && (
-                    <>
-                      <Autocomplete
-                        onChange={(e, id) =>
-                          setEntityID(id ? String(id?.value) : '')
-                        }
-                        data-qa-ticket-entity-id
-                        disabled={entityOptions.length === 0}
-                        errorText={entityError || inputError}
-                        inputValue={entityInputValue}
-                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
-                        loading={areEntitiesLoading}
-                        onInputChange={(e, value) => setEntityInputValue(value)}
-                        options={entityOptions}
-                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                        value={selectedEntity}
-                      />
-                      {!areEntitiesLoading && entityOptions.length === 0 ? (
-                        <FormHelperText>
-                          You don&rsquo;t have any{' '}
-                          {entityIdToNameMap[entityType]}s on your account.
-                        </FormHelperText>
-                      ) : null}
-                    </>
-                  )}
-                </React.Fragment>
-              )}
-              <TabbedReply
-                placeholder={
-                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                }
-                error={descriptionError}
-                handleChange={handleDescriptionInputChange}
-                innerClass={classes.innerReply}
-                required
-                rootClass={classes.rootReply}
-                value={description}
+                )}
+                control={form.control}
+                name="summary"
               />
+              {hasSeverityCapability && (
+                <Controller
+                  render={({ field }) => (
+                    <Autocomplete
+                      onChange={(e, severity) =>
+                        field.onChange(
+                          severity !== null ? severity.value : undefined
+                        )
+                      }
+                      textFieldProps={{
+                        tooltipPosition: 'right',
+                        tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
+                      }}
+                      autoHighlight
+                      data-qa-ticket-severity
+                      label="Severity"
+                      options={SEVERITY_OPTIONS}
+                      sx={{ maxWidth: 'initial' }}
+                      value={selectedSeverityOption ?? null}
+                    />
+                  )}
+                  control={form.control}
+                  name="selectedSeverity"
+                />
+              )}
+            </>
+          )}
+          {ticketType === 'smtp' && <SupportTicketSMTPFields />}
+          {ticketType === 'accountLimit' && (
+            <SupportTicketAccountLimitFields
+              prefilledFormPayloadValues={prefilledFormPayloadValues}
+            />
+          )}
+          {(!ticketType || ticketType === 'general') && (
+            <>
+              {props.hideProductSelection ? null : (
+                <SupportTicketProductSelectionFields />
+              )}
+              <Box mt={1}>
+                <Controller
+                  render={({ field, fieldState }) => (
+                    <TabbedReply
+                      placeholder={
+                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
+                      }
+                      error={fieldState.error?.message}
+                      handleChange={field.onChange}
+                      required
+                      value={description}
+                    />
+                  )}
+                  control={form.control}
+                  name="description"
+                />
+              </Box>
               <Accordion
-                detailProps={{ className: classes.expPanelSummary }}
+                detailProps={{ sx: { p: 0.25 } }}
                 heading="Formatting Tips"
+                summaryProps={{ sx: { paddingX: 0.25 } }}
+                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
               >
                 <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
-            </React.Fragment>
+              {form.formState.errors.root && (
+                <Notice
+                  data-qa-notice
+                  spacingTop={16}
+                  text={form.formState.errors.root.message}
+                  variant="error"
+                />
+              )}
+            </>
           )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'submit',
-              disabled: !requirementsMet,
               label: 'Open Ticket',
               loading: submitting,
-              onClick: onSubmit,
+              onClick: handleSubmit,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
-              onClick: onCancel,
+              onClick: handleCancel,
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />
-        </React.Fragment>
-      )}
-    </Dialog>
+        </Dialog>
+      </form>
+    </FormProvider>
   );
 };

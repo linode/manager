@@ -1,33 +1,33 @@
-import {
-  Account,
-  Invoice,
-  InvoiceItem,
-  Payment,
-} from '@linode/api-v4/lib/account';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
 
-import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { FlagSet, TaxDetail } from 'src/featureFlags';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';
 import {
-  PdfResult,
   createFooter,
   createInvoiceItemsTable,
   createInvoiceTotalsTable,
   createPaymentsTable,
   createPaymentsTotalsTable,
   dateConversion,
+  getRemitAddress,
   invoiceCreatedAfterDCPricingLaunch,
   pageMargin,
 } from './utils';
 
+import type { PdfResult } from './utils';
 import type { Region } from '@linode/api-v4';
+import type {
+  Account,
+  Invoice,
+  InvoiceItem,
+  Payment,
+} from '@linode/api-v4/lib/account';
+import type { FlagSet, TaxDetail } from 'src/featureFlags';
 
 const baseFont = 'helvetica';
 
@@ -64,22 +64,7 @@ const addLeftHeader = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const getRemitAddress = (isAkamaiBilling: boolean) => {
-    if (!isAkamaiBilling) {
-      return ADDRESSES.linode;
-    }
-    // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
-    if (country === 'US') {
-      ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
-      return ADDRESSES.linode;
-    }
-    if (['CA'].includes(country)) {
-      return ADDRESSES.akamai.us;
-    }
-    return ADDRESSES.akamai.international;
-  };
-
-  const remitAddress = getRemitAddress(isAkamaiBilling);
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   addLine(remitAddress.entity);
   addLine(remitAddress.address1);
@@ -98,17 +83,29 @@ const addLeftHeader = (
     doc.setFont(baseFont, 'normal');
 
     if (countryTax) {
-      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+      const { tax_id, tax_ids, tax_name } = countryTax;
+
+      addLine(`${tax_name}: ${tax_id}`);
+
+      if (tax_ids?.B2B) {
+        const { tax_id: b2bTaxId, tax_name: b2bTaxName } = tax_ids.B2B;
+        addLine(`${b2bTaxName}: ${b2bTaxId}`);
+      }
     }
     /**
-     * M3-7847 Add Akamai's Japanese QI System ID to Japanese Invoices.
+     * [M3-7847, M3-8008] Add Akamai's Japanese QI System ID to Japanese Invoices.
      * Since LD automatically serves Tax data based on the user's
      * we can check on qi_registration field to render QI Registration.
      * */
     if (countryTax && countryTax.qi_registration) {
-      const line = `QI Registration # ${countryTax.qi_registration}`;
-      addLine(line);
+      const qiRegistration = `QI Registration # ${countryTax.qi_registration}`;
+      addLine(qiRegistration);
     }
+
+    if (countryTax?.tax_info) {
+      addLine(countryTax.tax_info);
+    }
+
     if (provincialTax) {
       addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
     }
@@ -248,6 +245,7 @@ export const printInvoice = async (
      * as of 2/20/2020 we have the following cases:
      *
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
+     *  - [M3-8277] For EU customers, invoices will include VAT for B2C transactions and exclude VAT for B2B transactions. Both VAT numbers will be shown on the invoice template for EU countries.
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
     const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
@@ -288,7 +286,10 @@ export const printInvoice = async (
         doc,
         Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12,
         {
-          text: `Invoice: #${invoiceId}`,
+          text:
+            account.country === 'AE'
+              ? `Tax Invoice: #${invoiceId}`
+              : `Invoice: #${invoiceId}`,
         }
       );
 

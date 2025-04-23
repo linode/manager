@@ -1,31 +1,44 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { Tabs } from 'src/components/Tabs/Tabs';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Tab } from './Tab';
 
 describe('Tab Component', () => {
   it('renders tab with children', () => {
-    renderWithTheme(<Tab>Hello Tab</Tab>);
+    renderWithTheme(
+      <Tabs>
+        <Tab>Hello Tab</Tab>
+      </Tabs>
+    );
 
     const tabElement = screen.getByText('Hello Tab');
     expect(tabElement).toBeInTheDocument();
   });
 
   it('applies styles correctly', () => {
-    renderWithTheme(<Tab>Hello Tab</Tab>);
+    renderWithTheme(
+      <Tabs>
+        <Tab>Hello Tab</Tab>
+      </Tabs>
+    );
 
     const tabElement = screen.getByText('Hello Tab');
 
     expect(tabElement).toHaveStyle(`
       display: inline-flex;
-      color: rgb(54, 131, 220);
+      color: rgb(52, 52, 56);
     `);
   });
 
   it('handles disabled state', () => {
-    renderWithTheme(<Tab disabled>Click Me</Tab>);
+    renderWithTheme(
+      <Tabs>
+        <Tab disabled>Click Me</Tab>
+      </Tabs>
+    );
 
     const tabElement = screen.getByText('Click Me');
 

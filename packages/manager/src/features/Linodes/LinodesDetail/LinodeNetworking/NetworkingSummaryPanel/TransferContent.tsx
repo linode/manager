@@ -1,10 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Notice } from 'src/components/Notice/Notice';
 
 import {
   StyledLinodeUsage,
@@ -61,11 +60,10 @@ export const TransferContent = (props: ContentProps) => {
   if (error) {
     return (
       <Notice
+        spacingBottom={0}
         text={
           'Network transfer information for this Linode is currently unavailable.'
         }
-        important
-        spacingBottom={0}
         variant="error"
       />
     );
@@ -73,7 +71,12 @@ export const TransferContent = (props: ContentProps) => {
 
   if (loading) {
     return (
-      <Grid container justifyContent="center">
+      <Grid
+        container
+        sx={{
+          justifyContent: 'center',
+        }}
+      >
         <Grid>
           <CircleProgress size="sm" />
         </Grid>
@@ -90,32 +93,30 @@ export const TransferContent = (props: ContentProps) => {
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      <>
-        <StyledLinodeUsage>
-          <span>
-            {linodeLabel} ({linodeUsedInGB} GB - {Math.ceil(linodeUsagePercent)}
-            %)
-          </span>
-        </StyledLinodeUsage>
-        <StyledPoolUsage>
-          <span>
-            {isDynamicPricingDC
-              ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
-                  totalUsagePercent
-                )}%)`
-              : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
-                  totalUsagePercent
-                )}%)`}
-          </span>
-        </StyledPoolUsage>
-        <StyledRemainingPoolUsage>
-          <span>
-            {isDynamicPricingDC
-              ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
-              : `Global Pool Remaining (${remainingInGB} GB)`}
-          </span>
-        </StyledRemainingPoolUsage>
-      </>
+      <StyledLinodeUsage>
+        <span>
+          {linodeLabel} ({linodeUsedInGB} GB - {Math.ceil(linodeUsagePercent)}
+          %)
+        </span>
+      </StyledLinodeUsage>
+      <StyledPoolUsage>
+        <span>
+          {isDynamicPricingDC
+            ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
+                totalUsagePercent
+              )}%)`
+            : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
+                totalUsagePercent
+              )}%)`}
+        </span>
+      </StyledPoolUsage>
+      <StyledRemainingPoolUsage>
+        <span>
+          {isDynamicPricingDC
+            ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
+            : `Global Pool Remaining (${remainingInGB} GB)`}
+        </span>
+      </StyledRemainingPoolUsage>
     </div>
   );
 };

@@ -2,35 +2,24 @@
  * @file Integration tests for Placement Group update label flows.
  */
 
+import { mockGetAccount } from 'support/intercepts/account';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { randomLabel, randomNumber } from 'support/util/random';
-import {
+  mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUpdatePlacementGroup,
   mockUpdatePlacementGroupError,
 } from 'support/intercepts/placement-groups';
-import { accountFactory, placementGroupFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
-import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
+import { randomLabel, randomNumber } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { accountFactory, placementGroupFactory } from 'src/factories';
 
 const mockAccount = accountFactory.build();
 
 describe('Placement Group update label flow', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount);
   });
 
@@ -47,12 +36,12 @@ describe('Placement Group update label flow', () => {
 
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      label: randomLabel(),
-      region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      label: randomLabel(),
       members: [],
+      placement_group_policy: 'flexible',
+      placement_group_type: 'anti_affinity:local',
+      region: mockPlacementGroupCompliantRegion.id,
     });
 
     const mockPlacementGroupUpdated = {
@@ -61,6 +50,7 @@ describe('Placement Group update label flow', () => {
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     mockUpdatePlacementGroup(
       mockPlacementGroup.id,
@@ -86,8 +76,10 @@ describe('Placement Group update label flow', () => {
       cy.findByText('Edit').should('be.visible');
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
-        .click()
-        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
+        .click();
+      cy.focused().type(
+        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
+      );
 
       cy.findByText('Edit').should('be.visible').click();
 
@@ -113,12 +105,12 @@ describe('Placement Group update label flow', () => {
 
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
-      label: randomLabel(),
-      region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      label: randomLabel(),
       members: [],
+      placement_group_policy: 'flexible',
+      placement_group_type: 'anti_affinity:local',
+      region: mockPlacementGroupCompliantRegion.id,
     });
 
     const mockPlacementGroupUpdated = {
@@ -127,6 +119,7 @@ describe('Placement Group update label flow', () => {
     };
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     mockUpdatePlacementGroupError(
       mockPlacementGroup.id,
@@ -150,8 +143,10 @@ describe('Placement Group update label flow', () => {
       cy.findByText('Edit').should('be.visible');
       cy.findByDisplayValue(mockPlacementGroup.label)
         .should('be.visible')
-        .click()
-        .type(`{selectall}{backspace}${mockPlacementGroupUpdated.label}`);
+        .click();
+      cy.focused().type(
+        `{selectall}{backspace}${mockPlacementGroupUpdated.label}`
+      );
 
       cy.findByText('Edit').should('be.visible').click();
 

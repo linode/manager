@@ -1,19 +1,16 @@
+import { subnetFactory, vpcFactory } from '@src/factories';
 import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
-  mockGetVPCs,
+  MOCK_DELETE_VPC_ERROR,
   mockDeleteVPC,
   mockDeleteVPCError,
+  mockGetVPC,
+  mockGetVPCs,
   mockUpdateVPC,
-  MOCK_DELETE_VPC_ERROR,
 } from 'support/intercepts/vpc';
-import { subnetFactory, vpcFactory } from '@src/factories';
 import { ui } from 'support/ui';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+
 import { VPC_LABEL } from 'src/features/VPCs/constants';
 
 // TODO Remove feature flag mocks when feature flag is removed from codebase.
@@ -22,15 +19,13 @@ describe('VPC landing page', () => {
    * - Confirms that VPCs are listed on the VPC landing page.
    */
   it('lists VPC instances', () => {
-    const mockVPCs = vpcFactory.buildList(5);
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
+    const mockVPCs = vpcFactory.buildList(5, {
+      region: chooseRegion().id,
+    });
     mockGetVPCs(mockVPCs).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Confirm each VPC is listed with expected data.
     mockVPCs.forEach((mockVPC) => {
@@ -58,14 +53,10 @@ describe('VPC landing page', () => {
    * - Confirms VPC landing page empty state is shown when no VPCs are present.
    */
   it('shows empty state when there are no VPCs', () => {
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs([]).as('getVPCs');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Confirm that empty state is shown and that each section is present.
     cy.findByText(VPC_LABEL).should('be.visible');
@@ -92,32 +83,29 @@ describe('VPC landing page', () => {
   it('can update and delete VPCs from VPC landing page', () => {
     const mockVPCs = [
       vpcFactory.build({
+        description: randomPhrase(),
         label: randomLabel(),
         region: chooseRegion().id,
-        description: randomPhrase(),
       }),
       vpcFactory.build({
+        description: randomPhrase(),
         label: randomLabel(),
         region: chooseRegion().id,
-        description: randomPhrase(),
       }),
     ];
 
     const mockUpdatedVPC = {
       ...mockVPCs[1],
-      label: randomLabel(),
       description: randomPhrase(),
+      label: randomLabel(),
     };
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs([mockVPCs[1]]).as('getVPCs');
+    mockGetVPC(mockVPCs[1]).as('getVPC');
     mockUpdateVPC(mockVPCs[1].id, mockUpdatedVPC).as('updateVPC');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Find mocked VPC and click its "Edit" button.
     cy.findByText(mockVPCs[1].label)
@@ -136,14 +124,14 @@ describe('VPC landing page', () => {
         cy.findByLabelText('Label')
           .should('be.visible')
           .should('have.value', mockVPCs[1].label)
-          .clear()
-          .type(mockUpdatedVPC.label);
+          .clear();
+        cy.focused().type(mockUpdatedVPC.label);
 
         cy.findByLabelText('Description')
           .should('be.visible')
           .should('have.value', mockVPCs[1].description)
-          .clear()
-          .type(mockUpdatedVPC.description);
+          .clear();
+        cy.focused().type(mockUpdatedVPC.description);
 
         // TODO Add interactions/assertions for region selection once feature is available.
         ui.button
@@ -179,10 +167,11 @@ describe('VPC landing page', () => {
 
     // Delete VPCs Flow
     mockGetVPCs(mockVPCs).as('getVPCs');
+    mockGetVPC(mockVPCs[0]).as('getVPC');
     mockDeleteVPC(mockVPCs[0].id).as('deleteVPC');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Delete the first VPC instance
     cy.findByText(mockVPCs[0].label)
@@ -200,10 +189,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[0].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.focused().type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')
@@ -234,10 +221,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[1].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[1].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.focused().type(mockVPCs[1].label);
 
         ui.button
           .findByTitle('Delete')
@@ -271,15 +256,12 @@ describe('VPC landing page', () => {
       }),
     ];
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPCs(mockVPCs).as('getVPCs');
+    mockGetVPC(mockVPCs[0]).as('getVPC');
     mockDeleteVPCError(mockVPCs[0].id).as('deleteVPCError');
 
     cy.visitWithLogin('/vpcs');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPCs']);
+    cy.wait('@getVPCs');
 
     // Try to delete VPC
     cy.findByText(mockVPCs[0].label)
@@ -298,10 +280,8 @@ describe('VPC landing page', () => {
       .findByTitle(`Delete VPC ${mockVPCs[0].label}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('VPC Label')
-          .should('be.visible')
-          .click()
-          .type(mockVPCs[0].label);
+        cy.findByLabelText('VPC Label').should('be.visible').click();
+        cy.focused().type(mockVPCs[0].label);
 
         ui.button
           .findByTitle('Delete')
@@ -326,6 +306,7 @@ describe('VPC landing page', () => {
           .click();
       });
 
+    mockGetVPC(mockVPCs[1]).as('getVPC');
     cy.findByText(mockVPCs[1].label)
       .should('be.visible')
       .closest('tr')

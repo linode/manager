@@ -1,14 +1,11 @@
-import { Stack } from 'src/components/Stack';
+import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';
-import { Box } from 'src/components/Box';
 
 interface Props {
   /** The username of the Linode user who created the ticket. */

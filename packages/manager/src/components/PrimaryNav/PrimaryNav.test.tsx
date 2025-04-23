@@ -1,14 +1,18 @@
+import { queryClientFactory } from '@linode/queries';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { queryClientFactory } from 'src/queries/base';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
 
+import type { ManagerPreferences } from '@linode/utilities';
+import type { Flags } from 'src/featureFlags';
+
 const props = {
   closeMenu: vi.fn(),
+  desktopMenuToggle: vi.fn(),
   isCollapsed: false,
   toggleSpacing: vi.fn(),
   toggleTheme: vi.fn(),
@@ -18,6 +22,20 @@ const queryClient = queryClientFactory();
 const queryString = 'menu-item-Managed';
 
 describe('PrimaryNav', () => {
+  const preference: ManagerPreferences['collapsedSideNavProductFamilies'] = [];
+
+  const queryMocks = vi.hoisted(() => ({
+    usePreferences: vi.fn().mockReturnValue({}),
+  }));
+
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
+    return {
+      ...actual,
+      usePreferences: queryMocks.usePreferences,
+    };
+  });
+
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
       http.get('*/account/maintenance', () => {
@@ -54,7 +72,11 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item if the user has the account capability', async () => {
+  it('should show Databases menu item if the user has the account capability V1', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -65,16 +87,128 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+    const flags: Partial<Flags> = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
 
-    const databaseNavItem = await findByText('Databases');
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const databaseNavItem = await findByTestId('menu-item-Databases');
+
+    expect(databaseNavItem).toBeVisible();
+    expect(queryByTestId('betaChip')).toBeNull();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases Beta'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags: Partial<Flags> = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const databaseNavItem = await findByTestId('menu-item-Databases');
+    const betaChip = await findByTestId('betaChip');
+
+    expect(databaseNavItem).toBeVisible();
+    expect(betaChip).toBeVisible();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags: Partial<Flags> = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const databaseNavItem = await findByTestId('menu-item-Databases');
+
+    expect(databaseNavItem).toBeVisible();
+    expect(queryByTestId('betaChip')).toBeNull();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2', async () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases Beta'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags: Partial<Flags> = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const databaseNavItem = await findByTestId('menu-item-Databases');
 
     expect(databaseNavItem).toBeVisible();
   });
 
-  it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {
+  it('should show Metrics and Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag has any of the properties true', async () => {
     const account = accountFactory.build({
-      capabilities: [],
+      capabilities: ['Akamai Cloud Pulse'],
     });
 
     server.use(
@@ -83,18 +217,37 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: true },
-    });
+    const flags = {
+      aclp: {
+        beta: true,
+        enabled: true,
+      },
+      aclpAlerting: {
+        alertDefinitions: true,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
 
-    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
+    const { findAllByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
-    expect(loadbalancerNavItem).toBeVisible();
+    const monitorMetricsDisplayItem = await findByText('Metrics');
+    const monitorAlertsDisplayItem = await findByText('Alerts');
+    const betaChip = await findAllByTestId('betaChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeVisible();
+    expect(betaChip).toHaveLength(2);
   });
 
-  it('should show ACLB if the feature flag is off, but the account has the capability', async () => {
+  it('should not show Metrics and Alerts menu items if the user has the account capability but the aclp feature flag is not enabled', async () => {
     const account = accountFactory.build({
-      capabilities: ['Akamai Cloud Load Balancer'],
+      capabilities: ['Akamai Cloud Pulse'],
     });
 
     server.use(
@@ -103,18 +256,36 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: false },
-    });
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: false,
+      },
+      aclpAlerting: {
+        alertDefinitions: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
 
-    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
+    const { queryByTestId, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
-    expect(loadbalancerNavItem).toBeVisible();
+    const monitorMetricsDisplayItem = queryByText('Metrics');
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+
+    expect(monitorMetricsDisplayItem).toBeNull();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
   });
 
-  it('should not show ACLB if the feature flag is off and there is no account capability', async () => {
+  it('should not show Alerts menu items if the user has the account capability, aclp feature flag is enabled, and aclpAlerting feature flag does not have any of the properties true', async () => {
     const account = accountFactory.build({
-      capabilities: [],
+      capabilities: ['Akamai Cloud Pulse'],
     });
 
     server.use(
@@ -123,10 +294,31 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: false },
-    });
+    const flags = {
+      aclp: {
+        beta: true,
+        enabled: true,
+      },
+      aclpAlerting: {
+        alertDefinitions: false,
+        notificationChannels: false,
+        recentActivity: false,
+      },
+    };
 
-    expect(queryByText('Cloud Load Balancers')).not.toBeInTheDocument();
+    const { findByTestId, findByText, queryByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const monitorMetricsDisplayItem = await findByText('Metrics'); // Metrics should be visible
+    const monitorAlertsDisplayItem = queryByText('Alerts');
+    const betaChip = await findByTestId('betaChip');
+
+    expect(monitorMetricsDisplayItem).toBeVisible();
+    expect(monitorAlertsDisplayItem).toBeNull();
+    expect(betaChip).toBeVisible();
   });
 });

@@ -1,3 +1,5 @@
+import type { BaseQueryParams, LinodeCreateType } from '@linode/utilities';
+
 export type DialogType =
   | 'delete'
   | 'detach_vlan'
@@ -7,8 +9,14 @@ export type DialogType =
   | 'rescue'
   | 'resize'
   | 'upgrade_volumes';
-export type OpenDialog = (
-  type: DialogType,
-  linodeID: number,
-  linodeLabel?: string
-) => void;
+
+export interface LinodeCreateQueryParams extends BaseQueryParams {
+  type: LinodeCreateType;
+}
+
+export interface LinodeConfigAndDiskQueryParams extends BaseQueryParams {
+  selectedDisk: string;
+  selectedLinode: string;
+}
+
+export type BooleanString = 'false' | 'true';

@@ -1,15 +1,14 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { AxiosProgressEvent } from 'axios';
+import { Button } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { FileRejection, useDropzone } from 'react-dropzone';
-import { useQueryClient } from '@tanstack/react-query';
+import { useDropzone } from 'react-dropzone';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
-import { updateBucket } from 'src/queries/objectStorage';
+import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { uploadObject } from '../../../features/ObjectStorage/requests';
 import { FileUpload } from '../FileUpload';
@@ -17,7 +16,6 @@ import {
   MAX_FILE_SIZE_IN_BYTES,
   MAX_NUM_UPLOADS,
   MAX_PARALLEL_UPLOADS,
-  ObjectUploaderAction,
   curriedObjectUploaderReducer,
   defaultState,
   pathOrFileName,
@@ -28,6 +26,10 @@ import {
   StyledFileUploadsContainer,
   useStyles,
 } from './ObjectUploader.styles';
+
+import type { ObjectUploaderAction } from '../reducer';
+import type { AxiosProgressEvent } from 'axios';
+import type { FileRejection } from 'react-dropzone';
 
 interface Props {
   /**
@@ -115,7 +117,7 @@ export const ObjectUploader = React.memo((props: Props) => {
   // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
     debounce(3000, false, () =>
-      updateBucket(clusterId, bucketName, queryClient)
+      fetchBucketAndUpdateCache(clusterId, bucketName, queryClient)
     )
   ).current;
 
@@ -298,16 +300,15 @@ export const ObjectUploader = React.memo((props: Props) => {
   );
 });
 
-export const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: AxiosProgressEvent) => {
-  dispatch({
-    data: {
-      percentComplete:
-        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
-    },
-    filesToUpdate: [fileName],
-    type: 'UPDATE_FILES',
-  });
-};
+export const onUploadProgressFactory =
+  (dispatch: (value: ObjectUploaderAction) => void, fileName: string) =>
+  (progressEvent: AxiosProgressEvent) => {
+    dispatch({
+      data: {
+        percentComplete:
+          (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+      },
+      filesToUpdate: [fileName],
+      type: 'UPDATE_FILES',
+    });
+  };

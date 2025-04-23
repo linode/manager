@@ -12,10 +12,12 @@ export const Help = () => {
       <IconButton
         accessibleAriaLabel="Help & Support"
         component={Link}
+        data-testid="top-menu-help-and-support"
+        disableRipple
         sx={topMenuIconButtonSx}
         to="/support"
       >
-        <HelpSVGIcon height="20px" width="20px" />
+        <HelpSVGIcon height="24px" width="24px" />
       </IconButton>
     </TopMenuTooltip>
   );

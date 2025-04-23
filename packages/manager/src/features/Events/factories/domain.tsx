@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { EventLink } from '../EventLink';
-import { EventMessage } from '../EventMessage';
+import { FormattedEventMessage } from '../FormattedEventMessage';
 
 import type { PartialEventMap } from '../types';
 
@@ -30,12 +30,14 @@ export const domain: PartialEventMap<'domain'> = {
     ),
   },
   domain_record_create: {
-    notification: (e) => (
-      <>
-        <EventMessage message={e.message} /> has been <strong>added</strong> to{' '}
-        <EventLink event={e} to="entity" />.
-      </>
-    ),
+    notification: (e) => {
+      return (
+        <>
+          <FormattedEventMessage fallback="A record" message={e.message} /> has
+          been <strong>added</strong> to <EventLink event={e} to="entity" />.
+        </>
+      );
+    },
   },
   domain_record_delete: {
     notification: (e) => (
@@ -48,16 +50,16 @@ export const domain: PartialEventMap<'domain'> = {
   domain_record_update: {
     notification: (e) => (
       <>
-        <EventMessage message={e.message} /> has been <strong>updated</strong>{' '}
-        for <EventLink event={e} to="entity" />.
+        <FormattedEventMessage message={e.message} /> has been{' '}
+        <strong>updated</strong> for <EventLink event={e} to="entity" />.
       </>
     ),
   },
   domain_record_updated: {
     notification: (e) => (
       <>
-        <EventMessage message={e.message} /> has been <strong>updated</strong>{' '}
-        for <EventLink event={e} to="entity" />.
+        <FormattedEventMessage message={e.message} /> has been{' '}
+        <strong>updated</strong> for <EventLink event={e} to="entity" />.
       </>
     ),
   },

@@ -2,12 +2,12 @@
   "compilerOptions": {
     /* Language and Environment */
     "jsx": "react",
-    "lib": ["dom", "es2020"],
+    "lib": ["dom", "dom.iterable", "es2020"],
     "target": "es5",
 
     /* Modules */
     "baseUrl": ".",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
       "src/*": ["src/*"]
     },
@@ -35,10 +35,6 @@
     "strictNullChecks": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"],
 
-    /* Goodluck... */
-    "ignoreDeprecations": "5.0",
-    "suppressImplicitAnyIndexErrors": true,
-
     /* Completeness */
     "skipLibCheck": true,
 
@@ -47,6 +43,6 @@
   },
   "include": [
     "src",
-    "package.json"
+    "package.json",
   ]
 }

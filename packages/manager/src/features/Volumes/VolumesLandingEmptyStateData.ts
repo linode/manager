@@ -22,16 +22,17 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Block Storage',
-      to: 'https://www.linode.com/docs/products/storage/block-storage/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/block-storage',
     },
     {
       text: 'Create and Manage Block Storage Volumes',
-      to: 'https://www.linode.com/docs/products/storage/block-storage/guides/',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/manage-block-storage-volumes',
     },
     {
       text: 'Configure a Volume on a Compute Instance',
       to:
-        'https://www.linode.com/docs/products/storage/block-storage/guides/configure-volume/',
+        'https://techdocs.akamai.com/cloud-computing/docs/configure-and-mount-a-volume',
     },
   ],
   moreInfo: {

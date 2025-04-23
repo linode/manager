@@ -1,9 +1,5 @@
+import { Chip, StyledLinkButton, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Chip } from 'src/components/Chip';
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import { StyledLinkButton } from '../Button/StyledLinkButton';
 
 import type { TagProps } from './Tag';
 
@@ -14,10 +10,10 @@ export const StyledChip = styled(Chip, {
     '&:hover': {
       borderBottomRightRadius: props.onDelete && 0,
       borderTopRightRadius: props.onDelete && 0,
+      color: `${theme.color.white} !important`,
     },
     borderRadius: 4,
-    color: theme.name === 'light' ? '#3a3f46' : '#fff',
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
   },
@@ -28,29 +24,26 @@ export const StyledChip = styled(Chip, {
     borderTopRightRadius: 0,
     padding: '7px 10px',
   },
-  '&:focus': {
-    ['& .StyledDeleteButton']: {
+  '&:focus, &:hover, &.Mui-focusVisible': {
+    ['& .MuiChip-deleteIcon']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButton,
-  },
-  // Overrides MUI chip default styles so these appear as separate elements.
-  '&:hover': {
-    ['& .StyledDeleteButton']: {
-      color: theme.color.tagIcon,
+    ['& .MuiChip-label']: {
+      color: theme.color.tagButtonText,
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
   },
   fontSize: '0.875rem',
   height: 30,
   padding: 0,
+  transition: 'none',
   ...(props.colorVariant === 'blue' && {
     '& > span': {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        color: theme.tokens.color.Neutrals.White,
       },
-      color: 'white',
+      color: theme.tokens.color.Neutrals.White,
     },
 
     backgroundColor: theme.palette.primary.main,
@@ -58,15 +51,16 @@ export const StyledChip = styled(Chip, {
   ...(props.colorVariant === 'lightBlue' && {
     '& > span': {
       '&:focus': {
-        backgroundColor: theme.color.tagButton,
-        color: theme.color.black,
+        backgroundColor: theme.color.tagButtonBg,
+        color: theme.color.white,
       },
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        backgroundColor: theme.color.tagButtonBgHover,
+        color: theme.color.tagButtonTextHover,
       },
     },
-    backgroundColor: theme.color.tagButton,
+    backgroundColor: theme.color.tagButtonBg,
+    color: theme.color.tagButtonText,
   }),
 }));
 
@@ -74,25 +68,24 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   label: 'StyledDeleteButton',
 })(({ theme }) => ({
   '& svg': {
-    borderRadius: 0,
+    borderRadius: theme.tokens.alias.Radius.Default,
     color: theme.color.tagIcon,
     height: 15,
     width: 15,
   },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    color: theme.color.black,
-  },
-  '&:hover': {
+  '&:focus, &:hover': {
     '& svg': {
-      color: 'white',
+      color: theme.color.white,
     },
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    backgroundColor: `${theme.color.buttonPrimaryHover} !important`,
   },
   borderBottomRightRadius: 3,
-  borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
-  borderRadius: 0,
+  borderLeft: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals.White
+      : theme.tokens.color.Neutrals[100]
+  }`,
+  borderRadius: theme.tokens.alias.Radius.Default,
   borderTopRightRadius: 3,
   height: 30,
   margin: 0,

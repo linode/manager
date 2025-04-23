@@ -1,9 +1,11 @@
+import { formatDuration } from '@linode/utilities';
 import { Duration } from 'luxon';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { parseAPIDate } from 'src/utilities/date';
 
+import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
@@ -44,6 +46,18 @@ export function getEventMessage(
 
   return message ? message(event as Event) : null;
 }
+
+/**
+ * The event username Getter.
+ * Returns the username from event or 'Linode' if username is null or excluded by action.
+ */
+export const getEventUsername = (event: Event) => {
+  if (event.username && !ACTIONS_WITHOUT_USERNAMES.includes(event.action)) {
+    return event.username;
+  }
+
+  return 'Akamai';
+};
 
 /**
  * Format the time remaining for an event.
@@ -99,7 +113,8 @@ const shouldShowEventProgress = (event: Event): boolean => {
 };
 
 interface ProgressEventDisplay {
-  progressEventDisplay: null | string;
+  progressEventDate: string;
+  progressEventDuration: string;
   showProgress: boolean;
 }
 
@@ -111,16 +126,20 @@ interface ProgressEventDisplay {
  */
 export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
   const showProgress = shouldShowEventProgress(event);
-  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const startDate = parseAPIDate(event.created).toRelative();
+  const progressEventDate = showProgress ? `Started ${startDate}` : startDate;
 
-  const progressEventDisplay = showProgress
-    ? parsedTimeRemaining
-      ? `~${parsedTimeRemaining}`
-      : `Started ${getEventTimestamp(event).toRelative()}`
-    : getEventTimestamp(event).toRelative();
+  const parsedTimeRemaining = formatEventTimeRemaining(event.time_remaining);
+  const eventDuration = event.duration
+    ? formatDuration(Duration.fromObject({ seconds: event.duration }))
+    : '-';
+  const progressEventDuration = parsedTimeRemaining
+    ? `~${parsedTimeRemaining}`
+    : eventDuration;
 
   return {
-    progressEventDisplay,
+    progressEventDate,
+    progressEventDuration,
     showProgress,
   };
 };

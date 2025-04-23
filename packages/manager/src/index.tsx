@@ -1,8 +1,8 @@
+import { queryClientFactory } from '@linode/queries';
+import { getRoot } from '@linode/utilities';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
@@ -16,10 +16,9 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import NullComponent from './components/NullComponent';
-import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
+import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-import { queryClientFactory } from './queries/base';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -27,9 +26,13 @@ const store = storeFactory();
 setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const CancelLanding = React.lazy(
-  () => import('src/features/CancelLanding/CancelLanding')
+
+const CancelLanding = React.lazy(() =>
+  import('src/features/CancelLanding/CancelLanding').then((module) => ({
+    default: module.CancelLanding,
+  }))
 );
+
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
@@ -44,7 +47,7 @@ const Main = () => {
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper>
-          <CssBaseline />
+          <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
@@ -65,7 +68,7 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  hideIconVariant={true}
+                  hideIconVariant={false}
                   maxSnack={3}
                 >
                   <Switch>
@@ -80,24 +83,21 @@ const Main = () => {
             </Router>
           </React.Suspense>
         </LinodeThemeWrapper>
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          toggleButtonProps={{ style: { marginLeft: '3em' } }}
-        />
       </QueryClientProvider>
     </ReduxStoreProvider>
   );
 };
 
 async function loadApp() {
-  if (shouldEnableDevTools) {
-    // If devtools are enabled, load them before we load the main app.
-    // This ensures the MSW is setup before we start making API calls.
-    await loadDevTools(store);
+  if (shouldLoadDevTools) {
+    await loadDevTools(store, queryClient);
   }
+
   const container = document.getElementById('root');
-  const root = createRoot(container!);
-  root.render(<Main />);
+  if (container) {
+    const root = getRoot(container);
+    root.render(<Main />);
+  }
 }
 
 loadApp();

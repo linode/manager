@@ -1,17 +1,20 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import styled from '@emotion/styled';
+import { usePreferences } from '@linode/queries';
+import { Box, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
+import { TableRow } from 'src/components/TableRow';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import NodeActionMenu from './NodeActionMenu';
-import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface NodeRow {
   instanceId?: number;
@@ -42,6 +45,9 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   } = props;
 
   const { data: events } = useInProgressEvents();
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
 
   const recentEvent = events?.find(
     (event) =>
@@ -57,8 +63,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     nodeStatus === 'not_ready'
       ? 'other'
       : nodeReadyAndInstanceRunning
-      ? 'active'
-      : 'inactive';
+        ? 'active'
+        : 'inactive';
 
   const displayLabel = label ?? typeLabel;
 
@@ -70,9 +76,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayIP = ip ?? '';
 
   return (
-    <StyledTableRow data-qa-node-row={nodeId}>
+    <TableRow data-qa-node-row={nodeId}>
       <TableCell>
-        <Grid alignItems="center" container wrap="nowrap">
+        <Grid
+          sx={{
+            alignItems: 'center',
+          }}
+          container
+          wrap="nowrap"
+        >
           <Grid>
             <Typography>
               {linodeLink ? (
@@ -100,7 +112,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell noWrap>
         {linodeError ? (
           <Typography
             sx={(theme) => ({
@@ -110,10 +122,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
             Error retrieving IP
           </Typography>
         ) : displayIP.length > 0 ? (
-          <>
-            <CopyTooltip copyableText text={displayIP} />
+          <Box alignItems="center" display="flex" gap={0.5}>
+            <CopyTooltip
+              copyableText
+              masked={Boolean(maskSensitiveDataPreference)}
+              maskedTextLength="ipv4"
+              text={displayIP}
+            />
             <StyledCopyTooltip text={displayIP} />
-          </>
+          </Box>
         ) : null}
       </TableCell>
       <TableCell>
@@ -123,6 +140,15 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           openRecycleNodeDialog={openRecycleNodeDialog}
         />
       </TableCell>
-    </StyledTableRow>
+    </TableRow>
   );
+});
+
+export const StyledCopyTooltip = styled(CopyTooltip, {
+  label: 'StyledCopyTooltip',
+})({
+  '& svg': {
+    height: `12px`,
+    width: `12px`,
+  },
 });

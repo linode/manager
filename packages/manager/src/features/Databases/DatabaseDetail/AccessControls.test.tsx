@@ -30,4 +30,24 @@ describe('Access Controls', () => {
       screen.getByTestId('ip-removal-confirmation-warning')
     ).toBeInTheDocument();
   });
+
+  it.each([
+    ['disable', true],
+    ['enable', false],
+  ])(
+    'should %s "Manage Access" button when disabled is %s',
+    (_, isDisabled) => {
+      const database = databaseFactory.build();
+      const { getByRole } = renderWithTheme(
+        <AccessControls database={database} disabled={isDisabled} />
+      );
+      const button = getByRole('button', { name: 'Manage Access' });
+
+      if (isDisabled) {
+        expect(button).toBeDisabled();
+      } else {
+        expect(button).toBeEnabled();
+      }
+    }
+  );
 });

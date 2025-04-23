@@ -1,6 +1,6 @@
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
 
-import { ProductInformationBannerFlag } from 'src/featureFlags';
+import type { ProductInformationBannerFlag } from 'src/featureFlags';
 
 export const productInformationBannerFactory = Factory.Sync.makeFactory<ProductInformationBannerFlag>(
   {
@@ -13,6 +13,6 @@ export const productInformationBannerFactory = Factory.Sync.makeFactory<ProductI
     key: Factory.each((i) => `product-information-banner-${i}`),
     // safe
     message:
-      'Store critical data and media files with S3-Compatible Object Storage. <a target="_blank" href="https://www.linode.com/docs/products/storage/object-storage/">New Availability: Atlanta</a>',
+      'Store critical data and media files with S3-Compatible Object Storage. <a target="_blank" href="https://techdocs.akamai.com/cloud-computing/docs/object-storage">New Availability: Atlanta</a>',
   }
 );

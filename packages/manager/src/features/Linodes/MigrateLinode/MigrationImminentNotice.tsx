@@ -1,8 +1,9 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
+
+import type { Notification } from '@linode/api-v4/lib/account';
 
 interface Props {
   className?: string;

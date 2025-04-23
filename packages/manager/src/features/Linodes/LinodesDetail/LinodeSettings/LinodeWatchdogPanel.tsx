@@ -1,17 +1,17 @@
-import { Box, Stack } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Accordion,
+  Box,
+  CircleProgress,
+  FormControlLabel,
+  Notice,
+  Stack,
+  Toggle,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Notice } from 'src/components/Notice/Notice';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;
@@ -24,7 +24,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -34,13 +34,24 @@ export const LinodeWatchdogPanel = (props: Props) => {
       defaultExpanded
       heading="Shutdown Watchdog"
     >
-      <Grid alignItems="center" container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         {Boolean(error) && (
-          <Grid xs={12}>
+          <Grid size={12}>
             <Notice text={error?.[0].reason} variant="error" />
           </Grid>
         )}
-        <Grid md={2} xs={12}>
+        <Grid
+          size={{
+            md: 2,
+            xs: 12,
+          }}
+        >
           <FormControlLabel
             aria-label={
               linode?.watchdog_enabled
@@ -59,13 +70,20 @@ export const LinodeWatchdogPanel = (props: Props) => {
             label={
               <Stack alignItems="center" direction="row" spacing={1}>
                 <Box>{linode?.watchdog_enabled ? 'Enabled' : 'Disabled'}</Box>
-                <Box>{isLoading && <CircleProgress size="sm" />}</Box>
+                <Box>{isPending && <CircleProgress size="sm" />}</Box>
               </Stack>
             }
             disabled={isReadOnly}
           />
         </Grid>
-        <Grid lg={8} md={10} xl={6} xs={12}>
+        <Grid
+          size={{
+            lg: 8,
+            md: 10,
+            xl: 6,
+            xs: 12,
+          }}
+        >
           <Typography data-qa-watchdog-desc>
             Shutdown Watchdog, also known as Lassie, is a Linode Manager feature
             capable of automatically rebooting your Linode if it powers off

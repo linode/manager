@@ -1,21 +1,19 @@
+import { breakpoints } from '@linode/ui';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypeFactory } from 'src/factories/types';
 import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
-import { breakpoints } from 'src/foundations/breakpoints';
+import { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import {
   renderWithTheme,
   resizeScreenSize,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
-import {
-  KubernetesPlanSelection,
-  KubernetesPlanSelectionProps,
-} from './KubernetesPlanSelection';
+import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 
-import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
+import type { KubernetesPlanSelectionProps } from './KubernetesPlanSelection';
 
 const planHeader = 'Dedicated 20 GB';
 const baseHourlyPrice = '$0.015';
@@ -41,6 +39,7 @@ const props: KubernetesPlanSelectionProps = {
   onSelect: vi.fn(),
   plan: PlanWithAvailability,
   selectedRegionId: 'us-east',
+  selectedTier: 'standard',
   updatePlanCount: vi.fn(),
   wholePanelIsDisabled: false,
 };

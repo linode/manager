@@ -3,6 +3,28 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 
+export const PRIVATE_IPv4_REGEX = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+
+export const CHECK_ATTEMPTS = {
+  MIN: 1,
+  MAX: 30,
+};
+
+export const CHECK_TIMEOUT = {
+  MIN: 1,
+  MAX: 30,
+};
+
+export const CHECK_INTERVAL = {
+  MIN: 2,
+  MAX: 3600,
+};
+
+const CONNECTION_THROTTLE = {
+  MIN: 0,
+  MAX: 20,
+};
+
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
@@ -16,10 +38,7 @@ export const nodeBalancerConfigNodeSchema = object({
   address: string()
     .typeError('IP address is required.')
     .required('IP address is required.')
-    .matches(
-      /^192\.168\.\d{1,3}\.\d{1,3}$/,
-      'Must be a valid private IPv4 address.'
-    ),
+    .matches(PRIVATE_IPv4_REGEX, 'Must be a valid private IPv4 address.'),
 
   port: number()
     .typeError('Port must be a number.')
@@ -32,47 +51,93 @@ export const nodeBalancerConfigNodeSchema = object({
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 
-  mode: mixed().oneOf(['accept', 'reject', 'backup', 'drain']),
+  mode: string().oneOf(['accept', 'reject', 'backup', 'drain']),
 });
 
 export const createNodeBalancerConfigSchema = object({
-  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
-  check_attempts: number(),
+  algorithm: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
+    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
+  }),
+  check_attempts: number()
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
+    .integer(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP body regex is required.'),
+    then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
-  check_interval: number().typeError('Check interval must be a number.'),
-  check_passive: boolean(),
+  check_interval: number()
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
+    .integer(),
+  check_passive: boolean().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.isFalse(), // You can't enable check_passtive with UDP
+  }),
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     }),
-  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
-  check_timeout: number().typeError('Timeout must be a number.').integer(),
+  proxy_protocol: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none']), // UDP does not support proxy_protocol
+    otherwise: (schema) => schema.oneOf(['none', 'v1', 'v2']),
+  }),
+  check_timeout: number()
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
+    .typeError('Timeout must be a number.')
+    .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
-  cipher_suite: mixed().oneOf(['recommended', 'legacy']),
+  cipher_suite: string().oneOf(['recommended', 'legacy', 'none']),
   port: number()
     .integer()
     .required('Port is required')
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: mixed().oneOf(['http', 'https', 'tcp']),
+  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
   ssl_key: string().when('protocol', {
     is: 'https',
-    then: string().required('SSL key is required when using HTTPS.'),
+    then: (schema) => schema.required('SSL key is required when using HTTPS.'),
   }),
   ssl_cert: string().when('protocol', {
     is: 'https',
-    then: string().required('SSL certificate is required when using HTTPS.'),
+    then: (schema) =>
+      schema.required('SSL certificate is required when using HTTPS.'),
   }),
-  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
+  stickiness: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
+    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
+  }),
+  udp_check_port: number().min(1).max(65535),
   nodes: array()
     .of(nodeBalancerConfigNodeSchema)
     .required()
@@ -80,45 +145,111 @@ export const createNodeBalancerConfigSchema = object({
 });
 
 export const UpdateNodeBalancerConfigSchema = object({
-  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
-  check_attempts: number(),
+  algorithm: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
+    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
+  }),
+  check_attempts: number()
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
+    .integer(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP body regex is required.'),
+    then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
-  check_interval: number().typeError('Check interval must be a number.'),
-  check_passive: boolean(),
+  check_interval: number()
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
+    .integer(),
+  check_passive: boolean().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.isFalse(), // You can't enable check_passtive with UDP
+  }),
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     }),
-  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
-  check_timeout: number().typeError('Timeout must be a number.').integer(),
+  proxy_protocol: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none']), // UDP does not support proxy_protocol
+    otherwise: (schema) => schema.oneOf(['none', 'v1', 'v2']),
+  }),
+  check_timeout: number()
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
+    .typeError('Timeout must be a number.')
+    .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
-  cipher_suite: mixed().oneOf(['recommended', 'legacy']),
+  cipher_suite: string().oneOf(['recommended', 'legacy', 'none']),
   port: number()
     .typeError('Port must be a number.')
     .integer()
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: mixed().oneOf(['http', 'https', 'tcp']),
+  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
   ssl_key: string().when('protocol', {
     is: 'https',
-    then: string().required(),
+    then: (schema) => schema.required(),
   }),
   ssl_cert: string().when('protocol', {
     is: 'https',
-    then: string().required(),
+    then: (schema) => schema.required(),
   }),
-  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
-  nodes: array().of(nodeBalancerConfigNodeSchema),
+  udp_check_port: number().min(1).max(65535),
+  stickiness: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
+    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
+  }),
 });
+
+const client_conn_throttle = number()
+  .min(
+    CONNECTION_THROTTLE.MIN,
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .max(
+    CONNECTION_THROTTLE.MAX,
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .typeError('Client Connection Throttle must be a number.');
+
+const client_udp_sess_throttle = number()
+  .min(
+    CONNECTION_THROTTLE.MIN,
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .max(
+    CONNECTION_THROTTLE.MAX,
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .typeError('UDP Session Throttle must be a number.');
 
 export const NodeBalancerSchema = object({
   label: string()
@@ -130,7 +261,11 @@ export const NodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle: number().typeError('Must be a number.'),
+  client_conn_throttle,
+
+  client_udp_sess_throttle,
+
+  tags: array(string()),
 
   region: string().required('Region is required.'),
 
@@ -176,8 +311,7 @@ export const UpdateNodeBalancerSchema = object({
       /^[a-zA-Z0-9-_]+$/,
       "Label can't contain special characters or spaces."
     ),
-
-  client_conn_throttle: number().typeError('Must be a number.'),
-
-  region: string(),
+  client_conn_throttle,
+  client_udp_sess_throttle,
+  tags: array(string()),
 });

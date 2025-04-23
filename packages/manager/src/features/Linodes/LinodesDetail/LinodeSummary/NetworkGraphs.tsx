@@ -1,20 +1,23 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
-import { Theme, styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
+import { Paper } from '@linode/ui';
+import { getMetrics } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { NetworkTimeData } from 'src/components/AreaChart/types';
-import { Box } from 'src/components/Box';
 import {
-  NetworkUnit,
   convertNetworkToUnit,
   formatBitsPerSecond,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { Metrics, getMetrics } from 'src/utilities/statMetrics';
 
 import { StatsPanel } from './StatsPanel';
+
+import type { Stats } from '@linode/api-v4/lib/linodes';
+import type { Metrics } from '@linode/utilities';
+import type { Theme } from '@mui/material/styles';
+import type { NetworkTimeData } from 'src/components/AreaChart/types';
+import type { NetworkUnit } from 'src/features/Longview/shared/utilities';
 
 export interface TotalTrafficProps {
   combinedTraffic: string;
@@ -23,7 +26,6 @@ export interface TotalTrafficProps {
 }
 
 export interface ChartProps {
-  height: number;
   loading: boolean;
   rangeSelection: string;
   timezone: string;
@@ -102,7 +104,6 @@ export const NetworkGraphs = (props: Props) => {
   const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
-    chartHeight: props.height,
     rangeSelection,
     theme,
     timezone: props.timezone,
@@ -110,44 +111,57 @@ export const NetworkGraphs = (props: Props) => {
   };
 
   return (
-    <StyledGraphGrid container spacing={4} xs={12}>
-      <StyledGrid xs={12}>
-        <StatsPanel
-          renderBody={() => (
-            <Graph
-              ariaLabel="IPv4 Network Traffic Graph"
-              data={v4Data}
-              metrics={v4Metrics}
-              unit={v4Unit}
-              {...commonGraphProps}
-            />
-          )}
-          title={`Network — IPv4 (${v4Unit}/s)`}
-          {...rest}
-        />
-      </StyledGrid>
-      <StyledGrid xs={12}>
-        <StatsPanel
-          renderBody={() => (
-            <Graph
-              ariaLabel="IPv6 Network Traffic Graph"
-              data={v6Data}
-              metrics={v6Metrics}
-              unit={v6Unit}
-              {...commonGraphProps}
-            />
-          )}
-          title={`Network — IPv6 (${v6Unit}/s)`}
-          {...rest}
-        />
-      </StyledGrid>
-    </StyledGraphGrid>
+    <>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
+        <Paper variant="outlined" sx={{ height: 500 }}>
+          <StatsPanel
+            renderBody={() => (
+              <Graph
+                ariaLabel="IPv4 Network Traffic Graph"
+                data={v4Data}
+                metrics={v4Metrics}
+                unit={v4Unit}
+                {...commonGraphProps}
+              />
+            )}
+            title={`Network — IPv4 (${v4Unit}/s)`}
+            {...rest}
+          />
+        </Paper>
+      </Grid>
+      <Grid
+        size={{
+          md: 6,
+          xs: 12,
+        }}
+      >
+        <Paper variant="outlined" sx={{ height: 500 }}>
+          <StatsPanel
+            renderBody={() => (
+              <Graph
+                ariaLabel="IPv6 Network Traffic Graph"
+                data={v6Data}
+                metrics={v6Metrics}
+                unit={v6Unit}
+                {...commonGraphProps}
+              />
+            )}
+            title={`Network — IPv6 (${v6Unit}/s)`}
+            {...rest}
+          />
+        </Paper>
+      </Grid>
+    </>
   );
 };
 
 interface GraphProps {
   ariaLabel: string;
-  chartHeight: number;
   data: NetworkStats;
   metrics: NetworkMetrics;
   rangeSelection: string;
@@ -187,101 +201,60 @@ const Graph = (props: GraphProps) => {
   }
 
   return (
-    <Box marginLeft={-4} marginTop={2}>
-      <AreaChart
-        areas={[
-          {
-            color: theme.graphs.darkGreen,
-            dataKey: 'Public In',
-          },
-          {
-            color: theme.graphs.lightGreen,
-            dataKey: 'Public Out',
-          },
-          {
-            color: theme.graphs.purple,
-            dataKey: 'Private In',
-          },
-          {
-            color: theme.graphs.yellow,
-            dataKey: 'Private Out',
-          },
-        ]}
-        legendRows={[
-          {
-            data: metrics.publicIn,
-            format,
-            legendColor: 'darkGreen',
-            legendTitle: 'Public In',
-          },
-          {
-            data: metrics.publicOut,
-            format,
-            legendColor: 'lightGreen',
-            legendTitle: 'Public Out',
-          },
-          {
-            data: metrics.privateIn,
-            format,
-            legendColor: 'purple',
-            legendTitle: 'Private In',
-          },
-          {
-            data: metrics.privateOut,
-            format,
-            legendColor: 'yellow',
-            legendTitle: 'Private Out',
-          },
-        ]}
-        xAxis={{
-          tickFormat: xAxisTickFormat,
-          tickGap: 60,
-        }}
-        ariaLabel={ariaLabel}
-        data={timeData}
-        height={420}
-        showLegend
-        timezone={timezone}
-        unit={` ${unit}/s`}
-      />
-    </Box>
+    <AreaChart
+      areas={[
+        {
+          color: theme.graphs.darkGreen,
+          dataKey: 'Public In',
+        },
+        {
+          color: theme.graphs.lightGreen,
+          dataKey: 'Public Out',
+        },
+        {
+          color: theme.graphs.purple,
+          dataKey: 'Private In',
+        },
+        {
+          color: theme.graphs.yellow,
+          dataKey: 'Private Out',
+        },
+      ]}
+      legendRows={[
+        {
+          data: metrics.publicIn,
+          format,
+          legendColor: theme.graphs.darkGreen,
+          legendTitle: 'Public In',
+        },
+        {
+          data: metrics.publicOut,
+          format,
+          legendColor: theme.graphs.lightGreen,
+          legendTitle: 'Public Out',
+        },
+        {
+          data: metrics.privateIn,
+          format,
+          legendColor: theme.graphs.purple,
+          legendTitle: 'Private In',
+        },
+        {
+          data: metrics.privateOut,
+          format,
+          legendColor: theme.graphs.yellow,
+          legendTitle: 'Private Out',
+        },
+      ]}
+      xAxis={{
+        tickFormat: xAxisTickFormat,
+        tickGap: 60,
+      }}
+      ariaLabel={ariaLabel}
+      data={timeData}
+      showLegend
+      timezone={timezone}
+      unit={` ${unit}/s`}
+    />
   );
 };
-
-const StyledGrid = styled(Grid, {
-  label: 'StyledGrid',
-})(({ theme }) => ({
-  '& h2': {
-    fontSize: '1rem',
-  },
-  '&.MuiGrid-item': {
-    padding: theme.spacing(2),
-  },
-  backgroundColor: theme.bg.white,
-  border: `solid 1px ${theme.borderColors.divider}`,
-  padding: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
-  [theme.breakpoints.down(1100)]: {
-    '&:first-of-type': {
-      marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(2),
-    },
-  },
-  [theme.breakpoints.up(1100)]: {
-    '&:first-of-type': {
-      marginRight: theme.spacing(2),
-    },
-  },
-}));
-
-const StyledGraphGrid = styled(Grid, { label: 'StyledGraphGrid' })(
-  ({ theme }) => ({
-    flexWrap: 'nowrap',
-    margin: 0,
-    padding: 0,
-    [theme.breakpoints.down(1100)]: {
-      flexWrap: 'wrap',
-      marginTop: `-${theme.spacing(2)}`,
-    },
-  })
-);

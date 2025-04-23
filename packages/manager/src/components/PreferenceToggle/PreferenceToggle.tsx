@@ -1,30 +1,29 @@
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
-export interface PreferenceToggleProps<T> {
-  preference: T;
-  togglePreference: () => T;
-}
+import type { ManagerPreferences } from '@linode/utilities';
 
 interface RenderChildrenProps<T> {
-  preference: T;
-  togglePreference: () => T;
+  preference: NonNullable<T>;
+  togglePreference: () => NonNullable<T>;
 }
 
 type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
-interface Props<T> {
-  children: RenderChildren<T>;
-  initialSetCallbackFn?: (value: T) => void;
-  preferenceKey: string;
-  preferenceOptions: [T, T];
-  toggleCallbackFn?: (value: T) => void;
-  value?: T;
+interface Props<Key extends keyof ManagerPreferences> {
+  children: RenderChildren<ManagerPreferences[Key]>;
+  initialSetCallbackFn?: (value: ManagerPreferences[Key]) => void;
+  preferenceKey: Key;
+  preferenceOptions: [ManagerPreferences[Key], ManagerPreferences[Key]];
+  toggleCallbackFn?: (value: ManagerPreferences[Key]) => void;
+  value?: ManagerPreferences[Key];
 }
 
-export const PreferenceToggle = <T,>(props: Props<T>) => {
+/**
+ * @deprecated There are more simple ways to use preferences. Look into using `usePreferences` directly.
+ */
+export const PreferenceToggle = <Key extends keyof ManagerPreferences>(
+  props: Props<Key>
+) => {
   const {
     children,
     preferenceKey,
@@ -33,17 +32,19 @@ export const PreferenceToggle = <T,>(props: Props<T>) => {
     value,
   } = props;
 
-  const { data: preferences } = usePreferences();
+  const { data: preference } = usePreferences(
+    (preferences) => preferences?.[preferenceKey]
+  );
 
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
   const togglePreference = () => {
-    let newPreferenceToSet: T;
+    let newPreferenceToSet: ManagerPreferences[Key];
 
-    if (preferences?.[preferenceKey] === undefined) {
+    if (preference === undefined) {
       // Because we default to preferenceOptions[0], toggling with no preference should pick preferenceOptions[1]
       newPreferenceToSet = preferenceOptions[1];
-    } else if (preferences[preferenceKey] === preferenceOptions[0]) {
+    } else if (preference === preferenceOptions[0]) {
       newPreferenceToSet = preferenceOptions[1];
     } else {
       newPreferenceToSet = preferenceOptions[0];
@@ -58,11 +59,11 @@ export const PreferenceToggle = <T,>(props: Props<T>) => {
       toggleCallbackFn(newPreferenceToSet);
     }
 
-    return newPreferenceToSet;
+    return newPreferenceToSet!;
   };
 
   return children({
-    preference: value ?? preferences?.[preferenceKey] ?? preferenceOptions[0],
+    preference: value ?? preference ?? preferenceOptions[0]!,
     togglePreference,
   });
 };

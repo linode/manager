@@ -1,41 +1,38 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { pathOr } from 'ramda';
+import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
-import withLongviewClients, {
-  DispatchProps,
-  Props as LVProps,
-} from 'src/containers/longview.container';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import withLongviewClients from 'src/containers/longview.container';
+import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
-import {
-  LongviewPortsResponse,
-  LongviewTopProcesses,
-} from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useProfile } from 'src/queries/profile/profile';
+import { useTabs } from 'src/hooks/useTabs';
+import { useProfile } from '@linode/queries';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';
 import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
-import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
+import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
 import { StyledTabs } from './LongviewDetail.styles';
+
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
+import type {
+  DispatchProps,
+  Props as LVProps,
+} from 'src/containers/longview.container';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
+import type {
+  LongviewPortsResponse,
+  LongviewTopProcesses,
+} from 'src/features/Longview/request.types';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -52,10 +49,7 @@ const Overview = React.lazy(
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
 const Disks = React.lazy(() => import('./DetailTabs/Disks/Disks'));
 
-export type CombinedProps = RouteComponentProps<{ id: string }> &
-  Props &
-  LVDataProps &
-  DispatchProps;
+export type CombinedProps = Props & LVDataProps & DispatchProps;
 
 export const LongviewDetail = (props: CombinedProps) => {
   const {
@@ -110,59 +104,43 @@ export const LongviewDetail = (props: CombinedProps) => {
     [clientAPIKey, lastUpdated]
   );
 
-  const tabOptions = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      display: true,
-      routeName: `${props.match.url}/overview`,
       title: 'Overview',
+      to: '/longview/clients/$id/overview',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/processes`,
       title: 'Processes',
+      to: '/longview/clients/$id/processes',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/network`,
       title: 'Network',
+      to: '/longview/clients/$id/network',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/disks`,
       title: 'Disks',
+      to: '/longview/clients/$id/disks',
     },
     {
-      display: client && client.apps.apache,
-      routeName: `${props.match.url}/apache`,
+      hide: !client?.apps.apache,
       title: 'Apache',
+      to: '/longview/clients/$id/apache',
     },
     {
-      display: client && client.apps.nginx,
-      routeName: `${props.match.url}/nginx`,
+      hide: !client?.apps.nginx,
       title: 'Nginx',
+      to: '/longview/clients/$id/nginx',
     },
     {
-      display: client && client.apps.mysql,
-      routeName: `${props.match.url}/mysql`,
+      hide: !client?.apps.mysql,
       title: 'MySQL',
+      to: '/longview/clients/$id/mysql',
     },
     {
-      display: true,
-      routeName: `${props.match.url}/installation`,
       title: 'Installation',
+      to: '/longview/clients/$id/installation',
     },
-  ];
-
-  // Filtering out conditional tabs if they don't exist on client
-  const tabs = tabOptions.filter((tab) => tab.display === true);
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
+  ]);
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
@@ -193,19 +171,17 @@ export const LongviewDetail = (props: CombinedProps) => {
     return null;
   }
 
-  // Determining true tab count for indexing based on tab display
-  const displayedTabs = tabs.filter((tab) => tab.display === true);
-
   return (
     <React.Fragment>
       <LandingHeader
         breadcrumbProps={{
           firstAndLastOnly: true,
           labelOptions: { noCap: true },
-          pathname: props.location.pathname,
+          labelTitle: `longview${client?.id}`,
+          pathname: `/longview/clients/${client?.id}`,
         }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
         title={client.label}
       />
       {notifications.map((thisNotification, idx) => (
@@ -217,14 +193,8 @@ export const LongviewDetail = (props: CombinedProps) => {
           variant="warning"
         />
       ))}
-      <StyledTabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
+      <StyledTabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
@@ -310,7 +280,7 @@ export const LongviewDetail = (props: CombinedProps) => {
               </SafeTabPanel>
             )}
 
-            <SafeTabPanel index={Number(displayedTabs.length - 1)}>
+            <SafeTabPanel index={tabs.length - 1}>
               <Installation
                 clientAPIKey={client.api_key}
                 clientInstallationKey={client.install_code}
@@ -323,12 +293,17 @@ export const LongviewDetail = (props: CombinedProps) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
+type LongviewDetailParams = {
+  id: string;
+};
+
+const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
-    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
+
+  withClientStats<{ match: { params: LongviewDetailParams } }>((ownProps) => {
+    return +(ownProps?.match?.params?.id ?? '');
   }),
-  withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
+  withLongviewClients<Props, { match: { params: LongviewDetailParams } }>(
     (
       own,
       {
@@ -341,7 +316,7 @@ export default compose<CombinedProps, {}>(
       // This is explicitly typed, otherwise `client` would be typed as
       // `LongviewClient`, even though there's a chance it could be undefined.
       const client: LongviewClient | undefined =
-        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)];
+        longviewClientsData[own?.match.params.id ?? ''];
 
       return {
         client,
@@ -352,3 +327,5 @@ export default compose<CombinedProps, {}>(
     }
   )
 )(LongviewDetail);
+
+export default EnhancedLongviewDetail;

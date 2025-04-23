@@ -7,8 +7,9 @@ export const importZoneSchema = object({
 
 const domainSchemaBase = object().shape({
   domain: string().matches(
+    // eslint-disable-next-line sonarjs/slow-regex
     /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
-    'Domain is not valid.'
+    'Domain is not valid.',
   ),
   status: mixed().oneOf(['disabled', 'active', 'edit_mode', 'has_errors']),
   tags: array(),
@@ -29,16 +30,16 @@ export const createDomainSchema = domainSchemaBase.shape({
   domain: string()
     .required('Domain is required.')
     .matches(
+      // eslint-disable-next-line sonarjs/slow-regex
       /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
-      'Domain is not valid.'
+      'Domain is not valid.',
     ),
   tags: array().of(string()),
   type: mixed().required().oneOf(['master', 'slave']),
   soa_email: string()
     .when('type', {
       is: 'master',
-      then: string().required('SOA Email is required.'),
-      otherwise: string(),
+      then: (schema) => schema.required('SOA Email is required.'),
     })
     .email('SOA Email is not valid.')
     .trim(),
@@ -46,13 +47,12 @@ export const createDomainSchema = domainSchemaBase.shape({
     .of(string())
     .when('type', {
       is: 'slave',
-      then: array()
-        .of(string())
-        .compact()
-        .ensure()
-        .required('At least one primary IP address is required.')
-        .min(1, 'At least one primary IP address is required.'),
-      otherwise: array().of(string()),
+      then: (schema) =>
+        schema
+          .compact()
+          .ensure()
+          .required('At least one primary IP address is required.')
+          .min(1, 'At least one primary IP address is required.'),
     }),
 });
 

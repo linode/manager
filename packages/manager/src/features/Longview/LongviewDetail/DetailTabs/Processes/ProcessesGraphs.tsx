@@ -1,25 +1,20 @@
+import { Box, Paper, Typography } from '@linode/ui';
+import { convertBytesToTarget, readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
-import {
-  LongviewProcesses,
-  WithStartAndEnd,
-} from 'src/features/Longview/request.types';
 import {
   convertData,
   formatMemory,
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
-import {
-  convertBytesToTarget,
-  readableBytes,
-} from 'src/utilities/unitConversions';
 
-import { Process } from './types';
+import type { Process } from './types';
+import type {
+  LongviewProcesses,
+  WithStartAndEnd,
+} from 'src/features/Longview/request.types';
 
 interface Props {
   clientAPIKey: string;
@@ -50,6 +45,7 @@ export const ProcessesGraphs = (props: Props) => {
 
   const name = selectedProcess?.name ?? '';
   const user = selectedProcess?.user ?? '';
+  // @ts-expect-error The types are completely wrong. They don't account for "user"
   const process = processesData.Processes?.[name]?.[user] ?? {};
 
   const cpu = process.cpu ?? [];

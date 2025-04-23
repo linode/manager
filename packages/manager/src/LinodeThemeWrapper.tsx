@@ -1,8 +1,9 @@
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ThemeName } from './foundations/themes';
 import { themes, useColorMode } from './utilities/theme';
+
+import type { ThemeName } from '@linode/ui';
 
 interface Props {
   children: React.ReactNode;

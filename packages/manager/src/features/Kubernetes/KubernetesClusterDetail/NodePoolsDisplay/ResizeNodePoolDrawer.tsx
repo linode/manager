@@ -1,26 +1,38 @@
-import { KubeNodePoolResponse, Region } from '@linode/api-v4';
-import { Theme } from '@mui/material/styles';
+import {
+  ActionsPanel,
+  CircleProgress,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
+import { ErrorMessage } from 'src/components/ErrorMessage';
+import { NotFound } from 'src/components/NotFound';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { isNumber } from 'src/utilities/isNumber';
-import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../constants';
 import { hasInvalidNodePoolPrice } from './utils';
+
+import type {
+  KubeNodePoolResponse,
+  KubernetesTier,
+  Region,
+} from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   helperText: {
@@ -30,12 +42,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingBottom: theme.spacing(3),
   },
   summary: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '16px',
   },
 }));
 
 export interface Props {
+  clusterTier: KubernetesTier;
   kubernetesClusterId: number;
   kubernetesRegionId: Region['id'];
   nodePool: KubeNodePoolResponse | undefined;
@@ -48,6 +61,7 @@ the pool.`;
 
 export const ResizeNodePoolDrawer = (props: Props) => {
   const {
+    clusterTier,
     kubernetesClusterId,
     kubernetesRegionId,
     nodePool,
@@ -64,9 +78,11 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
+  const [resizeNodePoolError, setResizeNodePoolError] =
+    React.useState<string>('');
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -78,12 +94,19 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     }
     if (open) {
       setUpdatedCount(nodePool.count);
+      setResizeNodePoolError('');
     }
   }, [nodePool, open]);
 
   const handleChange = (value: number) => {
-    setUpdatedCount(Math.min(100, Math.floor(value)));
+    setUpdatedCount(Math.floor(value));
   };
+
+  React.useEffect(() => {
+    if (error) {
+      setResizeNodePoolError(error?.[0].reason);
+    }
+  }, [error]);
 
   if (!nodePool) {
     // This should never happen, but it keeps TypeScript happy and avoids crashing if we
@@ -97,8 +120,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getLinodeRegionPrice(planType, kubernetesRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    planType,
+    kubernetesRegionId
+  )?.monthly;
 
   const totalMonthlyPrice =
     planType &&
@@ -116,6 +141,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
@@ -129,23 +155,25 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             handleSubmit();
           }}
         >
-          <div className={classes.section}>
-            <Typography className={classes.summary}>
-              Current pool: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
-              /month ({pluralize('node', 'nodes', nodePool.count)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
-            </Typography>
-          </div>
-
-          {error && <Notice text={error?.[0].reason} variant="error" />}
+          {resizeNodePoolError && (
+            <Notice variant="error">
+              <ErrorMessage
+                entity={{ id: kubernetesClusterId, type: 'lkecluster_id' }}
+                message={resizeNodePoolError}
+              />
+            </Notice>
+          )}
 
           <div className={classes.section}>
             <Typography className={classes.helperText}>
-              Enter the number of nodes you'd like in this pool:
+              Adjust the total number of nodes to resize this node pool.
             </Typography>
             <EnhancedNumberInput
+              max={
+                clusterTier === 'enterprise'
+                  ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
+              }
               min={1}
               setValue={handleChange}
               value={updatedCount}
@@ -153,24 +181,31 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </div>
 
           <div className={classes.section}>
+            <Typography className={classes.summary}>
+              Current price: $
+              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
+              /month ({pluralize('node', 'nodes', nodePool.count)} at $
+              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
+              /month each)
+            </Typography>
+          </div>
+          <div className={classes.section}>
             {/* Renders total pool price/month for N nodes at price per node/month. */}
             <Typography className={classes.summary}>
-              {`Resized pool: $${renderMonthlyPriceToCorrectDecimalPlace(
+              {`Resized price: $${renderMonthlyPriceToCorrectDecimalPlace(
                 isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
               )}/month`}{' '}
               ({pluralize('node', 'nodes', updatedCount)} at $
               {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month)
+              /month each)
             </Typography>
           </div>
 
           {updatedCount < nodePool.count && (
-            <Notice important text={resizeWarning} variant="warning" />
+            <Notice text={resizeWarning} variant="warning" />
           )}
 
-          {updatedCount < 3 && (
-            <Notice important text={nodeWarning} variant="warning" />
-          )}
+          {updatedCount < 3 && <Notice text={nodeWarning} variant="warning" />}
 
           {nodePool.count && hasInvalidPrice && (
             <Notice
@@ -186,7 +221,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
               'data-testid': 'submit',
               disabled: updatedCount === nodePool.count || hasInvalidPrice,
               label: 'Save Changes',
-              loading: isLoading,
+              loading: isPending,
               onClick: handleSubmit,
             }}
           />

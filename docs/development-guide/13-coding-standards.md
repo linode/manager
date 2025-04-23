@@ -11,10 +11,22 @@ We use [ESLint](https://eslint.org/) to enforce coding and formatting standards.
 - **prettier** (code formatting)
 - **scanjs** (security)
 
-If you are using VSCode it is highly recommended to use the ESlint extension. The Prettier extension is also recommended, as it can be configured to format your code on save.
+If you are using VSCode it is **highly** recommended to use the [ESlint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). The [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) is also recommended, as it can be configured to format your code on save.
 
 ## React
+### useEffect()
+`useEffect()` should only be used for handling true side effects - specifically API calls, subscriptions, and DOM mutations that must occur outside React's render cycle. While you may encounter instances where `useEffect()` is used differently throughout our existing codebase, we're actively working to remove those instances. Existing code that does not adhere to the hook's proper use should not be used as precedent for implementing new `useEffect()` instances. All state updates and data transformations should be handled through event handlers and direct state management.
 
+When Not to Use Effects:
+- Prop synchronization with state
+- Derived state calculations
+- Post-render state updates
+- Props/state triggers for child components
+- Chaining state updates
+
+Reference: https://react.dev/learn/you-might-not-need-an-effect
+
+### useId()
 [Several new hooks were introduced with the release of React 18](https://react.dev/blog/2022/03/29/react-v18#new-hooks).
 
 It should be noted that the `useId()` hook is particularly useful for generating unique IDs for accessibility attributes. For this use case, `useId()` is preferred over hardcoding the ID because components may be rendered more than once on a page, but IDs must be unique.

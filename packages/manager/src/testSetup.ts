@@ -54,6 +54,13 @@ vi.mock('highlight.js/lib/highlight', () => ({
   },
 }));
 
+// Mock ResizeObserver for tests
+global.ResizeObserver = class ResizeObserver {
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};
+
 /**
  ***************************************
  *  Custom matchers & matchers overrides

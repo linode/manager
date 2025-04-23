@@ -4,16 +4,15 @@ import {
   domainZoneFileFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { fbtClick, fbtVisible } from 'support/helpers';
 import {
-  mockGetDomains,
   mockGetDomain,
   mockGetDomainRecords,
   mockGetDomainZoneFile,
+  mockGetDomains,
 } from 'support/intercepts/domains';
-import { randomDomainName } from 'support/util/random';
-import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
+import { readDownload } from 'support/util/downloads';
+import { randomDomainName } from 'support/util/random';
 
 authenticate();
 describe('Download a Zone file', () => {
@@ -25,9 +24,9 @@ describe('Download a Zone file', () => {
    */
   it('downloads a zone in the domain page', () => {
     const mockDomain = domainFactory.build({
-      id: 123,
       domain: randomDomainName(),
       group: 'test-group',
+      id: 123,
     });
     const mockDomainRecords = domainRecordFactory.build();
     const mockDomainZoneFile = domainZoneFileFactory.build();
@@ -46,8 +45,8 @@ describe('Download a Zone file', () => {
 
     mockGetDomain(mockDomain.id, mockDomain).as('getDomain');
     mockGetDomainRecords([mockDomainRecords]).as('getDomainRecords');
-    fbtVisible(mockDomain.domain);
-    fbtClick(mockDomain.domain);
+    cy.findByText(mockDomain.domain).should('be.visible').should('be.visible');
+    cy.findByText(mockDomain.domain).click();
     cy.wait('@getDomain');
     cy.wait('@getDomainRecords');
 

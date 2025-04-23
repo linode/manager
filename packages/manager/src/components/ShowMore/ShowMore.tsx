@@ -1,8 +1,9 @@
+import { Chip } from '@linode/ui';
 import Popover from '@mui/material/Popover';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Chip, ChipProps } from 'src/components/Chip';
+import type { ChipProps } from '@linode/ui';
 
 interface ShowMoreProps<T> {
   ariaItemType: string;
@@ -28,13 +29,13 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
 
   return (
     <React.Fragment>
-      <StyledChip
+      <Chip
         {...chipProps}
         sx={
           anchorEl
             ? {
                 backgroundColor: theme.palette.primary.main,
-                color: 'white',
+                color: theme.tokens.color.Neutrals.White,
               }
             : null
         }
@@ -60,28 +61,6 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
     </React.Fragment>
   );
 };
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  '& .MuiChip-label': {
-    paddingLeft: 6,
-    paddingRight: 6,
-  },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    outline: '1px dotted #999',
-  },
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  backgroundColor: theme.bg.lightBlue1,
-  fontFamily: theme.font.bold,
-  lineHeight: 1,
-  marginLeft: theme.spacing(0.5),
-  paddingLeft: 2,
-  paddingRight: 2,
-  position: 'relative',
-}));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   '& .MuiPopover-paper': {

@@ -1,11 +1,11 @@
-import { Config } from '@linode/api-v4';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useLinodeConfigDeleteMutation } from 'src/queries/linodes/configs';
+import { useLinodeConfigDeleteMutation } from '@linode/queries';
+
+import type { Config } from '@linode/api-v4';
 
 interface Props {
   config: Config | undefined;
@@ -18,7 +18,7 @@ export const DeleteConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useLinodeConfigDeleteMutation(
+  const { error, isPending, mutateAsync } = useLinodeConfigDeleteMutation(
     linodeId,
     config?.id ?? -1
   );
@@ -35,7 +35,7 @@ export const DeleteConfigDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Delete',
-        loading: isLoading,
+        loading: isPending,
         onClick: onDelete,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

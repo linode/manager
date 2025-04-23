@@ -1,10 +1,12 @@
+import { IconButton } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { IconButton } from 'src/components/IconButton';
-import { MenuItem, MenuItemProps } from 'src/components/MenuItem';
+import { MenuItem } from 'src/components/MenuItem';
+
+import type { Theme } from '@mui/material/styles';
+import type { MenuItemProps } from 'src/components/MenuItem';
 
 interface WrapperMenuItemProps {
   isLoading?: boolean;

@@ -1,17 +1,19 @@
-import { Subnet } from '@linode/api-v4';
+import { linodeFactory } from '@linode/utilities';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 
+import type { Subnet } from '@linode/api-v4';
+
 beforeAll(() => mockMatchMedia());
 
 const props = {
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
   subnet: {
@@ -36,7 +38,7 @@ describe('Subnet Assign Linodes Drawer', () => {
   );
 
   it('should render a subnet assign linodes drawer', () => {
-    const { getByText, queryAllByText } = renderWithTheme(
+    const { getByTestId, getByText, queryAllByText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
@@ -44,9 +46,7 @@ describe('Subnet Assign Linodes Drawer', () => {
       'Assign Linodes to subnet: subnet-1 (10.0.0.0/24)'
     );
     expect(header).toBeVisible();
-    const notice = getByText(
-      'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.'
-    );
+    const notice = getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();
     const helperText = getByText(
       `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`
@@ -57,7 +57,9 @@ describe('Subnet Assign Linodes Drawer', () => {
 
     const assignButton = getByText('Assign Linode');
     expect(assignButton).toBeVisible();
-    const alreadyAssigned = getByText('Linodes Assigned to Subnet (0)');
+    const alreadyAssigned = getByText(
+      'Linodes recently assigned to Subnet (0)'
+    );
     expect(alreadyAssigned).toBeVisible();
     const doneButton = getByText('Done');
     expect(doneButton).toBeVisible();

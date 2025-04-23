@@ -1,8 +1,5 @@
+import { Button, Typography, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 interface DropZoneClassProps {
   dropzoneDisabled: boolean;
@@ -54,7 +51,7 @@ export const StyledDropZoneDiv = styled('div', {
   }),
   ...(props.dropzoneDisabled && {
     // When the dropzone is disabled
-    borderColor: '#888',
+    borderColor: theme.tokens.color.Neutrals[60],
   }),
 }));
 

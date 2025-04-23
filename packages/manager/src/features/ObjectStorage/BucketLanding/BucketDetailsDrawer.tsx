@@ -1,72 +1,71 @@
-import { Region } from '@linode/api-v4';
+import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
+import { Divider, Drawer, Typography } from '@linode/ui';
 import {
-  ACLType,
-  getBucketAccess,
-  updateBucketAccess,
-} from '@linode/api-v4/lib/object-storage';
+  isFeatureEnabledV2,
+  pluralize,
+  readableBytes,
+  truncateMiddle,
+} from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Divider } from 'src/components/Divider';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+
 export interface BucketDetailsDrawerProps {
-  bucketLabel?: string;
-  bucketRegion?: Region;
-  cluster?: string;
-  created?: string;
-  hostname?: string;
-  objectsNumber?: number;
   onClose: () => void;
   open: boolean;
-  size?: null | number;
+  selectedBucket: ObjectStorageBucket | undefined;
 }
 
 export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
+    const { onClose, open, selectedBucket } = props;
+
     const {
-      bucketLabel,
-      bucketRegion,
       cluster,
       created,
+      endpoint_type,
       hostname,
-      objectsNumber,
-      onClose,
-      open,
+      label,
+      objects,
+      region,
       size,
-    } = props;
+    } = selectedBucket ?? {};
 
     const flags = useFlags();
     const { account } = useAccountManagement();
 
-    const isObjMultiClusterEnabled = isFeatureEnabled(
+    const isObjMultiClusterEnabled = isFeatureEnabledV2(
       'Object Storage Access Key Regions',
       Boolean(flags.objMultiCluster),
       account?.capabilities ?? []
     );
 
-    // @TODO OBJ Multicluster: Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
+    // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
     const { data: clusters } = useObjectStorageClusters(
       !isObjMultiClusterEnabled
     );
     const { data: regions } = useRegionsQuery();
+    const { data: currentRegion } = useRegionQuery(region ?? '');
     const { data: profile } = useProfile();
-    const actualCluster = clusters?.find((c) => c.id === cluster);
-    const region = regions?.find((r) => r.id === actualCluster?.region);
+
+    // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
+    const selectedCluster = clusters?.find((c) => c.id === cluster);
+    const regionFromCluster = regions?.find(
+      (r) => r.id === selectedCluster?.region
+    );
+
     let formattedCreated;
 
     try {
@@ -79,85 +78,73 @@ export const BucketDetailsDrawer = React.memo(
 
     return (
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
-        title={truncateMiddle(bucketLabel ?? 'Bucket Detail')}
+        title={truncateMiddle(label ?? 'Bucket Detail')}
       >
-        {formattedCreated ? (
+        {formattedCreated && (
           <Typography data-testid="createdTime" variant="subtitle2">
             Created: {formattedCreated}
           </Typography>
-        ) : null}
+        )}
+        {Boolean(endpoint_type) && (
+          <Typography data-testid="endpointType" variant="subtitle2">
+            Endpoint Type: {endpoint_type}
+          </Typography>
+        )}
         {isObjMultiClusterEnabled ? (
           <Typography data-testid="cluster" variant="subtitle2">
-            {bucketRegion?.label}
+            {currentRegion?.label}
           </Typography>
         ) : cluster ? (
           <Typography data-testid="cluster" variant="subtitle2">
-            {region?.label ?? cluster}
+            {regionFromCluster?.label ?? cluster}
           </Typography>
         ) : null}
-        {hostname ? (
-          <StyledLinkContainer>
-            <Link external to={`https://${hostname}`}>
-              {truncateMiddle(hostname, 50)}
-            </Link>
-            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
-          </StyledLinkContainer>
-        ) : null}
-        {formattedCreated || cluster ? (
+        {hostname && (
+          <MaskableText isToggleable text={hostname}>
+            <StyledLinkContainer>
+              <Link external to={`https://${hostname}`}>
+                {truncateMiddle(hostname, 50)}
+              </Link>
+              <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
+            </StyledLinkContainer>
+          </MaskableText>
+        )}
+        {(formattedCreated || cluster) && (
           <Divider spacingBottom={16} spacingTop={16} />
-        ) : null}
-        {typeof size === 'number' ? (
+        )}
+        {typeof size === 'number' && (
           <Typography variant="subtitle2">
             {readableBytes(size).formatted}
           </Typography>
-        ) : null}
+        )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}
-        {typeof objectsNumber === 'number' ? (
+        {typeof objects === 'number' && (
           <Link
             to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled && bucketRegion
-                ? bucketRegion.id
-                : cluster
-            }/${bucketLabel}`}
+              isObjMultiClusterEnabled && selectedBucket ? region : cluster
+            }/${label}`}
           >
-            {pluralize('object', 'objects', objectsNumber)}
+            {pluralize('object', 'objects', objects)}
           </Link>
-        ) : null}
-        {typeof size === 'number' || typeof objectsNumber === 'number' ? (
+        )}
+        {(typeof size === 'number' || typeof objects === 'number') && (
           <Divider spacingBottom={16} spacingTop={16} />
-        ) : null}
-        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
-         to getBucketAccess and updateBucketAccess.  */}
-        {cluster && bucketLabel ? (
+        )}
+        {cluster && label && (
           <AccessSelect
-            getAccess={() =>
-              getBucketAccess(
-                isObjMultiClusterEnabled && bucketRegion
-                  ? bucketRegion.id
-                  : cluster,
-                bucketLabel
-              )
+            clusterOrRegion={
+              isObjMultiClusterEnabled && currentRegion
+                ? currentRegion.id
+                : cluster
             }
-            updateAccess={(acl: ACLType, cors_enabled: boolean) => {
-              // Don't send the ACL with the payload if it's "custom", since it's
-              // not valid (though it's a valid return type).
-              const payload =
-                acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
-
-              return updateBucketAccess(
-                isObjMultiClusterEnabled && bucketRegion
-                  ? bucketRegion.id
-                  : cluster,
-                bucketLabel,
-                payload
-              );
-            }}
-            name={bucketLabel}
+            endpointType={endpoint_type}
+            name={label}
             variant="bucket"
           />
-        ) : null}
+        )}
       </Drawer>
     );
   }

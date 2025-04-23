@@ -1,8 +1,7 @@
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import {
@@ -12,12 +11,13 @@ import {
   statMax,
 } from 'src/features/Longview/shared/utilities';
 
-import {
+import { convertData } from '../../../shared/formatters';
+import GraphCard from '../../GraphCard';
+
+import type {
   InboundOutboundNetwork,
   LongviewNetworkInterface,
 } from '../../../request.types';
-import { convertData } from '../../../shared/formatters';
-import GraphCard from '../../GraphCard';
 
 interface Props {
   end: number;

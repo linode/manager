@@ -1,23 +1,28 @@
-import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
-import { Theme, useTheme } from '@mui/material/styles';
+import { listToItemsByID } from '@linode/queries';
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  H1Header,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Divider } from 'src/components/Divider';
-import { H1Header } from 'src/components/H1Header/H1Header';
-import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
-import { Typography } from 'src/components/Typography';
+import { Link } from 'src/components/Link';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
-import { TooltipIcon } from '../TooltipIcon';
+import { CodeBlock } from '../CodeBlock/CodeBlock';
+
+import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   author: {
@@ -68,12 +73,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   idSection: {
     fontSize: '1rem',
     marginTop: theme.spacing(1),
-  },
-  root: {
-    '.detailsWrapper &': {
-      padding: theme.spacing(4),
-    },
-    backgroundColor: theme.bg.bgPaper,
   },
 }));
 
@@ -157,7 +156,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       : `/stackscripts/community?${queryString}`;
 
   return (
-    <div className={classes.root}>
+    <div>
       <Box
         sx={{
           alignItems: 'flex-start',
@@ -274,7 +273,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
       <Typography className={classes.heading} variant="h3">
         Script
       </Typography>
-      <ScriptCode script={script} />
+      <CodeBlock code={script} language="shell" />
     </div>
   );
 });

@@ -1,224 +1,256 @@
-import { Image } from '@linode/api-v4/lib/images';
-import Grid from '@mui/material/Unstable_Grid2';
-import produce from 'immer';
+import {
+  Autocomplete,
+  Box,
+  InputAdornment,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { DateTime } from 'luxon';
-import { equals, groupBy } from 'ramda';
-import * as React from 'react';
+import React, { useMemo } from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-import { ImageOption } from 'src/components/ImageSelect/ImageOption';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
+import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
-import { arePropsEqual } from 'src/utilities/arePropsEqual';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { formatDate } from 'src/utilities/formatDate';
 
-import { distroIcons } from '../DistributionIcon';
+import { OSIcon } from '../OSIcon';
+import { ImageOption } from './ImageOption';
+import {
+  getAPIFilterForImageSelect,
+  getDisabledImages,
+  getFilteredImagesForImageSelect,
+  isImageDeprecated,
+} from './utilities';
 
-export type Variant = 'all' | 'private' | 'public';
+import type { Image, RegionSite } from '@linode/api-v4';
+import type { EnhancedAutocompleteProps } from '@linode/ui';
 
-interface ImageItem extends Item<string> {
-  className: string;
-  created: string;
-  isCloudInitCompatible: boolean;
+export type ImageSelectVariant = 'all' | 'private' | 'public';
+
+interface BaseProps
+  extends Omit<
+    Partial<EnhancedAutocompleteProps<Image>>,
+    'multiple' | 'onChange' | 'value'
+  > {
+  anyAllOption?: boolean;
+  filter?: (image: Image) => boolean;
+  groupBy?: (image: Image) => string;
+  label?: string;
+  placeholder?: string;
+  selectIfOnlyOneOption?: boolean;
+  siteType?: RegionSite;
+  variant: ImageSelectVariant;
 }
 
-interface ImageSelectProps {
-  classNames?: string;
-  disabled?: boolean;
-  error?: string;
-  handleSelectImage: (selection?: string) => void;
-  images: Image[];
-  selectedImageID?: string;
-  title: string;
-  variant?: Variant;
+interface SingleProps extends BaseProps {
+  multiple?: false;
+  onChange: (selected: Image | null) => void;
+  value: ((image: Image) => boolean) | null | string;
 }
 
-export interface ImageProps
-  extends Omit<BaseSelectProps<ImageItem>, 'onChange' | 'variant'> {
-  disabled: boolean;
-  error?: string;
-  handleSelectImage: (selection?: string) => void;
-  images: Image[];
-  selectedImageID?: string;
+interface MultiProps extends BaseProps {
+  multiple: true;
+  onChange: (selected: Image[]) => void;
+  value: ((image: Image) => boolean) | null | string[];
 }
 
-export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
-  if (a.created < b.created) {
-    return 1;
-  }
-  if (a.created > b.created) {
-    return -1;
-  }
-  return 0;
-};
+export type Props = MultiProps | SingleProps;
 
-export const sortGroupsWithMyImagesAtTheBeginning = (a: string, b: string) => {
-  if (a === 'My Images') {
-    return -1;
-  }
-  if (b === 'My Images') {
-    return 1;
-  }
-  if (a > b) {
-    return 1;
-  }
-  if (a < b) {
-    return -1;
-  }
-  return 0;
-};
-
-export const imagesToGroupedItems = (images: Image[]) => {
-  const groupedImages = groupBy((eachImage: Image) => {
-    return eachImage.vendor || 'My Images';
-  }, images);
-
-  return Object.keys(groupedImages)
-    .sort(sortGroupsWithMyImagesAtTheBeginning)
-    .reduce((accum: GroupType<string>[], thisGroup) => {
-      const group = groupedImages[thisGroup];
-      if (!group || group.length === 0) {
-        return accum;
-      }
-      return produce(accum, (draft) => {
-        draft.push({
-          label: thisGroup,
-          options: group
-            .reduce((acc: ImageItem[], thisImage) => {
-              const {
-                capabilities,
-                created,
-                eol,
-                id,
-                label,
-                vendor,
-              } = thisImage;
-              const differenceInMonths = DateTime.now().diff(
-                DateTime.fromISO(eol!),
-                'months'
-              ).months;
-              // if image is past its end of life, hide it, otherwise show it
-              if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
-                acc.push({
-                  className: vendor
-                    ? // Use Tux as a fallback.
-                      `fl-${distroIcons[vendor] ?? 'tux'}`
-                    : `fl-tux`,
-                  created,
-                  isCloudInitCompatible: capabilities?.includes('cloud-init'),
-                  // Add suffix 'deprecated' to the image at end of life.
-                  label:
-                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
-                  value: id,
-                });
-              }
-
-              return acc;
-            }, [])
-            .sort(sortByImageVersion),
-        });
-      });
-    }, []);
-};
-
-const isMemo = (prevProps: ImageSelectProps, nextProps: ImageSelectProps) => {
-  return (
-    equals(prevProps.images, nextProps.images) &&
-    arePropsEqual<ImageSelectProps>(
-      ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
-      prevProps,
-      nextProps
-    )
-  );
-};
-
-/**
- * @deprecated Start using ImageSelectv2 when possible
- */
-export const ImageSelect = React.memo((props: ImageSelectProps) => {
+export const ImageSelect = (props: Props) => {
   const {
-    classNames,
-    disabled,
-    handleSelectImage,
-    images,
-    selectedImageID,
-    title,
+    anyAllOption,
+    filter,
+    label,
+    multiple,
+    onChange,
+    placeholder,
+    selectIfOnlyOneOption,
+    siteType,
     variant,
-    ...reactSelectProps
+    ...rest
   } = props;
 
-  // Check for loading status and request errors in React Query
-  const { error, isLoading: _loading } = useAllImagesQuery();
+  const { data: images, error, isLoading } = useAllImagesQuery(
+    {},
+    getAPIFilterForImageSelect(variant)
+  );
 
-  const imageError = error
-    ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason
-    : undefined;
-
-  const filteredImages = images.filter((thisImage) => {
-    switch (variant) {
-      case 'public':
-        /*
-         * Get all public images but exclude any Kubernetes images.
-         * We don't want them to show up as a selectable image to deploy since
-         * the Kubernetes images are used behind the scenes with LKE.
-         */
-        return (
-          thisImage.is_public &&
-          thisImage.status === 'available' &&
-          !thisImage.label.match(/kube/i)
-        );
-      case 'private':
-        return !thisImage.is_public && thisImage.status === 'available';
-      case 'all':
-        // We don't show images with 'kube' in the label that are created by Linode
-        return !(
-          thisImage.label.match(/kube/i) && thisImage.created_by === 'linode'
-        );
-      default:
-        return true;
-    }
+  const disabledImages = getDisabledImages({
+    images: images ?? [],
+    site_type: siteType,
   });
 
-  const options = imagesToGroupedItems(filteredImages);
+  const _options = useMemo(() => {
+    // We can't filter out Kubernetes images using the API so we do it client side
+    const filteredOptions =
+      getFilteredImagesForImageSelect(images, variant) ?? [];
 
-  const onChange = (selection: ImageItem | null) => {
-    if (selection === null) {
-      return handleSelectImage(undefined);
+    return filter ? filteredOptions.filter(filter) : filteredOptions;
+  }, [images, filter, variant]);
+
+  const options = useMemo(() => {
+    if (anyAllOption) {
+      return [
+        imageFactory.build({
+          eol: undefined,
+          id: 'any/all',
+          label: 'Any/All',
+        }),
+        ..._options,
+      ];
     }
+    return _options;
+  }, [anyAllOption, _options]);
 
-    return handleSelectImage(selection.value);
-  };
+  // We need to sort options when grouping in order to avoid duplicate headers
+  // see https://mui.com/material-ui/react-autocomplete/#grouped
+  // We want:
+  // - Vendors to be sorted alphabetically
+  // - "My Images" to be first
+  // - Images to be sorted by creation date, newest first
+  const sortedOptions = useMemo(() => {
+    const myImages = options.filter((option) => !option.is_public);
+    const otherImages = options.filter((option) => option.is_public);
+
+    const sortedVendors = Array.from(
+      new Set(otherImages.map((img) => img.vendor))
+    ).sort((a, b) => (a ?? '').localeCompare(b ?? ''));
+
+    return [
+      ...myImages.sort(
+        (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      ),
+      ...sortedVendors.flatMap((vendor) =>
+        otherImages
+          .filter((img) => img.vendor === vendor)
+          .sort(
+            (a, b) =>
+              new Date(b.created).getTime() - new Date(a.created).getTime()
+          )
+      ),
+    ];
+  }, [options]);
+
+  const selected = props.value;
+  const value = useMemo(() => {
+    if (multiple) {
+      return options.filter((option) =>
+        Array.isArray(selected) ? selected.includes(option.id) : false
+      );
+    }
+    return options.find((option) => option.id === selected) ?? null;
+  }, [multiple, options, selected]);
+
+  const selectedDeprecatedImages = useMemo(() => {
+    if (!value) {
+      return false;
+    }
+    if (Array.isArray(value)) {
+      return value.filter((img) => isImageDeprecated(img));
+    }
+    return isImageDeprecated(value) && [value];
+  }, [value]);
+
+  if (options.length === 1 && onChange && selectIfOnlyOneOption && !multiple) {
+    onChange(options[0]);
+  }
 
   return (
-    <Paper data-qa-select-image-panel>
-      <Typography data-qa-tp={title} variant="h2">
-        {title}
-      </Typography>
-      <Grid container>
-        <Grid xs={12}>
-          <Select
-            value={getSelectedOptionFromGroupedOptions(
-              selectedImageID || '',
-              options
-            )}
-            components={{ Option: ImageOption, SingleValue: _SingleValue }}
-            disabled={disabled}
-            errorText={imageError}
-            isLoading={_loading}
-            label="Images"
-            onChange={onChange}
-            options={options}
-            placeholder="Choose an image"
-            {...reactSelectProps}
-            className={classNames}
-          />
-        </Grid>
-      </Grid>
-    </Paper>
+    <Box>
+      <Autocomplete
+        groupBy={(option) => {
+          if (option.id === 'any/all') {
+            return '';
+          }
+          if (!option.is_public) {
+            return 'My Images';
+          }
+
+          return option.vendor ?? '';
+        }}
+        renderOption={(props, option, state) => {
+          const { key, ...rest } = props;
+
+          return (
+            <ImageOption
+              disabledOptions={disabledImages[option.id]}
+              item={option}
+              key={key}
+              props={rest}
+              selected={state.selected}
+            />
+          );
+        }}
+        textFieldProps={{
+          InputProps: {
+            startAdornment:
+              !multiple && value && !Array.isArray(value) ? (
+                <InputAdornment position="start">
+                  <OSIcon
+                    fontSize="20px"
+                    height="20px"
+                    os={value.vendor ?? ''}
+                    position="relative"
+                    top={1}
+                  />
+                </InputAdornment>
+              ) : null,
+          },
+        }}
+        clearOnBlur
+        disableSelectAll
+        label={label || 'Images'}
+        loading={isLoading}
+        options={sortedOptions}
+        placeholder={placeholder || 'Choose an image'}
+        {...rest}
+        disableClearable={
+          rest.disableClearable ??
+          (selectIfOnlyOneOption && options.length === 1 && !multiple)
+        }
+        onChange={(_, value) =>
+          multiple && Array.isArray(value)
+            ? onChange(value)
+            : !multiple && !Array.isArray(value) && onChange(value)
+        }
+        errorText={rest.errorText ?? error?.[0].reason}
+        getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
+        multiple={multiple}
+        value={value}
+      />
+
+      <Stack>
+        {selectedDeprecatedImages &&
+          selectedDeprecatedImages.map((image) => (
+            <Notice
+              dataTestId="os-distro-deprecated-image-notice"
+              key={image.id}
+              spacingBottom={0}
+              spacingTop={16}
+              variant="warning"
+            >
+              {image.eol && DateTime.fromISO(image.eol) > DateTime.now() ? (
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  {image.label} will reach its end-of-life on{' '}
+                  {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. After
+                  this date, this OS distribution will no longer receive
+                  security updates or technical support. We recommend selecting
+                  a newer supported version to ensure continued security and
+                  stability for your linodes.
+                </Typography>
+              ) : (
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  {image.label} reached its end-of-life on{' '}
+                  {formatDate(image.eol ?? '', { format: 'MM/dd/yyyy' })}. This
+                  OS distribution will no longer receive security updates or
+                  technical support. We recommend selecting a newer supported
+                  version to ensure continued security and stability for your
+                  linodes.
+                </Typography>
+              )}
+            </Notice>
+          ))}
+      </Stack>
+    </Box>
   );
-}, isMemo);
+};

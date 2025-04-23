@@ -1,14 +1,12 @@
-import { EventStatus } from '@linode/api-v4';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
-import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
-import { fbtVisible, getClick } from 'support/helpers';
 import {
   mockDeleteImage,
   mockGetCustomImages,
+  mockGetImage,
   mockUpdateImage,
 } from 'support/intercepts/images';
 import { ui } from 'support/ui';
@@ -17,6 +15,9 @@ import { cleanUp } from 'support/util/cleanup';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import type { EventStatus } from '@linode/api-v4';
+import type { RecPartial } from 'factory.ts';
 
 /**
  * Returns a numeric image ID from a string-based image ID.
@@ -57,17 +58,17 @@ const eventIntercept = (
     apiMatcher('account/events*'),
     makeResourcePage(
       eventFactory.buildList(1, {
-        created: created ? created : DateTime.local().toISO(),
         action: 'image_upload',
+        created: created ? created : DateTime.local().toISO(),
         entity: {
-          label: label,
           id: numericId,
+          label,
           type: 'image',
           url: `/v4/images/private/${numericId}`,
         },
-        status,
-        secondary_entity: null,
         message: message ? message : '',
+        secondary_entity: null,
+        status,
       })
     )
   ).as('getEvent');
@@ -81,14 +82,12 @@ const eventIntercept = (
  * @param message - Expected failure message.
  */
 const assertFailed = (label: string, id: string, message: string) => {
-  ui.toast.assertMessage(
-    `There was a problem uploading image ${label}: ${message}`
-  );
+  ui.toast.assertMessage(`Image ${label} could not be uploaded: ${message}`);
 
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {
-    fbtVisible(label);
-    fbtVisible('Failed');
-    fbtVisible('N/A');
+    cy.findByText(label).should('be.visible');
+    cy.findByText('Upload Failed').should('be.visible'); // The status should be "Upload Failed"
+    cy.findAllByText('N/A').should('be.visible'); // The size should be "N/A"
   });
 };
 
@@ -100,9 +99,9 @@ const assertFailed = (label: string, id: string, message: string) => {
  */
 const assertProcessing = (label: string, id: string) => {
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {
-    fbtVisible(label);
-    fbtVisible('Processing');
-    fbtVisible('Pending');
+    cy.findByText(label).should('be.visible');
+    cy.findByText('Pending Upload').should('be.visible'); // The status should be "Pending Upload"
+    cy.findAllByText('Pending').should('be.visible'); // The size should be "Pending"
   });
 };
 
@@ -114,11 +113,24 @@ const assertProcessing = (label: string, id: string) => {
  * @param label - Label to apply to uploaded image.
  */
 const uploadImage = (label: string) => {
-  const region = chooseRegion();
+  // Disallow these regions from being returned by `chooseRegion` because they do not support Machine Images:
+  // - au-mel
+  // - gb-lon
+  // - sg-sin-2
+  //
+  // See also BAC-862.
+  const region = chooseRegion({
+    capabilities: ['Object Storage'],
+    exclude: ['au-mel', 'gb-lon', 'sg-sin-2'],
+  });
   const upload = 'machine-images/test-image.gz';
   cy.visitWithLogin('/images/create/upload');
-  getClick('[id="label"][data-testid="textfield-input"]').type(label);
-  getClick('[id="description"]').type('This is a machine image upload test');
+
+  cy.findByLabelText('Label').click();
+  cy.focused().type(label);
+
+  cy.findByLabelText('Description').click();
+  cy.focused().type('This is a machine image upload test');
 
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
@@ -164,17 +176,18 @@ describe('machine image', () => {
 
     const mockImageUpdated = {
       ...mockImage,
-      label: updatedLabel,
       description: updatedDescription,
+      label: updatedLabel,
     };
 
     mockGetCustomImages([mockImage]).as('getImages');
+    mockGetImage(mockImage.id, mockImage).as('getImage');
     cy.visitWithLogin('/images');
     cy.wait('@getImages');
 
     cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
       cy.findByText(initialLabel).should('be.visible');
-      cy.findByText('Ready').should('be.visible');
+      cy.findByText('Available').should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Image ${initialLabel}`)
@@ -183,6 +196,7 @@ describe('machine image', () => {
     });
 
     ui.actionMenuItem.findByTitle('Edit').should('be.visible').click();
+    cy.wait('@getImage');
 
     mockUpdateImage(mockImage.id, mockImageUpdated).as('updateImage');
     mockGetCustomImages([mockImageUpdated]).as('getImages');
@@ -191,15 +205,11 @@ describe('machine image', () => {
       .findByTitle('Edit Image')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label')
-          .should('be.visible')
-          .clear()
-          .type(updatedLabel);
+        cy.findByLabelText('Label').should('be.visible').clear();
+        cy.focused().type(updatedLabel);
 
-        cy.findByLabelText('Description')
-          .should('be.visible')
-          .clear()
-          .type(updatedDescription);
+        cy.findByLabelText('Description').should('be.visible').clear();
+        cy.focused().type(updatedDescription);
 
         ui.buttonGroup
           .findButtonByTitle('Save Changes')
@@ -256,15 +266,15 @@ describe('machine image', () => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
       mockGetCustomImages([
-        imageFactory.build({ label, id: imageId, status: 'available' }),
+        imageFactory.build({ id: imageId, label, status: 'available' }),
       ]).as('getImages');
       eventIntercept(label, imageId, status);
       ui.toast.assertMessage(uploadMessage);
       cy.wait('@getImages');
       ui.toast.assertMessage(availableMessage);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
-        fbtVisible(label);
-        fbtVisible('Ready');
+        cy.findByText(label).should('be.visible');
+        cy.findByText('Available').should('be.visible');
       });
     });
   });
@@ -319,12 +329,11 @@ describe('machine image', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Upload window expired';
-    const expiredDate = DateTime.local().minus({ days: 1 }).toISO();
     uploadImage(label);
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
       assertProcessing(label, imageId);
-      eventIntercept(label, imageId, status, message, expiredDate);
+      eventIntercept(label, imageId, status, message);
       cy.wait('@getEvent');
       assertFailed(label, imageId, message);
     });

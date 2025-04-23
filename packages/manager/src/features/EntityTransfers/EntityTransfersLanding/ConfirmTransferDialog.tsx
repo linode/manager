@@ -1,29 +1,21 @@
-import {
-  TransferEntities,
-  acceptEntityTransfer,
-} from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { Checkbox, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { capitalize, pluralize } from '@linode/utilities';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
 import {
   TRANSFER_FILTERS,
   queryKey,
   useTransferQuery,
 } from 'src/queries/entityTransfers';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { countByEntity } from '../utilities';
 import {
@@ -34,6 +26,9 @@ import {
   StyledSummaryTypography,
   StyledUl,
 } from './ConfirmTransferDialog.styles';
+
+import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;
@@ -219,24 +214,26 @@ export const DialogContent = React.memo((props: ContentProps) => {
           This transfer contains:
         </StyledSummaryTypography>
         <StyledUl>
-          {Object.keys(entities).map((thisEntityType) => {
-            // According to spec, all entity names are plural and lowercase
-            // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
-            const entityName = capitalize(thisEntityType).slice(0, -1);
-            return (
-              <li key={thisEntityType}>
-                <StyledEntityTypography>
-                  <strong>
-                    {pluralize(
-                      entityName,
-                      entityName + 's',
-                      entities[thisEntityType].length
-                    )}
-                  </strong>
-                </StyledEntityTypography>
-              </li>
-            );
-          })}
+          {Object.keys(entities).map(
+            (thisEntityType: keyof TransferEntities) => {
+              // According to spec, all entity names are plural and lowercase
+              // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
+              const entityName = capitalize(thisEntityType).slice(0, -1);
+              return (
+                <li key={thisEntityType}>
+                  <StyledEntityTypography>
+                    <strong>
+                      {pluralize(
+                        entityName,
+                        entityName + 's',
+                        entities[thisEntityType].length
+                      )}
+                    </strong>
+                  </StyledEntityTypography>
+                </li>
+              );
+            }
+          )}
         </StyledUl>
       </StyledDiv>
       {timeRemaining ? (

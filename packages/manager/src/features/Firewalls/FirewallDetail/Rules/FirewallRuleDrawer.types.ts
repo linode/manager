@@ -5,7 +5,7 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { FormikProps } from 'formik';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import { FirewallOptionItem } from '../../shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit';
@@ -34,8 +34,8 @@ export interface FirewallRuleFormProps extends FormikProps<FormState> {
   category: Category;
   ips: ExtendedIP[];
   mode: FirewallRuleDrawerMode;
-  presetPorts: Item<string>[];
+  presetPorts: FirewallOptionItem<string>[];
   ruleErrors?: FirewallRuleError[];
   setIPs: (ips: ExtendedIP[]) => void;
-  setPresetPorts: (selected: Item<string>[]) => void;
+  setPresetPorts: (selected: FirewallOptionItem<string>[]) => void;
 }

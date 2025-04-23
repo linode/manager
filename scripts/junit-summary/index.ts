@@ -24,6 +24,7 @@ program
   .version('0.1.0')
   .arguments('<junitPath>')
   .option('-f, --format <str>', 'JUnit summary output format', 'json')
+  .option('--meta:title <string>', 'Pipeline title')
   .option('--meta:author-name <str>', 'Author name')
   .option('--meta:author-slack <str>', 'Author Slack name')
   .option('--meta:author-github <str>', 'Author GitHub name')
@@ -36,6 +37,7 @@ program
   .option('--meta:artifacts-url <str>', 'CI artifacts URL')
   .option('--meta:results-url <str>', 'CI results URL')
   .option('--meta:rerun-url <str>', 'CI rerun URL')
+  .option('--meta:extra <str>', 'Extra information to display in output')
   .action((junitPath) => {
     return main(junitPath);
   });
@@ -46,9 +48,11 @@ const isTestSuites = (data: TestSuite | TestSuites): data is TestSuites => {
 
 const main = async (junitPath: string) => {
   try {
-    const reportPath = path.resolve(junitPath);
+    const reportPath = path.resolve(import.meta.dirname, '..', '..', junitPath);
     const summaryFormat = program.opts().format;
     const metadata: Metadata = {
+      pipelineTitle: program.opts()['meta:title'],
+
       authorName: program.opts()['meta:authorName'],
       authorSlack: program.opts()['meta:authorSlack'],
       authorGitHub: program.opts()['meta:auhtorGithub'],
@@ -65,6 +69,8 @@ const main = async (junitPath: string) => {
       artifactsUrl: program.opts()['meta:artifactsUrl'],
       resultsUrl: program.opts()['meta:resultsUrl'],
       rerunUrl: program.opts()['meta:rerunUrl'],
+
+      extra: program.opts()['meta:extra'],
     };
 
     // Create an array of absolute file paths to JUnit XML report files.
@@ -75,10 +81,6 @@ const main = async (junitPath: string) => {
       .map((dirItem: string) => {
         return path.resolve(reportPath, dirItem);
       });
-
-    if (reportFiles.length < 1) {
-      throw new Error(`No JUnit report files found in '${reportPath}'.`)
-    }
 
     // Read JUnit report file contents.
     const loadReportFileContents = reportFiles.map((reportFile: string) => {

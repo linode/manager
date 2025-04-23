@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
@@ -8,9 +8,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 const meta: Meta<typeof EntityIcon> = {
-  args: { variant: 'linode' },
+  args: { variant: 'compute' },
   component: EntityIcon,
-  title: 'Components/EntityIcon',
+  title: 'Icons/EntityIcon',
 };
 
 export default meta;
@@ -18,24 +18,15 @@ export default meta;
 type Story = StoryObj<typeof EntityIcon>;
 
 const variantList = [
-  { displayName: 'Managed', name: 'managed' },
-  { displayName: 'Linode', name: 'linode' },
-  { displayName: 'Volume', name: 'volume' },
-  { displayName: 'NodeBalancer', name: 'nodebalancer' },
-  { displayName: 'Firewall', name: 'firewall' },
-  { displayName: 'StackScript', name: 'stackscript' },
-  { displayName: 'Image', name: 'image' },
-  { displayName: 'Domain', name: 'domain' },
-  { displayName: 'Kubernetes', name: 'kubernetes' },
-  { displayName: 'Object Storage', name: 'storage' },
-  { displayName: 'Longview', name: 'longview' },
-  { displayName: 'Marketplace', name: 'marketplace' },
+  { displayName: 'Compute', name: 'compute' },
+  { displayName: 'Storage', name: 'storage' },
+  { displayName: 'Network', name: 'network' },
+  { displayName: 'Database', name: 'database' },
+  { displayName: 'Monitor', name: 'monitor' },
+  { displayName: 'More', name: 'more' },
 ];
 
 const sxGridItem = {
-  '& svg': {
-    color: '#333',
-  },
   alignItems: 'center',
   display: 'flex',
   flexDirection: 'column',
@@ -44,12 +35,20 @@ const sxGridItem = {
 
 export const Default: Story = {
   render: (args) => (
-    <Grid container spacing={2}>
-      <Grid sx={{ ...sxGridItem, marginBottom: '20px' }} xs="auto">
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      sx={{
+        display: 'flex',
+      }}
+    >
+      <Grid sx={{ ...sxGridItem }} size="auto">
         <EntityIcon {...args} />
+        <StyledLabel fontSize="0.875rem">{args.variant}</StyledLabel>
       </Grid>
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <StyledLabel fontSize="1.5rem">All Variants</StyledLabel>
         </Grid>
         {variantList.map((variant, idx) => {

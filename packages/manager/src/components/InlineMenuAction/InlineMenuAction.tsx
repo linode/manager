@@ -1,17 +1,21 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import { StyledActionButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { StyledActionButton } from 'src/components/Button/StyledActionButton';
+import { Link } from 'src/components/Link';
 
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
+  /** Optional aria label */
+  'aria-label'?: string;
   /** Optional height when displayed as a button */
   buttonHeight?: number;
   /** Optional class names */
   className?: string;
+  /** Optional test id */
+  'data-testid'?: string;
   /** Optional disabled */
   disabled?: boolean;
   /** Optional href */
@@ -51,8 +55,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
   return (
     <StyledActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
-      aria-label={rest['aria-label']}
-      buttonType="secondary"
+      buttonType="primary"
       disabled={disabled}
       loading={loading}
       onClick={onClick}

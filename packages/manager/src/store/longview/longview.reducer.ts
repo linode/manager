@@ -34,10 +34,13 @@ const reducer = reducerWithInitialState(defaultState)
     getLongviewClients.done,
     (state, { payload: { result } }) => ({
       ...state,
-      data: result.data.reduce((acc, client) => {
-        acc[client.id] = client;
-        return acc;
-      }, {}),
+      data: result.data.reduce<Record<number, LongviewClient>>(
+        (acc, client) => {
+          acc[client.id] = client;
+          return acc;
+        },
+        {}
+      ),
       lastUpdated: Date.now(),
       loading: false,
       results: result.results,

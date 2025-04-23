@@ -1,10 +1,10 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
   '&:before': {
@@ -15,7 +15,7 @@ export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   width: '30%',
 }));
 

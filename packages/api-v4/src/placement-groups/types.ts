@@ -1,33 +1,45 @@
 import type { Region } from '../regions/types';
 
-export const AFFINITY_TYPES = {
+export const PLACEMENT_GROUP_TYPES = {
   'affinity:local': 'Affinity',
   'anti_affinity:local': 'Anti-affinity',
 } as const;
 
-export type AffinityType = keyof typeof AFFINITY_TYPES;
-export type AffinityTypeEnforcement = 'Strict' | 'Flexible';
+export const PLACEMENT_GROUP_POLICIES = {
+  strict: 'Strict',
+  flexible: 'Flexible',
+} as const;
+
+export type PlacementGroupType = keyof typeof PLACEMENT_GROUP_TYPES;
+export type PlacementGroupPolicy = keyof typeof PLACEMENT_GROUP_POLICIES;
 
 export interface PlacementGroup {
   id: number;
   label: string;
   region: Region['id'];
-  affinity_type: AffinityType;
+  placement_group_type: PlacementGroupType;
   is_compliant: boolean;
   members: {
     linode_id: number;
     is_compliant: boolean;
   }[];
-  is_strict: boolean;
+  placement_group_policy: PlacementGroupPolicy;
+  migrations: {
+    inbound?: Array<{ linode_id: number }>;
+    outbound?: Array<{ linode_id: number }>;
+  } | null;
 }
 
-export type PlacementGroupPayload = Pick<
-  PlacementGroup,
-  'id' | 'label' | 'affinity_type' | 'is_strict'
->;
+export interface LinodePlacementGroupPayload
+  extends Pick<
+    PlacementGroup,
+    'id' | 'label' | 'placement_group_type' | 'placement_group_policy'
+  > {
+  migrating_to: number | null;
+}
 
 export interface CreatePlacementGroupPayload
-  extends Omit<PlacementGroupPayload, 'id'> {
+  extends Omit<LinodePlacementGroupPayload, 'id' | 'migrating_to'> {
   region: Region['id'];
 }
 

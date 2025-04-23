@@ -1,11 +1,9 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -14,6 +12,19 @@ import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
+
+export interface PlanSelectionFilterOptionsTable {
+  header?: string;
+  planFilter?: (plan: PlanWithAvailability) => boolean;
+}
+
+export interface PlanSelectionDividers {
+  flag: boolean;
+  planType: LinodeTypeClass;
+  tables: PlanSelectionFilterOptionsTable[];
+}
 
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
@@ -22,8 +33,8 @@ export interface PlanContainerProps {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planType?: LinodeTypeClass;
   plans: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -50,7 +61,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =
-    showLimits && plans.some((plan: PlanWithAvailability) => plan.transfer);
+    showLimits &&
+    plans.some((plan: PlanWithAvailability) => plan.transfer !== undefined);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const showNetwork =
@@ -64,15 +76,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
-  interface PlanSelectionDividerTable {
-    header?: string;
-    planFilter?: (plan: PlanWithAvailability) => boolean;
-  }
-  interface PlanSelectionDividers {
-    flag: boolean;
-    planType: LinodeTypeClass;
-    tables: PlanSelectionDividerTable[];
-  }
+  const isDatabaseGA =
+    !flags.dbaasV2?.beta &&
+    flags.dbaasV2?.enabled &&
+    (isDatabaseCreateFlow || isDatabaseResizeFlow);
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -98,7 +105,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   ];
 
   const renderPlanSelection = React.useCallback(
-    (filterOptions?: PlanSelectionDividerTable) => {
+    (filterOptions?: PlanSelectionFilterOptionsTable) => {
       const _plans = filterOptions?.planFilter
         ? plans.filter(filterOptions.planFilter)
         : plans;
@@ -141,6 +148,18 @@ export const PlanContainer = (props: PlanContainerProps) => {
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
+        {isCreate && isDatabaseGA && (
+          <Typography
+            sx={(theme: Theme) => ({
+              marginBottom: theme.spacing(2),
+              marginLeft: theme.spacing(1),
+              marginTop: theme.spacing(1),
+            })}
+          >
+            Usable storage is smaller than the actual plan storage due to the
+            overhead from the database platform.
+          </Typography>
+        )}
         {shouldDisplayNoRegionSelectedMessage ? (
           <Notice
             spacingLeft={8}
@@ -159,7 +178,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                     : plans;
                   return [
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} xs={12}>
+                      <Grid key={table.header} size={12}>
                         <Typography variant="h3">{table.header}</Typography>
                       </Grid>
                     ),
@@ -173,7 +192,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <Grid xs={12}>
+        <Grid size={12}>
           {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (
@@ -197,7 +216,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                         shouldDisplayNoRegionSelectedMessage
                       }
                       key={`plan-filter-${idx}`}
-                      planFilter={table.planFilter}
+                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />
@@ -210,9 +229,12 @@ export const PlanContainer = (props: PlanContainerProps) => {
                   shouldDisplayNoRegionSelectedMessage
                 }
                 key={planType}
+                planType={planType}
+                plans={plans}
                 renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
                 showTransfer={showTransfer}
+                showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}
               />
             )
           )}

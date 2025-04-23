@@ -1,40 +1,17 @@
-import { LinodeType, getLinodeTypes, getType } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
-import {
-  QueryClient,
-  UseQueryOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { linodeQueries, queryPresets } from '@linode/queries';
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import type { APIError, LinodeType } from '@linode/api-v4';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
-import { queryPresets } from './base';
-
-const queryKey = 'types';
-
-const getAllTypes = () =>
-  getAll(getLinodeTypes)().then((results) => results.data);
-
-const getSingleType = async (type: string, queryClient: QueryClient) => {
-  const allTypesCache = queryClient.getQueryData<LinodeType[]>(
-    allTypesQueryKey
-  );
-  return (
-    allTypesCache?.find((cachedType) => cachedType.id === type) ?? getType(type)
-  );
-};
-
-const allTypesQueryKey = [queryKey, 'all'];
 export const useAllTypes = (enabled = true) => {
-  return useQuery<LinodeType[], APIError[]>(allTypesQueryKey, getAllTypes, {
+  return useQuery<LinodeType[], APIError[]>({
+    ...linodeQueries.types._ctx.all,
     enabled,
     ...queryPresets.oneTimeFetch,
   });
 };
 
-const specificTypesQueryKey = (type: string) => [queryKey, 'detail', type];
 /**
  * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. This
  * hook may be useful in fetching these "shadow plans".
@@ -43,12 +20,19 @@ const specificTypesQueryKey = (type: string) => [queryKey, 'detail', type];
  */
 export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
+
   return useQueries({
     queries: types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      enabled: Boolean(type) && enabled,
-      queryFn: () => getSingleType(type, queryClient),
-      queryKey: specificTypesQueryKey(type),
+      enabled: enabled && Boolean(type),
+      ...linodeQueries.types._ctx.type(type),
       ...queryPresets.oneTimeFetch,
+      initialData() {
+        const allTypesFromCache = queryClient.getQueryData<LinodeType[]>(
+          linodeQueries.types._ctx.all.queryKey
+        );
+
+        return allTypesFromCache?.find((t) => t.id === type);
+      },
     })),
   });
 };

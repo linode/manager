@@ -1,8 +1,8 @@
-import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
+import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { curry } from 'ramda';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -20,15 +20,15 @@ import {
 import { LinodeTransferTable } from './LinodeTransferTable';
 import { TransferCheckoutBar } from './TransferCheckoutBar';
 import { TransferHeader } from './TransferHeader';
-import {
-  TransferableEntity,
-  defaultTransferState,
-  transferReducer,
-} from './transferReducer';
+import { defaultTransferState, transferReducer } from './transferReducer';
+
+import type { TransferableEntity } from './transferReducer';
+import type { CreateTransferPayload } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
 
 export const EntityTransfersCreate = () => {
   const { push } = useHistory();
-  const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
+  const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
 
   /**
@@ -70,7 +70,9 @@ export const EntityTransfersCreate = () => {
         const entityCount = countByEntity(transfer.entities);
         sendEntityTransferCreateEvent(entityCount);
 
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries({
+          queryKey: [queryKey],
+        });
         push({ pathname: '/account/service-transfers', state: { transfer } });
       },
     }).catch((_) => null);
@@ -99,7 +101,13 @@ export const EntityTransfersCreate = () => {
         />
       ) : null}
       <StyledRootGrid container direction="row" spacing={3} wrap="wrap">
-        <Grid lg={9} md={8} xs={12}>
+        <Grid
+          size={{
+            lg: 9,
+            md: 8,
+            xs: 12,
+          }}
+        >
           <TransferHeader />
           <LinodeTransferTable
             handleRemove={removeEntitiesFromTransfer('linodes')}
@@ -108,12 +116,12 @@ export const EntityTransfersCreate = () => {
             selectedLinodes={state.linodes}
           />
         </Grid>
-        <StyledSidebarGrid lg={3} md={4} xs={12}>
+        <StyledSidebarGrid size={{ lg: 3, md: 4, xs: 12 }}>
           <TransferCheckoutBar
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)
             }
-            isCreating={isLoading}
+            isCreating={isPending}
             removeEntities={removeEntitiesFromTransfer}
             selectedEntities={state}
           />
@@ -122,3 +130,9 @@ export const EntityTransfersCreate = () => {
     </>
   );
 };
+
+export const entityTransfersCreateLazyRoute = createLazyRoute(
+  '/account/service-transfers/create'
+)({
+  component: EntityTransfersCreate,
+});

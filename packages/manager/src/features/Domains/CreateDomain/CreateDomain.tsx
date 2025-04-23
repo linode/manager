@@ -1,36 +1,30 @@
-import { Linode } from '@linode/api-v4';
+import { useGrants, useProfile } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
-  CreateDomainPayload,
-  Domain,
-  DomainType,
-} from '@linode/api-v4/lib/domains';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+  ActionsPanel,
+  Autocomplete,
+  FormControlLabel,
+  FormHelperText,
+  Notice,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
-import { path } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { TextField } from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { useCreateDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -38,16 +32,25 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import {
-  ExtendedIP,
-  extendedIPToString,
-  stringToExtendedIP,
-} from 'src/utilities/ipUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 
-type DefaultRecordsType = 'linode' | 'nodebalancer' | 'none';
+import type { Linode } from '@linode/api-v4';
+import type {
+  CreateDomainPayload,
+  Domain,
+  DomainType,
+} from '@linode/api-v4/lib/domains';
+import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { DomainState } from 'src/routes/domains';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+interface DefaultRecordsSetting {
+  label: string;
+  value: 'linode' | 'nodebalancer' | 'none';
+}
 
 export const CreateDomain = () => {
   const { data: profile } = useProfile();
@@ -61,22 +64,31 @@ export const CreateDomain = () => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
-    Item<DefaultRecordsType>
-  >({
-    label: 'Do not insert default records for me.',
-    value: 'none',
-  });
+  const defaultRecords: DefaultRecordsSetting[] = [
+    {
+      label: 'Do not insert default records for me.',
+      value: 'none',
+    },
+    {
+      label: 'Insert default records from one of my Linodes.',
+      value: 'linode',
+    },
+    {
+      label: 'Insert default records from one of my NodeBalancers.',
+      value: 'nodebalancer',
+    },
+  ];
+
+  const [defaultRecordsSetting, setDefaultRecordsSetting] =
+    React.useState<DefaultRecordsSetting>(defaultRecords[0]);
 
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);
-  const [
-    selectedDefaultNodeBalancer,
-    setSelectedDefaultNodeBalancer,
-  ] = React.useState<NodeBalancer | undefined>(undefined);
+  const [selectedDefaultNodeBalancer, setSelectedDefaultNodeBalancer] =
+    React.useState<NodeBalancer | undefined>(undefined);
 
   const { values, ...formik } = useFormik({
     initialValues: {
@@ -110,20 +122,24 @@ export const CreateDomain = () => {
   const isCreatingPrimaryDomain = values.type === 'master';
   const isCreatingSecondaryDomain = values.type === 'slave';
 
-  const redirect = (id: '' | number, state?: Record<string, string>) => {
+  const redirect = (id: null | number, state?: DomainState) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
-    history.push(returnPath, state);
+    navigate({
+      params: { domainId: Number(id) },
+      state: (prev) => ({ ...prev, ...state }),
+      to: returnPath,
+    });
   };
 
   const redirectToLandingOrDetail = (
     type: 'master' | 'slave',
     domainID: number,
-    state: Record<string, string> = {}
+    state: DomainState = {}
   ) => {
     if (type === 'master' && domainID) {
       redirect(domainID, state);
     } else {
-      redirect('', state);
+      redirect(null, state);
     }
   };
 
@@ -180,8 +196,8 @@ export const CreateDomain = () => {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              path(['ipv4', 0], selectedDefaultLinode),
-              path(['ipv6'], selectedDefaultLinode)
+              selectedDefaultLinode?.ipv4?.[0],
+              selectedDefaultLinode?.ipv6
             )
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
@@ -191,8 +207,8 @@ export const CreateDomain = () => {
                   `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
-                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                    ipv6: path(['ipv6'], selectedDefaultLinode),
+                    ipv4: selectedDefaultLinode?.ipv4?.[0],
+                    ipv6: selectedDefaultLinode?.ipv6,
                     selectedLinode: selectedDefaultLinode!.id,
                   }
                 );
@@ -207,8 +223,8 @@ export const CreateDomain = () => {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              path(['ipv4'], selectedDefaultNodeBalancer),
-              path(['ipv6'], selectedDefaultNodeBalancer)
+              selectedDefaultNodeBalancer?.ipv4,
+              selectedDefaultNodeBalancer?.ipv6
             )
               .then(() => {
                 return redirectToLandingOrDetail(type, domainData.id);
@@ -218,8 +234,8 @@ export const CreateDomain = () => {
                   `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
                     domainID: domainData.id,
-                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer),
+                    ipv4: selectedDefaultNodeBalancer?.ipv4,
+                    ipv6: selectedDefaultNodeBalancer?.ipv6,
                     selectedNodeBalancer: selectedDefaultNodeBalancer!.id,
                   }
                 );
@@ -258,19 +274,18 @@ export const CreateDomain = () => {
   };
 
   const updatePrimaryIPAddress = (newIPs: ExtendedIP[]) => {
-    const master_ips =
-      newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
+    const masterIps = newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (mounted) {
-      formik.setFieldValue('master_ips', master_ips);
+      formik.setFieldValue('master_ips', masterIps);
     }
   };
 
   return (
     <Grid container>
-      <DocumentTitleSegment segment="Create Domain" />
+      <DocumentTitleSegment segment="Create a Domain" />
       <LandingHeader
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Create"
       />
       <StyledGrid>
@@ -284,7 +299,6 @@ export const CreateDomain = () => {
             text={
               "You don't have permissions to create a new Domain. Please contact an account administrator for details."
             }
-            important
             variant="error"
           />
         )}
@@ -358,29 +372,15 @@ export const CreateDomain = () => {
             )}
             {isCreatingPrimaryDomain && (
               <React.Fragment>
-                <Select
-                  onChange={(value: Item<DefaultRecordsType>) =>
-                    setDefaultRecordsSetting(value)
-                  }
-                  options={[
-                    {
-                      label: 'Do not insert default records for me.',
-                      value: 'none',
-                    },
-                    {
-                      label: 'Insert default records from one of my Linodes.',
-                      value: 'linode',
-                    },
-                    {
-                      label:
-                        'Insert default records from one of my NodeBalancers.',
-                      value: 'nodebalancer',
-                    },
-                  ]}
+                <Autocomplete
+                  value={defaultRecords.find(
+                    (dr) => dr.value === defaultRecordsSetting.value
+                  )}
+                  disableClearable
                   disabled={disabled}
-                  isClearable={false}
                   label="Insert Default Records"
-                  value={defaultRecordsSetting}
+                  onChange={(_, selected) => setDefaultRecordsSetting(selected)}
+                  options={defaultRecords}
                 />
                 <StyledFormHelperText>
                   If specified, we can automatically create some domain records

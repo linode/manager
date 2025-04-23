@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { TextTooltip } from './TextTooltip';
 

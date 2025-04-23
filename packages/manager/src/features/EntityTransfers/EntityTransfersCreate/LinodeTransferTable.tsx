@@ -1,7 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -9,13 +7,15 @@ import { SelectableTableRow } from 'src/components/SelectableTableRow/Selectable
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLinodesQuery } from 'src/queries/linodes/linodes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { TransferTable } from './TransferTable';
-import { Entity, TransferEntity } from './transferReducer';
+
+import type { Entity, TransferEntity } from './transferReducer';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   handleRemove: (linodesToRemove: string[]) => void;
@@ -77,6 +77,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
       page={pagination.page}
       pageSize={pagination.pageSize}
       requestPage={pagination.handlePageChange}
+      searchText={searchText}
       toggleSelectAll={toggleSelectAll}
     >
       <TableContentWrapper

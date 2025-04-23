@@ -1,4 +1,4 @@
-import { splitAt } from 'ramda';
+import { splitAt } from '@linode/utilities';
 import * as React from 'react';
 
 import { ShowMore } from 'src/components/ShowMore/ShowMore';

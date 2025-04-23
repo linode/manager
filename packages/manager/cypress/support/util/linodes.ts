@@ -1,14 +1,35 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
-import { createLinodeRequestFactory } from '@src/factories';
+import { createLinodeRequestFactory } from '@linode/utilities';
+import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+import { findOrCreateDependencyVlan } from 'support/api/vlans';
+import { pageSize } from 'support/constants/api';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { depaginate } from './paginate';
-import { pageSize } from 'support/constants/api';
 
-import type { Config, CreateLinodeRequest, Linode } from '@linode/api-v4';
-import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+
+import { depaginate } from './paginate';
+
+import type {
+  Config,
+  CreateLinodeRequest,
+  InterfacePayload,
+  Linode,
+} from '@linode/api-v4';
+
+/**
+ * Linode create interface to configure a Linode with no public internet access.
+ */
+export const linodeVlanNoInternetConfig: InterfacePayload[] = [
+  {
+    ipam_address: null,
+    label: randomLabel(),
+    primary: false,
+    purpose: 'vlan',
+  },
+];
 
 /**
  * Methods used to secure test Linodes.
@@ -23,30 +44,30 @@ import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
  */
 export type CreateTestLinodeSecurityMethod =
   | 'firewall'
-  | 'vlan_no_internet'
-  | 'powered_off';
+  | 'powered_off'
+  | 'vlan_no_internet';
 
 /**
  * Options to control the behavior of test Linode creation.
  */
 export interface CreateTestLinodeOptions {
-  /** Whether to wait for created Linode disks to be available before resolving. */
-  waitForDisks: boolean;
+  /** Method to use to secure the test Linode. */
+  securityMethod: CreateTestLinodeSecurityMethod;
 
   /** Whether to wait for created Linode to boot before resolving. */
   waitForBoot: boolean;
 
-  /** Method to use to secure the test Linode. */
-  securityMethod: CreateTestLinodeSecurityMethod;
+  /** Whether to wait for created Linode disks to be available before resolving. */
+  waitForDisks: boolean;
 }
 
 /**
  * Default test Linode creation options.
  */
 export const defaultCreateTestLinodeOptions = {
-  waitForDisks: false,
-  waitForBoot: false,
   securityMethod: 'firewall',
+  waitForBoot: false,
+  waitForDisks: false,
 };
 
 /**
@@ -58,7 +79,7 @@ export const defaultCreateTestLinodeOptions = {
  * @returns Promise that resolves to the created Linode.
  */
 export const createTestLinode = async (
-  createRequestPayload?: Partial<CreateLinodeRequest> | null,
+  createRequestPayload?: null | Partial<CreateLinodeRequest>,
   options?: Partial<CreateTestLinodeOptions>
 ): Promise<Linode> => {
   const resolvedOptions = {
@@ -66,50 +87,54 @@ export const createTestLinode = async (
     ...(options || {}),
   };
 
-  const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
-    switch (resolvedOptions.securityMethod) {
-      case 'firewall':
-      default:
-        const firewall = await findOrCreateDependencyFirewall();
-        return {
-          firewall_id: firewall.id,
-        };
+  let regionId = createRequestPayload?.region;
+  if (!regionId) {
+    regionId = chooseRegion().id;
+  }
 
-      case 'vlan_no_internet':
-        return {
-          interfaces: [
-            {
-              purpose: 'vlan',
-              primary: false,
-              label: randomLabel(),
-              ipam_address: null,
-            },
-          ],
-        };
+  const securityMethodPayload: Partial<CreateLinodeRequest> =
+    await (async () => {
+      switch (resolvedOptions.securityMethod) {
+        case 'firewall':
+          const firewall = await findOrCreateDependencyFirewall();
+          return {
+            firewall_id: firewall.id,
+          };
 
-      case 'powered_off':
-        return {
-          booted: false,
-        };
-    }
-  })();
+        case 'powered_off':
+          return {
+            booted: false,
+          };
+
+        case 'vlan_no_internet':
+          const vlanConfig = linodeVlanNoInternetConfig;
+          const vlanLabel = await findOrCreateDependencyVlan(regionId);
+          vlanConfig[0].label = vlanLabel;
+          return {
+            interfaces: vlanConfig,
+          };
+
+        default:
+          return {};
+      }
+    })();
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
-      label: randomLabel(),
-      image: 'linode/debian11',
-      region: chooseRegion().id,
       booted: false,
+      image: 'linode/ubuntu24.04',
+      label: randomLabel(),
+      region: regionId,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
 
     // Override given root password; mitigate against using default factory password, inadvertent logging, etc.
     root_pass: randomString(64, {
+      lowercase: true,
+      numbers: true,
       spaces: true,
       symbols: true,
-      numbers: true,
-      lowercase: true,
       uppercase: true,
     }),
   };
@@ -127,6 +152,7 @@ export const createTestLinode = async (
     );
   }
 
+  // eslint-disable-next-line @linode/cloud-manager/no-createLinode
   const linode = await createLinode(resolvedCreatePayload);
 
   // Wait for disks to become available if `waitForDisks` option is set.
@@ -147,33 +173,29 @@ export const createTestLinode = async (
 
   // Wait for Linode status to be 'running' if `waitForBoot` is true.
   if (resolvedOptions.waitForBoot) {
-    // Wait 15 seconds before initial check, then poll again every 5 seconds.
-    await pollLinodeStatus(
-      linode.id,
-      'running',
-      new SimpleBackoffMethod(5000, {
-        initialDelay: 15000,
-        maxAttempts: 25,
-      })
-    );
+    await pollLinodeStatus(linode.id, 'running');
   }
 
   Cypress.log({
-    name: 'createTestLinode',
-    message: `Create Linode '${linode.label}' (ID ${linode.id})`,
     consoleProps: () => {
       return {
+        linode,
         options: resolvedOptions,
         payload: {
           ...resolvedCreatePayload,
           root_pass: '(redacted)',
         },
-        linode,
       };
     },
+    message: `Create Linode '${linode.label}' (ID ${linode.id})`,
+    name: 'createTestLinode',
+    timeout: LINODE_CREATE_TIMEOUT,
   });
 
-  return linode;
+  return {
+    ...linode,
+    capabilities: [],
+  };
 };
 
 /**

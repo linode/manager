@@ -1,12 +1,12 @@
+import { Button } from '@linode/ui';
 import AttachFile from '@mui/icons-material/AttachFile';
 import { remove } from 'ramda';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-
 import { AttachFileListItem } from './AttachFileListItem';
-import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
+
+import type { FileAttachment } from './index';
 
 interface Props {
   files: FileAttachment[];
@@ -61,6 +61,8 @@ export const AttachFileForm = (props: Props) => {
       />
       <Button
         sx={(theme) => ({
+          display: 'flex',
+          justifyContent: 'flex-start',
           marginTop: theme.spacing(1),
         })}
         buttonType="secondary"

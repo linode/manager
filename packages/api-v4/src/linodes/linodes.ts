@@ -13,7 +13,7 @@ import Request, {
 } from '../request';
 import { DeepPartial, Filter, Params, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
-import { CreateLinodeRequest, Linode } from './types';
+import { CreateLinodeRequest, Linode, LinodeLishData } from './types';
 
 /**
  * getLinode
@@ -29,17 +29,15 @@ export const getLinode = (linodeId: number) =>
   );
 
 /**
- * getLinodeLishToken
+ * getLinodeLish
  *
- * Generates a token which can be used to authenticate with LISH.
+ * Generates urls and websockets protocols to authenticate with LISH.
  *
  * @param linodeId { number } The id of the Linode.
  */
-export const getLinodeLishToken = (linodeId: number) =>
-  Request<{ lish_token: string }>(
-    setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish_token`
-    ),
+export const getLinodeLish = (linodeId: number) =>
+  Request<LinodeLishData>(
+    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/lish`),
     setMethod('POST')
   );
 
@@ -74,7 +72,7 @@ export const getLinodeVolumes = (
  */
 export const getLinodes = (params?: Params, filter?: Filter) =>
   Request<Page<Linode>>(
-    setURL(`${API_ROOT}/linode/instances/`),
+    setURL(`${API_ROOT}/linode/instances`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)

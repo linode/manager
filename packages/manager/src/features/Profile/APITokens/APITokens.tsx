@@ -1,4 +1,5 @@
-import { Stack } from '@mui/material';
+import { Stack } from '@linode/ui';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -20,3 +21,7 @@ export const APITokens = () => {
     </Stack>
   );
 };
+
+export const APITokensLazyRoute = createLazyRoute('/profile/tokens')({
+  component: APITokens,
+});

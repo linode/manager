@@ -1,12 +1,11 @@
-import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import { StyledLinkButton } from '@linode/ui';
+import { capitalize, pluralize } from '@linode/utilities';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
-import { capitalize } from 'src/utilities/capitalize';
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledCopyTooltip,
@@ -18,6 +17,8 @@ import {
   StyledTokenTableCell,
 } from './RenderTransferRow.styles';
 import { TransfersPendingActionMenu } from './TransfersPendingActionMenu';
+
+import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 
 interface Props {
   created: string;
@@ -59,9 +60,11 @@ export const RenderTransferRow = React.memo((props: Props) => {
     <StyledTableRow>
       <StyledTokenTableCell noWrap>
         <StyledDiv>
-          <StyledLinkButton onClick={() => handleTokenClick(token, entities)}>
-            {token}
-          </StyledLinkButton>
+          <MaskableText isToggleable text={token}>
+            <StyledLinkButton onClick={() => handleTokenClick(token, entities)}>
+              {token}
+            </StyledLinkButton>
+          </MaskableText>
           <div data-qa-copy-token>
             <StyledCopyTooltip text={token} />
           </div>

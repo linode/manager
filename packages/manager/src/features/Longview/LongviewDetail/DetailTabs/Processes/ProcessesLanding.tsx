@@ -1,24 +1,24 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
-import { prop, sortBy } from 'ramda';
+import { TextField } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
+import { escapeRegExp } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TextField } from 'src/components/TextField';
-import {
+import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
+
+import { useGraphs } from '../OverviewGraphs/useGraphs';
+import { ProcessesGraphs } from './ProcessesGraphs';
+import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
+import { ProcessesTable } from './ProcessesTable';
+
+import type { ExtendedProcess } from './ProcessesTable';
+import type { Process } from './types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
   LongviewProcesses,
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
-import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
-import { escapeRegExp } from 'src/utilities/escapeRegExp';
-import { isToday as _isToday } from 'src/utilities/isToday';
-
-import { StyledItemGrid } from '../CommonStyles.styles';
-import { useGraphs } from '../OverviewGraphs/useGraphs';
-import { ProcessesGraphs } from './ProcessesGraphs';
-import { ProcessesTable, ExtendedProcess } from './ProcessesTable';
-import { Process } from './types';
-import { StyledBox, StyledTimeRangeSelect } from './ProcessesLanding.styles';
 
 interface Props {
   clientAPIKey?: string;
@@ -49,7 +49,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   // Text input for filtering processes by name or user.
-  const [inputText, setInputText] = React.useState<string | undefined>();
+  const [inputText, setInputText] = React.useState<string>();
 
   // The selected process row.
   const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(
@@ -99,7 +99,9 @@ export const ProcessesLanding = React.memo((props: Props) => {
       return;
     }
 
-    const sortedByName = sortByName(memoizedFilteredData);
+    const sortedByName = memoizedFilteredData.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
     if (sortedByName.length > 0) {
       const { name, user } = sortedByName[0];
       setSelectedProcess({
@@ -113,7 +115,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
     <>
       <DocumentTitleSegment segment="Processes" />
       <Grid container spacing={4}>
-        <StyledItemGrid lg={7} xs={12}>
+        <Grid size={{ lg: 7, xs: 12 }}>
           <StyledBox display="flex" justifyContent="space-between">
             <TextField
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -144,8 +146,8 @@ export const ProcessesLanding = React.memo((props: Props) => {
             selectedProcess={selectedProcess}
             setSelectedProcess={setSelectedProcess}
           />
-        </StyledItemGrid>
-        <StyledItemGrid lg={5} xs={12}>
+        </Grid>
+        <Grid size={{ lg: 5, xs: 12 }}>
           <ProcessesGraphs
             clientAPIKey={clientAPIKey || ''}
             error={lastUpdatedError?.[0]?.reason || error}
@@ -157,7 +159,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
             time={time}
             timezone={timezone}
           />
-        </StyledItemGrid>
+        </Grid>
       </Grid>
     </>
   );
@@ -178,6 +180,7 @@ export const extendData = (
     const { longname, ...users } = processesData.Processes![processName];
 
     Object.keys(users).forEach((user) => {
+      // @ts-expect-error The types are completely wrong. They don't account for "user"
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
@@ -196,5 +199,3 @@ export const extendData = (
 
   return extendedData;
 };
-
-const sortByName = sortBy(prop('name'));

@@ -1,77 +1,145 @@
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: '0px !important',
-  },
-}));
+import { useIsDatabasesEnabled } from '../utilities';
+
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import type { ActionType } from 'src/features/Account/utils';
+
+interface Props {
+  databaseEngine: Engine;
+  databaseId: number;
+  databaseLabel: string;
+  databaseStatus: DatabaseStatus;
+  handlers: ActionHandlers;
+}
 
 export interface ActionHandlers {
-  [index: string]: any;
-  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
+  handleDelete: () => void;
+  handleManageAccessControls: () => void;
+  handleResetPassword: () => void;
+  handleSuspend: () => void;
 }
 
-interface Props extends ActionHandlers {
-  databaseID: number;
-  databaseLabel: string;
-  inlineLabel?: string;
-}
+export const DatabaseActionMenu = (props: Props) => {
+  const {
+    databaseEngine,
+    databaseId,
+    databaseLabel,
+    databaseStatus,
+    handlers,
+  } = props;
 
-type CombinedProps = Props;
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const { mutateAsync: resumeDatabase } = useResumeDatabaseMutation(
+    databaseEngine,
+    databaseId
+  );
 
-const DatabaseActionMenu = (props: CombinedProps) => {
-  const { classes } = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const status = 'running';
+  const isDatabaseNotRunning = status !== 'running';
+  const isDatabaseSuspended =
+    databaseStatus === 'suspended' || databaseStatus === 'suspending';
 
-  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
+  const history = useHistory();
+
+  const handleResume = async () => {
+    try {
+      await resumeDatabase();
+      return enqueueSnackbar('Database Cluster resumed successfully.', {
+        variant: 'success',
+      });
+    } catch (e: any) {
+      const error = getAPIErrorOrDefault(
+        e,
+        'There was an error resuming this Database Cluster.'
+      )[0].reason;
+      return enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+
+  const isDatabaseReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'database',
+    id: databaseId,
+  });
+
+  const getTooltipText = (action: ActionType) => {
+    return isDatabaseReadOnly
+      ? getRestrictedResourceText({
+          action,
+          isSingular: true,
+          resourceType: 'Databases',
+        })
+      : undefined;
+  };
 
   const actions: Action[] = [
     {
-      onClick: () => {
-        alert('Resize not yet implemented');
-      },
-      title: 'Resize',
+      disabled:
+        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
+      onClick: handlers.handleManageAccessControls,
+      title: 'Manage Access Controls',
+      tooltip: getTooltipText('edit'),
     },
     {
+      disabled:
+        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
+      onClick: handlers.handleResetPassword,
+      title: 'Reset Root Password',
+      tooltip: getTooltipText('edit'),
+    },
+    {
+      disabled:
+        isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
       onClick: () => {
-        if (triggerDeleteDatabase !== undefined) {
-          triggerDeleteDatabase(databaseID, databaseLabel);
-        }
+        history.push({
+          pathname: `/databases/${databaseEngine}/${databaseId}/resize`,
+        });
       },
+      title: 'Resize',
+      tooltip: getTooltipText('resize'),
+    },
+    {
+      disabled: isDatabaseNotRunning || isDatabaseReadOnly,
+      onClick: handlers.handleDelete,
       title: 'Delete',
+      tooltip: getTooltipText('delete'),
     },
   ];
 
+  if (isDatabasesV2GA) {
+    actions.unshift({
+      disabled: databaseStatus !== 'active' || isDatabaseReadOnly,
+      onClick: () => {
+        handlers.handleSuspend();
+      },
+      title: 'Suspend',
+      tooltip: getTooltipText('suspend'),
+    });
+
+    actions.splice(4, 0, {
+      disabled: !isDatabaseSuspended || isDatabaseReadOnly,
+      onClick: () => {
+        handleResume();
+      },
+      title: 'Resume',
+      tooltip: getTooltipText('resume'),
+    });
+  }
+
   return (
-    <div className={classes.root}>
-      {!matchesSmDown &&
-        actions.map((thisAction) => {
-          return (
-            <InlineMenuAction
-              actionText={thisAction.title}
-              key={thisAction.title}
-              onClick={thisAction.onClick}
-            />
-          );
-        })}
-      {matchesSmDown && (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for Database ${props.databaseLabel}`}
-        />
-      )}
-    </div>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Database ${databaseLabel}`}
+    />
   );
 };
-
-export default React.memo(DatabaseActionMenu);

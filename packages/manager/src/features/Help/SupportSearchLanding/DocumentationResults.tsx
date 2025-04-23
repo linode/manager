@@ -1,11 +1,10 @@
-import { Theme } from '@mui/material/styles';
+import { ListItem, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {
@@ -13,16 +12,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(3),
   },
   icon: {
-    color: '#3683DC',
+    color: theme.tokens.color.Ultramarine[70],
     fontSize: '0.8rem',
     marginLeft: theme.spacing(1),
   },
   label: {
-    color: '#3683DC',
+    color: theme.tokens.color.Ultramarine[70],
   },
   link: {
     display: 'inline-block',
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginTop: theme.spacing(2),
   },
   noResultsContainer: {

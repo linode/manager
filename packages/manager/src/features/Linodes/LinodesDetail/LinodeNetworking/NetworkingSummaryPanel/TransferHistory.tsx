@@ -1,4 +1,5 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -8,11 +9,6 @@ import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { LinodeNetworkTimeData, Point } from 'src/components/AreaChart/types';
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
@@ -22,10 +18,15 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
   useLinodeTransferByDate,
-} from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { readableBytes } from 'src/utilities/unitConversions';
+
+import type { Stats } from '@linode/api-v4/lib/linodes';
+import type {
+  LinodeNetworkTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
 
 interface Props {
   linodeCreated: string;
@@ -52,7 +53,7 @@ export const TransferHistory = React.memo((props: Props) => {
     data: stats,
     error: statsError,
     isLoading: statsLoading,
-  } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
+  } = useLinodeStatsByDate(linodeID, year, month, true);
 
   const { data: transfer } = useLinodeTransferByDate(
     linodeID,
@@ -155,11 +156,11 @@ export const TransferHistory = React.memo((props: Props) => {
     );
 
     return (
-      <Box marginLeft={-5}>
+      <Box>
         <AreaChart
           areas={[
             {
-              color: '#1CB35C',
+              color: theme.tokens.color.Green[70],
               dataKey: 'Public Outbound Traffic',
             },
           ]}

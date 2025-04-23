@@ -2,22 +2,18 @@
  * @file Integration tests for Cloud Manager account cancellation flows.
  */
 
-import { profileFactory } from 'src/factories/profile';
-import { accountFactory } from 'src/factories/account';
-import {
-  mockGetAccount,
-  mockCancelAccount,
-  mockCancelAccountError,
-} from 'support/intercepts/account';
+import { profileFactory } from '@linode/utilities';
 import {
   cancellationDataLossWarning,
+  cancellationDialogTitle,
   cancellationPaymentErrorMessage,
 } from 'support/constants/account';
 import {
-  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
-} from 'src/features/Account/constants';
+  mockCancelAccount,
+  mockCancelAccountError,
+  mockGetAccount,
+} from 'support/intercepts/account';
+import { mockWebpageUrl } from 'support/intercepts/general';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
@@ -25,8 +21,15 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
+
+import { accountFactory } from 'src/factories/account';
+import {
+  CHILD_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+  PROXY_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT,
+} from 'src/features/Account/constants';
+
 import type { CancelAccount } from '@linode/api-v4';
-import { mockWebpageUrl } from 'support/intercepts/general';
 
 describe('Account cancellation', () => {
   /*
@@ -39,7 +42,7 @@ describe('Account cancellation', () => {
   it('users can cancel account', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      username: 'mock-user',
+      email: 'mock-user@linode.com',
       restricted: false,
     });
     const mockCancellationResponse: CancelAccount = {
@@ -74,9 +77,7 @@ describe('Account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(
@@ -89,14 +90,30 @@ describe('Account cancellation', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Enter username, confirm that submit button becomes enabled, and click
+        // Verify checkboxes are present with correct labels
+        cy.get('[data-qa-checkbox="deleteAccountServices"]')
+          .should('be.visible')
+          .should('not.be.checked');
+
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]')
+          .should('be.visible')
+          .should('not.be.checked');
+
+        // Check both boxes but verify submit remains disabled without email
+        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+
+        ui.button
+          .findByTitle('Close Account')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Enter email, confirm that submit button becomes enabled, and click
         // the submit button.
-        cy.findByLabelText(
-          `Please enter your Username (${mockProfile.username}) to confirm.`
-        )
+        cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
           .should('be.visible')
           .should('be.enabled')
-          .type(mockProfile.username);
+          .type(mockProfile.email);
 
         ui.button
           .findByTitle('Close Account')
@@ -115,7 +132,8 @@ describe('Account cancellation', () => {
         // Enter account cancellation comments, click "Close Account" again,
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
-        cy.contains('Comments (optional)').click().type(cancellationComments);
+        cy.contains('Comments (optional)').click();
+        cy.focused().type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')
@@ -151,7 +169,7 @@ describe('Account cancellation', () => {
   it('restricted users cannot cancel account', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      username: 'mock-restricted-user',
+      email: 'mock-user@linode.com',
       restricted: true,
     });
 
@@ -176,17 +194,22 @@ describe('Account cancellation', () => {
 
     // Fill out cancellation dialog and attempt submission.
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText(
-          `Please enter your Username (${mockProfile.username}) to confirm.`
-        )
+        // Check both boxes but verify submit remains disabled without email
+        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+
+        ui.button
+          .findByTitle('Close Account')
+          .should('be.visible')
+          .should('be.disabled');
+
+        cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
           .should('be.visible')
           .should('be.enabled')
-          .type(mockProfile.username);
+          .type(mockProfile.email);
 
         ui.button
           .findByTitle('Close Account')
@@ -208,7 +231,7 @@ describe('Parent/Child account cancellation', () => {
   it('disables the "Close Account" button for a child user', () => {
     const mockAccount = accountFactory.build({});
     const mockProfile = profileFactory.build({
-      username: 'mock-child-user',
+      email: 'mock-user@linode.com',
       restricted: false,
       user_type: 'child',
     });
@@ -242,7 +265,7 @@ describe('Parent/Child account cancellation', () => {
   it('disables "Close Account" button for proxy users', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      username: 'proxy-user',
+      email: 'mock-user@linode.com',
       restricted: false,
       user_type: 'proxy',
     });
@@ -276,7 +299,7 @@ describe('Parent/Child account cancellation', () => {
   it('disables "Close Account" button for parent users', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      username: 'parent-user',
+      email: 'mock-user@linode.com',
       restricted: false,
       user_type: 'parent',
     });
@@ -310,7 +333,7 @@ describe('Parent/Child account cancellation', () => {
   it('allows a default account with no active child accounts to close the account', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
-      username: 'default-user',
+      email: 'mock-user@linode.com',
       restricted: false,
       user_type: 'default',
     });
@@ -346,9 +369,7 @@ describe('Parent/Child account cancellation', () => {
       });
 
     ui.dialog
-      .findByTitle(
-        'Are you sure you want to close your cloud computing services account?'
-      )
+      .findByTitle(cancellationDialogTitle)
       .should('be.visible')
       .within(() => {
         cy.findByText(cancellationDataLossWarning, { exact: false }).should(
@@ -361,14 +382,21 @@ describe('Parent/Child account cancellation', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Enter username, confirm that submit button becomes enabled, and click
+        // Check both boxes but verify submit remains disabled without email
+        cy.get('[data-qa-checkbox="deleteAccountServices"]').click();
+        cy.get('[data-qa-checkbox="deleteAccountUsers"]').click();
+
+        ui.button
+          .findByTitle('Close Account')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Enter email, confirm that submit button becomes enabled, and click
         // the submit button.
-        cy.findByLabelText(
-          `Please enter your Username (${mockProfile.username}) to confirm.`
-        )
+        cy.findByLabelText(`Enter your email address (${mockProfile.email})`)
           .should('be.visible')
           .should('be.enabled')
-          .type(mockProfile.username);
+          .type(mockProfile.email);
 
         ui.button
           .findByTitle('Close Account')
@@ -387,7 +415,8 @@ describe('Parent/Child account cancellation', () => {
         // Enter account cancellation comments, click "Close Account" again,
         // and this time mock a successful account cancellation response.
         mockCancelAccount(mockCancellationResponse).as('cancelAccount');
-        cy.contains('Comments (optional)').click().type(cancellationComments);
+        cy.contains('Comments (optional)').click();
+        cy.focused().type(cancellationComments);
 
         ui.button
           .findByTitle('Close Account')

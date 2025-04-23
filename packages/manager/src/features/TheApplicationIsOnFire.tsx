@@ -1,9 +1,8 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { Dialog, Typography } from '@linode/ui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Typography } from 'src/components/Typography';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   restartButton: {

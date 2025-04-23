@@ -1,7 +1,8 @@
+import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -21,8 +22,8 @@ const queryMocks = vi.hoisted(() => ({
   useAllPlacementGroupsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
@@ -34,10 +35,10 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
+          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -67,10 +68,8 @@ describe('PlacementGroupSelect', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          is_strict: true,
           label: 'my-placement-group',
           members: [
             {
@@ -78,6 +77,8 @@ describe('PlacementGroupSelect', () => {
               linode_id: 1,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'ca-central',
         }),
       ],
@@ -106,8 +107,6 @@ describe('PlacementGroupSelect', () => {
     const selectedRegionOption = getByText('my-placement-group');
     fireEvent.click(selectedRegionOption);
 
-    expect(
-      getByText(`Option disabled: ${PLACEMENT_GROUP_HAS_NO_CAPACITY}`)
-    ).toBeVisible();
+    expect(getByText(PLACEMENT_GROUP_HAS_NO_CAPACITY)).toBeVisible();
   });
 });

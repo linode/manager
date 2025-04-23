@@ -1,19 +1,18 @@
-import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
+import { Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledButton,
   StyledClose,
-  StyledHeaderTypography,
   StyledRowBoxDiv,
   StyledRowDiv,
   StyledSubmitButton,
   StyledTypography,
 } from './TransferCheckoutBar.styles';
-import { TransferState } from './transferReducer';
+
+import type { TransferState } from './transferReducer';
+import type { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 
 interface Props {
   handleSubmit: (payload: CreateTransferPayload) => void;
@@ -26,7 +25,7 @@ export const generatePayload = (
   selectedEntities: TransferState
 ): CreateTransferPayload => {
   const entities = Object.keys(selectedEntities).reduce(
-    (acc, entityType) => {
+    (acc, entityType: keyof TransferState) => {
       return {
         ...acc,
         [entityType]: Object.keys(selectedEntities[entityType]).map(Number),
@@ -64,7 +63,7 @@ export const TransferCheckoutBar = React.memo((props: Props) => {
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
     <div>
-      <StyledHeaderTypography>Service Transfer Summary</StyledHeaderTypography>
+      <Typography variant="h3">Service Transfer Summary</Typography>
       <StyledRowBoxDiv>
         {Object.entries(selectedEntities.linodes).map(([id, label]) => (
           <TransferRow

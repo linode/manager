@@ -1,6 +1,7 @@
+import { Box, IconButton, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { IconButton } from 'src/components/IconButton';
+import Search from 'src/assets/icons/search.svg';
 
 export const StyledIconButton = styled(IconButton, {
   label: 'StyledIconButton',
@@ -9,78 +10,63 @@ export const StyledIconButton = styled(IconButton, {
     justifyContent: 'flex-end',
   },
   '& svg': {
-    height: 25,
-    width: 25,
+    height: 24,
+    width: 24,
   },
   '&:hover, &:focus': {
-    color: '#c1c1c0',
+    color: theme.tokens.component.GlobalHeader.Search.Icon.Hover,
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: '#c9c7c7',
+  color: theme.tokens.component.GlobalHeader.Search.Icon.Default,
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up('sm')]: {
     display: 'none',
   },
   top: 1,
 }));
 
-export const StyledSearchBarWrapperDiv = styled('div', {
-  label: 'StyledSearchBarWrapperDiv',
+export const StyledSearchSuggestionContainer = styled(Paper, {
+  label: 'StyledSearchSuggestionContainer',
 })(({ theme }) => ({
-  '& > div .react-select__control': {
-    backgroundColor: 'transparent',
-  },
-  '& > div .react-select__indicators': {
-    display: 'none',
-  },
-  '& > div .react-select__menu': {
-    border: 0,
-    borderRadius: 4,
-    boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    marginTop: 12,
-    maxHeight: 350,
-    overflowY: 'auto',
-  },
-  '& > div .react-select__menu-list': {
-    overflowX: 'hidden',
+  '& .MuiAutocomplete-listbox': {
+    border: 'none',
     padding: 0,
   },
-  '& > div .react-select__value-container': {
-    '& p': {
-      fontSize: '0.875rem',
-      overflow: 'visible',
-    },
-    overflow: 'hidden',
+  '& .MuiAutocomplete-noOptions': {
+    border: 'none',
   },
+  borderBottomLeftRadius: theme.shape.borderRadius,
+  borderBottomRightRadius: theme.shape.borderRadius,
+  boxShadow: `0 0 8px ${theme.color.boxShadow}`,
+  left: -2,
+  marginTop: theme.spacing(),
+  padding: 0,
+  position: 'relative',
+  width: '100%',
+}));
+
+export const StyledHelpContainer = styled(Box, {
+  label: 'StyledHelpContainer',
+})(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.bg.app,
-  borderRadius: 3,
+  backgroundColor: theme.color.grey9,
+  borderTop: `1px solid ${theme.palette.divider}`,
   display: 'flex',
-  flex: 1,
-  height: 34,
-  marginLeft: theme.spacing(1),
-  padding: theme.spacing(1),
-  position: 'relative', // for search results
-  [theme.breakpoints.down('md')]: {
-    '&.active': {
-      opacity: 1,
-      visibility: 'visible',
-      zIndex: 3,
+  fontSize: '0.8rem',
+  padding: theme.spacing(2),
+}));
+
+export const StyledSearchIcon = styled(Search, {
+  label: 'StyledSearchIcon',
+})(({ theme }) => ({
+  '&&': {
+    '&:hover': {
+      color: theme.tokens.component.GlobalHeader.Search.Icon.Hover,
     },
-    backgroundColor: theme.bg.white,
-    left: 0,
-    margin: 0,
-    opacity: 0,
-    position: 'absolute',
-    visibility: 'hidden',
-    width: 'calc(100% - 100px)',
-    zIndex: -1,
+
+    color: theme.tokens.component.GlobalHeader.Search.Icon.Default,
   },
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-  },
-  transition: theme.transitions.create(['opacity']),
 }));

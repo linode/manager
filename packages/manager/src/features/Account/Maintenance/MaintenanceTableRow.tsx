@@ -1,18 +1,19 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import { Tooltip } from '@linode/ui';
+import { capitalize, truncate } from '@linode/utilities';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { Markdown } from 'src/components/Markdown/Markdown';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
-import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
+import { useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { truncate } from 'src/utilities/truncate';
+
+import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   completed: 'Completed',
@@ -72,13 +73,13 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       <Hidden lgDown>
         <TableCell>
           {isTruncated ? (
-            <Tooltip title={<HighlightedMarkdown textOrMarkdown={reason} />}>
+            <Tooltip title={<Markdown textOrMarkdown={reason} />}>
               <div>
-                <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+                <Markdown textOrMarkdown={truncatedReason} />
               </div>
             </Tooltip>
           ) : (
-            <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+            <Markdown textOrMarkdown={truncatedReason} />
           )}
         </TableCell>
       </Hidden>

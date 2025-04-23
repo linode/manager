@@ -1,5 +1,6 @@
+import { grantFactory, grantsFactory } from '@linode/utilities';
 import { randomLabel } from 'support/util/random';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
+
 import type { Grants } from '@linode/api-v4';
 
 /**
@@ -17,6 +18,7 @@ export const userPermissionsGrants: Grants = grantsFactory.build({
     add_longview: false,
     add_nodebalancers: false,
     add_stackscripts: false,
+    add_databases: false,
     add_volumes: false,
     add_vpcs: false,
     longview_subscription: false,

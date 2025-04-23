@@ -1,12 +1,15 @@
+import { regionFactory } from '@linode/utilities';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { kubernetesClusterFactory, regionFactory } from 'src/factories';
+import { kubernetesClusterFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
+import { KubernetesClusterRow } from './KubernetesClusterRow';
+
+import type { Props } from './KubernetesClusterRow';
 
 const cluster = kubernetesClusterFactory.build({ region: 'us-central' });
 
@@ -36,12 +39,12 @@ describe('ClusterRow component', () => {
       })
     );
 
-    const { getByText, findByText } = render(
+    const { findByText, getByText } = render(
       wrapWithTableBody(<KubernetesClusterRow {...props} />)
     );
 
-    getByText('cluster-0');
-    await findByText('Fake Region, NC');
+    getByText('cluster-1');
+    await findByText('US, Fake Region, NC');
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {

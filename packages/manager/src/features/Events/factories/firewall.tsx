@@ -1,17 +1,11 @@
 import * as React from 'react';
 
+import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
+
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
-
-const secondaryFirewallEntityNameMap: Record<
-  FirewallDeviceEntityType,
-  string
-> = {
-  linode: 'Linode',
-  nodebalancer: 'NodeBalancer',
-};
 
 export const firewall: PartialEventMap<'firewall'> = {
   firewall_apply: {
@@ -41,7 +35,7 @@ export const firewall: PartialEventMap<'firewall'> = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          formattedTypes[e.secondary_entity.type as FirewallDeviceEntityType];
         return (
           <>
             {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}
@@ -62,7 +56,7 @@ export const firewall: PartialEventMap<'firewall'> = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          formattedTypes[e.secondary_entity.type as FirewallDeviceEntityType];
         return (
           <>
             {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}

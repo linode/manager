@@ -1,42 +1,52 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MatcherFunction, render } from '@testing-library/react';
+import { queryClientFactory } from '@linode/queries';
+import { CssBaseline } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router';
+import { render, waitFor } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
-import { Formik, FormikConfig, FormikValues } from 'formik';
+import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import {
-  FieldValues,
-  FormProvider,
-  UseFormProps,
-  useForm,
-} from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { MemoryRouterProps } from 'react-router';
-import { MemoryRouter } from 'react-router-dom';
-import { DeepPartial } from 'redux';
+import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { FlagSet } from 'src/featureFlags';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
-import {
-  ApplicationState,
-  ApplicationStore,
-  defaultState,
-  storeFactory,
-} from 'src/store';
+import { migrationRouteTree } from 'src/routes';
+import { defaultState, storeFactory } from 'src/store';
+
+import { mergeDeepRight } from './mergeDeepRight';
+
+import type { QueryClient } from '@tanstack/react-query';
+// TODO: Tanstack Router - replace AnyRouter once migration is complete.
+import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
+import type { MatcherFunction, RenderResult } from '@testing-library/react';
+import type { FormikConfig, FormikValues } from 'formik';
+import type { FieldValues, UseFormProps } from 'react-hook-form';
+import type { MemoryRouterProps } from 'react-router-dom';
+import type { DeepPartial } from 'redux';
+import type { FlagSet } from 'src/featureFlags';
+import type { ApplicationState, ApplicationStore } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
+      addEventListener: () => vi.fn(),
       addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
+      removeEventListener: () => vi.fn(),
       removeListener: vi.fn(),
     };
   });
@@ -66,9 +76,9 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
+  routePath?: string;
   theme?: 'dark' | 'light';
 }
-
 /**
  * preference state is necessary for all tests using the
  * renderWithTheme() helper function, since the whole app is wrapped with
@@ -80,15 +90,15 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore, queryClient: passedQueryClient } = options;
+  const { customStore, queryClient: passedQueryClient, routePath } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
+
+  const uiToRender = ui.children ?? ui;
 
   return (
     <Provider store={storeToPass}>
@@ -100,9 +110,17 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
+              {/**
+               * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
+               */}
               <MemoryRouter {...options.MemoryRouter}>
-                {ui.children ?? ui}
+                {routePath ? (
+                  <Route path={routePath}>{uiToRender}</Route>
+                ) : (
+                  uiToRender
+                )}
               </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>
@@ -110,6 +128,120 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
+};
+
+interface OptionsWithRouter
+  extends Omit<Options, 'MemoryRouter' | 'routePath'> {
+  initialRoute?: string;
+  routeTree?: AnyRootRoute;
+  router?: AnyRouter;
+}
+
+/**
+ * We don't always need to use the router in our tests. When we do, due to the async nature of TanStack Router, we need to use this helper function.
+ * The reason we use this instead of extending renderWithTheme is because of having to make all tests async.
+ * It seems unnecessary to refactor all tests to async when we don't need to access the router at all.
+ *
+ * In order to use this, you must await the result of the function.
+ *
+ * @example
+ * const { getByText, router } = await renderWithThemeAndRouter(
+ *   <Component />, {
+ *     initialRoute: '/route',
+ *   }
+ * );
+ *
+ * // Assert the initial route
+ * expect(router.state.location.pathname).toBe('/route');
+ *
+ * // from here, you can use the router to navigate
+ * await waitFor(() =>
+ *   router.navigate({
+ *    params: { betaId: beta.id },
+ *    to: '/path/to/something',
+ *  })
+ * );
+ *
+ * // And assert
+ * expect(router.state.location.pathname).toBe('/path/to/something');
+ *
+ * // and test the UI
+ * getByText('Some text');
+ */
+export const wrapWithThemeAndRouter = (
+  ui: React.ReactNode,
+  options: OptionsWithRouter = {}
+) => {
+  const {
+    customStore,
+    initialRoute = '/',
+    queryClient: passedQueryClient,
+  } = options;
+  const queryClient = passedQueryClient ?? queryClientFactory();
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
+
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
+
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: initialRoute,
+  });
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [initialRoute],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
+  });
+
+  return (
+    <Provider store={storeToPass}>
+      <QueryClientProvider client={passedQueryClient || queryClient}>
+        <LinodeThemeWrapper theme={options.theme}>
+          <LDProvider
+            clientSideID={''}
+            deferInitialization
+            flags={options.flags ?? {}}
+            options={{ bootstrap: options.flags }}
+          >
+            <CssBaseline enableColorScheme />
+            <SnackbarProvider>
+              <BrowserRouter>
+                <RouterProvider router={router} />
+              </BrowserRouter>
+            </SnackbarProvider>
+          </LDProvider>
+        </LinodeThemeWrapper>
+      </QueryClientProvider>
+    </Provider>
+  );
+};
+
+export const renderWithThemeAndRouter = async (
+  ui: React.ReactNode,
+  options: OptionsWithRouter = {}
+): Promise<RenderResult & { router: AnyRouter }> => {
+  const router = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [options.initialRoute || '/'],
+    }),
+    routeTree: options.routeTree || migrationRouteTree,
+  });
+
+  const utils: RenderResult = render(
+    wrapWithThemeAndRouter(ui, { ...options, router })
+  );
+
+  // Wait for the router to be ready
+  await waitFor(() => expect(router.state.status).toBe('idle'));
+
+  return {
+    ...utils,
+    rerender: (ui) =>
+      utils.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
+    router,
+  };
 };
 
 /**
@@ -146,8 +278,15 @@ export const wrapWithTableBody = (ui: any, options: Options = {}) =>
     options
   );
 
-export const renderWithTheme = (ui: any, options: Options = {}) => {
-  return render(wrapWithTheme(ui, options));
+export const renderWithTheme = (
+  ui: React.ReactNode,
+  options: Options = {}
+): RenderResult => {
+  const utils = render(wrapWithTheme(ui, options));
+  return {
+    ...utils,
+    rerender: (ui) => utils.rerender(wrapWithTheme(ui, options)),
+  };
 };
 
 /**
@@ -198,14 +337,16 @@ export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
 type Query = (f: MatcherFunction) => HTMLElement;
 
 /** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
-export const withMarkup = (query: Query) => (text: string): HTMLElement =>
-  query((content: string, node: HTMLElement) => {
-    const hasText = (node: HTMLElement) => node.textContent === text;
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child) => !hasText(child as HTMLElement)
-    );
-    return hasText(node) && childrenDontHaveText;
-  });
+export const withMarkup =
+  (query: Query) =>
+  (text: string): HTMLElement =>
+    query((content: string, node: HTMLElement) => {
+      const hasText = (node: HTMLElement) => node.textContent === text;
+      const childrenDontHaveText = Array.from(node.children).every(
+        (child) => !hasText(child as HTMLElement)
+      );
+      return hasText(node) && childrenDontHaveText;
+    });
 
 /**
  * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent

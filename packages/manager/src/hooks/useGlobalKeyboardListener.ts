@@ -1,18 +1,13 @@
+import { isOSMac } from '@linode/utilities';
 import React from 'react';
 
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { getNextThemeValue } from 'src/utilities/theme';
-import { isOSMac } from 'src/utilities/userAgent';
 
 export const useGlobalKeyboardListener = () => {
-  const { data: preferences } = usePreferences();
+  const { data: theme } = usePreferences((preferences) => preferences?.theme);
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
   const [goToOpen, setGoToOpen] = React.useState(false);
-
-  const theme = preferences?.theme;
 
   const keyboardListener = React.useCallback(
     (event: KeyboardEvent) => {
@@ -22,8 +17,7 @@ export const useGlobalKeyboardListener = () => {
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            const currentTheme = theme;
-            const newTheme = getNextThemeValue(currentTheme);
+            const newTheme = getNextThemeValue(theme);
 
             updateUserPreferences({ theme: newTheme });
             break;
@@ -42,7 +36,6 @@ export const useGlobalKeyboardListener = () => {
      * Allow an Easter egg for toggling the theme with
      * a key combination
      */
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
     document.addEventListener('keydown', keyboardListener);
     return () => {
       document.removeEventListener('keydown', keyboardListener);

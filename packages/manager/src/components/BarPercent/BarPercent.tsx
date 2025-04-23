@@ -1,13 +1,35 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import { getCustomColor, getPercentage } from './utils';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface BarPercentProps {
   /** Additional css class to pass to the component */
   className?: string;
+  /**
+   * Allows for custom colors to be applied to the bar.
+   * The color will be applied to the bar based on the percentage of the value to the max.
+   *
+   * @example
+   * ```tsx
+   * <BarPercent
+   *  customColors={[
+   *    { color: 'blue', percentage: 10 }, // blue at or above 10%
+   *    { color: 'red', percentage: 50 }, // red at or above 50%
+   *  ]}
+   * [...]
+   * />
+   * ```
+   */
+  customColors?: {
+    color: string;
+    percentage: number;
+  }[];
   /** Applies styles to show that the value is being retrieved. */
   isFetchingValue?: boolean;
   /** The maximum allowed value and should not be equal to min. */
@@ -16,7 +38,7 @@ export interface BarPercentProps {
   narrow?: boolean;
   /** Applies a `border-radius` to the bar. */
   rounded?: boolean;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /** The value of the progress indicator for the determinate and buffer variants. */
   value: number;
   /** The value for the buffer variant. */
@@ -29,6 +51,7 @@ export interface BarPercentProps {
 export const BarPercent = React.memo((props: BarPercentProps) => {
   const {
     className,
+    customColors,
     isFetchingValue,
     max,
     narrow,
@@ -48,6 +71,7 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
             ? 'buffer'
             : 'determinate'
         }
+        customColors={customColors}
         narrow={narrow}
         rounded={rounded}
         sx={sx}
@@ -58,9 +82,6 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
   );
 });
 
-export const getPercentage = (value: number, max: number) =>
-  (value / max) * 100;
-
 const StyledDiv = styled('div')({
   alignItems: 'center',
   display: 'flex',
@@ -69,14 +90,18 @@ const StyledDiv = styled('div')({
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
-  shouldForwardProp: omittedProps(['rounded', 'narrow']),
+  shouldForwardProp: omittedProps(['rounded', 'narrow', 'customColors']),
 })<Partial<BarPercentProps>>(({ theme, ...props }) => ({
   '& .MuiLinearProgress-bar2Buffer': {
-    backgroundColor: '#5ad865',
+    backgroundColor: theme.tokens.color.Green[60],
   },
   '& .MuiLinearProgress-barColorPrimary': {
     // Increase contrast if we have a buffer bar
-    backgroundColor: props.valueBuffer ? '#1CB35C' : '#5ad865',
+    backgroundColor: props.customColors
+      ? getCustomColor(props.customColors, props.value ?? 0)
+      : props.valueBuffer
+      ? theme.tokens.color.Green[70]
+      : theme.tokens.color.Green[60],
   },
   '& .MuiLinearProgress-dashed': {
     display: 'none',

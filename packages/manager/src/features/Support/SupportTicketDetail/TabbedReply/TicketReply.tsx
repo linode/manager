@@ -1,6 +1,5 @@
+import { TextField } from '@linode/ui';
 import * as React from 'react';
-
-import { TextField } from 'src/components/TextField';
 
 export interface Props {
   error?: string;

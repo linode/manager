@@ -1,33 +1,29 @@
-import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import {
+  ActionsPanel,
+  Box,
+  Button,
+  CircleProgress,
+  ErrorState,
+  Notice,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
   useBucketSSLQuery,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import {
-  StyledCertWrapper,
-  StyledFieldsWrapper,
-  StyledHelperText,
-  StyledKeyWrapper,
-} from './BucketSSL.styles';
+import type { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4';
 
 interface Props {
   bucketName: string;
@@ -36,22 +32,21 @@ interface Props {
 
 export const BucketSSL = (props: Props) => {
   const { bucketName, clusterId } = props;
-  const theme = useTheme();
 
   return (
-    <Paper sx={{ padding: theme.spacing(3) }}>
+    <Paper>
       <Typography variant="h2">SSL/TLS Certificate</Typography>
-      <StyledHelperText>
+      <Typography sx={{ mt: 1 }}>
         Object Storage buckets are automatically served with a default TLS
         certificate that is valid for subdomains of linodeobjects.com. You can
         upload a custom certificate that will be used for the TLS portion of the
         HTTPS request instead. For more information, please see our guide on
         using{' '}
-        <Link to="https://www.linode.com/docs/platform/object-storage/enable-ssl-for-object-storage/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-a-custom-domain-with-a-tls-ssl-certificate">
           custom certificates for Object Storage buckets
         </Link>
         .
-      </StyledHelperText>
+      </Typography>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
     </Paper>
   );
@@ -80,12 +75,12 @@ export const SSLBody = (props: Props) => {
 const AddCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { error, isLoading, mutateAsync } = useBucketSSLMutation(
+  const { error, isPending, mutateAsync } = useBucketSSLMutation(
     clusterId,
     bucketName
   );
 
-  const formik = useFormik<ObjectStorageBucketSSLRequest>({
+  const formik = useFormik<CreateObjectStorageBucketSSLPayload>({
     initialValues: {
       certificate: '',
       private_key: '',
@@ -111,45 +106,41 @@ const AddCertForm = (props: Props) => {
           variant="error"
         />
       )}
-      <StyledFieldsWrapper>
-        <StyledCertWrapper md={6} xs={12}>
+      <Grid container spacing={2}>
+        <Grid size={{ md: 6, xs: 12 }}>
           <TextField
             data-testid="ssl-cert-input"
             errorText={errorMap.certificate}
+            expand
             fullWidth={false}
             label="Certificate"
             multiline
             name="certificate"
             onChange={formik.handleChange}
             rows="3"
-            sx={{ '& > div': { minWidth: '100%' } }}
             value={formik.values.certificate}
           />
-        </StyledCertWrapper>
-        <StyledKeyWrapper md={6} xs={12}>
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
           <TextField
             data-testid="ssl-cert-input"
             errorText={errorMap.private_key}
+            expand
             fullWidth
             label="Private Key"
             multiline
             name="private_key"
             onChange={formik.handleChange}
             rows="3"
-            sx={{ '& > div': { minWidth: '100%' } }}
             value={formik.values.private_key}
           />
-        </StyledKeyWrapper>
-      </StyledFieldsWrapper>
-      <Grid>
-        <ActionsPanel
-          primaryButtonProps={{
-            label: 'Upload Certificate',
-            loading: isLoading,
-            type: 'submit',
-          }}
-        />
+        </Grid>
       </Grid>
+      <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Button buttonType="primary" loading={isPending} type="submit">
+          Upload Certificate
+        </Button>
+      </Box>
     </form>
   );
 };
@@ -160,7 +151,7 @@ const RemoveCertForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteSSLCert,
   } = useBucketSSLDeleteMutation(clusterId, bucketName);
 
@@ -177,11 +168,11 @@ const RemoveCertForm = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Remove certificate',
-        loading: isLoading,
+        loading: isPending,
         onClick: removeCertificate,
       }}
       secondaryButtonProps={{
-        disabled: isLoading,
+        disabled: isPending,
         label: 'Cancel',
         onClick: () => setOpen(false),
       }}

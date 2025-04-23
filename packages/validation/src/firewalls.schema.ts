@@ -1,13 +1,14 @@
 // We must use a default export for ipaddr.js so our packages node compatability
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
-import { array, mixed, number, object, string } from 'yup';
+import { array, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 
 export const validateIP = (ipAddress?: string | null): boolean => {
-  if (!ipAddress) {
+  // ''is falsy, so we must specify that it is OK
+  if (ipAddress !== '' && !ipAddress) {
     return false;
   }
   // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
@@ -33,7 +34,7 @@ export const CreateFirewallDeviceSchema = object({
   nodebalancers: array().of(number()),
 });
 
-export const ipAddress = string().test({
+export const ipAddress = string().defined().test({
   name: 'validateIP',
   message: IP_ERROR_MESSAGE,
   test: validateIP,
@@ -138,41 +139,52 @@ const validateFirewallPorts = string().test({
   },
 });
 
-const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];
 export const FirewallRuleTypeSchema = object().shape({
-  action: mixed().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
-  protocol: mixed()
-    .oneOf(validFirewallRuleProtocol)
+  action: string().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
+  description: string().nullable(),
+  label: string().nullable(),
+  protocol: string()
+    .oneOf(['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'])
     .required('Protocol is required.'),
   ports: string().when('protocol', {
     is: (val: any) => val !== 'ICMP' && val !== 'IPENCAP',
-    then: validateFirewallPorts,
+    then: () => validateFirewallPorts,
     // Workaround to get the test to fail if ports is defined when protocol === ICMP or IPENCAP
-    otherwise: string().test({
-      name: 'protocol',
-      message: 'Ports are not allowed for ICMP and IPENCAP protocols.',
-      test: (value) => typeof value === 'undefined',
-    }),
+    otherwise: (schema) =>
+      schema.test({
+        name: 'protocol',
+        message: 'Ports are not allowed for ICMP and IPENCAP protocols.',
+        test: (value) => typeof value === 'undefined',
+      }),
   }),
   addresses: object()
     .shape({
-      ipv4: array().of(ipAddress).nullable(true),
-      ipv6: array().of(ipAddress).nullable(true),
+      ipv4: array().of(ipAddress).nullable(),
+      ipv6: array().of(ipAddress).nullable(),
     })
     .strict(true)
-    .nullable(true),
+    .notRequired()
+    .nullable(),
 });
 
 export const FirewallRuleSchema = object().shape({
-  inbound: array(FirewallRuleTypeSchema).nullable(true),
-  outbound: array(FirewallRuleTypeSchema).nullable(true),
-  inbound_policy: mixed()
+  inbound: array(FirewallRuleTypeSchema).nullable(),
+  outbound: array(FirewallRuleTypeSchema).nullable(),
+  inbound_policy: string()
     .oneOf(['ACCEPT', 'DROP'])
     .required('Inbound policy is required.'),
-  outbound_policy: mixed()
+  outbound_policy: string()
     .oneOf(['ACCEPT', 'DROP'])
     .required('Outbound policy is required.'),
 });
+
+const CreateFirewallDevicesSchema = object()
+  .shape({
+    linodes: array().of(number().defined()),
+    nodebalancers: array().of(number().defined()),
+    interfaces: array().of(number().defined()),
+  })
+  .notRequired();
 
 export const CreateFirewallSchema = object().shape({
   label: string()
@@ -180,8 +192,9 @@ export const CreateFirewallSchema = object().shape({
     .min(3, 'Label must be between 3 and 32 characters.')
     .max(32, 'Label must be between 3 and 32 characters.'),
   // Label validation on the back end is more complicated, we only do basic checks here.
-  tags: array().of(string()),
+  tags: array().of(string().defined()),
   rules: FirewallRuleSchema,
+  devices: CreateFirewallDevicesSchema,
 });
 
 export const UpdateFirewallSchema = object().shape({
@@ -192,7 +205,16 @@ export const UpdateFirewallSchema = object().shape({
 
 export const FirewallDeviceSchema = object({
   type: string()
-    .oneOf(['linode', 'nodebalancer'])
+    .oneOf(['linode', 'nodebalancer', 'interface'])
     .required('Device type is required.'),
   id: number().required('ID is required.'),
+});
+
+export const UpdateFirewallSettingsSchema = object({
+  default_firewall_ids: object({
+    interface_public: number().nullable(),
+    interface_vpc: number().nullable(),
+    linode: number().nullable(),
+    nodebalancer: number().nullable(),
+  }),
 });

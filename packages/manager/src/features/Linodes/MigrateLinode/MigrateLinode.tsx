@@ -1,43 +1,46 @@
+import {
+  useAccountAgreements,
+  useAllLinodeDisksQuery,
+  useLinodeMigrateMutation,
+  useLinodeQuery,
+  useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
+  Box,
+  Button,
+  Dialog,
+  Notice,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import {
+  formatStorageUnits,
+  regionSupportsMetadata,
+  scrollErrorIntoView,
+} from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { MBpsInterDC } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
   useEventsPollingActions,
   useInProgressEvents,
 } from 'src/queries/events/events';
 import { useImageQuery } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import {
-  useLinodeMigrateMutation,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { addUsedDiskSpace } from '../LinodesDetail/LinodeStorage/LinodeDisks';
 import { CautionNotice } from './CautionNotice';
@@ -87,7 +90,7 @@ export const MigrateLinode = React.memo((props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: migrateLinode,
     reset,
   } = useLinodeMigrateMutation(linodeId ?? -1);
@@ -234,7 +237,14 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage
+            entity={{ id: linode.id, type: 'linode_id' }}
+            message={error[0].reason}
+          />
+        </Notice>
+      )}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>
@@ -294,7 +304,7 @@ export const MigrateLinode = React.memo((props: Props) => {
             },
           }}
           buttonType="primary"
-          loading={isLoading}
+          loading={isPending}
           onClick={handleMigrate}
         >
           Enter Migration Queue

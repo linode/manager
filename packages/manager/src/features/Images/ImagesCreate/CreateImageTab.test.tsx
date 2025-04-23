@@ -1,21 +1,32 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
-import {
-  imageFactory,
-  linodeDiskFactory,
-  linodeFactory,
-  regionFactory,
-} from 'src/factories';
+import { imageFactory, linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { CreateImageTab } from './CreateImageTab';
 
+const queryMocks = vi.hoisted(() => ({
+  useSearch: vi.fn().mockReturnValue({ query: undefined }),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
 describe('CreateImageTab', () => {
-  it('should render fields, titles, and buttons in their default state', () => {
-    const { getByLabelText, getByText } = renderWithTheme(<CreateImageTab />);
+  it('should render fields, titles, and buttons in their default state', async () => {
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+      <CreateImageTab />
+    );
 
     expect(getByText('Select Linode & Disk')).toBeVisible();
 
@@ -40,8 +51,40 @@ describe('CreateImageTab', () => {
     expect(submitButton).toBeEnabled();
   });
 
+  it('should pre-fill Linode and Disk from search params', async () => {
+    const linode = linodeFactory.build();
+    const disk = linodeDiskFactory.build();
+
+    server.use(
+      http.get('*/v4/linode/instances', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      }),
+      http.get('*/v4/linode/instances/:id/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk]));
+      })
+    );
+
+    queryMocks.useSearch.mockReturnValue({
+      selectedDisk: disk.id,
+      selectedLinode: linode.id,
+    });
+
+    const { getByLabelText } = await renderWithThemeAndRouter(
+      <CreateImageTab />
+    );
+
+    await waitFor(() => {
+      expect(getByLabelText('Linode')).toHaveValue(linode.label);
+      expect(getByLabelText('Disk')).toHaveValue(disk.label);
+    });
+  });
+
   it('should render client side validation errors', async () => {
-    const { getByText } = renderWithTheme(<CreateImageTab />);
+    queryMocks.useSearch.mockReturnValue({
+      selectedDisk: undefined,
+      selectedLinode: undefined,
+    });
+    const { getByText } = await renderWithThemeAndRouter(<CreateImageTab />);
 
     const submitButton = getByText('Create Image').closest('button');
 
@@ -72,7 +115,7 @@ describe('CreateImageTab', () => {
       getByLabelText,
       getByText,
       queryByText,
-    } = renderWithTheme(<CreateImageTab />);
+    } = await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -102,8 +145,8 @@ describe('CreateImageTab', () => {
     await findByText('Image scheduled for creation.');
   });
 
-  it('should render a notice if the user selects a Linode in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'distributed' });
+  it('should render a notice if the user selects a Linode in a region that does not support image storage', async () => {
+    const region = regionFactory.build({ capabilities: [] });
     const linode = linodeFactory.build({ region: region.id });
 
     server.use(
@@ -118,7 +161,9 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />);
+    const { findByText, getByLabelText } = await renderWithThemeAndRouter(
+      <CreateImageTab />
+    );
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -128,15 +173,17 @@ describe('CreateImageTab', () => {
 
     await userEvent.click(linodeOption);
 
-    // Verify distributed compute region notice renders
     await findByText(
-      'This Linode is in a distributed compute region. Images captured from this Linode will be stored in the closest core site.'
+      'This Linode’s region doesn’t support local image storage.',
+      { exact: false }
     );
   });
 
-  it('should render an encryption notice if disk encryption is enabled and the Linode is not in a distributed compute region', async () => {
-    const region = regionFactory.build({ site_type: 'core' });
-    const linode = linodeFactory.build({ region: region.id });
+  it('should auto-populate image label based on linode and disk', async () => {
+    const linode = linodeFactory.build();
+    const disk1 = linodeDiskFactory.build();
+    const disk2 = linodeDiskFactory.build();
+    const image = imageFactory.build();
 
     server.use(
       http.get('*/v4/linode/instances', () => {
@@ -145,14 +192,19 @@ describe('CreateImageTab', () => {
       http.get('*/v4/linode/instances/:id', () => {
         return HttpResponse.json(linode);
       }),
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
+      http.get('*/v4/linode/instances/:id/disks', () => {
+        return HttpResponse.json(makeResourcePage([disk1, disk2]));
+      }),
+      http.post('*/v4/images', () => {
+        return HttpResponse.json(image);
       })
     );
 
-    const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      flags: { linodeDiskEncryption: true },
-    });
+    const {
+      findByText,
+      getByLabelText,
+      queryByText,
+    } = await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -162,7 +214,37 @@ describe('CreateImageTab', () => {
 
     await userEvent.click(linodeOption);
 
-    // Verify encryption notice renders
-    await findByText('Virtual Machine Images are not encrypted.');
+    const diskSelect = getByLabelText('Disk');
+
+    // Once a Linode is selected, the Disk select should become enabled
+    expect(diskSelect).toBeEnabled();
+    expect(queryByText('Select a Linode to see available disks')).toBeNull();
+
+    await userEvent.click(diskSelect);
+
+    const diskOption = await findByText(disk1.label);
+
+    await userEvent.click(diskOption);
+
+    // Image label should auto-populate
+    const imageLabel = getByLabelText('Label');
+    expect(imageLabel).toHaveValue(`${linode.label}-${disk1.label}`);
+
+    // Image label should update
+    await userEvent.click(diskSelect);
+
+    const disk2Option = await findByText(disk2.label);
+    await userEvent.click(disk2Option);
+
+    expect(imageLabel).toHaveValue(`${linode.label}-${disk2.label}`);
+
+    // Image label should not override user input
+    const customLabel = 'custom-label';
+    await userEvent.clear(imageLabel);
+    await userEvent.type(imageLabel, customLabel);
+    expect(imageLabel).toHaveValue(customLabel);
+    await userEvent.click(diskSelect);
+    await userEvent.click(diskOption);
+    expect(imageLabel).toHaveValue(customLabel);
   });
 });

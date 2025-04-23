@@ -1,15 +1,14 @@
-import { ImportZonePayload } from '@linode/api-v4/lib/domains';
+import { useGrants, useProfile } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
+import { NotFound } from 'src/components/NotFound';
 import { useImportZoneMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { ImportZonePayload } from '@linode/api-v4/lib/domains';
 
 interface DomainZoneImportDrawerProps {
   onClose: () => void;
@@ -21,7 +20,7 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { error, mutateAsync: importZone, reset } = useImportZoneMutation();
 
@@ -32,7 +31,10 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
     },
     onSubmit: async (values) => {
       const result = await importZone(values);
-      history.push(`/domains/${result.id}`);
+      navigate({
+        params: { domainId: result.id },
+        to: '/domains/$domainId',
+      });
     },
   });
 
@@ -51,7 +53,12 @@ export const DomainZoneImportDrawer = (props: DomainZoneImportDrawerProps) => {
   const noPermission = profile?.restricted && !grants?.global.add_domains;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Import a Zone">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Import a Zone"
+    >
       {noPermission && (
         <Notice variant="error">
           You do not have permission to create new Domains.

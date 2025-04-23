@@ -1,9 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Checkbox, FormControlLabel } from '@linode/ui';
 import React from 'react';
 
-import { Checkbox } from './Checkbox';
-import { FormControlLabel } from './FormControlLabel';
 import { FormGroup } from './FormGroup';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FormGroup> = {
   component: FormGroup,

@@ -1,9 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
+import Grid from '@mui/material/Grid2';
 
 // sm = 600, md = 960, lg = 1280
 

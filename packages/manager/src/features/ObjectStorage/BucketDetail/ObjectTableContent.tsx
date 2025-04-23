@@ -1,10 +1,10 @@
+import { truncateEnd, truncateMiddle } from '@linode/utilities';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 
 import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
 import { FolderTableRow } from './FolderTableRow';
@@ -12,12 +12,12 @@ import { ObjectTableRow } from './ObjectTableRow';
 
 import type {
   ObjectStorageObject,
-  ObjectStorageObjectListResponse,
+  ObjectStorageObjectList,
 } from '@linode/api-v4';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
-  data: ObjectStorageObjectListResponse[];
+  data: ObjectStorageObjectList[];
   error?: APIError[];
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
@@ -95,7 +95,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                 folderName={object.name}
                 handleClickDelete={handleClickDelete}
                 key={object.name}
-                manuallyCreated={false}
               />
             );
           }
@@ -117,7 +116,6 @@ const ObjectTableContent: React.FC<Props> = (props) => {
               handleClickDetails={() => handleClickDetails(object)}
               handleClickDownload={handleClickDownload}
               key={object.name}
-              manuallyCreated={false}
               objectLastModified={object.last_modified || ''}
               objectSize={object.size || 0}
             />

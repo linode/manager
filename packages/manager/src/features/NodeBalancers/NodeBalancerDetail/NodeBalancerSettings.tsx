@@ -1,30 +1,35 @@
-import { useTheme } from '@mui/material';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
-import { Accordion } from 'src/components/Accordion';
-import { Button } from 'src/components/Button/Button';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { TextField } from 'src/components/TextField';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
+} from '@linode/queries';
+import {
+  Accordion,
+  Button,
+  FormHelperText,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
+import { useTheme } from '@mui/material';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
-  const displayFirewallInfoText = attachedFirewallData?.results === 0;
+  const navigate = useNavigate();
+  const match = useMatch({
+    strict: false,
+  });
+  const { id } = useParams({
+    strict: false,
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -34,25 +39,31 @@ export const NodeBalancerSettings = () => {
 
   const {
     error: labelError,
-    isLoading: isUpdatingLabel,
+    isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(id);
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const {
     error: throttleError,
-    isLoading: isUpdatingThrottle,
+    isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(id);
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
   const [connectionThrottle, setConnectionThrottle] = React.useState(
     nodebalancer?.client_conn_throttle
   );
+
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+  } = useDialogData({
+    enabled: !!id,
+    paramKey: 'id',
+    queryHook: useNodeBalancerQuery,
+    redirectToOnNotFound: '/nodebalancers',
+  });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -97,10 +108,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls
-          displayFirewallInfoText={displayFirewallInfoText}
-          nodeBalancerId={id}
-        />
+        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
@@ -139,21 +147,24 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
+          onClick={() =>
+            navigate({
+              params: { id: String(id) },
+              to: '/nodebalancers/$id/settings/delete',
+            })
+          }
           buttonType="primary"
+          data-testid="delete-nodebalancer"
           disabled={isNodeBalancerReadOnly}
-          onClick={() => setIsDeleteDialogOpen(true)}
         >
           Delete
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
-        id={nodebalancer.id}
-        label={nodebalancer?.label}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        isFetching={isFetchingNodeBalancer}
+        open={match.routeId === '/nodebalancers/$id/settings/delete'}
+        selectedNodeBalancer={selectedNodeBalancer}
       />
     </div>
   );
 };
-
-export default NodeBalancerSettings;

@@ -1,17 +1,15 @@
+import { Notice, StyledLinkButton, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { useLinodeFirewallsQuery } from '@linode/queries';
 
 const rescueDescription = {
   firewallWarning:
     'Cloud Firewall rules are not enabled when booting into Rescue Mode.',
-  link: 'https://www.linode.com/docs/guides/rescue-and-rebuild/',
+  link: 'https://techdocs.akamai.com/cloud-computing/docs/rescue-and-rebuild',
   text: `If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot your Linode into Rescue Mode. This is a safe environment for performing many system recovery and disk management tasks.`,
 };
 

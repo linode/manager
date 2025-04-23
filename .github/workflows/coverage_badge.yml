@@ -11,35 +11,35 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js v18.14.0
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: "18.14"
+          run_install: false
+          version: 10
 
-      - uses: actions/cache@v3
+      - name: Use Node.js v20.17 LTS
+        uses: actions/setup-node@v4
         with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          node-version: "20.17"
+          cache: "pnpm"
 
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build @linode/validation
-        run: yarn build:validation
+        run: pnpm build:validation
 
       - name: Build @linode/api-v4
-        run: yarn build:sdk
+        run: pnpm build:sdk
 
       - name: Run Base Branch Coverage
-        run: yarn coverage:summary
+        run: pnpm coverage:summary
 
       - name: Generate Coverage Badge
         uses: jaywcjlove/coverage-badges-cli@7f0781807ef3e7aba97a145beca881d36451b7b7 # v1.1.1
         with:
-          label: '@linode/manager coverage'
+          label: "@linode/manager coverage"
           source: ./packages/manager/coverage/coverage-summary.json
           output: ./packages/manager/coverage/badges.svg
 

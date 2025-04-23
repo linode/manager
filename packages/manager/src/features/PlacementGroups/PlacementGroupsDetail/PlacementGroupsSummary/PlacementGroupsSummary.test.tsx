@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsSummary } from './PlacementGroupsSummary';
@@ -10,7 +11,6 @@ describe('PlacementGroups Summary', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
-          affinity_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           label: 'pg-3',
@@ -36,6 +36,7 @@ describe('PlacementGroups Summary', () => {
               linode_id: 10,
             },
           ],
+          placement_group_type: 'affinity:local',
           region: 'us-east',
         })}
         region={regionFactory.build({
@@ -47,7 +48,7 @@ describe('PlacementGroups Summary', () => {
     expect(getByText('Placement Group Configuration')).toBeInTheDocument();
     expect(getByText('Linodes')).toBeInTheDocument();
     expect(getByTestId('HelpOutlineIcon')).toBeInTheDocument();
-    expect(getByText('Affinity Type')).toBeInTheDocument();
+    expect(getByText('Placement Group Type')).toBeInTheDocument();
     expect(getByText('Region')).toBeInTheDocument();
   });
 });

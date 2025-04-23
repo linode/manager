@@ -1,22 +1,23 @@
+import { Box, Drawer } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import withLongviewStats, {
+import withLongviewStats from 'src/containers/longview.stats.container';
+
+import { LongviewPackageRow } from './LongviewPackageRow';
+
+import type { LongviewPackage } from './request.types';
+import type {
   DispatchProps,
   LVClientData,
 } from 'src/containers/longview.stats.container';
-
-import { LongviewPackageRow } from './LongviewPackageRow';
-import { LongviewPackage } from './request.types';
 
 interface Props {
   clientID: number;
@@ -36,14 +37,11 @@ export const LongviewPackageDrawer = withLongviewStats<Props>(
   const { clientLabel, isOpen, longviewClientData, onClose } = props;
   const theme = useTheme();
 
-  const lvPackages: LongviewPackage[] = pathOr(
-    [],
-    ['Packages'],
-    longviewClientData
-  );
+  const lvPackages: LongviewPackage[] = longviewClientData?.Packages ?? [];
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={isOpen}
       title={`${clientLabel}: Package Updates`}

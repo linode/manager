@@ -20,7 +20,7 @@ const createSizeValidation = (minSize: number = 10) =>
 export const CreateVolumeSchema = object({
   region: string().when('linode_id', {
     is: (id: any) => id === undefined || id === '',
-    then: string().required('Must provide a region or a Linode ID.'),
+    then: (schema) => schema.required('Must provide a region or a Linode ID.'),
   }),
   linode_id: number().nullable(),
   size: createSizeValidation(10),
@@ -32,6 +32,7 @@ export const CreateVolumeSchema = object({
     .max(32, 'Label must be 32 characters or less.'),
   config_id: number().nullable().typeError('Config ID must be a number.'),
   tags: array().of(string()),
+  encryption: string().oneOf(['enabled', 'disabled']).notRequired(),
 });
 
 export const CloneVolumeSchema = object({
@@ -44,7 +45,8 @@ export const ResizeVolumeSchema = (minSize: number = 10) =>
   });
 
 export const UpdateVolumeSchema = object({
-  label: string().required(),
+  label: string(),
+  tags: array().of(string()),
 });
 
 export const AttachVolumeSchema = object({

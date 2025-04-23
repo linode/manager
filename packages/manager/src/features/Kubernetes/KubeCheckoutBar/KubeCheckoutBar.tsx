@@ -1,31 +1,33 @@
-import { Typography, styled } from '@mui/material';
+import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
-import { Notice } from 'src/components/Notice/Notice';
+import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useAccountAgreements } from 'src/queries/account/agreements';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountAgreements, useProfile } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
+import {
+  LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_ADDITIONAL_PRICING,
+} from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
   getTotalClusterPrice,
 } from 'src/utilities/pricing/kubernetes';
 
-import { nodeWarning } from '../kubeUtils';
-import { NodePoolSummary } from './NodePoolSummary';
+import { nodeWarning } from '../constants';
+import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
+import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
+  enterprisePrice?: number;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
@@ -42,6 +44,7 @@ export interface Props {
 export const KubeCheckoutBar = (props: Props) => {
   const {
     createCluster,
+    enterprisePrice,
     hasAgreed,
     highAvailability,
     highAvailabilityPrice,
@@ -81,7 +84,10 @@ export const KubeCheckoutBar = (props: Props) => {
     highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
-    needsAPool || gdprConditions || haConditions || !region
+    needsAPool ||
+      gdprConditions ||
+      (haConditions && !enterprisePrice) ||
+      !region
   );
 
   if (isLoading) {
@@ -98,26 +104,53 @@ export const KubeCheckoutBar = (props: Props) => {
       calculatedPrice={
         region
           ? getTotalClusterPrice({
-              highAvailabilityPrice: highAvailability
-                ? Number(highAvailabilityPrice)
-                : undefined,
+              enterprisePrice: enterprisePrice ?? undefined,
+              highAvailabilityPrice:
+                highAvailability && !enterprisePrice
+                  ? Number(highAvailabilityPrice)
+                  : undefined,
               pools,
               region,
               types: types ?? [],
             })
           : undefined
       }
+      priceSelectionText={
+        enterprisePrice
+          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+      }
+      additionalPricing={AdditionalPricing}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
-      priceSelectionText={LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE}
       submitText="Create Cluster"
     >
       <>
+        {region && highAvailability && !enterprisePrice && (
+          <StyledBox>
+            <Divider dark spacingBottom={16} spacingTop={16} />
+            <StyledHeader>High Availability (HA) Control Plane</StyledHeader>
+            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
+          </StyledBox>
+        )}
+        {enterprisePrice && (
+          <StyledBox>
+            <Divider dark spacingBottom={16} spacingTop={16} />
+            <StyledHeader>LKE Enterprise</StyledHeader>
+            <Typography mt={1}>{`$${enterprisePrice?.toFixed(
+              2
+            )}/month`}</Typography>
+          </StyledBox>
+        )}
         {pools.map((thisPool, idx) => (
-          <NodePoolSummary
+          <NodePoolSummaryItem
+            clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
+            key={idx}
+            nodeCount={thisPool.count}
+            onRemove={() => removePool(idx)}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -134,47 +167,29 @@ export const KubeCheckoutBar = (props: Props) => {
             updateNodeCount={(updatedCount: number) =>
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
-            key={idx}
-            nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
           />
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice
-            important
-            spacingTop={16}
-            text={nodeWarning}
-            variant="warning"
-          />
+          <Notice spacingTop={16} text={nodeWarning} variant="warning" />
         )}
-        {region && highAvailability ? (
-          <StyledHABox>
-            <StyledHAHeader>
-              High Availability (HA) Control Plane
-            </StyledHAHeader>
-            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
-            <Divider dark spacingBottom={0} spacingTop={16} />
-          </StyledHABox>
-        ) : undefined}
       </>
     </CheckoutBar>
   );
 };
 
+const AdditionalPricing = (
+  <>
+    <Divider dark spacingBottom={16} spacingTop={16} />
+    <Typography>{LKE_ADDITIONAL_PRICING}</Typography>
+    <Link
+      data-testid="additional-pricing-link"
+      to="https://www.linode.com/pricing/"
+    >
+      See pricing
+    </Link>
+    .
+  </>
+);
+
 export default RenderGuard(KubeCheckoutBar);
-
-const StyledHAHeader = styled(Typography, {
-  label: 'StyledHAHeader',
-})(({ theme }) => ({
-  fontFamily: theme.font.bold,
-  fontSize: '16px',
-  paddingBottom: theme.spacing(0.5),
-  paddingTop: theme.spacing(0.5),
-}));
-
-const StyledHABox = styled(Box, {
-  label: 'StyledHABox',
-})(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));

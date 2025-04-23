@@ -1,17 +1,14 @@
+import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Flag } from 'src/components/Flag';
-import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { sxDistributedRegionIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
@@ -59,6 +56,10 @@ export const ConfigureForm = React.memo((props: Props) => {
   } = props;
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { data: regions } = useRegionsQuery();
 
@@ -145,8 +146,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   );
 
   const linodeIsInDistributedRegion =
-    currentActualRegion?.site_type === 'distributed' ||
-    currentActualRegion?.site_type === 'edge';
+    currentActualRegion?.site_type === 'distributed';
 
   return (
     <StyledPaper>
@@ -159,14 +159,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
-            {linodeIsInDistributedRegion && (
-              <TooltipIcon
-                icon={<DistributedRegion />}
-                status="other"
-                sxTooltipIcon={sxDistributedRegionIcon}
-                text="This region is a distributed region."
-              />
-            )}
           </StyledDiv>
           {shouldDisplayPriceComparison && (
             <MigrationPricing
@@ -192,6 +184,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             currentCapability="Linodes"
             disableClearable
             errorText={errorText}
+            isGeckoLAEnabled={isGeckoLAEnabled}
             label="New Region"
             onChange={(e, region) => handleSelectRegion(region.id)}
             value={selectedRegion}
@@ -207,6 +200,8 @@ export const ConfigureForm = React.memo((props: Props) => {
                 handlePlacementGroupSelection(placementGroup);
               }}
               textFieldProps={{
+                helperText:
+                  'If your Linode already belongs to a placement group, it will be automatically unassigned during the migration. You can choose to move it to a new placement group in the same region here.',
                 tooltipText: hasRegionPlacementGroupCapability
                   ? ''
                   : 'Placement Groups are not available in this region.',

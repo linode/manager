@@ -22,16 +22,17 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Create a Compute Instance',
-      to: 'https://www.linode.com/docs/guides/creating-a-compute-instance/',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/create-a-compute-instance',
     },
     {
       text: 'Getting Started with Linode Compute Instances',
-      to: 'https://www.linode.com/docs/guides/getting-started/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started',
     },
     {
       text: 'Understanding Billing and Payment',
       to:
-        'https://www.linode.com/docs/guides/understanding-billing-and-payments/',
+        'https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works',
     },
     {
       text: 'Hosting a Website or Application on Linode',

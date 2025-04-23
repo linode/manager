@@ -1,0 +1,25 @@
+{
+  "name": "@linode/scripts",
+  "description": "Custom scripts and tooling for this monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "changeset": "node changelog/changeset.mjs",
+    "generate-changelogs": "node changelog/generate-changelogs.mjs",
+    "package-versions": "node package-versions/index.js",
+    "junit:summary": "tsx junit-summary/index.ts",
+    "generate-tod": "tsx tod-payload/index.ts"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "markdown-it": "^14.1.0",
+    "@types/node": "^20.17.0",
+    "chalk": "^5.2.0",
+    "commander": "^6.2.1",
+    "inquirer": "^12.2.0",
+    "junit2json": "^3.1.4",
+    "simple-git": "^3.19.0",
+    "tsx": "^4.19.3"
+  }
+}

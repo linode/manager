@@ -1,13 +1,12 @@
+import { Button, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 export const TaxCollectionBanner = () => {
   const history = useHistory();
@@ -69,14 +68,13 @@ export const TaxCollectionBanner = () => {
     !isBannerDateWithinFiveWeeksPrior ? (
     <DismissibleBanner
       actionButton={actionButton}
-      important
       preferenceKey="tax-collection-banner"
       variant="warning"
     >
       <Typography>
         Starting {bannerDateString}, tax may be applied to your Linode services.
         For more information, please see the{' '}
-        <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/tax-information">
           Tax Information Guide
         </Link>
         .

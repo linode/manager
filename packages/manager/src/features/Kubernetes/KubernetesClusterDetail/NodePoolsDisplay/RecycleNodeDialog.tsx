@@ -1,11 +1,13 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
+import { Link } from 'src/components/Link';
+import { SINGLE_NODE_POD_RECYCLE_WARNING } from 'src/features/Kubernetes/constants';
 import { useRecycleNodeMutation } from 'src/queries/kubernetes';
+
+import { LocalStorageWarningNotice } from '../LocalStorageWarningNotice';
 
 interface Props {
   clusterId: number;
@@ -19,7 +21,7 @@ export const RecycleNodeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useRecycleNodeMutation(
+  const { error, isPending, mutateAsync } = useRecycleNodeMutation(
     clusterId,
     nodeId
   );
@@ -36,7 +38,7 @@ export const RecycleNodeDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Recycle',
-        loading: isLoading,
+        loading: isPending,
         onClick: onSubmit,
       }}
       secondaryButtonProps={{
@@ -57,9 +59,14 @@ export const RecycleNodeDialog = (props: Props) => {
       title={`Recycle ${nodeId}?`}
     >
       <Typography>
-        This node will be deleted and a new node will be created to replace it.{' '}
-        {localStorageWarning} This may take several minutes.
+        Delete and recreate this node. {SINGLE_NODE_POD_RECYCLE_WARNING}{' '}
+        Consider draining this node first.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#recycle-nodes">
+          Learn more
+        </Link>
+        .
       </Typography>
+      <LocalStorageWarningNotice />
     </ConfirmationDialog>
   );
 };

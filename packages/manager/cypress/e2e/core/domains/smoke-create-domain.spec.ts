@@ -1,13 +1,13 @@
-import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { fbtClick, getClick, getVisible } from 'support/helpers';
 import {
   interceptCreateDomain,
   mockGetDomains,
 } from 'support/intercepts/domains';
 import { cleanUp } from 'support/util/cleanup';
 import { randomDomainName } from 'support/util/random';
+
+import type { Domain } from '@linode/api-v4';
 
 authenticate();
 describe('Create a Domain', () => {
@@ -16,6 +16,7 @@ describe('Create a Domain', () => {
   });
 
   it('Creates first Domain', () => {
+    cy.tag('method:e2e');
     // Mock Domains to modify incoming response.
     const mockDomains = new Array(2).fill(null).map(
       (_item: null, index: number): Domain => {
@@ -29,13 +30,15 @@ describe('Create a Domain', () => {
     interceptCreateDomain().as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
-    fbtClick('Create Domain');
+    cy.findByText('Create Domain').click();
     const label = randomDomainName();
-    getVisible('[id="domain"][data-testid="textfield-input"]').type(label);
-    getVisible('[id="soa-email-address"][data-testid="textfield-input"]').type(
-      'devs@linode.com'
-    );
-    getClick('[data-testid="submit"]');
+    cy.get('[id="domain"][data-testid="textfield-input"]')
+      .should('be.visible')
+      .type(label);
+    cy.get('[id="soa-email-address"][data-testid="textfield-input"]')
+      .should('be.visible')
+      .type('devs@linode.com');
+    cy.get('[data-testid="submit"]').click();
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);
   });

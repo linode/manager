@@ -1,21 +1,20 @@
-import { SecurityQuestionsData } from '@linode/api-v4';
-import { styled } from '@mui/material/styles';
-import { FormikConfig, useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import {
   useMutateSecurityQuestions,
   useSecurityQuestions,
-} from 'src/queries/profile/securityQuestions';
+} from '@linode/queries';
+import { Box, Button, CircleProgress, Typography } from '@linode/ui';
+import { styled } from '@mui/material/styles';
+import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
 
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
+
+import type { SecurityQuestionsData } from '@linode/api-v4';
+import type { FormikConfig } from 'formik';
 
 export const SecurityQuestions = ({
   securityQuestionRef,
@@ -24,7 +23,7 @@ export const SecurityQuestions = ({
 }) => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
-    isLoading: isUpdating,
+    isPending: isUpdating,
     mutateAsync: updateSecurityQuestions,
   } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
@@ -128,7 +127,7 @@ export const SecurityQuestions = ({
         no longer have access to the token or recovery codes. Answers to
         security questions should not be easily guessed or discoverable through
         research.{' '}
-        <Link to="https://www.linode.com/docs/guides/user-security-controls#security-questions">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/security-controls-for-user-accounts#security-questions">
           Learn more about security options.
         </Link>
       </StyledCopy>

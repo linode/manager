@@ -1,19 +1,16 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
+import { Button, Tooltip, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledCopyDiv,
@@ -22,6 +19,8 @@ import {
   StyledInputDiv,
   StyledTypography,
 } from './CreateTransferSuccessDialog.styles';
+
+import type { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
 
 const debouncedSendEntityTransferCopyTokenEvent = debounce(
   10 * 1000,
@@ -92,7 +91,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcon
+          hideIcons
           label="Token"
           value={transfer.token}
         />
@@ -115,7 +114,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcon
+          hideIcons
           label="Draft Email"
           multiline
           value={draftEmail}

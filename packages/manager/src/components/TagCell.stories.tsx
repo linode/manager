@@ -1,14 +1,15 @@
+import { Box } from '@linode/ui';
 import { useArgs } from '@storybook/preview-api';
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
+import { TagCell } from './TagCell/TagCell';
 
-import { TagCell, TagCellProps } from './TagCell/TagCell';
+import type { TagCellProps } from './TagCell/TagCell';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const _tags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
-export const Default: StoryObj<TagCellProps> = {
+export const PanelView: StoryObj<TagCellProps> = {
   render: (args) => {
     const TagsInputWrapper = () => {
       const [{ tags }, updateArgs] = useArgs();
@@ -18,7 +19,12 @@ export const Default: StoryObj<TagCellProps> = {
 
       return (
         <Box sx={{ height: 300 }}>
-          <TagCell {...args} tags={tags} updateTags={handleUpdateTags} />
+          <TagCell
+            {...args}
+            tags={tags}
+            updateTags={handleUpdateTags}
+            view={args.view ?? 'panel'}
+          />
         </Box>
       );
     };
@@ -39,9 +45,9 @@ export const InlineView: StoryObj<TagCellProps> = {
         <Box sx={{ height: 300 }}>
           <TagCell
             {...args}
-            listAllTags={() => undefined}
             tags={tags}
             updateTags={handleUpdateTags}
+            view={args.view ?? 'inline'}
           />
         </Box>
       );

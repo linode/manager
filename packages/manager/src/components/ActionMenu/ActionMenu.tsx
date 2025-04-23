@@ -1,11 +1,10 @@
-import { IconButton, ListItemText, useTheme } from '@mui/material';
+import { TooltipIcon, convertToKebabCase } from '@linode/ui';
+import { IconButton, ListItemText } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
 
 import KebabIcon from 'src/assets/icons/kebab.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 export interface Action {
   disabled?: boolean;
@@ -28,6 +27,11 @@ export interface ActionMenuProps {
    * A function that is called when the Menu is opened. Useful for analytics.
    */
   onOpen?: () => void;
+  /**
+   * If true, stop event propagation when handling clicks
+   * Ex: If the action menu is in an accordion, we don't want the click also opening/closing the accordion
+   */
+  stopClickPropagation?: boolean;
 }
 
 /**
@@ -36,8 +40,7 @@ export interface ActionMenuProps {
  * No more than 8 items should be displayed within an action menu.
  */
 export const ActionMenu = React.memo((props: ActionMenuProps) => {
-  const { actionsList, ariaLabel, onOpen } = props;
-  const theme = useTheme();
+  const { actionsList, ariaLabel, onOpen, stopClickPropagation } = props;
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -46,13 +49,19 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (stopClickPropagation) {
+      event.stopPropagation();
+    }
     setAnchorEl(event.currentTarget);
     if (onOpen) {
       onOpen();
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
+    if (stopClickPropagation) {
+      event.stopPropagation();
+    }
     setAnchorEl(null);
   };
 
@@ -65,21 +74,14 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
     }
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) =>
+    e.currentTarget.focus();
+
   if (!actionsList || actionsList.length === 0) {
     return null;
   }
 
   const sxTooltipIcon = {
-    '& :hover': {
-      color: '#4d99f1',
-    },
-    '&& .MuiSvgIcon-root': {
-      fill: theme.color.disabledText,
-      height: '20px',
-      width: '20px',
-    },
-
-    color: '#fff',
     padding: '0 0 0 8px',
     pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem
   };
@@ -89,12 +91,12 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       <IconButton
         sx={(theme) => ({
           ':hover': {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
+            backgroundColor: theme.color.buttonPrimaryHover,
+            color: theme.color.white,
           },
-          backgroundColor: open ? theme.palette.primary.main : undefined,
+          backgroundColor: open ? theme.color.buttonPrimaryHover : undefined,
           borderRadius: 'unset',
-          color: open ? '#fff' : theme.textColors.linkActiveLight,
+          color: open ? theme.color.white : theme.textColors.linkActiveLight,
           height: '100%',
           minWidth: '40px',
           padding: '10px',
@@ -122,7 +124,6 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
           paper: {
             sx: (theme) => ({
               backgroundColor: theme.palette.primary.main,
-              boxShadow: 'none',
             }),
           },
         }}
@@ -141,25 +142,20 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
       >
         {actionsList.map((a, idx) => (
           <MenuItem
-            onClick={() => {
+            onClick={(e) => {
               if (!a.disabled) {
-                handleClose();
+                handleClose(e);
                 a.onClick();
               }
-            }}
-            sx={{
-              '&:hover': {
-                background: '#226dc3',
-              },
-              background: '#3683dc',
-              borderBottom: '1px solid #5294e0',
-              color: '#fff',
-              padding: '10px 10px 10px 16px',
+              if (stopClickPropagation) {
+                e.stopPropagation();
+              }
             }}
             data-qa-action-menu-item={a.title}
             data-testid={a.title}
             disabled={a.disabled}
             key={idx}
+            onMouseEnter={handleMouseEnter}
           >
             <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
               {a.title}

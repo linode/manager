@@ -45,21 +45,37 @@ describe('EventsLanding', () => {
       http.get('*/events', () => HttpResponse.json(makeResourcePage([event])))
     );
 
-    const { findByText } = renderWithTheme(<EventsLanding />);
+    const { findByRole } = renderWithTheme(<EventsLanding />);
 
-    await findByText('my-volume');
-    await findByText('is being created by user.', { exact: false });
+    const messageCell = await findByRole('cell', {
+      name: /volume.*my-volume.*is being.*created/i,
+    });
+
+    expect(messageCell).toHaveTextContent(/volume/i);
+    expect(messageCell).toHaveTextContent(/my-volume/i);
+    expect(messageCell).toHaveTextContent(/is being/i);
+    expect(messageCell).toHaveTextContent(/created/i);
+
+    const volumeLink = await findByRole('link', { name: /my-volume/i });
+    expect(volumeLink).toHaveAttribute('href', '/volumes');
   });
 
   it('renders a message when there are no more events to load', async () => {
     const event = eventFactory.build();
+    const eventsResponse = makeResourcePage([event], {
+      page: 1,
+      pages: 1,
+      results: 1,
+    });
 
     server.use(
-      http.get('*/events', () =>
-        HttpResponse.json(
-          makeResourcePage([event], { page: 1, pages: 1, results: 1 })
-        )
-      )
+      http.get('*/events', () => HttpResponse.json(eventsResponse), {
+        once: true,
+      }),
+      // `useEventsInfiniteQuery` needs to make two fetches to know if there are no more events to show
+      http.get('*/events', () => HttpResponse.json(makeResourcePage([])), {
+        once: true,
+      })
     );
 
     const { findByText } = renderWithTheme(<EventsLanding />);

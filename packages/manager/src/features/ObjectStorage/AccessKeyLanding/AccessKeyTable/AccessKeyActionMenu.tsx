@@ -1,36 +1,45 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { styled } from '@mui/material/styles';
+import { Stack } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
+import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from '../types';
+import type { OpenAccessDrawer } from '../types';
+import type { ObjectStorageKey } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 
 interface Props {
   label: string;
   objectStorageKey: ObjectStorageKey;
   openDrawer: OpenAccessDrawer;
+  openHostnamesDrawer: () => void;
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-export const AccessKeyActionMenu = ({
-  label,
-  objectStorageKey,
-  openDrawer,
-  openRevokeDialog,
-}: Props) => {
+export const AccessKeyActionMenu = (props: Props) => {
+  const {
+    label,
+    objectStorageKey,
+    openDrawer,
+    openHostnamesDrawer,
+    openRevokeDialog,
+  } = props;
+
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
+  );
+
+  const isSmallViewport = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.down('md')
   );
 
   const actions = [
@@ -46,6 +55,14 @@ export const AccessKeyActionMenu = ({
       },
       title: 'Permissions',
     },
+    ...(isObjMultiClusterEnabled
+      ? [
+          {
+            onClick: openHostnamesDrawer,
+            title: 'View Regions/S3 Hostnames',
+          },
+        ]
+      : []),
     {
       onClick: () => {
         openRevokeDialog(objectStorageKey);
@@ -54,40 +71,24 @@ export const AccessKeyActionMenu = ({
     },
   ];
 
+  if (isObjMultiClusterEnabled || isSmallViewport) {
+    return (
+      <ActionMenu
+        actionsList={actions}
+        ariaLabel={`Action menu for Object Storage Key ${label}`}
+      />
+    );
+  }
+
   return (
-    <StyledInlineActionsContainer>
-      {isObjMultiClusterEnabled ? (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for Object Storage Key ${label}`}
+    <Stack direction="row" justifyContent="flex-end">
+      {actions.map((action) => (
+        <InlineMenuAction
+          actionText={action.title}
+          key={action.title}
+          onClick={action.onClick}
         />
-      ) : (
-        <>
-          <Hidden mdDown>
-            {actions.map((thisAction) => (
-              <InlineMenuAction
-                actionText={thisAction.title}
-                key={thisAction.title}
-                onClick={thisAction.onClick}
-              />
-            ))}
-          </Hidden>
-          <Hidden mdUp>
-            <ActionMenu
-              actionsList={actions}
-              ariaLabel={`Action menu for Object Storage Key ${label}`}
-            />
-          </Hidden>
-        </>
-      )}
-    </StyledInlineActionsContainer>
+      ))}
+    </Stack>
   );
 };
-
-const StyledInlineActionsContainer = styled('div', {
-  label: 'StyledInlineActionsContainer',
-})(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'flex-end',
-}));

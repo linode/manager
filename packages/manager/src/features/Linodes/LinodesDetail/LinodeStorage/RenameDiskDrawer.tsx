@@ -1,14 +1,13 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import { useLinodeDiskUpdateMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { object, string } from 'yup';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { useLinodeDiskUpdateMutation } from 'src/queries/linodes/disks';
+import { NotFound } from 'src/components/NotFound';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 const RenameDiskSchema = object({
   label: string()
@@ -57,7 +56,12 @@ export const RenameDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Rename Disk">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Rename Disk"
+    >
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice

@@ -2,34 +2,28 @@
  * @file Integration tests for VPC create flow.
  */
 
-import type { Subnet, VPC } from '@linode/api-v4';
-import {
-  vpcFactory,
-  subnetFactory,
-  linodeFactory,
-  regionFactory,
-} from '@src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { subnetFactory, vpcFactory } from '@src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
-  mockCreateVPCError,
   mockCreateVPC,
+  mockCreateVPCError,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
-  randomLabel,
-  randomPhrase,
-  randomIp,
-  randomNumber,
-  randomString,
-} from 'support/util/random';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
+import {
+  randomIp,
+  randomLabel,
+  randomNumber,
+  randomPhrase,
+  randomString,
+} from 'support/util/random';
+import { extendRegion } from 'support/util/regions';
+
 import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+
+import type { Subnet, VPC } from '@linode/api-v4';
 
 /**
  * Gets the "Add another Subnet" section with the given index.
@@ -49,15 +43,17 @@ describe('VPC create flow', () => {
    * - Confirms that UI redirects to created VPC page after creating a VPC.
    */
   it('can create a VPC', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
       return subnetFactory.build({
-        label: randomLabel(),
         id: randomNumber(10000, 99999),
         ipv4: `${randomIp()}/${randomNumber(0, 32)}`,
+        label: randomLabel(),
         linodes: linodeFactory.buildList(index + 1),
       });
     });
@@ -66,50 +62,42 @@ describe('VPC create flow', () => {
     const mockInvalidIpRange = `${randomIp()}/${randomNumber(33, 100)}`;
 
     const mockVpc: VPC = vpcFactory.build({
+      description: randomPhrase(),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       region: mockVPCRegion.id,
-      description: randomPhrase(),
       subnets: mockSubnets,
     });
 
-    const ipValidationErrorMessage = 'The IPv4 range must be in CIDR format';
+    const ipValidationErrorMessage1 = 'A subnet must have an IPv4 range.';
+    const ipValidationErrorMessage2 = 'The IPv4 range must be in CIDR format.';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
-    ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
+    ui.regionSelect.find().click();
+    cy.focused().type(`${mockVPCRegion.label}{enter}`);
 
-    cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
+    cy.findByText('VPC Label').should('be.visible').click();
+    cy.focused().type(mockVpc.label);
 
-    cy.findByText('Description')
-      .should('be.visible')
-      .click()
-      .type(mockVpc.description);
+    cy.findByText('Description').should('be.visible').click();
+    cy.focused().type(mockVpc.description);
 
     // Fill out the first Subnet.
     // Insert an invalid empty IP range to confirm client side validation.
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet Label')
-          .should('be.visible')
-          .click()
-          .type(mockSubnets[0].label);
+        cy.findByText('Subnet Label').should('be.visible').click();
+        cy.focused().type(mockSubnets[0].label);
 
-        cy.findByText('Subnet IP Address Range')
-          .should('be.visible')
-          .click()
-          .type(`{selectAll}{backspace}`);
+        cy.findByText('Subnet IP Address Range').should('be.visible').click();
+        cy.focused().type(`{selectAll}{backspace}`);
       });
 
     ui.button
@@ -118,14 +106,12 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage1).should('be.visible');
 
     // Enter a random non-IP address string to further test client side validation.
-    cy.findByText('Subnet IP Address Range')
-      .should('be.visible')
-      .click()
-      .type(`{selectAll}{backspace}`)
-      .type(randomString(18));
+    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(randomString(18));
 
     ui.button
       .findByTitle('Create VPC')
@@ -133,14 +119,12 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Enter a valid IP address with an invalid network prefix to further test client side validation.
-    cy.findByText('Subnet IP Address Range')
-      .should('be.visible')
-      .click()
-      .type(`{selectAll}{backspace}`)
-      .type(mockInvalidIpRange);
+    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(mockInvalidIpRange);
 
     ui.button
       .findByTitle('Create VPC')
@@ -148,14 +132,12 @@ describe('VPC create flow', () => {
       .should('be.enabled')
       .click();
 
-    cy.findByText(ipValidationErrorMessage).should('be.visible');
+    cy.findByText(ipValidationErrorMessage2).should('be.visible');
 
     // Replace invalid IP address range with valid range.
-    cy.findByText('Subnet IP Address Range')
-      .should('be.visible')
-      .click()
-      .type(`{selectAll}{backspace}`)
-      .type(mockSubnets[0].ipv4!);
+    cy.findByText('Subnet IP Address Range').should('be.visible').click();
+    cy.focused().type(`{selectAll}{backspace}`);
+    cy.focused().type(mockSubnets[0].ipv4!);
 
     // Add another subnet that we will remove later.
     ui.button
@@ -169,11 +151,9 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(1)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Subnet IP Address Range')
-          .should('be.visible')
-          .click()
-          .type(`{selectAll}{backspace}`)
-          .type(mockSubnetToDelete.ipv4!);
+        cy.findByText('Subnet IP Address Range').should('be.visible').click();
+        cy.focused().type(`{selectAll}{backspace}`);
+        cy.focused().type(mockSubnetToDelete.ipv4!);
       });
 
     ui.button
@@ -187,10 +167,12 @@ describe('VPC create flow', () => {
     getSubnetNodeSection(1)
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label is required').should('be.visible');
+        cy.findByText('Label must be between 1 and 64 characters.').should(
+          'be.visible'
+        );
 
         // Delete subnet.
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 1')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -210,16 +192,12 @@ describe('VPC create flow', () => {
       getSubnetNodeSection(index + 1)
         .should('be.visible')
         .within(() => {
-          cy.findByText('Subnet Label')
-            .should('be.visible')
-            .click()
-            .type(mockSubnet.label);
+          cy.findByText('Subnet Label').should('be.visible').click();
+          cy.focused().type(mockSubnet.label);
 
-          cy.findByText('Subnet IP Address Range')
-            .should('be.visible')
-            .click()
-            .type(`{selectAll}{backspace}`)
-            .type(`${randomIp()}/${randomNumber(0, 32)}`);
+          cy.findByText('Subnet IP Address Range').should('be.visible').click();
+          cy.focused().type(`{selectAll}{backspace}`);
+          cy.focused().type(`${randomIp()}/${randomNumber(0, 32)}`);
         });
     });
 
@@ -278,39 +256,37 @@ describe('VPC create flow', () => {
    * - Confirms that Cloud Manager UI responds accordingly when creating a VPC without subnets.
    */
   it('can create a VPC without any subnets', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockVpc: VPC = vpcFactory.build({
+      description: randomPhrase(),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       region: mockVPCRegion.id,
-      description: randomPhrase(),
       subnets: [],
     });
 
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets([]);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
-    cy.findByText('VPC Label').should('be.visible').click().type(mockVpc.label);
+    cy.findByText('VPC Label').should('be.visible').click();
+    cy.focused().type(mockVpc.label);
 
     // Remove the subnet.
     getSubnetNodeSection(0)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Remove Subnet')
+        cy.findByLabelText('Remove Subnet 0')
           .should('be.visible')
           .should('be.enabled')
           .click();

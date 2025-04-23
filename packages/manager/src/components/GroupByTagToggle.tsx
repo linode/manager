@@ -1,8 +1,8 @@
+import { IconButton } from '@linode/ui';
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import { Tooltip } from 'src/components/Tooltip';
-import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
 
 interface GroupByTagToggleProps {
   isGroupedByTag: boolean;
@@ -26,19 +26,21 @@ export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
         placement="top-end"
         title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
       >
-        <StyledToggleButton
+        <IconButton
+          sx={{
+            padding: 0,
+          }}
           aria-describedby={groupByDescriptionId}
           aria-label={`Toggle group by tag`}
+          className={isGroupedByTag ? 'MuiIconButton-isActive' : ''}
           disableRipple
           // See https://github.com/linode/manager/pull/6653 for more details
           disabled={isLargeAccount}
-          isActive={isGroupedByTag}
           // Group by Tag is not available if you have a large account.
           onClick={toggleGroupByTag}
-          size="large"
         >
           <GroupByTag />
-        </StyledToggleButton>
+        </IconButton>
       </Tooltip>
     </>
   );

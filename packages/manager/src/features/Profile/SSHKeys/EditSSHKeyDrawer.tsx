@@ -1,15 +1,14 @@
-import { SSHKey } from '@linode/api-v4';
+import { useUpdateSSHKeyMutation } from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { useUpdateSSHKeyMutation } from 'src/queries/profile/profile';
+import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+
+import type { SSHKey } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -17,11 +16,11 @@ interface Props {
   sshKey: SSHKey | undefined;
 }
 
-const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
+export const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateSSHKey,
     reset,
   } = useUpdateSSHKeyMutation(sshKey?.id ?? -1);
@@ -57,6 +56,7 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Edit SSH Key ${sshKey?.label}`}
@@ -75,7 +75,7 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
             'data-testid': 'submit',
             disabled: !formik.dirty,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
@@ -84,5 +84,3 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
     </Drawer>
   );
 };
-
-export default React.memo(EditSSHKeyDrawer);

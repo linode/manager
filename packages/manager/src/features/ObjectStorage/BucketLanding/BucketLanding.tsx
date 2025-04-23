@@ -1,44 +1,41 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useProfile, useRegionsQuery } from '@linode/queries';
+import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
+import { readableBytes, useOpenClose } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
-  BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+} from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+
+import type {
+  APIError,
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+  ObjectStorageEndpoint,
+} from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+
+interface Props {
+  isCreateBucketDrawerOpen?: boolean;
+}
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -46,71 +43,34 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const BucketLanding = () => {
+export const BucketLanding = (props: Props) => {
+  const { isCreateBucketDrawerOpen } = props;
   const { data: profile } = useProfile();
 
   const isRestrictedUser = profile?.restricted;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
-  const { data: regions } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const {
-    data: objectStorageClusters,
-    error: clustersErrors,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
   const { classes } = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
-  const [bucketToRemove, setBucketToRemove] = React.useState<
-    ObjectStorageBucket | undefined
-  >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
-  const [bucketForDetails, setBucketForDetails] = React.useState<
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
+  const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
 
   const handleClickDetails = (bucket: ObjectStorageBucket) => {
     setBucketDetailDrawerOpen(true);
-    setBucketForDetails(bucket);
+    setSelectedBucket(bucket);
   };
 
   const closeBucketDetailDrawer = () => {
@@ -118,21 +78,21 @@ export const BucketLanding = () => {
   };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
-    setBucketToRemove(bucket);
+    setSelectedBucket(bucket);
     setError(undefined);
     removeBucketConfirmationDialog.open();
   };
 
   const removeBucket = () => {
     // This shouldn't happen, but just in case (and to get TS to quit complaining...)
-    if (!bucketToRemove) {
+    if (!selectedBucket) {
       return;
     }
 
     setError(undefined);
     setIsLoading(true);
 
-    const { cluster, label } = bucketToRemove;
+    const { cluster, label } = selectedBucket;
 
     deleteBucket({ cluster, label })
       .then(() => {
@@ -151,20 +111,37 @@ export const BucketLanding = () => {
       });
   };
 
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: orderedData,
+  } = useOrderV2({
+    data: objectStorageBucketsResponse?.buckets,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/object-storage/buckets',
+    },
+    preferenceKey: 'object-storage-buckets',
+  });
+
   const closeRemoveBucketConfirmationDialog = React.useCallback(() => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
 
   const unavailableClusters =
-    objectStorageBucketsResponse?.errors.map(
-      (error: BucketError) => error.cluster
+    objectStorageBucketsResponse?.errors.map((error) =>
+      isBucketError(error) ? error.cluster : error.endpoint
     ) || [];
 
   if (isRestrictedUser) {
     return <RenderEmpty />;
   }
 
-  if (clustersErrors || bucketsErrors) {
+  if (bucketsErrors) {
     return (
       <ErrorState
         data-qa-error-state
@@ -173,11 +150,7 @@ export const BucketLanding = () => {
     );
   }
 
-  if (
-    areClustersLoading ||
-    areBucketsLoading ||
-    objectStorageBucketsResponse === undefined
-  ) {
+  if (areBucketsLoading || objectStorageBucketsResponse === undefined) {
     return <CircleProgress />;
   }
 
@@ -195,32 +168,25 @@ export const BucketLanding = () => {
   }
 
   const totalUsage = sumBucketUsage(objectStorageBucketsResponse.buckets);
-  const bucketLabel = bucketToRemove ? bucketToRemove.label : '';
+  const bucketLabel = selectedBucket ? selectedBucket.label : '';
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
+      <DocumentTitleSegment
+        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
+      />
       {unavailableClusters.length > 0 && (
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}
-      <Grid xs={12}>
-        <OrderBy
-          data={objectStorageBucketsResponse.buckets}
-          order={'asc'}
-          orderBy={'label'}
-        >
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              data: orderedData,
-              handleClickDetails,
-              handleClickRemove,
-              handleOrderChange,
-              order,
-              orderBy,
-            };
-            return <BucketTable {...bucketTableProps} />;
-          }}
-        </OrderBy>
+      <Grid size={12}>
+        <BucketTable
+          data={orderedData ?? []}
+          handleClickDetails={handleClickDetails}
+          handleClickRemove={handleClickRemove}
+          handleOrderChange={handleOrderChange}
+          order={order}
+          orderBy={orderBy}
+        />
         {/* If there's more than one Bucket, display the total usage. */}
         {objectStorageBucketsResponse.buckets.length > 1 ? (
           <Typography
@@ -258,11 +224,11 @@ export const BucketLanding = () => {
         </Notice>
         <Typography className={classes.copy}>
           A bucket must be empty before deleting it. Please{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/lifecycle-policies">
             delete all objects
           </Link>
           , or use{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             another tool
           </Link>{' '}
           to force deletion.
@@ -275,14 +241,9 @@ export const BucketLanding = () => {
         )}
       </TypeToConfirmDialog>
       <BucketDetailsDrawer
-        bucketLabel={bucketForDetails?.label}
-        cluster={bucketForDetails?.cluster}
-        created={bucketForDetails?.created}
-        hostname={bucketForDetails?.hostname}
-        objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}
         open={bucketDetailDrawerOpen}
-        size={bucketForDetails?.size}
+        selectedBucket={selectedBucket}
       />
     </React.Fragment>
   );
@@ -293,7 +254,7 @@ const RenderEmpty = () => {
 };
 
 interface UnavailableClustersDisplayProps {
-  unavailableClusters: ObjectStorageCluster[];
+  unavailableClusters: (ObjectStorageCluster | ObjectStorageEndpoint)[];
 }
 
 const UnavailableClustersDisplay = React.memo(
@@ -318,7 +279,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

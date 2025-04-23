@@ -1,81 +1,244 @@
+import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
+import { Box } from '@mui/material';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+import { themes } from 'src/utilities/theme';
+
+import { deepEqual } from '../Utils/FilterBuilder';
+
+import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
-  id: number;
+  id: string;
   label: string;
-  region?: string; // usually linodes are associated with only one region
-  regions?: string[]; // aclb are associated with multiple regions
+  region?: string;
+  tags?: string[];
 }
 
 export interface CloudPulseResourcesSelectProps {
-  defaultSelection?: number[];
-  handleResourcesSelection: (resources: CloudPulseResources[]) => void;
+  defaultValue?: Partial<FilterValue>;
+  disabled?: boolean;
+  handleResourcesSelection: (
+    resources: CloudPulseResources[],
+    savePref?: boolean
+  ) => void;
+  label: string;
   placeholder?: string;
-  region: string | undefined;
+  region?: string;
   resourceType: string | undefined;
+  savePreferences?: boolean;
+  tags?: string[];
+  xFilter?: Filter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
-    const [selectedResource, setResources] = React.useState<
-      CloudPulseResources[]
-    >([]);
-    const { data: resources, isLoading } = useResourcesQuery(
-      props.region && props.resourceType ? true : false,
-      props.resourceType,
-      {},
-      { region: props.region }
-    );
+    const {
+      defaultValue,
+      disabled,
+      handleResourcesSelection,
+      label,
+      placeholder,
+      region,
+      resourceType,
+      savePreferences,
+      tags,
+      xFilter,
+    } = props;
 
-    const getResourcesList = (): CloudPulseResources[] => {
-      return resources && resources.length > 0 ? resources : [];
+    const flags = useFlags();
+
+    const resourceFilterMap: Record<string, Filter> = {
+      dbaas: {
+        '+order': 'asc',
+        '+order_by': 'label',
+        platform: 'rdbms-default',
+      },
     };
 
-    React.useEffect(() => {
-      const defaultResources = resources?.filter((instance) =>
-        props.defaultSelection?.includes(instance.id)
-      );
+    const { data: resources, isError, isLoading } = useResourcesQuery(
+      disabled !== undefined ? !disabled : Boolean(region && resourceType),
+      resourceType,
+      {},
+      xFilter
+        ? {
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+            ...xFilter, // the usual xFilters
+          }
+        : {
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+            region,
+            ...(tags ?? []),
+          }
+    );
 
-      if (defaultResources && defaultResources.length > 0) {
-        setResources(defaultResources);
-        props.handleResourcesSelection(defaultResources!);
+    const [selectedResources, setSelectedResources] = React.useState<
+      CloudPulseResources[]
+    >();
+
+    /**
+     * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
+     * When the autocomplete is already closed, we should publish the resources on clear action and deselect action as well since onclose will not be triggered at that time
+     * When the autocomplete is open, we should publish any resources on clear action until the autocomplete is close
+     */
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
+
+    const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
+      return resources && resources.length > 0 ? resources : [];
+    }, [resources]);
+
+    // Maximum resource selection limit is fetched from launchdarkly
+    const maxResourceSelectionLimit = React.useMemo(() => {
+      const obj = flags.aclpResourceTypeMap?.find(
+        (item) => item.serviceType === resourceType
+      );
+      return obj?.maxResourceSelections || 10;
+    }, [resourceType, flags.aclpResourceTypeMap]);
+
+    const resourcesLimitReached = React.useMemo(() => {
+      return getResourcesList.length > maxResourceSelectionLimit;
+    }, [getResourcesList.length, maxResourceSelectionLimit]);
+
+    // Once the data is loaded, set the state variable with value stored in preferences
+    React.useEffect(() => {
+      if (disabled && !selectedResources) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
+      if (resources && savePreferences && !selectedResources) {
+        const defaultResources =
+          defaultValue && Array.isArray(defaultValue)
+            ? defaultValue.map((resource) => String(resource))
+            : [];
+        const resource = getResourcesList.filter((resource) =>
+          defaultResources.includes(String(resource.id))
+        );
+
+        handleResourcesSelection(resource);
+        setSelectedResources(resource);
+      } else {
+        if (selectedResources) {
+          setSelectedResources([]);
+        }
+        handleResourcesSelection([]);
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, props.region]); // only on any resources or region change, select defaults if any
+    }, [resources, region, xFilter, resourceType]);
 
     return (
       <Autocomplete
-        onChange={(_: any, resourceSelections: any) => {
-          setResources(resourceSelections);
-          props.handleResourcesSelection(resourceSelections);
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
+        onChange={(e, resourceSelections) => {
+          setSelectedResources(resourceSelections);
+
+          if (!isAutocompleteOpen.current) {
+            handleResourcesSelection(resourceSelections, savePreferences);
+          }
+        }}
+        onClose={() => {
+          isAutocompleteOpen.current = false;
+          handleResourcesSelection(selectedResources ?? [], savePreferences);
+        }}
+        onOpen={() => {
+          isAutocompleteOpen.current = true;
+        }}
+        placeholder={
+          selectedResources?.length ? '' : placeholder || 'Select Resources'
+        }
+        renderOption={(props, option) => {
+          // After selecting resources up to the max resource selection limit, rest of the unselected options will be disabled if there are any
+          const { key, ...rest } = props;
+          const isResourceSelected = selectedResources?.some(
+            (item) => item.label === option.label
+          );
+
+          const isSelectAllORDeslectAllOption =
+            option.label === 'Select All ' || option.label === 'Deselect All ';
+
+          const isMaxSelectionsReached =
+            selectedResources &&
+            selectedResources.length >= maxResourceSelectionLimit &&
+            !isResourceSelected &&
+            !isSelectAllORDeslectAllOption;
+
+          const ListItem = isSelectAllORDeslectAllOption
+            ? StyledListItem
+            : 'li';
+
+          return (
+            <ListItem
+              {...rest}
+              aria-disabled={isMaxSelectionsReached}
+              data-qa-option
+              key={key}
+            >
+              <>
+                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+                <SelectedIcon visible={isResourceSelected || false} />
+              </>
+            </ListItem>
+          );
+        }}
+        textFieldProps={{
+          InputProps: {
+            sx: {
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
+              maxHeight: '55px',
+              msOverflowStyle: 'none',
+              overflow: 'auto',
+              scrollbarWidth: 'none',
+              svg: {
+                color: themes.light.color.grey3,
+              },
+            },
+          },
         }}
         autoHighlight
         clearOnBlur
-        data-testid={'Resource-select'}
-        disabled={!props.region || !props.resourceType || isLoading}
-        isOptionEqualToValue={(option, value) => option.label === value.label}
-        label=""
-        limitTags={2}
+        data-testid="resource-select"
+        disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
+        disabled={disabled}
+        errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        label={label || 'Resources'}
+        limitTags={1}
+        loading={isLoading}
         multiple
-        options={getResourcesList()}
-        placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
-        value={selectedResource ? selectedResource : []}
+        noMarginTop
+        options={getResourcesList}
+        value={selectedResources ?? []}
       />
     );
   },
-  compareProps // we can re-render this component, on only region and resource type changes
+  compareProps
 );
 
 function compareProps(
-  oldProps: CloudPulseResourcesSelectProps,
-  newProps: CloudPulseResourcesSelectProps
-) {
-  return (
-    oldProps.region == newProps.region &&
-    oldProps.resourceType == newProps.resourceType
-  );
+  prevProps: CloudPulseResourcesSelectProps,
+  nextProps: CloudPulseResourcesSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseResourcesSelectProps)[] = [
+    'region',
+    'resourceType',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
 }

@@ -1,7 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
+import Grid from '@mui/material/Grid2';
 
 export const StyledButton = styled(Button, { label: 'StyledButton' })(
   ({ theme }) => ({

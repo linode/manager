@@ -1,10 +1,11 @@
-import { BrowserOptions, Event as SentryEvent, init } from '@sentry/react';
+import { deepStringTransform, redactAccessToken } from '@linode/utilities';
+import { init } from '@sentry/react';
 
 import { APP_ROOT, SENTRY_URL } from 'src/constants';
-import { deepStringTransform } from 'src/utilities/deepStringTransform';
-import { redactAccessToken } from 'src/utilities/redactAccessToken';
 
 import packageJson from '../package.json';
+
+import type { BrowserOptions, Event as SentryEvent } from '@sentry/react';
 
 export const initSentry = () => {
   const environment = getSentryEnvironment();
@@ -12,9 +13,11 @@ export const initSentry = () => {
   if (SENTRY_URL) {
     init({
       allowUrls: [
-        /** anything from either *.linode.com/* or localhost:3000 */
-        /linode.com{1}/g,
-        /localhost:3000{1}/g,
+        /**
+         * anything from either *linode.com* or *localhost:3000*
+         */
+        'linode.com',
+        'localhost:3000',
       ],
       autoSessionTracking: false,
       beforeSend,
@@ -166,7 +169,7 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
       !!exception.values[0].value &&
       !!exception.values[0].value.match(new RegExp(value, 'gmi'))
     ) {
-      acc = customFingerPrintMap[value];
+      acc = customFingerPrintMap[value as keyof typeof customFingerPrintMap];
     }
     return acc;
   }, '');

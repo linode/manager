@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
-import { linodeFactory } from 'src/factories';
+import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { typeFactory } from 'src/factories/types';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -9,19 +9,37 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EnableBackupsDialog } from './EnableBackupsDialog';
 
 const queryMocks = vi.hoisted(() => ({
+  useIsDiskEncryptionFeatureEnabled: vi.fn().mockReturnValue({
+    isDiskEncryptionFeatureEnabled: undefined,
+  }),
   useLinodeQuery: vi.fn().mockReturnValue({
     data: undefined,
+  }),
+  useRegionsQuery: vi.fn().mockReturnValue({
+    data: [],
   }),
   useTypeQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('src/components/Encryption/utils.ts', async () => {
+  const actual = await vi.importActual<any>(
+    'src/components/Encryption/utils.ts'
+  );
+  return {
+    ...actual,
+    useIsDiskEncryptionFeatureEnabled:
+      queryMocks.useIsDiskEncryptionFeatureEnabled,
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
@@ -64,9 +82,9 @@ describe('EnableBackupsDialog component', () => {
     });
   });
 
-  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
+  vi.mock('src/components/Encryption/utils.ts', async () => {
     const actual = await vi.importActual<any>(
-      'src/components/DiskEncryption/utils.ts'
+      'src/components/Encryption/utils.ts'
     );
     return {
       ...actual,

@@ -1,12 +1,10 @@
+import { Button, Tooltip, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
-import { Button } from 'src/components/Button/Button';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import {
   StyledActionsContainer,
@@ -15,10 +13,11 @@ import {
   StyledLeftWrapper,
   StyledRightWrapper,
   StyledRootContainer,
-  StyledUploadPending,
+  StyledUploadPendingIcon,
   useStyles,
 } from './FileUpload.styles';
-import { ObjectUploaderAction } from './reducer';
+
+import type { ObjectUploaderAction } from './reducer';
 
 export interface FileUploadProps {
   dispatch: React.Dispatch<ObjectUploaderAction>;
@@ -113,7 +112,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
               width={22}
             />
           ) : (
-            <StyledUploadPending
+            <StyledUploadPendingIcon
               data-qa-file-upload-pending
               height={22}
               width={22}

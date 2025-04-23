@@ -1,16 +1,20 @@
-import { createTestLinode } from 'support/util/linodes';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import { interceptCreateFirewall } from 'support/intercepts/firewalls';
-import { randomString, randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
-
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 authenticate();
-describe('create firewall', () => {
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
+describe.skip('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -35,7 +39,8 @@ describe('create firewall', () => {
         cy.get('[data-testid="submit"]').click();
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
-        cy.contains('Label').click().type(firewall.label);
+        cy.contains('Label').click();
+        cy.focused().type(firewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -86,11 +91,10 @@ describe('create firewall', () => {
         .should('be.visible')
         .within(() => {
           // Fill out and submit firewall create form.
-          cy.contains('Label').click().type(firewall.label);
-          cy.findByLabelText('Linodes')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.contains('Label').click();
+          cy.focused().type(firewall.label);
+          cy.findByLabelText('Linodes').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

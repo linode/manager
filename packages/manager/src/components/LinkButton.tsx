@@ -1,11 +1,8 @@
-import { Theme } from '@mui/material/styles';
+import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-
-import { Box } from './Box';
-import { StyledLinkButton } from './Button/StyledLinkButton';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
@@ -46,6 +43,7 @@ export const LinkButton = (props: Props) => {
       disabled={isDisabled}
       onClick={onClick}
       style={style}
+      tabIndex={0}
       type="button"
     >
       {children}

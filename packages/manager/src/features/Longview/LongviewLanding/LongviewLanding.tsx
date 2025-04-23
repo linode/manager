@@ -2,37 +2,42 @@ import {
   getActiveLongviewPlan,
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
-import {
-  ActiveLongviewPlan,
-  LongviewSubscription,
-} from '@linode/api-v4/lib/longview/types';
+import { useAccountSettings } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import withLongviewClients, {
-  Props as LongviewProps,
-} from 'src/containers/longview.container';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import withLongviewClients from 'src/containers/longview.container';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useTabs } from 'src/hooks/useTabs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
 
+import type {
+  ActiveLongviewPlan,
+  LongviewSubscription,
+} from '@linode/api-v4/lib/longview/types';
+import type { Props as LongviewProps } from 'src/containers/longview.container';
+import type { LongviewState } from 'src/routes/longview';
+
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
-interface LongviewLandingProps extends LongviewProps, RouteComponentProps<{}> {}
-
-export const LongviewLanding = (props: LongviewLandingProps) => {
+export const LongviewLanding = (props: LongviewProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LongviewState;
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
@@ -49,41 +54,35 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
 
   const isManaged = Boolean(accountSettings?.managed);
 
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [newClientLoading, setNewClientLoading] =
+    React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
-  const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: `${props.match.url}/clients`,
       title: 'Clients',
+      to: '/longview/clients',
     },
     {
-      routeName: `${props.match.url}/plan-details`,
       title: 'Plan Details',
+      to: '/longview/plan-details',
     },
-  ];
+  ]);
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
+  const isLongviewCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_longview',
+  });
 
   const handleAddClient = () => {
     setNewClientLoading(true);
     createLongviewClient()
       .then((_) => {
         setNewClientLoading(false);
-        if (props.history.location.pathname !== '/longview/clients') {
-          props.history.push('/longview/clients');
+        if (location.pathname !== '/longview/clients') {
+          navigate({
+            to: '/longview/clients',
+          });
         }
       })
       .catch((errorResponse) => {
@@ -105,43 +104,50 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
   };
 
   const handleSubmit = () => {
-    const {
-      history: { push },
-    } = props;
-
     if (isManaged) {
-      push({
-        pathname: '/support/tickets',
-        state: {
-          open: true,
-          title: 'Request for additional Longview clients',
-        },
+      navigate({
+        state: (prev) => ({ ...prev, ...locationState }),
+        to: '/support/tickets',
       });
       return;
     }
-    props.history.push('/longview/plan-details');
+    navigate({
+      to: '/longview/plan-details',
+    });
   };
 
   return (
     <>
+      {isLongviewCreationRestricted && (
+        <Notice
+          sx={{ marginBottom: 2 }}
+          text={getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Longview Clients',
+          })}
+          variant="error"
+        />
+      )}
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Longview Clients',
+          }),
+        }}
         createButtonText="Add Client"
-        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        disabledCreateButton={isLongviewCreationRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
         entity="Client"
         loading={newClientLoading}
         onButtonClick={handleAddClient}
         removeCrumbX={1}
         title="Longview"
       />
-      <StyledTabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
+      <StyledTabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
@@ -163,7 +169,7 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
       </StyledTabs>
       <SubscriptionDialog
         clientLimit={
-          isEmpty(activeSubscriptionRequestHook.data)
+          Object.keys(activeSubscriptionRequestHook.data).length === 0
             ? 10
             : (activeSubscriptionRequestHook.data as LongviewSubscription)
                 .clients_included

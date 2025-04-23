@@ -1,22 +1,22 @@
-import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { SupportLink } from 'src/components/SupportLink';
-import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
-import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
-} from 'src/queries/firewalls';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { getEntityIdsByPermission } from '@linode/utilities';
+import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
+import { SupportLink } from 'src/components/SupportLink';
+import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
+import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { NodeBalancer } from '@linode/api-v4';
@@ -30,7 +30,7 @@ interface Props {
 export const AddNodebalancerDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
@@ -41,10 +41,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   const theme = useTheme();
 
-  const {
-    isLoading: addDeviceIsLoading,
-    mutateAsync: addDevice,
-  } = useAddFirewallDeviceMutation(Number(id));
+  const { isPending: addDeviceIsLoading, mutateAsync: addDevice } =
+    useAddFirewallDeviceMutation();
 
   const [selectedNodebalancers, setSelectedNodebalancers] = React.useState<
     NodeBalancer[]
@@ -60,7 +58,11 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
     const results = await Promise.allSettled(
       selectedNodebalancers.map((nodebalancer) =>
-        addDevice({ id: nodebalancer.id, type: 'nodebalancer' })
+        addDevice({
+          firewallId: Number(id),
+          id: nodebalancer.id,
+          type: 'nodebalancer',
+        })
       )
     );
 
@@ -125,7 +127,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
       return (
         <Notice
           sx={{
-            fontFamily: theme.font.bold,
+            font: theme.font.bold,
             fontSize: '1rem',
             lineHeight: '20px',
           }}
@@ -176,6 +178,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
         setLocalError(undefined);
         onClose();
       }}
+      NotFoundComponent={NotFound}
       open={open}
       title={`Add Nodebalancer to Firewall: ${firewall?.label}`}
     >

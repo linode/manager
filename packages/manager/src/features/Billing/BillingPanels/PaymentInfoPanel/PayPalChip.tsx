@@ -1,25 +1,28 @@
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import {
   BraintreePayPalButtons,
-  CreateBillingAgreementActions,
   FUNDING,
-  OnApproveBraintreeActions,
-  OnApproveBraintreeData,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { reportException } from 'src/exceptionReporting';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { useClientToken } from 'src/queries/account/payment';
-import { accountQueries } from 'src/queries/account/queries';
+import { useClientToken, accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  CreateBillingAgreementActions,
+  OnApproveBraintreeActions,
+  OnApproveBraintreeData,
+} from '@paypal/react-paypal-js';
+import type { QueryClient } from '@tanstack/react-query';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()(() => ({
   disabled: {
@@ -115,7 +118,9 @@ export const PayPalChip = (props: Props) => {
       type: 'payment_method_nonce',
     })
       .then(() => {
-        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.paymentMethods.queryKey,
+        });
 
         onClose();
 

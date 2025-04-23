@@ -1,23 +1,19 @@
-import { Database } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
+
+import type { APIError, Database } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
@@ -81,13 +77,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   database: Database;
   description?: JSX.Element;
+  disabled?: boolean;
 }
 
 export const AccessControls = (props: Props) => {
-  const {
-    database: { allow_list: allowList, engine, id },
-    description,
-  } = props;
+  const { database, description, disabled } = props;
 
   const { classes } = useStyles();
 
@@ -104,22 +98,10 @@ export const AccessControls = (props: Props) => {
     setAddAccessControlDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
-
   const {
-    isLoading: databaseUpdating,
+    isPending: databaseUpdating,
     mutateAsync: updateDatabase,
-  } = useDatabaseMutation(engine, id);
-
-  React.useEffect(() => {
-    if (allowList.length > 0) {
-      const allowListExtended = allowList.map(stringToExtendedIP);
-
-      setExtendedIPs(allowListExtended);
-    } else {
-      setExtendedIPs([]);
-    }
-  }, [allowList]);
+  } = useDatabaseMutation(database.engine, database.id);
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
@@ -133,7 +115,7 @@ export const AccessControls = (props: Props) => {
 
   const handleRemoveIPAddress = () => {
     updateDatabase({
-      allow_list: allowList.filter(
+      allow_list: database.allow_list.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
       ),
     })
@@ -163,6 +145,7 @@ export const AccessControls = (props: Props) => {
                 <InlineMenuAction
                   actionText="Remove"
                   className={classes.removeButton}
+                  disabled={disabled}
                   onClick={() => handleClickRemove(accessControl)}
                 />
               </TableCell>
@@ -189,17 +172,21 @@ export const AccessControls = (props: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Access Controls</Typography>
+            <Typography variant="h3">Manage Access</Typography>
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
-        <AddNewLink
+        <Button
+          buttonType="outlined"
           className={classes.addAccessControlBtn}
-          label="Manage Access Controls"
+          data-testid="button-access-control"
+          disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
-        />
+        >
+          Manage Access
+        </Button>
       </div>
-      {ipTable(allowList)}
+      {ipTable(database.allow_list)}
       <ConfirmationDialog
         actions={actionsPanel}
         onClose={handleDialogClose}
@@ -215,10 +202,9 @@ export const AccessControls = (props: Props) => {
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer
-        allowList={extendedIPs}
+        database={database}
         onClose={() => setAddAccessControlDrawerOpen(false)}
         open={addAccessControlDrawerOpen}
-        updateDatabase={updateDatabase}
       />
     </>
   );

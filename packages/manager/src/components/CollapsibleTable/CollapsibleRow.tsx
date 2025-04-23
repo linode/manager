@@ -1,11 +1,10 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
+import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -22,47 +21,34 @@ export const CollapsibleRow = (props: Props) => {
 
   return (
     <>
-      <StyledOuterTableRow>
-        <TableCell component="th" scope="row">
-          <IconButton
-            aria-label={`expand ${label} row`}
-            onClick={() => setOpen(!open)}
-            size="small"
-            sx={{ padding: 1 }}
+      <TableRow>
+        <TableCell scope="row">
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
           >
-            {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-          </IconButton>
-          {label}
+            <IconButton
+              aria-label={`expand ${label} row`}
+              onClick={() => setOpen(!open)}
+              size="small"
+              sx={{ marginRight: 0.5, padding: 0 }}
+            >
+              {open ? <KeyboardCaretDownIcon /> : <KeyboardCaretRightIcon />}
+            </IconButton>
+            {label}
+          </Box>
         </TableCell>
         {OuterTableCells}
-      </StyledOuterTableRow>
-      <StyledTableRow>
-        <TableCell colSpan={6} style={{ border: 'none', padding: 0 }}>
+      </TableRow>
+      <TableRow className="MuiTableRow-nested">
+        <TableCell className="MuiTableCell-nested" colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>{InnerTable}</Box>
           </Collapse>
         </TableCell>
-      </StyledTableRow>
+      </TableRow>
     </>
   );
 };
-
-const StyledOuterTableRow = styled(TableRow, {
-  label: 'StyledOuterTableRow',
-})(({ theme }) => ({
-  '& > *': { borderBottom: 'unset' },
-  '& th': {
-    '&:first-of-type': {
-      paddingLeft: 0,
-    },
-  },
-  '& th, td': {
-    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  },
-}));
-
-const StyledTableRow = styled(TableRow, {
-  label: 'StyledTableRow',
-})(() => ({
-  height: 'auto',
-}));

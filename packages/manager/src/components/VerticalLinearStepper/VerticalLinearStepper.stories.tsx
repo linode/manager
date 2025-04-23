@@ -1,8 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Typography } from '@linode/ui';
 import React from 'react';
 
-import { Typography } from '../Typography';
 import { VerticalLinearStepper } from './VerticalLinearStepper';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof VerticalLinearStepper> = {
   component: VerticalLinearStepper,

@@ -1,27 +1,41 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Linode } from '@linode/api-v4';
 import { authenticate } from 'support/api/authentication';
-import { createTestLinode } from 'support/util/linodes';
-import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import {
+  interceptAddDisks,
+  interceptDeleteDisks,
+  interceptResizeDisks,
+} from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { apiMatcher } from 'support/util/intercepts';
+import { createTestLinode } from 'support/util/linodes';
 
-// 3 minutes.
-const LINODE_PROVISION_TIMEOUT = 180_000;
+import type { Linode } from '@linode/api-v4';
 
+/**
+ * Waits for a Linode to finish provisioning by checking the details page status indicator.
+ */
 const waitForProvision = () => {
-  cy.findByText('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+  cy.findByText('PROVISIONING', { timeout: LINODE_CREATE_TIMEOUT }).should(
     'not.exist'
   );
-  cy.findByText('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+  cy.findByText('BOOTING', { timeout: LINODE_CREATE_TIMEOUT }).should(
     'not.exist'
   );
-  cy.findByText('Creating', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+  cy.findByText('Creating', { timeout: LINODE_CREATE_TIMEOUT }).should(
     'not.exist'
   );
 };
 
+// Size values (in MB) to use when creating and resizing disks.
+const DISK_CREATE_SIZE_MB = 512;
+const DISK_RESIZE_SIZE_MB = 768;
+
+/**
+ * Deletes an in-use disk of the given name.
+ *
+ * @param diskName - Name of disk to attempt to delete.
+ */
 const deleteInUseDisk = (diskName: string) => {
   waitForProvision();
 
@@ -51,6 +65,11 @@ const deleteInUseDisk = (diskName: string) => {
   ).should('be.visible');
 };
 
+/**
+ * Deletes a disk of the given name.
+ *
+ * @param diskName - Name of disk to delete.
+ */
 const deleteDisk = (diskName: string) => {
   waitForProvision();
 
@@ -73,14 +92,24 @@ const deleteDisk = (diskName: string) => {
     });
 };
 
-const addDisk = (diskName: string) => {
-  cy.contains('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+/**
+ * Adds a new disk with the given name and optional size.
+ *
+ * If `diskSize` is not specified, the new disk will be 512MB.
+ *
+ * @param diskName - Name of new disk.
+ * @param diskSize - Size of new disk in megabytes.
+ */
+const addDisk = (diskName: string, diskSize: number = DISK_CREATE_SIZE_MB) => {
+  cy.contains('PROVISIONING', { timeout: LINODE_CREATE_TIMEOUT }).should(
     'not.exist'
   );
-  cy.contains('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
+  cy.contains('BOOTING', { timeout: LINODE_CREATE_TIMEOUT }).should(
     'not.exist'
   );
-  containsVisible('OFFLINE');
+  cy.contains('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
+    'be.visible'
+  );
 
   ui.button.findByTitle('Add a Disk').click();
 
@@ -89,7 +118,8 @@ const addDisk = (diskName: string) => {
     .should('be.visible')
     .within(() => {
       cy.findByLabelText('Label (required)').type(diskName);
-      cy.findByLabelText('Size (required)').clear().type('1');
+      cy.findByLabelText('Size (required)').clear();
+      cy.focused().type(`${diskSize}`);
       ui.button.findByTitle('Create').click();
     });
 
@@ -97,21 +127,25 @@ const addDisk = (diskName: string) => {
 };
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('linode storage tab', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
   });
 
+  /*
+   * - Confirms UI flow end-to-end when a user attempts to delete a Linode disk that's in use.
+   * - Confirms that error occurs and user is informed that they must power down their Linode.
+   */
   it('try to delete in use disk', () => {
-    const diskName = 'Debian 11 Disk';
+    const diskName = 'Ubuntu 24.04 LTS Disk';
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
-      cy.intercept(
-        'DELETE',
-        apiMatcher(`linode/instances/${linode.id}/disks/*`)
-      ).as('deleteDisk');
+      interceptDeleteDisks(linode.id).as('deleteDisk');
       cy.visitWithLogin(`linodes/${linode.id}/storage`);
-      containsVisible('RUNNING');
-      fbtVisible(diskName);
+      cy.contains('RUNNING', { timeout: LINODE_CREATE_TIMEOUT });
+      cy.findByText(diskName).should('be.visible');
 
       ui.button.findByTitle('Add a Disk').should('be.disabled');
 
@@ -125,20 +159,19 @@ describe('linode storage tab', () => {
     });
   });
 
+  /*
+   * - Confirms UI flow end-to-end when a user deletes a Linode disk.
+   * - Confirms that user can successfully delete a disk from a Linode.
+   * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
+   */
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode) => {
-      cy.intercept(
-        'DELETE',
-        apiMatcher(`linode/instances/${linode.id}/disks/*`)
-      ).as('deleteDisk');
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
+      interceptDeleteDisks(linode.id).as('deleteDisk');
+      interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
-      fbtVisible(diskName);
+      cy.findByText(diskName).should('be.visible');
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
       // Disk should show "Creating". We must wait for it to finish "Creating" before we try to delete the disk
       cy.findByText('Creating', { exact: false }).should('be.visible');
@@ -148,68 +181,72 @@ describe('linode storage tab', () => {
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
-      ui.toast.assertMessage(`Disk ${diskName} successfully deleted.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+      );
       cy.findByLabelText('List of Disks').within(() => {
         cy.contains(diskName).should('not.exist');
       });
     });
   });
 
+  /*
+   * - Confirms UI flow when user adds a disk to a Linode.
+   * - Confirms that Cloud Manager UI automatically updates to reflect new disk.
+   */
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`/linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
+      interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
-      fbtVisible(diskName);
+      cy.findByText(diskName).should('be.visible');
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
     });
   });
 
+  /*
+   * - Confirms UI flow when a user resizes an existing disk.
+   * - Confirms that Cloud Manager UI automatically updates to reflect resize.
+   */
   it('resize disk', () => {
-    const diskName = 'Debian 10 Disk';
-    cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks/*/resize`)
-      ).as('resizeDisk');
+    const diskName = 'Debian 12 Disk';
+    cy.defer(() =>
+      createTestLinode({ image: null }, { securityMethod: 'powered_off' })
+    ).then((linode: Linode) => {
+      interceptAddDisks(linode.id).as('addDisk');
+      interceptResizeDisks(linode.id).as('resizeDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      waitForProvision();
       addDisk(diskName);
-      fbtVisible(diskName);
+
+      cy.findByText(diskName).should('be.visible');
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
-      containsVisible('Creating');
-      cy.contains('PROVISIONING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
-        'not.exist'
-      );
-      cy.contains('BOOTING', { timeout: LINODE_PROVISION_TIMEOUT }).should(
-        'not.exist'
-      );
-      cy.contains('Creating', { timeout: LINODE_PROVISION_TIMEOUT }).should(
-        'not.exist'
-      );
+
+      cy.findByLabelText('List of Disks').within(() => {
+        // Confirm that "Creating" message appears then disappears.
+        cy.contains('Creating').should('be.visible');
+        cy.contains('Creating').should('not.exist');
+      });
+
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-        fbtClick('Resize');
+        cy.findByText('Resize').should('be.visible').click();
       });
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)
         .should('be.visible')
         .within(() => {
-          cy.findByLabelText('Size (required)').clear().type('2');
+          cy.findByLabelText('Size (required)').clear();
+          cy.focused().type(`${DISK_RESIZE_SIZE_MB}`);
           ui.button.findByTitle('Resize').click();
         });
 
       cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
       ui.toast.assertMessage('Disk queued for resizing.');
-      // cy.findByText('Resizing', { exact: false }).should('be.visible');
-      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been resized.`
+      );
     });
   });
 });

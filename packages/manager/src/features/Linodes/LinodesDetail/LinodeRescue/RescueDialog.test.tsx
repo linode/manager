@@ -1,10 +1,12 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories/linodes';
 import { typeFactory } from 'src/factories/types';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Props, RescueDialog } from './RescueDialog';
+import { RescueDialog } from './RescueDialog';
+
+import type { Props } from './RescueDialog';
 
 const standard = typeFactory.build({ id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -21,8 +23,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual<any>('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
@@ -39,6 +41,7 @@ vi.mock('src/queries/types', async () => {
 
 const props: Props = {
   linodeId: normalLinode.id,
+  linodeLabel: normalLinode.label,
   onClose: vi.fn(),
   open: true,
 };
@@ -53,7 +56,7 @@ describe('RescueDialog', () => {
       data: normalLinode,
     });
 
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <RescueDialog {...props} />
     );
 

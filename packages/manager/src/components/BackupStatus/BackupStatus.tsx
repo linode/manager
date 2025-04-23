@@ -1,14 +1,12 @@
+import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import Backup from '@mui/icons-material/Backup';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({
@@ -86,7 +84,7 @@ const BackupStatus = (props: Props) => {
     return (
       <div className={classes.wrapper}>
         <Tooltip placement={'right'} title="Edit Backups">
-          <RouterLink
+          <Link
             aria-label={'Edit Backups'}
             className={classes.backupLink}
             to={`/linodes/${linodeId}/backup`}
@@ -97,7 +95,7 @@ const BackupStatus = (props: Props) => {
             >
               Scheduled
             </Typography>
-          </RouterLink>
+          </Link>
         </Tooltip>
       </div>
     );
@@ -124,7 +122,7 @@ const BackupStatus = (props: Props) => {
   return (
     <div className={classes.wrapper}>
       <Tooltip placement={'right'} title="Enable Backups">
-        <RouterLink
+        <Link
           aria-label={'Enable Backups'}
           className={classes.backupLink}
           to={`/linodes/${linodeId}/backup`}
@@ -136,7 +134,7 @@ const BackupStatus = (props: Props) => {
             Never
           </Typography>
           <Backup className={`${classes.icon} backupIcon`} />
-        </RouterLink>
+        </Link>
       </Tooltip>
     </div>
   );

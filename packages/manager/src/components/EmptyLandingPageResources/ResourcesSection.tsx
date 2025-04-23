@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
@@ -8,7 +9,6 @@ import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Typography } from 'src/components/Typography';
 import {
   getLinkOnClick,
   youtubeChannelLink,
@@ -19,7 +19,7 @@ import {
 import type {
   ResourcesHeaders,
   ResourcesLinkSection,
-  linkAnalyticsEvent,
+  LinkAnalyticsEvent,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 interface ButtonProps {
@@ -62,7 +62,7 @@ interface ResourcesSectionProps {
   /**
    * The event data to be sent when the call to action is clicked
    */
-  linkAnalyticsEvent: linkAnalyticsEvent;
+  linkAnalyticsEvent: LinkAnalyticsEvent;
   /**
    * If true, the transfer display will be shown at the bottom
    * */
@@ -82,14 +82,14 @@ interface ResourcesSectionProps {
 
 const GuideLinks = (
   guides: ResourcesLinkSection,
-  linkAnalyticsEvent: linkAnalyticsEvent
+  linkAnalyticsEvent: LinkAnalyticsEvent
 ) => (
   <ResourceLinks linkAnalyticsEvent={linkAnalyticsEvent} links={guides.links} />
 );
 
 const YoutubeLinks = (
   youtube: ResourcesLinkSection,
-  linkAnalyticsEvent: linkAnalyticsEvent
+  linkAnalyticsEvent: LinkAnalyticsEvent
 ) => (
   <ResourceLinks
     linkAnalyticsEvent={linkAnalyticsEvent}
@@ -111,7 +111,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
     wide = false,
     youtubeLinkData,
   } = props;
-  const { description, subtitle, title } = headers;
+  const { description, logo, subtitle, title } = headers;
 
   return (
     <Placeholder
@@ -171,6 +171,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
       subtitle={subtitle}
       title={title}
     >
+      {logo}
       <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
   );

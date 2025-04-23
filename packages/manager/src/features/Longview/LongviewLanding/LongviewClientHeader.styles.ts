@@ -1,7 +1,6 @@
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-
-import { Button } from 'src/components/Button/Button';
+import Grid from '@mui/material/Grid2';
 
 export const StyledButton = styled(Button, { label: 'StyledButton' })({
   '&:hover': {
@@ -22,21 +21,21 @@ export const StyledDiv = styled('div', { label: 'StyledDiv' })(({ theme }) => ({
 
 export const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
   ({ theme }) => ({
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    width: '100%',
     '& a': {
       color: theme.textColors.linkActiveLight,
     },
     '& a:hover': {
       color: theme.palette.primary.main,
     },
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
     [theme.breakpoints.down('lg')]: {
       alignItems: 'center',
       flexDirection: 'row',
     },
+    width: '100%',
   })
 );
 

@@ -1,11 +1,7 @@
-import {
-  ObjectStorageKey,
-  RegionS3EndpointAndID,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { styled } from '@mui/material/styles';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
 
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -13,11 +9,16 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
+
+import type { OpenAccessDrawer } from '../types';
+import type {
+  APIError,
+  ObjectStorageKey,
+  ObjectStorageKeyRegions,
+} from '@linode/api-v4';
 
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
@@ -41,12 +42,12 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
     false
   );
-  const [hostNames, setHostNames] = useState<RegionS3EndpointAndID[]>([]);
+  const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -56,20 +57,26 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     <>
       <Table
         aria-label="List of Object Storage Access Keys"
-        colCount={2}
         data-testid="data-qa-access-key-table"
         rowCount={data?.length}
       >
         <TableHead>
-          <TableRow data-qa-table-head>
-            <StyledLabelCell data-qa-header-label>Label</StyledLabelCell>
-            <StyledLabelCell data-qa-header-key>Access Key</StyledLabelCell>
+          <TableRow>
+            <TableCell
+              sx={(theme) => ({
+                [theme.breakpoints.up('md')]: {
+                  minWidth: 120,
+                },
+              })}
+            >
+              Label
+            </TableCell>
+            <TableCell>Access Key</TableCell>
             {isObjMultiClusterEnabled && (
-              <StyledLabelCell data-qa-header-key>
-                Regions/S3 Hostnames
-              </StyledLabelCell>
+              <Hidden smDown>
+                <TableCell>Regions/S3 Hostnames</TableCell>
+              </Hidden>
             )}
-            {/* empty cell for kebab menu */}
             <TableCell />
           </TableRow>
         </TableHead>
@@ -78,6 +85,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             data={data}
             error={error}
             isLoading={isLoading}
+            isObjMultiClusterEnabled={isObjMultiClusterEnabled}
             isRestrictedUser={isRestrictedUser}
             openDrawer={openDrawer}
             openRevokeDialog={openRevokeDialog}
@@ -96,7 +104,3 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     </>
   );
 };
-
-const StyledLabelCell = styled(TableCell)(() => ({
-  width: '35%',
-}));

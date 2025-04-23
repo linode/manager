@@ -1,41 +1,43 @@
-import {
-  ObjectStorageKey,
-  RegionS3EndpointAndID,
-} from '@linode/api-v4/lib/object-storage';
+import { Stack, Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
 
-type Props = {
+import type { OpenAccessDrawer } from '../types';
+import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
+
+interface Props {
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
-};
+}
 
-export const AccessKeyTableRow = ({
-  openDrawer,
-  openRevokeDialog,
-  setHostNames,
-  setShowHostNamesDrawers,
-  storageKeyData,
-}: Props) => {
+export const AccessKeyTableRow = (props: Props) => {
+  const {
+    openDrawer,
+    openRevokeDialog,
+    setHostNames,
+    setShowHostNamesDrawers,
+    storageKeyData,
+  } = props;
+
   const { account } = useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -43,27 +45,30 @@ export const AccessKeyTableRow = ({
 
   return (
     <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
-      <TableCell parentColumn="Label">
-        <Typography component="h3" data-qa-key-label variant="body1">
-          {storageKeyData.label}
-        </Typography>
-      </TableCell>
-      <TableCell parentColumn="Access Key">
-        <Typography data-qa-key-created variant="body1">
-          {storageKeyData.access_key}
+      <TableCell>{storageKeyData.label}</TableCell>
+      <TableCell>
+        <Stack direction="row">
+          <MaskableText isToggleable text={storageKeyData.access_key}>
+            <Typography variant="body1">{storageKeyData.access_key}</Typography>
+          </MaskableText>
           <StyledCopyIcon text={storageKeyData.access_key} />
-        </Typography>
+        </Stack>
       </TableCell>
       {isObjMultiClusterEnabled && (
-        <HostNameTableCell
-          setHostNames={setHostNames}
-          setShowHostNamesDrawers={setShowHostNamesDrawers}
-          storageKeyData={storageKeyData}
-        />
+        <Hidden smDown>
+          <HostNameTableCell
+            setHostNames={setHostNames}
+            setShowHostNamesDrawers={setShowHostNamesDrawers}
+            storageKeyData={storageKeyData}
+          />
+        </Hidden>
       )}
-
-      <TableCell>
+      <TableCell actionCell>
         <AccessKeyActionMenu
+          openHostnamesDrawer={() => {
+            setShowHostNamesDrawers(true);
+            setHostNames(storageKeyData.regions);
+          }}
           label={storageKeyData.label}
           objectStorageKey={storageKeyData}
           openDrawer={openDrawer}

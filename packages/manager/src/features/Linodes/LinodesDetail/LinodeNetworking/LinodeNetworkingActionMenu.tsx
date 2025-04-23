@@ -1,20 +1,19 @@
-import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
-import { IPTypes } from './types';
-
+import type { IPTypes } from './types';
+import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  ipAddress?: IPAddress | IPRange;
+  ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isOnlyPublicIP: boolean;
   isVPCOnlyLinode: boolean;
@@ -26,7 +25,6 @@ interface Props {
 export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
-
   const {
     ipAddress,
     ipType,
@@ -38,15 +36,15 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   } = props;
 
   const showEdit = ![
-    'IPv4 – Private',
-    'IPv4 – Reserved (private)',
-    'IPv4 – Reserved (public)',
-    'IPv4 – VPC',
-    'IPv6 – Link Local',
-    'VPC IPv4 – NAT',
+    'Link Local – IPv6',
+    'Private – IPv4',
+    'Reserved IPv4 (private)',
+    'Reserved IPv4 (public)',
+    'VPC NAT – IPv4',
+    'VPC – IPv4',
   ].includes(ipType);
 
-  const deletableIPTypes = ['IPv4 – Public', 'IPv4 – Private', 'IPv6 – Range'];
+  const deletableIPTypes = ['Private – IPv4', 'Public – IPv4', 'Range – IPv6'];
 
   // if we have a 116 we don't want to give the option to remove it
   const is116Range = ipAddress?.prefix === 116;
@@ -59,8 +57,23 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
+  const isAssociatedWithLinodeInterface =
+    'address' in ipAddress && ipAddress.interface_id !== null;
+
+  const getAriaLabel = (): string => {
+    if ('address' in ipAddress) {
+      return `Action menu for IP Address ${ipAddress.address}`;
+    } else {
+      return `Action menu for IP Address ${ipAddress.range}`;
+    }
+  };
+
   const actions = [
-    onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
+    onRemove &&
+    ipAddress &&
+    !is116Range &&
+    deletableIPTypes.includes(ipType) &&
+    !isAssociatedWithLinodeInterface
       ? {
           disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
           id: 'delete',
@@ -71,10 +84,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
-            : isOnlyPublicIP
-            ? isOnlyPublicIPTooltip
-            : undefined,
+              ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+              : isOnlyPublicIP
+                ? isOnlyPublicIPTooltip
+                : undefined,
         }
       : null,
     onEdit && ipAddress && showEdit
@@ -88,13 +101,13 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
-            : undefined,
+              ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+              : undefined,
         }
       : null,
   ].filter(Boolean) as Action[];
 
-  return !isEmpty(actions) ? (
+  return actions.length > 0 ? (
     <>
       {!matchesMdDown &&
         actions.map((action) => {
@@ -110,13 +123,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           );
         })}
       {matchesMdDown && (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
-        />
+        <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
       )}
     </>
   ) : (
-    <Box sx={{ height: 40 }}></Box>
+    <Box sx={{ height: 40 }} />
   );
 };

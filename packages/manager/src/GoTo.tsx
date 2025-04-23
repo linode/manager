@@ -1,67 +1,18 @@
-import Dialog from '@mui/material/Dialog';
-import { Theme } from '@mui/material/styles';
+import { Dialog, Select } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-
-import { useIsACLBEnabled } from './features/LoadBalancers/utils';
+import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountManagement } from './hooks/useAccountManagement';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
-import { useIsDatabasesEnabled } from './features/Databases/utilities';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  input: {
-    width: '100%',
-  },
-  paper: {
-    '& .MuiInput-root': {
-      border: 0,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-    },
-    '& .react-select__control': {
-      backgroundColor: 'transparent',
-    },
-    '& .react-select__indicators': {
-      display: 'none',
-    },
-    '& .react-select__menu': {
-      border: 0,
-      borderRadius: 4,
-      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      marginTop: 12,
-      maxWidth: '100% !important',
-    },
-    '& .react-select__menu-list': {
-      maxHeight: '100% !important',
-      overflowX: 'auto',
-      padding: 0,
-    },
-    '& .react-select__option--is-focused': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-    },
-    '& .react-select__value-container': {
-      '& p': {
-        fontSize: '1rem',
-        overflow: 'visible',
-      },
-      overflow: 'auto',
-    },
-    overflow: 'visible',
-    position: 'absolute',
-    top: '10%',
-  },
-}));
+import type { SelectOption } from '@linode/ui';
 
 export const GoTo = React.memo(() => {
-  const { classes } = useStyles();
   const routerHistory = useHistory();
   const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
 
-  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { goToOpen, setGoToOpen } = useGlobalKeyboardListener();
@@ -70,7 +21,7 @@ export const GoTo = React.memo(() => {
     setGoToOpen(false);
   };
 
-  const onSelect = (item: Item<string>) => {
+  const onSelect = (item: SelectOption<string>) => {
     routerHistory.push(item.value);
     onClose();
   };
@@ -90,11 +41,6 @@ export const GoTo = React.memo(() => {
       {
         display: 'Volumes',
         href: '/volumes',
-      },
-      {
-        display: 'Load Balancers',
-        hide: !isACLBEnabled,
-        href: '/loadbalancers',
       },
       {
         display: 'VPC',
@@ -163,15 +109,10 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [
-      _hasAccountAccess,
-      _isManagedAccount,
-      isACLBEnabled,
-      isPlacementGroupsEnabled,
-    ]
+    [_hasAccountAccess, _isManagedAccount, isPlacementGroupsEnabled]
   );
 
-  const options: Item[] = React.useMemo(
+  const options: SelectOption<string>[] = React.useMemo(
     () =>
       links
         .filter((thisLink) => !thisLink.hide)
@@ -182,13 +123,28 @@ export const GoTo = React.memo(() => {
     [links]
   );
 
-  const dialogClasses = React.useMemo(() => ({ paper: classes.paper }), [
-    classes,
-  ]);
-
   return (
     <Dialog
-      classes={dialogClasses}
+      PaperProps={{
+        sx: {
+          '& .MuiAutocomplete-listbox': {
+            border: 0,
+            maxHeight: '75%',
+          },
+          '& .MuiDialogContent-root ': {
+            padding: '0 !important',
+          },
+          '& [data-qa-close-drawer="true"], & [data-qa-dialog-title="Go To..."], & [aria-label="Close"]': {
+            display: 'none',
+          },
+          height: '80%',
+          minHeight: '50%',
+          minWidth: 'auto !important',
+          padding: '0 !important',
+          width: 400,
+        },
+      }}
+      enableCloseOnBackdropClick
       onClose={onClose}
       open={goToOpen}
       title="Go To..."
@@ -197,20 +153,16 @@ export const GoTo = React.memo(() => {
       keyboard shortcuts are not realistic on mobile devices. So I think an
       absolute width here is fine. */}
       <div style={{ maxHeight: 600, width: 400 }}>
-        <EnhancedSelect
+        <Select
           // eslint-disable-next-line
           autoFocus
-          blurInputOnSelect
           hideLabel
-          isClearable={false}
-          isMulti={false}
           label="Go To"
-          menuIsOpen={true}
-          onChange={onSelect}
-          openMenuOnClick={false}
-          openMenuOnFocus={false}
+          onChange={(_event, value) => onSelect(value)}
+          open
           options={options}
           placeholder="Go to..."
+          searchable
         />
       </div>
     </Dialog>

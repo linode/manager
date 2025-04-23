@@ -1,19 +1,27 @@
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
+import { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { Typography } from 'src/components/Typography';
+import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useNotificationsQuery, usePreferences } from '@linode/queries';
 
 import {
   BillingActionButton,
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
+import {
+  StyledTypography,
+  StyledVisibilityHideIcon,
+  StyledVisibilityShowIcon,
+} from './ContactInformation.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
@@ -34,20 +42,7 @@ interface Props {
   zip: string;
 }
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  '& .dif': {
-    '& .MuiChip-root': {
-      position: 'absolute',
-      right: -10,
-      top: '-4px',
-    },
-    position: 'relative',
-    width: 'auto',
-  },
-  marginBottom: theme.spacing(1),
-}));
-
-const ContactInformation = (props: Props) => {
+export const ContactInformation = React.memo((props: Props) => {
   const {
     address1,
     address2,
@@ -74,9 +69,19 @@ const ContactInformation = (props: Props) => {
     setEditContactDrawerOpen,
   ] = React.useState<boolean>(false);
 
+  const { data: notifications } = useNotificationsQuery();
+
+  const { data: maskSensitiveDataPreference } = usePreferences(
+    (preferences) => preferences?.maskSensitiveData
+  );
+
   const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
+
+  const taxIdIsVerifyingNotification = notifications?.find((notification) => {
+    return notification.type === 'tax_id_verifying';
+  });
 
   const isReadOnly =
     useRestrictedGlobalGrantCheck({
@@ -113,6 +118,10 @@ const ContactInformation = (props: Props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
+  const [isContactInfoMasked, setIsContactInfoMasked] = useState(
+    maskSensitiveDataPreference
+  );
+
   /**
    * Finding the country from the countryData JSON
    * `country-region-data` mapping:
@@ -143,89 +152,133 @@ const ContactInformation = (props: Props) => {
   };
 
   return (
-    <Grid md={6} xs={12}>
+    <Grid
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
-          <BillingActionButton
-            onClick={() => {
-              history.push('/account/billing/edit');
-              handleEditDrawerOpen();
-            }}
-            tooltipText={getRestrictedResourceText({
-              includeContactInfo: false,
-              isChildUser,
-              resourceType: 'Account',
-            })}
-            data-testid="edit-contact-info"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-            disabled={isReadOnly}
-          >
-            {EDIT_BILLING_CONTACT}
-          </BillingActionButton>
+          <Box display="flex" marginLeft="auto">
+            {!isContactInfoMasked && (
+              <BillingActionButton
+                onClick={() => {
+                  history.push('/account/billing/edit');
+                  handleEditDrawerOpen();
+                }}
+                tooltipText={getRestrictedResourceText({
+                  includeContactInfo: false,
+                  isChildUser,
+                  resourceType: 'Account',
+                })}
+                data-testid="edit-contact-info"
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+              >
+                {EDIT_BILLING_CONTACT}
+              </BillingActionButton>
+            )}
+            {maskSensitiveDataPreference && (
+              <BillingActionButton
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                sx={{ marginLeft: !isContactInfoMasked ? 2 : 0 }}
+              >
+                {isContactInfoMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
+                )}
+                {isContactInfoMasked ? 'Show' : 'Hide'}
+              </BillingActionButton>
+            )}
+          </Box>
         </BillingBox>
-
-        <Grid container spacing={2}>
-          {(firstName ||
-            lastName ||
-            company ||
-            address1 ||
-            address2 ||
-            city ||
-            state ||
-            zip ||
-            country) && (
-            <Grid sx={sxGrid}>
-              {(firstName || lastName) && (
-                <StyledTypography
-                  data-qa-contact-name
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {firstName} {lastName}
-                </StyledTypography>
-              )}
-              {company && (
-                <StyledTypography
-                  data-qa-company
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {company}
-                </StyledTypography>
-              )}
-              {(address1 || address2 || city || state || zip || country) && (
-                <>
-                  <StyledTypography data-qa-contact-address>
-                    {address1}
+        {maskSensitiveDataPreference && isContactInfoMasked ? (
+          <MaskableTextAreaCopy />
+        ) : (
+          <Grid container spacing={2}>
+            {(firstName ||
+              lastName ||
+              company ||
+              address1 ||
+              address2 ||
+              city ||
+              state ||
+              zip ||
+              country) && (
+              <Grid sx={sxGrid}>
+                {(firstName || lastName) && (
+                  <StyledTypography
+                    data-qa-contact-name
+                    sx={{ wordBreak: 'keep-all' }}
+                  >
+                    {firstName} {lastName}
                   </StyledTypography>
-                  <StyledTypography>{address2}</StyledTypography>
-                </>
+                )}
+                {company && (
+                  <StyledTypography
+                    data-qa-company
+                    sx={{ wordBreak: 'keep-all' }}
+                  >
+                    {company}
+                  </StyledTypography>
+                )}
+                {(address1 || address2 || city || state || zip || country) && (
+                  <>
+                    <StyledTypography data-qa-contact-address>
+                      {address1}
+                    </StyledTypography>
+                    <StyledTypography>{address2}</StyledTypography>
+                  </>
+                )}
+                <StyledTypography>
+                  {city}
+                  {city && state && ','} {state} {zip}
+                </StyledTypography>
+                <StyledTypography>{countryName}</StyledTypography>
+              </Grid>
+            )}
+            <Grid sx={sxGrid}>
+              <StyledTypography
+                data-qa-contact-email
+                sx={{ wordBreak: 'break-all' }}
+              >
+                {email}
+              </StyledTypography>
+              {phone && (
+                <StyledTypography data-qa-contact-phone>
+                  {phone}
+                </StyledTypography>
               )}
-              <StyledTypography>
-                {city}
-                {city && state && ','} {state} {zip}
-              </StyledTypography>
-              <StyledTypography>{countryName}</StyledTypography>
+              {taxId && (
+                <Box alignItems="center" display="flex">
+                  <StyledTypography
+                    sx={{
+                      margin: 0,
+                    }}
+                  >
+                    <strong>Tax ID</strong> {taxId}
+                  </StyledTypography>
+                  {taxIdIsVerifyingNotification && (
+                    <TooltipIcon
+                      icon={<StyledAutorenewIcon />}
+                      status="other"
+                      text={taxIdIsVerifyingNotification.label}
+                    />
+                  )}
+                </Box>
+              )}
             </Grid>
-          )}
-          <Grid sx={sxGrid}>
-            <StyledTypography
-              data-qa-contact-email
-              sx={{ wordBreak: 'break-all' }}
-            >
-              {email}
-            </StyledTypography>
-            {phone && (
-              <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
-            )}
-            {taxId && (
-              <StyledTypography sx={{ marginTop: 'auto' }}>
-                <strong>Tax ID</strong> {taxId}
-              </StyledTypography>
-            )}
           </Grid>
-        </Grid>
+        )}
       </BillingPaper>
       <BillingContactDrawer
         onClose={() => {
@@ -238,6 +291,4 @@ const ContactInformation = (props: Props) => {
       />
     </Grid>
   );
-};
-
-export default React.memo(ContactInformation);
+});

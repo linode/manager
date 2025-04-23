@@ -1,13 +1,30 @@
-import { SxProps, Theme, useTheme } from '@mui/material/styles';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { Typography } from 'src/components/Typography';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface DisplayPriceProps {
+  /**
+   * The number of decimal places to display in the price.
+   */
   decimalPlaces?: number;
+  /**
+   * The font size of the displayed price.
+   */
   fontSize?: string;
+  /**
+   * The format interval to use for price formatting.
+   * @example 'mo'
+   * @example 'month'
+   * @example 'year'
+   */
   interval?: string;
+  /**
+   * The price to display.
+   */
   price: '--.--' | number;
 }
 

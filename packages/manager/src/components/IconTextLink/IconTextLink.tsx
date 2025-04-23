@@ -1,39 +1,26 @@
-import { Theme } from '@mui/material/styles';
+import { Button } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { SvgIcon } from 'src/components/SvgIcon';
+import { Link } from 'src/components/Link';
+
+import type { Theme } from '@mui/material/styles';
+import type { SvgIcon } from 'src/components/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   active: {
-    color: '#1f64b6',
+    color: theme.tokens.color.Ultramarine[80],
   },
   disabled: {
     '& $icon': {
-      borderColor: '#939598',
-      color: '#939598',
+      borderColor: theme.tokens.color.Neutrals[50],
+      color: theme.tokens.color.Neutrals[50],
     },
-    color: '#939598',
+    color: theme.tokens.color.Neutrals[50],
     pointerEvents: 'none',
   },
-  icon: {
-    '& .border': {
-      transition: 'none',
-    },
-    color: 'inherit',
-    fontSize: 18,
-    marginRight: theme.spacing(0.5),
-    transition: 'none',
-  },
   label: {
-    position: 'relative',
-    top: -1,
     whiteSpace: 'nowrap',
-  },
-  left: {
-    left: `-${theme.spacing(1.5)}`,
   },
   linkWrapper: {
     '&:hover, &:focus': {
@@ -43,22 +30,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
   },
   root: {
-    '&:focus': { outline: '1px dotted #999' },
-    '&:hover': {
-      '& .border': {
-        color: theme.palette.primary.light,
-      },
-      backgroundColor: 'transparent',
-      color: theme.palette.primary.light,
-    },
-    alignItems: 'flex-start',
-    borderRadius: 0,
-    cursor: 'pointer',
+    alignItems: 'center',
+    borderRadius: theme.tokens.alias.Radius.Default,
     display: 'flex',
-    margin: `0 ${theme.spacing(1)} 2px 0`,
-    minHeight: 'auto',
-    padding: theme.spacing(1.5),
-    transition: 'none',
+    gap: theme.spacing(2),
+    padding: theme.spacing(0.5),
   },
 }));
 
@@ -68,8 +44,6 @@ export interface Props {
   children?: string;
   className?: string;
   disabled?: boolean;
-  hideText?: boolean;
-  left?: boolean;
   onClick?: () => void;
   text: string;
   title: string;
@@ -83,8 +57,6 @@ export const IconTextLink = (props: Props) => {
     active,
     className,
     disabled,
-    hideText,
-    left,
     onClick,
     text,
     title,
@@ -98,7 +70,6 @@ export const IconTextLink = (props: Props) => {
         {
           [classes.active]: active,
           [classes.disabled]: disabled,
-          [classes.left]: left,
         },
         className
       )}
@@ -107,14 +78,8 @@ export const IconTextLink = (props: Props) => {
       onClick={onClick}
       title={title}
     >
-      <SideIcon className={cx(classes.icon, { m0: hideText })} />
-      <span
-        className={cx(classes.label, {
-          ['visually-hidden']: hideText,
-        })}
-      >
-        {text}
-      </span>
+      <SideIcon />
+      <span className={classes.label}>{text}</span>
     </Button>
   );
 

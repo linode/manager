@@ -1,29 +1,33 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeDiskResizeMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  FormHelperText,
+  InputAdornment,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
-import { Drawer } from 'src/components/Drawer';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
+import { NotFound } from 'src/components/NotFound';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskResizeMutation,
-} from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { sendEvent } from 'src/utilities/analytics/utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';
+
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export interface Props {
   disk: Disk | undefined;
@@ -85,7 +89,12 @@ export const ResizeDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={onClose} open={open} title={`Resize ${disk?.label}`}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={`Resize ${disk?.label}`}
+    >
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice
@@ -103,7 +112,7 @@ export const ResizeDiskDrawer = (props: Props) => {
               handleLinkClick('Learn more about restrictions to keep in mind.');
             }}
             to={
-              'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+              'https://techdocs.akamai.com/cloud-computing/docs/manage-disks-on-a-compute-instance'
             }
           >
             Learn more about restrictions to keep in mind.
@@ -166,7 +175,7 @@ const MaxSizeTooltipText = (
       onClick={() => {
         handleLinkClick('Lish');
       }}
-      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
+      to="https://techdocs.akamai.com/cloud-computing/docs/access-your-system-console-using-lish"
     >
       Lish
     </Link>

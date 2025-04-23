@@ -1,18 +1,42 @@
+import { Typography } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
 
+import type { ManagerPreferences } from '@linode/utilities';
+
 const props = { onClick: vi.fn(), onClose: vi.fn() };
+
+const preference: ManagerPreferences['type_to_confirm'] = true;
+
+const queryMocks = vi.hoisted(() => ({
+  usePreferences: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    usePreferences: queryMocks.usePreferences,
+  };
+});
+
+queryMocks.usePreferences.mockReturnValue({
+  data: preference,
+});
 
 describe('TypeToConfirmDialog Component', () => {
   const warningText =
     'Deleting your Linode will result in permanent data loss.';
 
   it('Should render children', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const { getByText } = renderWithTheme(
       <TypeToConfirmDialog
         entity={{
@@ -36,6 +60,10 @@ describe('TypeToConfirmDialog Component', () => {
   });
 
   it('should have its button disabled by default', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
+
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
         entity={{
@@ -66,6 +94,9 @@ describe('TypeToConfirmDialog Component', () => {
   });
 
   it('should disabled the Type To Confirm input field given the `disableTypeToConfirmInput` prop', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
         entity={{
@@ -92,6 +123,9 @@ describe('TypeToConfirmDialog Component', () => {
   });
 
   it('should disabled the Type To Confirm input field given the prop', () => {
+    queryMocks.usePreferences.mockReturnValue({
+      data: preference,
+    });
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
         entity={{

@@ -2,9 +2,7 @@ import { DateTime } from 'luxon';
 
 import { isPast } from 'src/utilities/isPast';
 
-import { ExcludedScope } from './CreateAPITokenDrawer';
-
-export type Permission = [string, number];
+import type { ExcludedScope } from './CreateAPITokenDrawer';
 
 export const basePerms = [
   'account',
@@ -18,6 +16,7 @@ export const basePerms = [
   'linodes',
   'lke',
   'longview',
+  'monitor',
   'nodebalancers',
   'object_storage',
   'stackscripts',
@@ -37,6 +36,7 @@ export const basePermNameMap = {
   linodes: 'Linodes',
   lke: 'Kubernetes',
   longview: 'Longview',
+  monitor: 'Monitor',
   nodebalancers: 'NodeBalancers',
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
@@ -44,11 +44,16 @@ export const basePermNameMap = {
   vpc: 'VPCs',
 } as const;
 
+type PermissionKey = keyof typeof basePermNameMap;
+
+export type Permission = [PermissionKey, number];
+
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
 export const levelMap = {
   create: 2,
   delete: 2,
+  hidden: -1,
   modify: 2,
   none: 0,
   read_only: 1,
@@ -105,7 +110,7 @@ export const scopeStringToPermTuples = (
     const [perm, level] = scopeStr.split(':');
     return {
       ...map,
-      [perm]: levelMap[level],
+      [perm]: levelMap[level as keyof typeof levelMap],
     };
   }, defaultScopeMap(basePerms, isCreateFlow));
 
@@ -156,26 +161,29 @@ export const scopeStringToPermTuples = (
 
 export const allMaxPerm = (
   scopeTups: Permission[],
-  perms: typeof basePerms
+  perms: typeof basePerms,
+  exclude: PermissionKey[] = []
 ): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
 
-  return scopeTups.reduce(
-    (acc: boolean, [key, value]: Permission) =>
-      value === levelMap.read_write && acc,
-    true
+  const excludeSet = new Set(exclude);
+  return scopeTups.every(
+    ([key, value]) => value === levelMap.read_write || excludeSet.has(key)
   );
 };
 
-export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
-  if (allMaxPerm(scopeTups, basePerms)) {
+export const permTuplesToScopeString = (
+  scopeTups: Permission[],
+  exclude: PermissionKey[]
+): string => {
+  if (allMaxPerm(scopeTups, basePerms, exclude)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
     const level = inverseLevelMap[value];
-    if (level !== 'none') {
+    if (level && level !== 'none') {
       return [...acc, [key, level].join(':')];
     }
     return [...acc];
@@ -255,17 +263,21 @@ Omit<typeof basePermNameMap, T[number]['name']> => {
  * Determines whether a selection has been made for every scope, since by default, the scope permissions are set to null.
  *
  * @param scopeTuples - The array of scope tuples.
+ * @param excludedPerms - The permission keys to be excluded from this check.
  * @returns {boolean} True if all scopes have permissions set to none/read_only/read_write, false otherwise.
  */
 export const hasAccessBeenSelectedForAllScopes = (
-  scopeTuples: Permission[]
+  scopeTuples: Permission[],
+  excludedPerms?: PermissionKey[]
 ): boolean => {
   const validAccessLevels = [
     levelMap['none'],
     levelMap['read_only'],
     levelMap['read_write'],
   ];
-  return scopeTuples.every((scopeTuple) =>
-    validAccessLevels.includes(scopeTuple[1])
+  return scopeTuples.every(
+    (scopeTuple) =>
+      validAccessLevels.includes(scopeTuple[1]) ||
+      excludedPerms?.includes(scopeTuple[0])
   );
 };

@@ -1,50 +1,54 @@
+import { Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import React from 'react';
-import { Typography } from 'src/components/Typography';
-import { capitalize } from 'src/utilities/capitalize';
-import { Event } from '@linode/api-v4';
-import {
+
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+
+import type { Event } from '@linode/api-v4';
+import type {
   Database,
   DatabaseInstance,
   DatabaseStatus,
 } from '@linode/api-v4/lib/databases/types';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   active: 'active',
   degraded: 'inactive',
   failed: 'error',
+  migrated: 'inactive',
+  migrating: 'other',
   provisioning: 'other',
+  resizing: 'other',
   restoring: 'other',
   resuming: 'other',
   suspended: 'error',
   suspending: 'other',
-  resizing: 'other',
 };
 interface Props {
-  events: Event[] | undefined;
   database: Database | DatabaseInstance;
+  events: Event[] | undefined;
 }
 export const DatabaseStatusDisplay = (props: Props) => {
-  const { events, database } = props;
+  const { database, events } = props;
   const recentEvent = events?.find(
     (event: Event) =>
       event.entity?.id === database.id && event.entity?.type === 'database'
   );
 
   let progress: number | undefined;
-  if (recentEvent?.action === 'database_resize') {
-    progress = recentEvent?.percent_complete ?? 0;
-  }
-
   let displayedStatus;
-  if (
-    recentEvent?.status === 'started' ||
-    recentEvent?.status === 'scheduled'
-  ) {
+
+  const isResizing =
+    recentEvent?.action === 'database_resize' &&
+    (recentEvent?.status === 'started' || recentEvent?.status === 'scheduled');
+
+  if (isResizing) {
+    progress = recentEvent?.percent_complete ?? 0;
     displayedStatus = (
       <>
-        <StatusIcon status={databaseStatusMap[recentEvent?.status]} />
-        <Typography variant="body1" sx={{ display: 'inline-block' }}>
+        <StatusIcon status="other" />
+        <Typography sx={{ display: 'inline-block' }} variant="body1">
           {`Resizing ${progress ? `(${progress}%)` : '(0%)'}`}
         </Typography>
       </>

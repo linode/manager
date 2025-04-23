@@ -1,7 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Notice } from 'src/components/Notice/Notice';
+import Grid from '@mui/material/Grid2';
 
 export const StyledNotice = styled(Notice, {
   label: 'StyledNotice',

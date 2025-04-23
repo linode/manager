@@ -1,44 +1,58 @@
-import { Profile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { useMutateProfile, useProfile } from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  Notice,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+
+import type { Profile } from '@linode/api-v4/lib/profile';
+import type { APIError } from '@linode/api-v4/lib/types';
+
+export interface LishAuthOption<T = string, L = string> {
+  label: L;
+  value: T;
+}
 
 export const LishSettings = () => {
   const theme = useTheme();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [lishAuthMethod, setLishAuthMethod] = React.useState<
-    Profile['lish_auth_method'] | undefined
-  >(profile?.lish_auth_method || 'password_keys');
-  const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
-    profile?.authorized_keys || []
-  );
-  const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
-    profile?.authorized_keys ? profile!.authorized_keys.length : 1
-  );
   const [errors, setErrors] = React.useState<APIError[]>([]);
   const [success, setSuccess] = React.useState<string>();
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
+
+  const [lishAuthMethod, setLishAuthMethod] = React.useState<
+    Profile['lish_auth_method'] | undefined
+  >(profile?.lish_auth_method || 'password_keys');
+
+  const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
+    profile?.authorized_keys || []
+  );
+
+  const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
+    profile?.authorized_keys ? profile!.authorized_keys.length : 1
+  );
+
   const tooltipText = thirdPartyEnabled
     ? 'Password is disabled because Third-Party Authentication has been enabled.'
     : '';
+
   const hasErrorFor = getAPIErrorFor(
     {
       authorized_keys: 'ssh public keys',
@@ -46,13 +60,14 @@ export const LishSettings = () => {
     },
     errors
   );
+
   const generalError = hasErrorFor('none');
   const authMethodError = hasErrorFor('lish_auth_method');
   const authorizedKeysError = hasErrorFor('authorized_keys');
 
   const modeOptions = [
     {
-      isDisabled: profile?.authentication_type !== 'password',
+      disabled: profile?.authentication_type !== 'password',
       label: 'Allow both password and key authentication',
       value: 'password_keys',
     },
@@ -68,9 +83,9 @@ export const LishSettings = () => {
 
   const defaultMode = modeOptions.find((eachMode) => {
     if (profile?.authentication_type !== 'password') {
-      return (eachMode.value as any) === 'keys_only';
+      return (eachMode.value as Profile['lish_auth_method']) === 'keys_only';
     } else {
-      return (eachMode.value as any) === lishAuthMethod;
+      return (eachMode.value as Profile['lish_auth_method']) === lishAuthMethod;
     }
   });
 
@@ -85,7 +100,7 @@ export const LishSettings = () => {
 
     updateProfile({
       authorized_keys: keys,
-      lish_auth_method: lishAuthMethod as any,
+      lish_auth_method: lishAuthMethod as Profile['lish_auth_method'],
     })
       .then((profileData) => {
         setSubmitting(false);
@@ -102,9 +117,6 @@ export const LishSettings = () => {
         scrollErrorIntoView();
       });
   };
-
-  const onListAuthMethodChange = (e: Item<Profile['lish_auth_method']>) =>
-    setLishAuthMethod(e.value);
 
   const onPublicKeyChange = (idx: number) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -133,20 +145,26 @@ export const LishSettings = () => {
         {isLoading ? null : (
           <>
             <FormControl sx={{ display: 'flex' }}>
-              <Select
+              <Autocomplete
+                onChange={(
+                  _,
+                  item: LishAuthOption<Profile['lish_auth_method']>
+                ) => setLishAuthMethod(item.value)}
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-mode-select': true,
                   },
                   tooltipText,
                 }}
+                value={modeOptions.find(
+                  (option) => option.value === lishAuthMethod
+                )}
                 defaultValue={defaultMode}
+                disableClearable
                 errorText={authMethodError}
+                getOptionDisabled={(option) => option.disabled === true}
                 id="mode-select"
-                isClearable={false}
                 label="Authentication Mode"
-                name="mode-select"
-                onChange={onListAuthMethodChange as any}
                 options={modeOptions}
               />
             </FormControl>
@@ -206,3 +224,7 @@ export const LishSettings = () => {
     </>
   );
 };
+
+export const lishSettingsLazyRoute = createLazyRoute('/profile/lish')({
+  component: LishSettings,
+});

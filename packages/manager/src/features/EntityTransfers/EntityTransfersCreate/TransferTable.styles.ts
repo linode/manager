@@ -1,26 +1,10 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
-
-export const StyledCheckbox = styled(Checkbox, {
-  label: 'StyledCheckbox',
-})({
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
-});
-
-export const StyledEmptyCheckbox = styled(Checkbox, {
-  label: 'StyledEmptyCheckbox',
-})({
-  '& svg': { height: 20, width: 20 },
-});
 
 export const StyledPaginationFooter = styled(PaginationFooter, {
   label: 'StyledPaginationFooter',

@@ -1,28 +1,31 @@
+import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
-import { PlanWithAvailability } from './types';
 
-interface PlanSelectionFilterOptionsTable {
-  header?: string;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
-}
+import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
+import type { PlanWithAvailability } from './types';
+import type { LinodeTypeClass } from '@linode/api-v4/';
+import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
+  planType?: LinodeTypeClass;
+  plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
+  showUsableStorage?: boolean;
 }
 
 const tableCells = [
@@ -45,12 +48,54 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
+    planType,
+    plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
+    showUsableStorage,
   } = props;
+  const flags = useFlags();
 
+  const showTransferTooltip = React.useCallback(
+    (cellName: string) =>
+      plans?.some((plan) => {
+        const showTooltipForGPUPlans =
+          flags.gpuv2?.transferBanner &&
+          plan.class === 'gpu' &&
+          filterOptions?.header?.includes('Ada');
+        return (
+          (showTooltipForGPUPlans || plan.class === 'accelerated') &&
+          cellName === 'Transfer'
+        );
+      }),
+    [plans, filterOptions, flags.gpuv2]
+  );
+
+  const showUsableStorageTooltip = (cellName: string) =>
+    cellName === 'Usable Storage';
+
+  const showTooltip = (
+    status: TooltipIconStatus,
+    text: JSX.Element | string,
+    width?: number
+  ) => {
+    return (
+      <TooltipIcon
+        sxTooltipIcon={{
+          height: 12,
+          marginTop: '-2px',
+          ml: 0.5,
+          px: 0,
+          py: 0,
+        }}
+        status={status}
+        text={text}
+        width={width}
+      />
+    );
+  };
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
@@ -67,6 +112,17 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             ) {
               return null;
             }
+            if (
+              showUsableStorage &&
+              !flags.dbaasV2?.beta &&
+              flags.dbaasV2?.enabled &&
+              cellName === 'Storage'
+            ) {
+              cellName = 'Usable Storage';
+            }
+            if (isPlanCell && planType === 'accelerated') {
+              cellName = 'NETINT Quadra T1U';
+            }
             return (
               <StyledTableCell
                 center={center}
@@ -78,6 +134,17 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {isPlanCell && filterOptions?.header
                   ? filterOptions?.header
                   : cellName}
+                {showTransferTooltip(cellName) &&
+                  showTooltip(
+                    'help',
+                    'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to charges.'
+                  )}
+                {showUsableStorageTooltip(cellName) &&
+                  showTooltip(
+                    'help',
+                    'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
+                    240
+                  )}
               </StyledTableCell>
             );
           })}
@@ -90,7 +157,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection(filterOptions)
+          renderPlanSelection()
         )}
       </TableBody>
     </StyledTable>

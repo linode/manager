@@ -1,20 +1,18 @@
+import { IconButton, Typography, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { IconButton } from 'src/components/IconButton';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',
 })(({ theme }) => ({
-  '& td': {
+  '& .MuiTableCell-root': {
     borderBottom: 'none',
     borderTop: 'none',
     // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
     padding: `${theme.spacing(1.25)} 0 2px`,
   },
-  backgroundColor: 'transparent !important',
+  backgroundColor: 'transparent',
   height: 'auto',
 }));
 
@@ -27,14 +25,13 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: omittedProps(['isGroupedByTag']),
-})<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
+})(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.bg.tableHeader,
+  backgroundColor: theme.tokens.component.Table.HeaderNested.Background,
   display: 'flex',
-  height: 46,
+  height: 42,
   justifyContent: 'flex-end',
-  marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
+  marginBottom: theme.spacing(1.25),
 }));
 
 export const StyledToggleButton = styled(IconButton, {
@@ -46,7 +43,7 @@ export const StyledToggleButton = styled(IconButton, {
   },
   '&:focus': {
     // Browser default until we get styling direction for focus states
-    outline: '1px dotted #999',
+    outline: `1px dotted ${theme.tokens.alias.Border.Neutral}`,
   },
   '&:hover': {
     backgroundColor: theme.palette.grey[300],

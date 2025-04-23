@@ -1,106 +1,50 @@
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import { Theme } from '@mui/material/styles';
-import * as React from 'react';
-import { OptionProps } from 'react-select';
-import { makeStyles } from 'tss-react/mui';
+import { ListItemOption, Stack, Tooltip, Typography } from '@linode/ui';
+import React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Item } from 'src/components/EnhancedSelect';
-import { Option } from 'src/components/EnhancedSelect/components/Option';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import { useFlags } from 'src/hooks/useFlags';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  distroIcon: {
-    fontSize: '1.8em',
+import { OSIcon } from '../OSIcon';
+import { isImageDeprecated } from './utilities';
 
-    margin: `0 ${theme.spacing()}`,
-    [theme.breakpoints.only('xs')]: {
-      fontSize: '1.52em',
-    },
-  },
-  focused: {
-    '& g': {
-      fill: 'white',
-    },
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  root: {
-    '& *': {
-      lineHeight: '1.2em',
-    },
-    '& g': {
-      fill: theme.name === 'dark' ? 'white' : '#888f91',
-    },
-    display: 'flex',
-    padding: `2px !important`, // Revisit use of important when we refactor the Select component
-  },
-  selected: {
-    '& g': {
-      fill: theme.palette.primary.main,
-    },
-  },
-}));
+import type { Image } from '@linode/api-v4';
+import type { ListItemOptionProps } from '@linode/ui';
 
-interface ImageItem extends Item<string> {
-  className?: string;
-  isCloudInitCompatible: boolean;
-}
-
-interface ImageOptionProps extends OptionProps<any, any> {
-  data: ImageItem;
-}
-
-export const ImageOption = (props: ImageOptionProps) => {
-  const { classes, cx } = useStyles();
-  const { data, isFocused, isSelected, label } = props;
+export const ImageOption = ({
+  disabledOptions,
+  item,
+  props,
+  selected,
+}: ListItemOptionProps<Image>) => {
   const flags = useFlags();
 
   return (
-    <Option
-      className={cx({
-        [classes.focused]: isFocused,
-        [classes.root]: true,
-        [classes.selected]: isSelected,
-      })}
-      attrs={{ ['data-qa-image-select-item']: data.value }}
-      value={data.value}
-      {...props}
+    <ListItemOption
+      disabledOptions={disabledOptions}
+      item={item}
+      maxHeight={35}
+      props={props}
+      selected={selected}
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        <span className={`${data.className} ${classes.distroIcon}`} />
-        <Box>{label}</Box>
-        {flags.metadata && data.isCloudInitCompatible ? (
-          <TooltipIcon
-            icon={<DescriptionOutlinedIcon />}
-            status="other"
-            sxTooltipIcon={sxCloudInitTooltipIcon}
-            text="This image is compatible with cloud-init."
+      <Stack alignItems="center" direction="row" gap={1} width="100%">
+        {item?.id !== 'any/all' && (
+          <OSIcon
+            fontSize="1.8em"
+            os={item.vendor}
+            sx={{ position: 'relative', top: 2 }}
           />
-        ) : null}
-      </Box>
-    </Option>
+        )}
+        <Typography color="inherit">
+          {item.label} {isImageDeprecated(item) && '(deprecated)'}
+        </Typography>
+      </Stack>
+      {flags.metadata && item.capabilities.includes('cloud-init') && (
+        <Tooltip title="This image supports our Metadata service via cloud-init.">
+          <span style={{ display: 'flex' }}>
+            <CloudInitIcon />
+          </span>
+        </Tooltip>
+      )}
+    </ListItemOption>
   );
-};
-
-const sxCloudInitTooltipIcon = {
-  '& svg': {
-    height: 20,
-    width: 20,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  marginLeft: 'auto',
-  padding: 0,
-  paddingRight: 1,
 };

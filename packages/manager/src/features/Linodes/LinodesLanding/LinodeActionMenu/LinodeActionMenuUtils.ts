@@ -1,12 +1,10 @@
-import { Region } from '@linode/api-v4/lib';
-
-import { ExtendedType } from 'src/utilities/extendType';
+import type { LinodeType, Region } from '@linode/api-v4';
 
 export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
   linodeType: null | string,
-  types: ExtendedType[] | null | undefined,
+  types: LinodeType[] | null | undefined,
   regions: Region[]
 ): string => {
   const linodeRegionId =

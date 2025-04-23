@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import * as factories from './factories';
 
@@ -40,7 +39,7 @@ export const withTypography = (eventMap: EventMap): OptionalEventMap => {
 export const eventMessages: EventMap = Object.keys(factories).reduce(
   (acc, factoryName) => ({
     ...acc,
-    ...withTypography(factories[factoryName]),
+    ...withTypography((factories as any)[factoryName]),
   }),
   {} as EventMap
 );

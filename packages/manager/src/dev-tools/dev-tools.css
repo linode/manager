@@ -1,42 +1,604 @@
-#dev-tools {
+.dev-tools {
+  --open-height-desktop: 375px;
+  --open-height-mobile: 400px;
+
+  --background-color-closed: rgba(0, 0, 0, 0.55);
+  --background-color-opened: rgba(0, 0, 0, 0.85);
+  --background-blur: blur(7px);
+
+  --open-close-transition: background-color 0.2s, height 0.075s;
+
   position: fixed;
-  bottom: 0px;
-  background: black;
-  opacity: 0.4;
-  color: white;
   width: 100%;
-  padding: 20px;
-  height: 60px;
-  width: 60px;
-  transition: all 0.3s;
+  bottom: 0;
+  right: 0;
   z-index: 1;
+  color: white;
+  font-size: 11pt;
+  scrollbar-color: rgba(255, 255, 255, .75) transparent;
+
+  &.isDraggable {
+    position: relative;
+    height: calc(100% - 50px);
+
+    .dev-tools__main {
+      flex-direction: column;
+    }
+
+    .dev-tools__tool {
+      min-height: 300px;
+    }
+
+    .dev-tools__tool__body,
+    .dev-tools__msw__column__body {
+      flex-basis: auto;
+    }
+
+    .dev-tools__body {
+      border-radius: 0 0 4px 4px;
+      height: 100% !important;
+    }
+  }
 }
 
-#dev-tools.mswEnabled svg {
-  color: #aaff00;
+.dev-tools__draggable-handle {
+  position: absolute;
+  z-index: 2;
+  left: -30px;
+  top: 35px;
+  cursor: grab;
+  background: #222222;
+  border: none;
+  border-radius: 4px 0 0  4px;
+  padding: 4px 4px 2px 4px;
+
+  svg {
+    fill: white;
+  }
 }
 
-#dev-tools:hover {
-  height: 375px;
+.dev-tools__resize-handle {
+  position: absolute;
+  z-index: 2;
+  right: 0px;
+  bottom: 16px;
+  color: white;
+  cursor: ew-resize;
+  background: transparent;
+  border: none;
+
+  svg {
+    fill: white;
+  }
+}
+
+.dev-tools hr {
+  border: none;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.25);
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.dev-tools__select {
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+
+  &.thin {
+    border-width: 1px
+  }
+}
+
+.dev-tools__select:has(>select:focus),
+.dev-tools__select:has(>select:active) {
+  background: rgb(50, 50, 50);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.dev-tools__select::after {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  transform: rotate(135deg);
+}
+
+.dev-tools__select select.dt-select {
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 4px 4px 5px 6px;
+  font-family: inherit;
+  font-size: 10.5pt;
+  appearance: none;
+  outline: none;
+}
+
+ /* avoid overriding TanStack React Query Devtools styles */
+.dev-tools__body button.dev-tools-button:not(.tsqd-parent-container button) {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 1000px;
+  color: white;
+  cursor: pointer;
+  padding: 5px 18px 7px 18px;
+  font-weight: bold;
+  font-size: 10.5pt;
+  font-family: inherit;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+
+  &.small {
+    padding: 2px 8px 4px 8px;
+    border-width: 1px;
+    font-size: 12px;
+    margin: 0
+  }
+
+  &.right-align {
+    float: right;
+  }
+
+
+  &.green {
+    background: #17cf73;
+    color: #080808;
+  }
+}
+
+.dev-tools__body .dev-tools__content button.dev-tools-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dev-tools__body .dev-tools__content button.dev-tools-button:not(:disabled).green:hover {
+  background-color: #60e9a4;
+  color: #080808;
+
+}
+
+.dev-tools__body .dev-tools__content button.dev-tools-button:disabled,
+.dev-tools__body .dev-tools__content button.dev-tools-button:disabled:active {
+  background: transparent;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.dev-tools__segmented-button .dev-tools__content button:not(:only-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dev-tools__segmented-button {
+  display: flex;
+  flex-wrap: nowrap;
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.dev-tools__segmented-button .dev-tools__content button:first-child:not(:only-child) {
+  border-top-left-radius: 1000px;
+  border-bottom-left-radius: 1000px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 2px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  padding-left: 24px;
+}
+
+.dev-tools__segmented-button .dev-tools__content button:last-child:not(:only-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 2px solid rgba(255, 255, 255, 0.5);
+  padding-right: 24px;
+}
+
+.dev-tools__button-list {
   width: 100%;
-  opacity: 0.9;
+  display: flex;
+  gap: 8px;
+  justify-content: end;
+}
+
+.dev-tools__body .dev-tools__content button.toggle-button.toggle-button--on {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-right: 2px solid white;
+  border-left: 2px solid white;
+  border-color: white;
+  border-left-color: white;
+  border-right-color: white;
+  border-top-color: white;
+  border-bottom-color: white;
+  color: white;
+  text-shadow: 0px -1px 0px black;
+}
+
+.dev-tools__body .dev-tools__content button.dev-tools-button:active {
+  background: rgb(50, 50, 50);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.dev-tools__toggle {
+  width: 70px;
+  height: 54px;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transform: translateX(-50%);
+}
+
+.dev-tools__toggle button {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: 0;
+  color: white;
+  cursor: pointer;
+}
+
+.dev-tools__toggle button svg {
+  position: relative;
+  top: 3px;
+  left: -5px;
+}
+
+.dev-tools.dev-tools--msw .dev-tools__toggle button svg {
+  color: #17cf73;
+  filter: drop-shadow(0 0 3px limegreen);
+}
+
+.dev-tools__toggle button::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  display: inline-block;
+  position: relative;
+  left: 3px;
+  top: -3px;
+  transform: rotate(-45deg);
+  transition: 0.3s transform;
+}
+
+.dev-tools.dev-tools--open .dev-tools__toggle button::after {
+  transform: translateY(-4px) rotate(135deg);
+}
+
+.dev-tools .dev-tools__toggle,
+.dev-tools .dev-tools__body {
+  background-color: var(--background-color-closed);
+  backdrop-filter: var(--background-blur);
+  transition: var(--open-close-transition);
+}
+
+.dev-tools.dev-tools--open .dev-tools__toggle {
+  background-color: #080808;
+  backdrop-filter: none;
+}
+
+.dev-tools__draggable-toggle {
+  display: flex;
+  justify-content: end;
+
+  button {
+    background: #1d1d1e;
+    background-blend-mode: overlay;
+    border: 0;
+
+    cursor: pointer;
+    padding: 4px;
+    position: relative;
+    bottom: -4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  svg {
+    color: white;
+
+  }
+}
+
+.dev-tools.dev-tools--open .dev-tools__body {
+  background-color: var(--background-color-opened);
+}
+
+.dev-tools__body input[type="number"],
+.dev-tools__body input[type="text"]:not(.MuiInput-input),
+.dev-tools__body textarea {
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: 10.5pt;
+  float: right;
+}
+
+.dev-tools__body textarea {
+  width: 100%;
+}
+
+.dev-tools__body input[type="checkbox"] {
+  margin-right: 8px;
+  position: relative;
+  top: 1px;
+}
+
+.dev-tools__modal-form {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 24px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
+  }
+
+  .dev-tools__modal-form__field {
+    margin-bottom: 12px;
+  }
+
+  .dev-tools__modal-form__field__radio-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  input, select {
+    padding: 4px;
+  }
+
+  textarea,
+  select:is([multiple]) {
+    min-height: 200px;
+    font-family: monospace;
+    white-space: pre;
+  }
+}
+
+/*
+ * Dev tools body has height of `0` when `.dev-tools--open` class is not present.
+ */
+.dev-tools .dev-tools__body {
+  height: 0;
+  padding: 0;
+}
+
+.dev-tools.dev-tools--open .dev-tools__body {
+  height: var(--open-height-mobile);
+}
+
+.dev-tools__content {
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.dev-tools__status-bar {
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 12px;
+}
+
+.dev-tools__main {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  gap: 24px;
+}
+
+.dev-tools__main__column {
+  flex-basis: 0;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.dev-tools__tool {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  gap: 12px;
+}
+
+.dev-tools__tool__header {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.dev-tools__tool__header span {
+  font-size: 13pt;
+  font-weight: bold;
+}
+
+.dev-tools__tool__footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 0;
+  align-items: center;
+}
+
+.dev-tools__list-box,
+.dev-tools__scroll-box {
+  /*padding: 4px 8px;*/
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0px 5px 9px 0px rgba(0,0,0,0.35);
+  height: 100%;
   overflow: auto;
 }
 
-#dev-tools:hover svg {
-  color: white;
+.dev-tools__list-box ul {
+  padding-left: none;
+  padding: 4px 8px;
+  margin: 0;
+  height: 100%;
 }
 
-#dev-tools .tools {
-  display: none;
+.dev-tools__list-box li {
+  padding-top: 3px;
+  padding-bottom: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  list-style: none;
 }
 
-#dev-tools:hover .tools {
-  display: flex;
+.dev-tools__list-box li:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-left: -4px;
+  margin-right: -4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
-@media only screen and (max-width: 960px) {
-  #dev-tools:hover .tools {
-    justify-content: space-between;
+.dev-tools__msw__presets__toggle {
+  &.enabled {
+    color: #17cf73;
   }
+
+  &.disabled {
+    color: #ff9800;
+  }
+}
+
+.dev-tools .dev-tools__list-box .dev-tools__list-box__separator {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  margin-left: -8px;
+  margin-right: -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 9px;
+  margin-bottom: 6px;
+  background-color: transparent;
+  border-radius: 0;
+
+  &.has-button {
+    min-height: 36px;
+  }
+
+  &.no-separator:not(:last-child) {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.dev-tools__msw {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dev-tools__msw__presets {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dev-tools__msw__extras {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 12px;
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.dev-tools__msw__column__heading {
+  flex-basis: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-weight: bold;
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+
+
+@media only screen and (min-width: 1024px) {
+  .dev-tools.dev-tools--open .dev-tools__body {
+    height: var(--open-height-desktop);
+  }
+
+  .dev-tools__main {
+    flex-direction: row;
+  }
+
+  .dev-tools__msw__extras {
+    flex-direction: row;
+  }
+
+  .dev-tools__tool__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    overflow: auto;
+  }
+
+  .dev-tools__msw__column {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    height: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dev-tools__msw__column__body {
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+}
+
+/* TanStack React Query Devtools */
+.tsqd-main-panel {
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
 }

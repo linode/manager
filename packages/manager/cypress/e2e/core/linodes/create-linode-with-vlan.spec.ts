@@ -1,29 +1,25 @@
-import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
   randomLabel,
   randomNumber,
   randomString,
 } from 'support/util/random';
-import { mockGetVLANs } from 'support/intercepts/vlans';
-import { mockCreateLinode } from 'support/intercepts/linodes';
+import { chooseRegion } from 'support/util/regions';
+
+import { VLANFactory } from 'src/factories';
 
 describe('Create Linode with VLANs', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
+      linodeInterfaces: { enabled: false },
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
@@ -42,11 +38,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([mockVlan]);
@@ -55,7 +51,7 @@ describe('Create Linode with VLANs', () => {
 
     // Fill out necessary Linode create fields.
     linodeCreatePage.selectRegionById(mockLinodeRegion.id);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.setLabel(mockLinode.label);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -80,11 +76,10 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -110,7 +105,8 @@ describe('Create Linode with VLANs', () => {
     });
 
     cy.url().should('endWith', `/linodes/${mockLinode.id}`);
-    // TODO Confirm whether toast notification should appear on Linode create.
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
 
   /*
@@ -129,11 +125,11 @@ describe('Create Linode with VLANs', () => {
     });
 
     const mockVlan = VLANFactory.build({
+      cidr_block: `${randomIp()}/24`,
       id: randomNumber(),
       label: randomLabel(),
-      region: mockLinodeRegion.id,
-      cidr_block: `${randomIp()}/24`,
       linodes: [],
+      region: mockLinodeRegion.id,
     });
 
     mockGetVLANs([]);
@@ -142,7 +138,7 @@ describe('Create Linode with VLANs', () => {
 
     // Fill out necessary Linode create fields.
     linodeCreatePage.selectRegionById(mockLinodeRegion.id);
-    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectImage('Debian 12');
     linodeCreatePage.setLabel(mockLinode.label);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(randomString(32));
@@ -163,11 +159,10 @@ describe('Create Linode with VLANs', () => {
       });
 
     // Confirm that VLAN attachment is listed in summary, then create Linode.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('VLAN Attached').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('VLAN Attached').should('be.visible');
+    });
 
     ui.button
       .findByTitle('Create Linode')
@@ -191,7 +186,8 @@ describe('Create Linode with VLANs', () => {
     });
 
     cy.url().should('endWith', `/linodes/${mockLinode.id}`);
-    // TODO Confirm whether toast notification should appear on Linode create.
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
 
   /*

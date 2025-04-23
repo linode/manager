@@ -9,13 +9,20 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-stretch: normal;
+  font-optical-sizing: auto;
 }
 
 body {
   height: 100%;
   margin: 0;
   padding: 0 !important;
-  font-family: 'LatoWeb', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  overscroll-behavior: none;
+
+  strong, b {
+    font-weight: 700;
+  }
 }
 
 body.searchOverlay #main-content {
@@ -106,7 +113,6 @@ body.searchOverlay #main-content {
 
 #main-content {
   max-width: 1280px;
-  margin: 0 auto;
 }
 
 .label-visually-hidden {
@@ -150,12 +156,6 @@ a.h-u:hover {
 
 .secondaryLink:hover {
   text-decoration: underline;
-}
-
-strong,
-b {
-  font-family: 'LatoWebBold', sans-serif;
-  font-weight: normal;
 }
 
 .visually-hidden {
@@ -305,10 +305,6 @@ button::-moz-focus-inner {
   }
 }
 
-.fade-in-table {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 @keyframes pulse {
   to {
     background-color: hsla(40, 100%, 55%, 0);
@@ -321,10 +317,6 @@ button::-moz-focus-inner {
   transition: none !important;
 }
 
-.terminal {
-  padding: 24px;
-}
-
 .overflow-hidden {
   overflow: hidden !important;
 }
@@ -335,7 +327,8 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-family: 'LatoWebBold', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
   padding: 8px;
   position: absolute;
   top: -40px;

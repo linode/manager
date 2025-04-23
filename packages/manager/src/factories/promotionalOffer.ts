@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
 
 import { PromotionalOffer } from 'src/featureFlags';
 

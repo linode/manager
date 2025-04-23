@@ -1,9 +1,10 @@
-import { Theme } from '@mui/material/styles';
+import { useAccountUsers, useProfile, useSSHKeysQuery } from '@linode/queries';
+import { Box, Button, Checkbox, Typography } from '@linode/ui';
+import { truncateAndJoinList } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { Checkbox } from 'src/components/Checkbox';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -11,33 +12,25 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { Typography } from 'src/components/Typography';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
-import { GravatarByEmail } from '../GravatarByEmail';
+import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
-export const MAX_SSH_KEYS_DISPLAY = 25;
+import type { TypographyProps } from '@linode/ui';
+import type { Theme } from '@mui/material/styles';
+
+const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cellCheckbox: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
     width: 50,
   },
+
   cellUser: {
     width: '30%',
-  },
-  gravatar: {
-    borderRadius: '50%',
-    height: 24,
-    marginRight: theme.spacing(1),
-    width: 24,
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -52,16 +45,22 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   authorizedUsers: string[];
   disabled?: boolean;
+  /**
+   * Override the "SSH Keys" heading variant
+   * @default h2
+   */
+  headingVariant?: TypographyProps['variant'];
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
-const UserSSHKeyPanel = (props: Props) => {
+export const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
-  const { authorizedUsers, disabled, setAuthorizedUsers } = props;
+  const theme = useTheme();
+  const { authorizedUsers, disabled, headingVariant, setAuthorizedUsers } =
+    props;
 
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
 
   const pagination = usePagination(1);
 
@@ -135,20 +134,18 @@ const UserSSHKeyPanel = (props: Props) => {
         <TableRow>
           <TableCell className={classes.cellCheckbox}>
             <Checkbox
+              checked={authorizedUsers.includes(profile.username)}
+              disabled={disabled}
               inputProps={{
                 'aria-label': `Enable SSH for ${profile.username}`,
               }}
-              checked={authorizedUsers.includes(profile.username)}
-              disabled={disabled}
               onChange={() => onToggle(profile.username)}
+              size="small"
             />
           </TableCell>
           <TableCell className={classes.cellUser}>
             <div className={classes.userWrapper}>
-              <GravatarByEmail
-                className={classes.gravatar}
-                email={profile.email}
-              />
+              <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
               {profile.username}
             </div>
           </TableCell>
@@ -167,17 +164,27 @@ const UserSSHKeyPanel = (props: Props) => {
       <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
           <Checkbox
+            checked={authorizedUsers.includes(user.username)}
+            disabled={disabled || user.ssh_keys.length === 0}
             inputProps={{
               'aria-label': `Enable SSH for ${user.username}`,
             }}
-            checked={authorizedUsers.includes(user.username)}
-            disabled={disabled || user.ssh_keys.length === 0}
             onChange={() => onToggle(user.username)}
+            size="small"
           />
         </TableCell>
         <TableCell className={classes.cellUser}>
           <div className={classes.userWrapper}>
-            <GravatarByEmail className={classes.gravatar} email={user.email} />
+            <Avatar
+              color={
+                user.username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              sx={{ borderRadius: '50%', marginRight: 1 }}
+              username={user.username}
+            />
+
             {user.username}
           </div>
         </TableCell>
@@ -191,11 +198,11 @@ const UserSSHKeyPanel = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
-      <Typography className={classes.title} variant="h2">
+    <Box>
+      <Typography className={classes.title} variant={headingVariant ?? 'h2'}>
         SSH Keys
       </Typography>
-      <Table spacingBottom={16}>
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell className={classes.cellCheckbox} />
@@ -219,6 +226,7 @@ const UserSSHKeyPanel = (props: Props) => {
         buttonType="outlined"
         disabled={disabled}
         onClick={() => setIsCreateDrawerOpen(true)}
+        sx={{ marginTop: theme.tokens.spacing.S16 }}
       >
         Add an SSH Key
       </Button>
@@ -226,8 +234,6 @@ const UserSSHKeyPanel = (props: Props) => {
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
       />
-    </React.Fragment>
+    </Box>
   );
 };
-
-export default React.memo(UserSSHKeyPanel);

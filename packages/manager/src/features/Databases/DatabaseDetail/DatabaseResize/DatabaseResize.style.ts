@@ -1,7 +1,7 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 
-import { Button } from 'src/components/Button/Button';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 
 export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
@@ -37,5 +37,5 @@ export const StyledPlansPanel = styled(PlansPanel, {
 export const StyledPlanSummarySpan = styled('span', {
   label: 'StyledPlanSummarySpan',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));

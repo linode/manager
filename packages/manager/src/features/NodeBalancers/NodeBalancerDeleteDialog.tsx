@@ -1,31 +1,36 @@
+import { useNodebalancerDeleteMutation } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
-import { useNodebalancerDeleteMutation } from 'src/queries/nodebalancers';
+
+import type { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
-  id: number;
-  label: string;
-  onClose: () => void;
+  isFetching: boolean;
   open: boolean;
+  selectedNodeBalancer: NodeBalancer | undefined;
 }
 
 export const NodeBalancerDeleteDialog = ({
-  id,
-  label,
-  onClose,
+  isFetching,
   open,
+  selectedNodeBalancer,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useNodebalancerDeleteMutation(id);
-  const { push } = useHistory();
+  const navigate = useNavigate();
+  const match = useMatch({
+    strict: false,
+  });
+  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
+    selectedNodeBalancer?.id ?? -1
+  );
+
+  const label = selectedNodeBalancer?.label;
 
   const onDelete = async () => {
     await mutateAsync();
-    onClose();
-    push('/nodebalancers');
+    navigate({ to: '/nodebalancers' });
   };
 
   return (
@@ -36,11 +41,20 @@ export const NodeBalancerDeleteDialog = ({
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
       }}
+      onClose={
+        match.routeId === '/nodebalancers/$id/settings/delete'
+          ? () =>
+              navigate({
+                params: { id: String(selectedNodeBalancer?.id) },
+                to: '/nodebalancers/$id/settings',
+              })
+          : () => navigate({ to: '/nodebalancers' })
+      }
       errors={error ?? undefined}
+      expand
       label={'NodeBalancer Label'}
-      loading={isLoading}
+      loading={isPending || isFetching}
       onClick={onDelete}
-      onClose={onClose}
       open={open}
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}

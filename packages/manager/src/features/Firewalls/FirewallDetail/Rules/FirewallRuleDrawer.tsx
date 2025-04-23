@@ -1,9 +1,9 @@
+import { Drawer, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
-import { Typography } from 'src/components/Typography';
-import { capitalize } from 'src/utilities/capitalize';
+import { NotFound } from 'src/components/NotFound';
 
 import {
   formValueToIPs,
@@ -16,6 +16,7 @@ import {
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
 
+import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallRuleDrawerProps,
   FormState,
@@ -24,7 +25,6 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // =============================================================================
@@ -41,9 +41,11 @@ export const FirewallRuleDrawer = React.memo(
     const [ips, setIPs] = React.useState<ExtendedIP[]>([{ address: '' }]);
 
     // Firewall Ports, like IPs, are tracked separately. The form.values state value
-    // tracks the custom user input; the Item[] array of port presets in the multi-select
+    // tracks the custom user input; the FirewallOptionItem[] array of port presets in the multi-select
     // is stored here.
-    const [presetPorts, setPresetPorts] = React.useState<Item<string>[]>([]);
+    const [presetPorts, setPresetPorts] = React.useState<
+      FirewallOptionItem<string>[]
+    >([]);
 
     // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
     // (along with any errors we may have).
@@ -115,7 +117,12 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     return (
-      <Drawer onClose={onClose} open={isOpen} title={title}>
+      <Drawer
+        NotFoundComponent={NotFound}
+        onClose={onClose}
+        open={isOpen}
+        title={title}
+      >
         <Formik
           initialValues={getInitialFormValues(ruleToModify)}
           onSubmit={onSubmit}

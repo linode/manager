@@ -1,9 +1,10 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   Account,
   ActivePromotion,
   RegionalNetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',
@@ -36,6 +37,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
+    'Akamai Cloud Pulse',
     'Block Storage',
     'Cloud Firewall',
     'Disk Encryption',
@@ -44,24 +46,29 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
+    'Managed Databases Beta',
+    'NETINT Quadra T1U',
     'NodeBalancers',
+    'Object Storage Access Key Regions',
+    'Object Storage Endpoint Types',
     'Object Storage',
     'Placement Group',
     'Vlans',
+    'Kubernetes Enterprise',
   ],
-  city: 'Colorado',
+  city: 'Philadelphia',
   company: Factory.each((i) => `company-${i}`),
-  country: 'CA',
+  country: 'US',
   credit_card: {
-    expiry: '01/2018',
+    expiry: '01/2028',
     last_four: '1111',
   },
   email: 'my-email@example.com',
   euuid: Factory.each((i) => `278EC57D-7424-4B3A-B35C3CE395787567-${i}`),
-  first_name: 'XRbganOEO',
-  last_name: 'demo2',
-  phone: '19005553221',
-  state: 'BC',
+  first_name: 'John',
+  last_name: 'Doe',
+  phone: '1215550001',
+  state: 'PA',
   tax_id: '111111111',
   zip: '19106',
 });

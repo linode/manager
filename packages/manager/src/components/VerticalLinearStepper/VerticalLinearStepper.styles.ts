@@ -1,7 +1,6 @@
+import { omittedProps } from '@linode/ui';
 import { StepConnector, StepIcon } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledCircleIconProps = {
   activeStep: number;
@@ -17,7 +16,7 @@ export const StyledCircleIcon = styled('div', {
     props.index === props.activeStep
       ? theme.palette.primary.main
       : props.index < props.activeStep
-      ? '#ADD8E6' // TODO: need UX confirmation on color code
+      ? theme.tokens.color.Cyan[30] // TODO: need UX confirmation on color code
       : theme.bg.bgPaper, // Adjust colors as needed
   border:
     props.index < props.activeStep || props.index === props.activeStep
@@ -46,7 +45,7 @@ export const StyledColorlibConnector = styled(StepConnector, {
   label: 'StyledColorlibConnector',
 })(({ theme }) => ({
   '& .MuiStepConnector-line': {
-    borderColor: '#eaeaf0',
+    borderColor: theme.tokens.color.Ultramarine[10],
     borderLeftWidth: '3px',
     minHeight: theme.spacing(2),
   },

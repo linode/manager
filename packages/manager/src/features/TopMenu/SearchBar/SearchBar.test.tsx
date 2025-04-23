@@ -1,9 +1,18 @@
-import { createFinalOptions } from './SearchBar';
+import { createFinalOptions } from './utils';
+
+import type { SearchResultItem } from './SearchBar';
 
 const createMockItems = (numberOfItemsToCreate: number) => {
   const mockItems = [];
   for (let i = 0; i < numberOfItemsToCreate; i++) {
-    mockItems.push({ label: `test-label-${i}`, value: `test-value-${i}` });
+    mockItems.push({
+      data: {
+        description: '',
+        path: '',
+      },
+      label: `test-label-${i}`,
+      value: `test-value-${i}`,
+    } as SearchResultItem);
   }
   return mockItems;
 };

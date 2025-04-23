@@ -1,9 +1,11 @@
-import { accountAvailabilityFactory, regionFactory } from 'src/factories';
+import { accountAvailabilityFactory, regionFactory } from '@linode/utilities';
 
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
+
+import type { Region } from '@linode/api-v4';
 
 describe('getRegionOptions', () => {
   it('should return an empty array if no regions are provided', () => {
@@ -176,6 +178,97 @@ describe('getRegionOptions', () => {
     });
 
     expect(result).toEqual(regions);
+  });
+
+  it('should filter out distributed regions by continent if the regionFilter includes continent', () => {
+    const regions2 = [
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 2',
+        site_type: 'core',
+      }),
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'distributed',
+      }),
+    ];
+
+    const resultNA = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-NA',
+      regions: regions2,
+    });
+    const resultEU = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-EU',
+      regions: regions2,
+    });
+
+    expect(resultNA).toEqual([
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'distributed',
+      }),
+    ]);
+    expect(resultEU).toEqual([
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'distributed',
+      }),
+    ]);
+  });
+
+  it('should not filter out distributed regions by continent if the regionFilter includes all', () => {
+    const regions: Region[] = [
+      regionFactory.build({
+        id: 'us-1',
+        label: 'US Site 1',
+        site_type: 'core',
+      }),
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        country: 'us',
+        id: 'us-2',
+        label: 'US Site 2',
+        site_type: 'distributed',
+      }),
+    ];
+
+    const resultAll = getRegionOptions({
+      currentCapability: undefined,
+      regionFilter: 'distributed-ALL',
+      regions,
+    });
+
+    expect(resultAll).toEqual([
+      regionFactory.build({
+        country: 'us',
+        id: 'us-2',
+        label: 'US Site 2',
+        site_type: 'distributed',
+      }),
+      regionFactory.build({
+        country: 'de',
+        id: 'eu-2',
+        label: 'EU Site 2',
+        site_type: 'distributed',
+      }),
+    ]);
   });
 });
 

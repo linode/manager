@@ -1,96 +1,102 @@
-import { sendFormEvent } from './utils';
+import { getFormattedStringFromFormEventOptions, sendFormEvent } from './utils';
 
 import type {
   BasicFormEvent,
   FormErrorEvent,
   FormInputEvent,
   FormStepEvent,
-  LinodeCreateFlowVersion,
-  LinodeCreateFormStepOptions,
+  LinodeCreateFormEventOptions,
 } from './types';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from '@linode/utilities';
 
 /**
  * Form Events
  */
 
-// AddNewMenu.tsx
-// LinodesLanding.tsx
-// LinodesLandingEmptyState.tsx
-// PrimaryNav.tsx
-export const sendLinodeCreateFormStartEvent = (
-  formStartName: string,
-  createType: LinodeCreateType,
-  version: LinodeCreateFlowVersion
-) => {
-  const formPayload: BasicFormEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Start - ${formStartName}`,
-  };
-  sendFormEvent(formPayload, 'formFocus');
-};
-
+// DetailsPanel.tsx
 // SelectFirewallPanel.tsx
 // CreateFirewallDrawer.tsx
 // VPCTopSectionContent.tsx
-// VPCCreateDrawer.tsx
 // VPCPanel.tsx
 // SubnetContent.tsx
 // LinodeCreate.tsx
 // LinodeCreateContainer.tsx
 // SelectRegionPanel.tsx
-export const sendLinodeCreateFormStepEvent = ({
-  action,
-  category,
+// PlacementGroupsDetailPanel.tsx
+export const sendLinodeCreateFormInputEvent = ({
   createType,
-  formStepName,
+  headerName,
+  interaction,
   label,
-  version,
-}: LinodeCreateFormStepOptions) => {
-  const formPayload: FormStepEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Step${
-      formStepName ? ` - ${formStepName}` : ''
-    }`,
-    stepName: `${label} - ${action}:${category}`,
-  };
-  sendFormEvent(formPayload, 'formStepInteraction');
-};
-
-export const sendLinodeCreateFormInputEvent = (
-  formInputName: string,
-  formInputValue: string,
-  createType: LinodeCreateType,
-  version: LinodeCreateFlowVersion
-) => {
+  subheaderName,
+  trackOnce,
+}: LinodeCreateFormEventOptions) => {
   const formPayload: FormInputEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form Input${
-      formInputName ? ` - ${formInputName}` : ''
-    }`,
-    inputValue: formInputValue,
+    formName: `Linode Create from ${createType}`,
+    inputValue: getFormattedStringFromFormEventOptions({
+      headerName,
+      interaction,
+      label,
+      subheaderName,
+      trackOnce,
+    }),
   };
   sendFormEvent(formPayload, 'formInput');
 };
 
+// CreateFirewallDrawer.tsx
 // LinodeCreate.tsx
-export const sendLinodeCreateFormSubmitEvent = (
-  formEndName: string,
-  createType: LinodeCreateType,
-  version: LinodeCreateFlowVersion
-) => {
+// PlacementGroupsCreateDrawer.tsx
+// useCreateVPC.ts
+export const sendLinodeCreateFormStepEvent = ({
+  createType,
+  headerName,
+  interaction,
+  label,
+  subheaderName,
+}: LinodeCreateFormEventOptions) => {
+  const formPayload: FormStepEvent = {
+    formName: `Linode Create from ${createType}`,
+    stepName: getFormattedStringFromFormEventOptions({
+      headerName,
+      interaction,
+      label,
+      subheaderName,
+    }),
+  };
+  sendFormEvent(formPayload, 'formStepInteraction');
+};
+
+// SelectRegionPanel.tsx
+export const sendLinodeCreateFormStartEvent = ({
+  createType,
+}: Partial<LinodeCreateFormEventOptions>) => {
   const formPayload: BasicFormEvent = {
-    formName: `Linode Create from ${createType} Form ${version} - Form End - ${formEndName}`,
+    formName: `Linode Create from ${createType}`,
+  };
+  sendFormEvent(formPayload, 'formStart');
+};
+
+// LinodeCreate.tsx
+export const sendLinodeCreateFormSubmitEvent = ({
+  createType,
+}: Partial<LinodeCreateFormEventOptions>) => {
+  const formPayload: BasicFormEvent = {
+    formName: `Linode Create from ${createType}`,
   };
   sendFormEvent(formPayload, 'formSubmit');
 };
 
 // LinodeCreate.tsx
+// CreateFirewallDrawer.tsx
+// useCreateVPC.ts
 export const sendLinodeCreateFormErrorEvent = (
   formError: string,
-  createType: LinodeCreateType,
-  version: LinodeCreateFlowVersion
+  createType: LinodeCreateType
 ) => {
   const formPayload: FormErrorEvent = {
     formError,
-    formName: `Linode Create from ${createType} Form ${version} - Form Error`,
+    formName: `Linode Create from ${createType}`,
   };
   sendFormEvent(formPayload, 'formError');
 };

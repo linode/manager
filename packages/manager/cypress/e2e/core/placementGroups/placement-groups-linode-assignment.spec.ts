@@ -1,14 +1,5 @@
-import {
-  accountFactory,
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -24,12 +15,12 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { accountFactory, placementGroupFactory } from 'src/factories';
+
 import type { Linode } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
 const mockAccount = accountFactory.build();
 
@@ -52,16 +43,7 @@ const mockRegions = regionFactory.buildList(10, {
 });
 
 describe('Placement Groups Linode assignment', () => {
-  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
-  // TODO Remove these mocks when `placementGroups` feature flag is retired.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount).as('getAccount');
   });
 
@@ -87,10 +69,10 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinode = mockLinodes[0];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: randomLabel(),
-      region: mockPlacementGroupRegion.id,
-      members: [],
       is_compliant: true,
+      label: randomLabel(),
+      members: [],
+      region: mockPlacementGroupRegion.id,
     });
 
     const mockPlacementGroupWithLinode = {
@@ -139,7 +121,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').should('be.enabled').click();
 
@@ -155,7 +141,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(`${mockLinode.label}`);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').click();
       });
@@ -188,7 +178,7 @@ describe('Placement Groups Linode assignment', () => {
    * - Confirms that UI automatically updates and shows a warning indicating the non-compliance status.
    * - Confirms that non-compliance status is indicated on the Placement Group landing page.
    */
-  it('can assign non-compliant Linode with weak enforcement', () => {
+  it('can assign non-compliant Linode with flexible placement group policy', () => {
     const mockPlacementGroupRegion = chooseRegion({ regions: mockRegions });
     const mockLinode = linodeFactory.build({
       id: randomNumber(10000, 99999),
@@ -198,22 +188,22 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
+      is_compliant: true,
       label: randomLabel(),
       members: [],
+      placement_group_policy: 'flexible',
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
-      is_strict: false,
     });
 
     const mockPlacementGroupAfterAssignment = {
       ...mockPlacementGroup,
+      is_compliant: false,
       members: [
         {
-          linode_id: mockLinode.id,
           is_compliant: false,
+          linode_id: mockLinode.id,
         },
       ],
-      is_compliant: false,
     };
 
     const complianceWarning = `Placement Group ${mockPlacementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group.`;
@@ -231,7 +221,7 @@ describe('Placement Groups Linode assignment', () => {
     cy.visitWithLogin(`/placement-groups/${mockPlacementGroup.id}`);
     cy.wait('@getPlacementGroup');
 
-    // Confirm that weak affinity enforcement type is indicated on page, then
+    // Confirm that `flexible` Placement Group Policy is indicated on page, then
     // initiate Linode assignment.
     cy.findByText('Flexible');
 
@@ -256,7 +246,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')
@@ -288,9 +282,9 @@ describe('Placement Groups Linode assignment', () => {
 
   /**
    * - Confirms UI flow when attempting to assign non-compliant Linode using mock API data.
-   * - Confirms graceful error handling when Placement Group enforcement is strict.
+   * - Confirms graceful error handling when Placement Group Policy is `strict`.
    */
-  it('cannot assign non-compliant Linode with strict enforcement', () => {
+  it('cannot assign non-compliant Linode with `strict` Placement Group Policy', () => {
     const mockPlacementGroupRegion = chooseRegion({ regions: mockRegions });
     const mockLinode = linodeFactory.build({
       id: randomNumber(10000, 99999),
@@ -300,11 +294,11 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
+      is_compliant: true,
       label: randomLabel(),
       members: [],
+      placement_group_policy: 'strict',
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
-      is_strict: true,
     });
 
     const complianceErrorMessage = `Assignment would break Placement Group's compliance, non compliant Linode IDs: [${mockLinode.id}]`;
@@ -322,7 +316,7 @@ describe('Placement Groups Linode assignment', () => {
     cy.visitWithLogin(`/placement-groups/${mockPlacementGroup.id}`);
     cy.wait('@getPlacementGroup');
 
-    // Confirm that weak affinity enforcement type is indicated on page, then
+    // Confirm that `strict` Placement Group Policy is indicated on page, then
     // initiate Linode assignment.
     cy.findByText('Strict');
 
@@ -344,7 +338,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')
@@ -378,22 +376,23 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinodeRemaining = mockLinodes[1];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: randomLabel(),
-      region: mockPlacementGroupRegion.id,
-      members: mockLinodes.map((linode: Linode) => ({
-        linode_id: linode.id,
-        is_compliant: true,
-      })),
       is_compliant: true,
+      label: randomLabel(),
+      members: mockLinodes.map((linode: Linode) => ({
+        is_compliant: true,
+        linode_id: linode.id,
+      })),
+      region: mockPlacementGroupRegion.id,
     });
 
     const mockPlacementGroupAfterUnassignment = {
       ...mockPlacementGroup,
-      members: [{ linode_id: mockLinodeRemaining.id, is_compliant: true }],
+      members: [{ is_compliant: true, linode_id: mockLinodeRemaining.id }],
     };
 
     mockGetRegions(mockRegions);
     mockGetLinodes(mockLinodes);
+    mockGetLinodeDetails(mockLinodeUnassigned.id, mockLinodeUnassigned);
     mockGetPlacementGroups([mockPlacementGroup]);
     mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 

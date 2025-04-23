@@ -1,3 +1,4 @@
+import { Checkbox } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
@@ -6,13 +7,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
 import {
-  StyledCheckbox,
+  StyledCheckAllTableCell,
   StyledDebouncedSearchTextField,
-  StyledEmptyCheckbox,
   StyledPaginationFooter,
   StyledTable,
   StyledTypography,
-  StyledCheckAllTableCell,
 } from './TransferTable.styles';
 
 export interface Props {
@@ -24,6 +23,7 @@ export interface Props {
   page: number;
   pageSize: number;
   requestPage: (page: number) => void;
+  searchText: string;
   toggleSelectAll: (isToggled: boolean) => void;
 }
 
@@ -36,16 +36,13 @@ export const TransferTable = React.memo((props: Props) => {
     page,
     pageSize,
     requestPage,
+    searchText,
     toggleSelectAll,
   } = props;
 
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     return toggleSelectAll(e.target.checked);
   };
-
-  const ConditionalCheckbox = hasSelectedAll
-    ? StyledCheckbox
-    : StyledEmptyCheckbox;
 
   return (
     <>
@@ -57,17 +54,19 @@ export const TransferTable = React.memo((props: Props) => {
         label="Search by label"
         onSearch={handleSearch}
         placeholder="Search by label"
+        value={searchText}
       />
       <StyledTable>
         <TableHead>
           <TableRow>
             <StyledCheckAllTableCell>
-              <ConditionalCheckbox
+              <Checkbox
+                checked={hasSelectedAll}
                 inputProps={{
                   'aria-label': `Select all services on page`,
                 }}
-                checked={hasSelectedAll}
                 onChange={handleToggleAll}
+                size="small"
               />
             </StyledCheckAllTableCell>
             {headers.map((thisHeader) => (

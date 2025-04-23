@@ -8,10 +8,6 @@ import globalErrors, {
   State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
 } from 'src/store/globalErrors';
-import linodeCreateReducer, {
-  State as LinodeCreateState,
-  defaultState as linodeCreateDefaultState,
-} from 'src/store/linodeCreate/linodeCreate.reducer';
 import longview, {
   State as LongviewState,
   defaultState as defaultLongviewState,
@@ -20,10 +16,6 @@ import longviewStats, {
   State as LongviewStatsState,
   defaultState as defaultLongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import stackScriptDialog, {
-  State as StackScriptDialogState,
-  defaultState as stackScriptDialogDefaultState,
-} from 'src/store/stackScriptDialog';
 
 import mockFeatureFlags, {
   MockFeatureFlagState,
@@ -37,24 +29,20 @@ import thunk from 'redux-thunk';
 
 export interface ApplicationState {
   authentication: AuthState;
-  createLinode: LinodeCreateState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
   pendingUpload: PendingUploadState;
-  stackScriptDialog: StackScriptDialogState;
 }
 
 export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
-  createLinode: linodeCreateDefaultState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
   pendingUpload: pendingUploadState,
-  stackScriptDialog: stackScriptDialogDefaultState,
 };
 
 /**
@@ -62,13 +50,11 @@ export const defaultState: ApplicationState = {
  */
 const reducers = combineReducers<ApplicationState>({
   authentication,
-  createLinode: linodeCreateReducer,
   globalErrors,
   longviewClients: longview,
   longviewStats,
   mockFeatureFlags,
   pendingUpload,
-  stackScriptDialog,
 });
 
 export const storeFactory = () =>

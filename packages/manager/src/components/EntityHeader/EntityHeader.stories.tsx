@@ -1,12 +1,11 @@
+import { Box, Button } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
-import { Button } from '../Button/Button';
 import { Link } from '../Link';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -40,32 +39,14 @@ export const Default: Story = {
     variant: 'h2',
   },
   render: (args) => {
-    const sxActionItem = {
-      '&:hover': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
-      },
-      color: '#2575d0',
-      fontFamily: '"LatoWeb", sans-serif',
-      fontSize: '0.875rem',
-      height: '34px',
-      minWidth: 'auto',
-    };
-
     return (
       <EntityHeader {...args}>
         <Box sx={sxBoxFlex}>Chip / Progress Go Here</Box>
         <Box sx={sxBoxFlex}>
           <Hidden mdDown>
-            <Button buttonType="secondary" sx={sxActionItem}>
-              Power Off
-            </Button>
-            <Button buttonType="secondary" sx={sxActionItem}>
-              Reboot
-            </Button>
-            <Button buttonType="secondary" sx={sxActionItem}>
-              Launch LISH Console
-            </Button>
+            <Button buttonType="secondary">Power Off</Button>
+            <Button buttonType="secondary">Reboot</Button>
+            <Button buttonType="secondary">Launch LISH Console</Button>
           </Hidden>
 
           <LinodeActionMenu
@@ -78,6 +59,7 @@ export const Default: Story = {
               },
             }}
             linodeType={{
+              accelerated_devices: 0,
               addons: {
                 backups: {
                   price: {

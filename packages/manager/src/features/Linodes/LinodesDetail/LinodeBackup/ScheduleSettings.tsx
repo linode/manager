@@ -1,22 +1,22 @@
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useProfile,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  FormControl,
+  FormHelperText,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
+import { getUserTimezone, initWindows } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import Select from 'src/components/EnhancedSelect/Select';
-import { FormControl } from 'src/components/FormControl';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
-import { useProfile } from 'src/queries/profile/profile';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
-import { initWindows } from 'src/utilities/initWindows';
 
 interface Props {
   isReadOnly: boolean;
@@ -32,7 +32,7 @@ export const ScheduleSettings = (props: Props) => {
 
   const {
     error: updateLinodeError,
-    isLoading: isUpdating,
+    isPending: isUpdating,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -94,7 +94,10 @@ export const ScheduleSettings = (props: Props) => {
           </Notice>
         )}
         <StyledFormControl>
-          <Select
+          <Autocomplete
+            onChange={(_, selected) =>
+              settingsForm.setFieldValue('day', selected?.value)
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-weekday-select': true,
@@ -103,20 +106,19 @@ export const ScheduleSettings = (props: Props) => {
             value={dayOptions.find(
               (item) => item.value === settingsForm.values.day
             )}
+            autoHighlight
+            disableClearable
             disabled={isReadOnly}
-            isClearable={false}
             label="Day of Week"
-            name="Day of Week"
             noMarginTop
-            onChange={(item) => settingsForm.setFieldValue('day', item.value)}
             options={dayOptions}
             placeholder="Choose a day"
           />
         </StyledFormControl>
         <FormControl>
-          <Select
-            onChange={(item) =>
-              settingsForm.setFieldValue('window', item.value)
+          <Autocomplete
+            onChange={(_, selected) =>
+              settingsForm.setFieldValue('window', selected?.value)
             }
             textFieldProps={{
               dataAttrs: {
@@ -126,10 +128,10 @@ export const ScheduleSettings = (props: Props) => {
             value={windowOptions.find(
               (item) => item.value === settingsForm.values.window
             )}
+            autoHighlight
+            disableClearable
             disabled={isReadOnly}
-            isClearable={false}
             label="Time of Day"
-            name="Time of Day"
             noMarginTop
             options={windowOptions}
             placeholder="Choose a time"
@@ -155,9 +157,6 @@ export const ScheduleSettings = (props: Props) => {
 
 const StyledFormControl = styled(FormControl, { label: 'StyledFormControl' })(
   ({ theme }) => ({
-    '& .react-select__menu-list': {
-      maxHeight: 'none',
-    },
     marginRight: theme.spacing(2),
     minWidth: 150,
   })

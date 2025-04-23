@@ -1,8 +1,8 @@
-import { Firewall } from '@linode/api-v4/lib/firewalls';
-import { FirewallDeviceEntityType } from '@linode/api-v4/lib/firewalls';
+import type { Firewall } from '@linode/api-v4/lib/firewalls';
+import type { FirewallDeviceEntityType } from '@linode/api-v4/lib/firewalls';
 
 export const firewall: Firewall = {
-  created_dt: '2019-09-11T19:44:38.526Z',
+  created: '2019-09-11T19:44:38.526Z',
   entities: [
     {
       id: 1,
@@ -14,6 +14,7 @@ export const firewall: Firewall = {
   id: 1,
   label: 'my-firewall',
   rules: {
+    fingerprint: '8a545843',
     inbound: [
       {
         action: 'ACCEPT',
@@ -34,14 +35,15 @@ export const firewall: Firewall = {
       },
     ],
     outbound_policy: 'DROP',
+    version: 1,
   },
   status: 'enabled',
   tags: [],
-  updated_dt: '2019-09-11T19:44:38.526Z',
+  updated: '2019-09-11T19:44:38.526Z',
 };
 
 export const firewall2: Firewall = {
-  created_dt: '2019-12-11T19:44:38.526Z',
+  created: '2019-12-11T19:44:38.526Z',
   entities: [
     {
       id: 1,
@@ -53,6 +55,7 @@ export const firewall2: Firewall = {
   id: 2,
   label: 'zzz',
   rules: {
+    fingerprint: '8a545843',
     inbound: [],
     inbound_policy: 'DROP',
     outbound: [
@@ -68,10 +71,11 @@ export const firewall2: Firewall = {
       },
     ],
     outbound_policy: 'DROP',
+    version: 1,
   },
   status: 'disabled',
   tags: [],
-  updated_dt: '2019-12-11T19:44:38.526Z',
+  updated: '2019-12-11T19:44:38.526Z',
 };
 
 export const firewalls = [firewall, firewall2];

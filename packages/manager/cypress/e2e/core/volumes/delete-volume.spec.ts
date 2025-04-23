@@ -1,12 +1,17 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Volume } from '@linode/api-v4';
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { interceptDeleteVolume } from 'support/intercepts/volumes';
-import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
+import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
+import { pollVolumeStatus } from 'support/util/polling';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { Volume } from '@linode/api-v4';
+import type { VolumeRequestPayload } from '@linode/api-v4/lib/volumes';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -15,10 +20,26 @@ const pageSizeOverride = {
   PAGE_SIZE: 100,
 };
 
+/**
+ * Creates a Volume and waits for it to become active.
+ *
+ * @param volumeRequest - Volume create request payload.
+ *
+ * @returns Promise that resolves to created Volume.
+ */
+const createActiveVolume = async (volumeRequest: VolumeRequestPayload) => {
+  const volume = await createVolume(volumeRequest);
+  await pollVolumeStatus(volume.id, 'active', new SimpleBackoffMethod(10000));
+  return volume;
+};
+
 authenticate();
 describe('volume delete flow', () => {
   before(() => {
     cleanUp('volumes');
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*
@@ -34,7 +55,7 @@ describe('volume delete flow', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(() => createVolume(volumeRequest), 'creating volume').then(
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating volume').then(
       (volume: Volume) => {
         interceptDeleteVolume(volume.id).as('deleteVolume');
         cy.visitWithLogin('/volumes', {
@@ -72,10 +93,8 @@ describe('volume delete flow', () => {
           .findByTitle(`Delete Volume ${volume.label}?`)
           .should('be.visible')
           .within(() => {
-            cy.findByLabelText('Volume Label')
-              .should('be.visible')
-              .click()
-              .type(volume.label);
+            cy.findByLabelText('Volume Label').should('be.visible').click();
+            cy.focused().type(volume.label);
 
             ui.buttonGroup
               .findButtonByTitle('Delete')
@@ -87,7 +106,7 @@ describe('volume delete flow', () => {
         // Confirm that volume is deleted.
         cy.wait('@deleteVolume').its('response.statusCode').should('eq', 200);
         cy.findByText(volume.label).should('not.exist');
-        ui.toast.assertMessage('Volume successfully deleted.');
+        ui.toast.assertMessage(`Volume ${volume.label} has been deleted.`);
       }
     );
   });

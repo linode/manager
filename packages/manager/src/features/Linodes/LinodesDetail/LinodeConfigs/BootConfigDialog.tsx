@@ -1,12 +1,12 @@
-import { Config } from '@linode/api-v4';
+import { useRebootLinodeMutation } from '@linode/queries';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useRebootLinodeMutation } from 'src/queries/linodes/linodes';
+
+import type { Config } from '@linode/api-v4';
 
 interface Props {
   config: Config | undefined;
@@ -19,7 +19,7 @@ export const BootConfigDialog = (props: Props) => {
   const { config, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useRebootLinodeMutation(linodeId);
+  const { error, isPending, mutateAsync } = useRebootLinodeMutation(linodeId);
 
   const { checkForNewEvents } = useEventsPollingActions();
 
@@ -36,7 +36,7 @@ export const BootConfigDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Boot',
-        loading: isLoading,
+        loading: isPending,
         onClick: onBoot,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

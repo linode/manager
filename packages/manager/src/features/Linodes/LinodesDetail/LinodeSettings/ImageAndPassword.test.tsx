@@ -1,34 +1,40 @@
+import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { profileFactory } from 'src/factories';
+
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantsFactory } from 'src/factories/grants';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { ImageAndPassword } from './ImageAndPassword';
 
 const props = {
   authorizedUsers: [],
+  disabled: false,
+  imageFieldError: undefined,
   linodeId: 0,
   onImageChange: vi.fn(),
   onPasswordChange: vi.fn(),
   password: '',
+  passwordError: undefined,
+  selectedImage: '',
   setAuthorizedUsers: vi.fn(),
 };
 
 describe('ImageAndPassword', () => {
   it('should render an Image Select', () => {
-    const { getByLabelText } = renderWithTheme(<ImageAndPassword {...props} />);
+    renderWithThemeAndHookFormContext({
+      component: <ImageAndPassword {...props} />,
+    });
 
-    expect(getByLabelText('Image')).toBeVisible();
-    expect(getByLabelText('Image')).toBeEnabled();
+    expect(screen.getByRole('combobox'));
+    expect(screen.getByRole('combobox')).toBeEnabled();
   });
   it('should render a password error if defined', async () => {
     const errorMessage = 'Unable to set password.';
-    const { findByText } = renderWithTheme(
-      <ImageAndPassword {...props} passwordError={errorMessage} />
-    );
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <ImageAndPassword {...props} passwordError={errorMessage} />,
+    });
 
     const passwordError = await findByText(errorMessage, undefined, {
       timeout: 2500,
@@ -36,7 +42,9 @@ describe('ImageAndPassword', () => {
     expect(passwordError).toBeVisible();
   });
   it('should render an SSH Keys section', async () => {
-    const { getByText } = renderWithTheme(<ImageAndPassword {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <ImageAndPassword {...props} />,
+    });
 
     expect(getByText('SSH Keys', { selector: 'h2' })).toBeVisible();
   });
@@ -49,7 +57,9 @@ describe('ImageAndPassword', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<ImageAndPassword {...props} />);
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <ImageAndPassword {...props} />,
+    });
 
     for (const user of users) {
       // eslint-disable-next-line no-await-in-loop
@@ -59,49 +69,5 @@ describe('ImageAndPassword', () => {
       expect(username).toBeVisible();
       expect(tableRow).toHaveTextContent(user.ssh_keys[0]);
     }
-  });
-  it('should be disabled for a restricted user with read only access', async () => {
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({
-            linode: [{ id: 0, permissions: 'read_only' }],
-          })
-        );
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(
-      <ImageAndPassword {...props} />
-    );
-
-    await findByText(`You don't have permissions to edit this Linode.`, {
-      exact: false,
-    });
-
-    expect(getByLabelText('Image')).toBeDisabled();
-  });
-  it('should be disabled for a restricted user with no access', async () => {
-    server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/profile/grants', () => {
-        return HttpResponse.json(grantsFactory.build({ linode: [] }));
-      })
-    );
-
-    const { findByText, getByLabelText } = renderWithTheme(
-      <ImageAndPassword {...props} />
-    );
-
-    await findByText(`You don't have permissions to edit this Linode.`, {
-      exact: false,
-    });
-
-    expect(getByLabelText('Image')).toBeDisabled();
   });
 });

@@ -1,7 +1,6 @@
-import { accountQueries } from '../account/queries';
-import { volumeQueries } from './volumes';
+import { accountQueries, volumeQueries } from '@linode/queries';
 
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 /**
  * An event handler that performs invalidations based on incoming volume events.
@@ -10,12 +9,18 @@ import type { EventHandlerData } from 'src/hooks/useEventHandlers';
  */
 export const volumeEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: volumeQueries.lists.queryKey,
     });
+
+    if (event.entity) {
+      invalidateQueries({
+        queryKey: volumeQueries.volume(event.entity.id).queryKey,
+      });
+    }
   }
 
   if (
@@ -24,7 +29,7 @@ export const volumeEventsHandler = ({
   ) {
     // if a migration finishes, we want to re-request notifications so that the `volume_migration_imminent`
     // notification goes away.
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: accountQueries.notifications.queryKey,
     });
   }
@@ -33,7 +38,7 @@ export const volumeEventsHandler = ({
     // The API gives us no way to know when a cloned volume transitions from
     // creating to active, so we will just refresh after 10 seconds
     setTimeout(() => {
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
       });
     }, 10000);

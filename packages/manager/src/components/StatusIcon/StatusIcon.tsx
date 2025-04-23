@@ -1,9 +1,8 @@
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material';
 import * as React from 'react';
 
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import { Box, BoxProps } from '../Box';
+import type { BoxProps } from '@linode/ui';
 
 export type Status = 'active' | 'error' | 'inactive' | 'other';
 
@@ -47,22 +46,23 @@ const StyledDiv = styled(Box, {
 })<StatusProps>(({ theme, ...props }) => ({
   borderRadius: '50%',
   display: 'inline-block',
+  flexShrink: 0,
   height: '16px',
   marginRight: theme.spacing(),
   position: 'relative',
   transition: theme.transitions.create(['color']),
   width: '16px',
   ...(props.status === 'active' && {
-    backgroundColor: theme.color.teal,
+    backgroundColor: theme.palette.success.dark,
   }),
   ...(props.status === 'inactive' && {
     backgroundColor: theme.color.grey8,
   }),
   ...(props.status === 'error' && {
-    backgroundColor: theme.color.red,
+    backgroundColor: theme.palette.error.dark,
   }),
   ...(!['active', 'error', 'inactive'].includes(props.status) && {
-    backgroundColor: theme.color.orange,
+    backgroundColor: theme.palette.warning.dark,
   }),
   ...(props.pulse && {
     animation: 'pulse 1.5s ease-in-out infinite',

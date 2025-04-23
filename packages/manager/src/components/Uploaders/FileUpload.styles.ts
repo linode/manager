@@ -1,9 +1,7 @@
+import { Typography, rotate360 } from '@linode/ui';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
-
-import UploadPending from 'src/assets/icons/uploadPending.svg';
-import { Typography } from 'src/components/Typography';
-import { rotate360 } from 'src/styles/keyframes';
 
 import type { FileUploadProps } from './FileUpload';
 import type { Theme } from '@mui/material/styles';
@@ -49,7 +47,7 @@ export const StyledRightWrapper = styled('div', {
   display: 'flex',
 }));
 
-export const StyledUploadPending = styled(UploadPending, {
+export const StyledUploadPendingIcon = styled(AutorenewIcon, {
   label: 'StyledUploadPending',
 })(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
@@ -74,7 +72,10 @@ export const StyledActionsContainer = styled('div', {
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   barColorPrimary: {
-    backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
+    backgroundColor:
+      theme.name === 'light'
+        ? theme.tokens.color.Brand[30]
+        : theme.tokens.color.Brand[100],
   },
   error: {
     '& g': {

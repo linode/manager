@@ -1,9 +1,8 @@
-import { Theme } from '@mui/material/styles';
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   buttonText: string;
@@ -67,11 +66,12 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         </Typography>
       </div>
       <Button
-        buttonType="primary"
+        buttonType="outlined"
         className={classes.sectionButton}
         data-qa-settings-button={buttonText}
         disabled={disabled}
         onClick={onClick}
+        title={buttonText}
       >
         {buttonText}
       </Button>

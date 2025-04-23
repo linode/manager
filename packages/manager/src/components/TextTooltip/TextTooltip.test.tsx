@@ -56,7 +56,7 @@ describe('TextTooltip', () => {
 
     const displayText = getByText(props.displayText);
 
-    expect(displayText).toHaveStyle('color: rgb(54, 131, 220)');
+    expect(displayText).toHaveStyle('color: rgb(0, 156, 222)');
     expect(displayText).toHaveStyle('font-size: 18px');
   });
 

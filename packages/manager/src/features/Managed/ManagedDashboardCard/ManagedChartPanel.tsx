@@ -1,27 +1,25 @@
-import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { useProfile } from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { getUserTimezone } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getUserTimezone } from 'src/utilities/getUserTimezone';
 
 import {
   StyledGraphControlsDiv,
   StyledRootDiv,
 } from './ManagedChartPanel.styles';
+
+import type { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import type { Theme } from '@mui/material/styles';
 
 const chartHeight = 300;
 
@@ -78,7 +76,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -107,7 +105,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -141,7 +139,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={3}>
               <AreaChart
                 areas={[
                   {

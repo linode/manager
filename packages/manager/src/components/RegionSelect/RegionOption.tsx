@@ -1,102 +1,56 @@
-import { visuallyHidden } from '@mui/utils';
+import { Box, ListItemOption, Stack } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
-import { Box } from 'src/components/Box';
-import { Flag } from 'src/components/Flag';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 
-import {
-  SelectedIcon,
-  StyledFlagContainer,
-  StyledListItem,
-  sxDistributedRegionIcon,
-} from './RegionSelect.styles';
-
-import type { DisableRegionOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
+import type { ListItemOptionProps } from '@linode/ui';
 
-interface Props {
-  disabledOptions?: DisableRegionOption;
-  props: React.HTMLAttributes<HTMLLIElement>;
-  region: Region;
-  selected?: boolean;
+interface RegionOptionProps extends ListItemOptionProps<Region> {
+  isGeckoLAEnabled: boolean;
 }
 
 export const RegionOption = ({
   disabledOptions,
+  isGeckoLAEnabled,
+  item,
   props,
-  region,
   selected,
-}: Props) => {
-  const { className, onClick } = props;
-  const isRegionDisabled = Boolean(disabledOptions);
-  const isRegionDisabledReason = disabledOptions?.reason;
-
-  const displayDistributedRegionIcon =
-    region.site_type === 'edge' || region.site_type === 'distributed';
-
+}: RegionOptionProps) => {
   return (
-    <Tooltip
-      PopperProps={{
-        sx: {
-          '& .MuiTooltip-tooltip': {
-            minWidth: disabledOptions?.tooltipWidth ?? 215,
-          },
-        },
-      }}
-      title={
-        isRegionDisabled && isRegionDisabledReason ? isRegionDisabledReason : ''
-      }
-      disableFocusListener={!isRegionDisabled}
-      disableHoverListener={!isRegionDisabled}
-      disableTouchListener={!isRegionDisabled}
-      enterDelay={200}
-      enterNextDelay={200}
-      enterTouchDelay={200}
+    <ListItemOption
+      disabledOptions={disabledOptions}
+      item={item}
+      props={props}
+      selected={selected}
     >
-      <StyledListItem
-        {...props}
-        componentsProps={{
-          root: {
-            'data-qa-option': region.id,
-            'data-testid': region.id,
-          } as ListItemComponentsPropsOverrides,
-        }}
-        onClick={(e) =>
-          isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
-        }
-        aria-disabled={undefined}
-        className={isRegionDisabled ? `${className} Mui-disabled` : className}
+      <Stack
+        sx={(theme) => ({
+          '&:hover .public-icon': {
+            color: `${theme.tokens.color.Neutrals.White}`,
+          },
+        })}
+        alignItems="center"
+        direction="row"
+        gap={1}
+        width="100%"
       >
-        <>
-          <Box alignItems="center" display="flex" flexGrow={1}>
-            <StyledFlagContainer>
-              <Flag country={region.country} />
-            </StyledFlagContainer>
-            {region.label} ({region.id})
-            {displayDistributedRegionIcon && (
-              <Box sx={visuallyHidden}>
-                &nbsp;(This region is a distributed region.)
-              </Box>
-            )}
-            {isRegionDisabled && isRegionDisabledReason && (
-              <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
-            )}
-          </Box>
-          {selected && <SelectedIcon visible />}
-          {displayDistributedRegionIcon && (
-            <TooltipIcon
-              icon={<DistributedRegion />}
-              status="other"
-              sxTooltipIcon={sxDistributedRegionIcon}
-              text="This region is a distributed region."
-            />
-          )}
-        </>
-      </StyledListItem>
-    </Tooltip>
+        {item.id === 'global' ? (
+          <PublicIcon
+            sx={(theme) => ({
+              color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
+            })}
+            className="public-icon"
+          />
+        ) : (
+          <Flag country={item.country} />
+        )}
+        {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
+        <Box flexGrow={1} />
+        {isGeckoLAEnabled && `(${item.id})`}
+      </Stack>
+    </ListItemOption>
   );
 };

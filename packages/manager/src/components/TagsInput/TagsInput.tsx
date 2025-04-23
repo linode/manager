@@ -1,15 +1,17 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import {
+  updateTagsSuggestionsData,
+  useAllTagsQuery,
+  useProfile,
+} from '@linode/queries';
+import { Autocomplete, Chip } from '@linode/ui';
+import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
 
-import Select, {
-  Item,
-  NoOptionsMessageProps,
-} from 'src/components/EnhancedSelect/Select';
-import { useProfile } from 'src/queries/profile/profile';
-import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface Tag {
   label: string;
@@ -46,7 +48,7 @@ export interface TagsInputProps {
   /**
    * Callback fired when the value changes.
    */
-  onChange: (selected: Item<string, string>[]) => void;
+  onChange: (selected: Tag[]) => void;
   /**
    * An error to display beneath the input.
    */
@@ -54,7 +56,7 @@ export interface TagsInputProps {
   /**
    * The value of the input.
    */
-  value: Item<string, string>[];
+  value: Tag[];
 }
 
 export const TagsInput = (props: TagsInputProps) => {
@@ -62,8 +64,6 @@ export const TagsInput = (props: TagsInputProps) => {
     disabled,
     hideLabel,
     label,
-    menuPlacement,
-    name,
     noMarginTop,
     onChange,
     tagError,
@@ -73,13 +73,13 @@ export const TagsInput = (props: TagsInputProps) => {
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
   const { data: profile } = useProfile();
-  const { data: accountTags, error: accountTagsError } = useTagSuggestions(
+  const { data: accountTags, error: accountTagsError } = useAllTagsQuery(
     !profile?.restricted
   );
 
   const queryClient = useQueryClient();
 
-  const accountTagItems: Item[] =
+  const accountTagItems: Tag[] =
     accountTags?.map((tag) => ({
       label: tag.label,
       value: tag.label,
@@ -89,13 +89,26 @@ export const TagsInput = (props: TagsInputProps) => {
     const newTag = { label: inputValue, value: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
-    if (inputValue.length < 3 || inputValue.length > 50) {
-      setErrors([
-        {
-          field: 'label',
-          reason: 'Length must be 3-50 characters',
-        },
-      ]);
+    const errors = [];
+
+    inputValue = inputValue.trim();
+
+    if (inputValue === '') {
+      errors.push({
+        field: 'label',
+        reason: 'Tag cannot be an empty',
+      });
+    }
+
+    if (inputValue.length < 1 || inputValue.length > 50) {
+      errors.push({
+        field: 'label',
+        reason: 'Length must be 1-50 characters',
+      });
+    }
+
+    if (errors.length > 0) {
+      setErrors(errors);
     } else {
       setErrors([]);
       onChange(updatedSelectedTags);
@@ -105,13 +118,30 @@ export const TagsInput = (props: TagsInputProps) => {
     }
   };
 
-  const getEmptyMessage = (value: NoOptionsMessageProps) => {
-    const { value: tags } = props;
-    if (tags.map((tag) => tag.value).includes(value.inputValue)) {
-      return 'This tag is already selected.';
-    } else {
-      return 'No results.';
+  const handleRemoveOption = (tagToRemove: Tag) => {
+    onChange(value.filter((t) => t.value !== tagToRemove.value));
+  };
+
+  const filterOptions = (
+    options: Tag[],
+    { inputValue }: { inputValue: string }
+  ) => {
+    const filtered = options.filter((o) =>
+      o.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+
+    const isExistingTag = options.some(
+      (o) => o.label.toLowerCase() === inputValue.toLowerCase()
+    );
+
+    if (inputValue !== '' && !isExistingTag) {
+      filtered.push({
+        label: `Create "${inputValue}"`,
+        value: inputValue,
+      });
     }
+
+    return filtered;
   };
 
   const errorMap = getErrorMap(['label'], errors);
@@ -128,21 +158,43 @@ export const TagsInput = (props: TagsInputProps) => {
         : undefined);
 
   return (
-    <Select
-      creatable
+    <Autocomplete
+      onChange={(_, newValue, reason, details) => {
+        const detailsOption = details?.option;
+        if (
+          reason === 'selectOption' &&
+          detailsOption?.label.includes(`Create "${detailsOption?.value}"`)
+        ) {
+          createTag(detailsOption.value);
+        } else {
+          setErrors([]);
+          onChange(newValue);
+        }
+      }}
+      renderTags={(tagValue, getTagProps) => {
+        return tagValue.map((option, index) => (
+          <Chip
+            {...getTagProps({ index })}
+            deleteIcon={<CloseIcon />}
+            key={index}
+            label={option.label}
+            onDelete={() => handleRemoveOption(option)}
+          />
+        ));
+      }}
+      autoHighlight
+      clearOnBlur
+      disableCloseOnSelect={false}
+      disabled={disabled}
       errorText={error}
-      hideLabel={hideLabel}
-      isDisabled={disabled}
-      isMulti={true}
+      filterOptions={filterOptions}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
       label={label || 'Add Tags'}
-      menuPlacement={menuPlacement}
-      name={name}
-      noMarginTop={noMarginTop}
-      noOptionsMessage={getEmptyMessage}
-      onChange={onChange}
-      onCreateOption={createTag}
+      multiple
+      noOptionsText={'No results.'}
       options={accountTagItems}
-      placeholder={'Type to choose or create a tag.'}
+      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
+      textFieldProps={{ hideLabel, noMarginTop }}
       value={value}
     />
   );

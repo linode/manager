@@ -1,17 +1,15 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { FormControlLabel, Toggle, TooltipIcon, Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
-import { MODE } from './types';
+
+import type { MODE } from './types';
+import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
 
 type LabelWithTooltipProps = {
   labelText: string;
@@ -29,12 +27,12 @@ const LabelWithTooltip = ({
 );
 
 interface Props {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;
   selectedRegions?: string[];
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const LimitedAccessControls = React.memo((props: Props) => {
@@ -43,7 +41,7 @@ export const LimitedAccessControls = React.memo((props: Props) => {
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

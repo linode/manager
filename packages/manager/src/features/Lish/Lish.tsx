@@ -1,31 +1,94 @@
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { Tab } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInitialRequests } from 'src/hooks/useInitialRequests';
-import {
-  useLinodeLishTokenQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
 
 import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
+import type { Tab } from 'src/components/Tabs/TabLinkList';
+
 const AUTH_POLLING_INTERVAL = 2000;
+
+export interface RetryLimiterInterface {
+  reset: () => void;
+  retryAllowed: () => boolean;
+}
+
+export const RetryLimiter = (
+  maxTries: number,
+  perTimeWindowMs: number
+): RetryLimiterInterface => {
+  let retryTimes: number[] = [];
+
+  return {
+    reset: (): void => {
+      retryTimes = [];
+    },
+    retryAllowed: (): boolean => {
+      const now = Date.now();
+      retryTimes.push(now);
+      const cutOffTime = now - perTimeWindowMs;
+      while (retryTimes.length && retryTimes[0] < cutOffTime) {
+        retryTimes.shift();
+      }
+      return retryTimes.length < maxTries;
+    },
+  };
+};
+
+export interface LishErrorInterface {
+  formatted: string;
+  grn: string;
+  isExpired: boolean;
+  reason: string;
+}
+
+export const ParsePotentialLishErrorString = (
+  s: null | string
+): LishErrorInterface | null => {
+  if (!s) {
+    return null;
+  }
+
+  let parsed = null;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    return null;
+  }
+
+  const grn = typeof parsed?.grn === 'string' ? parsed?.grn : '';
+  const grnFormatted = grn ? ` (${grn})` : '';
+
+  {
+    const reason = parsed?.reason;
+    if (parsed?.type === 'error' && typeof reason === 'string') {
+      const formattedPrefix = reason.indexOf(' ') >= 0 ? '' : 'Error code: ';
+      return {
+        formatted: formattedPrefix + reason + grnFormatted,
+        grn,
+        isExpired: reason.toLowerCase() === 'your session has expired.',
+        reason,
+      };
+    }
+  }
+  return null;
+};
 
 const Lish = () => {
   const history = useHistory();
 
-  const { isLoading: isMakingInitalRequests } = useInitialRequests();
+  const { isLoading: isMakingInitialRequests } = useInitialRequests();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
   const id = Number(linodeId);
@@ -41,11 +104,10 @@ const Lish = () => {
     error: tokenError,
     isLoading: isTokenLoading,
     refetch,
-  } = useLinodeLishTokenQuery(id);
+  } = useLinodeLishQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
-
-  const token = data?.lish_token;
+  const isLoading =
+    isLinodeLoading || isTokenLoading || isMakingInitialRequests;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
@@ -87,14 +149,15 @@ const Lish = () => {
     await refetch();
   };
 
-  if (isLoading) {
-    return <StyledCircleProgress />;
+  if (isLoading || !linode || !data) {
+    return <CircleProgress />;
   }
 
   if (linodeError) {
     return (
       <ErrorState
         errorText={linodeError?.[0]?.reason ?? 'Unable to load this Linode'}
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }
@@ -106,11 +169,12 @@ const Lish = () => {
           tokenError?.[0]?.reason ??
           'Unable to load a Lish token for this Linode'
         }
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
       />
     );
   }
 
-  return linode && token ? (
+  return (
     <StyledTabs
       index={
         type &&
@@ -123,16 +187,16 @@ const Lish = () => {
       <TabLinkList tabs={tabs} />
       <TabPanels>
         <SafeTabPanel data-qa-tab="Weblish" index={0}>
-          <Weblish linode={linode} refreshToken={refreshToken} token={token} />
+          <Weblish linode={linode} refreshToken={refreshToken} {...data} />
         </SafeTabPanel>
         {!isBareMetal && (
           <SafeTabPanel data-qa-tab="Glish" index={1}>
-            <Glish linode={linode} refreshToken={refreshToken} token={token} />
+            <Glish linode={linode} refreshToken={refreshToken} {...data} />
           </SafeTabPanel>
         )}
       </TabPanels>
     </StyledTabs>
-  ) : null;
+  );
 };
 
 export default Lish;
@@ -157,16 +221,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [role="tablist"]': {
     backgroundColor: theme.bg.offWhite,
     display: 'flex',
-    margin: 0,
+    marginBottom: '0 !important',
     overflow: 'hidden',
   },
-  backgroundColor: 'black',
-  margin: 0,
-}));
-
-export const StyledCircleProgress = styled(CircleProgress)(() => ({
-  left: '50%',
-  position: 'absolute',
-  top: '50%',
-  transform: 'translate(-50%, -50%)',
 }));

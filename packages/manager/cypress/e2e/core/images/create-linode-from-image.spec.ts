@@ -1,23 +1,23 @@
-import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { linodeFactory } from '@linode/utilities';
+import { imageFactory } from '@src/factories';
+import { mockGetAllImages } from 'support/intercepts/images';
+import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { imageFactory, linodeFactory } from '@src/factories';
 import { chooseRegion } from 'support/util/regions';
-import { ui } from 'support/ui';
 
 const region = chooseRegion();
 
 const mockLinode = linodeFactory.build({
-  region: region.id,
   id: 123456,
+  region: region.id,
 });
 
 const mockImage = imageFactory.build({
-  label: randomLabel(),
-  is_public: false,
   eol: null,
   id: `private/${randomNumber()}`,
+  is_public: false,
+  label: randomLabel(),
 });
 
 const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
@@ -33,29 +33,38 @@ const createLinodeWithImageMock = (url: string, preselectedImage: boolean) => {
   cy.visitWithLogin(url);
 
   cy.wait('@mockImage');
+
   if (!preselectedImage) {
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image');
-    });
-    cy.get(`[data-qa-image-select-item="${mockImage.id}"]`).within(() => {
-      cy.get('span').should('have.class', 'fl-tux');
-      fbtClick(mockImage.label);
-    });
+    cy.findByPlaceholderText('Choose an image')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(mockImage.label)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
   }
 
   ui.regionSelect.find().click();
   ui.regionSelect.findItemByRegionId(region.id).click();
 
-  fbtClick('Shared CPU');
-  getClick('[id="g6-nanode-1"][type="radio"]');
+  cy.findByText('Shared CPU').click();
+  cy.get('[id="g6-nanode-1"][type="radio"]').click();
   cy.get('[id="root-password"]').type(randomString(32));
-  getClick('[data-qa-deploy-linode="true"]');
+
+  ui.button
+    .findByTitle('Create Linode')
+    .scrollIntoView()
+    .should('be.visible')
+    .should('be.enabled')
+    .click();
 
   cy.wait('@mockLinodeRequest');
 
-  fbtVisible(mockLinode.label);
-  fbtVisible(region.label);
-  fbtVisible(`${mockLinode.id}`);
+  cy.findByText(mockLinode.label).should('be.visible');
+  cy.findByText(region.label).should('be.visible');
+  cy.findByText(`${mockLinode.id}`).should('be.visible');
 };
 
 describe('create linode from image, mocked data', () => {

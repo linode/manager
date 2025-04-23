@@ -3,17 +3,27 @@ import {
   deleteDatabase,
   getDatabaseBackups,
   getDatabaseCredentials,
+  getDatabaseEngineConfig,
   getDatabases,
   getEngineDatabase,
+  legacyRestoreWithBackup,
+  patchDatabase,
   resetDatabaseCredentials,
   restoreWithBackup,
+  resumeDatabase,
+  suspendDatabase,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { queryPresets } from '../base';
-import { profileQueries } from '../profile/profile';
+import { queryPresets, profileQueries } from '@linode/queries';
 import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,
@@ -27,6 +37,8 @@ import type {
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabaseEngineConfig,
+  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -37,6 +49,10 @@ import type {
 } from '@linode/api-v4';
 
 export const databaseQueries = createQueryKeys('databases', {
+  configs: (engine: Engine) => ({
+    queryFn: () => getDatabaseEngineConfig(engine),
+    queryKey: ['configs', engine],
+  }),
   database: (engine: Engine, id: number) => ({
     contextQueries: {
       backups: {
@@ -53,10 +69,15 @@ export const databaseQueries = createQueryKeys('databases', {
   }),
   databases: {
     contextQueries: {
-      all: {
-        queryFn: getAllDatabases,
-        queryKey: null,
-      },
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllDatabases(params, filter),
+        queryKey: [params, filter],
+      }),
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDatabases({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
         queryKey: [params, filter],
@@ -69,7 +90,12 @@ export const databaseQueries = createQueryKeys('databases', {
     queryKey: null,
   },
   types: {
-    queryFn: getAllDatabaseTypes,
+    contextQueries: {
+      all: (filter: Filter = {}) => ({
+        queryFn: () => getAllDatabaseTypes(filter),
+        queryKey: [filter],
+      }),
+    },
     queryKey: null,
   },
 });
@@ -84,17 +110,41 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
     refetchInterval: 20000,
   });
 
-export const useDatabasesQuery = (params: Params, filter: Filter) =>
+export const useDatabasesQuery = (
+  params: Params,
+  filter: Filter,
+  isEnabled: boolean | undefined
+) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    enabled: isEnabled,
+    placeholderData: keepPreviousData,
     // @TODO Consider removing polling
     refetchInterval: 20000,
   });
 
-export const useAllDatabasesQuery = (enabled: boolean = true) =>
+export const useDatabasesInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<DatabaseInstance>, APIError[]>({
+    ...databaseQueries.databases._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
+
+export const useAllDatabasesQuery = (
+  enabled: boolean = true,
+  params: Params = {},
+  filter: Filter = {}
+) =>
   useQuery<DatabaseInstance[], APIError[]>({
-    ...databaseQueries.databases._ctx.all,
+    ...databaseQueries.databases._ctx.all(params, filter),
     enabled,
   });
 
@@ -114,6 +164,22 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
+export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<void, APIError[], void>({
+    mutationFn: () => patchDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
 export const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[], CreateDatabasePayload>({
@@ -128,7 +194,9 @@ export const useCreateDatabaseMutation = () => {
         database
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };
@@ -148,10 +216,45 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    databaseQueries.database(engine, id)._ctx.backups
-  );
+export const useSuspendDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => suspendDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
+export const useResumeDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => resumeDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
+export const useDatabaseBackupsQuery = (
+  engine: Engine,
+  id: number,
+  enabled: boolean = false
+) =>
+  useQuery<ResourcePage<DatabaseBackup>, APIError[]>({
+    ...databaseQueries.database(engine, id)._ctx.backups,
+    enabled,
+  });
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>({
@@ -159,8 +262,23 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
+export const useDatabaseTypesQuery = (
+  filter: Filter = {},
+  enabled: boolean = true
+) =>
+  useQuery<DatabaseType[], APIError[]>({
+    ...databaseQueries.types._ctx.all(filter),
+    enabled,
+  });
+
+export const useDatabaseEngineConfig = (
+  engine: Engine,
+  enabled: boolean = true
+) =>
+  useQuery<DatabaseEngineConfig, APIError[]>({
+    ...databaseQueries.configs(engine),
+    enabled,
+  });
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
@@ -190,20 +308,35 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useRestoreFromBackupMutation = (
+export const useLegacyRestoreFromBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupId: number
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
-    mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
+    mutationFn: () => legacyRestoreWithBackup(engine, databaseId, backupId),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, databaseId).queryKey,
+      });
+    },
+  });
+};
+
+export const useRestoreFromBackupMutation = (
+  engine: Engine,
+  fork: DatabaseFork
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<Database, APIError[]>({
+    mutationFn: () => restoreWithBackup(engine, fork),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
       });
     },
   });

@@ -1,16 +1,21 @@
-import { SecurityQuestion } from '@linode/api-v4/lib/profile';
+import { Autocomplete, InputLabel, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect';
-import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+
+import type { SecurityQuestion } from '@linode/api-v4/lib/profile';
+
+export interface SelectQuestionOption {
+  label: string;
+  value: number;
+}
 
 interface Props {
   index: number;
   isReadOnly?: boolean;
   onClickEdit: () => void;
-  options: Item<number>[];
+  options: SelectQuestionOption[];
   questionResponse: SecurityQuestion | undefined;
   setFieldValue: (field: string, value: SecurityQuestion) => void;
 }
@@ -32,21 +37,21 @@ export const Question = (props: Props) => {
       }
     : undefined;
 
-  const name = `security_questions[${index}].id`;
   const label = `Question ${index + 1}`;
-  const onChange = (item: Item<number>) => {
-    setFieldValue(`security_questions[${index}]`, {
-      id: item.value,
-      question: item.label,
-      response: '',
-    });
-  };
+
   if (isReadOnly) {
     return (
       <>
         <InputLabel>{label}</InputLabel>
-        <Typography style={{ fontSize: '0.875rem' }} variant="body1">
-          {questionResponse?.question}
+        <Typography
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            fontSize: '0.875rem',
+          }}
+          variant="body1"
+        >
+          <MaskableText isToggleable text={questionResponse?.question} />
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
           </LinkButton>
@@ -55,14 +60,21 @@ export const Question = (props: Props) => {
     );
   }
   return (
-    <Select
+    <Autocomplete
+      onChange={(_, item) => {
+        setFieldValue(`security_questions[${index}]`, {
+          id: item.value,
+          question: item.label,
+          response: '',
+        });
+      }}
+      autoHighlight
       defaultValue={currentOption}
-      isClearable={false}
+      disableClearable
       label={label}
-      name={name}
-      onChange={onChange}
       options={options}
       placeholder="Select a question"
+      value={options.find((option) => option.value === questionResponse?.id)}
     />
   );
 };

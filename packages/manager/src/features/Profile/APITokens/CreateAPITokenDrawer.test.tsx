@@ -1,11 +1,10 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { appTokenFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
-import { profileFactory } from 'src/factories/profile';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -16,8 +15,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual<any>('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -32,16 +31,16 @@ const props = {
 
 describe('Create API Token Drawer', () => {
   it('checks API Token Drawer rendering', () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getAllByTestId, getByTestId, getByText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
     const drawerTitle = getByText('Add Personal Access Token');
     expect(drawerTitle).toBeVisible();
 
     const labelTitle = getByText(/Label/);
-    const labelField = getByTestId('textfield-input');
+    const labelField = getAllByTestId('textfield-input');
     expect(labelTitle).toBeVisible();
-    expect(labelField).toBeEnabled();
+    expect(labelField[0]).toBeEnabled();
 
     const expiry = getByText(/Expiry/);
     expect(expiry).toBeVisible();
@@ -67,19 +66,19 @@ describe('Create API Token Drawer', () => {
         })
       );
 
-      const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      const { getAllByTestId, getByLabelText, getByText } = renderWithTheme(
         <CreateAPITokenDrawer {...props} />
       );
 
-      const labelField = getByTestId('textfield-input');
-      await userEvent.type(labelField, 'my-test-token');
+      const labelField = getAllByTestId('textfield-input');
+      await userEvent.type(labelField[0], 'my-test-token');
 
       const selectAllNoAccessPermRadioButton = getByLabelText(
         'Select no access for all'
       );
       const submitBtn = getByText('Create Token');
 
-      expect(submitBtn).not.toHaveAttribute('aria-disabled', 'true');
+      expect(submitBtn).toHaveAttribute('aria-disabled', 'true');
       await userEvent.click(selectAllNoAccessPermRadioButton);
       await userEvent.click(submitBtn);
 
@@ -110,8 +109,10 @@ describe('Create API Token Drawer', () => {
   });
 
   it('Should default to 6 months for expiration', () => {
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
-    getByText('In 6 months');
+    const { getAllByRole } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />
+    );
+    expect(getAllByRole('combobox')[0]).toHaveDisplayValue('In 6 months');
   });
 
   it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {

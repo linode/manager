@@ -1,17 +1,17 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
+} from '@linode/api-v4';
+import { List, ListItem, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
-import { getAffinityTypeEnforcement } from '../utils';
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 
 import type { Linode, PlacementGroup, Region } from '@linode/api-v4';
@@ -37,11 +37,11 @@ export const PlacementGroupsRow = React.memo(
       region,
     } = props;
     const {
-      affinity_type,
       id,
       is_compliant,
-      is_strict,
       label,
+      placement_group_policy,
+      placement_group_type,
     } = placementGroup;
     const actions: Action[] = [
       {
@@ -72,10 +72,12 @@ export const PlacementGroupsRow = React.memo(
           )}
         </TableCell>
         <Hidden smDown>
-          <TableCell>{AFFINITY_TYPES[affinity_type]}</TableCell>
+          <TableCell>{PLACEMENT_GROUP_TYPES[placement_group_type]}</TableCell>
         </Hidden>
         <Hidden smDown>
-          <TableCell>{getAffinityTypeEnforcement(is_strict)}</TableCell>
+          <TableCell>
+            {PLACEMENT_GROUP_POLICIES[placement_group_policy]}
+          </TableCell>
         </Hidden>
         <TableCell data-testid={`placement-group-${id}-assigned-linodes`}>
           {assignedLinodes?.length === 0 ? (

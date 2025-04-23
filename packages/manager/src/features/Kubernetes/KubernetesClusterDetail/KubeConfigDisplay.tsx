@@ -1,20 +1,29 @@
-import { Box } from 'src/components/Box';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import {
+  Box,
+  CircleProgress,
+  Stack,
+  StyledLinkButton,
+  Typography,
+} from '@linode/ui';
+import { downloadFile } from '@linode/utilities';
+import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import DetailsIcon from 'src/assets/icons/code-file.svg';
+import CopyIcon from 'src/assets/icons/copy.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
-import { Typography } from 'src/components/Typography';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
-  useKubenetesKubeConfigQuery,
+  useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
-import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   clusterId: number;
@@ -34,21 +43,29 @@ const useStyles = makeStyles()((theme: Theme) => ({
     pointerEvents: 'none',
   },
   kubeconfigElement: {
+    '&:first-of-type': {
+      borderLeft: 'none',
+      paddingLeft: 0,
+    },
     '&:hover': {
       opacity: 0.7,
+      textDecoration: 'none',
     },
-    '&:last-child': {
-      borderRight: 'none',
+    '&:hover:not(:disabled)': {
+      textDecoration: 'none',
     },
     alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
+    borderLeft: `1px solid ${theme.tokens.color.Neutrals[40]}`,
     cursor: 'pointer',
     display: 'flex',
+    marginBottom: theme.spacing(1),
+    padding: `0 ${theme.spacing(0.6)}`,
   },
   kubeconfigElements: {
     alignItems: 'center',
     color: theme.palette.primary.main,
     display: 'flex',
+    flexWrap: 'wrap',
   },
   kubeconfigFileText: {
     color: theme.textColors.linkActiveLight,
@@ -56,13 +73,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
-    height: 16,
+    height: 14,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
-    width: 16,
+    width: 14,
   },
   label: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
 }));
@@ -73,15 +90,19 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return endpoint;
+    return <MaskableText isToggleable length="plaintext" text={endpoint} />;
   }
   if (endpointLoading) {
-    return 'Loading...';
+    return <Typography>Loading...</Typography>;
   }
   if (endpointError) {
-    return endpointError;
+    return <Typography>{endpointError}</Typography>;
   }
-  return 'Your endpoint will be displayed here once it is available.';
+  return (
+    <Typography>
+      Your endpoint will be displayed here once it is available.
+    </Typography>
+  );
 };
 
 export const KubeConfigDisplay = (props: Props) => {
@@ -96,7 +117,36 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { refetch } = useKubenetesKubeConfigQuery(clusterId);
+  const { refetch: getKubeConfig } = useKubernetesKubeConfigQuery(
+    clusterId,
+    false
+  );
+  const [isCopyTokenLoading, setIsCopyTokenLoading] = React.useState<boolean>(
+    false
+  );
+
+  const onCopyToken = async () => {
+    try {
+      setIsCopyTokenLoading(true);
+      const { data } = await getKubeConfig();
+      const token = data && data.match(/token:\s*(\S+)/);
+      if (token && token[1]) {
+        copy(token[1]);
+      } else {
+        enqueueSnackbar({
+          message: 'Unable to find token within the Kubeconfig',
+          variant: 'error',
+        });
+      }
+      setIsCopyTokenLoading(false);
+    } catch (error) {
+      enqueueSnackbar({
+        message: (error as APIError[])[0].reason,
+        variant: 'error',
+      });
+      setIsCopyTokenLoading(false);
+    }
+  };
 
   const {
     data: endpoints,
@@ -106,52 +156,73 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const downloadKubeConfig = async () => {
     try {
-      const { data } = await refetch();
+      const queryResult = await getKubeConfig();
 
-      if (data) {
-        downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
+      if (
+        Array.isArray(queryResult.error) &&
+        queryResult.error[0]?.reason?.includes(
+          'kubeconfig is not yet available'
+        )
+      ) {
+        enqueueSnackbar(
+          'Your cluster is still provisioning. Please try again in a few minutes.',
+          { variant: 'error' }
+        );
+        return;
       }
+
+      if (queryResult.isError) {
+        throw queryResult.error;
+      }
+
+      if (!queryResult.data) {
+        throw new Error('No kubeconfig data available');
+      }
+
+      downloadFile(`${clusterLabel}-kubeconfig.yaml`, queryResult.data);
     } catch (error) {
-      const errorText = getAPIErrorOrDefault(
-        error,
-        'Unable to download your kubeconfig'
-      )[0].reason;
+      const errorText =
+        error instanceof Error
+          ? error.message
+          : getAPIErrorOrDefault(error, 'Unable to download your kubeconfig')[0]
+              .reason;
 
       enqueueSnackbar(errorText, { variant: 'error' });
     }
   };
 
   const getEndpointToDisplay = (endpoints: string[]) => {
-    // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
-    return endpoints.find((thisResponse) =>
-      thisResponse.match(/linodelke\.net:443$/i)
+    // We are returning the endpoint with port 443 to be the most user-friendly, but if it doesn't exist, return the first endpoint available
+    return (
+      endpoints.find((thisResponse) =>
+        thisResponse.match(/linodelke\.net:443$/i)
+      ) ?? endpoints[0]
     );
   };
 
   return (
-    <>
-      <Grid xs={12}>
+    <Stack spacing={1}>
+      <Box>
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
         </Typography>
-        <Typography>
-          {renderEndpoint(
-            getEndpointToDisplay(
-              endpoints?.map((endpoint) => endpoint.endpoint) ?? []
-            ),
-            endpointsLoading,
-            endpointsError?.[0].reason
-          )}
-        </Typography>
-      </Grid>
-      <Grid xs={12}>
+        {renderEndpoint(
+          getEndpointToDisplay(
+            endpoints?.map((endpoint) => endpoint.endpoint) ?? []
+          ),
+          endpointsLoading,
+          endpointsError?.[0].reason
+        )}
+      </Box>
+      <Box>
         <Typography className={classes.label} style={{ marginTop: 8 }}>
           Kubeconfig:
         </Typography>
         <div className={classes.kubeconfigElements}>
-          <Box
+          <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={downloadKubeConfig}
+            aria-label={`Download kubeconfig for ${clusterLabel}`}
           >
             <DownloadIcon
               className={classes.kubeconfigIcons}
@@ -160,14 +231,35 @@ export const KubeConfigDisplay = (props: Props) => {
             <Typography className={classes.kubeconfigFileText}>
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
-          </Box>
-          <Box className={classes.kubeconfigElement} onClick={handleOpenDrawer}>
+          </StyledLinkButton>
+          <StyledLinkButton
+            className={classes.kubeconfigElement}
+            onClick={handleOpenDrawer}
+            aria-label="View kubeconfig details"
+          >
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
-          </Box>
-          <Box
+          </StyledLinkButton>
+          <StyledLinkButton
+            className={classes.kubeconfigElement}
+            onClick={onCopyToken}
+            aria-label="Copy kubeconfig token"
+          >
+            {isCopyTokenLoading ? (
+              <CircleProgress
+                className={classes.kubeconfigIcons}
+                noPadding
+                size="xs"
+              />
+            ) : (
+              <CopyIcon className={classes.kubeconfigIcons} />
+            )}
+            <Box className={classes.kubeconfigFileText}>Copy Token</Box>
+          </StyledLinkButton>
+          <StyledLinkButton
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
+            aria-label="Reset kubeconfig"
           >
             <ResetIcon
               className={cx({
@@ -183,9 +275,9 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Reset
             </Typography>
-          </Box>
+          </StyledLinkButton>
         </div>
-      </Grid>
-    </>
+      </Box>
+    </Stack>
   );
 };

@@ -11,17 +11,23 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+import type {
+  Filter,
+  Params,
+  ResourcePage as Page,
+  RequestOptions,
+} from '../types';
+import type {
   ObjectStorageBucket,
-  ObjectStorageBucketAccessRequest,
-  ObjectStorageBucketAccessResponse,
-  ObjectStorageBucketRequestPayload,
-  ObjectStorageBucketSSLRequest,
-  ObjectStorageBucketSSLResponse,
-  ObjectStorageDeleteBucketRequestPayload,
-  ObjectStorageObjectListParams,
-  ObjectStorageObjectListResponse,
+  ObjectStorageEndpoint,
+  UpdateObjectStorageBucketAccessPayload,
+  ObjectStorageBucketAccess,
+  CreateObjectStorageBucketPayload,
+  CreateObjectStorageBucketSSLPayload,
+  ObjectStorageBucketSSL,
+  DeleteObjectStorageBucketPayload,
+  GetObjectStorageObjectListPayload,
+  ObjectStorageObjectList,
 } from './types';
 
 /**
@@ -96,7 +102,7 @@ export const getBucketsInRegion = (
  * @param data { object } The label and clusterId of the new Bucket.
  *
  */
-export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
+export const createBucket = (data: CreateObjectStorageBucketPayload) =>
   Request<ObjectStorageBucket>(
     setURL(`${API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
@@ -113,7 +119,7 @@ export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
 export const deleteBucket = ({
   cluster,
   label,
-}: ObjectStorageDeleteBucketRequestPayload) =>
+}: DeleteObjectStorageBucketPayload) =>
   Request<ObjectStorageBucket>(
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
@@ -155,12 +161,12 @@ export const deleteBucketWithRegion = ({
 /**
  * Returns a list of Objects in a given Bucket.
  */
-export const getObjectList = (
-  clusterId: string,
-  bucketName: string,
-  params?: ObjectStorageObjectListParams
-) =>
-  Request<ObjectStorageObjectListResponse>(
+export const getObjectList = ({
+  clusterId,
+  bucket: bucketName,
+  params,
+}: GetObjectStorageObjectListPayload) =>
+  Request<ObjectStorageObjectList>(
     setMethod('GET'),
     setParams(params),
     setURL(
@@ -176,9 +182,9 @@ export const getObjectList = (
 export const uploadSSLCert = (
   clusterId: string,
   bucketName: string,
-  data: ObjectStorageBucketSSLRequest
+  data: CreateObjectStorageBucketSSLPayload
 ) =>
-  Request<ObjectStorageBucketSSLResponse>(
+  Request<ObjectStorageBucketSSL>(
     setMethod('POST'),
     setData(data, UploadCertificateSchema),
     setURL(
@@ -195,7 +201,7 @@ export const uploadSSLCert = (
  * the specified bucket, { ssl: false } otherwise.
  */
 export const getSSLCert = (clusterId: string, bucketName: string) =>
-  Request<ObjectStorageBucketSSLResponse>(
+  Request<ObjectStorageBucketSSL>(
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
@@ -227,7 +233,7 @@ export const deleteSSLCert = (clusterId: string, bucketName: string) =>
  * Returns access information (ACL, CORS) for a given Bucket.
  */
 export const getBucketAccess = (clusterId: string, bucketName: string) =>
-  Request<ObjectStorageBucketAccessResponse>(
+  Request<ObjectStorageBucketAccess>(
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
@@ -244,7 +250,7 @@ export const getBucketAccess = (clusterId: string, bucketName: string) =>
 export const updateBucketAccess = (
   clusterId: string,
   bucketName: string,
-  data: ObjectStorageBucketAccessRequest
+  params: UpdateObjectStorageBucketAccessPayload
 ) =>
   Request<{}>(
     setMethod('PUT'),
@@ -253,5 +259,18 @@ export const updateBucketAccess = (
         clusterId
       )}/${encodeURIComponent(bucketName)}/access`
     ),
-    setData(data, UpdateBucketAccessSchema)
+    setData(params, UpdateBucketAccessSchema)
+  );
+
+/**
+ * getObjectStorageEndpoints
+ *
+ * Returns a list of Object Storage Endpoints.
+ */
+export const getObjectStorageEndpoints = ({ filter, params }: RequestOptions) =>
+  Request<Page<ObjectStorageEndpoint>>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/object-storage/endpoints`),
+    setParams(params),
+    setXFilter(filter)
   );

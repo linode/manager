@@ -1,17 +1,19 @@
-import { SupportReply, SupportTicket } from '@linode/api-v4';
-import Avatar from '@mui/material/Avatar';
-import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import UserIcon from 'src/assets/icons/account.svg';
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Typography } from 'src/components/Typography';
+import { useProfile } from '@linode/queries';
 
 import { Hively, shouldRenderHively } from './Hively';
 import { TicketDetailText } from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
+
+import type { SupportReply, SupportTicket } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -23,7 +25,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   content: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,
     marginTop: theme.spacing(1),
@@ -34,7 +36,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   header: {
-    backgroundColor: theme.color.grey2,
+    backgroundColor:
+      theme.name === 'light' ? theme.color.grey2 : theme.color.grey7,
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
     minHeight: 40,
@@ -53,7 +56,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   userName: {
     color: theme.color.headline,
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    font: theme.font.bold,
     marginRight: 4,
     whiteSpace: 'nowrap',
   },
@@ -63,11 +66,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     height: 32,
     justifyContent: 'center',
-    marginTop: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
       height: 40,
-      marginRight: theme.spacing(1),
+      marginTop: theme.spacing(1),
       width: 40,
     },
     top: -2,
@@ -99,9 +103,13 @@ interface Data {
 export const ExpandableTicketPanel = React.memo((props: Props) => {
   const { classes } = useStyles();
 
+  const theme = useTheme();
+
   const { open, parentTicket, reply, ticket, ticketUpdated } = props;
 
   const [data, setData] = React.useState<Data | undefined>(undefined);
+
+  const { data: profile } = useProfile();
 
   React.useEffect(() => {
     if (!ticket && !reply) {
@@ -134,16 +142,18 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
     }
   }, [parentTicket, reply, ticket, ticketUpdated]);
 
-  const renderAvatar = (id: string) => {
+  const renderAvatar = () => {
     return (
       <div className={classes.userWrapper}>
         <Avatar
-          alt="Gravatar"
-          className={classes.leftIcon}
-          src={`https://gravatar.com/avatar/${id}?d=404`}
-        >
-          <UserIcon />
-        </Avatar>
+          color={
+            data?.username !== profile?.username
+              ? theme.palette.primary.dark
+              : undefined
+          }
+          sx={{ marginTop: 1 }}
+          username={data?.username === 'Linode' ? 'Akamai' : data?.username}
+        />
       </div>
     );
   };
@@ -158,12 +168,12 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   return (
     <Grid container wrap="nowrap">
-      <Grid>{renderAvatar(data.gravatar_id)}</Grid>
+      <Grid>{renderAvatar()}</Grid>
       <Grid className={classes.content}>
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>
             <Typography className={classes.userName} component="span">
-              {data.friendly_name}
+              {data.friendly_name === 'Linode' ? 'Akamai' : data.friendly_name}
             </Typography>
             {data.from_linode && !OFFICIAL_USERNAMES.includes(data.username) ? (
               <Typography

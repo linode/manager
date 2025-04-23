@@ -5,7 +5,7 @@ import { StatusIcon } from './StatusIcon';
 
 const meta: Meta<typeof StatusIcon> = {
   component: StatusIcon,
-  title: 'Components/StatusIcon',
+  title: 'Icons/StatusIcon',
 };
 
 type Story = StoryObj<typeof StatusIcon>;

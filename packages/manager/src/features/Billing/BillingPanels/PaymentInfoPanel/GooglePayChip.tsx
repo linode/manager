@@ -1,17 +1,18 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
+import { useClientToken } from '@linode/queries';
+import { CircleProgress } from '@linode/ui';
+import { useScript } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
+import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
-import { useScript } from 'src/hooks/useScript';
-import { useClientToken } from 'src/queries/account/payment';
+
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()(() => ({
   button: {

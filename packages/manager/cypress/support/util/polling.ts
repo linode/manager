@@ -22,9 +22,11 @@ import {
   BackoffMethod,
   BackoffOptions,
   FibonacciBackoffMethod,
+  SimpleBackoffMethod,
   attemptWithBackoff,
 } from './backoff';
 import { depaginate } from './paginate';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 /**
  * Describes a backoff configuration for a poll. This may be a partial BackoffOptions object,
@@ -103,9 +105,13 @@ export const poll = async <T>(
 /**
  * Polls a Linode with the given ID until it has the given status.
  *
+ * By default, polling will occur after 15 seconds have passed, and reattempts
+ * occur on a 5-second interval until the default Linode create timeout is reached.
+ * This behavior can be customized by passing an alternative `backoffMethod`.
+ *
  * @param linodeId - ID of Linode to poll.
  * @param desiredStatus - Desired status of Linode that is being polled.
- * @param backoffMethod - Backoff method implementation to manage re-attempts.
+ * @param backoffMethod - Optional backoff method for reattempts.
  * @param label - Optional label to assign to poll for logging and troubleshooting.
  *
  * @returns A Promise that resolves to the polled Linode's status or rejects on timeout.
@@ -121,10 +127,24 @@ export const pollLinodeStatus = async (
     return linode.status;
   };
 
+  // By default, wait 15 seconds before initial check then poll again every 5
+  // seconds until default Linode create timeout is reached.
+  const initialDelay = 15_000;
+  const interval = 5_000;
+  const maxAttempts = Math.ceil(
+    (LINODE_CREATE_TIMEOUT - initialDelay) / interval
+  );
+  const defaultBackoffMethod = new SimpleBackoffMethod(interval, {
+    initialDelay,
+    maxAttempts,
+  });
+
+  const backoff = backoffOptions ? backoffOptions : defaultBackoffMethod;
+
   const checkLinodeStatus = (status: LinodeStatus): boolean =>
     status === desiredStatus;
 
-  return poll(getLinodeStatus, checkLinodeStatus, backoffOptions, label);
+  return poll(getLinodeStatus, checkLinodeStatus, backoff, label);
 };
 
 /**

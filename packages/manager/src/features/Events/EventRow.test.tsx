@@ -1,34 +1,34 @@
-// TODO eventMessagesV2: delete when flag is removed
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import { eventFactory } from 'src/factories';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
-import { Row, RowProps } from './EventRow';
+import { EventRow } from './EventRow';
 
-const message = 'this is a message.';
-const props: RowProps = {
-  action: 'linode_boot',
-  message,
-  timestamp: DateTime.now(),
-  type: 'linode',
-  username: null,
-};
+import type { Event } from '@linode/api-v4/lib/account';
 
-describe('EventRow component', () => {
-  it('should render an event with a message', () => {
-    const { getByText } = renderWithTheme(
-      wrapWithTableBody(<Row {...props} />)
-    );
-
-    expect(getByText(message)).toBeInTheDocument();
+describe('EventRow', () => {
+  const mockEvent: Event = eventFactory.build({
+    action: 'tfa_enabled',
+    status: 'notification',
+    username: 'test_user',
   });
 
-  it("shouldn't render events without a message", () => {
-    const emptyMessageProps = { ...props, message: undefined };
-    const { container } = renderWithTheme(
-      wrapWithTableBody(<Row {...emptyMessageProps} />)
+  it('displays the correct data', () => {
+    resizeScreenSize(1600);
+    const { getByRole } = renderWithTheme(
+      wrapWithTableBody(<EventRow event={mockEvent} />)
     );
-    expect(container.closest('tr')).toBeNull();
+
+    expect(
+      getByRole('cell', {
+        name: /Two-factor authentication has been enabled./i,
+      })
+    ).toBeInTheDocument();
+    expect(getByRole('cell', { name: /test_user/i })).toBeInTheDocument();
   });
 });

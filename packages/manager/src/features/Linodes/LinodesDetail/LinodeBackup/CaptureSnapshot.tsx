@@ -1,17 +1,18 @@
+import {
+  Box,
+  Button,
+  FormControl,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { FormControl } from 'src/components/FormControl';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
+import { useLinodeBackupSnapshotMutation } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
@@ -29,8 +30,9 @@ export const CaptureSnapshot = (props: Props) => {
 
   const {
     error: snapshotError,
-    isLoading: isSnapshotLoading,
+    isPending: isSnapshotLoading,
     mutateAsync: takeSnapshot,
+    reset,
   } = useLinodeBackupSnapshotMutation(linodeId);
 
   const [
@@ -51,6 +53,11 @@ export const CaptureSnapshot = (props: Props) => {
     },
   });
 
+  const handleClose = () => {
+    setIsSnapshotConfirmationDialogOpen(false);
+    reset();
+  };
+
   const hasErrorFor = getErrorMap(['label'], snapshotError);
 
   return (
@@ -65,19 +72,14 @@ export const CaptureSnapshot = (props: Props) => {
         manual snapshot will not be overwritten by automatic backups.
       </Typography>
       <FormControl>
-        {hasErrorFor.none && (
-          <Notice spacingBottom={8} variant="error">
-            {hasErrorFor.none}
-          </Notice>
-        )}
         <StyledBox>
           <TextField
-            sx={{ minWidth: 275 }}
             data-qa-manual-name
             errorText={hasErrorFor.label}
             label="Name Snapshot"
             name="label"
             onChange={snapshotForm.handleChange}
+            sx={{ minWidth: 275 }}
             value={snapshotForm.values.label}
           />
           <Button
@@ -91,8 +93,9 @@ export const CaptureSnapshot = (props: Props) => {
         </StyledBox>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
+        error={hasErrorFor.none}
         loading={isSnapshotLoading}
-        onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
+        onClose={handleClose}
         onSnapshot={() => snapshotForm.handleSubmit()}
         open={isSnapshotConfirmationDialogOpen}
       />

@@ -1,4 +1,17 @@
-import { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import {
+  useAllLinodeDisksQuery,
+  useLinodeDiskCreateMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  FormHelperText,
+  InputAdornment,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
   CreateLinodeDiskSchema,
@@ -7,24 +20,18 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Drawer } from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
+import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
+import { NotFound } from 'src/components/NotFound';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskCreateMutation,
-} from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
+import { LinodePermissionsError } from '../LinodePermissionsError';
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
+
+import type { Image } from '@linode/api-v4';
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import type { Mode } from 'src/components/ModeSelect/ModeSelect';
 
 type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
@@ -58,6 +65,12 @@ export const CreateDiskDrawer = (props: Props) => {
   const { data: linode } = useLinodeQuery(linodeId, open);
 
   const { data: disks } = useAllLinodeDisksQuery(linodeId, open);
+
+  const disabled = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
   const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
     linodeId
@@ -123,8 +136,14 @@ export const CreateDiskDrawer = (props: Props) => {
   ];
 
   return (
-    <Drawer onClose={onClose} open={open} title="Create Disk">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Create Disk"
+    >
       <form onSubmit={formik.handleSubmit}>
+        {disabled && <LinodePermissionsError />}
         <ModeSelect
           modes={modeList}
           onChange={(e) => setSelectedMode(e.target.value as CreateMode)}
@@ -140,6 +159,7 @@ export const CreateDiskDrawer = (props: Props) => {
         )}
         <TextField
           data-qa-label
+          disabled={disabled}
           errorGroup="linode-disk-drawer"
           errorText={formik.touched.label ? formik.errors.label : undefined}
           label="Label"
@@ -161,6 +181,7 @@ export const CreateDiskDrawer = (props: Props) => {
               (option) => option.label === formik.values.filesystem
             )}
             disableClearable
+            disabled={disabled}
             label="Filesystem"
             onBlur={formik.handleBlur}
             options={fileSystemOptions}
@@ -171,8 +192,8 @@ export const CreateDiskDrawer = (props: Props) => {
             imageFieldError={
               formik.touched.image ? formik.errors.image : undefined
             }
-            onImageChange={(selected: Item) =>
-              formik.setFieldValue('image', selected?.value ?? null)
+            onImageChange={(image: Image) =>
+              formik.setFieldValue('image', image?.id ?? null)
             }
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)
@@ -184,8 +205,9 @@ export const CreateDiskDrawer = (props: Props) => {
               formik.setFieldValue('authorized_users', value)
             }
             authorizedUsers={formik.values.authorized_users}
-            linodeId={linodeId}
+            disabled={Boolean(disabled)}
             password={formik.values.root_pass}
+            selectedImage={formik.values.image}
           />
         )}
         <TextField
@@ -193,6 +215,7 @@ export const CreateDiskDrawer = (props: Props) => {
             endAdornment: <InputAdornment position="end">MB</InputAdornment>,
           }}
           data-qa-disk-size
+          disabled={disabled}
           errorText={formik.touched.size ? formik.errors.size : undefined}
           label="Size"
           name="size"
@@ -208,6 +231,7 @@ export const CreateDiskDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit-disk-form',
+            disabled,
             label: 'Create',
             loading: formik.isSubmitting,
             type: 'submit',

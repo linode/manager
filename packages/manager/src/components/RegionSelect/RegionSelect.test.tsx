@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { regionFactory } from 'src/factories';
+// @todo: modularization - Replace 'testHelpers' with 'testHelpers' from the shared package once available.
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RegionSelect } from './RegionSelect';
@@ -15,13 +16,14 @@ describe('RegionSelect', () => {
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
-    onChange: vi.fn(),
     helperText: '',
+    isGeckoLAEnabled: false,
     label: '',
+    onChange: vi.fn(),
     regions,
     required: false,
-    value: '',
     tooltipText: '',
+    value: '',
     width: 100,
   };
 
@@ -63,27 +65,5 @@ describe('RegionSelect', () => {
       <RegionSelect {...props} disabled={true} />
     );
     expect(getByTestId('textfield-input')).toBeDisabled();
-  });
-
-  it('should render a Select component with distributed region text', () => {
-    const newProps = {
-      ...props,
-      showDistributedRegionIconHelperText: true,
-    };
-    const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(
-      getByTestId('region-select-distributed-region-text')
-    ).toBeInTheDocument();
-  });
-
-  it('should render a Select component with no distributed region text', () => {
-    const newProps = {
-      ...props,
-      showDistributedRegionIconHelperText: false,
-    };
-    const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(
-      queryByTestId('region-select-distributed-region-text')
-    ).not.toBeInTheDocument();
   });
 });

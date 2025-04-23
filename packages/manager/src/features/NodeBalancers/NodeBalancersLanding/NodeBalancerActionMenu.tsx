@@ -1,26 +1,27 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
 interface Props {
-  label: string;
   nodeBalancerId: number;
-  toggleDialog: (nodeBalancerId: number, label: string) => void;
 }
 
 export const NodeBalancerActionMenu = (props: Props) => {
+  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const history = useHistory();
 
-  const { label, nodeBalancerId, toggleDialog } = props;
+  const { nodeBalancerId } = props;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -31,20 +32,35 @@ export const NodeBalancerActionMenu = (props: Props) => {
   const actions: Action[] = [
     {
       onClick: () => {
-        history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
+        navigate({
+          params: {
+            id: String(nodeBalancerId),
+          },
+          to: `/nodebalancers/$id/configurations`,
+        });
       },
       title: 'Configurations',
     },
     {
       onClick: () => {
-        history.push(`/nodebalancers/${nodeBalancerId}/settings`);
+        navigate({
+          params: {
+            id: String(nodeBalancerId),
+          },
+          to: `/nodebalancers/$id/settings`,
+        });
       },
       title: 'Settings',
     },
     {
       disabled: isNodeBalancerReadOnly,
       onClick: () => {
-        toggleDialog(nodeBalancerId, label);
+        navigate({
+          params: {
+            id: String(nodeBalancerId),
+          },
+          to: `/nodebalancers/$id/delete`,
+        });
       },
       title: 'Delete',
       tooltip: isNodeBalancerReadOnly

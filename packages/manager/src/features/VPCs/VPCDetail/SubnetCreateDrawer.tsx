@@ -1,20 +1,31 @@
-import { createSubnetSchema } from '@linode/validation';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
+import {
+  useCreateSubnetMutation,
+  useGrants,
+  useProfile,
+  useVPCQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  FormHelperText,
+  Notice,
+  Stack,
+  TextField,
+} from '@linode/ui';
+import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { NotFound } from 'src/components/NotFound';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
-  SubnetFieldState,
+  RESERVED_IP_NUMBER,
+  calculateAvailableIPv4sRFC1918,
   getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
-import { SubnetNode } from '../VPCCreate/SubnetNode';
+import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -33,92 +44,122 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
-    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+    vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
   );
 
-  const [errorMap, setErrorMap] = React.useState<
-    Record<string, string | undefined>
-  >({});
-
   const {
-    isLoading,
+    isPending,
     mutateAsync: createSubnet,
-    reset,
+    reset: resetRequest,
   } = useCreateSubnetMutation(vpcId);
 
-  const onCreateSubnet = async () => {
+  const {
+    control,
+    formState: { errors, isDirty, isSubmitting },
+    handleSubmit,
+    reset: resetForm,
+    setError,
+    watch,
+  } = useForm<CreateSubnetPayload>({
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchemaIPv4),
+    values: {
+      ipv4: recommendedIPv4,
+      label: '',
+    },
+  });
+
+  const ipv4 = watch('ipv4');
+  const numberOfAvailableIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
+
+  const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
-      await createSubnet({ ipv4: values.ip.ipv4, label: values.label });
-      onClose();
+      await createSubnet(values);
+      handleClose();
     } catch (errors) {
-      const newErrors = getErrorMap(['label', 'ipv4'], errors);
-      setErrorMap(newErrors);
-      setValues({
-        ip: {
-          ...values.ip,
-          ipv4Error: newErrors.ipv4,
-        },
-        label: values.label,
-        labelError: newErrors.label,
-      });
+      for (const error of errors) {
+        setError(error?.field ?? 'root', { message: error.reason });
+      }
     }
   };
 
-  const { dirty, handleSubmit, resetForm, setValues, values } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      ip: {
-        availIPv4s: 256,
-        ipv4: recommendedIPv4,
-      },
-      // @TODO VPC: add IPv6 when that is supported
-      label: '',
-    } as SubnetFieldState,
-    onSubmit: onCreateSubnet,
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: createSubnetSchema,
-  });
-
-  React.useEffect(() => {
-    if (open) {
-      resetForm();
-      reset();
-      setErrorMap({});
-    }
-  }, [open, reset, resetForm]);
+  const handleClose = () => {
+    resetForm();
+    resetRequest();
+    onClose();
+  };
 
   return (
-    <Drawer onClose={onClose} open={open} title={'Create Subnet'}>
-      {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title={'Create Subnet'}
+    >
+      {errors.root?.message && (
+        <Notice spacingBottom={8} text={errors.root.message} variant="error" />
+      )}
       {userCannotAddSubnet && (
         <Notice
+          spacingBottom={8}
+          spacingTop={16}
           text={
             "You don't have permissions to create a new Subnet. Please contact an account administrator for details."
           }
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
-      <form onSubmit={handleSubmit}>
-        <SubnetNode
-          onChange={(subnetState) => {
-            setValues(subnetState);
-          }}
-          disabled={userCannotAddSubnet}
-          subnet={values}
-        />
+      <form onSubmit={handleSubmit(onCreateSubnet)}>
+        <Stack>
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter a subnet label"
+                disabled={userCannotAddSubnet}
+                errorText={fieldState.error?.message}
+                label="Subnet Label"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                placeholder="Enter a subnet label"
+                value={field.value}
+              />
+            )}
+            control={control}
+            name="label"
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter an IPv4"
+                disabled={userCannotAddSubnet}
+                errorText={fieldState.error?.message}
+                label="Subnet IP Address Range"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                value={field.value}
+              />
+            )}
+            control={control}
+            name="ipv4"
+          />
+          {numberOfAvailableIPs && (
+            <FormHelperText>
+              Number of Available IP Addresses:{' '}
+              {numberOfAvailableIPs > RESERVED_IP_NUMBER
+                ? (numberOfAvailableIPs - RESERVED_IP_NUMBER).toLocaleString()
+                : 0}
+            </FormHelperText>
+          )}
+        </Stack>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-drawer-button',
-            disabled: !dirty || userCannotAddSubnet,
+            disabled: !isDirty || userCannotAddSubnet,
             label: 'Create Subnet',
-            loading: isLoading,
-            onClick: onCreateSubnet,
+            loading: isPending || isSubmitting,
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
       </form>
     </Drawer>

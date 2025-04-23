@@ -1,5 +1,6 @@
 import { determineIPType } from '@linode/validation';
 
+// eslint-disable-next-line sonarjs/no-hardcoded-ip
 export const DEFAULT_SUBNET_IPV4_VALUE = '10.0.0.0/24';
 export const RESERVED_IP_NUMBER = 4;
 
@@ -7,26 +8,9 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'label', label: 'Linode Label' },
   { key: 'id', label: 'Linode ID' },
   { key: 'ipv4', label: 'IPv4' },
-  { key: 'interfaceData.ipv4.vpc', label: 'IPv4 VPC' },
-  { key: 'interfaceData.ip_ranges', label: 'IPv4 VPC Ranges' },
+  { key: 'vpcIPv4', label: 'IPv4 VPC' },
+  { key: 'vpcRanges', label: 'IPv4 VPC Ranges' },
 ];
-
-// @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
-export interface SubnetIPState {
-  availIPv4s?: number;
-  ipv4?: string;
-  ipv4Error?: string;
-  ipv6?: string;
-  ipv6Error?: string;
-}
-
-export interface SubnetFieldState {
-  ip: SubnetIPState;
-  label: string;
-  labelError?: string;
-}
-
-export type SubnetIPType = 'ipv4' | 'ipv6';
 
 /**
  * Maps subnet mask length to number of theoretically available IPs.
@@ -35,7 +19,7 @@ export type SubnetIPType = 'ipv4' | 'ipv6';
  * - To get available IPs for our VPCs, subtract 4 (the number of reserved IPs)
  *  from the given number
  */
-export const SubnetMaskToAvailIPv4s = {
+export const SubnetMaskToAvailIPv4s: Record<number, number> = {
   0: 4294967296,
   1: 2147483648,
   2: 1073741824,
@@ -107,7 +91,9 @@ export const calculateAvailableIPv4sRFC1918 = (
   const [, mask] = address.split('/');
 
   // if the IP is not in the RFC1918 ranges, hold off on displaying number of available IPs
-  return isValidRFC1918IPv4(address) ? SubnetMaskToAvailIPv4s[mask] : undefined;
+  return isValidRFC1918IPv4(address)
+    ? SubnetMaskToAvailIPv4s[Number(mask)]
+    : undefined;
 };
 
 /**
@@ -126,12 +112,8 @@ export const getRecommendedSubnetIPv4 = (
   lastRecommendedIPv4: string,
   otherIPv4s: string[]
 ): string => {
-  const [
-    firstOctet,
-    secondOctet,
-    thirdOctet,
-    fourthOctet,
-  ] = lastRecommendedIPv4.split('.');
+  const [firstOctet, secondOctet, thirdOctet, fourthOctet] =
+    lastRecommendedIPv4.split('.');
   const parsedThirdOctet = parseInt(thirdOctet, 10);
   let ipv4ToReturn = '';
 

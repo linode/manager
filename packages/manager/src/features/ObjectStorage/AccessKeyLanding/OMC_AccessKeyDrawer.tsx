@@ -1,45 +1,46 @@
-import { Region } from '@linode/api-v4';
+import { useAccountSettings } from '@linode/queries';
 import {
-  AccessType,
-  ObjectStorageBucket,
-  ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  Scope,
-  UpdateObjectStorageKeyRequest,
-} from '@linode/api-v4/lib/object-storage';
+  ActionsPanel,
+  CircleProgress,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { sortByString } from '@linode/utilities';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
-} from '@linode/validation/lib/objectStorageKeys.schema';
-import { FormikProps, useFormik } from 'formik';
+} from '@linode/validation';
+import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useObjectStorageBuckets } from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { getRegionsByRegionId } from 'src/utilities/regions';
-import { sortByString } from 'src/utilities/sort-by';
+import { NotFound } from 'src/components/NotFound';
+import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import { AccessKeyRegions } from './AccessKeyRegions/AccessKeyRegions';
 import { LimitedAccessControls } from './LimitedAccessControls';
-import { MODE } from './types';
 import {
   generateUpdatePayload,
   hasAccessBeenSelectedForAllBuckets,
   hasLabelOrRegionsChanged,
 } from './utils';
+
+import type { MODE } from './types';
+import type {
+  CreateObjectStorageKeyPayload,
+  ObjectStorageBucket,
+  ObjectStorageKey,
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+  Region,
+  UpdateObjectStorageKeyPayload,
+} from '@linode/api-v4';
+import type { FormikProps } from 'formik';
 
 export interface AccessKeyDrawerProps {
   isRestrictedUser: boolean;
@@ -48,21 +49,22 @@ export interface AccessKeyDrawerProps {
   objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
   onSubmit: (
-    values: ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest,
+    values: CreateObjectStorageKeyPayload | UpdateObjectStorageKeyPayload,
     formikProps: FormikProps<
-      ObjectStorageKeyRequest | UpdateObjectStorageKeyRequest
+      CreateObjectStorageKeyPayload | UpdateObjectStorageKeyPayload
     >
   ) => void;
   open: boolean;
 }
 
 // Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
-export interface DisplayedAccessKeyScope extends Omit<Scope, 'permissions'> {
-  permissions: AccessType | null;
+export interface DisplayedAccessKeyScope
+  extends Omit<ObjectStorageKeyBucketAccess, 'permissions'> {
+  permissions: ObjectStorageKeyBucketAccessPermissions | null;
 }
 
 export interface FormState {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   label: string;
   regions: string[];
 }
@@ -74,20 +76,20 @@ export interface FormState {
  * sorted by region.
  */
 
-export const sortByRegion = (regionLookup: { [key: string]: Region }) => (
-  a: DisplayedAccessKeyScope,
-  b: DisplayedAccessKeyScope
-) => {
-  if (!a.region || !b.region) {
-    return 0;
-  }
+export const sortByRegion =
+  (regionLookup: { [key: string]: Region }) =>
+  (a: DisplayedAccessKeyScope, b: DisplayedAccessKeyScope) => {
+    if (!a.region || !b.region) {
+      return 0;
+    }
 
-  return sortByString(
-    regionLookup[a.region].label,
-    regionLookup[b.region].label,
-    'asc'
-  );
-};
+    return sortByString(
+      regionLookup[a.region].label,
+      regionLookup[b.region].label,
+      'asc'
+    );
+  };
+
 export const getDefaultScopes = (
   buckets: ObjectStorageBucket[],
   regionLookup: { [key: string]: Region } = {}
@@ -102,40 +104,16 @@ export const getDefaultScopes = (
     .sort(sortByRegion(regionLookup));
 
 export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const {
-    isRestrictedUser,
-    mode,
-    objectStorageKey,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
+  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
+    props;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
-  const { data: regions } = useRegionsQuery();
-
-  const regionsLookup = regions && getRegionsByRegionId(regions);
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
+  const { regionsByIdMap } = useObjectStorageRegions();
 
   const {
     data: objectStorageBuckets,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    isObjMultiClusterEnabled,
-    regions: regionsSupportingObjectStorage,
-  });
+  } = useObjectStorageBuckets();
 
   const { data: accountSettings } = useAccountSettings();
 
@@ -174,6 +152,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
       // If any/all permissions are 'none' or null, don't include them in the response.
       const access = values.bucket_access ?? [];
+
       const payload = limitedAccessChecked
         ? {
             ...values,
@@ -184,6 +163,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             ),
           }
         : { ...values, bucket_access: null };
+
       const updatePayload = generateUpdatePayload(values, initialValues);
 
       if (mode !== 'creating') {
@@ -216,7 +196,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     );
   };
 
-  const handleScopeUpdate = (newScopes: Scope[]) => {
+  const handleScopeUpdate = (newScopes: ObjectStorageKeyBucketAccess[]) => {
     formik.setFieldValue('bucket_access', newScopes);
   };
 
@@ -226,9 +206,10 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
     const bucketsInRegions = buckets?.filter(
       (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
     );
+
     formik.setFieldValue(
       'bucket_access',
-      getDefaultScopes(bucketsInRegions, regionsLookup)
+      getDefaultScopes(bucketsInRegions, regionsByIdMap)
     );
   };
 
@@ -239,6 +220,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}
@@ -259,8 +241,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
           {isRestrictedUser && (
             <Notice
-              important
-              text="You don't have bucket_access to create an Access Key. Please contact an account administrator for details."
+              text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
               variant="error"
             />
           )}
@@ -271,7 +252,7 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               Generate an Access Key for use with an{' '}
               <Link
                 className="h-u"
-                to="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools"
               >
                 S3-compatible client
               </Link>
@@ -311,10 +292,9 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               );
               formik.setFieldValue(
                 'bucket_access',
-                getDefaultScopes(bucketsInRegions, regionsLookup)
+                getDefaultScopes(bucketsInRegions, regionsByIdMap)
               );
               formik.setFieldValue('regions', values);
-              formik.setFieldTouched('regions', true, true);
             }}
             disabled={isRestrictedUser}
             name="regions"

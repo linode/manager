@@ -9,11 +9,17 @@ import {
   updateDomain,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { profileQueries } from './profile/profile';
+import { profileQueries } from '@linode/queries';
 
 import type {
   APIError,
@@ -27,7 +33,7 @@ import type {
   ResourcePage,
   UpdateDomainPayload,
 } from '@linode/api-v4';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 export const getAllDomains = () =>
   getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
@@ -54,6 +60,11 @@ const domainQueries = createQueryKeys('domains', {
         queryFn: getAllDomains,
         queryKey: null,
       },
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDomains({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getDomains(params, filter),
         queryKey: [params, filter],
@@ -66,7 +77,7 @@ const domainQueries = createQueryKeys('domains', {
 export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>({
     ...domainQueries.domains._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useAllDomainsQuery = (enabled: boolean = false) =>
@@ -75,8 +86,26 @@ export const useAllDomainsQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDomainQuery = (id: number) =>
-  useQuery<Domain, APIError[]>(domainQueries.domain(id));
+export const useDomainsInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Domain>, APIError[]>({
+    ...domainQueries.domains._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
+
+export const useDomainQuery = (id: number, enabled: boolean = true) =>
+  useQuery<Domain, APIError[]>({
+    ...domainQueries.domain(id),
+    enabled,
+  });
 
 export const useDomainRecordsQuery = (id: number) =>
   useQuery<DomainRecord[], APIError[]>(domainQueries.domain(id)._ctx.records);
@@ -186,7 +215,7 @@ export const useUpdateDomainMutation = () => {
 
 export const domainEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   const domainId = event.entity?.id;
 
@@ -196,17 +225,17 @@ export const domainEventsHandler = ({
 
   if (event.action.startsWith('domain_record')) {
     // Invalidate the domain's records because they may have changed
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domain(domainId)._ctx.records.queryKey,
     });
   } else {
     // Invalidate paginated lists
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domains.queryKey,
     });
 
     // Invalidate the domain's details
-    queryClient.invalidateQueries({
+    invalidateQueries({
       exact: true,
       queryKey: domainQueries.domain(domainId).queryKey,
     });

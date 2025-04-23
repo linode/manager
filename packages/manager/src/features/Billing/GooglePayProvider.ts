@@ -10,7 +10,7 @@ import { VariantType } from 'notistack';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
@@ -24,9 +24,7 @@ let googlePaymentInstance: GooglePayment;
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    resolve({ transactionState: 'SUCCESS' });
-  });
+  return Promise.resolve({ transactionState: 'SUCCESS' });
 };
 
 export const initGooglePaymentInstance = async (
@@ -114,7 +112,9 @@ export const gPay = async (
       nonce,
       usd: transactionInfo.totalPrice as string,
     });
-    queryClient.invalidateQueries(accountQueries.payments._def);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.payments._def,
+    });
     const message = {
       text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
       variant: 'success' as VariantType,
@@ -128,7 +128,9 @@ export const gPay = async (
       is_default: true,
       type: 'payment_method_nonce',
     });
-    queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.paymentMethods.queryKey,
+    });
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

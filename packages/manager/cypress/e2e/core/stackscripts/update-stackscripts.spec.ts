@@ -1,14 +1,17 @@
+import { getImages } from '@linode/api-v4';
+import { stackScriptFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { randomLabel, randomPhrase } from 'support/util/random';
 import {
   mockGetStackScript,
+  mockGetStackScripts,
   mockUpdateStackScript,
   mockUpdateStackScriptError,
-  mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
-import { stackScriptFactory } from '@src/factories';
-import { StackScript } from '@linode/api-v4';
+import { depaginate } from 'support/util/paginate';
+import { randomLabel, randomPhrase } from 'support/util/random';
+
+import type { Image, StackScript } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
@@ -22,6 +25,20 @@ const stackScriptErrorNoShebang =
 // StackScript error that is expected to appear when UDFs with non-alphanumeric names are supplied.
 const stackScriptErrorUdfAlphanumeric =
   'UDF names can only contain alphanumeric and underscore characters.';
+
+/**
+ * Sets the StackScript field's value programmatically rather than via simulated typing.
+ *
+ * Cypress's typing operation is slow for long strings, so we can save several
+ * seconds by setting the value directly, then simulating a couple keystrokes.
+ *
+ * @param script - Script contents to input.
+ */
+const inputStackScript = (script: string) => {
+  cy.get('[data-qa-textfield-label="Script"]').should('be.visible').click();
+
+  cy.focused().invoke('val', script).type(' {backspace}');
+};
 
 /**
  * Fills out the StackScript edition form.
@@ -43,28 +60,22 @@ const fillOutStackscriptForm = (
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
   cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
-    .click()
-    .clear()
-    .type(label);
+    .click();
+  cy.focused().clear();
+  cy.focused().type(label);
 
   if (description) {
-    cy.findByLabelText('Description')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(description);
+    cy.findByLabelText('Description').should('be.visible').click();
+    cy.focused().clear();
+    cy.focused().type(description);
   }
 
-  cy.get('[data-qa-multi-select="Select an Image"]')
-    .should('be.visible')
-    .click()
-    .type(`${targetImage}{enter}`);
+  ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
+  ui.autocompletePopper.findByTitle(targetImage).should('be.visible').click();
+  ui.autocomplete.findByLabel('Target Images').click(); // Close autocomplete popper
 
   // Insert a script with invalid UDF data.
-  cy.get('[data-qa-textfield-label="Script"]')
-    .should('be.visible')
-    .click()
-    .type(script);
+  inputStackScript(script);
 };
 
 authenticate();
@@ -78,7 +89,18 @@ describe('Update stackscripts', () => {
   it('updates a StackScript', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
-    const stackscriptImage = 'Alpine 3.17';
+
+    /**
+     * Returns a Promise that resolves to the first non-deprecated Alpine Image found.
+     */
+    const getAlpineImage = async () => {
+      const allPublicImages = await depaginate((page) =>
+        getImages({ page }, { is_public: true })
+      );
+      return allPublicImages.find(
+        (image) => image.vendor === 'Alpine' && image.deprecated === false
+      );
+    };
 
     const stackScripts = stackScriptFactory.buildList(2);
     // Import StackScript type from Linode API package.
@@ -86,8 +108,8 @@ describe('Update stackscripts', () => {
       // Spread operator clones an object...
       {
         ...stackScripts[0],
-        label: stackscriptLabel,
         description: stackscriptDesc,
+        label: stackscriptLabel,
       },
       { ...stackScripts[1] },
     ];
@@ -114,13 +136,15 @@ describe('Update stackscripts', () => {
       .should('be.disabled');
 
     // Submit StackScript edit form with invalid contents, confirm error messages.
-    cy.fixture(stackscriptNoShebangPath).then((stackscriptWithNoShebang) => {
-      fillOutStackscriptForm(
-        stackscriptLabel,
-        stackscriptDesc,
-        stackscriptImage,
-        stackscriptWithNoShebang
-      );
+    cy.defer(getAlpineImage).then((alpineImage: Image) => {
+      cy.fixture(stackscriptNoShebangPath).then((stackscriptWithNoShebang) => {
+        fillOutStackscriptForm(
+          stackscriptLabel,
+          stackscriptDesc,
+          alpineImage.label,
+          stackscriptWithNoShebang
+        );
+      });
     });
 
     mockUpdateStackScriptError(
@@ -138,11 +162,7 @@ describe('Update stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript edit form.
     cy.fixture(stackscriptUdfInvalidPath).then((stackScriptUdfInvalid) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdfInvalid);
+      inputStackScript(stackScriptUdfInvalid);
     });
 
     mockUpdateStackScriptError(
@@ -160,11 +180,7 @@ describe('Update stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript edit form.
     cy.fixture(stackscriptUdfPath).then((stackScriptUdf) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdf);
+      inputStackScript(stackScriptUdf);
     });
 
     updatedStackScripts[0].label = stackscriptLabel;
@@ -179,15 +195,10 @@ describe('Update stackscripts', () => {
       .should('be.enabled')
       .click();
     cy.wait('@updateStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
-
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-      });
+    ui.toast.assertMessage(
+      `Successfully updated StackScript ${updatedStackScripts[0].label}`
+    );
+    cy.url().should('endWith', `/stackscripts/${updatedStackScripts[0].id}`);
   });
 
   /*
@@ -199,6 +210,9 @@ describe('Update stackscripts', () => {
       is_public: false,
     });
     mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
@@ -214,7 +228,7 @@ describe('Update stackscripts', () => {
       .should('be.visible')
       .click();
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
         ui.button.findByTitle('Cancel').should('be.visible').click();
@@ -240,6 +254,7 @@ describe('Update stackscripts', () => {
       .findByTitle('Make StackScript Public')
       .should('be.visible')
       .click();
+    cy.wait('@getStackScript');
     const updatedStackScript = { ...stackScripts[0] };
     updatedStackScript.is_public = true;
     mockUpdateStackScript(updatedStackScript.id, updatedStackScript).as(
@@ -249,13 +264,10 @@ describe('Update stackscripts', () => {
       'mockGetStackScripts'
     );
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Yes, make me a star!')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Confirm').should('be.visible').click();
       });
     cy.wait('@mockUpdateStackScript');
     cy.wait('@mockGetStackScripts');

@@ -1,10 +1,8 @@
+import { Box, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   centerCheckbox?: boolean;
@@ -20,16 +18,9 @@ export const EUAgreementCheckbox = (props: Props) => {
   const { centerCheckbox, checked, className, onChange } = props;
   const theme = useTheme();
 
-  const baseCheckboxStyle = {
-    [theme.breakpoints.up('md')]: {
-      marginLeft: '-8px',
-    },
-  };
-
   const checkboxStyle = centerCheckbox
-    ? baseCheckboxStyle
+    ? {}
     : {
-        ...baseCheckboxStyle,
         marginTop: '-5px',
       };
 
@@ -56,7 +47,7 @@ export const EUAgreementCheckbox = (props: Props) => {
       <Typography
         component="label"
         htmlFor="gdpr-checkbox"
-        style={{ marginLeft: 4 }}
+        style={{ marginLeft: 16 }}
       >
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">

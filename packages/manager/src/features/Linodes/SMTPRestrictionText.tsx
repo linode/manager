@@ -1,14 +1,16 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
-import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+
+import type { Linode } from '@linode/api-v4';
 
 export interface SMTPRestrictionTextProps {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
+  linode?: Linode;
   supportLink?: {
     id: number;
     label: string;
@@ -16,14 +18,17 @@ export interface SMTPRestrictionTextProps {
 }
 
 export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
-  const { supportLink } = props;
+  const { linode, supportLink } = props;
   const { data: account } = useAccount();
+
+  const displayRestrictionText =
+    linode === undefined
+      ? !account?.capabilities.includes('SMTP Enabled')
+      : !linode.capabilities?.includes('SMTP Enabled');
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
-  const text = !accountCreatedAfterRestrictions(
-    account?.active_since
-  ) ? null : (
+  const text = displayRestrictionText ? (
     <Typography variant="body1">
       SMTP ports may be restricted on this Linode. Need to send email? Review
       our{' '}
@@ -46,26 +51,7 @@ export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
       )}
       .
     </Typography>
-  );
+  ) : null;
 
-  // eslint-disable-next-line
-  return <>{props.children({ text })}</>;
-};
-
-export const accountCreatedAfterRestrictions = (_accountCreated?: string) => {
-  // Default to `true` for bad input.
-  if (!_accountCreated) {
-    return true;
-  }
-
-  const restrictionsImplemented = new Date(
-    MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED
-  ).getTime();
-  const accountCreated = new Date(_accountCreated).getTime();
-
-  if (isNaN(accountCreated)) {
-    return true;
-  }
-
-  return accountCreated >= restrictionsImplemented;
+  return props.children({ text });
 };

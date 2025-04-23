@@ -1,11 +1,13 @@
-import { Subnet } from '@linode/api-v4';
+import { useDeleteSubnetMutation } from '@linode/queries';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteSubnetMutation } from 'src/queries/vpcs/vpcs';
+
+import type { Subnet } from '@linode/api-v4';
 
 interface Props {
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
@@ -13,11 +15,11 @@ interface Props {
 }
 
 export const SubnetDeleteDialog = (props: Props) => {
-  const { onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, vpcId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteSubnet,
     reset,
   } = useDeleteSubnetMutation(vpcId, subnet?.id ?? -1);
@@ -45,8 +47,10 @@ export const SubnetDeleteDialog = (props: Props) => {
         type: 'Subnet',
       }}
       errors={error}
+      expand
+      isFetching={isFetching}
       label="Subnet Label"
-      loading={isLoading}
+      loading={isPending}
       onClick={onDeleteSubnet}
       onClose={onClose}
       open={open}

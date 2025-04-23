@@ -1,7 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Typography } from 'src/components/Typography';
+import Grid from '@mui/material/Grid2';
 
 export const StyledWrapperGrid = styled(Grid, { label: 'StyledWrapperGrid' })(
   ({ theme }) => ({

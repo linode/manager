@@ -11,8 +11,10 @@ import {
 import type { PlanInformationProps } from './PlanInformation';
 
 const mockProps: PlanInformationProps = {
+  flow: 'linode',
   hasMajorityOfPlansDisabled: false,
   hasSelectedRegion: true,
+  isAPLEnabled: true,
   isSelectedRegionEligibleForPlan: false,
   planType: 'standard',
 };
@@ -25,6 +27,12 @@ describe('PlanInformation', () => {
   it('should render GPUNotice when planType is "gpu"', () => {
     renderWithTheme(<PlanInformation {...mockProps} planType="gpu" />);
     const element = screen.getByTestId('gpu-notice-error');
+    expect(element).toBeInTheDocument();
+  });
+
+  it('should render APLNotice when planType is "shared" and APL is enabled', () => {
+    renderWithTheme(<PlanInformation {...mockProps} planType="shared" />);
+    const element = screen.getByTestId('apl-notice');
     expect(element).toBeInTheDocument();
   });
 

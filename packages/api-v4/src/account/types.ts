@@ -59,29 +59,51 @@ export interface Account {
 
 export type BillingSource = 'linode' | 'akamai';
 
-export type AccountCapability =
-  | 'Akamai Cloud Load Balancer'
-  | 'CloudPulse'
-  | 'Block Storage'
-  | 'Cloud Firewall'
-  | 'Disk Encryption'
-  | 'Kubernetes'
-  | 'Linodes'
-  | 'LKE HA Control Planes'
-  | 'Machine Images'
-  | 'Managed Databases'
-  | 'NodeBalancers'
-  | 'Object Storage Access Key Regions'
-  | 'Object Storage'
-  | 'Placement Group'
-  | 'Support Ticket Severity'
-  | 'Vlans'
-  | 'VPCs';
+export const accountCapabilities = [
+  'Akamai Cloud Load Balancer',
+  'Akamai Cloud Pulse',
+  'Block Storage',
+  'Block Storage Encryption',
+  'Cloud Firewall',
+  'CloudPulse',
+  'Disk Encryption',
+  'Kubernetes',
+  'Kubernetes Enterprise',
+  'Linodes',
+  'Linode Interfaces',
+  'LKE HA Control Planes',
+  'LKE Network Access Control List (IP ACL)',
+  'Machine Images',
+  'Managed Databases',
+  'Managed Databases Beta',
+  'NETINT Quadra T1U',
+  'NodeBalancers',
+  'Object Storage Access Key Regions',
+  'Object Storage Endpoint Types',
+  'Object Storage',
+  'Placement Group',
+  'SMTP Enabled',
+  'Support Ticket Severity',
+  'Vlans',
+  'VPCs',
+] as const;
+
+export type AccountCapability = (typeof accountCapabilities)[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
   unavailable: Capabilities[];
 }
+
+export const linodeInterfaceAccountSettings = [
+  'legacy_config_only',
+  'legacy_config_default_but_linode_allowed',
+  'linode_default_but_legacy_config_allowed',
+  'linode_only',
+] as const;
+
+export type LinodeInterfaceAccountSetting =
+  (typeof linodeInterfaceAccountSettings)[number];
 
 export interface AccountSettings {
   managed: boolean;
@@ -89,6 +111,7 @@ export interface AccountSettings {
   network_helper: boolean;
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
+  interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
 }
 
 export interface ActivePromotion {
@@ -175,17 +198,21 @@ export interface Grant {
 }
 export type GlobalGrantTypes =
   | 'account_access'
+  | 'add_databases'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'
   | 'add_linodes'
   | 'add_longview'
+  | 'add_databases'
+  | 'add_kubernetes'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'
   | 'add_vpcs'
   | 'cancel_account'
   | 'child_account_access'
+  | 'add_buckets'
   | 'longview_subscription';
 
 export interface GlobalGrants {
@@ -241,6 +268,7 @@ export type AgreementType = 'eu_model' | 'privacy_policy';
 export interface Agreements {
   eu_model: boolean;
   privacy_policy: boolean;
+  billing_agreement: boolean;
 }
 
 export type NotificationType =
@@ -250,6 +278,7 @@ export type NotificationType =
   | 'reboot_scheduled'
   | 'outage'
   | 'maintenance'
+  | 'maintenance_scheduled'
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
@@ -257,7 +286,8 @@ export type NotificationType =
   | 'promotion'
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
-  | 'volume_migration_imminent';
+  | 'volume_migration_imminent'
+  | 'tax_id_verifying';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -305,6 +335,7 @@ export const EventActionKeys = [
   'database_scale',
   'database_update_failed',
   'database_update',
+  'database_migrate',
   'database_upgrade',
   'disk_create',
   'disk_delete',
@@ -343,6 +374,9 @@ export const EventActionKeys = [
   'image_delete',
   'image_update',
   'image_upload',
+  'interface_create',
+  'interface_delete',
+  'interface_update',
   'ipaddress_update',
   'ipv6pool_add',
   'ipv6pool_delete',
@@ -433,6 +467,7 @@ export const EventActionKeys = [
   'tag_create',
   'tag_delete',
   'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'ticket_attachment_upload',
@@ -461,7 +496,7 @@ export const EventActionKeys = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionKeys[number];
+export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
   | 'scheduled'
@@ -591,8 +626,12 @@ export interface AccountBeta {
   label: string;
   started: string;
   id: string;
-  ended?: string;
-  description?: string;
+  ended: string | null;
+  description: string | null;
+  /**
+   * The datetime the account enrolled into the beta
+   * @example 2024-10-23T14:22:29
+   */
   enrolled: string;
 }
 

@@ -1,58 +1,58 @@
-import { useTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
-  append,
-  clone,
-  compose,
-  defaultTo,
-  lensPath,
-  over,
-  pathOr,
-} from 'ramda';
-import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
-import { SelectRegionPanel } from 'src/components/SelectRegionPanel/SelectRegionPanel';
-import { Tag, TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import {
   useNodeBalancerTypesQuery,
   useNodebalancerCreateMutation,
-} from 'src/queries/nodebalancers';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
+  Accordion,
+  ActionsPanel,
+  Box,
+  Button,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
+import { scrollErrorIntoView } from '@linode/utilities';
+import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
+import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
+import * as React from 'react';
+
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorMessage } from 'src/components/ErrorMessage';
+import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
+import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
+import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
+import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_DC_PRICING,
+  PRICE_ERROR_TOOLTIP_TEXT,
+} from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
 } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
@@ -64,6 +64,8 @@ import {
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -97,6 +99,12 @@ const defaultFieldsStates = {
 };
 
 const NodeBalancerCreate = () => {
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+  const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: regions } = useRegionsQuery();
@@ -104,30 +112,23 @@ const NodeBalancerCreate = () => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
-  const history = useHistory();
+  const [nodeBalancerFields, setNodeBalancerFields] =
+    React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [
-    nodeBalancerFields,
-    setNodeBalancerFields,
-  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
-
-  const [
-    deleteConfigConfirmDialog,
-    setDeleteConfigConfirmDialog,
-  ] = React.useState<{
-    errors?: APIError[];
-    idxToDelete?: number;
-    open: boolean;
-    submitting: boolean;
-  }>(defaultDeleteConfigConfirmDialogState);
+  const [deleteConfigConfirmDialog, setDeleteConfigConfirmDialog] =
+    React.useState<{
+      errors?: APIError[];
+      idxToDelete?: number;
+      open: boolean;
+      submitting: boolean;
+    }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
@@ -158,16 +159,15 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
 
-  const removeNodeBalancerConfigNode = (configIdx: number) => (
-    nodeIdx: number
-  ) =>
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs];
-      newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
-        (_, idx) => idx !== nodeIdx
-      );
-      return { ...prev, configs: newConfigs };
-    });
+  const removeNodeBalancerConfigNode =
+    (configIdx: number) => (nodeIdx: number) =>
+      setNodeBalancerFields((prev) => {
+        const newConfigs = [...prev.configs];
+        newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
+          (_, idx) => idx !== nodeIdx
+        );
+        return { ...prev, configs: newConfigs };
+      });
 
   const setNodeValue = (
     cidx: number,
@@ -188,6 +188,12 @@ const NodeBalancerCreate = () => {
     nodeIdx: number,
     value: string
   ) => setNodeValue(configIdx, nodeIdx, 'label', value);
+
+  const onNodeModeChange = (
+    configIdx: number,
+    nodeIdx: number,
+    value: string
+  ) => setNodeValue(configIdx, nodeIdx, 'mode', value);
 
   const onNodeAddressChange = (
     configIdx: number,
@@ -296,7 +302,10 @@ const NodeBalancerCreate = () => {
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
-        history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
+        navigate({
+          params: { id: String(nodeBalancer.id) },
+          to: '/nodebalancers/$id/summary',
+        });
         // Analytics Event
         sendCreateNodeBalancerEvent(`Region: ${nodeBalancer.region}`);
       })
@@ -342,7 +351,13 @@ const NodeBalancerCreate = () => {
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
   };
 
-  const onConfigValueChange = (configId: number, key: string, value: any) => {
+  const onConfigValueChange = <
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors,
+  >(
+    configId: number,
+    key: Key,
+    value: NodeBalancerConfigFieldsWithStatusAndErrors[Key]
+  ) => {
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
       newConfigs[configId][key] = value;
@@ -417,8 +432,9 @@ const NodeBalancerCreate = () => {
     selectedRegionId: nodeBalancerFields.region ?? '',
   });
 
-  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
-    ?.label;
+  const regionLabel = regions?.find(
+    (r) => r.id === nodeBalancerFields.region
+  )?.label;
 
   const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
@@ -472,73 +488,98 @@ const NodeBalancerCreate = () => {
       />
       {generalError && !isRestricted && (
         <Notice spacingTop={8} variant="error">
-          {generalError}
+          <ErrorMessage
+            entity={{ type: 'nodebalancer_id' }}
+            message={generalError}
+          />
         </Notice>
       )}
       {isRestricted && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'create',
             resourceType: 'NodeBalancers',
           })}
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
-      <Paper>
-        <TextField
-          disabled={isRestricted}
-          errorText={hasErrorFor('label')}
-          label={'NodeBalancer Label'}
-          noMarginTop
-          onChange={labelChange}
-          value={nodeBalancerFields.label || ''}
-        />
-        <TagsInput
-          value={
-            nodeBalancerFields.tags
-              ? nodeBalancerFields.tags.map((tag) => ({
-                  label: tag,
-                  value: tag,
-                }))
-              : []
+      <Stack spacing={2}>
+        <Paper>
+          <TextField
+            disabled={isRestricted}
+            errorText={hasErrorFor('label')}
+            label={'NodeBalancer Label'}
+            noMarginTop
+            onChange={labelChange}
+            value={nodeBalancerFields.label || ''}
+          />
+          <TagsInput
+            value={
+              nodeBalancerFields.tags
+                ? nodeBalancerFields.tags.map((tag) => ({
+                    label: tag,
+                    value: tag,
+                  }))
+                : []
+            }
+            disabled={isRestricted}
+            onChange={tagsChange}
+            tagError={hasErrorFor('tags')}
+          />
+        </Paper>
+        <Paper>
+          <Stack
+            alignItems="flex-start"
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+            justifyContent="space-between"
+          >
+            <RegionSelect
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
+              currentCapability="NodeBalancers"
+              disableClearable
+              errorText={hasErrorFor('region')}
+              isGeckoLAEnabled={isGeckoLAEnabled}
+              noMarginTop
+              onChange={(e, region) => regionChange(region?.id ?? '')}
+              regions={regions ?? []}
+              value={nodeBalancerFields.region ?? ''}
+            />
+            <DocsLink
+              href="https://www.linode.com/pricing"
+              label={DOCS_LINK_LABEL_DC_PRICING}
+            />
+          </Stack>
+        </Paper>
+        <SelectFirewallPanel
+          handleFirewallChange={(firewallId: number) => {
+            setNodeBalancerFields((prev) => ({
+              ...prev,
+              firewall_id: firewallId > 0 ? firewallId : undefined,
+            }));
+          }}
+          helperText={
+            <Typography>
+              Assign an existing Firewall to this NodeBalancer to control
+              inbound network traffic.{' '}
+              <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+            </Typography>
           }
           disabled={isRestricted}
-          onChange={tagsChange}
-          tagError={hasErrorFor('tags')}
+          entityType="nodebalancer"
+          selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
-      </Paper>
-      <SelectRegionPanel
-        currentCapability="NodeBalancers"
-        disabled={isRestricted}
-        error={hasErrorFor('region')}
-        handleSelection={regionChange}
-        selectedId={nodeBalancerFields.region}
-      />
-      <SelectFirewallPanel
-        handleFirewallChange={(firewallId: number) => {
-          setNodeBalancerFields((prev) => ({
-            ...prev,
-            firewall_id: firewallId > 0 ? firewallId : undefined,
-          }));
-        }}
-        helperText={
-          <Typography>
-            Assign an existing Firewall to this NodeBalancer to control inbound
-            network traffic.{' '}
-            <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
-          </Typography>
-        }
-        disabled={isRestricted}
-        entityType="nodebalancer"
-        selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
-      />
+      </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
-          const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
-            value: any
-          ) => onConfigValueChange(idx, key, value);
+          const onChange =
+            (key: keyof NodeBalancerConfigFieldsWithStatus) => (value: any) =>
+              onConfigValueChange(idx, key, value);
 
           return (
             <Accordion
@@ -571,6 +612,9 @@ const NodeBalancerCreate = () => {
                 onNodeLabelChange={(nodeIndex, value) =>
                   onNodeLabelChange(idx, nodeIndex, value)
                 }
+                onNodeModeChange={(nodeIndex, value) =>
+                  onNodeModeChange(idx, nodeIndex, value)
+                }
                 onNodePortChange={(nodeIndex, value) =>
                   onNodePortChange(idx, nodeIndex, value)
                 }
@@ -581,6 +625,9 @@ const NodeBalancerCreate = () => {
                   onChange('protocol')(value);
                   afterProtocolUpdate(idx);
                 }}
+                onUdpCheckPortChange={(value) =>
+                  onChange('udp_check_port')(value)
+                }
                 addNode={addNodeBalancerConfigNode(idx)}
                 algorithm={nodeBalancerFields.configs[idx].algorithm!}
                 checkBody={nodeBalancerFields.configs[idx].check_body!}
@@ -612,6 +659,7 @@ const NodeBalancerCreate = () => {
                 removeNode={removeNodeBalancerConfigNode(idx)}
                 sessionStickiness={nodeBalancerFields.configs[idx].stickiness!}
                 sslCertificate={nodeBalancerFields.configs[idx].ssl_cert!}
+                udpCheckPort={nodeBalancerFields.configs[idx].udp_check_port!}
               />
             </Accordion>
           );
@@ -656,7 +704,7 @@ const NodeBalancerCreate = () => {
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          loading={isLoading}
+          loading={isPending}
           onClick={onCreate}
           tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
@@ -692,9 +740,9 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom = (p1: (number | string)[]) => (
-  p2: (number | string)[]
-) => lensPath([...p1, ...p2]);
+export const lensFrom =
+  (p1: (number | string)[]) => (p2: (number | string)[]) =>
+    lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;
@@ -738,7 +786,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
       }
   */
   return errors.reduce((acc: any, error: APIError) => {
-    const errorFields = pathOr('', ['field'], error).split('|');
+    const errorFields = error?.field?.split('|') ?? [''];
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
     );

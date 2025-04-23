@@ -56,7 +56,7 @@ describe('LandingHeader', () => {
     const { getByText } = renderWithTheme(
       <LandingHeader
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/products/compute/compute-instances/faqs/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
       />
     );
     expect(getByText('Docs')).toBeInTheDocument();

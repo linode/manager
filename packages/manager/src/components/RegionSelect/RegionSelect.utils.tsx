@@ -1,47 +1,70 @@
-import {
-  CONTINENT_CODE_TO_CONTINENT,
-  Capabilities,
-  RegionSite,
-} from '@linode/api-v4';
+import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
 
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
   GetRegionOptionAvailability,
-  SupportedDistributedRegionTypes,
+  RegionFilterValue,
 } from './RegionSelect.types';
-import type { AccountAvailability, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
-interface RegionSelectOptionsOptions {
+interface RegionSelectOptions {
   currentCapability: Capabilities | undefined;
-  regionFilter?: RegionSite;
+  forcefullyShownRegionIds?: Set<string>;
+  regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
+  forcefullyShownRegionIds,
   regionFilter,
   regions,
-}: RegionSelectOptionsOptions) => {
+}: RegionSelectOptions) => {
   return regions
     .filter((region) => {
+      if (forcefullyShownRegionIds?.has(region.id)) {
+        return true;
+      }
+
       if (
         currentCapability &&
         !region.capabilities.includes(currentCapability)
       ) {
         return false;
       }
-      if (regionFilter && region.site_type !== regionFilter) {
-        return false;
+      if (regionFilter) {
+        const [, distributedContinentCode] = regionFilter.split('distributed-');
+        // Filter distributed regions by geographical area
+        if (distributedContinentCode && distributedContinentCode !== 'ALL') {
+          const group = getRegionCountryGroup(region);
+          return (
+            region.site_type === 'distributed' &&
+            CONTINENT_CODE_TO_CONTINENT[
+              distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
+            ] === group
+          );
+        }
+        return regionFilter.includes(region.site_type);
       }
       return true;
     })
     .sort((region1, region2) => {
       const region1Group = getRegionCountryGroup(region1);
       const region2Group = getRegionCountryGroup(region2);
+
+      // Global group comes first
+      if (region1Group === 'global') {
+        return -1;
+      }
+      if (region2Group === 'global') {
+        return 1;
+      }
 
       // North America group comes first
       if (
@@ -62,17 +85,22 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // Then we group by country
-      if (region1.country < region2.country) {
-        return 1;
-      }
-      if (region1.country > region2.country) {
-        return -1;
+      // Group US first
+      if (region1.country === 'us' || region2.country === 'us') {
+        if (region1.country < region2.country) {
+          return 1;
+        }
+        if (region1.country > region2.country) {
+          return -1;
+        }
       }
 
-      // If regions are in the same group or country, sort alphabetically by label
+      // Then we group by label
       if (region1.label < region2.label) {
         return -1;
+      }
+      if (region1.label > region2.label) {
+        return 1;
       }
 
       return 1;
@@ -113,15 +141,12 @@ export const isRegionOptionUnavailable = ({
  * @returns a boolean indicating whether or not the create type supports distributed regions.
  */
 export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
-  const supportedDistributedRegionTypes: SupportedDistributedRegionTypes[] = [
-    'Distributions',
-    'StackScripts',
+  const supportedDistributedRegionTypes = [
+    'OS',
+    'Images',
+    undefined, // /linodes/create route
   ];
-  return (
-    supportedDistributedRegionTypes.includes(
-      createType as SupportedDistributedRegionTypes
-    ) || typeof createType === 'undefined' // /linodes/create route
-  );
+  return supportedDistributedRegionTypes.includes(createType);
 };
 
 /**
@@ -136,5 +161,5 @@ export const getIsDistributedRegion = (
   const region = regionsData.find(
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
-  return region?.site_type === 'distributed' || region?.site_type === 'edge';
+  return region?.site_type === 'distributed';
 };

@@ -1,21 +1,18 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Notice, Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { isToday as _isToday } from 'src/utilities/isToday';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
-import { WithStartAndEnd } from '../../../request.types';
+import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import {
-  StyledTimeRangeSelect,
-  StyledTypography,
-} from '../CommonStyles.styles';
 import { ApacheGraphs } from './ApacheGraphs';
+
+import type { WithStartAndEnd } from '../../../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   clientAPIKey?: string;
@@ -71,7 +68,7 @@ export const Apache = React.memo((props: Props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-apache-metrics-with-linode-longview#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the Apache Longview app.
@@ -83,7 +80,7 @@ export const Apache = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Apache'} />
-      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} xs={12}>
+      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} size={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -95,20 +92,16 @@ export const Apache = React.memo((props: Props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
+            sx={{ width: 250 }}
           />
         </Box>
       </Grid>
-      <Grid
-        className="py0"
-        sx={{ boxSizing: 'border-box', margin: '0' }}
-        xs={12}
-      >
+      <Grid size={12} sx={{ boxSizing: 'border-box', margin: '0', py: 0 }}>
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}

@@ -1,9 +1,10 @@
-import { Theme } from '@mui/material/styles';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -14,12 +15,13 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useTrustedDevicesQuery } from 'src/queries/profile/profile';
+import { useTrustedDevicesQuery } from '@linode/queries';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -87,8 +89,12 @@ const TrustedDevices = () => {
     return data?.data.map((device) => {
       return (
         <TableRow key={device.id}>
-          <TableCell>{device.user_agent}</TableCell>
-          <TableCell>{device.last_remote_addr}</TableCell>
+          <TableCell>
+            <MaskableText isToggleable text={device.user_agent} />
+          </TableCell>
+          <TableCell>
+            <MaskableText isToggleable text={device.last_remote_addr} />
+          </TableCell>
           <TableCell>
             <DateTimeDisplay value={device.last_authenticated} />
           </TableCell>

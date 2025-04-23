@@ -1,16 +1,22 @@
-import { User, createUser } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { createUser } from '@linode/api-v4/lib/account';
+import {
+  ActionsPanel,
+  Drawer,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+} from '@linode/ui';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
+import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+
+import type { User } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { RouteComponentProps } from 'react-router-dom';
 
 interface Props {
   onClose: () => void;
@@ -29,6 +35,64 @@ interface State {
 interface CreateUserDrawerProps extends Props, RouteComponentProps<{}> {}
 
 class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
+  handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      email: e.target.value,
+    });
+  };
+
+  handleChangeRestricted = () => {
+    this.setState({
+      restricted: !this.state.restricted,
+    });
+  };
+
+  handleChangeUsername = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    this.setState({
+      username: e.target.value,
+    });
+  };
+
+  onSubmit = () => {
+    const {
+      history: { push },
+      onClose,
+      refetch,
+    } = this.props;
+    const { email, restricted, username } = this.state;
+    this.setState({ errors: [], submitting: true });
+    createUser({ email, restricted, username })
+      .then((user: User) => {
+        this.setState({ submitting: false });
+        onClose();
+        if (user.restricted) {
+          push(`/account/users/${username}/permissions`, {
+            newUsername: user.username,
+          });
+        }
+        refetch();
+      })
+      .catch((errResponse) => {
+        const errors = getAPIErrorOrDefault(
+          errResponse,
+          'Error creating user.'
+        );
+        this.setState({ errors, submitting: false });
+      });
+  };
+
+  state: State = {
+    email: '',
+    errors: [],
+    restricted: false,
+    submitting: false,
+    username: '',
+  };
+
   componentDidUpdate(prevProps: CreateUserDrawerProps) {
     if (this.props.open === true && prevProps.open === false) {
       this.setState({
@@ -52,7 +116,12 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Drawer onClose={onClose} open={open} title="Add a User">
+      <Drawer
+        NotFoundComponent={NotFound}
+        onClose={onClose}
+        open={open}
+        title="Add a User"
+      >
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           data-qa-create-username
@@ -113,64 +182,6 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
       </Drawer>
     );
   }
-
-  handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      email: e.target.value,
-    });
-  };
-
-  handleChangeRestricted = () => {
-    this.setState({
-      restricted: !this.state.restricted,
-    });
-  };
-
-  handleChangeUsername = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    this.setState({
-      username: e.target.value,
-    });
-  };
-
-  onSubmit = () => {
-    const {
-      history: { push },
-      onClose,
-      refetch,
-    } = this.props;
-    const { email, restricted, username } = this.state;
-    this.setState({ errors: [], submitting: true });
-    createUser({ email, restricted, username })
-      .then((user: User) => {
-        this.setState({ submitting: false });
-        onClose();
-        if (user.restricted) {
-          push(`/account/users/${username}/permissions`, {
-            newUsername: user.username,
-          });
-        }
-        refetch();
-      })
-      .catch((errResponse) => {
-        const errors = getAPIErrorOrDefault(
-          errResponse,
-          'Error creating user.'
-        );
-        this.setState({ errors, submitting: false });
-      });
-  };
-
-  state: State = {
-    email: '',
-    errors: [],
-    restricted: false,
-    submitting: false,
-    username: '',
-  };
 }
 
 export default withRouter(CreateUserDrawer);

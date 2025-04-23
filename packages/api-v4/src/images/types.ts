@@ -1,14 +1,10 @@
-export type ImageStatus =
-  | 'available'
-  | 'creating'
-  | 'deleted'
-  | 'pending_upload';
+export type ImageStatus = 'available' | 'creating' | 'pending_upload';
 
-type ImageCapabilities = 'cloud-init' | 'distributed-images';
+export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 
 type ImageType = 'manual' | 'automatic';
 
-type ImageRegionStatus =
+export type ImageRegionStatus =
   | 'creating'
   | 'pending'
   | 'available'
@@ -153,4 +149,11 @@ export type UpdateImagePayload = Omit<BaseImagePayload, 'cloud_init'>;
 export interface ImageUploadPayload extends BaseImagePayload {
   label: string;
   region: string;
+}
+
+export interface UpdateImageRegionsPayload {
+  /**
+   * An array of region ids
+   */
+  regions: string[];
 }

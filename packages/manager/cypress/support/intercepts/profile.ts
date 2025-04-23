@@ -78,7 +78,27 @@ export const mockGetProfileGrants = (
 export const mockGetUserPreferences = (
   preferences: UserPreferences
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('profile/preferences'), preferences);
+  const defaultPreferences = {
+    // All sidebar categories are expanded.
+    collapsedSideNavProductFamilies: [],
+
+    // Sidebar is not pinned.
+    desktop_sidebar_open: false,
+
+    // Type-to-confirm is enabled.
+    type_to_confirm: true,
+  };
+
+  const resolvedPreferences = {
+    ...defaultPreferences,
+    ...preferences,
+  };
+
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/preferences'),
+    resolvedPreferences
+  );
 };
 
 /**
@@ -457,4 +477,30 @@ export const mockCreateSSHKeyError = (
     apiMatcher('profile/sshkeys'),
     makeErrorResponse(errorMessage, status)
   );
+};
+
+/**
+ * Intercepts PUT request to update an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to update
+ * @param sshKey - An SSH key with which to update.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSSHKey = (
+  sshKeyId: number,
+  sshKey: SSHKey
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher(`profile/sshkeys/${sshKeyId}`), sshKey);
+};
+
+/**
+ * Intercepts DELETE request to delete an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to delete
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteSSHKey = (sshKeyId: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`profile/sshkeys/${sshKeyId}`), {});
 };

@@ -1,7 +1,5 @@
+import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 
 interface Props {
   children?: React.ReactNode;
@@ -19,7 +17,6 @@ export const GraphCard = (props: Props) => {
           '& > strong': {
             color: theme.color.headline,
           },
-          color: theme.color.grey1,
         },
         marginBottom: theme.spacing(2),
         padding: theme.spacing(2),

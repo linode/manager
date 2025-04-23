@@ -1,50 +1,10 @@
-import type { Linode, Region } from '@linode/api-v4';
-import { accountFactory, linodeFactory, regionFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
-import { mockGetRegions } from 'support/intercepts/regions';
-import {
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
 
-const mockRegions: Region[] = [
-  regionFactory.build({
-    capabilities: ['Linodes', 'Disk Encryption'],
-    id: 'us-east',
-    label: 'Newark, NJ',
-    site_type: 'core',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes', 'Disk Encryption'],
-    id: 'us-den-edge-1',
-    label: 'Edge - Denver, CO',
-    site_type: 'edge',
-  }),
-];
-
-const mockLinodes: Linode[] = [
-  linodeFactory.build({
-    label: 'core-region-linode',
-    region: mockRegions[0].id,
-  }),
-  linodeFactory.build({
-    label: 'edge-region-linode',
-    region: mockRegions[1].id,
-  }),
-];
-
-const DISK_ENCRYPTION_IMAGES_CAVEAT_COPY =
-  'Virtual Machine Images are not encrypted.';
+import type { Linode } from '@linode/api-v4';
 
 authenticate();
 describe('create image (e2e)', () => {
@@ -53,12 +13,13 @@ describe('create image (e2e)', () => {
   });
 
   it('create image from a linode', () => {
+    cy.tag('method:e2e');
     const label = randomLabel();
     const description = randomPhrase();
 
-    // When Alpine 3.19 becomes deprecated, we will have to update these values for the test to pass.
-    const image = 'linode/alpine3.19';
-    const disk = 'Alpine 3.19 Disk';
+    // When Alpine 3.20 becomes deprecated, we will have to update these values for the test to pass.
+    const image = 'linode/alpine3.20';
+    const disk = 'Alpine 3.20 Disk';
 
     cy.defer(
       () => createTestLinode({ image }, { waitForDisks: true }),
@@ -71,8 +32,8 @@ describe('create image (e2e)', () => {
         .should('be.visible')
         .should('be.enabled')
         .should('have.attr', 'placeholder', 'Select a Linode')
-        .click()
-        .type(linode.label);
+        .click();
+      cy.focused().type(linode.label);
 
       // Select the Linode
       ui.autocompletePopper
@@ -94,7 +55,8 @@ describe('create image (e2e)', () => {
       cy.findByLabelText('Label')
         .should('be.enabled')
         .should('be.visible')
-        .type(label);
+        .clear();
+      cy.focused().type(label);
 
       // Give the Image a description
       cy.findByLabelText('Description')
@@ -124,138 +86,5 @@ describe('create image (e2e)', () => {
           cy.findByText('Creating', { exact: false }).should('be.visible');
         });
     });
-  });
-
-  it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in an Edge region', () => {
-    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
-    mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    // Mock responses
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Disk Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockGetLinodes(mockLinodes).as('getLinodes');
-
-    // intercept request
-    cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
-
-    // Find the Linode select and open it
-    cy.findByLabelText('Linode')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Select a Linode')
-      .click();
-
-    // Select the Linode
-    ui.autocompletePopper
-      .findByTitle(mockLinodes[0].label)
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Check if notice is visible
-    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('be.visible');
-  });
-
-  it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
-    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
-    mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    // Mock responses
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Disk Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockGetLinodes(mockLinodes).as('getLinodes');
-
-    // intercept request
-    cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
-
-    // Find the Linode select and open it
-    cy.findByLabelText('Linode')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Select a Linode')
-      .click();
-
-    // Select the Linode
-    ui.autocompletePopper
-      .findByTitle(mockLinodes[0].label)
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Check if notice is visible
-    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
-  });
-
-  it('does not display a notice informing user that Images are not encrypted if the selected linode is in an Edge region', () => {
-    // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
-    mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
-    // Mock responses
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Disk Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockGetLinodes(mockLinodes).as('getLinodes');
-    mockGetLinodeDetails(mockLinodes[1].id, mockLinodes[1]);
-
-    // intercept request
-    cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getRegions',
-      '@getLinodes',
-    ]);
-
-    // Find the Linode select and open it
-    cy.findByLabelText('Linode')
-      .should('be.visible')
-      .should('be.enabled')
-      .should('have.attr', 'placeholder', 'Select a Linode')
-      .click();
-
-    // Select the Linode
-    ui.autocompletePopper
-      .findByTitle(mockLinodes[1].label)
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    // Check if notice is visible
-    cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
   });
 });

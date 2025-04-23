@@ -16,9 +16,9 @@ The flags on/off values are stored in local storage for convenience and will be 
 
 By default, the boolean flags checkboxes represent their true values as returned by Launch Darkly (dev environment). Hitting the reset button will bring them back to those default values and clear local storage.
 
-## Theme Select
+## MSW Tools
 
-The theme select in dev tools is a convenient way to store the theme choice while MSW is enabled (it won't affect your actual Application settings/preferences). The default is "system".
+Please refer to the [Mocking Data](https://github.com/linode/manager/blob/develop/docs/development-guide/09-mocking-data.md) section of this documentation to get familiar with the usage of these tools.
 
 ## Writing a new tool
 

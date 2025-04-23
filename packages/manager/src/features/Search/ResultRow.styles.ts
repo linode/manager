@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -61,7 +61,7 @@ export const StyledLink = styled(Link, {
 })(({ theme }) => ({
   color: theme.textColors.linkActiveLight,
   display: 'block',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '.875rem',
   lineHeight: '1.125rem',
 }));

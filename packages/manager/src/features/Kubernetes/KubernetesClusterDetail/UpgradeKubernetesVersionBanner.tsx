@@ -1,23 +1,28 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 
+import {
+  getNextVersion,
+  useLkeStandardOrEnterpriseVersions,
+} from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
-import { getNextVersion } from '../kubeUtils';
+
+import type { KubernetesTier } from '@linode/api-v4';
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
+  clusterTier: KubernetesTier;
   currentVersion: string;
 }
 
 export const UpgradeKubernetesVersionBanner = (props: Props) => {
-  const { clusterID, clusterLabel, currentVersion } = props;
-  const { data: versions } = useKubernetesVersionQuery();
+  const { clusterID, clusterLabel, clusterTier, currentVersion } = props;
+
+  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -32,14 +37,16 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       {nextVersion ? (
         <DismissibleBanner
           actionButton={actionButton}
-          variant="info"
           preferenceKey={`${clusterID}-${currentVersion}`}
+          variant="info"
         >
           <Grid
-            alignItems="center"
             container
             direction="row"
-            justifyContent="space-between"
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid>
               <Typography>
@@ -52,6 +59,7 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       <UpgradeVersionModal
         clusterID={clusterID}
         clusterLabel={clusterLabel}
+        clusterTier={clusterTier}
         currentVersion={currentVersion}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}

@@ -9,11 +9,14 @@ import {
   Controls,
   Stories,
 } from '@storybook/blocks';
-import { wrapWithTheme } from '../src/utilities/testHelpers';
+import {
+  wrapWithTheme,
+  wrapWithThemeAndRouter,
+} from '../src/utilities/testHelpers';
 import { useDarkMode } from 'storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
-import { worker } from '../src/mocks/testBrowser';
+import { storybookWorker } from '../src/mocks/mswWorkers';
 
 import '../src/index.css';
 // TODO: M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
@@ -42,14 +45,18 @@ export const DocsContainer = ({ children, context }) => {
 
 const preview: Preview = {
   decorators: [
-    (Story) => {
+    (Story, context) => {
       const isDark = useDarkMode();
-      return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
+      return context.parameters.tanStackRouter
+        ? wrapWithThemeAndRouter(<Story />, {
+            theme: isDark ? 'dark' : 'light',
+          })
+        : wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
   ],
   loaders: [
     async () => ({
-      msw: await worker?.start(),
+      msw: await storybookWorker?.start(),
     }),
   ],
   parameters: {
@@ -61,7 +68,14 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        order: ['Intro', 'Core Styles', 'Components', 'Features'],
+        order: [
+          'Intro',
+          'Design System',
+          'Icons',
+          'Foundations',
+          'Components',
+          'Features',
+        ],
       },
     },
     viewport: {

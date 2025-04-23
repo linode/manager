@@ -1,20 +1,19 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
+} from '@linode/api-v4';
+import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
 
 import {
   PLACEMENT_GROUP_TOOLTIP_TEXT,
   PLACEMENT_GROUPS_DOCS_LINK,
 } from '../../constants';
-import { getAffinityTypeEnforcement } from '../../utils';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
 
@@ -32,7 +31,7 @@ export const PlacementGroupsSummary = (props: Props) => {
     <Box sx={{ mb: 3, mt: 1 }}>
       {!placementGroup.is_compliant && (
         <Notice spacingBottom={20} spacingTop={24} variant="warning">
-          <Typography fontFamily={theme.font.bold}>
+          <Typography sx={{ font: theme.font.bold }}>
             {`Placement Group ${placementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group. `}
             <Link
               className="secondaryLink"
@@ -62,18 +61,20 @@ export const PlacementGroupsSummary = (props: Props) => {
                 tooltip: { text: PLACEMENT_GROUP_TOOLTIP_TEXT, width: 275 },
               },
               {
-                description: AFFINITY_TYPES[placementGroup?.affinity_type],
-                title: 'Affinity Type',
+                description:
+                  PLACEMENT_GROUP_TYPES[placementGroup?.placement_group_type],
+                title: 'Placement Group Type',
               },
               {
                 description: region?.label ?? 'Unknown',
                 title: 'Region',
               },
               {
-                description: getAffinityTypeEnforcement(
-                  placementGroup?.is_strict
-                ),
-                title: 'Affinity Type Enforcement',
+                description:
+                  PLACEMENT_GROUP_POLICIES[
+                    placementGroup?.placement_group_policy
+                  ],
+                title: 'Placement Group Policy',
               },
             ]}
             displayMode="grid"
@@ -89,7 +90,7 @@ export const PlacementGroupsSummary = (props: Props) => {
 export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   marginRight: theme.spacing(8),
   width: theme.spacing(10),
 }));

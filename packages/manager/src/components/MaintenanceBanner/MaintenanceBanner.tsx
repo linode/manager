@@ -1,13 +1,13 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
+import { useAllAccountMaintenanceQuery, useProfile } from '@linode/queries';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
-import { useProfile } from 'src/queries/profile/profile';
+import { Link } from 'src/components/Link';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
+
+import type { AccountMaintenance } from '@linode/api-v4/lib/account';
 
 interface Props {
   maintenanceEnd?: null | string;
@@ -21,7 +21,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    { status: { '+or': ['pending, started'] } }
+    PENDING_MAINTENANCE_FILTER
   );
 
   const {
@@ -68,7 +68,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>

@@ -6,15 +6,16 @@ import {
   getObjectURL,
   revokeObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import {
-  ObjectStorageBucket,
-  ObjectStorageKey,
-  ObjectStorageObject,
-} from '@linode/api-v4';
 import axios from 'axios';
 import { authenticate } from 'support/api/authentication';
 import { isTestLabel } from 'support/api/common';
 import { depaginate } from 'support/util/paginate';
+
+import type {
+  ObjectStorageBucket,
+  ObjectStorageKey,
+  ObjectStorageObject,
+} from '@linode/api-v4';
 
 /**
  * Asynchronously deletes all objects within a test bucket.
@@ -39,7 +40,10 @@ export const deleteAllTestBucketObjects = async (
 
   authenticate();
   // @TODO Improve object retrieval to account for pagination for buckets with many objects.
-  const storageObjects = await getObjectList(clusterId, bucketLabel);
+  const storageObjects = await getObjectList({
+    bucket: bucketLabel,
+    clusterId,
+  });
   const storageObjectDeletePromises = storageObjects.data.map(
     async (storageObject: ObjectStorageObject) => {
       const objectUrl = await getObjectURL(

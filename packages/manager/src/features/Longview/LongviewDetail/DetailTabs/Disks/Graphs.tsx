@@ -1,15 +1,15 @@
+import { Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Typography } from 'src/components/Typography';
-import { isToday as _isToday } from 'src/utilities/isToday';
 
-import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 import { StyledDiv } from './Graphs.styles';
+
+import type { Stat, StatWithDummyPoint } from '../../../request.types';
 
 export interface GraphProps {
   childOf: boolean;
@@ -163,11 +163,7 @@ export const formatINodes = (
 ): StatWithDummyPoint[] => {
   return itotal.map((eachTotalStat, index) => {
     const { x: totalX, y: totalY } = eachTotalStat;
-    const { y: freeY } = pathOr(
-      { x: 0, y: null },
-      [index],
-      ifree
-    ) as StatWithDummyPoint;
+    const { y: freeY } = ifree?.[index] ?? { x: 0, y: null };
 
     const cleanedY =
       typeof totalY === 'number' && typeof freeY === 'number'

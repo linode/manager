@@ -1,6 +1,7 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { Notice, NoticeVariant } from 'src/components/Notice/Notice';
+import type { NoticeVariant } from '@linode/ui';
 
 export interface ProductNotificationProps {
   onClick?: () => void;
@@ -21,9 +22,5 @@ export const ProductNotification = ({
   const level = (severityLevelMap[severity] as NoticeVariant) ?? 'warning';
   const props = { variant: level };
 
-  return (
-    <Notice {...props} important>
-      {text}
-    </Notice>
-  );
+  return <Notice {...props}>{text}</Notice>;
 };

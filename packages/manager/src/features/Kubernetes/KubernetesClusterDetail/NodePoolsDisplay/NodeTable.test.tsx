@@ -1,20 +1,42 @@
+import { linodeFactory } from '@linode/utilities';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
-import { linodeFactory } from 'src/factories/linodes';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodeTable, Props, encryptionStatusTestId } from './NodeTable';
+import { NodeTable, encryptionStatusTestId } from './NodeTable';
 
-const mockLinodes = linodeFactory.buildList(3);
+import type { Props } from './NodeTable';
+import type { KubernetesTier } from '@linode/api-v4';
 
-const mockKubeNodes = kubeLinodeFactory.buildList(3);
+const mockLinodes = new Array(3)
+  .fill(null)
+  .map((_element: null, index: number) => {
+    return linodeFactory.build({
+      ipv4: [`50.116.6.${index}`],
+    });
+  });
+
+const mockKubeNodes = mockLinodes.map((mockLinode) =>
+  kubeLinodeFactory.build({
+    instance_id: mockLinode.id,
+  })
+);
 
 const props: Props = {
+  clusterCreated: '2025-01-13T02:58:58',
+  clusterId: 1,
+  clusterTier: 'standard',
   encryptionStatus: 'enabled',
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
+  regionSupportsDiskEncryption: false,
+  statusFilter: 'all',
+  tags: [],
   typeLabel: 'Linode 2G',
 };
 
@@ -27,9 +49,9 @@ describe('NodeTable', () => {
     };
   });
 
-  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
+  vi.mock('src/components/Encryption/utils.ts', async () => {
     const actual = await vi.importActual<any>(
-      'src/components/DiskEncryption/utils.ts'
+      'src/components/Encryption/utils.ts'
     );
     return {
       ...actual,
@@ -44,18 +66,51 @@ describe('NodeTable', () => {
     };
   });
 
-  it('includes label, status, and IP columns', () => {
-    const { findByText } = renderWithTheme(<NodeTable {...props} />);
-    mockLinodes.forEach(async (thisLinode) => {
-      await findByText(thisLinode.label);
-      await findByText(thisLinode.ipv4[0]);
-      await findByText('Ready');
-    });
+  it('includes label, status, and IP columns', async () => {
+    server.use(
+      http.get('*/linode/instances*', () => {
+        return HttpResponse.json(makeResourcePage(mockLinodes));
+      })
+    );
+
+    const { findAllByText, findByText } = renderWithTheme(
+      <NodeTable {...props} />
+    );
+
+    expect(await findAllByText('Running')).toHaveLength(3);
+
+    await Promise.all(
+      mockLinodes.map(async (mockLinode) => {
+        await findByText(mockLinode.label);
+        await findByText(mockLinode.ipv4[0]);
+      })
+    );
   });
 
   it('includes the Pool ID', () => {
     const { getByText } = renderWithTheme(<NodeTable {...props} />);
     getByText('Pool ID 1');
+  });
+
+  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
+    const clusterProps = {
+      ...props,
+      clusterCreated: DateTime.local().toISO(),
+      clusterTier: 'enterprise' as KubernetesTier,
+      nodes: [],
+    };
+
+    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
+
+    expect(
+      await findByText(
+        'Worker nodes will appear once cluster provisioning is complete.'
+      )
+    ).toBeVisible();
+
+    expect(
+      await findByText('Provisioning can take up to 10 minutes.')
+    ).toBeVisible();
   });
 
   it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', () => {

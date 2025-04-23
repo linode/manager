@@ -1,6 +1,5 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { ShowMoreExpansion } from './ShowMoreExpansion';
 
@@ -26,7 +25,7 @@ const meta: Meta<ShowMoreExpansionProps> = {
     name: 'Show More',
   },
   component: ShowMoreExpansion,
-  title: 'Components/Accordion/ShowMoreExpansion',
+  title: 'Foundations/Accordion/ShowMoreExpansion',
 };
 
 export default meta;

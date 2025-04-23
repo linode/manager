@@ -1,19 +1,15 @@
+import { Box, Typography } from '@linode/ui';
+import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import {
-  IncidentImpact,
-  IncidentStatus,
-  useIncidentQuery,
-} from 'src/queries/statusPage';
-import { capitalize } from 'src/utilities/capitalize';
+import { useIncidentQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
-import { truncateEnd } from 'src/utilities/truncate';
+
+import type { IncidentImpact, IncidentStatus } from 'src/queries/statusPage';
 
 export const StatusBanners = () => {
   const { data: incidentsData } = useIncidentQuery();
@@ -77,7 +73,6 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
       variant={
         variantMap.error ? 'error' : variantMap.warning ? 'warning' : undefined
       }
-      important
       preferenceKey={preferenceKey}
       sx={{ marginBottom: theme.spacing() }}
     >

@@ -1,11 +1,12 @@
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-import { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
+import type { AttachmentError } from '../Support/SupportTicketDetail/SupportTicketDetail';
 
 export const SupportWidget = () => {
   const history = useHistory();

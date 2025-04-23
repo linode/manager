@@ -1,8 +1,10 @@
+import { useProfile } from '@linode/queries';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile/profile';
-import { TimeInterval, formatDate } from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
+
+import type { TimeInterval } from 'src/utilities/formatDate';
 
 export interface DateTimeDisplayProps {
   /**

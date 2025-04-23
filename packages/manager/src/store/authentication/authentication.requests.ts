@@ -1,9 +1,11 @@
 import { LOGIN_ROOT } from 'src/constants';
-import { RevokeTokenSuccess, revokeToken } from 'src/session';
-import { ThunkActionCreator } from 'src/store/types';
+import { revokeToken } from 'src/session';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
 import { handleLogout as _handleLogout } from './authentication.actions';
+
+import type { RevokeTokenSuccess } from 'src/session';
+import type { ThunkActionCreator } from 'src/store/types';
 
 /**
  * Revokes auth token used to make HTTP requests
@@ -21,7 +23,12 @@ export const handleLogout: ThunkActionCreator<
 > = ({ client_id, token }) => (dispatch) => {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+  let loginURL;
+  try {
+    loginURL = new URL(localStorageOverrides?.loginRoot ?? LOGIN_ROOT);
+  } catch (_) {
+    loginURL = LOGIN_ROOT;
+  }
 
   return revokeToken(client_id, token)
     .then((response) => {

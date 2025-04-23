@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { EventLink } from '../EventLink';
+import { FormattedEventMessage } from '../FormattedEventMessage';
 
 import type { PartialEventMap } from '../types';
 
@@ -44,17 +45,21 @@ export const image: PartialEventMap<'image'> = {
     ),
   },
   image_upload: {
-    failed: (e) => (
-      <>
-        Image <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
-        <strong>uploaded</strong>: {e?.message?.replace(/(\d+)/g, '$1 MB')}.
-      </>
-    ),
+    failed: (e) => {
+      const message = e?.message?.replace(/(\d+)/g, '$1 MB') || '';
+
+      return (
+        <>
+          Image <EventLink event={e} to="entity" /> could <strong>not</strong>{' '}
+          be <strong>uploaded</strong>:{' '}
+          <FormattedEventMessage message={message} />
+        </>
+      );
+    },
 
     finished: (e) => (
       <>
-        Image <EventLink event={e} to="entity" /> has been{' '}
-        <strong>uploaded</strong>.
+        Image <EventLink event={e} to="entity" /> is now available.
       </>
     ),
     notification: (e) => (

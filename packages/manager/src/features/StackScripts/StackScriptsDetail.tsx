@@ -1,124 +1,84 @@
 import {
-  StackScript,
-  getStackScript,
-  updateStackScript,
-} from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+  useStackScriptQuery,
+  useUpdateStackScriptMutation,
+} from '@linode/queries';
+import { useGrants, useProfile } from '@linode/queries';
+import { CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
+import React from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useGrants } from 'src/queries/profile/profile';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { StackScript } from 'src/components/StackScript/StackScript';
 
+import { getRestrictedResourceText } from '../Account/utils';
 import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
 
-export const StackScriptsDetail = () => {
-  const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
-  const { data: grants } = useGrants();
-  const { stackScriptId } = useParams<{ stackScriptId: string }>();
+export const StackScriptDetail = () => {
   const history = useHistory();
-  const location = useLocation();
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+  const { id: stackScriptId } = useParams({
+    from: '/stackscripts/$id',
+  });
 
-  const [label, setLabel] = React.useState<string | undefined>('');
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [stackScript, setStackScript] = React.useState<StackScript | undefined>(
-    undefined
-  );
+  const id = Number(stackScriptId);
 
-  const username = profile?.username;
-  const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
-
+  const { data: stackscript, error, isLoading } = useStackScriptQuery(id);
+  const {
+    error: updateError,
+    mutateAsync: updateStackScript,
+    reset,
+  } = useUpdateStackScriptMutation(id);
   const isRestrictedUser = profile?.restricted ?? false;
+  const username = profile?.username;
+  const userCannotAddLinodes = isRestrictedUser && !grants?.global.add_linodes;
   const stackScriptGrants = grants?.stackscript ?? [];
 
   const userCanModify = Boolean(
-    stackScript?.mine &&
-      canUserModifyAccountStackScript(
-        isRestrictedUser,
-        stackScriptGrants,
-        +stackScriptId
-      )
+    stackscript?.mine &&
+      canUserModifyAccountStackScript(isRestrictedUser, stackScriptGrants, id)
   );
 
-  React.useEffect(() => {
-    getStackScript(+stackScriptId)
-      .then((stackScript) => {
-        setLoading(false);
-        setStackScript(stackScript);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setErrors(error);
-      });
-  }, [stackScriptId]);
-
   const handleCreateClick = () => {
-    if (!stackScript) {
+    if (!stackscript) {
       return;
     }
-    const url = getStackScriptUrl(
-      stackScript.username,
-      stackScript.id,
-      username
-    );
+    const url = getStackScriptUrl(stackscript.username, id, username);
     history.push(url);
   };
 
   const handleLabelChange = (label: string) => {
-    // This should never actually happen, but TypeScript is expecting a Promise here.
-    if (stackScript === undefined) {
-      return Promise.resolve();
-    }
-
-    setErrors(undefined);
-
-    return updateStackScript(stackScript.id, { label })
-      .then(() => {
-        setLabel(label);
-        setStackScript({ ...stackScript, label });
-      })
-      .catch((e) => {
-        setLabel(label);
-        setErrors(getAPIErrorOrDefault(e, 'Error updating label', 'label'));
-        return Promise.reject(e);
-      });
+    return updateStackScript({ label });
   };
 
-  const resetEditableLabel = () => {
-    setLabel(stackScript?.label);
-    setErrors(undefined);
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (!stackScript) {
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
+
+  if (!stackscript) {
     return <NotFound />;
   }
 
-  const errorMap = getErrorMap(['label'], errors);
-  const labelError = errorMap.label;
-
-  const stackScriptLabel = label ?? stackScript.label;
-
   return (
     <>
+      <DocumentTitleSegment segment={`${stackscript.label} | StackScripts`} />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
             {
               label: 'StackScripts',
-              linkTo: stackScript.mine
+              linkTo: stackscript.mine
                 ? '/stackscripts/account'
                 : '/stackscripts/community',
               position: 1,
@@ -127,26 +87,31 @@ export const StackScriptsDetail = () => {
           labelOptions: { noCap: true },
           onEditHandlers: userCanModify
             ? {
-                editableTextTitle: stackScriptLabel,
-                errorText: labelError,
-                onCancel: resetEditableLabel,
+                editableTextTitle: stackscript.label,
+                errorText: updateError?.[0].reason,
+                onCancel: () => reset(),
                 onEdit: handleLabelChange,
               }
             : undefined,
           pathname: location.pathname,
         }}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Linodes',
+          }),
+        }}
         createButtonText="Deploy New Linode"
         disabledCreateButton={userCannotAddLinodes}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         onButtonClick={handleCreateClick}
-        title={stackScript.label}
+        title={stackscript.label}
       />
-      <div className="detailsWrapper">
-        <_StackScript data={stackScript} userCanModify={userCanModify} />
-      </div>
+      <Paper>
+        <StackScript data={stackscript} userCanModify={userCanModify} />
+      </Paper>
     </>
   );
 };
-
-export default StackScriptsDetail;

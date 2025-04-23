@@ -1,6 +1,6 @@
 {
   "name": "@linode/validation",
-  "version": "0.48.0",
+  "version": "0.64.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
   "main": "lib/index.cjs",
@@ -28,29 +28,21 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
-    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
-    "precommit": "lint-staged"
+    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/linode/manager/tree/develop/packages/validation"
   },
   "dependencies": {
-    "@types/yup": "^0.29.13",
     "ipaddr.js": "^2.0.0",
     "libphonenumber-js": "^1.10.6",
-    "yup": "^0.32.9"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@types/node": "^12.7.1",
-    "concurrently": "^4.1.1",
-    "eslint": "^6.8.0",
-    "eslint-plugin-ramda": "^2.5.1",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "lint-staged": "^13.2.2",
-    "prettier": "~2.2.1",
-    "tsup": "^7.2.0"
+    "concurrently": "^9.0.1",
+    "tsup": "^8.4.0"
   },
   "keywords": [
     "linode",

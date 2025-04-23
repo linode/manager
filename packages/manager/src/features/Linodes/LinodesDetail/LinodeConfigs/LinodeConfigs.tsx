@@ -1,9 +1,13 @@
+import {
+  useAllLinodeConfigsQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
+import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
-import AddNewLink from 'src/components/AddNewLink';
-import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -15,21 +19,44 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile/profile';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './UpgradeInterfaces/constants';
+import { getUnableToUpgradeTooltipText } from './UpgradeInterfaces/utils';
 
 const LinodeConfigs = () => {
   const theme = useTheme();
+  const location = useLocation();
+  const history = useHistory();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
+
+  const { data: linode } = useLinodeQuery(id);
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const {
+    canUpgradeInterfaces,
+    unableToUpgradeReasons,
+  } = useCanUpgradeInterfaces(
+    linode?.lke_cluster_id,
+    linode?.region,
+    linode?.interface_generation
+  );
+
+  const unableToUpgradeTooltip = getUnableToUpgradeTooltipText(
+    unableToUpgradeReasons
+  );
+  const upgradeInterfacesTooltipText =
+    unableToUpgradeTooltip ?? DEFAULT_UPGRADE_BUTTON_HELPER_TEXT;
+
+  const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
 
@@ -53,6 +80,10 @@ const LinodeConfigs = () => {
   const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
     false
   );
+
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -90,18 +121,28 @@ const LinodeConfigs = () => {
       >
         <DocsLink
           href={
-            'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/'
+            'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance'
           }
           onClick={() => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
           }}
           label={'Configuration Profiles'}
         />
-        <AddNewLink
-          disabled={isReadOnly}
-          label="Add Configuration"
-          onClick={onCreate}
-        />
+        {isLinodeInterfacesEnabled &&
+          linode?.interface_generation !== 'linode' && (
+            <Button
+              alwaysShowTooltip
+              buttonType="outlined"
+              disabled={isReadOnly || !canUpgradeInterfaces}
+              onClick={openUpgradeInterfacesDialog}
+              tooltipText={upgradeInterfacesTooltipText}
+            >
+              Upgrade Interfaces
+            </Button>
+          )}
+        <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
+          Add Configuration
+        </Button>
       </Box>
       <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -129,26 +170,26 @@ const LinodeConfigs = () => {
                           handleClick={handleOrderChange}
                           label={'label'}
                         >
-                          <strong>Config</strong>
+                          <strong>Configuration</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{
-                            borderRight: `1px solid ${theme.palette.divider}`,
-                            fontFamily: theme.font.bold,
-                            width: '25%',
+                            font: theme.font.bold,
+                            width: isLegacyConfigInterface ? '25%' : '55%',
                           }}
                         >
                           Disks
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            borderRight: `1px solid ${theme.palette.divider}`,
-                            fontFamily: theme.font.bold,
-                            width: '30%',
-                          }}
-                        >
-                          Network Interfaces
-                        </TableCell>
+                        {isLegacyConfigInterface && (
+                          <TableCell
+                            sx={{
+                              font: theme.font.bold,
+                              width: '30%',
+                            }}
+                          >
+                            Network Interfaces
+                          </TableCell>
+                        )}
                         <TableCell sx={{ width: '10%' }} />
                       </TableRow>
                     </TableHead>

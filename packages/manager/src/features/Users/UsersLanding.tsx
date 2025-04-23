@@ -1,20 +1,17 @@
+import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { Typography } from 'src/components/Typography';
 import { PARENT_USER } from 'src/features/Account/constants';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccountUsers } from 'src/queries/account/users';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountUsers, useProfile } from '@linode/queries';
 
 import CreateUserDrawer from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
@@ -146,16 +143,18 @@ export const UsersLanding = () => {
             User Settings
           </Typography>
         )}
-        <AddNewLink
-          disabledReason={
+        <Button
+          tooltipText={
             isRestrictedUser
               ? 'You cannot create other users as a restricted user.'
               : undefined
           }
+          buttonType="primary"
           disabled={isRestrictedUser}
-          label="Add a User"
           onClick={() => setIsCreateDrawerOpen(true)}
-        />
+        >
+          Add a User
+        </Button>
       </Box>
       <Table aria-label="List of Users">
         <UsersLandingTableHead

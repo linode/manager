@@ -1,16 +1,18 @@
+import { getProfile } from '@linode/api-v4/lib/profile';
 import { accessFactory, appTokenFactory } from '@src/factories';
 import 'cypress-file-upload';
+import { authenticate } from 'support/api/authentication';
 import {
-  mockGetPersonalAccessTokens,
   mockGetAppTokens,
+  mockGetPersonalAccessTokens,
   mockRevokeAppToken,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
-import { Token, Profile } from '@linode/api-v4';
-import { getProfile } from '@linode/api-v4/lib/profile';
+
 import { formatDate } from 'src/utilities/formatDate';
-import { authenticate } from 'support/api/authentication';
+
+import type { Profile, Token } from '@linode/api-v4';
 
 authenticate();
 describe('Third party access tokens', () => {
@@ -66,7 +68,7 @@ describe('Third party access tokens', () => {
       .findByTitle(token.label)
       .should('be.visible')
       .within(() => {
-        Object.keys(access).forEach((key) => {
+        Object.keys(access).forEach((key: keyof typeof access) => {
           cy.findByText(key)
             .closest('tr')
             .within(() => {

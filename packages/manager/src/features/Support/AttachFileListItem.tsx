@@ -1,15 +1,14 @@
+import { InputAdornment, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { TextField } from 'src/components/TextField';
 
-import { FileAttachment } from './index';
+import type { FileAttachment } from './index';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   attachmentField: {
@@ -86,7 +85,7 @@ export const AttachFileListItem = (props: Props) => {
         />
       </Grid>
       {file.uploading && (
-        <Grid xs={12}>
+        <Grid size={12}>
           <LinearProgress
             className={classes.uploadProgress}
             variant="indeterminate"

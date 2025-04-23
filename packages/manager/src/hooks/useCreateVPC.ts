@@ -1,37 +1,29 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { isEmpty } from '@linode/api-v4';
 import {
-  APIError,
-  CreateSubnetPayload,
-  CreateVPCPayload,
-} from '@linode/api-v4';
+  useCreateVPCMutation,
+  useGrants,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
+  getQueryParamsFromQueryString,
+  scrollErrorIntoView,
+} from '@linode/utilities';
 import { createVPCSchema } from '@linode/validation';
-import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
-import {
-  SubnetError,
-  handleVPCAndSubnetErrors,
-} from 'src/utilities/formikErrorUtils';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
-import {
-  DEFAULT_SUBNET_IPV4_VALUE,
-  SubnetFieldState,
-} from 'src/utilities/subnets';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
+
+import type { CreateVPCPayload, VPC } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
-
-export interface CreateVPCFieldState {
-  description: string;
-  label: string;
-  region: string;
-  subnets: SubnetFieldState[];
-}
-
 export interface UseCreateVPCInputs {
-  handleSelectVPC?: (vpcId: number) => void;
+  handleSelectVPC?: (vpc: VPC) => void;
   onDrawerClose?: () => void;
   pushToVPCPage?: boolean;
   selectedRegion?: string;
@@ -45,182 +37,93 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     selectedRegion,
   } = inputs;
 
+  const previousSubmitCount = React.useRef<number>(0);
+
   const history = useHistory();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const userCannotAddVPC = profile?.restricted && !grants?.global.add_vpcs;
 
+  const location = useLocation();
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
+
   const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
 
-  const [
-    generalSubnetErrorsFromAPI,
-    setGeneralSubnetErrorsFromAPI,
-  ] = React.useState<APIError[]>();
-  const [generalAPIError, setGeneralAPIError] = React.useState<
-    string | undefined
-  >();
-
   const {
-    isLoading: isLoadingCreateVPC,
+    isPending: isLoadingCreateVPC,
     mutateAsync: createVPC,
   } = useCreateVPCMutation();
 
-  // When creating the subnet payloads, we also create a mapping of the indexes of the subnets that appear on
-  // the UI to the indexes of the subnets that the API will receive. This enables users to leave subnets blank
-  // on the UI and still have any errors returned by the API correspond to the correct subnet
-  const createSubnetsPayloadAndMapping = () => {
-    const subnetsPayload: CreateSubnetPayload[] = [];
-    const subnetIdxMapping = {};
-    let apiSubnetIdx = 0;
-
-    for (let i = 0; i < formik.values.subnets.length; i++) {
-      const { ip, label } = formik.values.subnets[i];
-      // if we are inside the VPCCreateDrawer, we force the first subnet to always be included in the payload,
-      // even if its fields are empty. This is for validation purposes - so that errors can be surfaced on the
-      // first subnet's label and ipv4 field if applicable.
-      if ((onDrawerClose && i === 0) || ip.ipv4 || label) {
-        subnetsPayload.push({ ipv4: ip.ipv4, label });
-        subnetIdxMapping[i] = apiSubnetIdx;
-        apiSubnetIdx++;
-      }
-    }
-
-    return {
-      subnetsPayload,
-      visualToAPISubnetMapping: subnetIdxMapping,
-    };
-  };
-
-  const combineErrorsAndSubnets = (
-    errors: {},
-    visualToAPISubnetMapping: {}
-  ) => {
-    return formik.values.subnets.map((subnet, idx) => {
-      const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[idx];
-      // If the subnet has errors associated with it, include those errors in its state
-      if ((apiSubnetIdx || apiSubnetIdx === 0) && errors[apiSubnetIdx]) {
-        const errorData: SubnetError = errors[apiSubnetIdx];
-        return {
-          ...subnet,
-          // @TODO VPC: IPv6 error handling
-          ip: {
-            ...subnet.ip,
-            ipv4Error: errorData.ipv4 ?? '',
-          },
-          labelError: errorData.label ?? '',
-        };
-      } else {
-        return subnet;
-      }
-    });
-  };
-
-  const onCreateVPC = async () => {
-    formik.setSubmitting(true);
-    setGeneralAPIError(undefined);
-
-    const {
-      subnetsPayload,
-      visualToAPISubnetMapping,
-    } = createSubnetsPayloadAndMapping();
-
-    const createVPCPayload: CreateVPCPayload = {
-      ...formik.values,
-      subnets: subnetsPayload,
-    };
-
+  const onCreateVPC = async (values: CreateVPCPayload) => {
     try {
-      const response = await createVPC(createVPCPayload);
+      const vpc = await createVPC(values);
       if (pushToVPCPage) {
-        history.push(`/vpcs/${response.id}`);
+        history.push(`/vpcs/${vpc.id}`);
       } else {
         if (handleSelectVPC && onDrawerClose) {
-          handleSelectVPC(response.id);
+          handleSelectVPC(vpc);
           onDrawerClose();
+          form.reset();
         }
       }
-    } catch (errors) {
-      const generalSubnetErrors = errors.filter(
-        (error: APIError) =>
-          // Both general and specific subnet errors include 'subnets' in their error field.
-          // General subnet errors come in as { field: subnets.some_field, ...}, whereas
-          // specific subnet errors come in as { field: subnets[some_index].some_field, ...}. So,
-          // to avoid specific subnet errors, we filter out errors with a field that includes '['
-          error.field &&
-          error.field.includes('subnets') &&
-          !error.field.includes('[')
-      );
 
-      if (generalSubnetErrors) {
-        setGeneralSubnetErrorsFromAPI(generalSubnetErrors);
+      // Fire analytics form submit upon successful VPC creation from Linode Create flow.
+      if (isFromLinodeCreate) {
+        sendLinodeCreateFormStepEvent({
+          createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+          headerName: 'Create VPC',
+          interaction: 'click',
+          label: 'Create VPC',
+        });
       }
-      const indivSubnetErrors = handleVPCAndSubnetErrors(
-        errors.filter(
-          // ignore general subnet errors: !(the logic of filtering for only general subnet errors)
-          (error: APIError) =>
-            !error.field?.includes('subnets') ||
-            !error.field ||
-            error.field.includes('[')
-        ),
-        formik.setFieldError,
-        setGeneralAPIError
-      );
-
-      // must combine errors and subnet data to avoid indexing weirdness when deleting a subnet
-      const subnetsAndErrors = combineErrorsAndSubnets(
-        indivSubnetErrors,
-        visualToAPISubnetMapping
-      );
-      formik.setFieldValue('subnets', subnetsAndErrors);
-
-      scrollErrorIntoView();
+    } catch (errors) {
+      for (const error of errors) {
+        if (error?.field === 'subnets.label') {
+          form.setError('root.subnetLabel', { message: error.reason });
+        } else if (error?.field === 'subnets.ipv4') {
+          form.setError('root.subnetIPv4', { message: error.reason });
+        } else {
+          form.setError(error?.field ?? 'root', { message: error.reason });
+        }
+      }
     }
-
-    formik.setSubmitting(false);
   };
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      description: '',
-      label: '',
-      region: selectedRegion ?? '',
-      subnets: [
-        {
-          ip: {
-            availIPv4s: 256,
-            ipv4: DEFAULT_SUBNET_IPV4_VALUE,
-            ipv4Error: '',
-          },
-          label: '',
-          labelError: '',
-        },
-      ] as SubnetFieldState[],
-    } as CreateVPCFieldState,
-    onSubmit: onCreateVPC,
-    validateOnChange: false,
-    validationSchema: createVPCSchema,
+  const defaultValues = {
+    description: '',
+    label: '',
+    region: selectedRegion ?? '',
+    subnets: [
+      {
+        ipv4: DEFAULT_SUBNET_IPV4_VALUE,
+        label: '',
+      },
+    ],
+  };
+
+  const form = useForm<CreateVPCPayload>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(createVPCSchema),
+    values: { ...defaultValues },
   });
 
-  // Helper method to set a field's value and clear existing errors
-  const onChangeField = (field: string, value: string) => {
-    formik.setFieldValue(field, value);
-    if (formik.errors[field]) {
-      formik.setFieldError(field, undefined);
+  const { errors, submitCount } = form.formState;
+
+  React.useEffect(() => {
+    if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
+      scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
-  };
+    previousSubmitCount.current = submitCount;
+  }, [errors, submitCount]);
 
   return {
-    formik,
-    generalAPIError,
-    generalSubnetErrorsFromAPI,
+    form,
     isLoadingCreateVPC,
-    onChangeField,
     onCreateVPC,
     regionsData,
-    setGeneralAPIError,
-    setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,
   };
 };

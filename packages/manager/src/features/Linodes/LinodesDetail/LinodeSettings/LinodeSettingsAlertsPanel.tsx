@@ -1,20 +1,16 @@
-import { Linode } from '@linode/api-v4';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import { Accordion, ActionsPanel, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Notice } from 'src/components/Notice/Notice';
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
 import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
+
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
@@ -29,7 +25,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -80,8 +76,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const alertSections = [
     {
-      copy:
-        'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
       endAdornment: '%',
       error: hasErrorFor('alerts.cpu'),
       hidden: isBareMetalInstance,
@@ -107,8 +102,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       value: formik.values.cpu,
     },
     {
-      copy:
-        'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
+      copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
       endAdornment: 'IOPS',
       error: hasErrorFor('alerts.io'),
       hidden: isBareMetalInstance,
@@ -216,7 +210,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           'data-testid': 'alerts-save',
           disabled: isReadOnly || !formik.dirty,
           label: 'Save',
-          loading: isLoading,
+          loading: isPending,
           onClick: () => formik.handleSubmit(),
         }}
       />
@@ -229,7 +223,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     <Accordion
       actions={renderExpansionActions}
       defaultExpanded
-      heading="Notification Thresholds"
+      heading="Alerts"
     >
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (

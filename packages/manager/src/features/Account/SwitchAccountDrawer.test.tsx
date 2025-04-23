@@ -1,7 +1,7 @@
-import { fireEvent } from '@testing-library/react';
+import { profileFactory } from '@linode/utilities';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories/profile';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -57,7 +57,7 @@ describe('SwitchAccountDrawer', () => {
     );
   });
 
-  it('should close when the close icon is clicked', () => {
+  it('should close when the close icon is clicked', async () => {
     const { getByLabelText } = renderWithTheme(
       <SwitchAccountDrawer {...props} />
     );
@@ -65,6 +65,8 @@ describe('SwitchAccountDrawer', () => {
     const closeIconButton = getByLabelText('Close drawer');
     fireEvent.click(closeIconButton);
 
-    expect(props.onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(props.onClose).toHaveBeenCalledTimes(1);
+    });
   });
 });

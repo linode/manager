@@ -1,7 +1,7 @@
+import { Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-import { Paper } from 'src/components/Paper';
+import { Markdown } from 'src/components/Markdown/Markdown';
 
 interface Props {
   error?: string;
@@ -14,14 +14,14 @@ export const PreviewReply = (props: Props) => {
   return (
     <Paper
       sx={{
-        border: '1px solid #ccc',
-        height: 320,
+        height: '243px',
         overflowY: 'auto',
-        padding: `9px 12px 9px 12px`,
+        padding: 1.75,
       }}
       error={error}
+      variant="outlined"
     >
-      <HighlightedMarkdown textOrMarkdown={value} />
+      <Markdown textOrMarkdown={value} />
     </Paper>
   );
 };

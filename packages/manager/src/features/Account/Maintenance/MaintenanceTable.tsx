@@ -1,9 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Theme } from '@mui/material/styles';
+import {
+  useAccountMaintenanceQuery,
+  useAllAccountMaintenanceQuery,
+} from '@linode/queries';
+import { Box, Paper, Typography } from '@linode/ui';
+import { useFormattedDate } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -16,16 +20,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import {
-  useAccountMaintenanceQuery,
-  useAllAccountMaintenanceQuery,
-} from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { PENDING_MAINTENANCE_FILTER } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -41,17 +40,9 @@ const headersForCSVDownload = [
   { key: 'reason', label: 'Reason' },
 ];
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   cell: {
     width: '12%',
-  },
-  headingContainer: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1.5),
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing(),
-    },
   },
 }));
 
@@ -59,7 +50,7 @@ interface Props {
   type: 'completed' | 'pending';
 }
 
-const MaintenanceTable = ({ type }: Props) => {
+export const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
@@ -79,7 +70,7 @@ const MaintenanceTable = ({ type }: Props) => {
    */
   const filters: Record<Props['type'], Filter> = {
     completed: { status: 'completed' },
-    pending: { status: { '+or': ['pending', 'started'] } },
+    pending: PENDING_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {
@@ -136,15 +127,25 @@ const MaintenanceTable = ({ type }: Props) => {
 
   const downloadCSV = async () => {
     await getCSVData();
-    csvRef.current.link.click();
+    // This approach is not particularly elegant, but setTimeout may be the best way to make this click async without adding a lot of logic.
+    setTimeout(() => {
+      csvRef.current.link.click();
+    }, 0);
   };
 
   return (
-    <>
-      <Box
-        className={classes.headingContainer}
-        display="flex"
-        justifyContent="space-between"
+    <Box>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'space-between',
+          minHeight: '42px',
+          padding: 0.75,
+          paddingLeft: 2,
+        }}
       >
         <Typography style={{ textTransform: 'capitalize' }} variant="h3">
           {type}
@@ -158,8 +159,8 @@ const MaintenanceTable = ({ type }: Props) => {
             onClick={downloadCSV}
           />
         </Box>
-      </Box>
-      <Table>
+      </Paper>
+      <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
             <TableCell className={classes.cell}>Entity</TableCell>
@@ -219,8 +220,6 @@ const MaintenanceTable = ({ type }: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-    </>
+    </Box>
   );
 };
-
-export { MaintenanceTable };

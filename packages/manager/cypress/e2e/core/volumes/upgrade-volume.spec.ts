@@ -1,6 +1,6 @@
+import { linodeFactory } from '@linode/utilities';
 import {
   eventFactory,
-  linodeFactory,
   notificationFactory,
   volumeFactory,
 } from '@src/factories';
@@ -10,19 +10,28 @@ import {
   mockGetLinodeDisks,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
-import { mockMigrateVolumes, mockGetVolumes } from 'support/intercepts/volumes';
+import {
+  mockGetVolume,
+  mockGetVolumes,
+  mockMigrateVolumes,
+} from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
+import { chooseRegion } from 'support/util/regions';
 
 describe('volume upgrade/migration', () => {
   it('can upgrade an unattached volume to NVMe', () => {
-    const volume = volumeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const volume = volumeFactory.build({
+      region: mockRegion.id,
+    });
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockGetVolumes([volume]).as('getVolumes');
+    mockGetVolume(volume).as('getVolume');
     mockMigrateVolumes().as('migrateVolumes');
     mockGetNotifications([migrationScheduledNotification]).as(
       'getNotifications'
@@ -38,8 +47,8 @@ describe('volume upgrade/migration', () => {
       .click();
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -53,7 +62,7 @@ describe('volume upgrade/migration', () => {
         .click();
     });
 
-    cy.wait(['@migrateVolumes', '@getNotifications']);
+    cy.wait(['@migrateVolumes', '@getVolume', '@getNotifications']);
 
     cy.findByText('UPGRADE PENDING').should('be.visible');
 
@@ -61,8 +70,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -74,7 +83,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 
@@ -87,24 +96,29 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 
   it('can upgrade an attached volume from the volumes landing page', () => {
-    const linode = linodeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const linode = linodeFactory.build({
+      region: mockRegion.id,
+    });
     const volume = volumeFactory.build({
       linode_id: linode.id,
       linode_label: linode.label,
+      region: mockRegion.id,
     });
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockGetVolumes([volume]).as('getVolumes');
     mockMigrateVolumes().as('migrateVolumes');
     mockGetLinodeDetails(linode.id, linode).as('getLinode');
+    mockGetLinodeVolumes(linode.id, [volume]);
     mockGetLinodeDisks(linode.id, []);
     mockGetNotifications([migrationScheduledNotification]).as(
       'getNotifications'
@@ -125,8 +139,8 @@ describe('volume upgrade/migration', () => {
     cy.wait(['@getLinode', '@getLinodeVolumes']);
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -137,7 +151,6 @@ describe('volume upgrade/migration', () => {
         `A Volume attached to Linode ${linode.label} will be upgraded to high-performance NVMe Block Storage.`,
         { exact: false }
       ).should('be.visible');
-
       ui.button
         .findByTitle('Enter Upgrade Queue')
         .should('be.visible')
@@ -152,8 +165,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -165,7 +178,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 
@@ -178,19 +191,23 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 
   it('can upgrade an attached volume from the linode details page', () => {
-    const linode = linodeFactory.build();
+    const mockRegion = chooseRegion({ capabilities: ['Block Storage'] });
+    const linode = linodeFactory.build({
+      region: mockRegion.id,
+    });
     const volume = volumeFactory.build({
       linode_id: linode.id,
       linode_label: linode.label,
+      region: mockRegion.id,
     });
 
     const migrationScheduledNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_scheduled',
-      entity: { type: 'volume', id: volume.id },
     });
 
     mockMigrateVolumes().as('migrateVolumes');
@@ -212,8 +229,8 @@ describe('volume upgrade/migration', () => {
       .click();
 
     const migrationImminentNotification = notificationFactory.build({
+      entity: { id: volume.id, type: 'volume' },
       type: 'volume_migration_imminent',
-      entity: { type: 'volume', id: volume.id },
     });
     mockGetNotifications([migrationImminentNotification]).as(
       'getNotifications'
@@ -239,8 +256,8 @@ describe('volume upgrade/migration', () => {
       const mockStartedMigrationEvent = eventFactory.build({
         action: 'volume_migrate',
         entity: { id: volume.id, type: 'volume' },
-        status: 'started',
         percent_complete: percentage,
+        status: 'started',
       });
 
       mockGetEvents([mockStartedMigrationEvent]).as('getEvents');
@@ -252,7 +269,7 @@ describe('volume upgrade/migration', () => {
 
     const mockFinishedMigrationEvent = eventFactory.build({
       action: 'volume_migrate',
-      entity: { id: volume.id, type: 'volume', label: volume.label },
+      entity: { id: volume.id, label: volume.label, type: 'volume' },
       status: 'finished',
     });
 
@@ -265,6 +282,6 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 });

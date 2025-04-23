@@ -1,21 +1,23 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { splitAt } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import type { Disk, Linode } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
 interface Props {
-  diskId?: number;
-  label: string;
-  linodeId?: number;
-  linodeStatus: string;
+  disk: Disk;
+  linodeId: number;
+  linodeStatus: Linode['status'];
   onDelete: () => void;
-  onImagize: () => void;
   onRename: () => void;
   onResize: () => void;
   readOnly?: boolean;
@@ -27,19 +29,23 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const history = useHistory();
 
   const {
-    diskId,
+    disk,
     linodeId,
     linodeStatus,
     onDelete,
-    onImagize,
     onRename,
     onResize,
     readOnly,
   } = props;
 
-  const tooltip =
+  const poweredOnTooltip =
     linodeStatus !== 'offline'
       ? 'Your Linode must be fully powered down in order to perform this action'
+      : undefined;
+
+  const swapTooltip =
+    disk.filesystem == 'swap'
+      ? 'You cannot create images from Swap images.'
       : undefined;
 
   const actions: Action[] = [
@@ -52,17 +58,23 @@ export const LinodeDiskActionMenu = (props: Props) => {
       disabled: linodeStatus !== 'offline' || readOnly,
       onClick: onResize,
       title: 'Resize',
-      tooltip,
+      tooltip: poweredOnTooltip,
     },
     {
-      disabled: readOnly,
-      onClick: onImagize,
-      title: 'Imagize',
+      disabled: readOnly || !!swapTooltip,
+      onClick: () =>
+        history.push(
+          `/images/create/disk?selectedLinode=${linodeId}&selectedDisk=${disk.id}`
+        ),
+      title: 'Create Disk Image',
+      tooltip: swapTooltip,
     },
     {
       disabled: readOnly,
       onClick: () => {
-        history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
+        history.push(
+          `/linodes/${linodeId}/clone/disks?selectedDisk=${disk.id}`
+        );
       },
       title: 'Clone',
     },
@@ -70,7 +82,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
       disabled: linodeStatus !== 'offline' || readOnly,
       onClick: onDelete,
       title: 'Delete',
-      tooltip,
+      tooltip: poweredOnTooltip,
     },
   ];
 
@@ -101,7 +113,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
         ))}
       <ActionMenu
         actionsList={menuActions}
-        ariaLabel={`Action menu for Disk ${props.label}`}
+        ariaLabel={`Action menu for Disk ${disk.label}`}
       />
     </Box>
   );

@@ -1,6 +1,29 @@
 /**
  * @file Cypress integration tests for OBJ enrollment and cancellation.
  */
+import { profileFactory, regionFactory } from '@linode/utilities';
+import {
+  accountFactory,
+  accountSettingsFactory,
+  objectStorageClusterFactory,
+  objectStorageKeyFactory,
+} from '@src/factories';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockCancelObjectStorage,
+  mockCreateAccessKey,
+  mockGetAccessKeys,
+  mockGetBuckets,
+  mockGetClusters,
+} from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
 
 import type {
   AccountSettings,
@@ -8,43 +31,20 @@ import type {
   ObjectStorageClusterID,
   Region,
 } from '@linode/api-v4';
-import {
-  accountSettingsFactory,
-  objectStorageClusterFactory,
-  profileFactory,
-  regionFactory,
-  objectStorageKeyFactory,
-} from '@src/factories';
-import { mockGetAccountSettings } from 'support/intercepts/account';
-import {
-  mockCancelObjectStorage,
-  mockCreateAccessKey,
-  mockGetBuckets,
-  mockGetClusters,
-} from 'support/intercepts/object-storage';
-import { mockGetProfile } from 'support/intercepts/profile';
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
 const objNotes = {
-  // When enabling OBJ, in both the Access Key flow and Create Bucket flow, when OBJ DC-specific pricing is enabled.
-  objDCPricing:
-    'Object Storage costs a flat rate of $5/month, and includes 250 GB of storage. When you enable Object Storage, 1 TB of outbound data transfer will be added to your global network transfer pool.',
+  // Information regarding the Object Storage cancellation process.
+  cancellationExplanation:
+    /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
 
   // Link to further DC-specific pricing information.
   dcPricingLearnMoreNote: 'Learn more about pricing and specifications.',
 
-  // Information regarding the Object Storage cancellation process.
-  cancellationExplanation: /To discontinue billing, you.*ll need to cancel Object Storage in your Account Settings./,
+  // When enabling OBJ, in both the Access Key flow and Create Bucket flow, when OBJ DC-specific pricing is enabled.
+  objDCPricing:
+    'Object Storage costs a flat rate of $5/month, and includes 250 GB of storage. When you enable Object Storage, 1 TB of outbound data transfer will be added to your global network transfer pool.',
 };
 
 describe('Object Storage enrollment', () => {
@@ -56,10 +56,11 @@ describe('Object Storage enrollment', () => {
    * - Confirms that consistent pricing information is shown for all regions in the enable modal.
    */
   it('can enroll in Object Storage', () => {
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
-    mockGetFeatureFlagClientstream();
 
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
@@ -74,18 +75,18 @@ describe('Object Storage enrollment', () => {
     const mockRegions: Region[] = [
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Newark, NJ',
         id: 'us-east',
+        label: 'Newark, NJ',
       }),
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Sao Paulo, BR',
         id: 'br-gru',
+        label: 'Sao Paulo, BR',
       }),
       regionFactory.build({
         capabilities: ['Object Storage'],
-        label: 'Jakarta, ID',
         id: 'id-cgk',
+        label: 'Jakarta, ID',
       }),
     ];
 
@@ -144,6 +145,10 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Bucket Name (required)')
+          .should('be.visible')
+          .type(randomLabel());
+
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
 
@@ -376,6 +381,8 @@ describe('Object Storage enrollment', () => {
       });
 
     cy.wait('@cancelObjectStorage');
+
+    ui.toast.assertMessage('Object Storage successfully canceled.');
 
     // Confirm that settings page updates to reflect that Object Storage is disabled.
     cy.contains(getStartedNote).should('be.visible');

@@ -1,20 +1,19 @@
-import { SupportTicket } from '@linode/api-v4/lib/support/types';
+import { Paper, Stack, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Typography } from 'src/components/Typography';
-import { useProfile } from 'src/queries/profile/profile';
-import { capitalize } from 'src/utilities/capitalize';
+import { useProfile } from '@linode/queries';
 import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 import { SeverityChip } from './SeverityChip';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support/types';
 
 type Props = Pick<
   SupportTicket,
@@ -52,12 +51,19 @@ export const TicketStatus = (props: Props) => {
       sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
     >
       <Stack direction="row">
-        <Grid alignItems="center" container direction="row" xs>
+        <Grid
+          container
+          direction="row"
+          size="grow"
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledStatusIcon
             ariaLabel={`Ticket status is ${status}`}
             status={status === 'closed' ? 'inactive' : 'active'}
           />
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {capitalize(status)}
           </Typography>
           <Hidden smDown>

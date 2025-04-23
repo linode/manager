@@ -1,6 +1,6 @@
+import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { linodeFactory, linodeTypeFactory } from 'src/factories/linodes';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
@@ -71,7 +71,7 @@ describe('BackupLinodeRow', () => {
 
     expect(getByText('my-dc-pricing-linode-to-back-up')).toBeVisible();
     expect(await findByText('Linode Test Type')).toBeVisible();
-    expect(await findByText('Jakarta, ID')).toBeVisible();
+    expect(await findByText('ID, Jakarta')).toBeVisible();
     expect(await findByText('$3.57/mo')).toBeVisible();
   });
 

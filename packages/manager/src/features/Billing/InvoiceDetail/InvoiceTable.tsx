@@ -1,8 +1,4 @@
-import { InvoiceItem } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -17,21 +13,12 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  table: {
-    '& thead th': {
-      '&:last-of-type': {
-        paddingRight: 15,
-      },
-      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    },
-    border: `1px solid ${theme.borderColors.borderTable}`,
-  },
-}));
+import type { InvoiceItem } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   errors?: APIError[];
@@ -41,7 +28,6 @@ interface Props {
 }
 
 export const InvoiceTable = (props: Props) => {
-  const { classes } = useStyles();
   const MIN_PAGE_SIZE = 25;
 
   const {
@@ -92,37 +78,33 @@ export const InvoiceTable = (props: Props) => {
                 <TableRow
                   key={`${invoiceItem.label}-${invoiceItem.from}-${invoiceItem.to}`}
                 >
-                  <TableCell data-qa-description parentColumn="Description">
-                    {invoiceItem.label}
-                  </TableCell>
-                  <TableCell data-qa-from parentColumn="From">
+                  <TableCell data-qa-description>{invoiceItem.label}</TableCell>
+                  <TableCell data-qa-from>
                     {renderDate(invoiceItem.from)}
                   </TableCell>
-                  <TableCell data-qa-to parentColumn="To">
-                    {renderDate(invoiceItem.to)}
-                  </TableCell>
-                  <TableCell data-qa-quantity parentColumn="Quantity">
+                  <TableCell data-qa-to>{renderDate(invoiceItem.to)}</TableCell>
+                  <TableCell data-qa-quantity>
                     {renderQuantity(invoiceItem.quantity)}
                   </TableCell>
                   {shouldShowRegion && (
-                    <TableCell data-qa-region parentColumn="Region">
+                    <TableCell data-qa-region>
                       {getInvoiceRegion(invoiceItem, regions ?? [])}
                     </TableCell>
                   )}
-                  <TableCell data-qa-unit-price parentColumn="Unit Price">
+                  <TableCell data-qa-unit-price>
                     {invoiceItem.unit_price !== 'None' &&
                       renderUnitPrice(invoiceItem.unit_price)}
                   </TableCell>
-                  <TableCell data-qa-amount parentColumn="Amount (USD)">
+                  <TableCell data-qa-amount>
                     <Currency
                       quantity={invoiceItem.amount}
                       wrapInParentheses={invoiceItem.amount < 0}
                     />
                   </TableCell>
-                  <TableCell data-qa-tax parentColumn="Tax (USD)">
+                  <TableCell data-qa-tax>
                     <Currency quantity={invoiceItem.tax} />
                   </TableCell>
-                  <TableCell data-qa-total parentColumn="Total (USD)">
+                  <TableCell data-qa-total>
                     <Currency
                       quantity={invoiceItem.total}
                       wrapInParentheses={invoiceItem.total < 0}
@@ -134,9 +116,13 @@ export const InvoiceTable = (props: Props) => {
                 <TableRow>
                   <TableCell
                     colSpan={NUM_COLUMNS}
-                    sx={{ paddingLeft: '0px !important' }}
+                    sx={{ paddingLeft: 0, paddingRight: 0 }}
                   >
                     <PaginationFooter
+                      sx={{
+                        border: 0,
+                        width: '100%',
+                      }}
                       count={count}
                       eventCategory="invoice_items"
                       handlePageChange={handlePageChange}
@@ -157,7 +143,7 @@ export const InvoiceTable = (props: Props) => {
   };
 
   return (
-    <Table aria-label="Invoice Details" className={classes.table} noBorder>
+    <Table aria-label="Invoice Details">
       <TableHead>
         <TableRow>
           <TableCell>Description</TableCell>

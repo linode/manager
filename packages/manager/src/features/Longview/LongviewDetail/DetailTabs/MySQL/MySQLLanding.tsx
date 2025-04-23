@@ -1,22 +1,18 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Notice, Typography } from '@linode/ui';
+import { isToday as _isToday } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
-import { isToday as _isToday } from 'src/utilities/isToday';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
-import { WithStartAndEnd } from '../../../request.types';
-import {
-  StyledTimeRangeSelect,
-  StyledTypography,
-} from '../CommonStyles.styles';
-import { StyledItemGrid } from '../CommonStyles.styles';
+import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { MySQLGraphs } from './MySQLGraphs';
+
+import type { WithStartAndEnd } from '../../../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   clientAPIKey?: string;
@@ -72,7 +68,7 @@ export const MySQLLanding = React.memo((props: Props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-mysql-metrics-with-linode-longview#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the MySQL Longview app.
@@ -84,7 +80,7 @@ export const MySQLLanding = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'MySQL'} />
-      <StyledItemGrid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Box
           alignItems="center"
           display="flex"
@@ -96,16 +92,16 @@ export const MySQLLanding = React.memo((props: Props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
+            sx={{ width: 250 }}
           />
         </Box>
-      </StyledItemGrid>
-      <StyledItemGrid className="py0" xs={12}>
+      </Grid>
+      <Grid size={{ xs: 12 }} sx={{ py: 0 }}>
         <MySQLGraphs
           data={data?.Applications?.MySQL}
           end={time.end}
@@ -118,7 +114,7 @@ export const MySQLLanding = React.memo((props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </StyledItemGrid>
+      </Grid>
     </Grid>
   );
 });

@@ -1,34 +1,50 @@
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
+import FolderIcon from 'src/assets/icons/objectStorage/folder.svg';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import { FolderActionMenu } from './FolderActionMenu';
 
-interface Props {
+import type { TableRowProps } from 'src/components/TableRow';
+
+export interface FolderTableRowProps extends TableRowProps {
   displayName: string;
   folderName: string;
   handleClickDelete: (objectName: string) => void;
-  manuallyCreated: boolean;
 }
 
-export const FolderTableRow = (props: Props) => {
-  const { displayName, folderName, handleClickDelete } = props;
+export const FolderTableRow = (props: FolderTableRowProps) => {
+  const {
+    displayName,
+    folderName,
+    handleClickDelete,
+    ...tableRowProps
+  } = props;
 
   return (
-    <TableRow key={folderName} {...props}>
-      <TableCell parentColumn="Object">
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+    <TableRow key={folderName} {...tableRowProps}>
+      <TableCell>
+        <Grid
+          sx={{
+            alignItems: 'center',
+          }}
+          container
+          spacing={2}
+          wrap="nowrap"
+        >
           <StyledIconWrapper>
-            <EntityIcon size={22} variant="folder" />
+            <FolderIcon size={22} />
           </StyledIconWrapper>
           <Grid>
-            <Link className="secondaryLink" to={`?prefix=${folderName}`}>
+            <Link
+              className="secondaryLink"
+              to={`?prefix=${encodeURIComponent(folderName)}`}
+            >
               {displayName}
             </Link>
           </Grid>

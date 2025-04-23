@@ -1,18 +1,18 @@
+import { regionFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
 import {
   accountTransferFactory,
   accountTransferNoResourceFactory,
 } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TransferDisplayDialog } from './TransferDisplayDialog';
 import {
-  NETWORK_TRANSFER_QUOTA_DOCS_LINKS,
+  NETWORK_TRANSFER_USAGE_AND_COST_LINK,
   TRANSFER_DISPLAY_BUTTON,
 } from './constants';
+import { TransferDisplayDialog } from './TransferDisplayDialog';
 import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
 
 import type { TransferDisplayDialogProps } from './TransferDisplayDialog';
@@ -53,7 +53,10 @@ describe('TransferDisplayDialog', () => {
     const docsLink = getByRole('link');
 
     expect(docsLink).toBeInTheDocument();
-    expect(docsLink).toHaveAttribute('href', NETWORK_TRANSFER_QUOTA_DOCS_LINKS);
+    expect(docsLink).toHaveAttribute(
+      'href',
+      NETWORK_TRANSFER_USAGE_AND_COST_LINK
+    );
   });
 
   it('renders transfer display dialog without usage or quota data if no quota/resources', async () => {

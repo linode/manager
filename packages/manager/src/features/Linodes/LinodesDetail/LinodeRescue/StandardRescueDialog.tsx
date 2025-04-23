@@ -1,35 +1,38 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { styled, useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
-import { assoc, clamp, equals, pathOr } from 'ramda';
-import * as React from 'react';
-
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { usePrevious } from 'src/hooks/usePrevious';
-import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import {
+  useAllLinodeDisksQuery,
+  useAllVolumesQuery,
+  useGrants,
   useLinodeQuery,
   useLinodeRescueMutation,
-} from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+  useProfile,
+} from '@linode/queries';
 import {
-  DevicesAsStrings,
-  createDevicesFromStrings,
-} from 'src/utilities/createDevicesFromStrings';
+  ActionsPanel,
+  Button,
+  Dialog,
+  ErrorState,
+  Notice,
+  Paper,
+  clamp,
+} from '@linode/ui';
+import { usePrevious, createDevicesFromStrings } from '@linode/utilities';
+import { styled, useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+
+import { useEventsPollingActions } from 'src/queries/events/events';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import { DeviceSelection, ExtendedDisk } from './DeviceSelection';
+import { DeviceSelection } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
+
+import type { ExtendedDisk } from './DeviceSelection';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { DevicesAsStrings } from '@linode/utilities';
 
 interface Props {
   linodeId: number | undefined;
+  linodeLabel: string | undefined;
   onClose: () => void;
   open: boolean;
 }
@@ -75,7 +78,7 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 export const StandardRescueDialog = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, linodeLabel, onClose, open } = props;
 
   const theme = useTheme();
 
@@ -115,9 +118,10 @@ export const StandardRescueDialog = (props: Props) => {
   //   open
   // );
 
-  const linodeDisks = disks?.map((disk) =>
-    assoc('_id', `disk-${disk.id}`, disk)
-  );
+  const linodeDisks = disks?.map((disk) => ({
+    ...disk,
+    _id: `disk-${disk.id}`,
+  }));
 
   const filteredVolumes =
     volumes?.filter((volume) => {
@@ -149,7 +153,13 @@ export const StandardRescueDialog = (props: Props) => {
   const [APIError, setAPIError] = React.useState<string>('');
 
   React.useEffect(() => {
-    if (!equals(deviceMap, prevDeviceMap)) {
+    if (
+      Object.entries(deviceMap).length !==
+        Object.entries(prevDeviceMap ?? {}).length ||
+      Object.entries(deviceMap).some(
+        ([key, value]) => prevDeviceMap?.[key as keyof DeviceMap] !== value
+      )
+    ) {
       setCounter(initialCounter);
       setRescueDevices(deviceMap);
       setAPIError('');
@@ -202,7 +212,7 @@ export const StandardRescueDialog = (props: Props) => {
       fullWidth
       maxWidth="md"
       open={open}
-      title={`Rescue Linode ${linode?.label ?? ''}`}
+      title={`Rescue Linode ${linodeLabel ?? ''}`}
     >
       {APIError && <Notice text={APIError} variant="error" />}
       {disksError ? (
@@ -219,27 +229,29 @@ export const StandardRescueDialog = (props: Props) => {
             {isReadOnly && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
+              getSelected={(slot) =>
+                rescueDevices?.[slot as keyof DevicesAsStrings] ?? ''
+              }
               counter={counter}
               devices={devices}
               disabled={disabled}
-              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
               onChange={onChange}
               rescue
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             />
             <Button
-              sx={{ marginTop: theme.spacing() }}
               buttonType="secondary"
               compactX
               disabled={disabled || counter >= 6}
               onClick={incrementCounter}
+              sx={{ marginTop: theme.spacing() }}
             >
               Add Disk
             </Button>
             <ActionsPanel
               primaryButtonProps={{
-                'data-testid': 'submit',
                 'data-qa-form-data-loading': isLoading,
+                'data-testid': 'submit',
                 disabled,
                 label: 'Reboot into Rescue Mode',
                 onClick: onSubmit,

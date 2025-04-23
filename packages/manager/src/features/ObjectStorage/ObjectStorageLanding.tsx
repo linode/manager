@@ -1,9 +1,10 @@
+import { StyledLinkButton, Typography } from '@linode/ui';
+import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -11,24 +12,21 @@ import { Link } from 'src/components/Link';
 import { PromotionalOfferCard } from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useTabs } from 'src/hooks/useTabs';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
-import { MODE } from './AccessKeyLanding/types';
+import { getRestrictedResourceText } from '../Account/utils';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
+
+import type { MODE } from './AccessKeyLanding/types';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -42,119 +40,99 @@ const AccessKeyLanding = React.lazy(() =>
 );
 
 export const ObjectStorageLanding = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const [mode, setMode] = React.useState<MODE>('creating');
-  const { action, tab } = useParams<{
-    action?: 'create';
-    tab?: 'access-keys' | 'buckets';
-  }>();
-  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
-  const {
-    _isRestrictedUser,
-    account,
-    accountSettings,
-  } = useAccountManagement();
 
+  const { _isRestrictedUser, account, accountSettings } =
+    useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
 
-  const { data: objectStorageClusters } = useObjectStorageClusters(
-    !isObjMultiClusterEnabled
-  );
-
-  const { data: regionsData } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regionsData?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
-  const createOrEditDrawer = useOpenClose();
 
-  const tabs = [
-    {
-      routeName: `/object-storage/buckets`,
-      title: 'Buckets',
-    },
-    {
-      routeName: `/object-storage/access-keys`,
-      title: 'Access Keys',
-    },
-  ];
+  const { handleTabChange, tabIndex, tabs } = useTabs([
+    { title: 'Buckets', to: `/object-storage/buckets` },
+    { title: 'Access Keys', to: `/object-storage/access-keys` },
+  ]);
 
-  const realTabs = ['buckets', 'access-keys'];
+  const objPromotionalOffers =
+    flags.promotionalOffers?.filter((offer) =>
+      offer.features.includes('Object Storage')
+    ) ?? [];
 
-  const openDrawer = (mode: MODE) => {
-    setMode(mode);
-    createOrEditDrawer.open();
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  const objPromotionalOffers = (
-    flags.promotionalOffers ?? []
-  ).filter((promotionalOffer) =>
-    promotionalOffer.features.includes('Object Storage')
-  );
-
-  // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop
-  // being billed. If they have the service enabled but do not have any buckets, show a warning.
+  // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
+  // Display a warning if the service is active but no buckets are present.
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
     userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
 
-  // No need to display header since the it is redundant with the docs and CTA of the empty state
-  // Meanwhile it will still display the header for the access keys tab at all times
-  const shouldHideDocsAndCreateButtons =
-    !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
+  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_buckets',
+  });
 
-  const createButtonText =
-    tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
+  const shouldHideDocsAndCreateButtons =
+    !areBucketsLoading && tabIndex === 0 && userHasNoBucketCreated;
+
+  const isAccessKeysTab = tabIndex === 1;
+
+  const createButtonText = isAccessKeysTab
+    ? 'Create Access Key'
+    : 'Create Bucket';
+
+  const openDrawer = useOpenClose();
+
+  const handleOpenAccessDrawer = (mode: MODE) => {
+    setMode(mode);
+    openDrawer.open();
+  };
 
   const createButtonAction = () => {
-    if (tab === 'access-keys') {
-      setMode('creating');
-
-      return createOrEditDrawer.open();
+    if (isAccessKeysTab) {
+      navigate({ to: '/object-storage/access-keys/create' });
+    } else {
+      navigate({ to: '/object-storage/buckets/create' });
     }
-
-    history.replace('/object-storage/buckets/create');
   };
+
+  const isCreateBucketOpen = match.routeId === '/object-storage/buckets/create';
+  const isCreateAccessKeyOpen =
+    match.routeId === '/object-storage/access-keys/create';
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Object Storage" />
+      <DocumentTitleSegment
+        segment={`${
+          isCreateBucketOpen && !objectStorageBucketsResponse?.buckets.length
+            ? 'Create a Bucket'
+            : 'Object Storage'
+        }`}
+      />
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Buckets',
+          }),
+        }}
         breadcrumbProps={{ pathname: '/object-storage' }}
         createButtonText={createButtonText}
+        disabledCreateButton={isBucketCreationRestricted}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         entity="Object Storage"
         onButtonClick={createButtonAction}
@@ -162,15 +140,8 @@ export const ObjectStorageLanding = () => {
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
         title="Object Storage"
       />
-      <Tabs
-        index={
-          realTabs.findIndex((t) => t === tab) !== -1
-            ? realTabs.findIndex((t) => t === tab)
-            : 0
-        }
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map((promotionalOffer) => (
           <StyledPromotionalOfferCard
@@ -184,18 +155,23 @@ export const ObjectStorageLanding = () => {
           <TabPanels>
             <SafeTabPanel index={0}>
               {isObjMultiClusterEnabled ? (
-                <OMC_BucketLanding />
+                <OMC_BucketLanding
+                  isCreateBucketDrawerOpen={isCreateBucketOpen}
+                />
               ) : (
-                <BucketLanding />
+                <BucketLanding isCreateBucketDrawerOpen={isCreateBucketOpen} />
               )}
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                accessDrawerOpen={createOrEditDrawer.isOpen}
-                closeAccessDrawer={createOrEditDrawer.close}
+                closeAccessDrawer={() => {
+                  navigate({ to: '/object-storage/access-keys' });
+                  openDrawer.close();
+                }}
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
-                openAccessDrawer={openDrawer}
+                openAccessDrawer={handleOpenAccessDrawer}
               />
             </SafeTabPanel>
           </TabPanels>
@@ -203,12 +179,12 @@ export const ObjectStorageLanding = () => {
         {isObjMultiClusterEnabled ? (
           <OMC_CreateBucketDrawer
             isOpen={isCreateBucketOpen}
-            onClose={() => history.replace('/object-storage/buckets')}
+            onClose={() => navigate({ to: '/object-storage/buckets' })}
           />
         ) : (
           <CreateBucketDrawer
             isOpen={isCreateBucketOpen}
-            onClose={() => history.replace('/object-storage/buckets')}
+            onClose={() => navigate({ to: '/object-storage/buckets' })}
           />
         )}
       </Tabs>
@@ -219,7 +195,7 @@ export const ObjectStorageLanding = () => {
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
 export const BillingNotice = React.memo(() => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <DismissibleBanner
@@ -227,7 +203,6 @@ export const BillingNotice = React.memo(() => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: NOTIFICATION_KEY,
       }}
-      important
       preferenceKey={NOTIFICATION_KEY}
       variant="warning"
     >
@@ -236,7 +211,7 @@ export const BillingNotice = React.memo(() => {
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
         <StyledLinkButton
-          onClick={() => history.replace('/object-storage/buckets/create')}
+          onClick={() => navigate({ to: '/object-storage/buckets/create' })}
         >
           create a Bucket.
         </StyledLinkButton>

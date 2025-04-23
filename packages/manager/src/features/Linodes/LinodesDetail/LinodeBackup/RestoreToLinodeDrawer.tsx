@@ -1,24 +1,27 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import {
+  useAllLinodesQuery,
+  useLinodeBackupRestoreMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Checkbox,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Notice,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Checkbox } from 'src/components/Checkbox';
-import { Drawer } from 'src/components/Drawer';
-import Select from 'src/components/EnhancedSelect/Select';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { Notice } from 'src/components/Notice/Notice';
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
 interface Props {
   backup: LinodeBackup | undefined;
   linodeId: number;
@@ -47,7 +50,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: restoreBackup,
     reset: resetMutation,
   } = useLinodeBackupRestoreMutation();
@@ -94,6 +97,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Restore Backup from ${backup?.created}`}
@@ -102,17 +106,20 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         {Boolean(errorMap.none) && (
           <Notice variant="error">{errorMap.none}</Notice>
         )}
-        <Select
+        <Autocomplete
+          onChange={(_, selected) =>
+            formik.setFieldValue('linode_id', selected?.value)
+          }
           textFieldProps={{
             dataAttrs: {
               'data-qa-select-linode': true,
             },
           }}
+          autoHighlight
+          disableClearable
           errorText={linodeError?.[0].reason ?? errorMap.linode_id}
-          isClearable={false}
-          isLoading={linodesLoading}
           label="Linode"
-          onChange={(item) => formik.setFieldValue('linode_id', item.value)}
+          loading={linodesLoading}
           options={linodeOptions}
           placeholder="Select a Linode"
           value={selectedLinodeOption}
@@ -152,7 +159,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'restore-submit',
             label: 'Restore',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{

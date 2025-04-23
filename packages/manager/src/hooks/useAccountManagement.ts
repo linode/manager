@@ -1,13 +1,22 @@
-import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import {
+  useAccount,
+  useAccountSettings,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 
-import { useAccount } from 'src/queries/account/account';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { useRestrictedGlobalGrantCheck } from './useRestrictedGlobalGrantCheck';
+
+import type { GlobalGrantTypes } from '@linode/api-v4/lib/account';
 
 export const useAccountManagement = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+
+  const isRestrictedGlobalGrant = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
 
   const _isRestrictedUser = profile?.restricted ?? false;
   const { data: accountSettings } = useAccountSettings();
@@ -19,6 +28,12 @@ export const useAccountManagement = () => {
 
   const _isManagedAccount = accountSettings?.managed ?? false;
 
+  const hasReadWriteAccess = _hasGrant('account_access') === 'read_write';
+
+  const canSwitchBetweenParentOrProxyAccount =
+    (profile?.user_type === 'parent' && !isRestrictedGlobalGrant) ||
+    profile?.user_type === 'proxy';
+
   return {
     _hasAccountAccess,
     _hasGrant,
@@ -27,6 +42,8 @@ export const useAccountManagement = () => {
     account,
     accountError,
     accountSettings,
+    canSwitchBetweenParentOrProxyAccount,
+    hasReadWriteAccess,
     profile,
   };
 };

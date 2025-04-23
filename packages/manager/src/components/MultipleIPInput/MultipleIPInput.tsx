@@ -1,19 +1,22 @@
+import {
+  Button,
+  InputLabel,
+  Notice,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import { InputBaseProps } from '@mui/material/InputBase';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
-import { Notice } from 'src/components/Notice/Notice';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
-import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+
+import type { InputBaseProps } from '@mui/material/InputBase';
+import type { Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {
@@ -26,7 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& :hover, & :focus': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: theme.tokens.color.Neutrals.White,
     },
     '& > span': {
       padding: 2,
@@ -50,39 +53,111 @@ const useStyles = makeStyles()((theme: Theme) => ({
     flexDirection: 'row',
   },
   required: {
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
   },
   root: {
     marginTop: theme.spacing(),
   },
 }));
 
-interface Props {
+export interface MultipeIPInputProps {
+  /**
+   * Text displayed on the button.
+   */
   buttonText?: string;
+
+  /**
+   * Custom CSS class for additional styling.
+   */
   className?: string;
+
+  /**
+   * Disables the component (non-interactive).
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Error message for invalid input.
+   */
   error?: string;
+
+  /**
+   * Indicates if the input relates to database access controls.
+   * @default false
+   */
   forDatabaseAccessControls?: boolean;
+
+  /**
+   * Indicates if the input is for VPC IPv4 ranges.
+   * @default false
+   */
   forVPCIPv4Ranges?: boolean;
+
+  /**
+   * Helper text for additional guidance.
+   */
   helperText?: string;
+
+  /**
+   * Custom input properties passed to the underlying input component.
+   */
   inputProps?: InputBaseProps;
+
+  /**
+   * Array of `ExtendedIP` objects representing managed IPs.
+   */
   ips: ExtendedIP[];
+
+  /**
+   * Styles the button as a link.
+   * @default false
+   */
+  isLinkStyled?: boolean;
+
+  /**
+   * Callback triggered when the input loses focus, passing updated `ips`.
+   */
   onBlur?: (ips: ExtendedIP[]) => void;
+
+  /**
+   * Callback triggered when IPs change, passing updated `ips`.
+   */
   onChange: (ips: ExtendedIP[]) => void;
+
+  /**
+   * Placeholder text for an empty input field.
+   */
   placeholder?: string;
+
+  /**
+   * Indicates if the input is required for form submission.
+   * @default false
+   */
   required?: boolean;
+
+  /**
+   * Title or label for the input field.
+   */
   title: string;
+
+  /**
+   * Tooltip text for extra info on hover.
+   */
   tooltip?: string;
 }
 
-export const MultipleIPInput = React.memo((props: Props) => {
+export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
     buttonText,
     className,
+    disabled,
     error,
     forDatabaseAccessControls,
     forVPCIPv4Ranges,
     helperText,
     ips,
+    isLinkStyled,
     onBlur,
     onChange,
     placeholder,
@@ -128,20 +203,24 @@ export const MultipleIPInput = React.memo((props: Props) => {
     return null;
   }
 
-  const addIPButton = forVPCIPv4Ranges ? (
-    <StyledLinkButtonBox>
-      <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
-    </StyledLinkButtonBox>
-  ) : (
-    <Button
-      buttonType="secondary"
-      className={classes.addIP}
-      compactX
-      onClick={addNewInput}
-    >
-      {buttonText ?? 'Add an IP'}
-    </Button>
-  );
+  const addIPButton =
+    forVPCIPv4Ranges || isLinkStyled ? (
+      <StyledLinkButtonBox sx={{ marginTop: isLinkStyled ? '8px' : '12px' }}>
+        <LinkButton isDisabled={disabled} onClick={addNewInput}>
+          {buttonText}
+        </LinkButton>
+      </StyledLinkButtonBox>
+    ) : (
+      <Button
+        buttonType="secondary"
+        className={classes.addIP}
+        compactX
+        disabled={disabled}
+        onClick={addNewInput}
+      >
+        {buttonText ?? 'Add an IP'}
+      </Button>
+    );
 
   return (
     <div className={cx(classes.root, className)}>
@@ -175,15 +254,18 @@ export const MultipleIPInput = React.memo((props: Props) => {
           container
           data-testid="domain-transfer-input"
           direction="row"
-          justifyContent="center"
           key={`domain-transfer-ip-${idx}`}
-          maxWidth={forVPCIPv4Ranges ? '415px' : undefined}
           spacing={2}
+          sx={{
+            justifyContent: 'center',
+            maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
+          }}
         >
-          <Grid xs={11}>
+          <Grid size={11}>
             <TextField
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
+                disabled,
                 ...props.inputProps,
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -202,10 +284,11 @@ export const MultipleIPInput = React.memo((props: Props) => {
           {/** Don't show the button for the first input since it won't do anything, unless this component is
            * used in DBaaS or for Linode VPC interfaces
            */}
-          <Grid xs={1}>
+          <Grid size={1}>
             {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
+                disabled={disabled}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />

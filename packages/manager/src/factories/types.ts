@@ -1,7 +1,6 @@
-import * as Factory from 'factory.ts';
+import { Factory } from '@linode/utilities';
 
-import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import type { PriceType } from '@linode/api-v4/src/types';
+import type { LinodeType, PriceType } from '@linode/api-v4';
 import type {
   PlanSelectionAvailabilityTypes,
   PlanWithAvailability,
@@ -9,6 +8,7 @@ import type {
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -57,8 +57,8 @@ export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 8,
 });
 
-export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailability>(
-  {
+export const planSelectionTypeFactory =
+  Factory.Sync.makeFactory<PlanWithAvailability>({
     class: typeFactory.build().class,
     disk: typeFactory.build().disk,
     formattedLabel: '',
@@ -81,12 +81,12 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailab
     ],
     transfer: typeFactory.build().transfer,
     vcpus: typeFactory.build().vcpus,
-  }
-);
+  });
 
 export const extendedTypeFactory = Factory.Sync.makeFactory<
   ExtendedType & PlanSelectionAvailabilityTypes
 >({
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -173,8 +173,8 @@ export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
   transfer: 0,
 });
 
-export const lkeStandardAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType>(
-  {
+export const lkeStandardAvailabilityTypeFactory =
+  Factory.Sync.makeFactory<PriceType>({
     id: 'lke-sa',
     label: 'LKE Standard Availability',
     price: {
@@ -183,11 +183,10 @@ export const lkeStandardAvailabilityTypeFactory = Factory.Sync.makeFactory<Price
     },
     region_prices: [],
     transfer: 0,
-  }
-);
+  });
 
-export const lkeHighAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType>(
-  {
+export const lkeHighAvailabilityTypeFactory =
+  Factory.Sync.makeFactory<PriceType>({
     id: 'lke-ha',
     label: 'LKE High Availability',
     price: {
@@ -207,8 +206,18 @@ export const lkeHighAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType
       },
     ],
     transfer: 0,
-  }
-);
+  });
+
+export const lkeEnterpriseTypeFactory = Factory.Sync.makeFactory<PriceType>({
+  id: 'lke-e',
+  label: 'LKE Enterprise',
+  price: {
+    hourly: 0.45,
+    monthly: 300,
+  },
+  region_prices: [],
+  transfer: 0,
+});
 
 export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   id: 'objectstorage',
@@ -232,8 +241,8 @@ export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   transfer: 1000,
 });
 
-export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceType>(
-  {
+export const objectStorageOverageTypeFactory =
+  Factory.Sync.makeFactory<PriceType>({
     id: 'objectstorage-overage',
     label: 'Object Storage Overage',
     price: {
@@ -253,11 +262,10 @@ export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceTyp
       },
     ],
     transfer: 0,
-  }
-);
+  });
 
-export const distributedNetworkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
-  {
+export const distributedNetworkTransferPriceTypeFactory =
+  Factory.Sync.makeFactory<PriceType>({
     id: 'distributed_network_transfer',
     label: 'Distributed Network Transfer',
     price: {
@@ -266,11 +274,10 @@ export const distributedNetworkTransferPriceTypeFactory = Factory.Sync.makeFacto
     },
     region_prices: [],
     transfer: 0,
-  }
-);
+  });
 
-export const networkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
-  {
+export const networkTransferPriceTypeFactory =
+  Factory.Sync.makeFactory<PriceType>({
     id: 'network_transfer',
     label: 'Network Transfer',
     price: {
@@ -290,5 +297,4 @@ export const networkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceTyp
       },
     ],
     transfer: 0,
-  }
-);
+  });

@@ -1,15 +1,17 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import { formatDuration } from '@linode/utilities';
 import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Status, StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
-import { formatDuration } from 'src/utilities/formatDuration';
 
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
+
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 interface Props {
   backup: LinodeBackup;
@@ -48,25 +50,18 @@ export const BackupTableRow = (props: Props) => {
 
   return (
     <TableRow data-qa-backup key={backup.id}>
-      <TableCell
-        data-qa-backup-name={backup.label || typeMap[backup.type]}
-        parentColumn="Label"
-      >
+      <TableCell data-qa-backup-name={backup.label || typeMap[backup.type]}>
         {backup.label || typeMap[backup.type]}
       </TableCell>
-      <TableCell
-        data-qa-backup-name={backup.status}
-        parentColumn="Status"
-        statusCell
-      >
+      <TableCell data-qa-backup-name={backup.status} statusCell>
         <StatusIcon status={statusIconMap[backup.status] ?? 'other'} />
         {statusTextMap[backup.status]}
       </TableCell>
-      <TableCell parentColumn="Date Created">
+      <TableCell>
         {/** important to note that we're intentionally not humanizing the time here */}
         <DateTimeDisplay value={backup.created} />
       </TableCell>
-      <TableCell parentColumn="Duration">
+      <TableCell>
         {formatDuration(
           Duration.fromMillis(
             (backup.finished
@@ -76,14 +71,14 @@ export const BackupTableRow = (props: Props) => {
           )
         )}
       </TableCell>
-      <TableCell data-qa-backup-disks parentColumn="Disks">
+      <TableCell data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (
           <div key={idx}>
             {disk.label} ({disk.filesystem}) - {disk.size} MB
           </div>
         ))}
       </TableCell>
-      <TableCell data-qa-space-required parentColumn="Space Required">
+      <TableCell data-qa-space-required>
         {backup.disks.reduce((acc, disk) => acc + disk.size, 0)} MB
       </TableCell>
       <TableCell actionCell>

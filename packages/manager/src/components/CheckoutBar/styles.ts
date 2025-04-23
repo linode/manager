@@ -1,7 +1,5 @@
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/system';
-
-import { Button } from 'src/components/Button/Button';
+import { Button } from '@linode/ui';
+import { styled, useTheme } from '@mui/material/styles';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: 18,
@@ -10,21 +8,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledRoot = styled('div')(() => {
-  const theme = useTheme();
-
-  return {
-    minHeight: '24px',
-    minWidth: '24px',
-    [theme.breakpoints.down(1280)]: {
-      background: theme.color.white,
-      bottom: '0 !important' as '0',
-      left: '0 !important' as '0',
-      padding: theme.spacing(2),
-      position: 'relative !important' as 'relative',
-    },
-  };
-});
+const StyledRoot = styled('div')(({ theme }) => ({
+  minHeight: '24px',
+  minWidth: '24px',
+  [theme.breakpoints.down(1280)]: {
+    background: theme.color.white,
+    bottom: '0 !important' as '0',
+    left: '0 !important' as '0',
+    padding: theme.spacing(2),
+    position: 'relative !important' as 'relative',
+  },
+}));
 
 const StyledCheckoutSection = styled('div')(({ theme }) => ({
   padding: '12px 0',

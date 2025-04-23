@@ -1,13 +1,16 @@
-import { Config } from '@linode/api-v4/lib/linodes';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { splitAt } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   config: Config;

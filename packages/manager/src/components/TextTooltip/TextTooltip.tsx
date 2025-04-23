@@ -1,12 +1,10 @@
+import { Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
-import { Typography } from 'src/components/Typography';
-
-import type { SxProps } from '@mui/material';
+import type { TypographyProps } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
-import type { TypographyProps } from 'src/components/Typography';
 
 export interface TextTooltipProps {
   /**
@@ -30,7 +28,7 @@ export interface TextTooltipProps {
    */
   placement?: TooltipProps['placement'];
   /** Optional custom styles */
-  sxTypography?: SxProps;
+  sxTypography?: SxProps<Theme>;
   /** The text to display inside the tooltip */
   tooltipText: JSX.Element | string;
   /**
@@ -82,10 +80,13 @@ export const TextTooltip = (props: TextTooltipProps) => {
 const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
+  '&:hover': {
+    color: theme.textColors.linkHover,
+  },
   borderRadius: 4,
-  color: theme.palette.primary.main,
+  color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
   position: 'relative',
-  textDecoration: `underline dotted ${theme.palette.primary.main}`,
+  textDecoration: `underline dotted ${theme.textColors.linkActiveLight}`,
   textUnderlineOffset: 4,
 }));

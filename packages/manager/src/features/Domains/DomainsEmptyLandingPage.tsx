@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
@@ -49,7 +49,7 @@ export const DomainsEmptyLandingState = (
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={DomainIcon}
+      icon={NetworkIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

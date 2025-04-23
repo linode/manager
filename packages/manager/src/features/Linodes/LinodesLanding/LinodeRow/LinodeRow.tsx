@@ -1,4 +1,5 @@
-import { SxProps } from '@mui/system';
+import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { capitalizeAllWords, formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -8,24 +9,17 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { IPAddress } from '../IPAddress';
-import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
 import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
 import {
@@ -33,6 +27,10 @@ import {
   StyledIpTableCell,
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
+
+import type { LinodeHandlers } from '../LinodesLanding';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
@@ -98,7 +96,6 @@ export const LinodeRow = (props: Props) => {
       key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      sx={{ height: 'auto' }}
     >
       <TableCell noWrap>
         <Link tabIndex={0} to={`/linodes/${id}`}>
@@ -209,7 +206,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text: string | undefined;
 }> = (props) => {
   const { className, progress, sx, text } = props;

@@ -1,10 +1,6 @@
-import { pathOr } from 'ramda';
+import { pluralize, readableBytes } from '@linode/utilities';
 
-import { LVClientData } from 'src/containers/longview.stats.container';
-import { pluralize } from 'src/utilities/pluralize';
-import { readableBytes } from 'src/utilities/unitConversions';
-
-import {
+import type {
   CPU,
   Disk,
   InboundOutboundNetwork,
@@ -15,13 +11,14 @@ import {
   Stat,
   StatWithDummyPoint,
 } from '../request.types';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Storage {
   free: number;
   total: number;
 }
 
-export const getPackageNoticeText = (packages: LongviewPackage[]) => {
+export const getPackageNoticeText = (packages: LongviewPackage[] | null) => {
   if (!packages) {
     return 'Package information not available';
   }
@@ -49,8 +46,8 @@ export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
   let total = 0;
   Object.keys(DiskData).forEach((key) => {
     const disk = DiskData[key];
-    free += pathOr(0, ['fs', 'free', 0, 'y'], disk);
-    total += pathOr(0, ['fs', 'total', 0, 'y'], disk);
+    free += disk?.fs?.free?.[0]?.y ?? 0;
+    total += disk?.fs?.total?.[0]?.y ?? 0;
   });
   return { free, total };
 };
@@ -183,10 +180,10 @@ export const generateTotalMemory = (used: number, free: number) => used + free;
 /**
  * Used for calculating comparison values for sorting by RAM
  */
-export const sumUsedMemory = (data: LVClientData) => {
-  const usedMemory = pathOr(0, ['Memory', 'real', 'used', 0, 'y'], data);
-  const buffers = pathOr(0, ['Memory', 'real', 'buffers', 0, 'y'], data);
-  const cache = pathOr(0, ['Memory', 'real', 'cache', 0, 'y'], data);
+export const sumUsedMemory = (data: LVDataProps['longviewClientData']) => {
+  const usedMemory = data?.Memory?.real?.used?.[0]?.y ?? 0;
+  const buffers = data?.Memory?.real?.buffers?.[0]?.y ?? 0;
+  const cache = data?.Memory?.real?.cache?.[0]?.y ?? 0;
 
   return generateUsedMemory(usedMemory, buffers, cache);
 };
@@ -253,9 +250,12 @@ export const sumStatsObject = <T extends {}>(
       if (thisObject && typeof thisObject === 'object') {
         Object.keys(thisObject).forEach((thisKey) => {
           if (thisKey in accum) {
-            accum[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+            (accum as any)[thisKey] = appendStats(
+              (accum as any)[thisKey],
+              (thisObject as any)[thisKey]
+            );
           } else {
-            accum[thisKey] = thisObject[thisKey];
+            (accum as any)[thisKey] = (thisObject as any)[thisKey];
           }
         });
       }

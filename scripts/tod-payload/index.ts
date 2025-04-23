@@ -17,14 +17,14 @@ program
   .option('-v, --appVersion <str>', 'Application version')
   .option('-t, --appTeam <str>', 'Application team name')
   .option('-f, --fail', 'Treat payload as failure')
-  .option('-t, --tag <str>', 'Optional tag for run')
+  .option('-T, --tag <str>', 'Optional tag for run')
 
   .action((junitPath: string) => {
     return main(junitPath);
   });
 
 const main = async (junitPath: string) => {
-  const resolvedJunitPath = resolve(junitPath);
+  const resolvedJunitPath = resolve(import.meta.dirname, '..', '..', junitPath);
 
   // Create an array of absolute file paths to JUnit XML report files.
   // Account for cases where `resolvedJunitPath` is a path to a directory

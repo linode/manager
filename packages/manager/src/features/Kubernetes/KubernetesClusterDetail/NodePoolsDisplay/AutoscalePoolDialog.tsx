@@ -1,25 +1,37 @@
-import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
-import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import {
+  ActionsPanel,
+  Button,
+  FormControlLabel,
+  Notice,
+  TextField,
+  Toggle,
+  Typography,
+} from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
+
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../../constants';
+
+import type {
+  AutoscaleSettings,
+  KubeNodePoolResponse,
+  KubernetesTier,
+} from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   clusterId: number;
+  clusterTier: KubernetesTier;
   handleOpenResizeDrawer: (poolId: number) => void;
   nodePool: KubeNodePoolResponse | undefined;
   onClose: () => void;
@@ -29,9 +41,6 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     opacity: 0.5,
-  },
-  errorText: {
-    color: theme.color.red,
   },
   input: {
     '& input': {
@@ -45,7 +54,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   notice: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: 15,
   },
   resize: {
@@ -67,12 +76,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const AutoscalePoolDialog = (props: Props) => {
-  const { clusterId, handleOpenResizeDrawer, nodePool, onClose, open } = props;
+  const {
+    clusterId,
+    clusterTier,
+    handleOpenResizeDrawer,
+    nodePool,
+    onClose,
+    open,
+  } = props;
   const autoscaler = nodePool?.autoscaler;
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useUpdateNodePoolMutation(
+  const { error, isPending, mutateAsync } = useUpdateNodePoolMutation(
     clusterId,
     nodePool?.id ?? -1
   );
@@ -106,7 +122,32 @@ export const AutoscalePoolDialog = (props: Props) => {
       min: autoscaler?.min ?? 1,
     },
     onSubmit,
-    validationSchema: AutoscaleNodePoolSchema,
+    validate: (values) => {
+      const errors: { max?: string; min?: string } = {};
+      const maxLimit =
+        clusterTier === 'enterprise'
+          ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+          : MAX_NODES_PER_POOL_STANDARD_TIER;
+      if (values.enabled) {
+        if (!values.min) {
+          errors.min = 'Minimum is a required field.';
+        }
+        if (
+          values.min > values.max ||
+          values.min < 1 ||
+          values.min > maxLimit
+        ) {
+          errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+        }
+        if (!values.max) {
+          errors.max = 'Maximum is a required field.';
+        }
+        if (values.max > maxLimit || values.max < 1) {
+          errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
+        }
+      }
+      return errors;
+    },
   });
 
   const warning =
@@ -126,7 +167,7 @@ export const AutoscalePoolDialog = (props: Props) => {
                 values.max === autoscaler?.max) ||
               Object.keys(errors).length !== 0,
             label: 'Save Changes',
-            loading: isLoading || isSubmitting,
+            loading: isPending || isSubmitting,
             onClick: () => handleSubmit(),
           }}
           secondaryButtonProps={{
@@ -147,13 +188,13 @@ export const AutoscalePoolDialog = (props: Props) => {
           {warning}
           <div>
             <Button
+              buttonType="secondary"
+              className={classes.resize}
+              compactX
               onClick={() => {
                 handleClose();
                 handleOpenResizeDrawer(nodePool?.id ?? -1);
               }}
-              buttonType="secondary"
-              className={classes.resize}
-              compactX
             >
               Resize
             </Button>
@@ -162,12 +203,12 @@ export const AutoscalePoolDialog = (props: Props) => {
         </Notice>
       ) : null}
       <Typography>
-        Set minimum and maximum node pool constraints for LKE to resize your
-        cluster automatically based on resource demand and overall usage.
-        Maximum limit is 100 nodes.{' '}
-        <Link to="https://www.linode.com/docs/products/compute/kubernetes/guides/enable-cluster-autoscaling">
-          Learn more.
+        Enable the built-in autoscaler to automatically add and remove nodes
+        based on resource demand and usage.{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools#autoscale-automatically-resize-node-pools">
+          Learn more
         </Link>
+        .
       </Typography>
       <form onSubmit={handleSubmit}>
         <FormControlLabel
@@ -179,9 +220,12 @@ export const AutoscalePoolDialog = (props: Props) => {
               onChange={handleChange}
             />
           }
-          label="Autoscaler"
+          label="Autoscale"
           style={{ marginTop: 12 }}
         />
+        <Typography marginTop={1}>
+          Define the minimum and maximum node constraints:
+        </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
             <TextField
@@ -215,17 +259,17 @@ export const AutoscalePoolDialog = (props: Props) => {
               value={values.max}
             />
           </Grid>
-          <Grid style={{ padding: '0 8px' }} xs={12}>
-            {errors.min ? (
-              <Typography className={classes.errorText}>
+          <Grid size={12} style={{ padding: '0 8px' }}>
+            {errors.min && (
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.min}
               </Typography>
-            ) : null}
-            {errors.max ? (
-              <Typography className={classes.errorText}>
+            )}
+            {errors.max && (
+              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.max}
               </Typography>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       </form>

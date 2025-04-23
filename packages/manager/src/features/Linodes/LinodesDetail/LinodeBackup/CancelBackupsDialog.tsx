@@ -1,11 +1,10 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupsCancelMutation } from 'src/queries/linodes/backups';
+import { useLinodeBackupsCancelMutation } from '@linode/queries';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {
@@ -20,7 +19,7 @@ export const CancelBackupsDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
 
@@ -43,7 +42,7 @@ export const CancelBackupsDialog = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-cancel',
             label: 'Cancel Backups',
-            loading: isLoading,
+            loading: isPending,
             onClick: onCancelBackups,
           }}
           secondaryButtonProps={{

@@ -1,7 +1,7 @@
+import { Button } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
-import { Button } from '../Button/Button';
 import { LandingHeader } from './LandingHeader';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -50,7 +50,7 @@ export const Default: Story = {
     disabledCreateButton: false,
     docsLabel: 'Docs',
     docsLink:
-      'https://www.linode.com/docs/products/compute/compute-instances/faqs/',
+      'https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances',
     entity: 'My Entity',
     extraActions: <Button buttonType="secondary">Import a Zone</Button>,
     loading: false,

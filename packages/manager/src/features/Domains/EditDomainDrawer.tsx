@@ -1,36 +1,38 @@
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { useGrants, useProfile } from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
+import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { useUpdateDomainMutation } from 'src/queries/domains';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import {
-  ExtendedIP,
-  extendedIPToString,
-  stringToExtendedIP,
-} from 'src/utilities/ipUtils';
+import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from './domainUtils';
 
+import type { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+
 interface EditDomainDrawerProps {
   domain: Domain | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
-  const { domain, onClose, open } = props;
+  const { domain, isFetching, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -121,7 +123,13 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const disabled = !canEdit;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Domain">
+    <Drawer
+      NotFoundComponent={NotFound}
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Edit Domain"
+    >
       {!canEdit && (
         <Notice variant="error">
           You do not have permission to modify this Domain.

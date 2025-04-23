@@ -1,9 +1,8 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import { sendSwitchAccountSessionExpiryEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 export const SwitchAccountSessionDialog = React.memo(

@@ -1,22 +1,16 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { pathOr } from 'ramda';
+import { useProfile } from '@linode/queries';
+import { Typography } from '@linode/ui';
+import { formatUptime } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import { DispatchProps } from 'src/containers/longview.container';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
-import { useProfile } from 'src/queries/profile/profile';
+import withClientStats from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { formatUptime } from 'src/utilities/formatUptime';
 
-import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
 import {
   StyledButton,
@@ -25,6 +19,10 @@ import {
   StyledUpdatesGrid,
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { DispatchProps } from 'src/containers/longview.container';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props {
   clientID: number;
@@ -74,19 +72,12 @@ export const LongviewClientHeader = enhanced(
         });
     };
 
-    const hostname = pathOr(
-      'Hostname not available',
-      ['SysInfo', 'hostname'],
-      longviewClientData
-    );
-    const uptime = pathOr<null | number>(null, ['Uptime'], longviewClientData);
+    const hostname =
+      longviewClientData.SysInfo?.hostname ?? 'Hostname not available';
+    const uptime = longviewClientData?.Uptime ?? null;
     const formattedUptime =
       uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
-    const packages = pathOr<LongviewPackage[] | null>(
-      null,
-      ['Packages'],
-      longviewClientData
-    );
+    const packages = longviewClientData?.Packages ?? null;
     const numPackagesToUpdate = packages ? packages.length : 0;
     const packagesToUpdate = getPackageNoticeText(packages);
 

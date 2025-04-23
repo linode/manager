@@ -1,22 +1,19 @@
-import { Box } from 'src/components/Box';
+import { Box, Button, PlusSignIcon, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Minus from 'src/assets/icons/LKEminusSign.svg';
-import Plus from 'src/assets/icons/LKEplusSign.svg';
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
 
 const sxTextFieldBase = {
   '&::-webkit-inner-spin-button': {
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     margin: 0,
   },
   '&::-webkit-outer-spin-button': {
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     margin: 0,
   },
-  '-moz-appearance': 'textfield',
+  MozAppearance: 'textfield',
   padding: '0 8px',
   textAlign: 'right',
 };
@@ -26,8 +23,8 @@ const sxTextField = {
   height: 34,
   margin: '0 5px',
   minHeight: 30,
-  minWidth: 40,
-  width: 53,
+  minWidth: 53,
+  maxWidth: 70,
 };
 
 interface EnhancedNumberInputProps {
@@ -145,7 +142,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     border: 'none',
   },
   border: 'none',
-  borderRadius: 0,
+  borderRadius: theme.tokens.alias.Radius.Default,
   height: 34,
   minHeight: 'fit-content',
   minWidth: 30,
@@ -156,6 +153,6 @@ const MinusIcon = styled(Minus)({
   width: 12,
 });
 
-const PlusIcon = styled(Plus)({
+const PlusIcon = styled(PlusSignIcon)({
   width: 14,
 });

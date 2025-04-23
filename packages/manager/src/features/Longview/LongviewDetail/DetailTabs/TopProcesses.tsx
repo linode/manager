@@ -1,8 +1,8 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Box, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -12,16 +12,16 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
-import {
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+
+import { formatCPU } from '../../shared/formatters';
+import { StyledLink } from './TopProcesses.styles';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
   LongviewTopProcesses,
   TopProcessStat,
 } from 'src/features/Longview/request.types';
-import { readableBytes } from 'src/utilities/unitConversions';
-
-import { formatCPU } from '../../shared/formatters';
-import { StyledItemGrid } from './CommonStyles.styles';
-import { StyledLink } from './TopProcesses.styles';
 
 export interface Props {
   clientID: number;
@@ -40,71 +40,80 @@ export const TopProcesses = React.memo((props: Props) => {
     topProcessesLoading,
   } = props;
 
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData,
+  } = useOrderV2<ExtendedTopProcessStat>({
+    data: extendTopProcesses(topProcessesData),
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'cpu',
+      },
+      from: '/longview/clients/$id/overview',
+    },
+    preferenceKey: 'top-processes',
+    prefix: 'top-processes',
+  });
+
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
     ? 'There was an error getting Top Processes.'
     : undefined;
 
   return (
-    <StyledItemGrid lg={4} xs={12}>
+    <Grid size={{ lg: 4, xs: 12 }}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <StyledLink to={`/longview/clients/${clientID}/processes`}>
           View Details
         </StyledLink>
       </Box>
-      <OrderBy
-        data={extendTopProcesses(topProcessesData)}
-        order={'desc'}
-        orderBy={'cpu'}
-        preferenceKey="top-processes"
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Table aria-label="List of Top Processes" spacingTop={16}>
-            <TableHead>
-              <TableRow>
-                <TableSortCell
-                  active={orderBy === 'name'}
-                  data-qa-table-header="Process"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="name"
-                  style={{ width: '40%' }}
-                >
-                  Process
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'cpu'}
-                  data-qa-table-header="CPU"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="cpu"
-                  style={{ width: '25%' }}
-                >
-                  CPU
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'mem'}
-                  data-qa-table-header="Memory"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="mem"
-                  style={{ width: '15%' }}
-                >
-                  Memory
-                </TableSortCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {renderLoadingErrorData(
-                orderedData,
-                topProcessesLoading,
-                errorMessage
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </OrderBy>
-    </StyledItemGrid>
+      <Table aria-label="List of Top Processes" spacingTop={16}>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'name'}
+              data-qa-table-header="Process"
+              direction={order}
+              handleClick={handleOrderChange}
+              label="name"
+              style={{ width: '40%' }}
+            >
+              Process
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'cpu'}
+              data-qa-table-header="CPU"
+              direction={order}
+              handleClick={handleOrderChange}
+              label="cpu"
+              style={{ width: '25%' }}
+            >
+              CPU
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'mem'}
+              data-qa-table-header="Memory"
+              direction={order}
+              handleClick={handleOrderChange}
+              label="mem"
+              style={{ width: '15%' }}
+            >
+              Memory
+            </TableSortCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {renderLoadingErrorData(
+            sortedData ?? [],
+            topProcessesLoading,
+            errorMessage
+          )}
+        </TableBody>
+      </Table>
+    </Grid>
   );
 });
 
@@ -152,13 +161,9 @@ export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
 
   return (
     <TableRow data-testid="longview-top-process-row">
-      <TableCell data-qa-top-process-process parentColumn="Process">
-        {name}
-      </TableCell>
-      <TableCell data-qa-top-process-cpu parentColumn="CPU">
-        {formatCPU(cpu)}
-      </TableCell>
-      <TableCell data-qa-top-process-memory parentColumn="Memory">
+      <TableCell data-qa-top-process-process>{name}</TableCell>
+      <TableCell data-qa-top-process-cpu>{formatCPU(cpu)}</TableCell>
+      <TableCell data-qa-top-process-memory>
         {readableBytes(memInBytes, { round: 0 }).formatted}
       </TableCell>
     </TableRow>

@@ -13,6 +13,7 @@ import {
 import { deleteAllTestStackScripts } from 'support/api/stackscripts';
 import { deleteAllTestTags } from 'support/api/tags';
 import { deleteAllTestVolumes } from 'support/api/volumes';
+import { deleteAllTestSSHKeys } from 'support/api/profile';
 
 /** Types of resources that can be cleaned up. */
 export type CleanUpResource =
@@ -27,6 +28,7 @@ export type CleanUpResource =
   | 'obj-buckets'
   | 'service-transfers'
   | 'stackscripts'
+  | 'ssh-keys'
   | 'tags'
   | 'volumes';
 
@@ -48,6 +50,7 @@ const cleanUpMap: CleanUpMap = {
   'obj-buckets': () => deleteAllTestBuckets(),
   'service-transfers': () => cancelAllTestEntityTransfers(),
   stackscripts: () => deleteAllTestStackScripts(),
+  'ssh-keys': () => deleteAllTestSSHKeys(),
   tags: () => deleteAllTestTags(),
   volumes: () => deleteAllTestVolumes(),
 };

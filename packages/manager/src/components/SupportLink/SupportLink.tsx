@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { Link } from 'react-router-dom';
 
-import {
+import type { LinkProps } from 'react-router-dom';
+import type {
   EntityType,
+  FormPayloadValues,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-interface SupportLinkProps {
+export interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
+  formPayloadValues?: FormPayloadValues;
   onClick?: LinkProps['onClick'];
   text: string;
   ticketType?: TicketType;
@@ -16,12 +20,21 @@ interface SupportLinkProps {
 }
 
 export interface EntityForTicketDetails {
-  id: number;
+  id?: number;
   type: EntityType;
 }
 
 const SupportLink = (props: SupportLinkProps) => {
-  const { description, entity, onClick, text, ticketType, title } = props;
+  const {
+    description,
+    entity,
+    formPayloadValues,
+    onClick,
+    text,
+    ticketType,
+    title,
+  } = props;
+
   return (
     <Link
       to={{
@@ -29,6 +42,7 @@ const SupportLink = (props: SupportLinkProps) => {
         state: {
           description,
           entity,
+          formPayloadValues,
           open: true,
           ticketType,
           title,

@@ -1,37 +1,39 @@
+import {
+  useLinodeFirewallsQuery,
+  useLinodeVolumesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
+import { Notice } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
-import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
+import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
-import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
 import { LinodeEntityDetailHeader } from './LinodeEntityDetailHeader';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import {
   transitionText as _transitionText,
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
 } from './transitions';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@linode/ui';
 
 interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
   linode: Linode;
-  openTagDrawer: () => void;
   variant?: TypographyProps['variant'];
 }
 
@@ -40,7 +42,7 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export const LinodeEntityDetail = (props: Props) => {
-  const { handlers, isSummaryView, linode, openTagDrawer, variant } = props;
+  const { handlers, isSummaryView, linode, variant } = props;
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -60,12 +62,20 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const {
-    configInterfaceWithVPC,
-    configs,
-    isVPCOnlyLinode,
-    vpcLinodeIsAssignedTo,
-  } = useVPCConfigInterface(linode.id);
+  const isLinodeInterface = linode.interface_generation === 'linode';
+
+  const { configs, interfaceWithVPC, isVPCOnlyLinode, vpcLinodeIsAssignedTo } =
+    useVPCInterface({
+      isLinodeInterface,
+      linodeId: linode.id,
+    });
+
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
+    linode.id,
+    !isLinodeInterface
+  );
+
+  const attachedFirewalls = attachedFirewallData?.data ?? [];
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -86,6 +96,15 @@ export const LinodeEntityDetail = (props: Props) => {
     linode.region
   );
 
+  const regionSupportsDiskEncryption =
+    (regions
+      ?.find((r) => r.id === linode.region)
+      ?.capabilities.includes('Disk Encryption') ||
+      regions
+        ?.find((r) => r.id === linode.region)
+        ?.capabilities.includes('LA Disk Encryption')) ??
+    false;
+
   let progress;
   let transitionText;
 
@@ -103,27 +122,31 @@ export const LinodeEntityDetail = (props: Props) => {
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
           })}
-          important
           variant="warning"
         />
       )}
       <EntityDetail
         body={
           <LinodeEntityDetailBody
-            configInterfaceWithVPC={configInterfaceWithVPC}
             encryptionStatus={linode.disk_encryption}
+            firewalls={attachedFirewalls}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
+            interfaceGeneration={linode.interface_generation}
+            interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}
             isVPCOnlyLinode={isVPCOnlyLinode}
+            linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeIsInDistributedRegion={linodeIsInDistributedRegion}
             linodeLabel={linode.label}
+            linodeLkeClusterId={linode.lke_cluster_id}
             numCPUs={linode.specs.vcpus}
             numVolumes={numberOfVolumes}
             region={linode.region}
+            regionSupportsDiskEncryption={regionSupportsDiskEncryption}
             vpcLinodeIsAssignedTo={vpcLinodeIsAssignedTo}
           />
         }
@@ -136,7 +159,6 @@ export const LinodeEntityDetail = (props: Props) => {
             linodePlan={linodePlan}
             linodeRegionDisplay={linodeRegionDisplay}
             linodeTags={linode.tags}
-            openTagDrawer={openTagDrawer}
           />
         }
         header={

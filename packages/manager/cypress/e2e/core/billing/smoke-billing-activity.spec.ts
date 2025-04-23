@@ -1,19 +1,21 @@
-import { DateTime } from 'luxon';
 import { getProfile } from '@linode/api-v4';
-import type { Invoice, Profile, Payment } from '@linode/api-v4';
-import { invoiceFactory, paymentFactory } from 'src/factories/billing';
+import { profileFactory } from '@linode/utilities';
+import { formatDate } from '@src/utilities/formatDate';
+import { DateTime } from 'luxon';
 import { authenticate } from 'support/api/authentication';
 import {
   mockGetInvoices,
-  mockGetPayments,
   mockGetPaymentMethods,
+  mockGetPayments,
 } from 'support/intercepts/account';
-import { formatDate } from '@src/utilities/formatDate';
-import { randomNumber } from 'support/util/random';
-import { ui } from 'support/ui';
-import { profileFactory } from '@src/factories';
 import { mockGetProfile, mockUpdateProfile } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
+import { randomNumber } from 'support/util/random';
+
+import { invoiceFactory, paymentFactory } from 'src/factories/billing';
+
+import type { Invoice, Payment, Profile } from '@linode/api-v4';
 
 /**
  * Uses the user menu to navigate to the Profile Display page.
@@ -67,8 +69,8 @@ const navigateToBilling = () => {
  */
 const assertInvoiceInfo = (invoice: Invoice, timezone: string) => {
   const invoiceDate = formatDate(invoice.date, {
-    timezone,
     displayTime: true,
+    timezone,
   });
   cy.findByText(invoice.label)
     .should('be.visible')
@@ -97,8 +99,8 @@ const assertInvoiceInfo = (invoice: Invoice, timezone: string) => {
  */
 const assertPaymentInfo = (payment: Payment, timezone: string) => {
   const paymentDate = formatDate(payment.date, {
-    timezone,
     displayTime: true,
+    timezone,
   });
   cy.findByText(`Payment #${payment.id}`)
     .should('be.visible')
@@ -123,24 +125,21 @@ describe('Billing Activity Feed', () => {
    * - Confirms that clicking on an invoice's label directs the user to the invoice details page.
    */
   it('lists invoices and payments', () => {
-    const invoiceMocks = buildArray(
-      10,
-      (i: number): Invoice => {
-        const id = randomNumber(1, 999999);
-        const date = DateTime.now().minus({ days: 2, months: i }).toISO();
-        const subtotal = randomNumber(25, 949);
-        const tax = randomNumber(5, 50);
+    const invoiceMocks = buildArray(10, (i: number): Invoice => {
+      const id = randomNumber(1, 999999);
+      const date = DateTime.now().minus({ days: 2, months: i }).toISO();
+      const subtotal = randomNumber(25, 949);
+      const tax = randomNumber(5, 50);
 
-        return invoiceFactory.build({
-          id,
-          label: `Invoice #${id}`,
-          date,
-          subtotal,
-          tax,
-          total: subtotal + tax,
-        });
-      }
-    );
+      return invoiceFactory.build({
+        date,
+        id,
+        label: `Invoice #${id}`,
+        subtotal,
+        tax,
+        total: subtotal + tax,
+      });
+    });
 
     const paymentMocks = invoiceMocks.map(
       (invoice: Invoice, i: number): Payment => {
@@ -148,8 +147,8 @@ describe('Billing Activity Feed', () => {
         const date = DateTime.now().minus({ months: i }).toISO();
 
         return paymentFactory.build({
-          id,
           date,
+          id,
           usd: invoice.total,
         });
       }
@@ -167,13 +166,9 @@ describe('Billing Activity Feed', () => {
       cy.visitWithLogin('/account/billing');
       cy.wait(['@getInvoices', '@getPayments']);
       cy.findByText('Billing & Payment History')
-        .scrollIntoView()
-        .should('be.visible');
-
-      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types').should(
-        'be.visible'
-      );
-      cy.contains('[data-qa-enhanced-select]', '6 Months').should('be.visible');
+        .as('qaBilling')
+        .scrollIntoView();
+      cy.get('@qaBilling').should('be.visible');
 
       // Confirm that payments and invoices from the past 6 months are displayed,
       // and that payments and invoices beyond 6 months are not displayed.
@@ -201,11 +196,13 @@ describe('Billing Activity Feed', () => {
       mockGetInvoices(invoiceMocks).as('getInvoices');
       mockGetPayments(paymentMocks).as('getPayments');
 
-      cy.contains('[data-qa-enhanced-select]', '6 Months')
+      cy.findByText('Transaction Dates').click();
+      cy.focused().type(`All Time`);
+      ui.autocompletePopper
+        .findByTitle(`All Time`)
         .should('be.visible')
         .click();
 
-      ui.select.findItemByText('All Time').should('be.visible').click();
       cy.wait(['@getInvoices', '@getPayments']);
 
       // Confirm that all invoices and payments are displayed.
@@ -218,11 +215,12 @@ describe('Billing Activity Feed', () => {
       });
 
       // Change transaction type drop-down to "Payments" only.
-      cy.contains('[data-qa-enhanced-select]', 'All Transaction Types')
+      cy.findByText('Transaction Types').click();
+      cy.focused().type(`Payments`);
+      ui.autocompletePopper
+        .findByTitle(`Payments`)
         .should('be.visible')
         .click();
-
-      ui.select.findItemByText('Payments').should('be.visible').click();
 
       // Confirm that all payments are shown and that all invoices are hidden.
       paymentMocks.forEach((payment) =>
@@ -233,11 +231,11 @@ describe('Billing Activity Feed', () => {
       );
 
       // Change transaction type drop-down to "Invoices" only.
-      cy.contains('[data-qa-enhanced-select]', 'Payments')
+      cy.findByText('Transaction Types').should('be.visible').focused().click();
+      ui.autocompletePopper
+        .findByTitle('Invoices')
         .should('be.visible')
         .click();
-
-      ui.select.findItemByText('Invoices').should('be.visible').click();
 
       // Confirm that all invoices are shown and that all payments are hidden.
       invoiceMocks6Months.forEach((invoice) => {
@@ -272,19 +270,18 @@ describe('Billing Activity Feed', () => {
     cy.wait(['@getInvoices', '@getPayments', '@getPaymentMethods']);
 
     // Change invoice date selection from "6 Months" to "All Time".
-    cy.contains('[data-qa-enhanced-select]', '6 Months')
-      .should('be.visible')
-      .click();
-
-    ui.select.findItemByText('All Time').should('be.visible').click();
+    cy.findByText('Transaction Dates').click();
+    cy.focused().type('All Time');
+    ui.autocompletePopper.findByTitle('All Time').should('be.visible').click();
 
     cy.get('[data-qa-billing-activity-panel]')
       .should('be.visible')
       .within(() => {
         // Confirm that pagination page size selection is set to "Show 25".
         ui.pagination.findPageSizeSelect().click();
-
-        ui.select.findItemByText('Show 25').should('be.visible').click();
+        cy.get('[data-qa-pagination-page-size-option="25"]')
+          .should('exist')
+          .click();
 
         // Confirm that pagination controls list exactly 4 pages.
         ui.pagination
@@ -316,8 +313,9 @@ describe('Billing Activity Feed', () => {
 
         // Change page size selection from "Show 25" to "Show 100".
         ui.pagination.findPageSizeSelect().click();
-
-        ui.select.findItemByText('Show 100').should('be.visible').click();
+        cy.get('[data-qa-pagination-page-size-option="100"]')
+          .should('exist')
+          .click();
 
         // Confirm that all 100 invoices are shown.
         cy.get('tr').should('have.length', 101);
@@ -333,12 +331,15 @@ describe('Billing Activity Feed', () => {
   it('displays correct timezone for invoice and payment dates', () => {
     // Time zones against which to verify invoice and payment dates.
     const timeZonesList = [
-      { key: 'America/New_York', human: 'Eastern Time - New York' },
-      { key: 'GMT', human: 'Coordinated Universal Time' },
-      { key: 'Asia/Honk_Kong', human: 'Hong Kong Standard Time' },
+      { human: 'Eastern Time - New York', key: 'America/New_York' },
+      { human: 'Coordinated Universal Time', key: 'UTC' },
+      { human: 'Hong Kong Standard Time', key: 'Asia/Hong_Kong' },
     ];
 
-    const mockProfile = profileFactory.build();
+    const mockProfile = profileFactory.build({
+      timezone: 'Pacific/Honolulu',
+    });
+
     const mockInvoice = invoiceFactory.build({
       date: DateTime.now().minus({ days: 2 }).toISO(),
     });
@@ -354,11 +355,16 @@ describe('Billing Activity Feed', () => {
     cy.visitWithLogin('/profile/display');
     cy.wait('@getProfile');
 
+    // Verify the user's initial timezone is selected by default
+    cy.findByLabelText('Timezone')
+      .should('be.visible')
+      .should('contain.value', 'Hawaii-Aleutian Standard Time');
+
     // Iterate through each timezone and confirm that payment and invoice dates
     // reflect each timezone.
     timeZonesList.forEach((timezone) => {
       const timezoneId = timezone.key;
-      const humanReadable = timezone.human;
+      const timezoneLabel = timezone.human;
 
       mockUpdateProfile({
         ...mockProfile,
@@ -369,10 +375,8 @@ describe('Billing Activity Feed', () => {
       // This isn't strictly necessary, but is the most straightforward way to
       // get Cloud to re-fetch the user's profile data with the new timezone
       // applied.
-      cy.findByText('Timezone')
-        .should('be.visible')
-        .click()
-        .type(`${humanReadable}{enter}`);
+      cy.findByText('Timezone').should('be.visible').click();
+      cy.focused().type(`${timezoneLabel}{enter}`);
 
       ui.button
         .findByTitle('Update Timezone')
@@ -381,6 +385,11 @@ describe('Billing Activity Feed', () => {
         .click();
 
       cy.wait('@updateProfile');
+
+      // Verify the new timezone remains selected after clicking "Update Timezone"
+      cy.findByLabelText('Timezone')
+        .should('be.visible')
+        .should('contain.value', timezoneLabel);
 
       // Navigate back to Billing & Contact Information page to confirm that
       // invoice and payment data correctly reflects updated timezone.

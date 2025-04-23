@@ -1,101 +1,115 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import Select, {
-  BaseSelectProps,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
+import type { FilterValue, TimeDuration } from '@linode/api-v4';
+import type { EnhancedAutocompleteProps, SelectOption } from '@linode/ui';
 
-interface Props
+export interface CloudPulseTimeRangeSelectProps
   extends Omit<
-    BaseSelectProps<Item<Labels, Labels>, false>,
-    'defaultValue' | 'onChange'
+    EnhancedAutocompleteProps<SelectOption<Labels>, false>,
+    'defaultValue' | 'onChange' | 'options'
   > {
-  defaultValue?: Labels;
-  handleStatsChange?: (start: number, end: number) => void;
+  defaultValue?: Partial<FilterValue>;
+  handleStatsChange?: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void;
+  hideLabel?: boolean;
+  savePreferences?: boolean;
 }
 
-const PAST_7_DAYS = 'Past 7 Days';
-const PAST_12_HOURS = 'Past 12 Hours';
-const PAST_24_HOURS = 'Past 24 Hours';
-const PAST_30_DAYS = 'Past 30 Days';
-const PAST_30_MINUTES = 'Past 30 Minutes';
+const PAST_7_DAYS = 'Last 7 Days';
+const PAST_12_HOURS = 'Last 12 Hours';
+const PAST_24_HOURS = 'Last 24 Hours';
+const PAST_30_DAYS = 'Last 30 Days';
+const PAST_30_MINUTES = 'Last 30 Minutes';
 export type Labels =
-  | 'Past 7 Days'
-  | 'Past 12 Hours'
-  | 'Past 24 Hours'
-  | 'Past 30 Days'
-  | 'Past 30 Minutes';
+  | 'Last 7 Days'
+  | 'Last 12 Hours'
+  | 'Last 24 Hours'
+  | 'Last 30 Days'
+  | 'Last 30 Minutes';
 
-export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
-  const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
+export const CloudPulseTimeRangeSelect = React.memo(
+  (props: CloudPulseTimeRangeSelectProps) => {
+    const {
+      defaultValue,
+      handleStatsChange,
+      hideLabel,
+      label,
+      savePreferences,
+    } = props;
+    const options = generateSelectOptions();
+    const getDefaultValue = React.useCallback((): SelectOption<Labels> => {
+      if (!savePreferences) {
+        return options[0];
+      }
+      return options.find((o) => o.label === defaultValue) || options[0];
+    }, [defaultValue]);
+    const [selectedTimeRange, setSelectedTimeRange] = React.useState<
+      SelectOption<Labels>
+    >(getDefaultValue());
 
-  /*
-    the time range is the label instead of the value because it's a lot harder
-    to keep Date.now() consistent with this state. We can get the actual
-    values when it comes time to make the request.
+    React.useEffect(() => {
+      const item = getDefaultValue();
 
-    Use the value from user preferences if available, then fall back to
-    the default that was passed to the component, and use Past 30 Minutes
-    if all else fails.
+      if (handleStatsChange) {
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          false
+        );
+      }
 
-    @todo Validation here to make sure that the value from user preferences
-    is a valid time window.
-  */
-  const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    PAST_30_MINUTES
-  );
+      if (item !== selectedTimeRange) {
+        setSelectedTimeRange(item);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultValue]); // need to execute when there is change in default value
+    const handleChange = (item: SelectOption<Labels>) => {
+      setSelectedTimeRange(item);
 
-  /*
-    Why division by 1000?
-
-    Because the LongView API doesn't expect the start and date time
-    to the nearest millisecond - if you send anything more than 10 digits
-    you won't get any data back
-  */
-  const nowInSeconds = Date.now() / 1000;
-
-  React.useEffect(() => {
-    // Do the math and send start/end values to the consumer
-    // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
-    // but the calcs to turn that into start/end numbers live here)
-    if (!!handleStatsChange) {
-      handleStatsChange(
-        Math.round(generateStartTime(selectedTimeRange, nowInSeconds)),
-        Math.round(nowInSeconds)
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimeRange]);
-
-  const options = generateSelectOptions();
-
-  const handleChange = (item: Item<Labels, Labels>) => {
-    setTimeRange(item.value);
-  };
-
-  return (
-    <Select
-      {...restOfSelectProps}
-      isClearable={false}
-      isSearchable={false}
-      onChange={handleChange}
-      options={options}
-      small
-      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
-    />
-  );
-});
+      if (handleStatsChange) {
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          savePreferences
+        );
+      }
+    };
+    return (
+      <Autocomplete
+        onChange={(e, value: SelectOption<Labels>) => {
+          handleChange(value);
+        }}
+        textFieldProps={{
+          hideLabel,
+        }}
+        autoHighlight
+        data-testid="cloudpulse-time-duration"
+        disableClearable
+        fullWidth
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        label={label || 'Time Range'}
+        noMarginTop
+        options={options}
+        value={selectedTimeRange}
+      />
+    );
+  }
+);
 
 /**
- * react-select option generator that aims to remain a pure function
+ * Select option generator that aims to remain a pure function
  * and take in the current datetime as an argument and generate select values
  * based on what it's passed.
  *
  *
  * @param { string } currentYear - the current year
  */
-export const generateSelectOptions = (): Item<Labels, Labels>[] => {
-  const baseOptions: Item<Labels, Labels>[] = [
+export const generateSelectOptions = (): SelectOption<Labels>[] => {
+  const baseOptions: SelectOption<Labels>[] = [
     {
       label: PAST_30_MINUTES,
       value: PAST_30_MINUTES,
@@ -140,4 +154,33 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }
+};
+
+/**
+ *
+ * @param label label for time duration to get the corresponding time duration object
+ * @returns time duration object for the label
+ */
+const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
+  if (label === PAST_30_MINUTES) {
+    return { unit: 'min', value: 30 };
+  }
+
+  if (label === PAST_24_HOURS) {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (label === PAST_12_HOURS) {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (label === PAST_7_DAYS) {
+    return { unit: 'days', value: 7 };
+  }
+
+  if (label === PAST_30_DAYS) {
+    return { unit: 'days', value: 30 };
+  }
+
+  return { unit: 'min', value: 30 };
 };

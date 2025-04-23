@@ -1,14 +1,15 @@
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { Theme } from '@mui/material/styles';
+import { ActionsPanel } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
-import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { ThirdPartyPayment } from './ThirdPartyPayment';
+
+import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   container: {

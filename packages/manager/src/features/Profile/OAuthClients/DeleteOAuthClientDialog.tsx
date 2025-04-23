@@ -1,9 +1,8 @@
+import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { useDeleteOAuthClientMutation } from 'src/queries/account/oauth';
+import { useDeleteOAuthClientMutation } from '@linode/queries';
 
 interface Props {
   id: string;
@@ -18,7 +17,7 @@ export const DeleteOAuthClientDialog = ({
   onClose,
   open,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useDeleteOAuthClientMutation(id);
+  const { error, isPending, mutateAsync } = useDeleteOAuthClientMutation(id);
 
   const onDelete = () => {
     mutateAsync().then(() => {
@@ -33,7 +32,7 @@ export const DeleteOAuthClientDialog = ({
           primaryButtonProps={{
             'data-testid': 'button-confirm',
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

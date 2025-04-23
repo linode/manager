@@ -1,36 +1,29 @@
-import {
-  Account,
-  Invoice,
-  InvoiceItem,
-  getInvoice,
-  getInvoiceItems,
-} from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
+import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { IconButton } from 'src/components/IconButton';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
-import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useAccount, useRegionsQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
+import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { InvoiceTable } from './InvoiceTable';
+
+import type { Account, Invoice, InvoiceItem } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -124,150 +117,178 @@ export const InvoiceDetail = () => {
   };
 
   return (
-    <Paper
-      sx={{
-        padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
-      }}
-    >
-      <Grid container rowGap={2}>
-        <Grid xs={12}>
-          <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
-            <Grid sm={4} sx={sxGrid} xs={12}>
-              <Link
-                accessibleAriaLabel="Back to Billing"
-                data-qa-back-to-billing
-                to={`/account/billing`}
+    <>
+      <DocumentTitleSegment segment="Invoice | Account & Billing" />
+      <Paper
+        sx={{
+          padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            rowGap: 2,
+          }}
+        >
+          <Grid size={12}>
+            <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
+              <Grid
+                sx={sxGrid}
+                size={{
+                  sm: 4,
+                  xs: 12,
+                }}
               >
-                <IconButton
-                  sx={{
-                    padding: 0,
-                  }}
-                  component="span"
-                  disableFocusRipple
-                  role="none"
-                  size="large"
-                  tabIndex={-1}
+                <Link
+                  accessibleAriaLabel="Back to Billing"
+                  data-qa-back-to-billing
+                  to={`/account/billing`}
                 >
-                  <KeyboardArrowLeft
+                  <IconButton
                     sx={{
-                      height: 34,
-                      width: 34,
+                      padding: 0,
+                    }}
+                    component="span"
+                    disableFocusRipple
+                    role="none"
+                    size="large"
+                    tabIndex={-1}
+                  >
+                    <KeyboardArrowLeft
+                      sx={{
+                        height: 34,
+                        width: 34,
+                      }}
+                    />
+                  </IconButton>
+                </Link>
+                {invoice && (
+                  <LandingHeader
+                    breadcrumbProps={{
+                      crumbOverrides: [{ label: 'Billing Info', position: 1 }],
+                      firstAndLastOnly: true,
+                      labelTitle: `Invoice #${invoice.id}`,
+                      pathname: location.pathname,
                     }}
                   />
-                </IconButton>
-              </Link>
-              {invoice && (
-                <Typography
-                  data-qa-invoice-id
-                  sx={{ paddingLeft: theme.spacing(1) }}
-                  variant="h2"
-                >
-                  Invoice #{invoice.id}
-                </Typography>
-              )}
+                )}
+              </Grid>
+              <Grid
+                data-qa-printable-invoice
+                sx={{ ...sxGrid, justifyContent: 'flex-end' }}
+                size={{
+                  sm: 'grow',
+                }}
+              >
+                {account && invoice && items && (
+                  <>
+                    <DownloadCSV
+                      csvRef={csvRef}
+                      data={items}
+                      filename={`invoice-${invoice.date}.csv`}
+                      headers={csvHeaders}
+                      onClick={() => csvRef.current.link.click()}
+                      sx={{ ...sxDownloadButton, marginRight: '8px' }}
+                    />
+                    <Button
+                      buttonType="secondary"
+                      onClick={() => printInvoicePDF(account, invoice, items)}
+                      sx={sxDownloadButton}
+                    >
+                      Download PDF
+                    </Button>
+                  </>
+                )}
+              </Grid>
+              <Grid
+                size={{
+                  sm: 'auto',
+                }}
+              >
+                {invoice && (
+                  <Typography data-qa-total={invoice.total} variant="h2">
+                    Total:{' '}
+                    <Currency
+                      quantity={invoice.total}
+                      wrapInParentheses={invoice.total < 0}
+                    />
+                  </Typography>
+                )}
+              </Grid>
             </Grid>
-            <Grid
-              data-qa-printable-invoice
-              sm
-              sx={{ ...sxGrid, justifyContent: 'flex-end' }}
-            >
-              {account && invoice && items && (
-                <>
-                  <DownloadCSV
-                    csvRef={csvRef}
-                    data={items}
-                    filename={`invoice-${invoice.date}.csv`}
-                    headers={csvHeaders}
-                    onClick={() => csvRef.current.link.click()}
-                    sx={{ ...sxDownloadButton, marginRight: '8px' }}
+          </Grid>
+          <Grid size={12}>
+            {pdfGenerationError && (
+              <Notice variant="error">Failed generating PDF.</Notice>
+            )}
+            <InvoiceTable
+              errors={errors}
+              items={items}
+              loading={loading}
+              shouldShowRegion={shouldShowRegion}
+            />
+          </Grid>
+          <Grid size={12}>
+            {invoice && (
+              <Box
+                sx={{
+                  alignItems: 'flex-end',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: theme.spacing(2),
+                  padding: theme.spacing(1),
+                }}
+                data-qa-invoice-summary
+              >
+                <Typography variant="h2">
+                  Subtotal:{' '}
+                  <Currency
+                    quantity={invoice.subtotal}
+                    wrapInParentheses={invoice.subtotal < 0}
                   />
-                  <Button
-                    buttonType="secondary"
-                    onClick={() => printInvoicePDF(account, invoice, items)}
-                    sx={sxDownloadButton}
-                  >
-                    Download PDF
-                  </Button>
-                </>
-              )}
-            </Grid>
-            <Grid sm="auto">
-              {invoice && (
-                <Typography data-qa-total={invoice.total} variant="h2">
+                </Typography>
+                {invoice.tax_summary.map((summary) => {
+                  return (
+                    <Typography key={summary.name} variant="h2">
+                      {summary.name === 'Standard'
+                        ? 'Standard Tax: '
+                        : `${summary.name}: `}
+                      <Currency quantity={summary.tax} />
+                    </Typography>
+                  );
+                })}
+                <Typography variant="h2">
+                  Tax Subtotal: <Currency quantity={invoice.tax} />
+                </Typography>
+                <Typography variant="h2">
                   Total:{' '}
                   <Currency
                     quantity={invoice.total}
                     wrapInParentheses={invoice.total < 0}
                   />
                 </Typography>
-              )}
-            </Grid>
+                <Typography>
+                  This invoice may include Linode Compute Instances that have
+                  been powered off as the data is maintained and resources are
+                  still reserved. If you no longer need powered-down Linodes,
+                  you can{' '}
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing">
+                    {' '}
+                    remove the service
+                  </Link>{' '}
+                  from your account.
+                </Typography>
+              </Box>
+            )}
           </Grid>
         </Grid>
-        <Grid xs={12}>
-          {pdfGenerationError && (
-            <Notice variant="error">Failed generating PDF.</Notice>
-          )}
-          <InvoiceTable
-            errors={errors}
-            items={items}
-            loading={loading}
-            shouldShowRegion={shouldShowRegion}
-          />
-        </Grid>
-        <Grid xs={12}>
-          {invoice && (
-            <Box
-              sx={{
-                alignItems: 'flex-end',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing(2),
-                padding: theme.spacing(1),
-              }}
-              data-qa-invoice-summary
-            >
-              <Typography variant="h2">
-                Subtotal:{' '}
-                <Currency
-                  quantity={invoice.subtotal}
-                  wrapInParentheses={invoice.subtotal < 0}
-                />
-              </Typography>
-              {invoice.tax_summary.map((summary) => {
-                return (
-                  <Typography key={summary.name} variant="h2">
-                    {summary.name === 'Standard'
-                      ? 'Standard Tax: '
-                      : `${summary.name}: `}
-                    <Currency quantity={summary.tax} />
-                  </Typography>
-                );
-              })}
-              <Typography variant="h2">
-                Tax Subtotal: <Currency quantity={invoice.tax} />
-              </Typography>
-              <Typography variant="h2">
-                Total:{' '}
-                <Currency
-                  quantity={invoice.total}
-                  wrapInParentheses={invoice.total < 0}
-                />
-              </Typography>
-              <Typography>
-                This invoice may include Linode Compute Instances that have been
-                powered off as the data is maintained and resources are still
-                reserved. If you no longer need powered-down Linodes, you can{' '}
-                <Link to="https://www.linode.com/docs/products/platform/billing/guides/stop-billing/">
-                  {' '}
-                  remove the service
-                </Link>{' '}
-                from your account.
-              </Typography>
-            </Box>
-          )}
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </>
   );
 };
+
+export const invoiceDetailLazyRoute = createLazyRoute(
+  '/account/billing/invoices/$invoiceId'
+)({
+  component: InvoiceDetail,
+});

@@ -1,14 +1,15 @@
+import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { MBpsIntraDC } from 'src/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useStartLinodeMutationMutation } from 'src/queries/linodes/actions';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import {
+  useStartLinodeMutationMutation,
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
@@ -45,7 +46,7 @@ export const MutationNotification = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: startMutation,
   } = useStartLinodeMutationMutation(linodeId);
 
@@ -73,7 +74,7 @@ export const MutationNotification = (props: Props) => {
 
   return (
     <>
-      <Notice important variant="warning">
+      <Notice variant="warning">
         <Typography>
           You have a pending upgrade. The estimated time to complete this
           upgrade is
@@ -132,7 +133,7 @@ export const MutationNotification = (props: Props) => {
         handleClose={() => setIsMutationDrawerOpen(false)}
         initMutation={initMutation}
         linodeId={linodeId}
-        loading={isLoading}
+        loading={isPending}
         open={isMutationDrawerOpen}
       />
     </>

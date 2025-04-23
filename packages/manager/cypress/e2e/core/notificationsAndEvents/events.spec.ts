@@ -1,142 +1,44 @@
-import { Event, EventAction } from '@linode/api-v4';
+import { EventActionKeys } from '@linode/api-v4';
 import { eventFactory } from '@src/factories/events';
-import { RecPartial } from 'factory.ts';
-import { containsClick, getClick } from 'support/helpers';
 import { mockGetEvents } from 'support/intercepts/events';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 
-const eventActions: RecPartial<EventAction>[] = [
-  'backups_cancel',
-  'backups_enable',
-  'backups_restore',
-  'community_like',
-  'community_question_reply',
-  'disk_create',
-  'disk_delete',
-  'disk_duplicate',
-  'disk_resize',
-  'disk_update',
-  'database_resize',
-  'database_low_disk_space',
-  'entity_transfer_accept',
-  'entity_transfer_cancel',
-  'entity_transfer_create',
-  'entity_transfer_fail',
-  'entity_transfer_stale',
-  'firewall_create',
-  'firewall_delete',
-  'firewall_device_add',
-  'firewall_device_remove',
-  'firewall_disable',
-  'firewall_enable',
-  'firewall_update',
-  'host_reboot',
-  'image_delete',
-  'image_update',
-  'image_upload',
-  'lassie_reboot',
-  'linode_addip',
-  'linode_boot',
-  'linode_clone',
-  'linode_config_create',
-  'linode_config_delete',
-  'linode_config_update',
-  'linode_create',
-  'linode_delete',
-  'linode_deleteip',
-  'linode_migrate',
-  'linode_migrate_datacenter',
-  'linode_mutate',
-  'linode_reboot',
-  'linode_rebuild',
-  'linode_resize',
-  'linode_shutdown',
-  'linode_snapshot',
-  'linode_update',
-  'lke_node_create',
-  'longviewclient_create',
-  'longviewclient_delete',
-  'longviewclient_update',
-  'nodebalancer_config_create',
-  'nodebalancer_config_delete',
-  'nodebalancer_config_update',
-  'nodebalancer_create',
-  'nodebalancer_delete',
-  'nodebalancer_update',
-  'stackscript_create',
-  'stackscript_delete',
-  'stackscript_publicize',
-  'stackscript_revise',
-  'stackscript_update',
-  'subnet_create',
-  'subnet_delete',
-  'subnet_update',
-  'tfa_disabled',
-  'tfa_enabled',
-  'user_ssh_key_add',
-  'user_ssh_key_delete',
-  'user_ssh_key_update',
-  'volume_clone',
-  'volume_create',
-  'volume_detach',
-  'volume_resize',
-  'vpc_create',
-  'vpc_delete',
-  'vpc_update',
-  // 'linode_migrate_datacenter_create',
-  // 'linode_mutate_create',
-  // 'linode_resize_create',
-  // 'profile_update',
-  // 'volume_delete',
-  // unwanted 'account_update',
-  // unwanted 'account_settings_update',
-  // unwanted 'credit_card_updated',
-  // unwanted 'profile_update',
-  // unwanted 'ticket_attachment_upload',
-  // unwanted 'volume_update',
-];
+import type { Event } from '@linode/api-v4';
 
-const events: Event[] = eventActions.map((action) => {
+const events: Event[] = EventActionKeys.map((action) => {
   return eventFactory.build({
     action,
-    message: `${action + ' message'}`,
-    seen: false,
-    read: false,
-    percent_complete: null,
     entity: { id: 0, label: 'linode-0' },
+    message: `${action + ' message'}`,
+    percent_complete: null,
+    read: false,
+    seen: false,
   });
 });
 
 describe('verify notification types and icons', () => {
-  before(() => {
-    // TODO eventMessagesV2: delete when flag is removed and update test
-    mockAppendFeatureFlags({
-      eventMessagesV2: makeFeatureFlagData(false),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   it(`notifications`, () => {
     mockGetEvents(events).as('mockEvents');
     cy.visitWithLogin('/linodes');
     cy.wait('@mockEvents').then(() => {
-      getClick('button[aria-label="Notifications"]');
+      cy.get('button[aria-label="Notifications"]').click();
       for (let i = 0; i < 20; i++) {
+        // Skip account_agreement_eu_model action since it is a special case
+        if (events[i].action === 'account_agreement_eu_model') {
+          return;
+        }
         const text = [`${events[i].message}`, `${events[i].entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${events[i].action}"]`).within(() => {
+        cy.get(`[data-testid="${events[i].action}"]`).within(() => {
           cy.contains(regex);
         });
       }
-      containsClick('View all events');
+      cy.get('button[aria-label="View all events"]').click();
+      // Clicking "View all events" navigates to Events page at /events
+      cy.url().should('endWith', '/events');
       events.forEach((event) => {
         const text = [`${event.message}`, `${event.entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
-        cy.get(`[data-test-id="${event.action}"]`).within(() => {
+        cy.get(`[data-testid="${event.action}"]`).within(() => {
           cy.contains(regex);
         });
       });

@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 
 export const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
