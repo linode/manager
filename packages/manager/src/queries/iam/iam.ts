@@ -17,11 +17,12 @@ export const useAccountUserPermissions = (username?: string) => {
   });
 };
 
-export const useAccountPermissions = () => {
+export const useAccountPermissions = (enabled = true) => {
   return useQuery<IamAccountPermissions, APIError[]>({
     ...iamQueries.permissions,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
+    enabled,
   });
 };
 
