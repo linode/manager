@@ -1,4 +1,5 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import {
@@ -137,9 +138,9 @@ describe('AlertDetail component tests', () => {
       isLoadiing: false,
     });
 
-    const { getByTestId } = renderWithTheme(<AlertDetail />);
+    renderWithTheme(<AlertDetail />);
 
-    const element = getByTestId('notice-error').textContent;
+    const element = screen.getByTestId('notice-error').textContent;
     expect(element).toEqual(
       `${alert.label} alert creation has failed. Please contact support to resolve the issue.`
     );
