@@ -134,24 +134,17 @@ export const CloudPulseRegionSelect = React.memo(
       regionsFromResources.includes(id)
     );
 
-    const resourceLabel =
-      FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
-        (value) => value.name === 'Resources'
-      )?.configuration.name ?? 'Resources';
-
-    const errorMessage = isError
-      ? `Failed to fetch ${label || 'Regions'}.`
-      : isResourcesError
-        ? `Failed to fetch ${resourceLabel}.`
-        : '';
-
     return (
       <RegionSelect
         currentCapability={capability}
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions || disabled || !resources}
-        errorText={errorMessage}
+        errorText={
+          isError || isResourcesError
+            ? `Failed to fetch ${label || 'Regions'}.`
+            : ''
+        }
         fullWidth
         isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}

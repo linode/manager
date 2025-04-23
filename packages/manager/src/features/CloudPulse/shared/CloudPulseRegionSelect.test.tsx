@@ -132,7 +132,7 @@ describe('CloudPulseRegionSelect', () => {
     };
     renderWithTheme(<CloudPulseRegionSelect {...updatedProps} />);
 
-    const errorMessage = screen.getByText('Failed to fetch Database Clusters.');
+    const errorMessage = screen.getByText('Failed to fetch Region.');
 
     expect(errorMessage).not.toBeNull();
   });
