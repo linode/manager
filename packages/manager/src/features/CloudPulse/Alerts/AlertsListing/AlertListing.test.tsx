@@ -247,7 +247,7 @@ describe('Alert Listing', () => {
 
     const element = getByTestId('notice-error').textContent;
     expect(element).toEqual(
-      'Creation of some alerts has failed. Please contact support for assistance.'
+      'Creation of 3 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
     );
   });
 });

@@ -142,7 +142,7 @@ describe('AlertDetail component tests', () => {
 
     const element = screen.getByTestId('notice-error').textContent;
     expect(element).toEqual(
-      `${alert.label} alert creation has failed. Please contact support to resolve the issue.`
+      `${alert.label} alert creation has failed. Please open a support ticket for assistance.`
     );
   });
 });

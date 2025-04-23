@@ -127,9 +127,9 @@ export const AlertDetail = () => {
                 href="https://cloud.linode.com/support/tickets"
                 underline="hover"
               >
-                contact support
+                open a support ticket
               </Link>{' '}
-              to resolve the issue.
+              for assistance.
             </Typography>
           </Notice>
         )}
