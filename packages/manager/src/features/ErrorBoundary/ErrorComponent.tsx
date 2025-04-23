@@ -22,10 +22,10 @@ export const ErrorComponent = ({
       }}
     >
       <Paper
-        sx={(theme) => ({
+        sx={{
           maxWidth: 600,
-          border: `1px solid ${theme.tokens.alias.Border.Normal}`,
-        })}
+        }}
+        variant="outlined"
       >
         <Box
           sx={{
@@ -47,7 +47,7 @@ export const ErrorComponent = ({
           <li>Clear your cookies</li>
           <li>Check your internet connection</li>
         </Typography>
-        <Typography>
+        <Typography sx={{ my: 1 }}>
           <strong>Resources:</strong>{' '}
         </Typography>
         <Typography component="ul">
@@ -70,7 +70,7 @@ export const ErrorComponent = ({
             </a>
           </li>
         </Typography>
-        <Typography component="div">
+        <Typography component="div" sx={{ mt: 2 }}>
           <strong>Error details:</strong>{' '}
           <CodeBlock
             code={`${error.name}: ${error.message}`}
@@ -82,12 +82,17 @@ export const ErrorComponent = ({
           justifyContent="center"
           marginTop={3}
           spacing={2}
+          sx={{
+            '& .MuiButton-root': {
+              width: 175,
+            },
+          }}
         >
           <Button buttonType="outlined" onClick={resetError}>
-            Refresh the application
+            Refresh application
           </Button>
           <Button buttonType="primary" onClick={() => window.location.reload()}>
-            Reload the page
+            Reload page
           </Button>
         </Stack>
       </Paper>
