@@ -36,8 +36,8 @@ describe('ErrorBoundaryFallback', () => {
 
     expect(consoleSpy).toHaveBeenCalledTimes(3);
 
-    const refreshButton = screen.getByText('Refresh the application');
-    const reloadButton = screen.getByText('Reload the page');
+    const refreshButton = screen.getByText('Refresh application');
+    const reloadButton = screen.getByText('Reload page');
 
     expect(refreshButton).toBeInTheDocument();
     expect(reloadButton).toBeInTheDocument();
