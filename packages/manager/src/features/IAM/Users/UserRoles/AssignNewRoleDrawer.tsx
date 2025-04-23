@@ -16,14 +16,12 @@ import {
   useAccountUserPermissionsMutation,
 } from 'src/queries/iam/iam';
 
-import { getAllRoles } from '../../Shared/utilities';
+import {
+  getAllRoles,
+  mergeAssignedRolesIntoExistingRoles,
+} from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
-import {
-  AccountAccessRole,
-  EntityAccessRole, EntityTypePermissions,
-  IamUserPermissions
-} from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -71,50 +69,11 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     useAccountUserPermissionsMutation(username);
 
   const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
-    const selectedRoles = values.roles.map((r) => ({
-      access: r.role?.access,
-      entities: r.entities || null,
-      role: r.role?.value,
-    }));
-
-    if (selectedRoles.length) {
-      const selectedPlusExistingRoles: IamUserPermissions = {
-        account_access: existingRoles?.account_access || [],
-        entity_access: existingRoles?.entity_access || [],
-      };
-
-      // Add the selected Account level roles to the existing ones
-      selectedRoles
-        .filter((r) => r.access === 'account_access')
-        .forEach((r) => {
-          selectedPlusExistingRoles.account_access.push(
-            r.role as AccountAccessRole
-          );
-        });
-
-      // Add the selected Entity level roles to the existing ones
-      selectedRoles
-        .filter((r) => r.access === 'entity_access')
-        .forEach((r) => {
-          r.entities?.forEach((e) => {
-            const existingEntity = selectedPlusExistingRoles.entity_access.find(
-              (ee) => ee.id === e.value
-            );
-            if (existingEntity) {
-              existingEntity.roles.push(r.role as EntityAccessRole);
-            } else {
-              selectedPlusExistingRoles.entity_access.push({
-                id: e.value,
-                roles: [r.role as EntityAccessRole],
-                type: r.role?.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
-              });
-            }
-          });
-        });
-
-      console.log(selectedRoles, selectedPlusExistingRoles);
-      await updateUserRolePermissions(selectedPlusExistingRoles);
-    }
+    const mergedRoles = mergeAssignedRolesIntoExistingRoles(
+      values,
+      existingRoles
+    );
+    await updateUserRolePermissions(mergedRoles);
     handleClose();
   });
 

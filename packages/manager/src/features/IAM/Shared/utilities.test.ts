@@ -8,11 +8,12 @@ import {
   getAllRoles,
   getRoleByName,
   mapRolesToPermissions,
+  mergeAssignedRolesIntoExistingRoles,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { CombinedRoles } from './utilities';
+import type { AssignNewRoleFormValues, CombinedRoles } from './utilities';
 import type {
   EntityAccess,
   IamAccountPermissions,
@@ -68,6 +69,64 @@ const userPermissions: IamUserPermissions = {
       id: 12345678,
       roles: ['linode_contributor'],
       type: 'linode',
+    },
+  ],
+};
+
+const assignRolesFormValues: AssignNewRoleFormValues = {
+  roles: [
+    {
+      entities: null,
+      role: {
+        access: 'account_access',
+        entity_type: 'account',
+        label: 'account_viewer',
+        value: 'account_viewer',
+      },
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'firewall',
+        label: 'firewall_viewer',
+        value: 'firewall_viewer',
+      },
+      entities: [
+        {
+          label: 'firewall-1',
+          value: 12365433,
+        },
+      ],
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'linode',
+        label: 'linode_viewer',
+        value: 'linode_viewer',
+      },
+      entities: [
+        {
+          label: 'linode-12345678',
+          value: 12345678,
+        },
+      ],
+    },
+  ],
+};
+
+const mergedRoles = {
+  account_access: ['account_linode_admin', 'linode_creator', 'account_viewer'],
+  entity_access: [
+    {
+      id: 12345678,
+      roles: ['linode_contributor', 'linode_viewer'],
+      type: 'linode',
+    },
+    {
+      id: 12365433,
+      roles: ['firewall_viewer'],
+      type: 'firewall',
     },
   ],
 };
@@ -611,5 +670,40 @@ describe('deleteUserEntity', () => {
     expect(
       deleteUserEntity(userPermissions, roleName, entityId, entityType)
     ).toEqual(expectedRoles);
+  });
+});
+
+describe('mergeAssignedRolesIntoExistingRoles', () => {
+  it('should merge new role form selections into existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(
+        assignRolesFormValues,
+        userPermissions
+      )
+    ).toEqual(mergedRoles);
+  });
+  it('should just return the existing roles if no selected form values passed in', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles({ roles: [] }, userPermissions)
+    ).toEqual(userPermissions);
+  });
+  it('should transform new role form selections into proper format even with no existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(assignRolesFormValues, undefined)
+    ).toEqual({
+      account_access: ['account_viewer'],
+      entity_access: [
+        {
+          id: 12365433,
+          roles: ['firewall_viewer'],
+          type: 'firewall',
+        },
+        {
+          id: 12345678,
+          roles: ['linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    });
   });
 });
