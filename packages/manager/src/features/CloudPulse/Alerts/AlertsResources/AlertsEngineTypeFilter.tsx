@@ -1,9 +1,18 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { engineOptions } from './constants';
+import type { AlertFilterKey, EngineType } from './types';
 
-import type { AlertFilterKey } from './types';
+const engineOptions: EngineType[] = [
+  {
+    id: 'mysql',
+    label: 'MySQL',
+  },
+  {
+    id: 'postgresql',
+    label: 'PostgreSQL',
+  },
+];
 
 export interface AlertsEngineOptionProps {
   /**

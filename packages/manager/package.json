@@ -171,10 +171,9 @@
     "@types/recompose": "^0.30.0",
     "@types/redux-mock-store": "^1.0.1",
     "@types/throttle-debounce": "^1.0.0",
-    "@types/uuid": "^3.4.3",
     "@types/zxcvbn": "^4.4.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
-    "@vitest/coverage-v8": "^3.0.7",
+    "@vitest/coverage-v8": "^3.1.2",
     "axe-core": "^4.10.2",
     "chai-string": "^1.5.0",
     "concurrently": "^9.1.0",
@@ -199,7 +198,7 @@
     "redux-mock-store": "^1.5.3",
     "storybook": "^8.6.7",
     "storybook-dark-mode": "4.0.1",
-    "vite": "^6.2.5",
+    "vite": "^6.3.2",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
