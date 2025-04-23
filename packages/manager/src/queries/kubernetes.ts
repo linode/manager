@@ -17,6 +17,7 @@ import {
   getKubernetesTypesBeta,
   getKubernetesVersions,
   getNodePools,
+  getNodePoolsBeta,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
@@ -40,6 +41,7 @@ import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -129,10 +131,13 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         },
         queryKey: null,
       },
-      pools: {
-        queryFn: () => getAllNodePoolsForCluster(id),
-        queryKey: null,
-      },
+      pools: (isUsingBetaEndpoint: boolean = false) => ({
+        queryFn: () =>
+          isUsingBetaEndpoint
+            ? getAllNodePoolsForClusterBeta(id)
+            : getAllNodePoolsForCluster(id),
+        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
+      }),
     },
     queryFn: () => getKubernetesCluster(id),
     queryKey: [id],
@@ -362,7 +367,7 @@ export const useCreateNodePoolMutation = (clusterId: number) => {
     mutationFn: (data) => createNodePool(clusterId, data),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -381,7 +386,7 @@ export const useUpdateNodePoolMutation = (
     mutationFn: (data) => updateNodePool(clusterId, poolId, data),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -396,7 +401,7 @@ export const useDeleteNodePoolMutation = (
     mutationFn: () => deleteNodePool(clusterId, poolId),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -411,7 +416,7 @@ export const useRecycleNodePoolMutation = (
     mutationFn: () => recycleAllNodes(clusterId, poolId),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -423,7 +428,7 @@ export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
     mutationFn: () => recycleNode(clusterId, nodeId),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -435,7 +440,7 @@ export const useRecycleClusterMutation = (clusterId: number) => {
     mutationFn: () => recycleClusterNodes(clusterId),
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
+        queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools().queryKey,
       });
     },
   });
@@ -443,10 +448,11 @@ export const useRecycleClusterMutation = (clusterId: number) => {
 
 export const useAllKubernetesNodePoolQuery = (
   clusterId: number,
-  options?: { enabled?: boolean; refetchInterval?: number }
+  options?: { enabled?: boolean; refetchInterval?: number },
+  isUsingBetaEndpoint = false
 ) => {
   return useQuery<KubeNodePoolResponse[], APIError[]>({
-    ...kubernetesQueries.cluster(clusterId)._ctx.pools,
+    ...kubernetesQueries.cluster(clusterId)._ctx.pools(isUsingBetaEndpoint),
     ...options,
   });
 };
@@ -519,6 +525,11 @@ export const useKubernetesControlPlaneACLMutation = (id: number) => {
 const getAllNodePoolsForCluster = (clusterId: number) =>
   getAll<KubeNodePoolResponse>((params, filters) =>
     getNodePools(clusterId, params, filters)
+  )().then((data) => data.data);
+
+const getAllNodePoolsForClusterBeta = (clusterId: number) =>
+  getAll<KubeNodePoolResponseBeta>((params, filters) =>
+    getNodePoolsBeta(clusterId, params, filters)
   )().then((data) => data.data);
 
 const getAllKubernetesClusters = () =>
