@@ -15,6 +15,7 @@ import { ui } from 'support/ui';
 import { accountFactory, alertFactory, alertRulesFactory } from 'src/factories';
 import {
   alertLimitMessage,
+  alertToolTipText,
   metricLimitMessage,
 } from 'src/features/CloudPulse/Alerts/AlertsListing/constants';
 import {
@@ -134,7 +135,7 @@ const verifyTableSorting = (
     cy.get('[data-qa-alert-cell]').should(($cells) => {
       const actualOrder = $cells
         .map((_, cell) =>
-          parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
+          parseInt(cell.getAttribute('data-qa-alert-cell') || '0', 10)
         )
         .get();
       expectedValues.forEach((value, index) => {
@@ -439,11 +440,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     cy.get('[data-alert-notice="true"]')
       .should('be.visible')
       .and('have.text', alertLimitMessage);
-    ui.tooltip
-      .findByText(
-        'You have reached your limit of definitions for this account.'
-      )
-      .should('be.visible');
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
   });
 
   it('should disable Create Alert button when metrics exceed threshold even if alerts are below limit', () => {
@@ -474,11 +471,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     cy.get('[data-alert-notice="true"]')
       .should('be.visible')
       .and('have.text', metricLimitMessage);
-    ui.tooltip
-      .findByText(
-        'You have reached your limit of definitions for this account.'
-      )
-      .should('be.visible');
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
   });
 
   it('should disable Create Alert button when both alert and metric counts exceed threshold', () => {
@@ -513,10 +506,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
           .last()
           .should('have.text', metricLimitMessage);
       });
-    ui.tooltip
-      .findByText(
-        'You have reached your limit of definitions for this account.'
-      )
-      .should('be.visible');
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
   });
 });
