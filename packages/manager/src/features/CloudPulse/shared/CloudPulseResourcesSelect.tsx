@@ -195,9 +195,6 @@ export const CloudPulseResourcesSelect = React.memo(
               msOverflowStyle: 'none',
               overflow: 'auto',
               scrollbarWidth: 'none',
-              svg: {
-                color: themes.light.color.grey3,
-              },
             },
           },
         }}
