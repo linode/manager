@@ -15,8 +15,8 @@ import type { DiskSelection } from './utilities';
 import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export interface DisksProps {
-  diskSelection: DiskSelection;
   disks: Disk[];
+  diskSelection: DiskSelection;
   handleSelect: (id: number) => void;
   selectedConfigIds: number[];
 }
@@ -73,6 +73,7 @@ export const Disks = (props: DisksProps) => {
                                 data-testid={`checkbox-${disk.id}`}
                                 disabled={isConfigSelected}
                                 onChange={() => handleSelect(disk.id)}
+                                size="small"
                                 text={disk.label}
                               />
                             </TableCell>
