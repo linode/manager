@@ -43,6 +43,15 @@ export const useStyles = makeStyles()((theme) => ({
       top: 1,
       margin: 0,
     },
+    '& ul': {
+      paddingLeft: 20,
+      margin: 0,
+      listStyleType: 'disc',
+      '& li': {
+        display: 'list-item',
+        padding: 0,
+      },
+    },
     maxWidth: '100%',
     position: 'relative',
   },
