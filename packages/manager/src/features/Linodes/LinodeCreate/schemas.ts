@@ -14,20 +14,21 @@ import type { ObjectSchema } from 'yup';
  * has extra fields that we want to validate.
  * In theory, this schema should align with the `LinodeCreateFormValues` type.
  */
-export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> = BaseCreateLinodeSchema.concat(
-  object({
-    firewallOverride: boolean(),
-    hasSignedEUAgreement: boolean(),
-    interfaces: array(ConfigProfileInterfaceSchema).required(),
-    linode: object({
-      id: number().defined(),
-      label: string().defined(),
-      region: string().defined(),
-      type: string().defined().nullable(),
-    }).notRequired(),
-    linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
-  })
-);
+export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> =
+  BaseCreateLinodeSchema.concat(
+    object({
+      firewallOverride: boolean(),
+      hasSignedEUAgreement: boolean(),
+      interfaces: array(ConfigProfileInterfaceSchema).required(),
+      linode: object({
+        id: number().defined(),
+        label: string().defined(),
+        region: string().defined(),
+        type: string().defined().nullable(),
+      }).notRequired(),
+      linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
+    })
+  );
 
 /**
  * Extends the Linode Create schema to make backup_id required for the backups tab
