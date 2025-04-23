@@ -14,6 +14,17 @@ export const EditLinodeInterfaceFormSchema = ModifyLinodeInterfaceSchema.shape({
   firewall_id: number().nullable(),
 });
 
+/**
+ * A React Query mutation that abstracts the process of updating a Linode Interface's Firewall.
+ *
+ * This mutation handles creating and deleting firewall devices based on the current state of the
+ * interface.
+ *
+ * @returns A UseMutationResult where the type of the resulting data indicates the following:
+ * - `null` means the firewall was removed (The Linode Interface no longer has a Firewall)
+ * - `number` means firewall was updated (The number is the Firewall ID of the Interfaces new Firewall)
+ * - `false` means nothing changed (Will happen if you pass the firewall of the Interfaces current firewall)
+ */
 export const useUpdateLinodeInterfaceFirewallMutation = (
   linodeId: number,
   interfaceId: number
@@ -25,7 +36,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
   const { mutateAsync: createFirewallDevice } = useAddFirewallDeviceMutation();
 
   return useMutation<
-    false | null | number, // Null means the firewall was removed, false means nothing changed, number means firewall was set to that Firewall ID
+    false | null | number,
     APIError[],
     { firewall_id: null | number | undefined }
   >({
