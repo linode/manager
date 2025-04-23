@@ -42,17 +42,35 @@ export interface ReadableBytesOptions {
   base10?: boolean;
   handleNegatives?: boolean;
   maxUnit?: StorageSymbol;
-  round?: Partial<Record<StorageSymbol, number>> | number;
+  round?: number | Partial<Record<StorageSymbol, number>>;
   unit?: StorageSymbol;
   unitLabels?: Partial<Record<StorageSymbol, string>>;
 }
 
-export type StorageSymbol = 'GB' | 'KB' | 'MB' | 'TB' | 'byte' | 'bytes';
+export type StorageSymbol = 'byte' | 'bytes' | 'GB' | 'KB' | 'MB' | 'TB';
 
 // This code inspired by: https://ourcodeworld.com/articles/read/713/converting-bytes-to-human-readable-values-kb-mb-gb-tb-pb-eb-zb-yb-with-javascript
+
+/**
+ * Converts raw bytes to human-readable format using base2 calculations (1024-based)
+ * while displaying using common units (KB/MB/GB/TB).
+ *
+ * IMPORTANT: We intentionally use base2 calculations (1024 bytes = 1 KB) even though
+ * we display using traditional storage units. This aligns with industry practice. Internally these represent GiB, TiB, PiB values
+ * despite the displayed labels.
+ *
+ * To use base10 calculations (1000-based), set the base10 option to true.
+ * By default, calculations use base2 (1024-based).
+ *
+ * See: https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#storage-units
+ *
+ * @param num - The number of bytes to convert.
+ * @param options - Options for the conversion.
+ * @returns An object containing the formatted value, unit, and value.
+ */
 export const readableBytes = (
   num: number,
-  options: ReadableBytesOptions = {}
+  options: ReadableBytesOptions = {},
 ) => {
   // These are the units Classic uses. This can easily be extended –
   // just keep adding to this array and the corresponding interface.
@@ -126,7 +144,7 @@ export const readableBytes = (
 export const determinePower = (
   num: number,
   storageUnits: StorageSymbol[],
-  options: ReadableBytesOptions
+  options: ReadableBytesOptions,
 ) => {
   // If maxUnit has been supplied, use that
   if (options.unit) {
@@ -136,7 +154,7 @@ export const determinePower = (
 
     // Otherwise, we need to do some magic, which I don't 100% understand
     const magicallyCalculatedPower = Math.floor(
-      Math.log(num) / Math.log(multiplier)
+      Math.log(num) / Math.log(multiplier),
     );
 
     // If the magically calculated power/unit is higher than the
@@ -154,7 +172,7 @@ export const determinePower = (
 const determineDecimalPlaces = (
   num: number,
   unit: StorageSymbol,
-  options: ReadableBytesOptions = {}
+  options: ReadableBytesOptions = {},
 ) => {
   if (typeof options.round === 'number') {
     return options.round;
@@ -175,12 +193,12 @@ const determineDecimalPlaces = (
 
 export const convertBytesToTarget = (
   unit: StorageSymbol | StorageUnitExponentKey,
-  value: number
+  value: number,
 ) => {
   switch (unit) {
+    case 'B':
     case 'byte':
     case 'bytes':
-    case 'B':
       return value;
     default:
       return convertStorageUnit('B', value, unit);
@@ -207,7 +225,7 @@ type StorageUnitExponentKey = keyof typeof StorageUnitExponents;
 export const convertStorageUnit = (
   sourceUnit: StorageUnitExponentKey,
   sourceQuantity: number | undefined,
-  targetUnit: StorageUnitExponentKey
+  targetUnit: StorageUnitExponentKey,
 ) => {
   if (sourceQuantity === undefined) {
     return 0;
