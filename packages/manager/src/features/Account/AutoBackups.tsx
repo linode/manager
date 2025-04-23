@@ -1,7 +1,7 @@
 import {
-  Accordion,
   FormControlLabel,
   Notice,
+  Paper,
   Toggle,
   Typography,
 } from '@linode/ui';
@@ -25,7 +25,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
-    marginLeft: `calc(${theme.spacing(1)} / 3)`,
+    marginLeft: `calc(${theme.spacingFunction(8)} / 3)`,
   },
 }));
 
@@ -49,15 +49,16 @@ const AutoBackups = (props: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Accordion defaultExpanded={true} heading="Backup Auto Enrollment">
-      <Grid container direction="column" spacing={2}>
+    <Paper>
+      <Typography variant="h2">Backup Auto Enrollment</Typography>
+      <Grid container direction="column" mt={1} spacing={1}>
         <Grid>
-          {!!isManagedCustomer ? (
-            <Notice spacingBottom={20} variant="info">
+          {isManagedCustomer && (
+            <Notice spacingBottom={20} spacingTop={8} variant="info">
               You&rsquo;re a Managed customer, which means your Linodes are
               already automatically backed up - no need to toggle this setting.
             </Notice>
-          ) : null}
+          )}
           <Typography variant="body1">
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
@@ -72,30 +73,22 @@ const AutoBackups = (props: Props) => {
             .
           </Typography>
         </Grid>
-        <Grid
-          container
-          direction="row"
-          sx={{
-            alignItems: 'center',
-          }}
-        >
-          <Grid>
-            <FormControlLabel
-              control={
-                <Toggle
-                  checked={!!isManagedCustomer ? true : backups_enabled}
-                  data-qa-toggle-auto-backup
-                  disabled={!!isManagedCustomer}
-                  onChange={onChange}
-                />
-              }
-              label={
-                backups_enabled || isManagedCustomer
-                  ? 'Enabled (Auto enroll all new Linodes in Backups)'
-                  : 'Disabled (Don\u{2019}t enroll new Linodes in Backups automatically)'
-              }
-            />
-          </Grid>
+        <Grid>
+          <FormControlLabel
+            control={
+              <Toggle
+                checked={isManagedCustomer ? true : backups_enabled}
+                data-qa-toggle-auto-backup
+                disabled={!!isManagedCustomer}
+                onChange={onChange}
+              />
+            }
+            label={
+              backups_enabled || isManagedCustomer
+                ? 'Enabled (Auto enroll all new Linodes in Backups)'
+                : 'Disabled (Don\u{2019}t enroll new Linodes in Backups automatically)'
+            }
+          />
         </Grid>
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
           <Grid>
@@ -113,7 +106,7 @@ const AutoBackups = (props: Props) => {
           </Grid>
         )}
       </Grid>
-    </Accordion>
+    </Paper>
   );
 };
 

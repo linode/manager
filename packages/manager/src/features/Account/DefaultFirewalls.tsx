@@ -86,14 +86,14 @@ export const DefaultFirewalls = () => {
 
   return (
     <Paper>
-      <Typography variant="h2">Default Firewalls</Typography>
+      <Typography mb={1} variant="h2">
+        Default Firewalls
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         {errors.root?.message && (
-          <Notice marginTop={1} variant="error">
-            {errors.root.message}
-          </Notice>
+          <Notice variant="error">{errors.root.message}</Notice>
         )}
-        <Typography marginTop={1} sx={{ mb: 2 }}>
+        <Typography sx={{ mb: 2 }}>
           Set the default firewall that is assigned to each network interface
           type when creating a Linode. The same firewall (new or existing) can
           be assigned to each type of interface/connection.

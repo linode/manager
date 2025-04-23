@@ -1,5 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Accordion, Button } from '@linode/ui';
+import { Button, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
@@ -35,21 +35,20 @@ const CloseAccountSetting = () => {
 
   return (
     <>
-      <Accordion defaultExpanded={true} heading="Close Account">
-        <Grid container direction="column">
-          <Grid>
-            <Button
-              buttonType="outlined"
-              data-testid="close-account-button"
-              disabled={isCloseAccountDisabled}
-              onClick={() => setDialogOpen(true)}
-              tooltipText={closeAccountButtonTooltipText}
-            >
-              Close Account
-            </Button>
-          </Grid>
+      <Paper>
+        <Typography variant="h2">Close Account</Typography>
+        <Grid mt={2}>
+          <Button
+            buttonType="outlined"
+            data-testid="close-account-button"
+            disabled={isCloseAccountDisabled}
+            onClick={() => setDialogOpen(true)}
+            tooltipText={closeAccountButtonTooltipText}
+          >
+            Close Account
+          </Button>
         </Grid>
-      </Accordion>
+      </Paper>
       <CloseAccountDialog
         closeDialog={() => setDialogOpen(false)}
         open={dialogOpen}

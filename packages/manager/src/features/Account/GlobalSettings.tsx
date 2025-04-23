@@ -16,7 +16,7 @@ import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { DefaultFirewalls } from './DefaultFirewalls';
 import { EnableManaged } from './EnableManaged';
-import NetworkHelper from './NetworkHelper';
+import { NetworkHelper } from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 

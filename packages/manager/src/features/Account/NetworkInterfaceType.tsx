@@ -80,9 +80,12 @@ export const NetworkInterfaceType = () => {
 
   return (
     <Paper>
-      <Typography variant="h2">Network Interface Type</Typography>
+      <Box alignItems={'center'} display={'flex'}>
+        <Typography variant="h2">Network Interface Type</Typography>
+        <BetaChip />
+      </Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack marginTop={1}>
+        <Stack mt={1}>
           <Typography variant="body1">
             Set the network interface for your Linode instances to use during
             creation. <Link to="/#">Learn more</Link>.
@@ -120,11 +123,7 @@ export const NetworkInterfaceType = () => {
               />
             )}
           />
-          <Box
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
+          <Box marginTop={2}>
             <Button
               buttonType="outlined"
               disabled={!isDirty}

@@ -1,6 +1,6 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
-import { Accordion, ActionsPanel, Button, Typography } from '@linode/ui';
+import { ActionsPanel, Button, Paper, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -102,12 +102,15 @@ export const EnableManaged = (props: Props) => {
 
   return (
     <>
-      <Accordion defaultExpanded={true} heading="Linode Managed">
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Linode Managed
+        </Typography>
         <ManagedContent
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />
-      </Accordion>
+      </Paper>
       <ConfirmationDialog
         actions={actions}
         error={error}
