@@ -37,7 +37,7 @@ const CloseAccountSetting = () => {
     <>
       <Paper>
         <Typography variant="h2">Close Account</Typography>
-        <Grid mt={2}>
+        <Grid mt={1}>
           <Button
             buttonType="outlined"
             data-testid="close-account-button"
