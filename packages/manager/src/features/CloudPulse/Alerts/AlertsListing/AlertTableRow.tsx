@@ -8,7 +8,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { alertStatusToIconStatusMap, alertStatuses } from '../constants';
+import { alertStatuses, alertStatusToIconStatusMap } from '../constants';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Item } from '../constants';

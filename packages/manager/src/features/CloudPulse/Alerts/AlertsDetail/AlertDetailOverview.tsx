@@ -46,11 +46,11 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         Overview
       </Typography>
       <Grid
+        container
+        spacing={2}
         sx={{
           alignItems: 'center',
         }}
-        container
-        spacing={2}
       >
         <AlertDetailRow label="Name" value={label} />
         <AlertDetailRow label="Description" value={description} />
@@ -69,17 +69,17 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           value={convertStringToCamelCasesWithSpaces(type)}
         />
         <AlertDetailRow
+          label="Created"
           value={formatDate(created, {
             format: 'MMM dd, yyyy, h:mm a',
           })}
-          label="Created"
         />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
+          label="Last Modified"
           value={formatDate(updated, {
             format: 'MMM dd, yyyy, h:mm a',
           })}
-          label="Last Modified"
         />
         <AlertDetailRow label="Last Modified By" value={updatedBy} />
       </Grid>
