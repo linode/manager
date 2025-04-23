@@ -1,7 +1,7 @@
 import {
+  createRootRouteWithContext,
   ErrorComponent,
   Outlet,
-  createRootRouteWithContext,
 } from '@tanstack/react-router';
 
 import { Root } from '../Root';
