@@ -30,6 +30,11 @@ export const PrivateIP = () => {
 
   return (
     <FormControlLabel
+      checked={field.value ?? false}
+      control={
+        <Checkbox sx={(theme) => ({ mt: `-${theme.tokens.spacing.S8}` })} />
+      }
+      disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
       label={
         <Stack spacing={1} sx={{ pl: 2 }}>
           <Typography component="span" variant="h3">
@@ -41,9 +46,6 @@ export const PrivateIP = () => {
           </Typography>
         </Stack>
       }
-      checked={field.value ?? false}
-      control={<Checkbox />}
-      disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
       onChange={field.onChange}
       sx={{ alignItems: 'start' }}
     />

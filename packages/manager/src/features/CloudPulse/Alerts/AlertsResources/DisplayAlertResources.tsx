@@ -203,14 +203,15 @@ export const DisplayAlertResources = React.memo(
                   <TableRow>
                     {isSelectionsNeeded && (
                       <TableCell
+                        padding="checkbox"
                         sx={{
                           cursor: isRootCheckBoxDisabled
                             ? 'not-allowed'
                             : 'auto',
                         }}
-                        padding="checkbox"
                       >
                         <Tooltip
+                          placement="right-start"
                           slotProps={{
                             tooltip: {
                               sx: {
@@ -226,10 +227,12 @@ export const DisplayAlertResources = React.memo(
                               />
                             ) : undefined
                           }
-                          placement="right-start"
                         >
                           <Box>
                             <Checkbox
+                              checked={isAllPageSelected(paginatedData)}
+                              data-testid={`select_all_in_page_${page}`}
+                              disabled={isRootCheckBoxDisabled}
                               indeterminate={
                                 isSomeSelected(paginatedData) &&
                                 !isAllPageSelected(paginatedData)
@@ -240,12 +243,7 @@ export const DisplayAlertResources = React.memo(
                                   !isAllPageSelected(paginatedData)
                                 )
                               }
-                              sx={{
-                                p: 0,
-                              }}
-                              checked={isAllPageSelected(paginatedData)}
-                              data-testid={`select_all_in_page_${page}`}
-                              disabled={isRootCheckBoxDisabled}
+                              size="small"
                             />
                           </Box>
                         </Tooltip>
@@ -253,13 +251,13 @@ export const DisplayAlertResources = React.memo(
                     )}
                     {columns.map(({ label, sortingKey }) => (
                       <TableSortCell
-                        handleClick={(orderBy, order) =>
-                          handleSort(orderBy, order, handlePageChange)
-                        }
                         active={sorting.orderBy === sortingKey}
                         data-qa-header={label.toLowerCase()}
                         data-testid={label.toLowerCase()}
                         direction={sorting.order}
+                        handleClick={(orderBy, order) =>
+                          handleSort(orderBy, order, handlePageChange)
+                        }
                         key={label}
                         label={sortingKey ?? ''}
                       >
@@ -288,6 +286,7 @@ export const DisplayAlertResources = React.memo(
                               }}
                             >
                               <Tooltip
+                                placement="right-start"
                                 slotProps={{
                                   tooltip: {
                                     sx: {
@@ -303,19 +302,16 @@ export const DisplayAlertResources = React.memo(
                                     />
                                   ) : undefined
                                 }
-                                placement="right-start"
                               >
                                 <Box>
                                   <Checkbox
-                                    onClick={() => {
-                                      handleSelectionChange([id], !checked);
-                                    }}
-                                    sx={{
-                                      p: 0,
-                                    }}
                                     checked={checked}
                                     data-testid={`select_item_${id}`}
                                     disabled={isItemCheckboxDisabled}
+                                    onClick={() => {
+                                      handleSelectionChange([id], !checked);
+                                    }}
+                                    size="small"
                                   />
                                 </Box>
                               </Tooltip>
@@ -353,6 +349,8 @@ export const DisplayAlertResources = React.memo(
               </Table>
               {!isDataLoadingError && paginatedData.length !== 0 && (
                 <PaginationFooter
+                  count={count}
+                  eventCategory="alerts_resources"
                   handlePageChange={(page) => {
                     handlePageNumberChange(handlePageChange, page);
                   }}
@@ -361,8 +359,6 @@ export const DisplayAlertResources = React.memo(
                     handlePageNumberChange(handlePageChange, 1); // Moves to the first page after page size change
                     scrollToGivenElement();
                   }}
-                  count={count}
-                  eventCategory="alerts_resources"
                   page={page}
                   pageSize={pageSize}
                 />

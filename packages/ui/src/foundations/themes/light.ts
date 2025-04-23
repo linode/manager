@@ -629,6 +629,29 @@ export const lightTheme: ThemeOptions = {
           color: Component.Checkbox.Empty.Default.Border,
         },
       },
+      defaultProps: {
+        size: 'medium',
+      },
+      variants: [
+        {
+          props: { size: 'small' },
+          style: {
+            svg: {
+              height: '16px',
+              width: '16px',
+            },
+          },
+        },
+        {
+          props: { size: 'medium' },
+          style: {
+            svg: {
+              height: '20px',
+              width: '20px',
+            },
+          },
+        },
+      ],
     },
     MuiChip: {
       styleOverrides: {
