@@ -132,8 +132,8 @@ export const AssignedEntitiesTable = () => {
     }) as EntitiesRole[];
 
     const sortedRoles = [...filteredRoles].sort((a, b) => {
-      const aValue = a[orderBy];
-      const bValue = b[orderBy];
+      const aValue = a[orderBy]?.toLowerCase();
+      const bValue = b[orderBy]?.toLowerCase();
 
       if (aValue < bValue) {
         return order === 'asc' ? -1 : 1;
