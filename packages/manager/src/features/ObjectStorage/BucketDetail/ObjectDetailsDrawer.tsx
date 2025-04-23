@@ -74,8 +74,7 @@ export const ObjectDetailsDrawer = React.memo(
       >
         {size ? (
           <Typography variant="subtitle2">
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(size, { base10: true }).formatted}
+            {readableBytes(size).formatted}
           </Typography>
         ) : null}
         {formattedLastModified && Boolean(profile) ? (
@@ -86,7 +85,7 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <Link external to={url}>
+            <Link bypassSanitization external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
             <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />
