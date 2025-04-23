@@ -1,4 +1,5 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import {
@@ -138,6 +139,24 @@ describe('AlertDetail component tests', () => {
     expect(getByText('Notification Channels')).toBeInTheDocument(); // validate if notification channels is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
+  });
+
+  it('should show error notice for failed alert', () => {
+    const alert = alertFactory.build({
+      status: 'failed',
+    });
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: alert,
+      isError: false,
+      isLoadiing: false,
+    });
+
+    renderWithTheme(<AlertDetail />);
+
+    const element = screen.getByTestId('notice-error').textContent;
+    expect(element).toEqual(
+      `${alert.label} alert creation has failed. Please open a support ticket for assistance.`
+    );
   });
 });
 
