@@ -24,7 +24,7 @@ import { AlertsListTable } from './AlertListTable';
 import {
   alertLimitMessage,
   alertToolTipText,
-  metricLimitMessage
+  metricLimitMessage,
 } from './constants';
 
 import type { Item } from '../constants';
