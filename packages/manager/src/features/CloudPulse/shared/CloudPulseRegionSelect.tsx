@@ -125,13 +125,8 @@ export const CloudPulseRegionSelect = React.memo(
       return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
     }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
-    const regionsFromResources =
-      resources
-        ?.filter(({ region }) => region !== undefined)
-        .map(({ region }) => region) ?? [];
-
     const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
-      regionsFromResources.includes(id)
+      resources?.some(({ region }) => region === id)
     );
 
     return (

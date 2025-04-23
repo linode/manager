@@ -4,7 +4,6 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
@@ -184,20 +183,15 @@ export const CloudPulseResourcesSelect = React.memo(
             </ListItem>
           );
         }}
-        textFieldProps={{
-          InputProps: {
-            sx: {
-              '::-webkit-scrollbar': {
-                display: 'none',
-              },
-              maxHeight: '55px',
-              msOverflowStyle: 'none',
-              overflow: 'auto',
-              scrollbarWidth: 'none',
-              svg: {
-                color: themes.light.color.grey3,
-              },
+        sx={{
+          '& .MuiInputBase-root': {
+            maxHeight: '55px',
+            overflow: 'auto',
+            '::-webkit-scrollbar': {
+              display: 'none',
             },
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
           },
         }}
         autoHighlight
