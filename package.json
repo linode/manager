@@ -68,6 +68,11 @@
     "clean": "concurrently \"rm -rf node_modules\" \"pnpm -r exec rm -rf node_modules lib dist\" \"pnpm store prune\"",
     "prepare": "husky"
   },
+  "resolutions": {
+    "node-fetch": "^2.6.7",
+    "yaml": "^2.3.0",
+    "semver": "^7.5.2"
+  },
   "version": "0.0.0",
   "volta": {
     "node": "20.17.0"
