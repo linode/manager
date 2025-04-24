@@ -168,7 +168,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
         open={supportModalOpen}
         sx={{
           '& .MuiDialog-paper': {
-            width: '600px',
+            maxWidth: 600,
           },
         }}
         title="Increase Quota"

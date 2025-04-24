@@ -1,4 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
+import { readableBytes } from '@linode/utilities';
 import { object, string } from 'yup';
 
 import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
@@ -145,6 +146,58 @@ export const getQuotaIncreaseMessage = ({
     quantity: '0',
     summary: 'Increase Quota',
   };
+};
+
+interface ConvertResourceMetricProps {
+  initialLimit: number;
+  initialResourceMetric: string;
+  initialUsage: number;
+}
+
+/**
+ * Function to convert the resource metric to a human readable format
+ */
+export const convertResourceMetric = ({
+  initialResourceMetric,
+  initialUsage,
+  initialLimit,
+}: ConvertResourceMetricProps): {
+  convertedLimit: number;
+  convertedResourceMetric: string;
+  convertedUsage: number;
+} => {
+  if (initialResourceMetric === 'byte') {
+    const limitReadable = readableBytes(initialLimit);
+
+    return {
+      convertedUsage: readableBytes(initialUsage, {
+        unit: limitReadable.unit,
+      }).value,
+      convertedResourceMetric: limitReadable.unit,
+      convertedLimit: limitReadable.value,
+    };
+  }
+
+  return {
+    convertedUsage: initialUsage,
+    convertedLimit: initialLimit,
+    convertedResourceMetric: initialResourceMetric,
+  };
+};
+
+/**
+ * Function to pluralize the resource metric
+ * If the unit is 'byte', we need to return the unit without an 's' (ex: 'GB', 'MB', 'TB')
+ * Otherwise, we need to return the unit with an 's' (ex: 'Buckets', 'Objects')
+ *
+ * Note: the value should be the raw values in bytes, not an existing conversion
+ */
+export const pluralizeMetric = (value: number, unit: string) => {
+  if (unit !== 'byte') {
+    return value > 1 ? `${unit}s` : unit;
+  }
+
+  return unit;
 };
 
 export const getQuotaIncreaseFormSchema = object({
