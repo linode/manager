@@ -2856,6 +2856,7 @@ export const handlers = [
           metric: 'system_cpu_utilization_percent',
           size: 12,
           unit: '%',
+          group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
         },
         {
@@ -2866,6 +2867,7 @@ export const handlers = [
           metric: 'system_memory_usage_by_resource',
           size: 12,
           unit: 'Bytes',
+          group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
         {
@@ -2877,6 +2879,7 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          group_by: ['entity_id'],
         },
         {
           aggregate_function: 'avg',
@@ -2886,6 +2889,7 @@ export const handlers = [
           metric: 'system_disk_OPS_total',
           size: 6,
           unit: 'OPS',
+          group_by: ['entity_id'],
           y_label: 'system_disk_operations_total',
         },
       ],
