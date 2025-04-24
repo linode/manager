@@ -8,7 +8,7 @@ import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
 
 interface Props {
   /**
-   * In the case this from has a partial failure, we may want to show that the
+   * In the case this form has a partial failure, we may want to show that the
    * firewall was successfully updated.
    */
   showSuccessNotice: boolean;

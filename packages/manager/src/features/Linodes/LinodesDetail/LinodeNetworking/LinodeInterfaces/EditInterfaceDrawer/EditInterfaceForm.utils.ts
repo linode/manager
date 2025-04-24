@@ -27,8 +27,8 @@ export type EditLinodeInterfaceFormValues = InferType<
  *
  * @returns A UseMutationResult where the type of the resulting data indicates the following:
  * - `null` means the firewall was removed (The Linode Interface no longer has a Firewall)
- * - `number` means firewall was updated (The number is the Firewall ID of the Interfaces new Firewall)
- * - `false` means nothing changed (Will happen if you pass the firewall of the Interfaces current firewall)
+ * - `number` means firewall was updated (The number is the Firewall ID of the Interface's new Firewall)
+ * - `false` means nothing changed (Will happen if you pass the firewall ID of the Interface's current firewall)
  */
 export const useUpdateLinodeInterfaceFirewallMutation = (
   linodeId: number,
@@ -46,7 +46,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
     { firewall_id: null | number | undefined }
   >({
     async mutationFn({ firewall_id }) {
-      // Get the interfaces Firewalls
+      // Get the interface's Firewalls
       const interfaceFirewalls = await queryClient.ensureQueryData(
         linodeQueries
           .linode(linodeId)
