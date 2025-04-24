@@ -2,10 +2,10 @@ import {
   FormControlLabel,
   Notice,
   Paper,
+  Stack,
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -51,29 +51,27 @@ const AutoBackups = (props: Props) => {
   return (
     <Paper>
       <Typography variant="h2">Backup Auto Enrollment</Typography>
-      <Grid container direction="column" mt={1} spacing={1}>
-        <Grid>
-          {isManagedCustomer && (
-            <Notice spacingBottom={20} spacingTop={8} variant="info">
-              You&rsquo;re a Managed customer, which means your Linodes are
-              already automatically backed up - no need to toggle this setting.
-            </Notice>
-          )}
-          <Typography variant="body1">
-            This controls whether Linode Backups are enabled, by default, for
-            all Linodes when they are initially created. For each Linode with
-            Backups enabled, your account will be billed the additional hourly
-            rate noted on the&nbsp;
-            <Link
-              data-qa-backups-price
-              to="https://www.linode.com/products/backups/"
-            >
-              Backups pricing page
-            </Link>
-            .
-          </Typography>
-        </Grid>
-        <Grid>
+      {isManagedCustomer && (
+        <Notice spacingBottom={16} spacingTop={16} variant="info">
+          You&rsquo;re a Managed customer, which means your Linodes are already
+          automatically backed up - no need to toggle this setting.
+        </Notice>
+      )}
+      <Stack mt={1} spacing={1}>
+        <Typography variant="body1">
+          This controls whether Linode Backups are enabled, by default, for all
+          Linodes when they are initially created. For each Linode with Backups
+          enabled, your account will be billed the additional hourly rate noted
+          on the&nbsp;
+          <Link
+            data-qa-backups-price
+            to="https://www.linode.com/products/backups/"
+          >
+            Backups pricing page
+          </Link>
+          .
+        </Typography>
+        <Stack>
           <FormControlLabel
             control={
               <Toggle
@@ -89,23 +87,21 @@ const AutoBackups = (props: Props) => {
                 : 'Disabled (Don\u{2019}t enroll new Linodes in Backups automatically)'
             }
           />
-        </Grid>
+        </Stack>
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
-          <Grid>
-            <Typography className={classes.footnote} variant="body1">
-              For existing Linodes without backups,&nbsp;
-              <button
-                className={classes.enableBackupsButton}
-                data-qa-backup-existing
-                onClick={openBackupsDrawer}
-              >
-                enable now
-              </button>
-              .
-            </Typography>
-          </Grid>
+          <Typography className={classes.footnote} variant="body1">
+            For existing Linodes without backups,&nbsp;
+            <button
+              className={classes.enableBackupsButton}
+              data-qa-backup-existing
+              onClick={openBackupsDrawer}
+            >
+              enable now
+            </button>
+            .
+          </Typography>
         )}
-      </Grid>
+      </Stack>
     </Paper>
   );
 };

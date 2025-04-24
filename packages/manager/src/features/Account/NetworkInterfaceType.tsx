@@ -79,7 +79,7 @@ export const NetworkInterfaceType = () => {
   };
 
   return (
-    <Paper>
+    <Paper data-testid="network-interface-type">
       <Box alignItems={'center'} display={'flex'}>
         <Typography variant="h2">Network Interface Type</Typography>
         <BetaChip />

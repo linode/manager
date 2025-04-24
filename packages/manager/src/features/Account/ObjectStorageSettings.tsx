@@ -51,7 +51,7 @@ export const ObjectStorageSettings = () => {
 
   return (
     <>
-      <Paper>
+      <Paper data-testid="object-storage">
         <Typography variant="h2">Object Storage</Typography>
         {accountSettings?.object_storage === 'active' ? (
           <Stack mt={1} spacing={2}>

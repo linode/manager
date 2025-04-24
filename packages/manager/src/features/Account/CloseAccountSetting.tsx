@@ -1,6 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Button, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import CloseAccountDialog from './CloseAccountDialog';
@@ -35,9 +34,9 @@ const CloseAccountSetting = () => {
 
   return (
     <>
-      <Paper>
+      <Paper data-testid="close-account">
         <Typography variant="h2">Close Account</Typography>
-        <Grid mt={1}>
+        <Box mt={1}>
           <Button
             buttonType="outlined"
             data-testid="close-account-button"
@@ -47,7 +46,7 @@ const CloseAccountSetting = () => {
           >
             Close Account
           </Button>
-        </Grid>
+        </Box>
       </Paper>
       <CloseAccountDialog
         closeDialog={() => setDialogOpen(false)}

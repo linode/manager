@@ -68,7 +68,7 @@ export const DefaultFirewalls = () => {
 
   if (isLoadingFirewallSettings) {
     return (
-      <Paper>
+      <Paper data-testid="default-firewalls">
         <Typography variant="h2">Default Firewalls</Typography>
         <CircleProgress />
       </Paper>
@@ -77,7 +77,7 @@ export const DefaultFirewalls = () => {
 
   if (firewallSettingsError) {
     return (
-      <Paper>
+      <Paper data-testid="default-firewalls">
         <Typography variant="h2">Default Firewalls</Typography>
         <ErrorState errorText="Unable to load your firewall settings and firewalls." />
       </Paper>
@@ -85,7 +85,7 @@ export const DefaultFirewalls = () => {
   }
 
   return (
-    <Paper>
+    <Paper data-testid="default-firewalls">
       <Typography mb={1} variant="h2">
         Default Firewalls
       </Typography>

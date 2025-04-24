@@ -1,5 +1,4 @@
-import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { FormControlLabel, Paper, Stack, Toggle, Typography } from '@linode/ui';
 import * as React from 'react';
 
 interface Props {
@@ -11,14 +10,12 @@ export const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
   return (
     <Paper>
       <Typography variant="h2">Network Helper</Typography>
-      <Grid container direction="column" mt={1} spacing={1}>
-        <Grid>
-          <Typography variant="body1">
-            Network Helper automatically deposits a static networking
-            configuration into your Linode at boot.
-          </Typography>
-        </Grid>
-        <Grid>
+      <Stack mt={1} spacing={1}>
+        <Typography variant="body1">
+          Network Helper automatically deposits a static networking
+          configuration into your Linode at boot.
+        </Typography>
+        <Stack>
           <FormControlLabel
             control={
               <Toggle
@@ -31,8 +28,8 @@ export const NetworkHelper = ({ networkHelperEnabled, onChange }: Props) => {
               networkHelperEnabled ? 'Enabled (default behavior)' : 'Disabled'
             }
           />
-        </Grid>
-      </Grid>
+        </Stack>
+      </Stack>
     </Paper>
   );
 };
