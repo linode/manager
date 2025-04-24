@@ -27,7 +27,9 @@ describe('QuotasIncreaseForm', () => {
 
     expect(getByLabelText('Title (required)')).toHaveValue('Increase Quota');
     expect(getByLabelText('Quantity (required)')).toHaveValue(0);
-    expect(getByText('In us-east (initial limit of 50)')).toBeInTheDocument();
+    expect(
+      getByText('In us-east (initial limit of 100 GB)')
+    ).toBeInTheDocument();
     expect(getByLabelText('Notes')).toHaveValue('');
     expect(getByText('Ticket Preview')).toBeInTheDocument();
     expect(

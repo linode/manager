@@ -111,7 +111,9 @@ describe('QuotasTable', () => {
 
     await waitFor(() => {
       expect(getByText(quota.quota_name)).toBeInTheDocument();
-      expect(getByText(quota.quota_limit)).toBeInTheDocument();
+      expect(
+        getByText(`${quota.quota_limit} ${quota.resource_metric}s`)
+      ).toBeInTheDocument();
       expect(getByLabelText(quota.description)).toBeInTheDocument();
       expect(getByTestId('linear-progress')).toBeInTheDocument();
       expect(

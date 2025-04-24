@@ -49,9 +49,7 @@ describe('useGetLocationsForQuotaService', () => {
       }
     );
 
-    expect(result.current.s3Endpoints).toEqual([
-      { label: 'Global (Account level)', value: 'global' },
-    ]);
+    expect(result.current.s3Endpoints).toEqual([]);
   });
 
   it('should filter out endpoints with null s3_endpoint values', () => {
@@ -76,7 +74,6 @@ describe('useGetLocationsForQuotaService', () => {
     );
 
     expect(result.current.s3Endpoints).toEqual([
-      { label: 'Global (Account level)', value: 'global' },
       { label: 'endpoint1 (Standard E0)', value: 'endpoint1' },
     ]);
   });

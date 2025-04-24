@@ -112,6 +112,7 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
+import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
@@ -1084,6 +1085,20 @@ export const handlers = [
       }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
+  }),
+  http.get('*/v4*/object-storage/quotas*', () => {
+    const quotas = [
+      quotaFactory.build({
+        description: 'The total capacity of your Object Storage account',
+        endpoint_type: 'E0',
+        quota_limit: 1_000_000_000_000_000,
+        quota_name: 'Total Capacity',
+        resource_metric: 'byte',
+        s3_endpoint: 'endpoint1',
+      }),
+    ];
+
+    return HttpResponse.json(makeResourcePage(quotas));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);

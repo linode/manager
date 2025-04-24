@@ -17,7 +17,6 @@ export const Quotas = () => {
   const [selectedLocation, setSelectedLocation] =
     React.useState<null | SelectOption<Quota['region_applied']>>(null);
   const locationData = useGetLocationsForQuotaService('object-storage');
-
   const { s3Endpoints } = locationData;
   const isFetchingLocations =
     'isFetchingS3Endpoints' in locationData
