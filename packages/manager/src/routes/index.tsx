@@ -3,6 +3,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
+import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
@@ -102,13 +103,13 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
 ]);
 export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
-  Wrap: ({ children }) => {
-    return <div data-testid="migration-router">{children}</div>;
-  },
   context: {
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
   defaultPreload: 'intent',
+  defaultErrorComponent: ({ error, reset }) => (
+    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
+  ),
   routeTree: migrationRouteTree,
 });

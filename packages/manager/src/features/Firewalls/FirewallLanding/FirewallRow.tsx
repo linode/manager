@@ -30,11 +30,8 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const {
-    defaultNumEntities,
-    isDefault,
-    tooltipText,
-  } = useDefaultFirewallChipInformation(id);
+  const { defaultNumEntities, isDefault, tooltipText } =
+    useDefaultFirewallChipInformation(id);
 
   const neededLinodeIdsForInterfaceDevices = entities
     .slice(0, 3) // only take the first three entities since we only show those entity links

@@ -88,10 +88,7 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
           .findByTitle(nodeBal_2.ipv4)
           .should('be.visible')
           .click();
-        cy.get('[data-testid="textfield-input"]')
-          .last()
-          .should('be.visible')
-          .click();
+        cy.findByLabelText('Weight').should('be.visible').click();
         cy.focused().clear();
         cy.focused().type('50');
 
