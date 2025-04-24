@@ -109,28 +109,28 @@ export const customDarkModeOptions = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `48px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.IconBackground}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `48px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.IconBackground}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `48px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
 } as const;
 

@@ -30,6 +30,12 @@ describe('Create Firewall Drawer', () => {
     expect(title).toBeVisible();
   });
 
+  it('should always show the label field', () => {
+    renderWithTheme(<CreateFirewallDrawer {...props} />);
+    const label = screen.getByText('Label');
+    expect(label).toBeVisible();
+  });
+
   it('should render radio buttons for default inbound/outbound policies', () => {
     renderWithTheme(<CreateFirewallDrawer {...props} />);
     const withinInboundPolicy = within(
