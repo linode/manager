@@ -32,8 +32,7 @@ export const dimensionFilterFactory =
     dimension_label: Factory.each((i) => `dimension_${i}`),
     operator: 'startswith',
     value: Factory.each((i) => `value_${i}`),
-  }
-);
+  });
 
 export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   aggregate_function: 'avg',

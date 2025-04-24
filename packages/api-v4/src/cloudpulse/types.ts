@@ -8,7 +8,9 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith'
   | 'endswith';
-export type WidgetDimensionFilterOperatorType = DimensionFilterOperatorType | 'in';
+export type WidgetDimensionFilterOperatorType =
+  | 'in'
+  | DimensionFilterOperatorType;
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'enabled' | 'disabled' | 'in progress' | 'failed';
 export type CriteriaConditionType = 'ALL';
@@ -58,7 +60,7 @@ export interface DateTimeWithPreset {
 
 export interface Widgets {
   aggregate_function: string;
-  chart_type: 'line' | 'area';
+  chart_type: 'area' | 'line';
   color: string;
   entity_ids: string[];
   filters: WidgetDimensionFilter[];
