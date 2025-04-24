@@ -52,6 +52,12 @@ export const EditInterfaceForm = (props: Props) => {
   const form = useForm<EditLinodeInterfaceFormValues>({
     defaultValues,
     resolver: yupResolver(EditLinodeInterfaceFormSchema),
+    values: defaultValues,
+    resetOptions: {
+      keepErrors: true,
+      keepDirty: true,
+      keepDirtyValues: true,
+    },
   });
 
   const onSubmit = async (values: EditLinodeInterfaceFormValues) => {
@@ -88,32 +94,6 @@ export const EditInterfaceForm = (props: Props) => {
       if (results[1].status === 'rejected') {
         for (const error of results[1].reason) {
           form.setError('firewall_id', { message: error.reason });
-        }
-      }
-      // If the interface was updated successfully,
-      // update the form values so that any auto-allocated IPs propagate in the form state.
-      // We do this in case the firewall request fails and the drawer stays open.
-      // It ensures the `Reset` button works as expected.
-      if (results[0].status === 'fulfilled') {
-        const updatedInterfaceValues = results[0].value;
-        form.reset(
-          { firewall_id: defaultValues.firewall_id, ...updatedInterfaceValues },
-          {
-            keepErrors: true,
-            keepDirty: true,
-            keepDirtyValues: true,
-          }
-        );
-      }
-
-      // If the firewall was updated successfully,
-      // update the form values so that new firewall is propagated in the form state.
-      // We do this in case the interface update request failed and the drawer stays open.
-      // It ensures the `Reset` button works as expected.
-      if (results[1].status === 'fulfilled') {
-        const updatedFirewallId = results[1].value;
-        if (updatedFirewallId !== false) {
-          form.resetField('firewall_id', { defaultValue: updatedFirewallId });
         }
       }
     }

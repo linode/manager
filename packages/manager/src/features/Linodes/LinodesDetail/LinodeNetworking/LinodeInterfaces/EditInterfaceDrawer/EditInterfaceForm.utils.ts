@@ -128,7 +128,11 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
 
       return false;
     },
-    onSuccess() {
+    onSettled() {
+      // The use of `onSettled` is intentional here!
+      // Because the `mutationFn` chains API requests, it is possible that some requests may fail during the mutation.
+      // We want to invalidate on both success *and* failure so that the app's state reflects the true state
+      // of the backend if there are any failures.
       queryClient.invalidateQueries({
         queryKey: linodeQueries
           .linode(linodeId)
