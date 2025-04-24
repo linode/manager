@@ -65,6 +65,7 @@ const dashboard = dashboardFactory.build({
       metric: name,
       unit,
       y_label: yLabel,
+      group_by: ['entity_id'],
     });
   }),
 });
@@ -189,7 +190,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"secondary"');
-        expect(group_by).to.equal('region');
+        expect(group_by).to.deep.equal(['entity_id']);
       });
   });
 
@@ -271,7 +272,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"primary"');
-        expect(group_by).to.equal('region');
+        expect(group_by).to.deep.equal(['entity_id']);
       });
   });
 
