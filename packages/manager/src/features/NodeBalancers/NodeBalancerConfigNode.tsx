@@ -1,15 +1,15 @@
 import {
-  Autocomplete,
   Box,
   Button,
   Chip,
   Divider,
   Notice,
+  Select,
   TextField,
   Typography,
 } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -81,7 +81,7 @@ export const NodeBalancerConfigNode = React.memo(
 
     return (
       <React.Fragment>
-        <Grid data-qa-node sx={{ padding: 1 }} size={12}>
+        <Grid data-qa-node size={12} sx={{ padding: 1 }}>
           {idx !== 0 && (
             <Grid size={12}>
               <Divider
@@ -138,7 +138,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid sx={{ padding: 1 }} size={12}>
+        <Grid size={12} sx={{ padding: 1 }}>
           <Grid container data-qa-node key={idx} spacing={2}>
             <Grid
               size={{
@@ -205,18 +205,17 @@ export const NodeBalancerConfigNode = React.memo(
                   xs: 6,
                 }}
               >
-                <Autocomplete
+                <Select
+                  disabled={disabled}
+                  errorText={nodesErrorMap.mode}
+                  label="Mode"
+                  onChange={(_, option) => onNodeModeChange(idx, option.value)}
+                  options={modeOptions}
+                  textFieldProps={{ noMarginTop: true }}
                   value={
                     modeOptions.find((option) => option.value === node.mode) ??
                     modeOptions.find((option) => option.value === 'accept')
                   }
-                  disableClearable
-                  disabled={disabled}
-                  errorText={nodesErrorMap.mode}
-                  label="Mode"
-                  noMarginTop
-                  onChange={(_, option) => onNodeModeChange(idx, option.value)}
-                  options={modeOptions}
                 />
               </Grid>
             )}

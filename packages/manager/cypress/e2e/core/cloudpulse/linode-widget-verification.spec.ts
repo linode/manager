@@ -90,6 +90,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
 const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: resource,
+  region: 'us-ord',
 });
 
 const mockAccount = accountFactory.build();
