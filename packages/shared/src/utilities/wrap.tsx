@@ -1,4 +1,6 @@
 import { queryClientFactory } from '@linode/queries';
+import { light } from '@linode/ui';
+import { type Theme, ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import React from 'react';
@@ -28,3 +30,7 @@ export const QueryClientWrapper =
   (ui: React.ReactNode) => (
     <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
   );
+
+export const ThemeWrapper =
+  (theme: Theme = light) =>
+  (ui: React.ReactNode) => <ThemeProvider theme={theme}>{ui}</ThemeProvider>;
