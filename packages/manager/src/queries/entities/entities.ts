@@ -8,7 +8,6 @@ import type { AccountEntity, APIError, ResourcePage } from '@linode/api-v4';
 export const useAccountEntities = () => {
   return useQuery<ResourcePage<AccountEntity>, APIError[]>({
     ...entitiesQueries.entities,
-    ...queryPresets.oneTimeFetch,
-    ...queryPresets.noRetry,
+    ...queryPresets.shortLived,
   });
 };

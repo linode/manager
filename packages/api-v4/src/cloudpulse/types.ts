@@ -77,7 +77,7 @@ export interface Widgets {
 }
 
 export interface Filters {
-  key: string;
+  dimension_label: string;
   operator: string;
   value: string;
 }
@@ -130,13 +130,17 @@ export interface JWEToken {
   token: string;
 }
 
+export interface Metric {
+  aggregate_function: string;
+  name: string;
+}
+
 export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
-  aggregate_function: string;
   entity_ids: number[];
   filters?: WidgetDimensionFilter[];
   group_by: string;
-  metric: string;
+  metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;
 }

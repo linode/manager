@@ -255,11 +255,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
-      flags,
       label: widget.label,
       metricsList,
       resources,
-      serviceType,
       status,
       unit,
     });

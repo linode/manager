@@ -1,16 +1,17 @@
-import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
-
 import {
   basename,
   confirmObjectStorage,
   displayName,
   extendObject,
   firstSubfolder,
+  generateObjectUrl,
   isFile,
   isFolder,
   prefixArrayToString,
   tableUpdateAction,
 } from './utilities';
+
+import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 
 const folder: ObjectStorageObject = {
   etag: null,
@@ -41,7 +42,22 @@ const object3: ObjectStorageObject = {
   size: 0,
 };
 
+const mockHostname = 'my-bucket.linodeobjects.com';
+
 describe('Object Storage utilities', () => {
+  describe('generateObjectUrl', () => {
+    it('returns the correct URL', () => {
+      expect(generateObjectUrl(mockHostname, 'my-object')).toBe(
+        'https://my-bucket.linodeobjects.com/my-object'
+      );
+    });
+    it('encodes the URL for special characters', () => {
+      expect(generateObjectUrl(mockHostname, 'my-object?')).toBe(
+        'https://my-bucket.linodeobjects.com/my-object%3F'
+      );
+    });
+  });
+
   describe('isFolder', () => {
     it('returns `true` if the object has null for fields except `name`', () => {
       expect(isFolder(folder)).toBe(true);
