@@ -114,5 +114,3 @@ export const PaymentMethodCard = (props: Props) => {
     />
   );
 };
-
-export default PaymentMethodCard;
