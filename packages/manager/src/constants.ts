@@ -74,8 +74,12 @@ export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 
 /** Adobe Analytics */
-export const ADOBE_ANALYTICS_URL = import.meta.env
-  .REACT_APP_ADOBE_ANALYTICS_URL;
+// TODO: revert this change; this is for debugging the new Adobe Launch script with MADS
+export const ADOBE_ANALYTICS_URL =
+  'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-92311d9d9637-development.min.js';
+// import.meta.env
+//   .REACT_APP_ADOBE_ANALYTICS_URL;
+
 export const NUM_ADOBE_SCRIPTS = 3;
 
 /** Pendo */
@@ -289,7 +293,8 @@ export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
 
 // URL validators
-export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const OFFSITE_URL_REGEX =
+  /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
 export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links
