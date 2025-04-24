@@ -4,7 +4,7 @@ import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@linode/ui';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
