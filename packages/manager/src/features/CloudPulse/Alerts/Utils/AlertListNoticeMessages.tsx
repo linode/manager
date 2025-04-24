@@ -24,14 +24,9 @@ export const AlertListNoticeMessages = (
     return (
       <Notice data-alert-notice style={style} sx={sx} variant={variant}>
         {/* temporarily using `ul`, `li` tags instead of `List`, `ListItem` till we figure out the alignment issue with the icon and messages in the Notice */}
-        <ul
-          style={{ margin: 0, paddingLeft: 20 }}
-        >
+        <ul style={{ margin: 0, paddingLeft: 20 }}>
           {errorList.map((error, index) => (
-            <li
-              data-testid="alert_notice_message_list"
-              key={index}
-            >
+            <li data-testid="alert_notice_message_list" key={index}>
               {error}
             </li>
           ))}
@@ -43,10 +38,10 @@ export const AlertListNoticeMessages = (
   return (
     <Notice data-alert-notice style={style} sx={sx} variant={variant}>
       <Typography
+        data-testid="alert_message_notice"
         sx={(theme) => ({
           fontFamily: theme.tokens.font.FontWeight.Extrabold,
         })}
-        data-testid="alert_message_notice"
       >
         {errorList[0]}
       </Typography>
