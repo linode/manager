@@ -125,25 +125,9 @@ export const CloudPulseRegionSelect = React.memo(
       return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
     }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
-    const regionsFromResources =
-      resources
-        ?.filter(({ region }) => region !== undefined)
-        .map(({ region }) => region) ?? [];
-
     const supportedRegionsFromResources = supportedRegions?.filter(({ id }) =>
-      regionsFromResources.includes(id)
+      resources?.some(({ region }) => region === id)
     );
-
-    const resourceLabel =
-      FILTER_CONFIG.get(serviceType ?? '')?.filters.find(
-        (value) => value.name === 'Resources'
-      )?.configuration.name ?? 'Resources';
-
-    const errorMessage = isError
-      ? `Failed to fetch ${label || 'Regions'}.`
-      : isResourcesError
-        ? `Failed to fetch ${resourceLabel}.`
-        : '';
 
     return (
       <RegionSelect
@@ -151,7 +135,11 @@ export const CloudPulseRegionSelect = React.memo(
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions || disabled || !resources}
-        errorText={errorMessage}
+        errorText={
+          isError || isResourcesError
+            ? `Failed to fetch ${label || 'Regions'}.`
+            : ''
+        }
         fullWidth
         isGeckoLAEnabled={isGeckoLAEnabled}
         label={label || 'Region'}
