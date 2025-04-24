@@ -6,13 +6,13 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { Link } from '@mui/material';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { SupportLink } from 'src/components/SupportLink';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -294,13 +294,7 @@ export const AlertListing = () => {
           >
             Creation of {failedAlertsCount} alerts has failed as indicated in
             the status column. Please{' '}
-            <Link
-              href="https://cloud.linode.com/support/tickets"
-              underline="hover"
-            >
-              open a support ticket
-            </Link>{' '}
-            for assistance.
+            <SupportLink text="open a support ticket" /> for assistance.
           </Typography>
         </Notice>
       )}
