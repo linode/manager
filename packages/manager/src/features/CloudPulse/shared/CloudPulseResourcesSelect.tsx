@@ -4,7 +4,6 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
@@ -194,9 +193,6 @@ export const CloudPulseResourcesSelect = React.memo(
               msOverflowStyle: 'none',
               overflow: 'auto',
               scrollbarWidth: 'none',
-              svg: {
-                color: themes.light.color.grey3,
-              },
             },
           },
         }}

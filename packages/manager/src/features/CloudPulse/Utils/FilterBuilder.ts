@@ -107,8 +107,14 @@ export const getRegionProperties = (
     savePref?: boolean
   ) => void
 ): CloudPulseRegionSelectProps => {
-  const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const { name: label, placeholder, filterKey } = props.config.configuration;
+  const {
+    dashboard,
+    isServiceAnalyticsIntegration,
+    preferences,
+    dependentFilters,
+    config,
+  } = props;
   return {
     defaultValue: preferences?.[REGION],
     handleRegionChange,
@@ -116,6 +122,12 @@ export const getRegionProperties = (
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
+    disabled: shouldDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
 
