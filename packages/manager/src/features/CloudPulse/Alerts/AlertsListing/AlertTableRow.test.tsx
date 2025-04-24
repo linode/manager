@@ -215,6 +215,6 @@ describe('Alert Row', () => {
       `Action menu for Alert ${alert.label}`
     );
     await userEvent.click(ActionMenu);
-    expect(screen.getByText('Delete')).toBeInTheDocument();
+    expect(screen.getByText('Delete')).toBeVisible();
   });
 });
