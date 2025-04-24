@@ -16,6 +16,26 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+// Shared import restrictions applied across different rule contexts
+const restrictedImportPaths = [
+  'rxjs',
+  '@mui/core',
+  '@mui/system',
+  '@mui/icons-material',
+  {
+    name: '@mui/material',
+    importNames: ['Typography'],
+    message:
+      'Please use Typography component from @linode/ui instead of @mui/material',
+  },
+  {
+    name: 'react-router-dom',
+    importNames: ['Link'],
+    message:
+      'Please use the Link component from src/components/Link instead of react-router-dom',
+  },
+];
+
 export const baseConfig = [
   // 1. Ignores
   {
@@ -79,21 +99,15 @@ export const baseConfig = [
       'no-new-wrappers': 'error',
       'no-restricted-imports': [
         'error',
-        'rxjs',
-        '@mui/core',
-        '@mui/system',
-        '@mui/icons-material',
         {
-          importNames: ['Typography'],
-          message:
-            'Please use Typography component from @linode/ui instead of @mui/material',
-          name: '@mui/material',
-        },
-        {
-          importNames: ['Link'],
-          message:
-            'Please use the Link component from src/components/Link instead of react-router-dom',
-          name: 'react-router-dom',
+          paths: restrictedImportPaths,
+          patterns: [
+            {
+              group: ['**/node_modules/cypress/**', 'cypress/**'],
+              message:
+                'Cypress modules should only be imported in testing directories',
+            },
+          ],
         },
       ],
       'no-restricted-syntax': [
@@ -366,6 +380,14 @@ export const baseConfig = [
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
       '@typescript-eslint/no-unused-expressions': 'off',
+      // Maintain standard import restrictions but allow Cypress imports in Cypress files
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: restrictedImportPaths,
+          // Intentionally omit patterns to allow Cypress imports in test files
+        },
+      ],
     },
   },
 
