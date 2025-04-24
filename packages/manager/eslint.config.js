@@ -385,7 +385,7 @@ export const baseConfig = [
         'error',
         {
           paths: restrictedImportPaths,
-          // Intentionally omit patterns to allow Cypress imports in test files
+          // Intentionally omit patterns to allow Cypress imports in Cypress files
         },
       ],
     },
