@@ -1,5 +1,5 @@
 import { default as _FormControlLabel } from '@mui/material/FormControlLabel';
-import * as React from 'react';
+import React from 'react';
 
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 
