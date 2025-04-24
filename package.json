@@ -69,10 +69,8 @@
   },
   "resolutions": {
     "node-fetch": "^2.6.7",
-    "yaml": "^2.3.0",
     "semver": "^7.5.2",
-    "cookie": "^0.7.0",
-    "nanoid": "^3.3.8"
+    "yaml": "^2.3.0"
   },
   "version": "0.0.0",
   "volta": {
