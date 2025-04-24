@@ -377,6 +377,10 @@ export const extractPlansInformation = ({
           )
         );
 
+      // Resizing of MTC_TT plan instances are not supported from any regions.
+      // - Resizing existing linodes (from MTC regions) to this MTC_TT plan is not supported
+      // - Resizing exisiting linodes (from non-MTC regions) to this MTC_TT plan is not supported
+      // - Resizing existing MTC linodes is not supported (Disabled at the `Resize` Action Menu as well)
       const planIsMTCTTWithResizing = Boolean(
         isCustomMTCPlan && isActionResize
       );
