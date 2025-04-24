@@ -420,8 +420,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         status: statusList[index % statusList.length],
         type: 'user',
         id: index,
-        created_by: `user-${index}`,
-        updated_by: `uuser-${index}`,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
         ...(index % 2 === 0 && {
           rule_criteria: {
             rules: alertRulesFactory.buildList(0),
@@ -451,8 +451,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         status: statusList[index % statusList.length],
         type: 'user',
         id: index,
-        created_by: `user-${index}`,
-        updated_by: `uuser-${index}`,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
         ...(index % 2 === 0 && {
           rule_criteria: {
             rules: alertRulesFactory.buildList(5),
@@ -482,8 +482,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         status: statusList[index % statusList.length],
         type: 'user',
         id: index,
-        created_by: `user-${index}`,
-        updated_by: `uuser-${index}`,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
       })
     );
 
