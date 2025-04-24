@@ -103,6 +103,7 @@ export const getLegacyInterfaceFromLinodeInterface = (
       },
       purpose,
       subnet_id: linodeInterface.vpc?.subnet_id,
+      vpc_id: linodeInterface.vpc?.vpc_id,
     };
   }
 
