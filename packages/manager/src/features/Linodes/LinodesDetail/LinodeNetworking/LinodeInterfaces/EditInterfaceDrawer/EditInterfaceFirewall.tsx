@@ -4,9 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 
-import { EditLinodeInterfaceFormSchema } from './EditInterfaceForm.utils';
-
-import type { InferType } from 'yup';
+import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
 
 interface Props {
   /**
@@ -17,8 +15,7 @@ interface Props {
 }
 
 export const EditInterfaceFirewall = ({ showSuccessNotice }: Props) => {
-  const { control } =
-    useFormContext<InferType<typeof EditLinodeInterfaceFormSchema>>();
+  const { control } = useFormContext<EditLinodeInterfaceFormValues>();
 
   return (
     <Stack spacing={1}>
