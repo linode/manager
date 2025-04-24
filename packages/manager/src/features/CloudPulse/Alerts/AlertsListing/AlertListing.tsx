@@ -14,9 +14,14 @@ import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 
 import type { Item } from '../constants';
-import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
-import { alertLimitMessage, alertToolTipText, metricLimitMessage } from './constants';
+import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
+
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 const searchAndSelectSx = {
   lg: '250px',
@@ -43,15 +48,15 @@ export const AlertListing = () => {
   } = useCloudPulseServiceTypes(true);
 
   const isAlertLimitReached = alerts
-  ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
-  : false;
+    ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
+    : false;
 
-const isMetricLimitReached = alerts
-  ? alerts
-      .filter(({ type }) => type === 'user')
-      .reduce(
-        (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
-        0
+  const isMetricLimitReached = alerts
+    ? alerts
+        .filter(({ type }) => type === 'user')
+        .reduce(
+          (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
+          0
       ) >= maxAllowedMetrics
   : false;
 
