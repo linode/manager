@@ -31,7 +31,7 @@ import type { DisableItemOption } from '@linode/ui';
  * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = <
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 >(
   props: RegionSelectProps<DisableClearable>
 ) => {
@@ -58,10 +58,8 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,

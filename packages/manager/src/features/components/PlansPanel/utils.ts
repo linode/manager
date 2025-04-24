@@ -216,7 +216,7 @@ export const getIsLimitedAvailability = ({
  * These plans have specific availability requirements and are treated differently
  * from regular plans in terms of region availability and 512GB plan handling.
  */
-export const isMTCTTPlan = (plan: PlanSelectionType) => {
+export const isMTCTTPlan = (plan: Partial<PlanSelectionType>) => {
   return (
     plan.class === 'premium' &&
     MTC_TT['available_types'].includes(

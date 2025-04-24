@@ -48,6 +48,7 @@ import { ConfigureForm } from './ConfigureForm';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { Event } from '@linode/api-v4/lib/account';
+import { isMTCTTPlan } from 'src/features/components/PlansPanel/utils';
 
 interface Props {
   linodeId: number | undefined;
@@ -85,7 +86,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { data: events } = useInProgressEvents();
 
   const eventsForLinode = linodeId
-    ? events?.filter((event) => isEventRelevantToLinode(event, linodeId)) ?? []
+    ? (events?.filter((event) => isEventRelevantToLinode(event, linodeId)) ??
+      [])
     : [];
 
   const {
@@ -104,16 +106,13 @@ export const MigrateLinode = React.memo((props: Props) => {
   const [selectedRegion, handleSelectRegion] = React.useState<
     string | undefined
   >();
-  const [
-    placementGroupSelection,
-    setPlacementGroupSelection,
-  ] = React.useState<PlacementGroup | null>();
+  const [placementGroupSelection, setPlacementGroupSelection] =
+    React.useState<PlacementGroup | null>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
@@ -210,7 +209,7 @@ export const MigrateLinode = React.memo((props: Props) => {
   };
 
   const newLabel = getLinodeDescription(
-    type ? formatStorageUnits(type.label) : linode.type ?? 'Unknown Type',
+    type ? formatStorageUnits(type.label) : (linode.type ?? 'Unknown Type'),
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,
@@ -227,6 +226,8 @@ export const MigrateLinode = React.memo((props: Props) => {
   const migrationTimeInMinutes = Math.ceil(
     addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
+
+  const isMTCTTLinode = Boolean(type && isMTCTTPlan(type));
 
   return (
     <Dialog
@@ -269,10 +270,14 @@ export const MigrateLinode = React.memo((props: Props) => {
         currentRegion={region}
         handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
+        isMTCTTLinode={isMTCTTLinode}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
       />
       <Box
+        alignItems="center"
+        display="flex"
+        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
         sx={{
           marginTop: theme.spacing(3),
           [theme.breakpoints.down('md')]: {
@@ -280,9 +285,6 @@ export const MigrateLinode = React.memo((props: Props) => {
             justifyContent: 'flex-end',
           },
         }}
-        alignItems="center"
-        display="flex"
-        justifyContent={showGDPRCheckbox ? 'space-between' : 'flex-end'}
       >
         {showGDPRCheckbox ? (
           <StyledAgreementCheckbox
