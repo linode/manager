@@ -104,7 +104,7 @@ const mockRegions = [
   }),
   regionFactory.build({
     id: 'us-east',
-    label: 'Newyark, NJ',
+    label: 'Newark, NJ',
     capabilities: ['Managed Databases'],
   }),
 ];

@@ -183,7 +183,7 @@ describe('CloudPulseRegionSelect', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Open' }));
-    // example: region id => 'us-west' belongs to service type - 'dbass', capability -'Managed Databases', and is supported via launchDarkly
+    // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported via launchDarkly
     const usWestRegion = screen.getByRole('option', {
       name: 'US, Fremont, CA (us-west)',
     });
