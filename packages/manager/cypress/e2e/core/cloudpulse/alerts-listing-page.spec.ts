@@ -495,5 +495,11 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
           .should('have.text', metricLimitMessage);
       });
     ui.tooltip.findByText(alertToolTipText).should('be.visible');
+    cy.get('[data-qa-error="true"]')
+      .should('be.visible')
+      .should(
+        'have.text',
+        'Creation of 25 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
+      );
   });
 });
