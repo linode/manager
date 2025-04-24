@@ -243,10 +243,9 @@ describe('LKE Cluster Creation', () => {
 
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
-    ui.autocomplete
-      .findByLabel('Kubernetes Version')
-      .click()
-      .type(`${clusterVersion}{enter}`);
+    ui.autocomplete.findByLabel('Kubernetes Version').click();
+
+    cy.findByText(`${clusterVersion}`).should('be.visible').click();
 
     cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
@@ -747,8 +746,8 @@ describe('LKE Cluster Creation with ACL', () => {
       ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
       cy.wait(['@getRegionAvailability']);
 
-      cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.focused().type(`${clusterVersion}{enter}`);
+      cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+      cy.findByText(`${clusterVersion}`).should('be.visible').click();
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
@@ -850,8 +849,8 @@ describe('LKE Cluster Creation with ACL', () => {
 
       ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
 
-      cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.focused().type(`${clusterVersion}{enter}`);
+      cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+      cy.findByText(`${clusterVersion}`).should('be.visible').click();
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
@@ -1181,8 +1180,8 @@ describe('LKE Cluster Creation with ACL', () => {
 
       ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
 
-      cy.findByText('Kubernetes Version').should('be.visible').click();
-      cy.focused().type(`${clusterVersion}{enter}`);
+      cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+      cy.findByText(`${clusterVersion}`).should('be.visible').click();
 
       cy.get('[data-testid="ha-radio-button-yes"]')
         .should('be.visible')
