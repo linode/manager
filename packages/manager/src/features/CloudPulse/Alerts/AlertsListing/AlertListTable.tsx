@@ -5,6 +5,7 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -13,7 +14,10 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import {
+  useDeleteAlertDefinitionMutation,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
@@ -23,7 +27,12 @@ import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
-import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertServiceType,
+  APIError,
+  DeleteAlertPayload,
+} from '@linode/api-v4';
 
 export interface AlertsListTableProps {
   /**
@@ -71,10 +80,14 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     : undefined;
   const history = useHistory();
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
-
+  const { mutateAsync: deleteAlertDefinition } =
+    useDeleteAlertDefinitionMutation();
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
+    React.useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = React.useState<boolean>(false);
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -91,6 +104,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
+  }, []);
+
+  const handleDelete = React.useCallback((alert: Alert) => {
+    setSelectedAlert(alert);
+    setIsDeleteDialogOpen(true);
   }, []);
 
   const handleConfirm = React.useCallback(
@@ -127,6 +145,33 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     [editAlertDefinition]
   );
 
+  const handleDeleteConfirm = React.useCallback(
+    (alert: Alert) => {
+      const payload: DeleteAlertPayload = {
+        serviceType: alert.service_type,
+        alertId: alert.id,
+      };
+      setIsDeleting(true);
+      deleteAlertDefinition(payload)
+        .then(() => {
+          enqueueSnackbar('Alert deleted', { variant: 'success' });
+        })
+        .catch((deleteError: APIError[]) => {
+          const errorResponse = getAPIErrorOrDefault(
+            deleteError,
+            'Alert deletion failed.'
+          );
+          enqueueSnackbar(errorResponse[0].reason, {
+            variant: 'error',
+          });
+        })
+        .finally(() => {
+          setIsDeleteDialogOpen(false);
+          setIsDeleting(false);
+        });
+    },
+    [deleteAlertDefinition]
+  );
   const isEnabled = selectedAlert.status !== 'disabled';
 
   return (
@@ -151,27 +196,27 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                 <>
                   <Grid2 sx={{ marginTop: 2 }}>
                     <Table
-                      tableClass={
-                        alertsGroupedByTag ? 'MuiTable-groupByTag' : ''
-                      }
                       colCount={7}
                       data-qa="alert-table"
                       size="small"
+                      tableClass={
+                        alertsGroupedByTag ? 'MuiTable-groupByTag' : ''
+                      }
                     >
                       <TableHead>
                         <TableRow>
                           {AlertListingTableLabelMap.map((value) => (
                             <TableSortCell
+                              active={orderBy === value.label}
+                              data-qa-header={value.label}
+                              data-qa-sorting={value.label}
+                              direction={order}
                               handleClick={(orderBy, order) => {
                                 if (order) {
                                   handleOrderChange(orderBy, order);
                                   handlePageChange(1);
                                 }
                               }}
-                              active={orderBy === value.label}
-                              data-qa-header={value.label}
-                              data-qa-sorting={value.label}
-                              direction={order}
                               key={value.label}
                               label={value.label}
                               noWrap
@@ -190,10 +235,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                               }}
                             >
                               <GroupByTagToggle
+                                isGroupedByTag={alertsGroupedByTag ?? false}
                                 toggleGroupByTag={
                                   toggleAlertsGroupedByTag ?? (() => false)
                                 }
-                                isGroupedByTag={alertsGroupedByTag ?? false}
                               />
                             </Box>
                           </TableCell>
@@ -210,6 +255,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                       {alertsGroupedByTag ? (
                         <GroupedAlertsTable
                           groupedAlerts={sortGroups(groupByTags(orderedData))}
+                          handleDelete={handleDelete}
                           handleDetails={handleDetails}
                           handleEdit={handleEdit}
                           handleStatusChange={handleStatusChange}
@@ -218,6 +264,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                       ) : (
                         <AlertsTable
                           alerts={paginatedAndOrderedAlerts}
+                          handleDelete={handleDelete}
                           handleDetails={handleDetails}
                           handleEdit={handleEdit}
                           handleStatusChange={handleStatusChange}
@@ -228,6 +275,8 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                   </Grid2>
                   {!alertsGroupedByTag && (
                     <PaginationFooter
+                      count={count}
+                      eventCategory="Alert Definitions Table"
                       handlePageChange={(page: number) => {
                         handlePageChange(page);
                         requestAnimationFrame(() => {
@@ -241,8 +290,6 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           scrollToElement();
                         });
                       }}
-                      count={count}
-                      eventCategory="Alert Definitions Table"
                       page={page}
                       pageSize={pageSize}
                       sx={{ border: 0 }}
@@ -255,15 +302,23 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </OrderBy>
       <AlertConfirmationDialog
-        message={`Are you sure you want to ${
-          isEnabled ? 'disable' : 'enable'
-        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
+      />
+      <DeletionDialog
+        entity="Alert"
+        label={selectedAlert.label}
+        loading={isDeleting}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onDelete={() => handleDeleteConfirm(selectedAlert)}
+        open={isDeleteDialogOpen}
       />
     </>
   );

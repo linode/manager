@@ -35,6 +35,10 @@ interface GroupedAlertsProps {
    */
   handleStatusChange: (alert: Alert) => void;
   /**
+   * Callback function to handle deleting an alert
+   */
+  handleDelete: (alert: Alert) => void;
+  /**
    * The list of services to display in the table
    */
   services: Item<string, AlertServiceType>[];
@@ -45,6 +49,7 @@ export const GroupedAlertsTable = ({
   handleDetails,
   handleEdit,
   handleStatusChange,
+  handleDelete,
   services,
 }: GroupedAlertsProps) => {
   const theme = useTheme();
@@ -98,6 +103,7 @@ export const GroupedAlertsTable = ({
                       handleDetails: () => handleDetails(alert),
                       handleEdit: () => handleEdit(alert),
                       handleStatusChange: () => handleStatusChange(alert),
+                      handleDelete: () => handleDelete(alert),
                     }}
                     alert={alert}
                     key={alert.id}
