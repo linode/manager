@@ -12,6 +12,8 @@ const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
   useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
+  convertResourceMetric: vi.fn().mockReturnValue({}),
+  pluralizeMetric: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/hooks/useFlags', () => {
@@ -33,6 +35,8 @@ vi.mock('@linode/queries', async () => {
 vi.mock('./utils', () => ({
   getQuotasFilters: queryMocks.getQuotasFilters,
   useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
+  convertResourceMetric: queryMocks.convertResourceMetric,
+  pluralizeMetric: queryMocks.pluralizeMetric,
 }));
 
 describe('Quotas', () => {
