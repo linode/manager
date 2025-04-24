@@ -83,11 +83,13 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const { mutateAsync: deleteAlertDefinition } =
     useDeleteAlertDefinitionMutation();
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
-    React.useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = React.useState<boolean>(false);
+
+  const [deleteState, setDeleteState] = React.useState({
+    isDialogOpen: false,
+    isDeleting: false,
+  });
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -108,7 +110,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
   const handleDelete = React.useCallback((alert: Alert) => {
     setSelectedAlert(alert);
-    setIsDeleteDialogOpen(true);
+    setDeleteState((prev) => ({ ...prev, isDialogOpen: true }));
   }, []);
 
   const handleConfirm = React.useCallback(
@@ -151,7 +153,8 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         serviceType: alert.service_type,
         alertId: alert.id,
       };
-      setIsDeleting(true);
+      setDeleteState((prev) => ({ ...prev, isDeleting: true }));
+
       deleteAlertDefinition(payload)
         .then(() => {
           enqueueSnackbar('Alert deleted', { variant: 'success' });
@@ -161,13 +164,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
             deleteError,
             'Alert deletion failed.'
           );
-          enqueueSnackbar(errorResponse[0].reason, {
-            variant: 'error',
-          });
+          enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
         })
         .finally(() => {
-          setIsDeleteDialogOpen(false);
-          setIsDeleting(false);
+          setDeleteState({ isDialogOpen: false, isDeleting: false });
         });
     },
     [deleteAlertDefinition]
@@ -315,10 +315,12 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
       <DeletionDialog
         entity="Alert"
         label={selectedAlert.label}
-        loading={isDeleting}
-        onClose={() => setIsDeleteDialogOpen(false)}
+        loading={deleteState.isDeleting}
+        onClose={() =>
+          setDeleteState((prev) => ({ ...prev, isDialogOpen: false }))
+        }
         onDelete={() => handleDeleteConfirm(selectedAlert)}
-        open={isDeleteDialogOpen}
+        open={deleteState.isDialogOpen}
       />
     </>
   );
