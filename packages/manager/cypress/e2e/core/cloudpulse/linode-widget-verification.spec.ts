@@ -96,7 +96,6 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
 const mockLinode = linodeFactory.build({
   id: kubeLinodeFactory.build().instance_id ?? undefined,
   label: resource,
-  region: 'us-ord',
 });
 
 const mockAccount = accountFactory.build();
@@ -137,6 +136,7 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
+    flags,
     label,
     metricsList: responsePayload,
     resources: [
@@ -146,6 +146,7 @@ const getWidgetLegendRowValuesFromResponse = (
         region: 'us-ord',
       },
     ],
+    serviceType,
     status: 'success',
     unit,
   });
@@ -333,7 +334,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             expect(testData.expectedAggregation).to.equal(
-              interception.request.body.metrics[0].aggregate_function
+              interception.request.body.aggregate_function
             );
           });
 
@@ -384,16 +385,15 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        const { metrics: metric, relative_time_duration: timeRange } =
-          requestPayload;
-        const metricData = metrics.find(({ name }) => name === metric[0].name);
+        const { metric, relative_time_duration: timeRange } = requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric);
 
         if (!metricData) {
           throw new Error(
-            `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
+            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
           );
         }
-        expect(metric[0].name).to.equal(metricData.name);
+        expect(metric).to.equal(metricData.name);
         expect(timeRange).to.have.property('unit', 'hr');
         expect(timeRange).to.have.property('value', 24);
       });

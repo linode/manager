@@ -333,9 +333,6 @@ export const baseConfig = [
               ],
             ];
           }
-          if (rule === 'prefer-explicit-assert') {
-            return [`testing-library/${rule}`, 'off'];
-          }
           // All other rules just get set to warn
           return [`testing-library/${rule}`, 'warn'];
         })

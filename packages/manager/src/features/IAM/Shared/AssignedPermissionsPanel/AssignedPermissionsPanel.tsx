@@ -1,15 +1,17 @@
-import { Paper, Typography } from '@linode/ui';
+import { Paper, StyledLinkButton, Typography } from '@linode/ui';
+import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { Link } from 'src/components/Link';
-
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
-import { getFacadeRoleDescription } from '../utilities';
 
-import type { EntitiesOption } from '../types';
-import type { DrawerModes, ExtendedRole, ExtendedRoleMap } from '../utilities';
+import type {
+  DrawerModes,
+  EntitiesOption,
+  ExtendedRole,
+  ExtendedRoleMap,
+} from '../utilities';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
@@ -29,9 +31,15 @@ export const AssignedPermissionsPanel = ({
   sx,
   value,
 }: Props) => {
+  const [showFullDescription, setShowFullDescription] = React.useState(false);
+
   const theme = useTheme();
 
-  // TODO: update the link for the description when it's ready - UIE-8534
+  const description =
+    role.description.length < 110 || showFullDescription
+      ? role.description
+      : truncate(role.description, 110);
+
   return (
     <Paper
       sx={{
@@ -53,18 +61,25 @@ export const AssignedPermissionsPanel = ({
       </Typography>
       <Typography
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
           marginBottom: theme.tokens.spacing.S8,
-          marginTop: theme.tokens.spacing.S2,
           overflowWrap: 'anywhere',
           wordBreak: 'normal',
         }}
       >
-        {role.permissions.length ? (
-          role.description
-        ) : (
-          <>
-            {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
-          </>
+        {description}{' '}
+        {description.length > 110 && (
+          <StyledLinkButton
+            onClick={() => setShowFullDescription((show) => !show)}
+            sx={{
+              font: theme.tokens.alias.Typography.Label.Semibold.Xs,
+              width: 'max-content',
+            }}
+            type="button"
+          >
+            {showFullDescription ? 'Hide' : 'Expand'}
+          </StyledLinkButton>
         )}
       </Typography>
       <Permissions permissions={role.permissions} />

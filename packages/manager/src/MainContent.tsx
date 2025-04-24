@@ -23,9 +23,8 @@ import {
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
-import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 import { Footer } from 'src/features/Footer';
-import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
+
 import {
   notificationCenterContext,
   useNotificationContext,
@@ -139,6 +138,7 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
+const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
     default: module.HelpAndSupport,
@@ -326,22 +326,19 @@ export const MainContent = () => {
                 >
                   <MainContentBanner />
                   <Box
-                    component="main"
-                    id="main-content"
-                    role="main"
                     sx={(theme) => ({
                       flex: 1,
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
                       pt: {
-                        md: 1.5,
-                        xs: theme.spacing(2),
+                        md: theme.spacingFunction(24),
+                        xs: theme.spacingFunction(16),
                       },
                       px: {
-                        md: theme.spacing(2),
+                        md: theme.spacingFunction(24),
                         xs: 0,
                       },
-                      py: 1.5,
+                      py: theme.spacingFunction(24),
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
@@ -351,6 +348,9 @@ export const MainContent = () => {
                               : SIDEBAR_WIDTH
                           }px)`,
                     })}
+                    component="main"
+                    id="main-content"
+                    role="main"
                   >
                     <Grid
                       className={classes.grid}
@@ -359,61 +359,50 @@ export const MainContent = () => {
                       spacing={0}
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
-                          <ErrorBoundaryFallback>
-                            <Switch>
+                          <Switch>
+                            <Route component={LinodesRoutes} path="/linodes" />
+                            <Route component={Managed} path="/managed" />
+                            <Route component={Kubernetes} path="/kubernetes" />
+                            {isIAMEnabled && (
+                              <Route component={IAM} path="/iam" />
+                            )}
+                            <Route component={Account} path="/account" />
+                            <Route component={Profile} path="/profile" />
+                            <Route component={Help} path="/support" />
+                            <Route component={SearchLanding} path="/search" />
+                            <Route component={EventsLanding} path="/events" />
+                            {isDatabasesEnabled && (
+                              <Route component={Databases} path="/databases" />
+                            )}
+                            {isACLPEnabled && (
                               <Route
-                                component={LinodesRoutes}
-                                path="/linodes"
+                                component={CloudPulseMetrics}
+                                path="/metrics"
                               />
+                            )}
+                            {isACLPEnabled && (
                               <Route
-                                component={Kubernetes}
-                                path="/kubernetes"
+                                component={CloudPulseAlerts}
+                                path="/alerts"
                               />
-                              {isIAMEnabled && (
-                                <Route component={IAM} path="/iam" />
-                              )}
-                              <Route component={Account} path="/account" />
-                              <Route component={Profile} path="/profile" />
-                              <Route component={Help} path="/support" />
-                              <Route component={SearchLanding} path="/search" />
-                              <Route component={EventsLanding} path="/events" />
-                              {isDatabasesEnabled && (
-                                <Route
-                                  component={Databases}
-                                  path="/databases"
-                                />
-                              )}
-                              {isACLPEnabled && (
-                                <Route
-                                  component={CloudPulseMetrics}
-                                  path="/metrics"
-                                />
-                              )}
-                              {isACLPEnabled && (
-                                <Route
-                                  component={CloudPulseAlerts}
-                                  path="/alerts"
-                                />
-                              )}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              {/**
-                               * This is the catch all routes that allows TanStack Router to take over.
-                               * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                               * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                               * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                               */}
-                              <Route path="*">
-                                <RouterProvider
-                                  context={{ queryClient }}
-                                  router={migrationRouter as AnyRouter}
-                                />
-                              </Route>
-                            </Switch>
-                          </ErrorBoundaryFallback>
+                            )}
+                            <Redirect exact from="/" to={defaultRoot} />
+                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                            <Redirect from="/dashboard" to={defaultRoot} />
+                            {/**
+                             * This is the catch all routes that allows TanStack Router to take over.
+                             * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                             * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                             * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                             */}
+                            <Route path="*">
+                              <RouterProvider
+                                context={{ queryClient }}
+                                router={migrationRouter as AnyRouter}
+                              />
+                            </Route>
+                          </Switch>
                         </React.Suspense>
                       </Grid>
                     </Grid>

@@ -76,7 +76,7 @@ export interface Widgets {
 }
 
 export interface Filters {
-  dimension_label: string;
+  key: string;
   operator: string;
   value: string;
 }
@@ -129,19 +129,15 @@ export interface JWEToken {
   token: string;
 }
 
-export interface Metric {
-  aggregate_function: string;
-  name: string;
-}
-
 export interface CloudPulseMetricsRequest {
-  absolute_time_duration: DateTimeWithPreset | undefined;
-  entity_ids: number[];
+  metric: string;
   filters?: Filters[];
+  aggregate_function: string;
   group_by: string;
-  metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
+  absolute_time_duration: DateTimeWithPreset | undefined;
   time_granularity: TimeGranularity | undefined;
+  entity_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {

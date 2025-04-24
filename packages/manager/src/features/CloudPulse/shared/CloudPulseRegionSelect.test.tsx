@@ -1,9 +1,8 @@
-import { linodeFactory, regionFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
+import { regionFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
+import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DBAAS_CAPABILITY, LINODE_CAPABILITY } from '../Utils/FilterConfig';
@@ -18,13 +17,10 @@ const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
   label: 'Region',
   selectedDashboard: undefined,
-  disabled: false,
-  xFilter: {},
 };
 
 const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
 
 const flags: Partial<Flags> = {
@@ -40,62 +36,10 @@ const flags: Partial<Flags> = {
   ] as CloudPulseResourceTypeMapFlag[],
 };
 
-const allRegions: Region[] = [
-  regionFactory.build({
-    capabilities: [LINODE_CAPABILITY],
-    id: 'us-lax',
-    label: 'US, Los Angeles, CA',
-  }),
-  regionFactory.build({
-    capabilities: [LINODE_CAPABILITY],
-    id: 'us-mia',
-    label: 'US, Miami, FL',
-  }),
-  regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
-    id: 'us-west',
-    label: 'US, Fremont, CA',
-  }),
-  regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
-    id: 'us-east',
-    label: 'US, Newark, NJ',
-  }),
-  regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
-    id: 'us-central',
-    label: 'US, Dallas, TX',
-  }),
-];
-
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
-
-vi.mock('src/queries/cloudpulse/resources', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/resources');
-  return {
-    ...actual,
-    useResourcesQuery: queryMocks.useResourcesQuery,
-  };
-});
-
-beforeEach(() => {
-  queryMocks.useRegionsQuery.mockReturnValue({
-    data: allRegions,
-    isError: false,
-    isLoading: false,
-  });
-
-  queryMocks.useResourcesQuery.mockReturnValue({
-    data: linodeFactory.buildList(3, {
-      region: 'us-lax',
-    }),
-    isError: false,
-    isLoading: false,
-  });
-});
 
 describe('CloudPulseRegionSelect', () => {
   it('should render a Region Select component', () => {
@@ -120,91 +64,76 @@ describe('CloudPulseRegionSelect', () => {
     expect(getByText('Failed to fetch Region.'));
   });
 
-  it('should render a Region Select component with proper error message on resources api call failure', () => {
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: null,
-      isError: true,
-      isLoading: false,
-    });
-    const updatedProps = {
-      ...props,
-      selectedDashboard: dashboardFactory.build({ service_type: 'dbaas' }),
-    };
-    renderWithTheme(<CloudPulseRegionSelect {...updatedProps} />);
-
-    const errorMessage = screen.getByText('Failed to fetch Region.');
-
-    expect(errorMessage).not.toBeNull();
-  });
-
-  it('should render a Region Select component with proper error message on both region and resources api call failure', () => {
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: null,
-      isError: true,
-      isLoading: false,
-    });
-    queryMocks.useRegionsQuery.mockReturnValue({
-      data: null,
-      isError: true,
-      isLoading: false,
-    });
-    renderWithTheme(<CloudPulseRegionSelect {...props} />);
-
-    expect(queryMocks.useResourcesQuery).toHaveBeenLastCalledWith(
-      false,
-      undefined,
-      {},
-      {}
-    ); // use resources should have called with enabled false since the region call failed
-
-    const errorMessage = screen.getByText('Failed to fetch Region.'); // should show regions failure only
-
-    expect(errorMessage).not.toBeNull();
-  });
-
   it('should render a Region Select component with capability specific and launchDarkly based supported regions', async () => {
     const user = userEvent.setup();
 
-    // resources are present only in us-west, no other regions like us-east here should be listed
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: databaseInstanceFactory.buildList(3, {
-        region: 'us-west',
+    const allRegions: Region[] = [
+      regionFactory.build({
+        capabilities: [LINODE_CAPABILITY],
+        id: 'us-lax',
+        label: 'US, Los Angeles, CA',
       }),
+      regionFactory.build({
+        capabilities: [LINODE_CAPABILITY],
+        id: 'us-mia',
+        label: 'US, Miami, FL',
+      }),
+      regionFactory.build({
+        capabilities: [DBAAS_CAPABILITY],
+        id: 'us-west',
+        label: 'US, Fremont, CA',
+      }),
+      regionFactory.build({
+        capabilities: [DBAAS_CAPABILITY],
+        id: 'us-east',
+        label: 'US, Newark, NJ',
+      }),
+      regionFactory.build({
+        capabilities: [DBAAS_CAPABILITY],
+        id: 'us-central',
+        label: 'US, Dallas, TX',
+      }),
+    ];
+
+    queryMocks.useRegionsQuery.mockReturnValue({
+      data: allRegions,
       isError: false,
       isLoading: false,
     });
 
-    renderWithTheme(
+    const { getByRole, queryByRole } = renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
+        // eslint-disable-next-line camelcase
         selectedDashboard={dashboardFactory.build({ service_type: 'dbaas' })}
       />,
       { flags }
     );
 
-    await user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(getByRole('button', { name: 'Open' }));
     // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported via launchDarkly
-    const usWestRegion = screen.getByRole('option', {
-      name: 'US, Fremont, CA (us-west)',
-    });
-    expect(usWestRegion).toBeInTheDocument();
-
-    const usEastRegion = screen.queryByRole('option', {
-      name: 'US, Newark, NJ (us-east)',
-    });
-    expect(usEastRegion).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('option', {
+      getByRole('option', {
+        name: 'US, Fremont, CA (us-west)',
+      })
+    ).toBeInTheDocument();
+    expect(
+      getByRole('option', {
+        name: 'US, Newark, NJ (us-east)',
+      })
+    ).toBeInTheDocument();
+    expect(
+      queryByRole('option', {
         name: 'US, Dallas, TX (us-central)',
       })
     ).toBeNull();
     expect(
-      screen.queryByRole('option', {
+      queryByRole('option', {
         name: 'US, Los Angeles, CA (us-lax)',
       })
     ).toBeNull();
     expect(
-      screen.queryByRole('option', {
+      queryByRole('option', {
         name: 'US, Miami, FL (us-mia)',
       })
     ).toBeNull();

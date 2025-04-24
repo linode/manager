@@ -1,4 +1,5 @@
 import '@reach/tabs/styles.css';
+import { ErrorBoundary } from '@sentry/react';
 import * as React from 'react';
 
 import {
@@ -6,7 +7,7 @@ import {
   withDocumentTitleProvider,
 } from 'src/components/DocumentTitle';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
-import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import { SplashScreen } from './components/SplashScreen';
 import { GoTo } from './GoTo';
@@ -33,7 +34,7 @@ const BaseApp = withDocumentTitleProvider(
     }
 
     return (
-      <ErrorBoundaryFallback>
+      <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
         {/** Accessibility helper */}
         <a className="skip-link" href="#main-content">
           Skip to main content
@@ -53,7 +54,7 @@ const BaseApp = withDocumentTitleProvider(
          */}
         <MainContent />
         <GlobalListeners />
-      </ErrorBoundaryFallback>
+      </ErrorBoundary>
     );
   })
 );

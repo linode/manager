@@ -2836,9 +2836,7 @@ export const handlers = [
         result: [
           {
             metric: {
-              entity_id: '123',
-              metric_name: 'average_cpu_usage',
-              node_id: 'primary-1',
+              test: 'Test1',
             },
             values: [
               [1721854379, '0.2744841110560275'],
@@ -2879,9 +2877,7 @@ export const handlers = [
           // })),
           {
             metric: {
-              entity_id: '456',
-              metric_name: 'average_cpu_usage',
-              node_id: 'primary-2',
+              test2: 'Test2',
             },
             values: [
               [1721854379, '0.3744841110560275'],
@@ -2901,9 +2897,7 @@ export const handlers = [
           },
           {
             metric: {
-              entity_id: '789',
-              metric_name: 'average_cpu_usage',
-              node_id: 'primary-3',
+              test3: 'Test3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

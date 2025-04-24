@@ -175,12 +175,7 @@ describe('Cloud pulse widgets', () => {
     expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
       'linode',
       expect.objectContaining({
-        metrics: [
-          {
-            aggregate_function: 'max',
-            name: props.widget.metric,
-          },
-        ],
+        aggregate_function: 'max',
       }),
       expect.any(Object)
     );

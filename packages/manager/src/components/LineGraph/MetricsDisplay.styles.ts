@@ -10,7 +10,6 @@ export const StyledLegend = styled(Button, {
   justifyContent: 'flex-start',
   padding: 0,
   textAlign: 'left',
-  textTransform: 'none',
   [theme.breakpoints.down('sm')]: {
     padding: 0,
   },

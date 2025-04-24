@@ -102,7 +102,7 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 });
 
 const databaseMock: Database = databaseFactory.build({
-  region: mockRegion.id,
+  region: mockRegion.label,
   type: engine,
 });
 const mockProfile = profileFactory.build({
@@ -237,15 +237,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         resources: ['1'],
       },
     }).as('fetchPreferences');
-    mockGetDatabases([databaseMock]).as('fetchDatabases');
+    mockGetDatabases([databaseMock]);
 
     cy.visitWithLogin('/metrics');
-    cy.wait([
-      '@fetchServices',
-      '@fetchDashboard',
-      '@fetchPreferences',
-      '@fetchDatabases',
-    ]);
+    cy.wait(['@fetchServices', '@fetchDashboard', '@fetchPreferences']);
   });
 
   it('Implement and validate the functionality of the custom date and time picker for selecting a specific date and time range', () => {
