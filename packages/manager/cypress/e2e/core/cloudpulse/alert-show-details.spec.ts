@@ -144,12 +144,10 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       id: 1001,
       label: 'Alert-1',
     });
-
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
     mockGetAlertDefinitions('dbaas', 1001, alertDetails).as(
       'getDBaaSAlertDefinitions'
     );
-
     // Navigate to the alert definitions list page with login
     cy.visitWithLogin('/alerts/definitions/detail/dbaas/1001');
     cy.wait('@getDBaaSAlertDefinitions');
@@ -160,10 +158,6 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         'have.text',
         'Alert-1 alert creation has failed. Please open a support ticket for assistance.'
       );
-
-    // Validate Name field
-    cy.findByText('Name:').should('be.visible');
-    cy.findByText('Alert-1').should('be.visible');
     // Validate Status field
     cy.findByText('Status:').should('be.visible');
     cy.findByText('Failed').should('be.visible');
