@@ -380,12 +380,12 @@ export const baseConfig = [
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
       '@typescript-eslint/no-unused-expressions': 'off',
-      // Maintain standard import restrictions but allow Cypress imports in Cypress files
+      // Maintain standard import restrictions but allow Cypress imports
       'no-restricted-imports': [
         'error',
         {
           paths: restrictedImportPaths,
-          // Intentionally omit patterns to allow Cypress imports in Cypress files
+          // Intentionally omit patterns to allow Cypress imports here
         },
       ],
     },
