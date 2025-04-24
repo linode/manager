@@ -83,7 +83,7 @@ export const Quotas = () => {
             This table shows quotas and usage. If you need to increase a quota,
             select Request Increase from the Actions menu. Usage can also be
             found using third-party tools like{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage#check-disk-usage-by-bucket">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage-copy#check-disk-usage-by-bucket">
               s3cmd
             </Link>
             .
