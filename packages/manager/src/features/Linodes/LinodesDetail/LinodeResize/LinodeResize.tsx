@@ -1,4 +1,11 @@
 import {
+  useAllLinodeDisksQuery,
+  useLinodeQuery,
+  useLinodeResizeMutation,
+  usePreferences,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   Box,
   Button,
   Checkbox,
@@ -22,13 +29,6 @@ import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-  useLinodeResizeMutation,
-  usePreferences,
-  useRegionsQuery,
-} from '@linode/queries';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
@@ -273,12 +273,12 @@ export const LinodeResize = (props: Props) => {
               />
             ) : !_shouldEnableAutoResizeDiskOption ? (
               <TooltipIcon
+                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
                 text={`Your ext disk can only be automatically resized if you have one ext
                     disk or one ext disk and one swap disk on this Linode.`}
-                status="help"
               />
             ) : null}
           </Typography>
@@ -288,6 +288,7 @@ export const LinodeResize = (props: Props) => {
                 ? false
                 : formik.values.allow_auto_disk_resize
             }
+            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
             onChange={(value, checked) =>
               formik.setFieldValue('allow_auto_disk_resize', checked)
             }
@@ -304,7 +305,6 @@ export const LinodeResize = (props: Props) => {
                 We recommend you keep this option enabled when available.
               </Typography>
             }
-            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
           />
           <Divider
             sx={{
@@ -331,14 +331,14 @@ export const LinodeResize = (props: Props) => {
           </Box>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              buttonType="primary"
+              data-qa-resize
               disabled={
                 !formik.values.type ||
                 linodeInTransition(linode?.status || '') ||
                 tableDisabled ||
                 submitButtonDisabled
               }
-              buttonType="primary"
-              data-qa-resize
               loading={isPending}
               type="submit"
             >
