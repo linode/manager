@@ -237,7 +237,7 @@ export const LinodeResize = (props: Props) => {
             <PlansPanel
               currentPlanHeading={type ? extendType(type).heading : undefined} // lol, why make us pass the heading and not the plan id?
               disabled={tableDisabled}
-              isActionResize={true}
+              isResize
               onSelect={(type) => formik.setFieldValue('type', type)}
               regionsData={regionsData}
               selectedId={formik.values.type}

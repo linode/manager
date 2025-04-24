@@ -44,9 +44,9 @@ export interface PlansPanelProps {
   error?: string;
   handleTabChange?: (index: number) => void;
   header?: string;
-  isActionResize?: boolean;
   isCreate?: boolean;
   isLegacyDatabase?: boolean;
+  isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
@@ -80,6 +80,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     header,
     isCreate,
     isLegacyDatabase,
+    isResize,
     linodeID,
     onSelect,
     regionsData,
@@ -87,7 +88,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedRegionID,
     showLimits,
     types,
-    isActionResize = false,
   } = props;
 
   const flags = useFlags();
@@ -167,7 +167,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disableLargestGbPlansFlag: flags.disableLargestGbPlans,
         disabledClasses,
         disabledSmallerPlans,
-        isActionResize,
+        isResize,
         isLegacyDatabase,
         plans: plansMap,
         regionAvailabilities,

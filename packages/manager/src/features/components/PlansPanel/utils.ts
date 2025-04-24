@@ -323,9 +323,9 @@ interface ExtractPlansInformationProps {
   disabledClasses?: LinodeTypeClass[];
   disabledSmallerPlans?: PlanSelectionType[];
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
-  isActionResize?: boolean;
   isAPLEnabled?: boolean;
   isLegacyDatabase?: boolean;
+  isResize?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -349,10 +349,10 @@ export const extractPlansInformation = ({
   disabledSmallerPlans,
   isAPLEnabled,
   isLegacyDatabase,
+  isResize,
   plans,
   regionAvailabilities,
   selectedRegionId,
-  isActionResize,
 }: ExtractPlansInformationProps) => {
   const plansForThisLinodeTypeClass: PlanWithAvailability[] = plans.map(
     (plan) => {
@@ -381,9 +381,7 @@ export const extractPlansInformation = ({
       // - Resizing existing linodes (from MTC regions) to this MTC_TT plan is not supported
       // - Resizing exisiting linodes (from non-MTC regions) to this MTC_TT plan is not supported
       // - Resizing existing MTC linodes is not supported (Disabled at the `Resize` Action Menu as well)
-      const planIsMTCTTWithResizing = Boolean(
-        isCustomMTCPlan && isActionResize
-      );
+      const planIsMTCTTWithResizing = Boolean(isCustomMTCPlan && isResize);
 
       const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
