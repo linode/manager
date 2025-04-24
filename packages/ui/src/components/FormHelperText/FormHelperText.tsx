@@ -1,5 +1,5 @@
 import { default as _FormHelperText } from '@mui/material/FormHelperText';
-import * as React from 'react';
+import React from 'react';
 
 import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 

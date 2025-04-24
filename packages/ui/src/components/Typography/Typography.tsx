@@ -1,5 +1,5 @@
 import { default as _Typography } from '@mui/material/Typography';
-import * as React from 'react';
+import React from 'react';
 
 import type { TypographyProps as _TypographyProps } from '@mui/material/Typography';
 
