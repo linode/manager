@@ -70,8 +70,8 @@
   },
   "resolutions": {
     "node-fetch": "^2.6.7",
-    "yaml": "^2.3.0",
-    "semver": "^7.5.2"
+    "semver": "^7.5.2",
+    "yaml": "^2.3.0"
   },
   "version": "0.0.0",
   "volta": {
