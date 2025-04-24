@@ -105,7 +105,7 @@ export const baseConfig = [
             {
               group: ['**/node_modules/cypress/**', 'cypress/**'],
               message:
-                'Cypress modules should only be imported in testing directories',
+                'Cypress modules should only be imported in Cypress testing directories',
             },
           ],
         },
