@@ -61,7 +61,7 @@ const flags: Partial<Flags> = {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
+      supportedRegionIds: 'us-ord, us-east',
     },
   ],
 };
@@ -96,21 +96,39 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
   })
 );
 
-const mockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
+const mockRegions = [
+  regionFactory.build({
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    capabilities: ['Managed Databases'],
+  }),
+  regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    capabilities: ['Managed Databases'],
+  }),
+];
 
-const databaseMock: Database = databaseFactory.build({
-  cluster_size: 3,
-  engine: 'mysql',
-  label: clusterName,
-  region: mockRegion.id,
-  status: 'provisioning',
-  type: engine,
-  version: '1',
-});
+const databaseMocks: Database[] = [
+  databaseFactory.build({
+    cluster_size: 3,
+    engine: 'mysql',
+    label: clusterName,
+    region: mockRegions[0].id,
+    status: 'provisioning',
+    type: engine,
+    version: '1',
+  }),
+  databaseFactory.build({
+    cluster_size: 3,
+    engine: 'mysql',
+    region: mockRegions[1].id,
+    status: 'provisioning',
+    type: engine,
+    version: '1',
+  }),
+];
+
 const mockAccount = accountFactory.build();
 
 describe('Tests for API error handling', () => {
@@ -122,9 +140,9 @@ describe('Tests for API error handling', () => {
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockCreateCloudPulseJWEToken(serviceType);
     mockGetCloudPulseDashboard(id, dashboard);
-    mockGetRegions([mockRegion]);
+    mockGetRegions(mockRegions);
     mockGetUserPreferences({});
-    mockGetDatabases([databaseMock]).as('getDatabases');
+    mockGetDatabases(databaseMocks).as('getDatabases');
   });
 
   it('displays error message when metric definitions API fails', () => {
@@ -161,7 +179,7 @@ describe('Tests for API error handling', () => {
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -238,7 +256,7 @@ describe('Tests for API error handling', () => {
     ui.regionSelect.find().click();
 
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -321,7 +339,7 @@ describe('Tests for API error handling', () => {
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -383,11 +401,6 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when instance API fails', () => {
-    // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
-    mockGetDatabasesError('Internal Server Error').as(
-      'getDatabaseInstancesError'
-    );
-
     cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
@@ -404,14 +417,6 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
     // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
@@ -419,6 +424,25 @@ describe('Tests for API error handling', () => {
       .type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
+      .should('be.visible')
+      .click();
+
+    // simulate an error on instances call before changing the region again
+    mockGetDatabasesError('Internal Server Error').as(
+      'getDatabaseInstancesError'
+    );
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegions[1].id, mockRegions)
+      .should('be.visible')
+      .click();
 
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');
