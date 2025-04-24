@@ -46,7 +46,7 @@ export const getCleanedLinodeInterfaceValues = (
 
 /**
  * Intended to be used right before sending a paylaod to the API (but after client side validation)
- * Cleans the given LinodeCreateInterface via:
+ * Cleans the given LinodeCreateInterface, turning it into a valid CreateLinodeInterfacePayload object via:
  * - Removes the 'purpose' field
  * - if the interface is a VPC interface, removes the 'vpc_id' field
  */
