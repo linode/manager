@@ -18,6 +18,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { usePreferencesToggle } from '../../Utils/UserPreference';
 import { alertStatusOptions } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
 import {
