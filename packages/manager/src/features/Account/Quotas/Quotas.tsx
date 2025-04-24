@@ -36,7 +36,7 @@ export const Quotas = () => {
         <Stack>
           <Typography variant="h2">Object Storage</Typography>
           <Notice spacingTop={16} variant="info">
-            <Typography sx={{ py: 0.5 }}>
+            <Typography>
               View your Object Storage quotas by applying the endpoint filter
               below.{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/quotas">
@@ -83,9 +83,9 @@ export const Quotas = () => {
           <Typography>
             This table shows quotas and usage. If you need to increase a quota,
             select Request Increase from the Actions menu. Usage can also be
-            found using the{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage">
-              S3 APIs
+            found using third-party tools like{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage#check-disk-usage-by-bucket">
+              s3cmd
             </Link>
             .
           </Typography>

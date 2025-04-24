@@ -19,6 +19,12 @@ import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
 
 interface QuotasIncreaseFormProps {
+  convertedResourceMetrics:
+    | undefined
+    | {
+        limit: number;
+        metric: string;
+      };
   onClose: () => void;
   onSuccess: (ticketId: number) => void;
   open: boolean;
@@ -31,7 +37,7 @@ export interface QuotaIncreaseFormFields extends TicketRequest {
 }
 
 export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
-  const { onClose, quota } = props;
+  const { onClose, quota, convertedResourceMetrics } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<null | string>(null);
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -86,34 +92,43 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
         {error && <Notice variant="error">{error}</Notice>}
         <Stack direction="column" gap={2}>
           <Controller
+            control={form.control}
+            name="summary"
             render={({ field, fieldState }) => (
               <TextField
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
                 errorText={fieldState.error?.message}
                 label="Title"
                 name="summary"
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
                 placeholder="Enter a title for your ticket."
                 required
                 value={field.value}
               />
             )}
-            control={form.control}
-            name="summary"
           />
           <Controller
+            control={form.control}
+            name="quantity"
             render={({ field, fieldState }) => (
               <Stack direction="row" gap={2}>
                 <TextField
+                  errorText={fieldState.error?.message}
+                  helperText={`In ${quota.region_applied || quota.s3_endpoint} (initial limit of ${convertedResourceMetrics?.limit} ${convertedResourceMetrics?.metric})`}
+                  label="Quantity"
+                  min={1}
+                  name="quantity"
                   onChange={(e) => {
                     field.onChange(e);
                     form.trigger('quantity');
                   }}
+                  required
                   slotProps={{
                     input: {
                       endAdornment: (
                         <Typography
+                          component="span"
                           sx={(theme) => ({
                             color: theme.tokens.alias.Content.Text,
                             font: theme.font.bold,
@@ -123,31 +138,29 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                             userSelect: 'none',
                             whiteSpace: 'nowrap',
                           })}
-                          component="span"
                         >
-                          {quota.resource_metric}
+                          {convertedResourceMetrics?.metric ??
+                            quota.resource_metric}
                         </Typography>
                       ),
                     },
                   }}
-                  errorText={fieldState.error?.message}
-                  helperText={`In ${quota.region_applied} (initial limit of ${quota?.quota_limit})`}
-                  label="Quantity"
-                  min={1}
-                  name="quantity"
-                  required
                   sx={{ width: 300 }}
                   type="number"
                   value={field.value}
                 />
               </Stack>
             )}
-            control={form.control}
-            name="quantity"
           />
           <Controller
+            control={form.control}
+            name="notes"
             render={({ field, fieldState }) => (
               <TextField
+                errorText={fieldState.error?.message}
+                label="Notes"
+                multiline
+                name="notes"
                 onChange={(e) => {
                   field.onChange(e);
                 }}
@@ -158,15 +171,9 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                     },
                   },
                 }}
-                errorText={fieldState.error?.message}
-                label="Notes"
-                multiline
-                name="notes"
                 value={field.value}
               />
             )}
-            control={form.control}
-            name="notes"
           />
           <Accordion
             data-testid="quota-increase-form-preview"
@@ -175,11 +182,11 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             summaryProps={{ sx: { paddingX: 0.25 } }}
           >
             <Stack
+              data-testid="quota-increase-form-preview-content"
               sx={(theme) => ({
                 backgroundColor: theme.tokens.alias.Background.Neutral,
                 p: 2,
               })}
-              data-testid="quota-increase-form-preview-content"
             >
               <Typography
                 sx={(theme) => ({

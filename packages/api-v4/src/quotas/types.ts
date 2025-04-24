@@ -1,4 +1,3 @@
-import type { StorageSymbol } from '../../../utilities/src/helpers/unitConversions';
 import type { ObjectStorageEndpointTypes } from 'src/object-storage';
 import type { Region } from 'src/regions';
 /**
@@ -45,7 +44,7 @@ export interface Quota {
   /**
    * The unit of measurement for this service limit.
    */
-  resource_metric: StorageSymbol;
+  resource_metric: string;
 
   /**
    * The S3 endpoint URL to which this limit applies.

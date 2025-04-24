@@ -37,7 +37,11 @@ export const QuotasTable = (props: QuotasTableProps) => {
   const hasSelectedLocation = Boolean(selectedLocation);
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
   const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
-
+  const [convertedResourceMetrics, setConvertedResourceMetrics] =
+    React.useState<{
+      limit: number;
+      metric: string;
+    }>();
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
     service: selectedService,
@@ -138,6 +142,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
                   key={quota.quota_id}
                   quota={quota}
                   quotaUsageQueries={quotaUsageQueries}
+                  setConvertedResourceMetrics={setConvertedResourceMetrics}
                   setSelectedQuota={setSelectedQuota}
                   setSupportModalOpen={setSupportModalOpen}
                 />
@@ -170,6 +175,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
       >
         {selectedQuota && (
           <QuotasIncreaseForm
+            convertedResourceMetrics={convertedResourceMetrics}
             onClose={() => setSupportModalOpen(false)}
             onSuccess={onIncreaseQuotaTicketCreated}
             open={supportModalOpen}

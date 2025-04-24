@@ -8,22 +8,22 @@ import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 
 describe('QuotasIncreaseForm', () => {
   it('should render with default values', async () => {
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <QuotasIncreaseForm
-        quota={{
-          ...quotaFactory.build(),
-          ...quotaUsageFactory.build(),
-        }}
-        onClose={() => {}}
-        onSuccess={() => {}}
-        open={true}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <QuotasIncreaseForm
+          convertedResourceMetrics={{
+            limit: 100,
+            metric: 'GB',
+          }}
+          onClose={() => {}}
+          onSuccess={() => {}}
+          open={true}
+          quota={{
+            ...quotaFactory.build(),
+            ...quotaUsageFactory.build(),
+          }}
+        />
+      );
 
     expect(getByLabelText('Title (required)')).toHaveValue('Increase Quota');
     expect(getByLabelText('Quantity (required)')).toHaveValue(0);
@@ -41,13 +41,17 @@ describe('QuotasIncreaseForm', () => {
   it('description should be updated as quantity is changed', async () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <QuotasIncreaseForm
-        quota={{
-          ...quotaFactory.build(),
-          ...quotaUsageFactory.build(),
+        convertedResourceMetrics={{
+          limit: 100,
+          metric: 'GB',
         }}
         onClose={() => {}}
         onSuccess={() => {}}
         open={true}
+        quota={{
+          ...quotaFactory.build(),
+          ...quotaUsageFactory.build(),
+        }}
       />
     );
 
@@ -65,7 +69,6 @@ describe('QuotasIncreaseForm', () => {
     });
 
     await waitFor(() => {
-      // eslint-disable-next-line xss/no-mixed-html
       expect(previewContent).toHaveTextContent(
         'Increase QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs New Quantity Requested: 2 CPUs Region: us-east test!'
       );

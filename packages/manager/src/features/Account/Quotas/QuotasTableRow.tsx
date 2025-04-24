@@ -14,7 +14,6 @@ import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { getQuotaError } from './utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
-import type { StorageSymbol } from '@linode/utilities';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -27,6 +26,10 @@ interface QuotasTableRowProps {
   index: number;
   quota: QuotaWithUsage;
   quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
+  setConvertedResourceMetrics: (resourceMetric: {
+    limit: number;
+    metric: string;
+  }) => void;
   setSelectedQuota: (quota: Quota) => void;
   setSupportModalOpen: (open: boolean) => void;
 }
@@ -41,6 +44,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     quotaUsageQueries,
     setSelectedQuota,
     setSupportModalOpen,
+    setConvertedResourceMetrics,
   } = props;
   const theme = useTheme();
   const flags = useFlags();
@@ -53,47 +57,68 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
       isAkamaiAccount);
 
-  const requestIncreaseAction: Action = {
-    disabled: isRequestForQuotaButtonDisabled,
-    onClick: () => {
-      setSelectedQuota(quota);
-      setSupportModalOpen(true);
-    },
-    title: 'Request an Increase',
-  };
-
   const convertResourceMetric = ({
     initialResourceMetric,
     initialUsage,
     initialLimit,
   }: {
     initialLimit: number;
-    initialResourceMetric: StorageSymbol;
+    initialResourceMetric: string;
     initialUsage: number;
-  }) => {
+  }): {
+    convertedLimit: number;
+    convertedResourceMetric: string;
+    convertedUsage: number;
+  } => {
     if (initialResourceMetric === 'byte') {
-      // First determine the appropriate unit based on the larger number (limit)
       const limitReadable = readableBytes(initialLimit);
-      // Then use that same unit for both values
+
       return {
-        usage: readableBytes(initialUsage, { unit: limitReadable.unit }).value,
-        resourceMetric: limitReadable.unit,
-        limit: limitReadable.value,
+        convertedUsage: readableBytes(initialUsage, {
+          unit: limitReadable.unit,
+        }).value,
+        convertedResourceMetric: limitReadable.unit,
+        convertedLimit: limitReadable.value,
       };
     }
 
     return {
-      usage: initialUsage,
-      limit: initialLimit,
-      resourceMetric: initialResourceMetric,
+      convertedUsage: initialUsage,
+      convertedLimit: initialLimit,
+      convertedResourceMetric: initialResourceMetric,
     };
   };
 
-  const { usage, limit, resourceMetric } = convertResourceMetric({
-    initialResourceMetric: quota.resource_metric,
-    initialUsage: quota.usage?.usage ?? 0,
-    initialLimit: quota.quota_limit,
-  });
+  const pluralizeMetric = (value: number, unit: string) => {
+    if (unit !== 'byte') {
+      return value > 1 ? `${unit}s` : unit;
+    }
+
+    return unit;
+  };
+
+  const { convertedUsage, convertedLimit, convertedResourceMetric } =
+    convertResourceMetric({
+      initialResourceMetric: pluralizeMetric(
+        quota.quota_limit,
+        quota.resource_metric
+      ),
+      initialUsage: quota.usage?.usage ?? 0,
+      initialLimit: quota.quota_limit,
+    });
+
+  const requestIncreaseAction: Action = {
+    disabled: isRequestForQuotaButtonDisabled,
+    onClick: () => {
+      setSelectedQuota(quota);
+      setSupportModalOpen(true);
+      setConvertedResourceMetrics({
+        limit: convertedLimit,
+        metric: convertedResourceMetric,
+      });
+    },
+    title: 'Request an Increase',
+  };
 
   return (
     <TableRow key={quota.quota_id} sx={{ height: quotaRowMinHeight }}>
@@ -118,8 +143,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
         </Box>
       </TableCell>
       <TableCell>
-        {limit} {resourceMetric}
-        {quota.quota_limit > 1 ? 's' : ''}
+        {convertedLimit} {convertedResourceMetric}
       </TableCell>
       <TableCell>
         <Box sx={{ maxWidth: '80%' }}>
@@ -163,9 +187,9 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 value={quota.usage?.usage ?? 0}
               />
               <Typography sx={{ mb: 1 }}>
-                {`${usage} of ${limit} ${
-                  resourceMetric
-                }${quota.quota_limit > 1 ? 's' : ''} used`}
+                {`${convertedUsage} of ${convertedLimit} ${
+                  convertedResourceMetric
+                } used`}
               </Typography>
             </>
           ) : (
