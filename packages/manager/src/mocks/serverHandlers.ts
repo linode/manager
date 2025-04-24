@@ -107,6 +107,7 @@ import {
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
+  widgetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
@@ -2697,6 +2698,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     } else if (params.serviceType === 'dbaas') {
@@ -2704,6 +2714,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     }
