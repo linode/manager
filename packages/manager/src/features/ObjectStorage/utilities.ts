@@ -6,7 +6,7 @@ import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
-  return `https://${hostname}/${objectName}`;
+  return `https://${hostname}/${encodeURIComponent(objectName)}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent

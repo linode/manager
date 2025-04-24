@@ -136,7 +136,7 @@ const labelValidation = string()
   .test(
     labelTestDetails.testName,
     labelTestDetails.testMessage,
-    (value) => !value?.includes('--')
+    (value) => !value?.includes('--'),
   )
   .min(1, LABEL_MESSAGE)
   .max(64, LABEL_MESSAGE)
@@ -277,13 +277,13 @@ export const createSubnetSchemaWithIPv6 = object().shape(
   [
     ['ipv6', 'ipv4'],
     ['ipv4', 'ipv6'],
-  ]
+  ],
 );
 
 const createVPCIPv6Schema = VPCIPv6Schema.concat(
   object({
     allocation_class: string().optional(),
-  })
+  }),
 );
 
 export const createVPCSchema = object({

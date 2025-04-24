@@ -5,11 +5,11 @@ import {
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
-  Autocomplete,
   Box,
   ErrorState,
   Notice,
   Paper,
+  Select,
   Stack,
   TextField,
 } from '@linode/ui';
@@ -408,13 +408,13 @@ export const CreateCluster = () => {
         )}
         <Paper data-qa-label-header>
           <TextField
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              updateLabel(e.target.value)
-            }
             data-qa-label-input
             disabled={isCreateClusterRestricted}
             errorText={errorMap.label}
             label="Cluster Label"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              updateLabel(e.target.value)
+            }
             value={label || ''}
           />
           {isLkeEnterpriseLAFlagEnabled && (
@@ -437,6 +437,12 @@ export const CreateCluster = () => {
                     ? 'Kubernetes Enterprise'
                     : 'Kubernetes'
                 }
+                disableClearable
+                disabled={isCreateClusterRestricted}
+                errorText={errorMap.region}
+                isGeckoLAEnabled={isGeckoLAEnabled}
+                onChange={(e, region) => setSelectedRegion(region)}
+                regions={regionsData}
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
@@ -447,12 +453,6 @@ export const CreateCluster = () => {
                     ? 'Only regions that support LKE Enterprise clusters are listed.'
                     : undefined
                 }
-                disableClearable
-                disabled={isCreateClusterRestricted}
-                errorText={errorMap.region}
-                isGeckoLAEnabled={isGeckoLAEnabled}
-                onChange={(e, region) => setSelectedRegion(region)}
-                regions={regionsData}
                 value={selectedRegion?.id}
               />
             </Stack>
@@ -468,15 +468,14 @@ export const CreateCluster = () => {
           <Divider sx={{ marginTop: 4 }} />
           <StyledStackWithTabletBreakpoint>
             <Stack>
-              <Autocomplete
-                onChange={(_, selected) => {
-                  setVersion(selected?.value);
-                }}
-                disableClearable={!!version}
+              <Select
                 disabled={isCreateClusterRestricted}
                 errorText={errorMap.k8s_version}
                 label="Kubernetes Version"
                 loading={isLoadingVersions}
+                onChange={(_, selected) => {
+                  setVersion(selected?.value);
+                }}
                 options={versions}
                 placeholder={' '}
                 sx={{ minWidth: 416 }}
@@ -558,14 +557,6 @@ export const CreateCluster = () => {
           )}
           <Divider sx={{ marginBottom: 4 }} />
           <NodePoolPanel
-            typesError={
-              typesError
-                ? getAPIErrorOrDefault(
-                    typesError,
-                    'Error loading Linode type information.'
-                  )[0].reason
-                : undefined
-            }
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             apiError={errorMap.node_pools}
             hasSelectedRegion={hasSelectedRegion}
@@ -576,6 +567,14 @@ export const CreateCluster = () => {
             selectedRegionId={selectedRegion?.id}
             selectedTier={selectedTier}
             types={typesData || []}
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
             typesLoading={typesLoading}
           />
         </Paper>
@@ -585,11 +584,22 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          createCluster={createCluster}
+          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
+          hasAgreed={hasAgreed}
+          highAvailability={highAvailability}
           highAvailabilityPrice={
             isErrorKubernetesTypes || !highAvailabilityPrice
               ? UNKNOWN_PRICE
               : highAvailabilityPrice
           }
+          pools={nodePools}
+          region={selectedRegion?.id}
+          regionsData={regionsData}
+          removePool={removePool}
+          showHighAvailability={showHighAvailability}
+          submitting={submitting}
+          toggleHasAgreed={toggleHasAgreed}
           updateFor={[
             hasAgreed,
             highAvailability,
@@ -602,17 +612,6 @@ export const CreateCluster = () => {
             createCluster,
             classes,
           ]}
-          createCluster={createCluster}
-          enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
-          hasAgreed={hasAgreed}
-          highAvailability={highAvailability}
-          pools={nodePools}
-          region={selectedRegion?.id}
-          regionsData={regionsData}
-          removePool={removePool}
-          showHighAvailability={showHighAvailability}
-          submitting={submitting}
-          toggleHasAgreed={toggleHasAgreed}
           updatePool={updatePool}
         />
       </Grid>
