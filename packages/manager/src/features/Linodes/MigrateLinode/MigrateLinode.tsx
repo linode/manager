@@ -28,6 +28,7 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { MBpsInterDC } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { isMTCTTPlan } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
@@ -48,7 +49,6 @@ import { ConfigureForm } from './ConfigureForm';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { Event } from '@linode/api-v4/lib/account';
-import { isMTCTTPlan } from 'src/features/components/PlansPanel/utils';
 
 interface Props {
   linodeId: number | undefined;

@@ -155,8 +155,8 @@ export const ConfigureForm = React.memo((props: Props) => {
         return false;
       }
 
-      // For non-MTC_TT Linodes, the migration region dropdown should display all regions except for MTC availability regions
-      // - Exclude only MTC availability regions
+      // For non-MTC_TT Linodes, the migration region dropdown should display all regions except for MTC availability regions.
+      // - Exclude only MTC availability regions.
       if (
         flags.mtctt2025 &&
         !isMTCTTLinode &&
@@ -168,7 +168,7 @@ export const ConfigureForm = React.memo((props: Props) => {
       }
 
       // For MTC_TT Linodes, the migration region dropdown should only display MTC availability regions.
-      // - All other regions should be excluded from selection
+      // - All other regions should be excluded from selection.
       if (
         flags.mtctt2025 &&
         isMTCTTLinode &&
