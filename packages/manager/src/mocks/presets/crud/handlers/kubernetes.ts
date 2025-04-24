@@ -1,3 +1,4 @@
+import { linodeFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
@@ -237,9 +238,33 @@ export const createKubernetesCluster = (mockState: MockState) => [
             mockState
           )
       );
-
       await Promise.all(createNodePoolPromises);
       await mswDB.add('kubernetesClusters', cluster, mockState);
+
+      // Create mock Linode instances linked to the newly created mock cluster's node pool nodes.
+      const allNodePools = await mswDB.getAll('kubernetesNodePools');
+      const createdClusterNodePools = allNodePools?.filter(
+        (pool: MockKubeNodePoolResponse) => pool.clusterId === cluster.id
+      ) as MockKubeNodePoolResponse[];
+
+      const createLinodePromises = (createdClusterNodePools || []).map(
+        (pool) => {
+          return (pool?.nodes || []).map((node) => {
+            return mswDB.add(
+              'linodes',
+              {
+                ...linodeFactory.build({
+                  lke_cluster_id: cluster.id,
+                  id: node.instance_id ?? undefined,
+                  type: pool.type,
+                }),
+              },
+              mockState
+            );
+          });
+        }
+      );
+      await Promise.all(createLinodePromises);
 
       queueEvents({
         mockState,
