@@ -64,7 +64,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       title={`Delete Cluster ${clusterLabel}`}
     >
       <Notice variant="warning">
-        <Typography sx={{ pl: 0.5 }}>
+        <Typography>
           <strong>Warning:</strong>
         </Typography>
         <List>

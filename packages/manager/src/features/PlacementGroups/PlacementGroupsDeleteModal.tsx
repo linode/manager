@@ -125,7 +125,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       {assignedLinodesCount > 0 ? (
         <>
           <Notice spacingTop={8} variant="warning">
-            <Typography sx={{ pl: 0.5 }}>
+            <Typography>
               <strong>Warning:</strong>
             </Typography>
             <List>

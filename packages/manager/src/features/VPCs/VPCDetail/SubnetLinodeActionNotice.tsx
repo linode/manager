@@ -22,7 +22,7 @@ export const SubnetLinodeActionNotice = (props: Props) => {
       spacingBottom={16}
       variant="warning"
     >
-      <Typography sx={{ pl: 0.5 }}>
+      <Typography>
         <strong>{linodeAction} a Linode to a subnet requires:</strong>
       </Typography>
       <List>
