@@ -9,10 +9,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { number } from 'yup';
 
 import type { APIError, Firewall } from '@linode/api-v4';
+import type { InferType } from 'yup';
 
 export const EditLinodeInterfaceFormSchema = ModifyLinodeInterfaceSchema.shape({
   firewall_id: number().nullable(),
 });
+
+export type EditLinodeInterfaceFormValues = InferType<
+  typeof EditLinodeInterfaceFormSchema
+>;
 
 /**
  * A React Query mutation that abstracts the process of updating a Linode Interface's Firewall.

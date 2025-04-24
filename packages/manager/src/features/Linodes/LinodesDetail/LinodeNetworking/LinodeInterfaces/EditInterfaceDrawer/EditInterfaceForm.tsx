@@ -16,8 +16,8 @@ import { IPv6Ranges } from './PublicInterface/IPv6Ranges';
 import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
 import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
+import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
 import type { APIError, Firewall, LinodeInterface } from '@linode/api-v4';
-import type { InferType } from 'yup';
 
 interface Props {
   linodeId: number;
@@ -49,14 +49,12 @@ export const EditInterfaceForm = (props: Props) => {
     firewall_id: firewall?.id ?? null,
   };
 
-  const form = useForm<InferType<typeof EditLinodeInterfaceFormSchema>>({
+  const form = useForm<EditLinodeInterfaceFormValues>({
     defaultValues,
     resolver: yupResolver(EditLinodeInterfaceFormSchema),
   });
 
-  const onSubmit = async (
-    values: InferType<typeof EditLinodeInterfaceFormSchema>
-  ) => {
+  const onSubmit = async (values: EditLinodeInterfaceFormValues) => {
     const results = await Promise.allSettled([
       updateInterface(values),
       updateInterfaceFirewall({ firewall_id: values.firewall_id }),
