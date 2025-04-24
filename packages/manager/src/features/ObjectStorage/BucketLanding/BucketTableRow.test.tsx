@@ -37,10 +37,10 @@ describe('BucketTableRow', () => {
     getByText('test-bucket-001.alpha.linodeobjects.com');
   });
 
-  it('should render a size with the correct size abbreviation', () => {
+  it('should render size with base2 calculations (displaying GB but representing GiB)', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<BucketTableRow {...props} />)
     );
-    getByText('5.42 GB');
+    getByText('5.05 GB');
   });
 });
