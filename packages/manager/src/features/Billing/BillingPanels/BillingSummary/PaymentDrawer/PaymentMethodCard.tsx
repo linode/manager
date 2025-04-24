@@ -107,10 +107,6 @@ export const PaymentMethodCard = (props: Props) => {
       sxCardBaseSubheading={{
         color: cardIsExpired ? theme.color.red : undefined,
       }}
-      sxGrid={{
-        minWidth: '100%',
-        padding: 0,
-      }}
     />
   );
 };
