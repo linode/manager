@@ -108,13 +108,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     // Store the last valid children and title in refs
     // This is to prevent flashes of content during the drawer's closing transition,
     // and its content becomes potentially undefined
-    // const lastChildrenRef = React.useRef(children);
-    // const lastTitleRef = React.useRef(title);
+    const lastChildrenRef = React.useRef(children);
+    const lastTitleRef = React.useRef(title);
     // Update refs when the drawer is open and content is matched
-    // if (open && children) {
-    //   lastChildrenRef.current = children;
-    //   lastTitleRef.current = title;
-    // }
+    if (open && children) {
+      lastChildrenRef.current = children;
+      lastTitleRef.current = title;
+    }
 
     return (
       <_Drawer
