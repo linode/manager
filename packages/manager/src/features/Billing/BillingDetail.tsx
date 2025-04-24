@@ -51,7 +51,7 @@ export const BillingDetail = () => {
   }
 
   return (
-    <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+    <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
         sx={{
