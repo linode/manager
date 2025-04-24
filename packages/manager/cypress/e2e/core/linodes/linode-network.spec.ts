@@ -20,7 +20,6 @@ import {
 } from 'support/intercepts/firewalls';
 import {
   mockCreateLinodeInterface,
-  mockCreateLinodeInterfaceError,
   mockGetLinodeDetails,
   mockGetLinodeFirewalls,
   mockGetLinodeInterfaces,
@@ -263,8 +262,6 @@ describe('Linode Interfaces', () => {
   });
 
   it('allows the user to add a public network interface with a firewall', () => {
-    const mockErrorMessage =
-      "An interface must have exactly one of 'public', 'vpc' or 'vlan' properties defined";
     const linode = linodeFactory.build({ interface_generation: 'linode' });
     const firewalls = firewallFactory.buildList(3);
     const linodeInterface = linodeInterfaceFactoryPublic.build();
@@ -274,9 +271,7 @@ describe('Linode Interfaces', () => {
     mockGetLinodeDetails(linode.id, linode).as('getLinode');
     mockGetLinodeInterfaces(linode.id, { interfaces: [] }).as('getInterfaces');
     mockGetFirewalls(firewalls).as('getFirewalls');
-    mockCreateLinodeInterfaceError(linode.id, mockErrorMessage).as(
-      'createInterfaceError'
-    );
+    mockCreateLinodeInterface(linode.id, linodeInterface).as('createInterface');
     mockGetLinodeInterfaceFirewalls(linode.id, linodeInterface.id, [
       selectedFirewall,
     ]).as('getInterfaceFirewalls');
@@ -294,20 +289,22 @@ describe('Linode Interfaces', () => {
       // Try submitting the form
       ui.button.findByAttribute('type', 'submit').should('be.enabled').click();
 
-      // Mock API error response when submitting without an interface type selected
-      cy.findByText(mockErrorMessage).should('be.visible');
+      // Verify a validation error shows
+      cy.findByText('You must selected an Interface type.').should(
+        'be.visible'
+      );
 
       // Select the public interface type
       cy.findByLabelText('Public').click();
+
+      // Verify a validation error goes away
+      cy.findByText('You must selected an Interface type.').should('not.exist');
 
       // Select a Firewall
       ui.autocomplete.findByLabel('Firewall').click();
       ui.autocompletePopper.findByTitle(selectedFirewall.label).click();
 
       mockGetLinodeInterfaces(linode.id, { interfaces: [linodeInterface] });
-      mockCreateLinodeInterface(linode.id, linodeInterface).as(
-        'createInterface'
-      );
 
       ui.button.findByAttribute('type', 'submit').should('be.enabled').click();
     });

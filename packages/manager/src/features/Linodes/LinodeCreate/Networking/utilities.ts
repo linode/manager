@@ -53,7 +53,7 @@ export const getCleanedLinodeInterfaceValues = (
 export const getLinodeInterfacePayload = (
   networkInterface: LinodeCreateInterface
 ): CreateLinodeInterfacePayload => {
-  // ensure only one interface type allowed
+  // ensure only one interface type is present
   const cleanedValues = getCleanedLinodeInterfaceValues(networkInterface);
 
   if (cleanedValues.vpc) {

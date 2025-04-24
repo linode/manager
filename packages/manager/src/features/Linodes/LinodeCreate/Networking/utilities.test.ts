@@ -1,3 +1,4 @@
+import { omitProps } from '@linode/ui';
 import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
@@ -8,12 +9,11 @@ import { firewallSettingsFactory } from 'src/factories';
 import {
   getCleanedLinodeInterfaceValues,
   getDefaultFirewallForInterfacePurpose,
-  transformLegacyInterfaceErrorsToLinodeInterfaceErrors,
   getLinodeInterfacePayload,
+  transformLegacyInterfaceErrorsToLinodeInterfaceErrors,
 } from './utilities';
 
 import type { APIError } from '@linode/api-v4';
-import { omitProps } from '@linode/ui';
 
 describe('getLinodeInterfacesPayload', () => {
   it('only retains the field of the given interface type', () => {
