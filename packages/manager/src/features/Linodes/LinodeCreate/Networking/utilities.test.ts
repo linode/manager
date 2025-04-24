@@ -1,4 +1,7 @@
-import { linodeInterfaceFactoryPublic } from '@linode/utilities';
+import {
+  linodeInterfaceFactoryPublic,
+  linodeInterfaceFactoryVPC,
+} from '@linode/utilities';
 
 import { firewallSettingsFactory } from 'src/factories';
 
@@ -6,9 +9,11 @@ import {
   getCleanedLinodeInterfaceValues,
   getDefaultFirewallForInterfacePurpose,
   transformLegacyInterfaceErrorsToLinodeInterfaceErrors,
+  getLinodeInterfacePayload,
 } from './utilities';
 
 import type { APIError } from '@linode/api-v4';
+import { omitProps } from '@linode/ui';
 
 describe('getLinodeInterfacesPayload', () => {
   it('only retains the field of the given interface type', () => {
@@ -52,6 +57,35 @@ describe('getLinodeInterfacesPayload', () => {
       ...networkInterface,
       vlan: null,
       vpc: null,
+    });
+  });
+});
+
+describe('getLinodeInterfacePayload', () => {
+  it('removes the purpose field from the given network interface object', () => {
+    const networkInterface = {
+      ...linodeInterfaceFactoryPublic.build(),
+      purpose: 'public' as const,
+    };
+
+    expect(getLinodeInterfacePayload(networkInterface)).toEqual({
+      ...omitProps(networkInterface, ['purpose']),
+    });
+  });
+
+  it('removes the vpc_id field from the given vpc interface object', () => {
+    const vpcInterface = linodeInterfaceFactoryVPC.build();
+    const networkInterface = {
+      ...vpcInterface,
+      purpose: 'vpc' as const,
+    };
+
+    const newInterface = {
+      ...vpcInterface,
+      vpc: vpcInterface.vpc ? omitProps(vpcInterface.vpc, ['vpc_id']) : null,
+    };
+    expect(getLinodeInterfacePayload(networkInterface)).toEqual({
+      ...newInterface,
     });
   });
 });

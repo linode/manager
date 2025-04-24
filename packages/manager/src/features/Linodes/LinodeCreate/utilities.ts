@@ -12,6 +12,7 @@ import {
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
+import type { FieldErrors } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
@@ -22,7 +23,7 @@ import { isPrivateIP } from 'src/utilities/ipUtils';
 import {
   getDefaultInterfacePayload,
   getLegacyInterfaceFromLinodeInterface,
-  getCleanedLinodeInterfaceValues,
+  getLinodeInterfacePayload,
 } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
@@ -40,7 +41,6 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -190,7 +190,7 @@ export const getLinodeCreatePayload = (
 
     if (shouldUseNewInterfaces) {
       values.interfaces = formValues.linodeInterfaces.map(
-        getCleanedLinodeInterfaceValues
+        getLinodeInterfacePayload
       );
       values.firewall_id = undefined;
     } else {
@@ -304,12 +304,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: {
+  linode?: null | {
     id: number;
     label: string;
     region: string;
-    type: string | null;
-  } | null;
+    type: null | string;
+  };
   /**
    * Form state for the new Linode interface
    */
@@ -345,7 +345,7 @@ export const defaultValues = async (
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
-  let stackscript: StackScript | null = null;
+  let stackscript: null | StackScript = null;
 
   if (stackscriptId) {
     try {

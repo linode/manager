@@ -1,11 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateLinodeInterfaceMutation } from '@linode/queries';
-import { Notice, omitProps, Stack } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { getCleanedLinodeInterfaceValues } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
+import {
+  getCleanedLinodeInterfaceValues,
+  getLinodeInterfacePayload,
+} from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
@@ -59,7 +62,7 @@ export const AddInterfaceForm = (props: Props) => {
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
     try {
-      await mutateAsync(omitProps(values, ['purpose']));
+      await mutateAsync(getLinodeInterfacePayload(values));
 
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',

@@ -1,3 +1,5 @@
+import { omitProps } from '@linode/ui';
+
 import type {
   APIError,
   CreateLinodeInterfacePayload,
@@ -30,7 +32,7 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
  */
 export const getCleanedLinodeInterfaceValues = (
   networkInterface: LinodeCreateInterface
-) => {
+): LinodeCreateInterface => {
   const cleanedInterface = { ...networkInterface };
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
@@ -40,6 +42,26 @@ export const getCleanedLinodeInterfaceValues = (
   }
 
   return cleanedInterface;
+};
+
+/**
+ * Intended to be used right before sending a paylaod to the API (but after client side validation)
+ * Cleans the given LinodeCreateInterface via:
+ * - Removes the 'purpose' field
+ * - if the interface is a VPC interface, removes the 'vpc_id' field
+ */
+export const getLinodeInterfacePayload = (
+  networkInterface: LinodeCreateInterface
+): CreateLinodeInterfacePayload => {
+  // ensure only one interface type allowed
+  const cleanedValues = getCleanedLinodeInterfaceValues(networkInterface);
+
+  if (cleanedValues.vpc) {
+    const vpcValues = omitProps(cleanedValues.vpc, ['vpc_id']);
+    return { ...omitProps(cleanedValues, ['purpose']), vpc: vpcValues };
+  }
+
+  return omitProps(cleanedValues, ['purpose']);
 };
 
 /**
