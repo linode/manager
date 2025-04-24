@@ -16,7 +16,7 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// Shared import restrictions applied across different rule contexts
+// Shared import restrictions between different rule contexts
 const restrictedImportPaths = [
   'rxjs',
   '@mui/core',
