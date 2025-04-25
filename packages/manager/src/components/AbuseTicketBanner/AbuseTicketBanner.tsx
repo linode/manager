@@ -41,7 +41,7 @@ export const AbuseTicketBanner = () => {
         expiry: DateTime.utc().plus({ days: 7 }).toISO(),
         label: preferenceKey,
       }}
-      important
+      forceImportantIconVerticalCenter
       preferenceKey={preferenceKey}
       variant="warning"
     >

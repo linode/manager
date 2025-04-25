@@ -81,7 +81,7 @@ export const MaintenanceBanner = React.memo((props: MaintenanceBannerProps) => {
   }
 
   return (
-    <Notice important variant="warning" {...rest}>
+    <Notice forceImportantIconVerticalCenter variant="warning" {...rest}>
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>

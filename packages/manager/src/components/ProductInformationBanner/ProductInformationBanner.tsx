@@ -72,7 +72,7 @@ export const ProductInformationBanner = React.memo(
 
     return (
       <DismissibleBanner
-        important={isImportantBanner}
+        forceImportantIconVerticalCenter={isImportantBanner}
         preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
         variant={thisBanner.decoration.variant ?? 'warning'}
         {...rest}
