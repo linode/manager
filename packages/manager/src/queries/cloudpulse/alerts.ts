@@ -4,6 +4,7 @@ import {
   deleteEntityFromAlert,
   editAlertDefinition,
 } from '@linode/api-v4/lib/cloudpulse';
+import { deleteAlertDefinition } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
 import {
   keepPreviousData,
@@ -22,7 +23,12 @@ import type {
   EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
-import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
+import type {
+  APIError,
+  DeleteAlertPayload,
+  Filter,
+  Params,
+} from '@linode/api-v4/lib/types';
 
 export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   const queryClient = useQueryClient();
@@ -197,6 +203,30 @@ export const useRemoveEntityFromAlert = () => {
 
       queryClient.invalidateQueries({
         queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+    },
+  });
+};
+
+export const useDeleteAlertDefinitionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Alert, APIError[], DeleteAlertPayload>({
+    mutationFn: ({ serviceType, alertId }) => {
+      return deleteAlertDefinition(serviceType, alertId);
+    },
+    onSuccess(_data, { serviceType, alertId }) {
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.all().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey:
+          queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
+      });
+      queryClient.removeQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          serviceType,
+          String(alertId)
+        ).queryKey,
       });
     },
   });

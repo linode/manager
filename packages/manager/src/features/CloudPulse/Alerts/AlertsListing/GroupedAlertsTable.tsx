@@ -23,6 +23,10 @@ interface GroupedAlertsProps {
    */
   groupedAlerts: GroupedBy<Alert>;
   /**
+   * Callback function to handle deleting an alert
+   */
+  handleDelete: (alert: Alert) => void;
+  /**
    * Callback function to handle viewing alert details
    */
   handleDetails: (alert: Alert) => void;
@@ -45,6 +49,7 @@ export const GroupedAlertsTable = ({
   handleDetails,
   handleEdit,
   handleStatusChange,
+  handleDelete,
   services,
 }: GroupedAlertsProps) => {
   const theme = useTheme();
@@ -94,12 +99,13 @@ export const GroupedAlertsTable = ({
                 </StyledTagHeaderRow>
                 {paginatedTagAlerts.map((alert) => (
                   <AlertTableRow
+                    alert={alert}
                     handlers={{
                       handleDetails: () => handleDetails(alert),
                       handleEdit: () => handleEdit(alert),
                       handleStatusChange: () => handleStatusChange(alert),
+                      handleDelete: () => handleDelete(alert),
                     }}
-                    alert={alert}
                     key={alert.id}
                     services={services}
                   />
@@ -108,6 +114,8 @@ export const GroupedAlertsTable = ({
                   <TableRow>
                     <TableCell colSpan={7} sx={{ padding: 0 }}>
                       <PaginationFooter
+                        count={count}
+                        eventCategory={`Alert Definitions Table ${tag}`}
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
                           scrollToTagWithAnimation(tag);
@@ -117,6 +125,8 @@ export const GroupedAlertsTable = ({
                           handleTagPageChange(1);
                           scrollToTagWithAnimation(tag);
                         }}
+                        page={page}
+                        pageSize={pageSize}
                         sx={{
                           border: 0,
                           marginBottom:
@@ -125,10 +135,6 @@ export const GroupedAlertsTable = ({
                               : theme.spacingFunction(16),
                           marginTop: theme.spacingFunction(16),
                         }}
-                        count={count}
-                        eventCategory={`Alert Definitions Table ${tag}`}
-                        page={page}
-                        pageSize={pageSize}
                       />
                     </TableCell>
                   </TableRow>

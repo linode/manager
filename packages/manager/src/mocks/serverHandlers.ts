@@ -2466,27 +2466,27 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-    http.post(
-      '*/monitor/services/:service_type/alert-definitions',
-      async ({ request }) => {
-  
-        const types: AlertDefinitionType[] = ['system', 'user'];
-        const status: AlertStatusType[] = ['enabled', 'disabled'];
-        const severity: AlertSeverityType[] = [0, 1, 2, 3];
-        const users = ['user1', 'user2', 'user3'];
-        const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-        const reqBody = await request.json();
-        const response = alertFactory.build({
-          ...(reqBody as CreateAlertDefinitionPayload),
-          created_by: pickRandom(users),
-          service_type: pickRandom(serviceTypes),
-          severity: pickRandom(severity),
-          status: pickRandom(status),
-          type: pickRandom(types),
-          updated_by: pickRandom(users),
-        });
-        return HttpResponse.json(response);
-  }),
+  http.post(
+    '*/monitor/services/:service_type/alert-definitions',
+    async ({ request }) => {
+      const types: AlertDefinitionType[] = ['system', 'user'];
+      const status: AlertStatusType[] = ['enabled', 'disabled'];
+      const severity: AlertSeverityType[] = [0, 1, 2, 3];
+      const users = ['user1', 'user2', 'user3'];
+      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+      const reqBody = await request.json();
+      const response = alertFactory.build({
+        ...(reqBody as CreateAlertDefinitionPayload),
+        created_by: pickRandom(users),
+        service_type: pickRandom(serviceTypes),
+        severity: pickRandom(severity),
+        status: pickRandom(status),
+        type: pickRandom(types),
+        updated_by: pickRandom(users),
+      });
+      return HttpResponse.json(response);
+    }
+  ),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
@@ -2607,6 +2607,9 @@ export const handlers = [
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(7))
     );
+  }),
+  http.delete('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json({});
   }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
