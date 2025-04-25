@@ -65,7 +65,7 @@ const dashboard = dashboardFactory.build({
       metric: name,
       unit,
       y_label: yLabel,
-      group_by: ['entity_id'],
+      group_by: ['entity_id', 'node_type'],
     });
   }),
 });
@@ -190,7 +190,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"secondary"');
-        expect(group_by).to.deep.equal(['entity_id']);
+        expect(group_by.length).to.equal(2);
+        expect(group_by[0]).to.equal('entity_id');
+        expect(group_by[1]).to.equal('node_type');
       });
   });
 
@@ -272,7 +274,9 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(filtersStr).to.include('"dimension_label":"node_type"');
         expect(filtersStr).to.include('"operator":"eq"');
         expect(filtersStr).to.include('"value":"primary"');
-        expect(group_by).to.deep.equal(['entity_id']);
+        expect(group_by.length).to.equal(2);
+        expect(group_by[0]).to.equal('entity_id');
+        expect(group_by[1]).to.equal('node_type');
       });
   });
 
