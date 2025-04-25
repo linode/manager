@@ -103,7 +103,7 @@ export const baseConfig = [
           paths: restrictedImportPaths,
           patterns: [
             {
-              group: ['**/node_modules/cypress/**', 'cypress/**'],
+              group: ['**/cypress/**'],
               message:
                 'Cypress modules should only be imported in Cypress testing directories',
             },
@@ -127,6 +127,12 @@ export const baseConfig = [
       'object-shorthand': 'warn',
       'sort-keys': 'off',
       'spaced-comment': 'warn',
+    },
+  },
+  {
+    files: ['**/cypress.config.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 
