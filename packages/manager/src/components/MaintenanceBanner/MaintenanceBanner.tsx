@@ -50,14 +50,18 @@ export const MaintenanceBanner = React.memo((props: MaintenanceBannerProps) => {
     return profile.timezone;
   };
 
-  const shouldRender =
+  const shouldRender = Boolean(
     maintenanceStart !== null &&
-    accountMaintenanceData &&
-    accountMaintenanceData.length > 0;
+      accountMaintenanceData &&
+      accountMaintenanceData.length > 0
+  );
 
-  React.useEffect(() => {
-    props.onBannerRender?.(Boolean(shouldRender));
-  }, [shouldRender, props.onBannerRender]);
+  const prevShouldRenderRef = React.useRef<boolean>();
+
+  if (prevShouldRenderRef.current !== shouldRender) {
+    props.onBannerRender?.(shouldRender);
+    prevShouldRenderRef.current = shouldRender;
+  }
 
   /**
    * don't display a banner if there is no start time.

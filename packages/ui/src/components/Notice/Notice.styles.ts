@@ -29,7 +29,7 @@ export const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     alignItems: 'center',
     '& + .notice': {
-      marginTop: `${theme.spacingFunction(8)} !important`,
+      marginTop: `${theme.spacingFunction(16)} !important`,
     },
     borderRadius: 1,
     padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(12)}`,
