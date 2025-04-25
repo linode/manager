@@ -32,7 +32,7 @@ export const useStyles = makeStyles()((theme) => ({
       marginTop: `${theme.spacingFunction(8)} !important`,
     },
     borderRadius: 1,
-    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(12)}`,
+    padding: `10px ${theme.spacingFunction(12)}`,
     '& .MuiTypography-root': {
       width: '100%',
     },
