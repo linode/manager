@@ -72,7 +72,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
       setSelectedQuota(quota);
       setSupportModalOpen(true);
       setConvertedResourceMetrics({
-        limit: convertedLimit,
+        limit: Number(convertedLimit),
         metric: convertedResourceMetric,
       });
     },
@@ -145,7 +145,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 sx={{ mb: 1, mt: 2, padding: '3px' }}
                 value={quota.usage?.usage ?? 0}
               />
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, mt: -0.5 }}>
                 {`${convertedUsage} of ${convertedLimit} ${
                   convertedResourceMetric
                 } used`}

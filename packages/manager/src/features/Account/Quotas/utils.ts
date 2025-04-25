@@ -1,5 +1,5 @@
 import { useRegionsQuery } from '@linode/queries';
-import { readableBytes } from '@linode/utilities';
+import { capitalize, readableBytes } from '@linode/utilities';
 import { object, string } from 'yup';
 
 import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
@@ -109,18 +109,25 @@ export const getQuotaError = (
 };
 
 interface GetQuotaIncreaseFormDefaultValuesProps {
+  convertedMetrics: {
+    limit: number;
+    metric: string;
+  };
   profile: Profile | undefined;
   quantity: number;
   quota: Quota;
+  selectedService: SelectOption<QuotaType>;
 }
 
 /**
  * Function to get the default values for the quota increase form
  */
 export const getQuotaIncreaseMessage = ({
+  convertedMetrics,
   profile,
   quantity,
   quota,
+  selectedService,
 }: GetQuotaIncreaseFormDefaultValuesProps): QuotaIncreaseFormFields => {
   const regionAppliedLabel = quota.s3_endpoint ? 'Endpoint' : 'Region';
   const regionAppliedValue = quota.s3_endpoint ?? quota.region_applied;
@@ -130,7 +137,7 @@ export const getQuotaIncreaseMessage = ({
       description: '',
       notes: '',
       quantity: '0',
-      summary: 'Increase Quota',
+      summary: `Increase ${selectedService.label} Quota`,
     };
   }
 
@@ -139,12 +146,14 @@ export const getQuotaIncreaseMessage = ({
       profile.email
     }<br>\n**Quota Name**: ${
       quota.quota_name
-    }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+    }<br>\n**Current Quota**: ${convertedMetrics.limit} ${
+      convertedMetrics.metric
+    }<br>\n**New Quota Requested**: ${quantity} ${convertedMetrics.metric}${
       quantity > 1 ? 's' : ''
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
     notes: '',
-    quantity: '0',
-    summary: 'Increase Quota',
+    quantity: String(quantity),
+    summary: `Increase ${selectedService.label} Quota`,
   };
 };
 
@@ -162,7 +171,7 @@ export const convertResourceMetric = ({
   initialUsage,
   initialLimit,
 }: ConvertResourceMetricProps): {
-  convertedLimit: number;
+  convertedLimit: string;
   convertedResourceMetric: string;
   convertedUsage: number;
 } => {
@@ -173,15 +182,15 @@ export const convertResourceMetric = ({
       convertedUsage: readableBytes(initialUsage, {
         unit: limitReadable.unit,
       }).value,
-      convertedResourceMetric: limitReadable.unit,
-      convertedLimit: limitReadable.value,
+      convertedResourceMetric: capitalize(limitReadable.unit),
+      convertedLimit: String(limitReadable.value),
     };
   }
 
   return {
     convertedUsage: initialUsage,
-    convertedLimit: initialLimit,
-    convertedResourceMetric: initialResourceMetric,
+    convertedLimit: initialLimit.toLocaleString(),
+    convertedResourceMetric: capitalize(initialResourceMetric),
   };
 };
 
@@ -200,13 +209,22 @@ export const pluralizeMetric = (value: number, unit: string) => {
   return unit;
 };
 
-export const getQuotaIncreaseFormSchema = object({
-  description: string().required('Description is required.'),
-  notes: string()
-    .optional()
-    .max(255, 'Notes must be less than 255 characters.'),
-  quantity: string()
-    .required('Quantity is required')
-    .matches(/^[1-9]\d*$/, 'Quantity must be a number greater than 0.'),
-  summary: string().required('Summary is required.'),
-});
+export const getQuotaIncreaseFormSchema = (currentLimit: number) =>
+  object({
+    description: string().required('Description is required.'),
+    notes: string()
+      .optional()
+      .max(255, 'Notes must be less than 255 characters.'),
+    quantity: string()
+      .required('Quantity is required')
+      .test(
+        'is-greater-than-limit',
+        `Quantity must be greater than the current quota of ${currentLimit.toLocaleString()}.`,
+        (value) => {
+          const num = parseFloat(value);
+          return !isNaN(num) && num > currentLimit;
+        }
+      ),
+    // .matches(/^\d*\.?\d*$/, 'Must be a valid number'), // allows decimals
+    summary: string().required('Summary is required.'),
+  });

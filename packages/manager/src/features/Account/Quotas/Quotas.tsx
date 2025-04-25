@@ -23,6 +23,10 @@ export const Quotas = () => {
       ? locationData.isFetchingS3Endpoints
       : locationData.isFetchingRegions;
 
+  const sortedS3Endpoints = React.useMemo(() => {
+    return s3Endpoints?.sort((a, b) => a.label.localeCompare(b.label));
+  }, [s3Endpoints]);
+
   return (
     <>
       <DocumentTitleSegment segment="Quotas" />
@@ -57,7 +61,7 @@ export const Quotas = () => {
                 history.push('/account/quotas');
               }}
               options={
-                s3Endpoints?.map((location) => ({
+                sortedS3Endpoints?.map((location) => ({
                   label: location.label,
                   value: location.value,
                 })) ?? []
@@ -80,9 +84,8 @@ export const Quotas = () => {
             <Typography variant="h3">Quotas</Typography>
           </Stack>
           <Typography>
-            This table shows quotas and usage. If you need to increase a quota,
-            select Request Increase from the Actions menu. Usage can also be
-            found using third-party tools like{' '}
+            If you need to increase a quota, select Request Increase from the
+            Actions menu. Usage can also be found using third-party tools like{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage-copy#check-disk-usage-by-bucket">
               s3cmd
             </Link>

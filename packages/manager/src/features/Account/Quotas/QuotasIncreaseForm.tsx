@@ -16,19 +16,19 @@ import { Markdown } from 'src/components/Markdown/Markdown';
 
 import { getQuotaIncreaseFormSchema, getQuotaIncreaseMessage } from './utils';
 
-import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
+import type { APIError, Quota, QuotaType, TicketRequest } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 
 interface QuotasIncreaseFormProps {
-  convertedResourceMetrics:
-    | undefined
-    | {
-        limit: number;
-        metric: string;
-      };
+  convertedResourceMetrics: {
+    limit: number;
+    metric: string;
+  };
   onClose: () => void;
   onSuccess: (ticketId: number) => void;
   open: boolean;
   quota: Quota;
+  selectedService: SelectOption<QuotaType>;
 }
 
 export interface QuotaIncreaseFormFields extends TicketRequest {
@@ -37,7 +37,7 @@ export interface QuotaIncreaseFormFields extends TicketRequest {
 }
 
 export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
-  const { onClose, quota, convertedResourceMetrics } = props;
+  const { onClose, quota, convertedResourceMetrics, selectedService } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<null | string>(null);
   const formContainerRef = React.useRef<HTMLFormElement>(null);
@@ -45,21 +45,38 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
   const defaultValues = React.useMemo(
-    () => getQuotaIncreaseMessage({ profile, quantity: 0, quota }),
-    [quota, profile]
+    () =>
+      getQuotaIncreaseMessage({
+        convertedMetrics: {
+          limit: convertedResourceMetrics.limit,
+          metric: convertedResourceMetrics.metric,
+        },
+        profile,
+        quantity: convertedResourceMetrics?.limit ?? 0,
+        quota,
+        selectedService,
+      }),
+    [quota, profile, selectedService, convertedResourceMetrics]
   );
   const form = useForm<QuotaIncreaseFormFields>({
     defaultValues,
     mode: 'onBlur',
-    resolver: yupResolver(getQuotaIncreaseFormSchema),
+    resolver: yupResolver(
+      getQuotaIncreaseFormSchema(convertedResourceMetrics?.limit ?? 0)
+    ),
   });
 
   const { notes, quantity, summary } = form.watch();
 
   const quotaIncreaseDescription = getQuotaIncreaseMessage({
+    convertedMetrics: {
+      limit: convertedResourceMetrics.limit,
+      metric: convertedResourceMetrics.metric,
+    },
     profile,
     quantity: Number(quantity),
     quota,
+    selectedService,
   }).description;
 
   const handleSubmit = form.handleSubmit(async (values) => {
@@ -112,12 +129,12 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             control={form.control}
             name="quantity"
             render={({ field, fieldState }) => (
-              <Stack direction="row" gap={2}>
+              <Stack direction="row" gap={2} sx={{ maxWidth: 250 }}>
                 <TextField
                   errorText={fieldState.error?.message}
-                  helperText={`In ${quota.region_applied || quota.s3_endpoint} (initial limit of ${convertedResourceMetrics?.limit} ${convertedResourceMetrics?.metric})`}
-                  label="Quantity"
-                  min={1}
+                  helperText={`In ${quota.region_applied || quota.s3_endpoint} - current quota: ${convertedResourceMetrics?.limit} ${convertedResourceMetrics?.metric}`}
+                  label="New Quota"
+                  min={convertedResourceMetrics?.limit}
                   name="quantity"
                   onChange={(e) => {
                     field.onChange(e);

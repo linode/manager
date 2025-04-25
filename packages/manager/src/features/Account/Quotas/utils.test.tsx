@@ -106,6 +106,14 @@ describe('useGetLocationsForQuotaService', () => {
       profile,
       quantity,
       quota,
+      selectedService: {
+        label: 'Object Storage',
+        value: 'object-storage',
+      },
+      convertedMetrics: {
+        limit: quota.quota_limit,
+        metric: quota.resource_metric,
+      },
     });
 
     expect(defaultValues.description).toEqual(
@@ -113,7 +121,9 @@ describe('useGetLocationsForQuotaService', () => {
         profile.email
       }<br>\n**Quota Name**: ${
         quota.quota_name
-      }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+      }<br>\n**Current Quota**: ${quota.quota_limit} ${
+        quota.resource_metric
+      }<br>\n**New Quota Requested**: ${quantity} ${quota.resource_metric}${
         quantity > 1 ? 's' : ''
       }<br>\n**Region**: ${quota.region_applied}`
     );
@@ -133,7 +143,7 @@ describe('convertResourceMetric', () => {
     });
 
     expect(result).toEqual({
-      convertedLimit: 95.4,
+      convertedLimit: '95.4',
       convertedResourceMetric: 'MB',
       convertedUsage: 0.95,
     });

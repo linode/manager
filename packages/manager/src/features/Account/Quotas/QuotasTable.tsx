@@ -41,7 +41,10 @@ export const QuotasTable = (props: QuotasTableProps) => {
     React.useState<{
       limit: number;
       metric: string;
-    }>();
+    }>({
+      limit: 0,
+      metric: '',
+    });
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
     service: selectedService,
@@ -171,7 +174,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
             maxWidth: 600,
           },
         }}
-        title="Increase Quota"
+        title={`Increase ${selectedService.label} Quota`}
       >
         {selectedQuota && (
           <QuotasIncreaseForm
@@ -180,6 +183,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
             onSuccess={onIncreaseQuotaTicketCreated}
             open={supportModalOpen}
             quota={selectedQuota}
+            selectedService={selectedService}
           />
         )}
       </Dialog>

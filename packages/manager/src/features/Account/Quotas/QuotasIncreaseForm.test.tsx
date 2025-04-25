@@ -22,14 +22,18 @@ describe('QuotasIncreaseForm', () => {
             ...quotaFactory.build(),
             ...quotaUsageFactory.build(),
           }}
+          selectedService={{
+            label: 'Object Storage',
+            value: 'object-storage',
+          }}
         />
       );
 
-    expect(getByLabelText('Title (required)')).toHaveValue('Increase Quota');
-    expect(getByLabelText('Quantity (required)')).toHaveValue(0);
-    expect(
-      getByText('In us-east (initial limit of 100 GB)')
-    ).toBeInTheDocument();
+    expect(getByLabelText('Title (required)')).toHaveValue(
+      'Increase Object Storage Quota'
+    );
+    expect(getByLabelText('New Quota (required)')).toHaveValue(0);
+    expect(getByText('In us-east - current quota: 100 GB')).toBeInTheDocument();
     expect(getByLabelText('Notes')).toHaveValue('');
     expect(getByText('Ticket Preview')).toBeInTheDocument();
     expect(
@@ -54,10 +58,14 @@ describe('QuotasIncreaseForm', () => {
           ...quotaFactory.build(),
           ...quotaUsageFactory.build(),
         }}
+        selectedService={{
+          label: 'Object Storage',
+          value: 'object-storage',
+        }}
       />
     );
 
-    const quantityInput = getByLabelText('Quantity (required)');
+    const quantityInput = getByLabelText('New Quota (required)');
     const notesInput = getByLabelText('Notes');
     const preview = getByTestId('quota-increase-form-preview');
     const previewContent = getByTestId('quota-increase-form-preview-content');
@@ -72,7 +80,7 @@ describe('QuotasIncreaseForm', () => {
 
     await waitFor(() => {
       expect(previewContent).toHaveTextContent(
-        'Increase QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs New Quantity Requested: 2 CPUs Region: us-east test!'
+        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GBs Region: us-east test!'
       );
     });
   });
