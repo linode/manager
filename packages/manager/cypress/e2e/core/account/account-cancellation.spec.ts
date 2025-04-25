@@ -65,12 +65,10 @@ describe('Account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -181,12 +179,10 @@ describe('Account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -243,12 +239,10 @@ describe('Parent/Child account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.disabled')
           .trigger('mouseover');
@@ -277,12 +271,10 @@ describe('Parent/Child account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.disabled')
           .trigger('mouseover');
@@ -311,12 +303,10 @@ describe('Parent/Child account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.disabled')
           .trigger('mouseover');
@@ -357,12 +347,10 @@ describe('Parent/Child account cancellation', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getAccount', '@getProfile']);
 
-    ui.accordion
-      .findByTitle('Close Account')
+    cy.findByTestId('close-account')
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Close Account')
+        cy.findByTestId('close-account-button')
           .should('be.visible')
           .should('be.enabled')
           .click();
