@@ -29,8 +29,8 @@ import type {
   Dashboard,
   DateTimeWithPreset,
   Filter,
+  Filters,
   TimeDuration,
-  WidgetDimensionFilter,
 } from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
@@ -457,8 +457,8 @@ export const getMetricsCallCustomFilters = (
  */
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[]
-): WidgetDimensionFilter[] => {
-  const filters: WidgetDimensionFilter[] = [];
+): Filters[] => {
+  const filters: Filters[] = [];
   for (const filter of additionalFilters) {
     if (filter) {
       // push to the filters
