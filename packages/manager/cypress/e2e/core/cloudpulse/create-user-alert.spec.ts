@@ -2,7 +2,7 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -33,6 +33,7 @@ import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/con
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
+import { mockGetProfile } from 'support/intercepts/profile';
 
 export interface MetricDetails {
   aggregationType: string;
@@ -85,6 +86,9 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
     unit,
   })
 );
+const mockProfile = profileFactory.build({
+  timezone: 'Asia/Kolkata',
+});
 const mockAlerts = alertFactory.build({
   alert_channels: [{ id: 1 }],
   created_by: 'user1',
@@ -159,6 +163,7 @@ describe('Create Alert', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);

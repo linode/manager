@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 /**
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
  * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
@@ -10,35 +11,46 @@ import {
   mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
-import { accountFactory, alertFactory } from 'src/factories';
+import { accountFactory, alertFactory, alertRulesFactory } from 'src/factories';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from 'src/features/CloudPulse/Alerts/AlertsListing/constants';
 import {
   alertStatuses,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Alert } from '@linode/api-v4';
+import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
+const alertDefinitionsUrl = '/alerts/definitions';
 
+const mockProfile = profileFactory.build({
+  timezone: 'Asia/Kolkata',
+});
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
   alertFactory.build({
     created_by: 'user1',
+    entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-1',
     service_type: 'dbaas',
     severity: 1,
     status: 'enabled',
     type: 'user',
     updated: new Date(now.getTime() - 86400).toISOString(),
-    updated_by: 'uuser1',
+    updated_by: 'updated1',
   }),
   alertFactory.build({
     created_by: 'user4',
-    updated_by: 'uuser4',
+    updated_by: 'updated4',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-2',
     service_type: 'dbaas',
@@ -49,7 +61,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user2',
-    updated_by: 'uuser2',
+    updated_by: 'updated2',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-3',
     service_type: 'linode',
@@ -60,7 +72,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user3',
-    updated_by: 'uuser3',
+    updated_by: 'updated3',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-4',
     service_type: 'linode',
@@ -81,6 +93,13 @@ interface AlertToggleOptions extends AlertActionOptions {
   confirmationText: string;
   successMessage: string;
 }
+const statusList: AlertStatusType[] = [
+  'enabled',
+  'disabled',
+  'in progress',
+  'failed',
+];
+const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
 
 /**
  * @description
@@ -123,7 +142,7 @@ const verifyTableSorting = (
     cy.get('[data-qa-alert-cell]').should(($cells) => {
       const actualOrder = $cells
         .map((_, cell) =>
-          parseInt(cell.getAttribute('data-qa-alert-cell')!, 10)
+          parseInt(cell.getAttribute('data-qa-alert-cell') || '0', 10)
         )
         .get();
       expectedValues.forEach((value, index) => {
@@ -177,6 +196,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     mockUpdateAlertDefinitions('dbaas', 1, mockAlerts[0]).as(
@@ -185,7 +205,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
   });
 
@@ -226,7 +246,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/alerts/definitions');
+      .and('have.attr', 'href', alertDefinitionsUrl);
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers
@@ -387,5 +407,107 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         successMessage: UPDATE_ALERT_SUCCESS_MESSAGE,
       });
     });
+  });
+  it('should allow creating alerts even if system alert count exceeds threshold', () => {
+    const mockAlerts = alertFactory.buildList(105, {
+      type: 'system',
+    });
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    cy.visitWithLogin(alertDefinitionsUrl);
+    cy.wait('@getAlertDefinitionsList');
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('not.be.disabled');
+  });
+  it('should disable Create Alert button when user alert count reaches threshold', () => {
+    const mockAlerts = Array.from({ length: 100 }, (_, index) =>
+      alertFactory.build({
+        label: `Alert-${index}`,
+        service_type: serviceTypes[index % serviceTypes.length],
+        status: statusList[index % statusList.length],
+        type: 'user',
+        id: index,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
+        ...(index % 2 === 0 && {
+          rule_criteria: {
+            rules: alertRulesFactory.buildList(0),
+          },
+        }),
+      })
+    );
+
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    cy.visitWithLogin(alertDefinitionsUrl);
+    cy.wait('@getAlertDefinitionsList');
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
+    cy.get('[data-alert-notice="true"]')
+      .should('be.visible')
+      .and('have.text', alertLimitMessage);
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
+  });
+
+  it('should disable Create Alert button when metrics exceed threshold even if alerts are below limit', () => {
+    const mockAlerts = Array.from({ length: 50 }, (_, index) =>
+      alertFactory.build({
+        label: `Alert-${index}`,
+        service_type: serviceTypes[index % serviceTypes.length],
+        status: statusList[index % statusList.length],
+        type: 'user',
+        id: index,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
+        ...(index % 2 === 0 && {
+          rule_criteria: {
+            rules: alertRulesFactory.buildList(5),
+          },
+        }),
+      })
+    );
+
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    cy.visitWithLogin(alertDefinitionsUrl);
+    cy.wait('@getAlertDefinitionsList');
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
+    cy.get('[data-alert-notice="true"]')
+      .should('be.visible')
+      .and('have.text', metricLimitMessage);
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
+  });
+
+  it('should disable Create Alert button when both alert and metric counts exceed threshold', () => {
+    const mockAlerts = Array.from({ length: 100 }, (_, index) =>
+      alertFactory.build({
+        label: `Alert-${index}`,
+        service_type: serviceTypes[index % serviceTypes.length],
+        status: statusList[index % statusList.length],
+        type: 'user',
+        id: index,
+        created_by: `create_user-${index}`,
+        updated_by: `updated_user-${index}`,
+      })
+    );
+
+    mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
+    cy.visitWithLogin(alertDefinitionsUrl);
+    cy.wait('@getAlertDefinitionsList');
+    ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
+
+    cy.get('[data-alert-notice="true"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-testid="alert_notice_message_list"]')
+          .first()
+          .should('have.text', alertLimitMessage);
+
+        cy.get('[data-testid="alert_notice_message_list"]')
+          .last()
+          .should('have.text', metricLimitMessage);
+      });
+    ui.tooltip.findByText(alertToolTipText).should('be.visible');
+    cy.get('[data-qa-error="true"]')
+      .should('be.visible')
+      .should(
+        'have.text',
+        'Creation of 25 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
+      );
   });
 });

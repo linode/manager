@@ -2,9 +2,9 @@
  * @file Integration Tests for the CloudPulse Alerts Show Detail Page.
  *
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
- * It ensures that all alert details, criteria, and resource information are displayed correctly.
+ * It ensures that all alert details, criteria, and entity information are displayed correctly.
  */
-import { capitalize, regionFactory } from '@linode/utilities';
+import { capitalize, profileFactory, regionFactory } from '@linode/utilities';
 import {
   aggregationTypeMap,
   dimensionOperatorTypeMap,
@@ -19,6 +19,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -94,14 +95,18 @@ const verifyRowOrder = (expectedIds: string[]) => {
     });
   });
 };
+const mockProfile = profileFactory.build({
+  timezone: 'Asia/Kolkata',
+});
 /**
- * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and resource information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
+ * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
 
 describe('Integration Tests for Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetRegions(regions);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
     mockGetAlertDefinitions(service_type, id, alertDetails).as(
@@ -134,6 +139,33 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
     // Verify the URL ends with the expected details page path
     cy.url().should('endWith', `/detail/${service_type}/${id}`);
+  });
+
+  it('displays failure message and alert details for a failed alert', () => {
+    const alertDetails = alertFactory.build({
+      service_type: 'dbaas',
+      status: 'failed',
+      type: 'user',
+      id: 1001,
+      label: 'Alert-1',
+    });
+    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+    mockGetAlertDefinitions('dbaas', 1001, alertDetails).as(
+      'getDBaaSAlertDefinitions'
+    );
+    // Navigate to the alert definitions list page with login
+    cy.visitWithLogin('/alerts/definitions/detail/dbaas/1001');
+    cy.wait('@getDBaaSAlertDefinitions');
+
+    cy.get('[data-qa-error="true"]')
+      .should('be.visible')
+      .should(
+        'have.text',
+        'Alert-1 alert creation has failed. Please open a support ticket for assistance.'
+      );
+    // Validate Status field
+    cy.findByText('Status:').should('be.visible');
+    cy.findByText('Failed').should('be.visible');
   });
 
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
@@ -219,7 +251,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         cy.get('[data-qa-item="Dimension Filter"]')
           .eq(index)
           .within(() => {
-            (rule.dimension_filters ?? []).forEach((filter, filterIndex) => {
+            (rule.dimension_filters ?? []).forEach((filter) => {
               // Validate the filter label
               cy.get(`[data-qa-chip="${filter.label}"]`)
                 .should('be.visible')
@@ -275,7 +307,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         .should('be.visible')
         .should('have.text', 'consecutive occurrences.');
     });
-    //  Validate the Resources section (Resource and Region columns)
+    //  Validate the entity section (Entity and Region columns)
     cy.get('[data-qa-section="Resources"]').within(() => {
       ui.heading
         .findByText('entity')
@@ -294,7 +326,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
 
       cy.get('[data-qa-alert-row]').should('have.length', 4);
 
-      // Validate resource-region mapping for each row in the table
+      // Validate entity-region mapping for each row in the table
 
       const regionMap = new Map(regions.map((r) => [r.id, r.label]));
 
