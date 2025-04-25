@@ -8,6 +8,11 @@ import type { AlertDefinitionType, AlertStatusType } from '@linode/api-v4';
 
 export interface ActionHandlers {
   /**
+   * Callback for delete action
+   */
+  handleDelete: () => void;
+
+  /**
    * Callback for show details action
    */
   handleDetails: () => void;

@@ -4,6 +4,7 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -12,7 +13,10 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import {
+  useDeleteAlertDefinitionMutation,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
@@ -22,7 +26,12 @@ import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
-import type { Alert, AlertServiceType, APIError } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertServiceType,
+  APIError,
+  DeleteAlertPayload,
+} from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertsListTableProps {
@@ -71,10 +80,16 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     : undefined;
   const history = useHistory();
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
-
+  const { mutateAsync: deleteAlertDefinition } =
+    useDeleteAlertDefinitionMutation();
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
+
+  const [deleteState, setDeleteState] = React.useState({
+    isDialogOpen: false,
+    isDeleting: false,
+  });
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -91,6 +106,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
+  }, []);
+
+  const handleDelete = React.useCallback((alert: Alert) => {
+    setSelectedAlert(alert);
+    setDeleteState((prev) => ({ ...prev, isDialogOpen: true }));
   }, []);
 
   const handleConfirm = React.useCallback(
@@ -127,6 +147,31 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     [editAlertDefinition]
   );
 
+  const handleDeleteConfirm = React.useCallback(
+    (alert: Alert) => {
+      const payload: DeleteAlertPayload = {
+        serviceType: alert.service_type,
+        alertId: alert.id,
+      };
+      setDeleteState((prev) => ({ ...prev, isDeleting: true }));
+
+      deleteAlertDefinition(payload)
+        .then(() => {
+          enqueueSnackbar('Alert deleted', { variant: 'success' });
+        })
+        .catch((deleteError: APIError[]) => {
+          const errorResponse = getAPIErrorOrDefault(
+            deleteError,
+            'Alert deletion failed.'
+          );
+          enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
+        })
+        .finally(() => {
+          setDeleteState({ isDialogOpen: false, isDeleting: false });
+        });
+    },
+    [deleteAlertDefinition]
+  );
   const isEnabled = selectedAlert.status !== 'disabled';
 
   const handleScrollAndPageChange = (
@@ -242,6 +287,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                             groupedAlerts={sortGroups(groupByTags(orderedData))}
                             handleDetails={handleDetails}
                             handleEdit={handleEdit}
+                            handleDelete={handleDelete}
                             handleStatusChange={handleStatusChange}
                             services={services}
                           />
@@ -250,6 +296,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                             alerts={paginatedAndOrderedAlerts}
                             handleDetails={handleDetails}
                             handleEdit={handleEdit}
+                            handleDelete={handleDelete}
                             handleStatusChange={handleStatusChange}
                             services={services}
                           />
@@ -292,6 +339,16 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         message={`Are you sure you want to ${
           isEnabled ? 'disable' : 'enable'
         } this alert definition?`}
+      />
+      <DeletionDialog
+        entity="Alert"
+        label={selectedAlert.label}
+        loading={deleteState.isDeleting}
+        onClose={() =>
+          setDeleteState((prev) => ({ ...prev, isDialogOpen: false }))
+        }
+        onDelete={() => handleDeleteConfirm(selectedAlert)}
+        open={deleteState.isDialogOpen}
       />
     </>
   );

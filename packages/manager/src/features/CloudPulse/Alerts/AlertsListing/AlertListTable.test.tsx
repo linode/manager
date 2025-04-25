@@ -11,11 +11,13 @@ import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
   useEditAlertDefinition: vi.fn(),
+  useDeleteAlertDefinitionMutation: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
+  useDeleteAlertDefinitionMutation: queryMocks.useDeleteAlertDefinitionMutation,
 }));
 
 queryMocks.useEditAlertDefinition.mockReturnValue({
@@ -24,6 +26,11 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 const mockScroll = vi.fn();
+queryMocks.useDeleteAlertDefinitionMutation.mockReturnValue({
+  isError: false,
+  mutateAsync: vi.fn().mockResolvedValue({}),
+  reset: vi.fn(),
+});
 
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
