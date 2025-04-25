@@ -232,4 +232,22 @@ describe('Alert Listing', () => {
       expect(screen.getByText(alertToolTipText)).toBeVisible();
     });
   });
+
+  it('should show error notice for failed alerts', () => {
+    const alerts = alertFactory.buildList(3, {
+      status: 'failed',
+    });
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: alerts,
+      isError: false,
+      isLoading: false,
+    });
+
+    const { getByTestId } = renderWithTheme(<AlertListing />);
+
+    const element = getByTestId('notice-error').textContent;
+    expect(element).toEqual(
+      'Creation of 3 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
+    );
+  });
 });
