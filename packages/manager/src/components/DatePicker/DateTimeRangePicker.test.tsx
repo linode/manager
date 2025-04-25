@@ -325,7 +325,9 @@ describe('DateTimeRangePicker Component', () => {
     expect(
       screen.getByRole('textbox', { name: 'End Date and Time' })
     ).toHaveValue(`${now.toFormat(format)} (GMT+5:30)`);
-    expect(screen.getByRole('button', { name: 'Presets' })).toBeInTheDocument();
+    const button = screen.getByRole('button', { name: 'Presets' });
+
+    expect(button).toBeInTheDocument();
 
     // Set start date-time to the 15th
     const startDateField = screen.getByLabelText('Start Date and Time');
@@ -347,8 +349,9 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Confirm error message is not displayed
-    expect(
-      screen.queryByText('Start date/time cannot be after the end date/time.')
-    ).toBeInTheDocument();
+    const errorText = screen.queryByText(
+      'Start date/time cannot be after the end date/time.'
+    );
+    expect(errorText).toBeInTheDocument();
   });
 });

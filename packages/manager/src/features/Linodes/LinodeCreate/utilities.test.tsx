@@ -3,8 +3,8 @@ import {
   getIsLegacyInterfaceArray,
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 
 import {
@@ -208,7 +208,6 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
       },
     ]);
   });

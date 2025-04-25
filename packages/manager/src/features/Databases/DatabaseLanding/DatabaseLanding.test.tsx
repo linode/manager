@@ -1,9 +1,9 @@
 import { capitalize } from '@linode/utilities';
 import {
-  screen,
-  within,
   fireEvent,
+  screen,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -126,17 +126,18 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
+
+    renderWithTheme(<DatabaseLanding />, {
       flags: { dbaasV2: { beta: true, enabled: true } },
     });
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(screen.queryByTestId(loadingTestId));
 
-    expect(
-      getByText(
-        "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
-      )
-    ).toBeInTheDocument();
+    const text = screen.getByText(
+      "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
+    );
+
+    expect(text).toBeInTheDocument();
   });
 
   it('should render tabs with legacy and new databases ', async () => {

@@ -299,19 +299,6 @@ export const ConfigProfileInterfaceSchema = object().shape(
             test: (value) => typeof value === 'undefined' || value === null,
           }),
     }),
-    vpc_id: number().when('purpose', {
-      is: 'vpc',
-      then: (schema) => schema.required('VPC is required.'),
-      otherwise: (schema) =>
-        schema
-          .notRequired()
-          .nullable()
-          .test({
-            name: testnameDisallowedBasedOnPurpose('VPC'),
-            message: testmessageDisallowedBasedOnPurpose('vpc', 'vpc_id'),
-            test: (value) => typeof value === 'undefined' || value === null,
-          }),
-    }),
     ipv4: ipv4ConfigInterface,
     ipv6: ipv6ConfigInterface,
     ip_ranges: array()

@@ -12,6 +12,7 @@ import {
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
+import type { FieldErrors } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
@@ -40,7 +41,6 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -247,6 +247,7 @@ export const getInterfacesPayload = (
   }
 
   if (hasVPC) {
+    delete vpcInterface.vpc_id;
     return [vpcInterface];
   }
 
