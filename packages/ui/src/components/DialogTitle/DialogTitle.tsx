@@ -60,7 +60,7 @@ const DialogTitle = (props: DialogTitleProps) => {
             onClick={onClose}
             size="large"
           >
-            <CloseIcon data-testid={'CloseIcon'} />
+            <CloseIcon data-testid="CloseIcon" />
           </IconButton>
         )}
       </Box>

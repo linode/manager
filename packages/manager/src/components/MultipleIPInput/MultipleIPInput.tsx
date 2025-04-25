@@ -27,10 +27,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingTop: theme.spacing(1.5),
   },
   button: {
-    '& :hover, & :focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.tokens.color.Neutrals.White,
-    },
     '& > span': {
       padding: 2,
     },
