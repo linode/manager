@@ -117,12 +117,12 @@ export const PlansPanel = (props: PlansPanelProps) => {
       return false;
     }
 
-    // Resizing of MTC_TT plan instances are not supported from any regions
-    // - Existing linodes should not see this plan when resizing their linodes
+    // Resizing of MTC_TT plan instances are not supported from any regions.
+    // - Existing linodes should not see this plan when resizing their linodes.
     // Some Resizing scenarios:
-    // - Resizing existing linodes (from MTC regions) to this MTC_TT plan is not supported
-    // - Resizing existing linodes (from non-MTC regions) to this MTC_TT plan is not supported
-    // - Resizing existing MTC linodes is not supported at all (Disabled at the `Resize` Action Menu as well)
+    // - Resizing existing MTC linodes is not supported at all (Disabled at the `Resize` Action Menu as well).
+    // - Resizing existing linodes (from non-MTC regions) to this MTC_TT plan is not supported.
+    // - Resizing existing linodes (from MTC regions) to this MTC_TT plan is not supported [Edge case].
     if (flags.mtctt2025 && isMTCTTPlan(type) && isResize) {
       return false;
     }
