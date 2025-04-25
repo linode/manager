@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { Link, styled, useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { SupportLink } from 'src/components/SupportLink';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertResources } from '../AlertsResources/AlertsResources';
@@ -123,13 +124,7 @@ export const AlertDetail = () => {
               })}
             >
               {label} alert creation has failed. Please{' '}
-              <Link
-                href="https://cloud.linode.com/support/tickets"
-                underline="hover"
-              >
-                open a support ticket
-              </Link>{' '}
-              for assistance.
+              <SupportLink text="open a support ticket" /> for assistance.
             </Typography>
           </Notice>
         )}

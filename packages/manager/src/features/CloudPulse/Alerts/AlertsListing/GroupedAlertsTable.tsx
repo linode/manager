@@ -65,10 +65,17 @@ export const GroupedAlertsTable = ({
     [tagRefs]
   );
 
+  const createAlertHandlers = (alert: Alert) => ({
+    handleDetails: () => handleDetails(alert),
+    handleEdit: () => handleEdit(alert),
+    handleStatusChange: () => handleStatusChange(alert),
+  });
+
   return (
     <>
-      {groupedAlerts.map(([tag, alertsForTag]) => {
+      {groupedAlerts.map(([tag, alertsForTag], index) => {
         const tagRef = tagRefs.current.get(tag);
+        const isLastGroup = index === groupedAlerts.length - 1;
 
         return (
           <Paginate data={alertsForTag} key={tag}>
@@ -81,7 +88,11 @@ export const GroupedAlertsTable = ({
               pageSize,
             }) => (
               <TableBody>
-                <StyledTagHeaderRow sx={{ backgroundColor: theme.bg.app }}>
+                <StyledTagHeaderRow
+                  sx={{
+                    backgroundColor: theme.tokens.alias.Background.Neutral,
+                  }}
+                >
                   <TableCell colSpan={7}>
                     <StyledTagHeader
                       data-qa-tag-header={tag}
@@ -92,22 +103,24 @@ export const GroupedAlertsTable = ({
                     </StyledTagHeader>
                   </TableCell>
                 </StyledTagHeaderRow>
-                {paginatedTagAlerts.map((alert) => (
-                  <AlertTableRow
-                    handlers={{
-                      handleDetails: () => handleDetails(alert),
-                      handleEdit: () => handleEdit(alert),
-                      handleStatusChange: () => handleStatusChange(alert),
-                    }}
-                    alert={alert}
-                    key={alert.id}
-                    services={services}
-                  />
-                ))}
+                {paginatedTagAlerts.map((alert) => {
+                  const alertHandlers = createAlertHandlers(alert);
+
+                  return (
+                    <AlertTableRow
+                      alert={alert}
+                      handlers={alertHandlers}
+                      key={alert.id}
+                      services={services}
+                    />
+                  );
+                })}
                 {count > MIN_PAGE_SIZE && (
                   <TableRow>
                     <TableCell colSpan={7} sx={{ padding: 0 }}>
                       <PaginationFooter
+                        count={count}
+                        eventCategory={`Alert Definitions Table ${tag}`}
                         handlePageChange={(newPage) => {
                           handleTagPageChange(newPage);
                           scrollToTagWithAnimation(tag);
@@ -117,18 +130,15 @@ export const GroupedAlertsTable = ({
                           handleTagPageChange(1);
                           scrollToTagWithAnimation(tag);
                         }}
-                        sx={{
-                          border: 0,
-                          marginBottom:
-                            groupedAlerts[groupedAlerts.length - 1][0] === tag
-                              ? 0
-                              : theme.spacingFunction(16),
-                          marginTop: theme.spacingFunction(16),
-                        }}
-                        count={count}
-                        eventCategory={`Alert Definitions Table ${tag}`}
                         page={page}
                         pageSize={pageSize}
+                        sx={{
+                          border: 0,
+                          marginBottom: isLastGroup
+                            ? 0
+                            : theme.spacingFunction(16),
+                          marginTop: theme.spacingFunction(16),
+                        }}
                       />
                     </TableCell>
                   </TableRow>

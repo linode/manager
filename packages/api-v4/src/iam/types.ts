@@ -11,36 +11,41 @@ export type EntityTypePermissions =
   | 'volume'
   | 'vpc';
 
-export type AccountAccessType =
+export type AccountAccessRole =
   | 'account_admin'
   | 'account_linode_admin'
   | 'account_viewer'
+  | 'account_volume_admin'
   | 'firewall_creator'
   | 'linode_contributor'
-  | 'linode_creator';
+  | 'linode_creator'
+  | 'stackscript_creator';
 
-export type RoleType =
+export type EntityAccessRole =
+  | 'database_admin'
   | 'firewall_admin'
   | 'firewall_creator'
   | 'linode_contributor'
   | 'linode_creator'
   | 'linode_viewer'
+  | 'stackscript_admin'
+  | 'stackscript_viewer'
   | 'update_firewall';
 
 export interface IamUserPermissions {
-  account_access: AccountAccessType[];
+  account_access: AccountAccessRole[];
   entity_access: EntityAccess[];
 }
 export interface EntityAccess {
   id: number;
+  roles: EntityAccessRole[];
   type: EntityTypePermissions;
-  roles: RoleType[];
 }
 
 export type PermissionType =
   | 'acknowledge_account_agreement'
-  | 'add_nodebalancer_config_node'
   | 'add_nodebalancer_config'
+  | 'add_nodebalancer_config_node'
   | 'allocate_ip'
   | 'allocate_linode_ip_address'
   | 'assign_ips'
@@ -49,18 +54,18 @@ export type PermissionType =
   | 'boot_linode'
   | 'cancel_account'
   | 'cancel_linode_backups'
-  | 'clone_linode_disk'
   | 'clone_linode'
+  | 'clone_linode_disk'
   | 'clone_volume'
-  | 'create_firewall_device'
   | 'create_firewall'
+  | 'create_firewall_device'
   | 'create_image'
   | 'create_ipv6_range'
-  | 'create_linode_backup_snapshot'
-  | 'create_linode_config_profile_interface'
-  | 'create_linode_config_profile'
-  | 'create_linode_disk'
   | 'create_linode'
+  | 'create_linode_backup_snapshot'
+  | 'create_linode_config_profile'
+  | 'create_linode_config_profile_interface'
+  | 'create_linode_disk'
   | 'create_nodebalancer'
   | 'create_oauth_client'
   | 'create_payment_method'
@@ -68,24 +73,24 @@ export type PermissionType =
   | 'create_service_transfer'
   | 'create_user'
   | 'create_volume'
-  | 'create_vpc_subnet'
   | 'create_vpc'
-  | 'delete_firewall_device'
+  | 'create_vpc_subnet'
   | 'delete_firewall'
+  | 'delete_firewall_device'
   | 'delete_image'
-  | 'delete_linode_config_profile_interface'
+  | 'delete_linode'
   | 'delete_linode_config_profile'
+  | 'delete_linode_config_profile_interface'
   | 'delete_linode_disk'
   | 'delete_linode_ip_address'
-  | 'delete_linode'
-  | 'delete_nodebalancer_config_node'
-  | 'delete_nodebalancer_config'
   | 'delete_nodebalancer'
+  | 'delete_nodebalancer_config'
+  | 'delete_nodebalancer_config_node'
   | 'delete_payment_method'
   | 'delete_user'
   | 'delete_volume'
-  | 'delete_vpc_subnet'
   | 'delete_vpc'
+  | 'delete_vpc_subnet'
   | 'detach_volume'
   | 'enable_linode_backups'
   | 'enable_managed'
@@ -136,42 +141,43 @@ export type PermissionType =
   | 'reorder_linode_config_profile_interfaces'
   | 'rescue_linode'
   | 'reset_linode_disk_root_password'
-  | 'resize_linode_disk'
   | 'resize_linode'
+  | 'resize_linode_disk'
   | 'resize_volume'
   | 'restore_linode_backup'
   | 'set_default_payment_method'
   | 'share_ips'
   | 'share_ipv4'
   | 'shutdown_linode'
-  | 'update_account_settings'
   | 'update_account'
-  | 'update_firewall_rules'
+  | 'update_account_settings'
   | 'update_firewall'
+  | 'update_firewall_rules'
   | 'update_image'
-  | 'update_linode_config_profile_interface'
+  | 'update_linode'
   | 'update_linode_config_profile'
+  | 'update_linode_config_profile_interface'
   | 'update_linode_disk'
   | 'update_linode_ip_address'
-  | 'update_linode'
-  | 'update_nodebalancer_config_node'
-  | 'update_nodebalancer_config'
   | 'update_nodebalancer'
+  | 'update_nodebalancer_config'
+  | 'update_nodebalancer_config_node'
   | 'update_user'
   | 'update_volume'
-  | 'update_vpc_subnet'
   | 'update_vpc'
+  | 'update_vpc_subnet'
   | 'upgrade_linode'
   | 'upload_image'
-  | 'view_account_settings'
   | 'view_account'
-  | 'view_firewall_device'
+  | 'view_account_settings'
   | 'view_firewall'
+  | 'view_firewall_device'
   | 'view_image'
   | 'view_invoice'
+  | 'view_linode'
   | 'view_linode_backup'
-  | 'view_linode_config_profile_interface'
   | 'view_linode_config_profile'
+  | 'view_linode_config_profile_interface'
   | 'view_linode_disk'
   | 'view_linode_ip_address'
   | 'view_linode_kernel'
@@ -181,18 +187,17 @@ export type PermissionType =
   | 'view_linode_networking_info'
   | 'view_linode_stats'
   | 'view_linode_type'
-  | 'view_linode'
   | 'view_network_usage'
-  | 'view_nodebalancer_config_node'
-  | 'view_nodebalancer_config'
-  | 'view_nodebalancer_statistics'
   | 'view_nodebalancer'
-  | 'view_payment_method'
+  | 'view_nodebalancer_config'
+  | 'view_nodebalancer_config_node'
+  | 'view_nodebalancer_statistics'
   | 'view_payment'
+  | 'view_payment_method'
   | 'view_user'
   | 'view_volume'
-  | 'view_vpc_subnet'
-  | 'view_vpc';
+  | 'view_vpc'
+  | 'view_vpc_subnet';
 
 export interface IamAccountPermissions {
   account_access: IamAccess[];
@@ -200,13 +205,13 @@ export interface IamAccountPermissions {
 }
 
 export interface IamAccess {
-  type: EntityTypePermissions;
   roles: Roles[];
+  type: EntityTypePermissions;
 }
 
 export interface Roles {
-  name: string;
   description: string;
+  name: string;
   permissions: PermissionType[];
 }
 

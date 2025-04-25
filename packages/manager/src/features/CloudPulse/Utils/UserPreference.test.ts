@@ -18,7 +18,11 @@ describe('usePreferencesToggle', () => {
     queryMocks.useMutatePreferences.mockReturnValue({
       mutateAsync: vi.fn().mockResolvedValue(undefined),
     });
-    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
     expect(result.preference).toBeUndefined();
   });
 
@@ -29,7 +33,11 @@ describe('usePreferencesToggle', () => {
       mutateAsync: mockMutate,
     });
 
-    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
     const newValue = result.toggle();
     expect(newValue).toBe(true);
@@ -43,7 +51,11 @@ describe('usePreferencesToggle', () => {
       mutateAsync: mockMutate,
     });
 
-    const result = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+    const result = usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
     const newValue = result.toggle();
     expect(newValue).toBe(true);

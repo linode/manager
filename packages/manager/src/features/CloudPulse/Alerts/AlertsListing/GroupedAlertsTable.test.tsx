@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { vi } from 'vitest';
@@ -39,7 +40,7 @@ const mockAlerts: GroupedBy<Alert> = [
 
 describe('GroupedAlertsTable', () => {
   it('should render grouped alerts by tag', () => {
-    const { getByText } = renderWithTheme(
+    renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={mockAlerts}
         handleDetails={mockHandleDetails}
@@ -49,24 +50,19 @@ describe('GroupedAlertsTable', () => {
       />
     );
 
-    expect(getByText('tag1')).toBeInTheDocument();
-    expect(getByText('tag2')).toBeInTheDocument();
-    expect(getByText('Alert 1')).toBeInTheDocument();
-    expect(getByText('Alert 2')).toBeInTheDocument();
-    expect(getByText('Alert 3')).toBeInTheDocument();
+    expect(screen.getByText('tag1')).toBeVisible();
+    expect(screen.getByText('tag2')).toBeVisible();
+    expect(screen.getByText('Alert 1')).toBeVisible();
+    expect(screen.getByText('Alert 2')).toBeVisible();
+    expect(screen.getByText('Alert 3')).toBeVisible();
   });
 
   it('should handle pagination properly', async () => {
     const alerts: GroupedBy<Alert> = [
-      [
-        'tag1',
-        Array(50)
-          .fill(null)
-          .map(() => alertFactory.build({ tags: ['tag1'] })),
-      ],
+      ['tag1', alertFactory.buildList(50, { tags: ['tag1'] })],
     ];
 
-    const { getByRole } = renderWithTheme(
+    renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={alerts}
         handleDetails={mockHandleDetails}
@@ -76,24 +72,21 @@ describe('GroupedAlertsTable', () => {
       />
     );
 
-    expect(getByRole('button', { name: 'page 1' })).toBeInTheDocument();
-    await userEvent.click(getByRole('button', { name: 'Go to next page' }));
-    expect(getByRole('button', { name: 'page 2' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'page 1' })).toBeVisible();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Go to next page' })
+    );
+    expect(screen.getByRole('button', { name: 'page 2' })).toBeVisible();
   });
 
   it('should scroll to tag header when switching pages within tag pagination', async () => {
-    const manyAlerts: GroupedBy<Alert> = [
-      [
-        'tag1',
-        Array(50)
-          .fill(null)
-          .map(() => alertFactory.build({ tags: ['tag1'] })),
-      ],
+    const alerts: GroupedBy<Alert> = [
+      ['tag1', alertFactory.buildList(50, { tags: ['tag1'] })],
     ];
 
-    const { container, getByRole } = renderWithTheme(
+    renderWithTheme(
       <GroupedAlertsTable
-        groupedAlerts={manyAlerts}
+        groupedAlerts={alerts}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
         handleStatusChange={mockHandleStatusChange}
@@ -102,11 +95,13 @@ describe('GroupedAlertsTable', () => {
     );
 
     // Find and click next page within tag1's pagination
-    const nextPageButton = getByRole('button', { name: 'Go to next page' });
+    const nextPageButton = screen.getByRole('button', {
+      name: 'Go to next page',
+    });
     await userEvent.click(nextPageButton);
 
-    const tagHeader = container.querySelector('h2[data-qa-tag-header]');
-    expect(tagHeader?.textContent).toBe('tag1');
+    const tagHeader = screen.getByRole('heading', { name: 'tag1' });
+    expect(tagHeader).toBeVisible();
 
     // Ensure that the user is scrolled to the tag header
     expect(mockScrollToElement).toHaveBeenCalledWith(tagHeader);

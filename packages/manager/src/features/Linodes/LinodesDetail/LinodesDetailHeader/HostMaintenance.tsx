@@ -13,7 +13,7 @@ export const HostMaintenance = (props: Props) => {
     return null;
   }
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography style={{ paddingBottom: '8px' }} variant="h3">
         <strong>
           An issue affecting the physical host this Linode resides on has been

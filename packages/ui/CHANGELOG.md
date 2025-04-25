@@ -1,5 +1,15 @@
-## [2025-04-08] - v0.9.0
+## [2025-04-22] - v0.10.0
 
+### Added:
+
+- Include outlined SVG icons for toast design ([#11962](https://github.com/linode/manager/pull/11962))
+
+### Tech Stories:
+
+- Initial update to start updating deprecated TextField props for MUIv6 ([#11816](https://github.com/linode/manager/pull/11816))
+- Eslint Overhaul ([#11941](https://github.com/linode/manager/pull/11941))
+
+## [2025-04-08] - v0.9.0
 
 ### Added:
 
@@ -16,7 +26,6 @@
 - BetaChip `color` prop ([#11872](https://github.com/linode/manager/pull/11872))
 
 ## [2025-03-25] - v0.8.0
-
 
 ### Added:
 
@@ -40,11 +49,10 @@
 - Upgrade to MUI v6 ([#11688](https://github.com/linode/manager/pull/11688))
 - 4.0.0 Design Tokens - New Spacing & Badge Tokens ([#11757](https://github.com/linode/manager/pull/11757))
 
-
 ## [2025-02-25] - v0.7.0
 
-
 ### Added:
+
 - ESLint rules to disallow `data-test-id` attributes and enforce type-safe equality operators ([#11634](https://github.com/linode/manager/pull/11634))
 - `Dialog`, `DialogTitle` components, and `visibilityHide.svg`, `visibilityShow.svg`, and `chevron-down.svg` icons to the `@linode/ui` package ([#11673](https://github.com/linode/manager/pull/11673))
 
@@ -53,7 +61,6 @@
 - Add `MuiOutlinedInput` styling in `dark.ts` and `light.ts` ([#11573](https://github.com/linode/manager/pull/11573))
 
 ## [2025-01-28] - v0.6.0
-
 
 ### Changed:
 

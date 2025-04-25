@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
@@ -20,7 +21,7 @@ interface OverviewProps {
 }
 export const AlertDetailOverview = React.memo((props: OverviewProps) => {
   const { alertDetails } = props;
-
+  const { data: profile } = useProfile();
   const {
     created,
     created_by: createdBy,
@@ -69,17 +70,19 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           value={convertStringToCamelCasesWithSpaces(type)}
         />
         <AlertDetailRow
+          label="Created"
           value={formatDate(created, {
             format: 'MMM dd, yyyy, h:mm a',
+            timezone: profile?.timezone,
           })}
-          label="Created"
         />
         <AlertDetailRow label="Created By" value={createdBy} />
         <AlertDetailRow
+          label="Last Modified"
           value={formatDate(updated, {
             format: 'MMM dd, yyyy, h:mm a',
+            timezone: profile?.timezone,
           })}
-          label="Last Modified"
         />
         <AlertDetailRow label="Last Modified By" value={updatedBy} />
       </Grid>

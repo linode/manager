@@ -36,3 +36,9 @@ export const LKE_ENTERPRISE_VPC_WARNING =
 
 export const LKE_ENTERPRISE_LINODE_VPC_CONFIG_WARNING =
   'This VPC has been automatically generated for your LKE Enterprise cluster. Making edits may disrupt cluster communication.';
+
+export const MAX_NODES_PER_POOL_ENTERPRISE_TIER = 500; // TODO LKE-E M3-9793: Update this limit once a higher one is supported on the backend.
+export const MAX_NODES_PER_POOL_STANDARD_TIER = 100;
+
+export const ADD_NODE_POOLS_DESCRIPTION = `Add groups of Linodes to your cluster. You can have a maximum of ${MAX_NODES_PER_POOL_STANDARD_TIER} Linodes per node pool and a maximum of 250 Linodes per cluster.`;
+export const ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION = `Add groups of Linodes to your cluster. You can have a maximum of ${MAX_NODES_PER_POOL_ENTERPRISE_TIER} Linodes per node pool.`;

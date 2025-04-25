@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -88,19 +89,15 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -115,19 +112,15 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -148,19 +141,15 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -181,19 +170,15 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
-    const {
-      getByLabelText,
-      getByRole,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      <AlertsListTable
-        alerts={[alert]}
-        isLoading={false}
-        scrollToElement={mockScroll}
-        services={[{ label: 'Linode', value: 'linode' }]}
-      />
-    );
+    const { getByLabelText, getByRole, getByTestId, getByText } =
+      renderWithTheme(
+        <AlertsListTable
+          alerts={[alert]}
+          isLoading={false}
+          scrollToElement={mockScroll}
+          services={[{ label: 'Linode', value: 'linode' }]}
+        />
+      );
 
     const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
     await userEvent.click(actionMenu);
@@ -207,18 +192,19 @@ describe('Alert List Table test', () => {
   });
 
   it('should toggle alerts grouped by tag', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    renderWithTheme(
       <AlertsListTable
         alerts={[alertFactory.build({ label: 'Test Alert' })]}
-        alertsGroupedByTag={true}
+        isGroupedByTag={true}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
-        toggleAlertsGroupedByTag={() => true}
+        toggleGroupByTag={() => true}
       />
     );
-    const toggleButton = getByLabelText('Toggle group by tag');
+    const toggleButton = screen.getByLabelText('Toggle group by tag');
     await userEvent.click(toggleButton);
-    expect(getByText('group by tag is currently enabled')).toBeInTheDocument();
+    expect(screen.getByText('tag1')).toBeVisible();
+    expect(screen.getByText('tag2')).toBeVisible();
   });
 });

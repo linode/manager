@@ -30,6 +30,16 @@ export const queryPresets = {
 };
 
 /**
+ * A list of API v4 error reasons for which we should *not* retry the API request.
+ */
+const reasonsToNotRety = ['Unauthorized', 'Not found'];
+
+/**
+ * Number of times a query is retried by default.
+ */
+const DEFAULT_RETRIES = 3;
+
+/**
  * Creates and returns a new TanStack Query query client instance.
  *
  * Allows the query client behavior to be configured by specifying a preset. The
@@ -41,10 +51,26 @@ export const queryPresets = {
  * @returns New `QueryClient` instance.
  */
 export const queryClientFactory = (
-  preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch'
+  preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch',
 ) => {
   return new QueryClient({
-    defaultOptions: { queries: queryPresets[preset] },
+    defaultOptions: {
+      queries: {
+        retry(failureCount, error) {
+          if (getIsAPIErrorArray(error)) {
+            // For some API errors, we don't want to retry.
+            // Ideally, we'd do this conditionally based on the HTTP status code,
+            // but the creators of the `APIError[]` type didn't think to surface
+            // the status code, so we do it based on the `reason`.
+            if (error.some((e) => reasonsToNotRety.includes(e.reason))) {
+              return false;
+            }
+          }
+          return failureCount < DEFAULT_RETRIES;
+        },
+        ...queryPresets[preset],
+      },
+    },
   });
 };
 
@@ -58,6 +84,24 @@ export type ItemsByID<T> = Record<string, T>;
 // =============================================================================
 
 /**
+ * getIsAPIErrorArray
+ * @param error an unknown error
+ * @returns If the error is a APIError[]
+ */
+function getIsAPIErrorArray(error: unknown): error is APIError[] {
+  if (!Array.isArray(error)) {
+    return false;
+  }
+  if (error.length === 0) {
+    // an empty array counts as a APIError[]
+    return true;
+  }
+  // If the first element in the array contains a `reason` property,
+  // we'll assume this is an APIError[]
+  return Boolean(error[0]?.reason);
+}
+
+/**
  * "Indexers" for the following methods are included to handle
  * the case where an entity's primary key isn't "id." By
  * default, these methods will try to map Entity.id: Entity,
@@ -69,22 +113,22 @@ export type ItemsByID<T> = Record<string, T>;
 
 export const listToItemsByID = <E extends { [id: number | string]: any }>(
   entityList: E[],
-  indexer: string = 'id'
+  indexer: string = 'id',
 ) => {
   return entityList.reduce<Record<string, E>>(
     (map, item) => ({ ...map, [item[indexer]]: item }),
-    {}
+    {},
   );
 };
 
 export const mutationHandlers = <
   T,
   V extends Record<string, any>,
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
   indexer: string = 'id',
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -99,7 +143,7 @@ export const mutationHandlers = <
 
 export const simpleMutationHandlers = <T, V, E = APIError[]>(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables: V) => {
@@ -114,11 +158,11 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
 export const creationHandlers = <
   T extends Record<string, any>,
   V,
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
   indexer: string = 'id',
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity) => {
@@ -134,11 +178,11 @@ export const creationHandlers = <
 export const deletionHandlers = <
   T,
   V extends Record<string, any>,
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
   indexer: string = 'id',
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -155,10 +199,10 @@ export const deletionHandlers = <
 export const itemInListMutationHandler = <
   T extends { id: number | string },
   V,
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {
@@ -168,7 +212,7 @@ export const itemInListMutationHandler = <
         }
 
         const index = oldData?.findIndex(
-          (item) => item.id === updatedEntity.id
+          (item) => item.id === updatedEntity.id,
         );
 
         if (index === -1) {
@@ -187,7 +231,7 @@ export const itemInListMutationHandler = <
 
 export const itemInListCreationHandler = <T, V, E = APIError[]>(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (createdEntity) => {
@@ -207,10 +251,10 @@ export const itemInListCreationHandler = <T, V, E = APIError[]>(
 export const itemInListDeletionHandler = <
   T,
   V extends { id?: number | string },
-  E = APIError[]
+  E = APIError[],
 >(
   queryKey: QueryKey,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -245,7 +289,7 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number | string,
   newData: Partial<T>,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
     { queryKey },
@@ -255,7 +299,7 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
       }
 
       const toUpdateIndex = oldData.data.findIndex(
-        (entity) => entity.id === id
+        (entity) => entity.id === id,
       );
 
       const isEntityOnPage = toUpdateIndex !== -1;
@@ -275,14 +319,14 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
         ...oldData,
         data: updatedPaginatedData,
       };
-    }
+    },
   );
 };
 
 export const getItemInPaginatedStore = <T extends { id: number | string }>(
   queryKey: QueryKey,
   id: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>({
     queryKey,
@@ -300,11 +344,11 @@ export const getItemInPaginatedStore = <T extends { id: number | string }>(
 };
 
 export const doesItemExistInPaginatedStore = <
-  T extends { id: number | string }
+  T extends { id: number | string },
 >(
   queryKey: QueryKey,
   id: number,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) => {
   const item = getItemInPaginatedStore<T>(queryKey, id, queryClient);
   return item !== null;

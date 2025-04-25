@@ -25,7 +25,7 @@ import type { QueryClient } from '@tanstack/react-query';
 
 export const useLinodeIPsQuery = (
   linodeId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<LinodeIPsResponse, APIError[]>({
     ...linodeQueries.linode(linodeId)._ctx.ips,
@@ -49,7 +49,7 @@ export const useLinodeIPMutation = () => {
 
 export const useLinodeIPDeleteMutation = (
   linodeId: number,
-  address: string
+  address: string,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
@@ -76,7 +76,7 @@ export const useLinodeRemoveRangeMutation = (range: string) => {
   return useMutation<IPRangeInformation, APIError[]>({
     mutationFn: async () => {
       const rangeDetails = await queryClient.ensureQueryData(
-        networkingQueries.ipv6._ctx.range(range)
+        networkingQueries.ipv6._ctx.range(range),
       );
       await removeIPv6Range({ range });
       return rangeDetails;
@@ -103,6 +103,9 @@ export const useLinodeRemoveRangeMutation = (range: string) => {
         });
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linode)._ctx.ips.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linode)._ctx.interfaces.queryKey,
         });
       }
     },
