@@ -15,6 +15,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -33,7 +34,6 @@ import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/con
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Flags } from 'src/featureFlags';
-import { mockGetProfile } from 'support/intercepts/profile';
 
 export interface MetricDetails {
   aggregationType: string;
@@ -87,7 +87,7 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
   })
 );
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'gmt',
 });
 const mockAlerts = alertFactory.build({
   alert_channels: [{ id: 1 }],
@@ -102,7 +102,6 @@ const mockAlerts = alertFactory.build({
   severity: 0,
   tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
-  updated: new Date().toISOString(),
 });
 
 /**
@@ -422,8 +421,11 @@ describe('Create Alert', () => {
           cy.findByText('Databases').should('be.visible');
           cy.findByText(created_by).should('be.visible');
           cy.findByText(
-            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
-          );
+            formatDate(updated, {
+              format: 'MMM dd, yyyy, h:mm a',
+              timezone: 'GMT',
+            })
+          ).should('be.visible');
         });
     });
   });

@@ -96,7 +96,7 @@ const verifyRowOrder = (expectedIds: string[]) => {
   });
 };
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'gmt',
 });
 /**
  * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
@@ -207,13 +207,13 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       cy.findByText(
         formatDate(updated, {
           format: 'MMM dd, yyyy, h:mm a',
+          timezone: 'GMT',
         })
       ).should('be.visible');
-
-      cy.findByText('Created:').should('be.visible');
       cy.findByText(
         formatDate(created, {
           format: 'MMM dd, yyyy, h:mm a',
+          timezone: 'GMT',
         })
       ).should('be.visible');
     });

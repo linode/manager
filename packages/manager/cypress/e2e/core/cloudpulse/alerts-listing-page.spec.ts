@@ -31,7 +31,7 @@ import type { Flags } from 'src/featureFlags';
 const alertDefinitionsUrl = '/alerts/definitions';
 
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'gmt',
 });
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
@@ -174,11 +174,16 @@ const validateAlertDetails = (alert: Alert) => {
         'href',
         `/alerts/definitions/detail/${service_type}/${id}`
       );
-    cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
+    cy.findByText(
+      formatDate(updated, {
+        format: 'MMM dd, yyyy, h:mm a',
+        timezone: 'GMT',
+      })
+    )
       .should('be.visible')
       .and(
         'have.text',
-        formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+        formatDate(updated, { format: 'MMM dd, yyyy, h:mm a', timezone: 'GMT' })
       );
     cy.findByText(created_by).should('be.visible').and('have.text', created_by);
   });

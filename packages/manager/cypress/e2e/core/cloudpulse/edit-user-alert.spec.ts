@@ -107,7 +107,7 @@ const notificationChannels = notificationChannelFactory.build({
   type: 'custom',
 });
 const mockProfile = profileFactory.build({
-  timezone: 'Asia/Kolkata',
+  timezone: 'gmt',
 });
 
 describe('Integration Tests for Edit Alert', () => {
@@ -368,7 +368,10 @@ describe('Integration Tests for Edit Alert', () => {
           cy.findByText('Databases').should('be.visible');
           cy.findByText('user1').should('be.visible');
           cy.findByText(
-            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+            formatDate(updated, {
+              format: 'MMM dd, yyyy, h:mm a',
+              timezone: 'GMT',
+            })
           ).should('be.visible');
         });
     });
