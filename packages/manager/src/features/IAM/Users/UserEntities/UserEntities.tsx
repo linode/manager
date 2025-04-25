@@ -1,4 +1,11 @@
-import { CircleProgress, Paper, Stack, Typography } from '@linode/ui';
+import { useAccountUser } from '@linode/queries';
+import {
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { isEmpty } from 'ramda';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -15,6 +22,7 @@ export const UserEntities = () => {
   const { data: assignedRoles, isLoading } = useAccountUserPermissions(
     username ?? ''
   );
+  const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
     ? !isEmpty(assignedRoles.entity_access)
@@ -22,6 +30,10 @@ export const UserEntities = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
   }
 
   return (

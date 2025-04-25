@@ -1,4 +1,12 @@
-import { Button, CircleProgress, Paper, Stack, Typography } from '@linode/ui';
+import { useAccountUser } from '@linode/queries';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { isEmpty } from 'ramda';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -17,6 +25,8 @@ export const UserRoles = () => {
   const { data: assignedRoles, isLoading } = useAccountUserPermissions(
     username ?? ''
   );
+  const { error } = useAccountUser(username ?? '');
+
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const hasAssignedRoles = assignedRoles
@@ -26,6 +36,10 @@ export const UserRoles = () => {
 
   if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
   }
 
   return (
