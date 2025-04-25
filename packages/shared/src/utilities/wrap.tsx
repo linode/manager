@@ -1,5 +1,4 @@
-import { queryClientFactory } from '@linode/queries';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClientFactory, QueryClientProvider } from '@linode/queries';
 import { render } from '@testing-library/react';
 import React from 'react';
 
