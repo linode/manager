@@ -1,7 +1,7 @@
 /**
  * @file Cypress intercepts and mocks for Firewall API requests.
  */
-import { APIErrorContents, makeErrorResponse } from 'support/util/errors';
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
@@ -12,6 +12,7 @@ import type {
   FirewallSettings,
   FirewallTemplate,
 } from '@linode/api-v4';
+import type { APIErrorContents } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch Firewalls.
@@ -20,6 +21,22 @@ import type {
  */
 export const interceptGetFirewalls = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('networking/firewalls*'));
+};
+
+/**
+ * Mocks the GET request to get a single Firewall
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewall = (
+  firewallId: number,
+  firewall: Firewall,
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/${firewallId}`),
+    firewall
+  );
 };
 
 /**
@@ -128,6 +145,22 @@ export const interceptUpdateFirewallLinodes = (
   return cy.intercept(
     'POST',
     apiMatcher(`networking/firewalls/${firewallId}/devices`)
+  );
+};
+
+/**
+ * Mocks the GET request to get a Firewall's devices
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallDevices = (
+  firewallId: number,
+  firewallDevices: FirewallDevice[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/${firewallId}/devices*`),
+    paginateResponse(firewallDevices)
   );
 };
 
