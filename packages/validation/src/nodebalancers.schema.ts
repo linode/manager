@@ -1,9 +1,15 @@
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+
+import { IP_EITHER_BOTH_NOT_NEITHER, vpcsValidateIP } from './vpcs.schema';
 
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
+const PRIVATE_IPV4_WARNING = 'Must be a valid private IPv4 address.';
 
-export const PRIVATE_IPv4_REGEX = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+export const PRIVATE_IPV4_REGEX =
+  /^10\.|^172\.1[6-9]\.|^172\.2\d\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+// The regex to capture private IPv6 isn't comprehensive of all possible cases. Currently, we just match for the first block.
+export const PRIVATE_IPV6_REGEX = /^(fc|fd)[0-9a-f]{2}/;
 
 export const CHECK_ATTEMPTS = {
   MIN: 1,
@@ -29,7 +35,7 @@ export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
       /^[a-zA-Z0-9.\-_]+$/,
-      'Label may only contain letters, numbers, periods, dashes, and underscores.'
+      'Label may only contain letters, numbers, periods, dashes, and underscores.',
     )
     .min(3, 'Label should be between 3 and 32 characters.')
     .max(32, 'Label should be between 3 and 32 characters.')
@@ -38,7 +44,15 @@ export const nodeBalancerConfigNodeSchema = object({
   address: string()
     .typeError('IP address is required.')
     .required('IP address is required.')
-    .matches(PRIVATE_IPv4_REGEX, 'Must be a valid private IPv4 address.'),
+    .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING),
+
+  subnet_id: number().when('vpcs', {
+    is: (vpcs: (typeof createNodeBalancerVPCsSchema)[]) => vpcs !== undefined,
+    then: (schema) =>
+      schema
+        .required('Subnet ID is required')
+        .typeError('Subnet ID must be a number'),
+  }),
 
   port: number()
     .typeError('Port must be a number.')
@@ -63,11 +77,11 @@ export const createNodeBalancerConfigSchema = object({
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
-      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`,
     )
     .max(
       CHECK_ATTEMPTS.MAX,
-      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`,
     )
     .integer(),
   check_body: string().when('check', {
@@ -77,11 +91,11 @@ export const createNodeBalancerConfigSchema = object({
   check_interval: number()
     .min(
       CHECK_INTERVAL.MIN,
-      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`,
     )
     .max(
       CHECK_INTERVAL.MAX,
-      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`,
     )
     .typeError('Interval must be a number.')
     .integer(),
@@ -107,11 +121,11 @@ export const createNodeBalancerConfigSchema = object({
   check_timeout: number()
     .min(
       CHECK_TIMEOUT.MIN,
-      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`,
     )
     .max(
       CHECK_TIMEOUT.MAX,
-      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`,
     )
     .typeError('Timeout must be a number.')
     .integer(),
@@ -153,11 +167,11 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
-      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`,
     )
     .max(
       CHECK_ATTEMPTS.MAX,
-      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`,
     )
     .integer(),
   check_body: string().when('check', {
@@ -167,11 +181,11 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_interval: number()
     .min(
       CHECK_INTERVAL.MIN,
-      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`,
     )
     .max(
       CHECK_INTERVAL.MAX,
-      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`,
     )
     .typeError('Interval must be a number.')
     .integer(),
@@ -197,11 +211,11 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_timeout: number()
     .min(
       CHECK_TIMEOUT.MIN,
-      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`,
     )
     .max(
       CHECK_TIMEOUT.MAX,
-      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`,
     )
     .typeError('Timeout must be a number.')
     .integer(),
@@ -229,27 +243,101 @@ export const UpdateNodeBalancerConfigSchema = object({
   }),
 });
 
-const client_conn_throttle = number()
+const clientConnThrottle = number()
   .min(
     CONNECTION_THROTTLE.MIN,
-    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`,
   )
   .max(
     CONNECTION_THROTTLE.MAX,
-    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`,
   )
   .typeError('Client Connection Throttle must be a number.');
 
-const client_udp_sess_throttle = number()
+const clientUdpSessThrottle = number()
   .min(
     CONNECTION_THROTTLE.MIN,
-    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`,
   )
   .max(
     CONNECTION_THROTTLE.MAX,
-    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`,
   )
   .typeError('UDP Session Throttle must be a number.');
+
+const createNodeBalancerVPCsSchema = object().shape(
+  {
+    subnet_id: number()
+      .typeError('Subnet ID must be a number.')
+      .required('Subnet ID is required.'),
+    ipv4_range: string().when('ipv6_range', {
+      is: (value: unknown) =>
+        value === '' || value === null || value === undefined,
+      then: (schema) =>
+        schema
+          .required(IP_EITHER_BOTH_NOT_NEITHER)
+          .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING)
+          .test({
+            name: 'IPv4 CIDR format',
+            message: 'The IPv4 range must be in CIDR format.',
+            test: (value) =>
+              vpcsValidateIP({
+                value,
+                shouldHaveIPMask: true,
+                mustBeIPMask: false,
+              }),
+          }),
+      otherwise: (schema) =>
+        lazy((value: string | undefined) => {
+          switch (typeof value) {
+            case 'string':
+              return schema
+                .notRequired()
+                .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING)
+                .test({
+                  name: 'IPv4 CIDR format',
+                  message: 'The IPv4 range must be in CIDR format.',
+                  test: (value) =>
+                    vpcsValidateIP({
+                      value,
+                      shouldHaveIPMask: true,
+                      mustBeIPMask: false,
+                    }),
+                });
+
+            case 'undefined':
+              return schema.notRequired().nullable();
+
+            default:
+              return schema.notRequired().nullable();
+          }
+        }),
+    }),
+    ipv6_range: string().when('ipv4_range', {
+      is: (value: unknown) =>
+        value === '' || value === null || value === undefined,
+      then: (schema) =>
+        schema
+          .required(IP_EITHER_BOTH_NOT_NEITHER)
+          .matches(PRIVATE_IPV6_REGEX, 'Must be a valid private IPv6 address.')
+          .test({
+            name: 'valid-ipv6-range',
+            message:
+              'Must be a valid private IPv6 range, e.g. fd12:3456:789a:1::1/64.',
+            test: (value) =>
+              vpcsValidateIP({
+                value,
+                shouldHaveIPMask: true,
+                mustBeIPMask: false,
+              }),
+          }),
+    }),
+  },
+  [
+    ['ipv4_range', 'ipv6_range'],
+    ['ipv6_range', 'ipv4_range'],
+  ],
+);
 
 export const NodeBalancerSchema = object({
   label: string()
@@ -258,12 +346,12 @@ export const NodeBalancerSchema = object({
     .max(32, LABEL_WARNING)
     .matches(
       /^[a-zA-Z0-9-_]+$/,
-      "Label can't contain special characters or spaces."
+      "Label can't contain special characters or spaces.",
     ),
 
-  client_conn_throttle,
+  clientConnThrottle,
 
-  client_udp_sess_throttle,
+  clientUdpSessThrottle,
 
   tags: array(string()),
 
@@ -272,33 +360,48 @@ export const NodeBalancerSchema = object({
   configs: array()
     .of(createNodeBalancerConfigSchema)
     /* @todo there must be an easier way */
-    .test('unique', 'Port must be unique.', function (value?: any[] | null) {
+    .test('unique', 'Port must be unique.', function (value) {
       if (!value) {
         return true;
       }
       const ports: number[] = [];
-      const configs = value.reduce(
-        (prev: number[], value: any, idx: number) => {
-          if (!value.port) {
-            return prev;
-          }
-          if (!ports.includes(value.port)) {
-            ports.push(value.port);
-            return prev;
-          }
-          return [...prev, idx];
-        },
-        []
-      );
+      const configs = value.reduce((prev: number[], value, idx: number) => {
+        if (!value.port) {
+          return prev;
+        }
+        if (!ports.includes(value.port)) {
+          ports.push(value.port);
+          return prev;
+        }
+        return [...prev, idx];
+      }, []);
       if (configs.length === 0) {
         return true;
       } // No ports were duplicates
       const configStrings = configs.map(
-        (config: number) => `configs[${config}].port`
+        (config: number) => `configs[${config}].port`,
       );
       throw this.createError({
         path: configStrings.join('|'),
         message: 'Port must be unique.',
+      });
+    }),
+
+  vpcs: array()
+    .of(createNodeBalancerVPCsSchema)
+    .test('unique subnet IDs', 'Subnet IDs must be unique.', function (value) {
+      if (!value) {
+        return true;
+      }
+      const ids: number[] = value.map((vpcs) => vpcs.subnet_id);
+      const duplicates: number[] = [];
+      ids.forEach(
+        (id, index) => ids.indexOf(id) !== index && duplicates.push(index),
+      );
+      const idStrings = ids.map((id: number) => `vpcs[${id}].subnet_id`);
+      throw this.createError({
+        path: idStrings.join('|'),
+        message: 'Subnet ID must be unique',
       });
     }),
 });
@@ -309,9 +412,9 @@ export const UpdateNodeBalancerSchema = object({
     .max(32, LABEL_WARNING)
     .matches(
       /^[a-zA-Z0-9-_]+$/,
-      "Label can't contain special characters or spaces."
+      "Label can't contain special characters or spaces.",
     ),
-  client_conn_throttle,
-  client_udp_sess_throttle,
+  clientConnThrottle,
+  clientUdpSessThrottle,
   tags: array(string()),
 });
