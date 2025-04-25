@@ -77,15 +77,15 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   return (
     <Dialog
-      sx={{
-        overflowX: 'hidden',
-        paddingBottom: '0px',
-      }}
       fullHeight
       fullWidth
       maxWidth="sm"
       onClose={onClose}
       open={isOpen}
+      sx={{
+        overflowX: 'hidden',
+        paddingBottom: '0px',
+      }}
       title="Create Linode"
     >
       <Typography sx={{ paddingBottom: '6px' }} variant="body1">
