@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -8,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { alertStatusToIconStatusMap, alertStatuses } from '../constants';
+import { alertStatuses, alertStatusToIconStatusMap } from '../constants';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Item } from '../constants';
@@ -32,6 +33,7 @@ interface Props {
 
 export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
+  const { data: profile } = useProfile();
   const location = useLocation();
   const {
     created_by,
@@ -67,6 +69,7 @@ export const AlertTableRow = (props: Props) => {
       <TableCell data-testid={`updated-${id}`}>
         {formatDate(updated, {
           format: 'MMM dd, yyyy, h:mm a',
+          timezone: profile?.timezone,
         })}
       </TableCell>
       <TableCell data-testid={`updated-by-${id}`}>{updated_by}</TableCell>

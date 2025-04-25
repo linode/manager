@@ -1,12 +1,12 @@
-import { capitalize } from '@linode/utilities';
-import React from 'react';
+import { capitalize, capitalizeAllWords } from '@linode/utilities';
 
-import { useFlags } from 'src/hooks/useFlags';
+import { PAID_ENTITY_TYPES } from './constants';
 
 import type {
-  AccountAccessType,
+  AccountAccessRole,
   AccountEntity,
   EntityAccess,
+  EntityAccessRole,
   EntityType,
   EntityTypePermissions,
   IamAccess,
@@ -14,48 +14,18 @@ import type {
   IamAccountPermissions,
   IamUserPermissions,
   PermissionType,
-  RoleType,
   Roles,
 } from '@linode/api-v4';
-
-/**
- * Hook to determine if the IAM feature should be visible to the user.
- * Based on the user's account capability and the feature flag.
- *
- * @returns {boolean} - Whether the IAM feature is enabled for the current user.
- */
-export const useIsIAMEnabled = () => {
-  const flags = useFlags();
-
-  const isIAMEnabled = flags.iam?.enabled;
-
-  return {
-    isIAMBeta: flags.iam?.beta,
-    isIAMEnabled,
-  };
-};
-
-export const placeholderMap: Record<string, string> = {
-  account: 'Select Account',
-  database: 'Select Databases',
-  domain: 'Select Domains',
-  firewall: 'Select Firewalls',
-  image: 'Select Images',
-  linode: 'Select Linodes',
-  longview: 'Select Longviews',
-  nodebalancer: 'Select Nodebalancers',
-  stackscript: 'Select Stackscripts',
-  volume: 'Select Volumes',
-  vpc: 'Select VPCs',
-};
+import type { SelectOption } from '@linode/ui';
+import { EntitiesOption } from './types';
 
 export interface RoleMap {
   access: 'account_access' | 'entity_access';
   description: string;
   entity_ids: null | number[];
   entity_type: EntityTypePermissions;
-  id: AccountAccessType | RoleType;
-  name: AccountAccessType | RoleType;
+  id: AccountAccessRole | EntityAccessRole;
+  name: AccountAccessRole | EntityAccessRole;
   permissions: PermissionType[];
 }
 export interface ExtendedRoleMap extends RoleMap {
@@ -95,15 +65,15 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
 /**
  * Checks if the given Role has a type
  *
- * @param resourceType The type to check for
+ * @param entityType The type to check for
  * @param role The role to compare against
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  resourceType: EntityType | EntityTypePermissions,
+  entityType: EntityType | EntityTypePermissions,
   role: ExtendedRoleMap
 ) => {
-  return role.entity_type === resourceType;
+  return role.entity_type === entityType;
 };
 
 /**
@@ -135,9 +105,14 @@ export interface RolesType {
   value: string;
 }
 
-interface ExtendedRole extends Roles {
+export interface ExtendedRole extends Roles {
   access: IamAccessType;
   entity_type: EntityTypePermissions;
+}
+
+export interface ExtendedEntityRole extends EntitiesRole {
+  label: EntityAccessRole;
+  value: EntityAccessRole;
 }
 
 export const getAllRoles = (
@@ -180,16 +155,17 @@ export const getRoleByName = (
 };
 
 export interface EntitiesRole {
+  access: IamAccessType;
+  entity_id: number;
+  entity_name: string;
   entity_type: EntityType | EntityTypePermissions;
   id: string;
-  resource_id: number;
-  resource_name: string;
-  role_name: RoleType;
+  role_name: EntityAccessRole;
 }
 
 export interface EntitiesType {
   label: string;
-  rawValue: EntityType | EntityTypePermissions;
+  rawValue?: EntityType | EntityTypePermissions;
   value?: string;
 }
 
@@ -197,18 +173,32 @@ export const mapEntityTypes = (
   data: EntitiesRole[] | RoleMap[],
   suffix: string
 ): EntitiesType[] => {
-  const resourceTypes = Array.from(new Set(data.map((el) => el.entity_type)));
+  const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
 
-  return resourceTypes.map((resource) => ({
-    label: capitalize(resource) + suffix,
-    rawValue: resource,
-    value: capitalize(resource) + suffix,
+  return entityTypes.map((entity) => ({
+    label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
+    rawValue: entity,
+    value: capitalizeAllWords(entity, '_') + suffix,
   }));
+};
+
+export const mapEntityTypesForSelect = (
+  data: EntitiesRole[] | RoleMap[],
+  suffix: string
+): SelectOption[] => {
+  const entityTypes = Array.from(new Set(data?.map((el) => el.entity_type)));
+
+  return entityTypes
+    .map((entity) => ({
+      label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
+      value: entity,
+    }))
+    .sort((a, b) => (a?.value ?? '').localeCompare(b?.value ?? ''));
 };
 
 export interface CombinedRoles {
   id: null | number[];
-  name: AccountAccessType | RoleType;
+  name: AccountAccessRole | EntityAccessRole;
 }
 
 /**
@@ -217,28 +207,31 @@ export interface CombinedRoles {
  */
 export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
-  const roleMap: Map<AccountAccessType | RoleType, null | number[]> = new Map();
+  const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
+    new Map();
 
   // Add account access roles with resource_id set to null
-  data.account_access.forEach((role: AccountAccessType) => {
+  data.account_access.forEach((role: AccountAccessRole) => {
     if (!roleMap.has(role)) {
       roleMap.set(role, null);
     }
   });
 
   // Add resource access roles with their respective resource_id
-  data.entity_access.forEach((resource: { id: number; roles: RoleType[] }) => {
-    resource.roles?.forEach((role: RoleType) => {
-      if (roleMap.has(role)) {
-        const existingResourceIds = roleMap.get(role);
-        if (existingResourceIds && existingResourceIds !== null) {
-          existingResourceIds.push(resource.id);
+  data.entity_access.forEach(
+    (resource: { id: number; roles: EntityAccessRole[] }) => {
+      resource.roles?.forEach((role: EntityAccessRole) => {
+        if (roleMap.has(role)) {
+          const existingResourceIds = roleMap.get(role);
+          if (existingResourceIds && existingResourceIds !== null) {
+            existingResourceIds.push(resource.id);
+          }
+        } else {
+          roleMap.set(role, [resource.id]);
         }
-      } else {
-        roleMap.set(role, [resource.id]);
-      }
-    });
-  });
+      });
+    }
+  );
 
   // Convert the Map into the final combinedRoles array
   roleMap.forEach((id, name) => {
@@ -303,6 +296,35 @@ export const mapRolesToPermissions = (
 };
 
 /**
+ * Add descriptions, permissions, type to roles
+ */
+export const mapAccountPermissionsToRoles = (
+  accountPermissions: IamAccountPermissions
+): RoleMap[] => {
+  const mapperFn = (access: string, entity_type: string, role: Roles) => ({
+    access,
+    description: role.description,
+    entity_type,
+    id: role.name,
+    name: role.name,
+    permissions: role.permissions,
+  });
+
+  return [
+    ...accountPermissions.account_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('account_access', ap.type, role) as RoleMap
+      )
+    ),
+    ...accountPermissions.entity_access.map((ap) =>
+      ap.roles.map(
+        (role) => mapperFn('entity_access', ap.type, role) as RoleMap
+      )
+    ),
+  ].flat();
+};
+
+/**
  * Add assigned entities to role
  */
 
@@ -330,54 +352,6 @@ export const addEntitiesNamesToRoles = (
   });
 };
 
-/**
- * Custom hook to calculate hidden items
- */
-export const useCalculateHiddenItems = (
-  items: PermissionType[] | string[],
-  showAll?: boolean
-) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
-
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
-
-  const calculateHiddenItems = React.useCallback(() => {
-    if (showAll || !containerRef.current) {
-      setNumHiddenItems(0);
-      return;
-    }
-
-    if (!itemRefs.current) {
-      return;
-    }
-
-    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
-
-    const itemsArray = Array.from(itemRefs.current);
-
-    const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLDivElement | HTMLSpanElement) => {
-        const rect = item.getBoundingClientRect();
-        return rect.top >= containerBottom;
-      }
-    );
-
-    const numHiddenItems =
-      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
-
-    setNumHiddenItems(numHiddenItems);
-  }, [items, showAll]);
-
-  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
-};
-
-export interface EntitiesOption {
-  label: string;
-  value: number;
-}
-
 interface UpdateUserRolesProps {
   access: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -395,8 +369,8 @@ export const updateUserRoles = ({
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.map(
-        (role: AccountAccessType) =>
-          role === initialRole ? (newRole as AccountAccessType) : role
+        (role: AccountAccessRole) =>
+          role === initialRole ? (newRole as AccountAccessRole) : role
       ),
     };
   }
@@ -407,8 +381,8 @@ export const updateUserRoles = ({
       entity_access: assignedRoles.entity_access.map(
         (resource: EntityAccess) => ({
           ...resource,
-          roles: resource.roles.map((role: RoleType) =>
-            role === initialRole ? (newRole as RoleType) : role
+          roles: resource.roles.map((role: EntityAccessRole) =>
+            role === initialRole ? (newRole as EntityAccessRole) : role
           ),
         })
       ),
@@ -426,9 +400,15 @@ export const updateUserRoles = ({
 
 export interface AssignNewRoleFormValues {
   roles: {
-    role: RolesType | null;
+    entities?: EntitiesOption[] | null;
+    role: null | RolesType;
   }[];
 }
+
+export interface UpdateEntitiesFormValues {
+  entities: EntitiesOption[];
+}
+
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
   assignedRoles?: IamUserPermissions;
@@ -451,7 +431,7 @@ export const deleteUserRole = ({
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.filter(
-        (role: AccountAccessType) => role !== initialRole
+        (role: AccountAccessRole) => role !== initialRole
       ),
     };
   }
@@ -463,7 +443,7 @@ export const deleteUserRole = ({
         .map((resource: EntityAccess) => ({
           ...resource,
           roles: resource.roles.filter(
-            (role: RoleType) => role !== initialRole
+            (role: EntityAccessRole) => role !== initialRole
           ),
         }))
         .filter((resource: EntityAccess) => resource.roles.length > 0),
@@ -474,13 +454,11 @@ export const deleteUserRole = ({
   return assignedRoles;
 };
 
-export const transformedAccountEntities = (
+export const groupAccountEntitiesByType = (
   entities: AccountEntity[]
 ): Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> => {
-  const result: Map<
-    EntityType,
-    Pick<AccountEntity, 'id' | 'label'>[]
-  > = new Map();
+  const result: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]> =
+    new Map();
 
   entities.forEach((item) => {
     if (!result.has(item.type)) {
@@ -494,4 +472,134 @@ export const transformedAccountEntities = (
   });
 
   return result;
+};
+
+export type DrawerModes =
+  | 'assign-role'
+  | 'change-role'
+  | 'change-role-for-entity';
+
+export const changeRoleForEntity = (
+  entityRoles: EntityAccess[],
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions,
+  initialRole: EntityAccessRole,
+  newRole: EntityAccessRole
+): EntityAccess[] => {
+  return [
+    ...entityRoles.map((entity) => {
+      const roles = Array.from(
+        new Set(
+          entity.roles.map((role) => (role === initialRole ? newRole : role))
+        )
+      );
+      if (entity.type === entityType && entity.id === entityId) {
+        return {
+          ...entity,
+          roles,
+        };
+      }
+      return entity;
+    }),
+  ];
+};
+
+export const toEntityAccess = (
+  entityRoles: EntityAccess[],
+  entityIds: number[],
+  roleName: EntityAccessRole,
+  roleType: EntityTypePermissions
+): EntityAccess[] => {
+  const selectedIds = new Set(entityIds);
+
+  const updatedEntityAccess = entityRoles
+    .map((entity) => {
+      if (selectedIds.has(entity.id)) {
+        // Ensure the role is assigned to the entity
+        if (!entity.roles.includes(roleName)) {
+          return {
+            ...entity,
+            roles: [...entity.roles, roleName],
+          };
+        }
+        return entity;
+      }
+
+      // Remove the role if the entity is not in the new entity IDs
+      return {
+        ...entity,
+        roles: entity.roles.filter((role) => role !== roleName),
+      };
+    })
+    .filter((entity) => entity.roles.length > 0); // Remove entities with no roles
+
+  // Add new entities that don't exist in the current access
+  const newEntities = Array.from(selectedIds)
+    .filter((id) => !entityRoles.some((entity) => entity.id === id))
+    .map((id) => ({
+      id,
+      roles: [roleName],
+      type: roleType,
+    }));
+
+  return [...updatedEntityAccess, ...newEntities];
+};
+
+export interface CombinedEntity {
+  id: number;
+  name: string;
+}
+
+export const deleteUserEntity = (
+  entityRoles: EntityAccess[],
+  roleName: EntityAccessRole,
+  entityId: number,
+  entityType: EntityType | EntityTypePermissions
+): EntityAccess[] => {
+  return entityRoles
+    .map((entity) => {
+      if (entity.type === entityType && entity.id === entityId) {
+        const roles = entity.roles.filter(
+          (role: EntityAccessRole) => role !== roleName
+        );
+        return {
+          ...entity,
+          roles,
+        };
+      }
+
+      return entity;
+    })
+    .filter((entity) => entity.roles.length > 0);
+};
+
+export const getFacadeRoleDescription = (
+  role: ExtendedRole | ExtendedRoleMap
+): string => {
+  if (role.access === 'account_access') {
+    const dollarSign = PAID_ENTITY_TYPES.includes(role.entity_type)
+      ? ' ($)'
+      : '';
+
+    return `This role grants the same access as the legacy "Can add ${getFormattedEntityType(role.entity_type)}s to this account${dollarSign}" global permissions.`;
+  }
+
+  if (role.access === 'entity_access') {
+    const access = role.name.includes('admin') ? 'Read-Write' : 'Read-Only';
+
+    return `This role grants the same access as the legacy ${access} special permission for the ${getFormattedEntityType(role.entity_type)}s attached to this role.`;
+  }
+
+  return role.description;
+};
+
+export const getFormattedEntityType = (entityType: string): string => {
+  const overrideCapitalization: Record<string, string> = {
+    vpc: 'VPC',
+    stackscript: 'StackScript',
+    nodebalancer: 'NodeBalancer',
+  };
+
+  // Return the overridden capitalization if it exists, otherwise capitalize normally
+  return overrideCapitalization[entityType] || capitalize(entityType);
 };

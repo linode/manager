@@ -1,28 +1,31 @@
 import { Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 
 import { supportTextRegex } from './ErrorMessage';
 
-import type { EntityForTicketDetails } from './SupportLink/SupportLink';
+import type {
+  EntityForTicketDetails,
+  SupportLinkProps,
+} from './SupportLink/SupportLink';
 import type { FormPayloadValues } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface SupportTicketGeneralErrorProps {
   entity?: EntityForTicketDetails;
   formPayloadValues?: FormPayloadValues;
   generalError: string;
+  supportLinkProps?: Partial<SupportLinkProps>;
 }
 
-const accountLimitRegex = /(limit|limit for the number of active services) on your account/i;
+const accountLimitRegex =
+  /(limit|limit for the number of active services) on your account/i;
 
 export const SupportTicketGeneralError = (
   props: SupportTicketGeneralErrorProps
 ) => {
-  const { entity, formPayloadValues, generalError } = props;
-  const theme = useTheme();
+  const { entity, formPayloadValues, generalError, supportLinkProps } = props;
 
   const limitError = generalError.split(supportTextRegex);
 
@@ -32,8 +35,8 @@ export const SupportTicketGeneralError = (
   return (
     <Typography
       sx={{
-        font: theme.font.bold,
-        fontSize: '1rem',
+        font: 'inherit',
+        fontSize: 'inherit',
         lineHeight: '20px',
       }}
     >
@@ -43,6 +46,9 @@ export const SupportTicketGeneralError = (
         if (openTicket) {
           return (
             <SupportLink
+              entity={entity}
+              formPayloadValues={formPayloadValues}
+              key={`${substring}-${idx}`}
               text={
                 substring.match(/^[A-Z]/)
                   ? capitalize(openTicket[0])
@@ -51,9 +57,7 @@ export const SupportTicketGeneralError = (
               ticketType={
                 isAccountLimitSupportTicket ? 'accountLimit' : 'general'
               }
-              entity={entity}
-              formPayloadValues={formPayloadValues}
-              key={`${substring}-${idx}`}
+              {...supportLinkProps}
             />
           );
         } else {

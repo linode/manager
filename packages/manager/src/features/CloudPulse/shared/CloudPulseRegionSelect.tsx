@@ -14,7 +14,7 @@ import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
-  disabled: boolean | undefined;
+  disabled?: boolean;
   handleRegionChange: (
     region: string | undefined,
     labels: string[],

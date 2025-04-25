@@ -19,9 +19,9 @@ const addTo = <T>(list: T[] = [], i: T) => [...list, i];
  */
 const reduceEntitiesToTags = <T extends Tagged>(
   obj: Record<string, T[]>,
-  entity: T
+  entity: T,
 ): Record<string, T[]> => {
-  const { tags=[] } = entity;
+  const { tags = [] } = entity;
 
   return tags.length === 0
     ? { ...obj, [NONE]: addTo(obj[NONE], entity) }
@@ -29,12 +29,14 @@ const reduceEntitiesToTags = <T extends Tagged>(
 };
 
 /** Literally push a value on an array at a specificed key of an array. */
-const addToArrayAtKey = <T>(value: T) => (obj: any, key: string) => {
-  return {
-    ...obj,
-    [key]: addTo(obj[key], value),
+const addToArrayAtKey =
+  <T>(value: T) =>
+  (obj: any, key: string) => {
+    return {
+      ...obj,
+      [key]: addTo(obj[key], value),
+    };
   };
-};
 
 /** Create a group map based on tags. */
 export const groupByTags = <T extends Tagged>(arr: T[]): GroupedBy<T> => {
@@ -46,7 +48,7 @@ export const groupByTags = <T extends Tagged>(arr: T[]): GroupedBy<T> => {
 /** Just in case... */
 const reduceEntitiesToGroup = <T extends Grouped>(
   obj: Record<string, T[]>,
-  entity: T
+  entity: T,
 ): Record<string, T[]> => {
   const { group } = entity;
 
@@ -78,7 +80,7 @@ export const sortGroups = (groups: GroupedBy<any>) => {
 
   if (typeof foundUntaggedIndex === 'undefined') {
     return groups.sort(([firstTag], [secondTag]) =>
-      firstTag > secondTag ? 0 : -1
+      firstTag > secondTag ? 0 : -1,
     );
   }
 

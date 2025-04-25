@@ -7,6 +7,7 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -69,6 +70,7 @@ describe('delete linode', () => {
   it('deletes linode from linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -114,6 +116,7 @@ describe('delete linode', () => {
   it('deletes linode from setting tab in linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -129,7 +132,6 @@ describe('delete linode', () => {
       // Check elements in setting tab
       cy.findByText('Linode Label').should('be.visible');
       cy.findByText('Reset Root Password').should('be.visible');
-      cy.findByText('Notification Thresholds').should('be.visible');
       cy.findByText('Shutdown Watchdog').should('be.visible');
       cy.findByText('Delete Linode').should('be.visible');
 
@@ -163,6 +165,7 @@ describe('delete linode', () => {
   it('deletes linode from linode landing page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
+      region: chooseRegion().id,
     });
     cy.defer(() => createTestLinode(linodeCreatePayload)).then((linode) => {
       // catch delete request
@@ -211,10 +214,16 @@ describe('delete linode', () => {
     const createTwoLinodes = async (): Promise<[Linode, Linode]> => {
       return Promise.all([
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
         createTestLinode(
-          createLinodeRequestFactory.build({ label: randomLabel() })
+          createLinodeRequestFactory.build({
+            label: randomLabel(),
+            region: chooseRegion().id,
+          })
         ),
       ]);
     };

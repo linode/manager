@@ -1,5 +1,6 @@
+import { grantFactory, grantsFactory } from '@linode/utilities';
 import { randomLabel } from 'support/util/random';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
+
 import type { Grants } from '@linode/api-v4';
 
 /**
