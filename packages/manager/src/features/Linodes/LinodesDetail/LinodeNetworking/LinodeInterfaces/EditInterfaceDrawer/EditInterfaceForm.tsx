@@ -60,6 +60,8 @@ export const EditInterfaceForm = (props: Props) => {
     },
   });
 
+  const { errors, isDirty, isSubmitting, dirtyFields } = form.formState;
+
   const onSubmit = async (values: EditLinodeInterfaceFormValues) => {
     const results = await Promise.allSettled([
       updateInterface(values),
@@ -91,7 +93,7 @@ export const EditInterfaceForm = (props: Props) => {
       }
 
       // Handle Firewall update errors
-      if (results[1].status === 'rejected') {
+      if (results[1].status === 'rejected' && dirtyFields.firewall_id) {
         for (const error of results[1].reason) {
           form.setError('firewall_id', { message: error.reason });
         }
@@ -110,26 +112,26 @@ export const EditInterfaceForm = (props: Props) => {
               text="Updating the interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
               variant="warning"
             />
-            {form.formState.errors.root?.message && (
+            {errors.root?.message && (
               <Notice
-                text={form.formState.errors.root?.message}
+                text={errors.root?.message}
                 variant="error"
               />
             )}
-            {form.formState.errors.default_route?.ipv4?.message && (
+            {errors.default_route?.ipv4?.message && (
               <Notice
-                text={form.formState.errors.default_route?.ipv4?.message}
+                text={errors.default_route?.ipv4?.message}
                 variant="error"
               />
             )}
-            {form.formState.errors.default_route?.ipv6?.message && (
+            {errors.default_route?.ipv6?.message && (
               <Notice
-                text={form.formState.errors.default_route?.ipv6?.message}
+                text={errors.default_route?.ipv6?.message}
                 variant="error"
               />
             )}
           </Stack>
-          {!form.formState.isSubmitting && updatedInterface !== undefined && (
+          {!isSubmitting && updatedInterface !== undefined && (
             <Notice text="Interface successfully updated." variant="success" />
           )}
           <Stack divider={<Divider />} spacing={3}>
@@ -147,7 +149,7 @@ export const EditInterfaceForm = (props: Props) => {
             )}
             <EditInterfaceFirewall
               showSuccessNotice={
-                !form.formState.isSubmitting &&
+                !isSubmitting &&
                 wasFirewallUpdated !== undefined &&
                 wasFirewallUpdated !== false
               }
@@ -156,7 +158,7 @@ export const EditInterfaceForm = (props: Props) => {
           <Stack direction="row" justifyContent="flex-end" mt={2} spacing={1}>
             <Button onClick={onClose}>Cancel</Button>
             <Button
-              disabled={!form.formState.isDirty}
+              disabled={!isDirty}
               onClick={() => {
                 form.reset();
                 reset();
@@ -166,8 +168,8 @@ export const EditInterfaceForm = (props: Props) => {
             </Button>
             <Button
               buttonType="primary"
-              disabled={!form.formState.isDirty}
-              loading={form.formState.isSubmitting}
+              disabled={!isDirty}
+              loading={isSubmitting}
               type="submit"
             >
               Save
