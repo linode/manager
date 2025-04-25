@@ -199,21 +199,19 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
 
   const maxUnit = generateMaxUnit(legendRowsData, unit);
   const dimensions = Object.entries(dimension)
-    .map(
-      ([timestamp, resource]): DataSet => {
-        const rolledUpData = Object.entries(resource).reduce(
-          (oldValue, newValue) => {
-            return {
-              ...oldValue,
-              [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
-            };
-          },
-          {}
-        );
+    .map(([timestamp, resource]): DataSet => {
+      const rolledUpData = Object.entries(resource).reduce(
+        (oldValue, newValue) => {
+          return {
+            ...oldValue,
+            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+          };
+        },
+        {}
+      );
 
-        return { timestamp: Number(timestamp), ...rolledUpData };
-      }
-    )
+      return { timestamp: Number(timestamp), ...rolledUpData };
+    })
     .sort(
       (dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp
     );
