@@ -1,11 +1,19 @@
-import { act, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { alertFactory } from 'src/factories/cloudpulse/alerts';
+import {
+  alertFactory,
+  alertRulesFactory,
+} from 'src/factories/cloudpulse/alerts';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertListing } from './AlertListing';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 const queryMocks = vi.hoisted(() => ({
   useAllAlertDefinitionsQuery: vi.fn().mockReturnValue({}),
@@ -48,12 +56,18 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByText } = renderWithTheme(<AlertListing />);
-    expect(getByText('Alert Name')).toBeVisible();
-    expect(getByText('Service')).toBeVisible();
-    expect(getByText('Status')).toBeVisible();
-    expect(getByText('Last Modified')).toBeVisible();
-    expect(getByText('Created By')).toBeVisible();
+    renderWithTheme(<AlertListing />);
+    expect(screen.getByText('Alert Name')).toBeVisible();
+    expect(screen.getByText('Service')).toBeVisible();
+    expect(screen.getByText('Status')).toBeVisible();
+    expect(screen.getByText('Last Modified')).toBeVisible();
+    expect(screen.getByText('Created By')).toBeVisible();
+    expect(screen.getByLabelText('Toggle group by tag')).toBeVisible();
+    const firstActionMenu = screen.getAllByLabelText(
+      `Action menu for Alert ${mockResponse[0].label}`
+    )[0];
+    await userEvent.click(firstActionMenu);
+    expect(screen.getByTestId('Show Details')).toBeVisible();
   });
 
   it('should render the alert row', async () => {
@@ -165,6 +179,57 @@ describe('Alert Listing', () => {
     await waitFor(() => {
       expect(getByText(alert1.label)).toBeVisible();
       expect(queryByText(alert2.label)).not.toBeInTheDocument();
+    });
+  });
+
+  it('should show the banner and disable the create button when the user has reached the maximum allowed user alerts', async () => {
+    const userAlerts = alertFactory.buildList(100, { type: 'user' });
+    const systemAlerts = alertFactory.buildList(10, { type: 'system' });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
+      data: [...userAlerts, ...systemAlerts],
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    expect(screen.getByText(alertLimitMessage)).toBeVisible();
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
+
+    expect(createButton).toBeDisabled();
+    await userEvent.hover(createButton);
+    await waitFor(() => {
+      expect(screen.getByText(alertToolTipText)).toBeVisible();
+    });
+  });
+
+  it('should show the banner and disable the create button when the user has reached the maximum allowed user metrics', async () => {
+    const userAlerts = alertFactory.buildList(25, {
+      rule_criteria: {
+        rules: alertRulesFactory.buildList(4, { dimension_filters: [] }),
+      },
+      type: 'user',
+    });
+    const systemAlerts = alertFactory.buildList(10, { type: 'system' });
+
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValueOnce({
+      data: [...userAlerts, ...systemAlerts],
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    expect(screen.getByText(metricLimitMessage)).toBeVisible();
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
+
+    expect(createButton).toBeDisabled();
+    await userEvent.hover(createButton);
+    await waitFor(() => {
+      expect(screen.getByText(alertToolTipText)).toBeVisible();
     });
   });
 });

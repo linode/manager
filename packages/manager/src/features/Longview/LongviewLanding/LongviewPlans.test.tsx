@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   screen,
   waitFor,
@@ -9,12 +9,11 @@ import * as React from 'react';
 
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { accountSettingsFactory } from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LONGVIEW_FREE_ID, LongviewPlans, formatPrice } from './LongviewPlans';
+import { formatPrice, LONGVIEW_FREE_ID, LongviewPlans } from './LongviewPlans';
 
 import type { LongviewPlansProps } from './LongviewPlans';
 

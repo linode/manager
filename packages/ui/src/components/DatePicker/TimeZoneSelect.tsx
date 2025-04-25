@@ -4,7 +4,7 @@ import React from 'react';
 
 import { timezones } from '../../utilities/timezones';
 
-type Timezone = typeof timezones[number];
+type Timezone = (typeof timezones)[number];
 
 interface TimeZoneSelectProps {
   disabled?: boolean;
@@ -54,6 +54,7 @@ export const TimeZoneSelect = ({
       autoHighlight
       disabled={disabled}
       errorText={errorText}
+      keepSearchEnabledOnMobile
       label={label}
       noMarginTop={noMarginTop}
       onChange={(e, option) => onChange(option?.value || '')}

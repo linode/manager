@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
-  useLinodeQuery,
   useGrants,
+  useLinodeQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
@@ -144,9 +144,8 @@ export const CreateImageTab = () => {
   /**
    * The 'Object Storage' capability indicates a region can store images
    */
-  const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
-    'Object Storage'
-  );
+  const linodeRegionSupportsImageStorage =
+    selectedLinodeRegion?.capabilities.includes('Object Storage');
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -164,7 +163,6 @@ export const CreateImageTab = () => {
               isSingular: false,
               resourceType: 'Images',
             })}
-            important
             variant="error"
           />
         )}

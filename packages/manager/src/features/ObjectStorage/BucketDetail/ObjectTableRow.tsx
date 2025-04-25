@@ -37,10 +37,10 @@ export const ObjectTableRow = (props: Props) => {
         <Grid
           container
           spacing={2}
-          wrap="nowrap"
           sx={{
             alignItems: 'center',
           }}
+          wrap="nowrap"
         >
           <Grid className="py0">
             <ObjectIcon size={20} />
@@ -56,10 +56,7 @@ export const ObjectTableRow = (props: Props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell noWrap>
-        {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-        {readableBytes(objectSize, { base10: true }).formatted}
-      </TableCell>
+      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
       <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />

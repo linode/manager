@@ -295,9 +295,11 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
+   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces.
+   * `ipv4` and `ipv6` fields are only accepted for VPC interfaces and the omit type avoids
+   * `CreateLinodeSchema` type errors (see https://github.com/linode/manager/pull/11942#discussion_r2043029481)
    */
-  interfaces: InterfacePayload[];
+  interfaces: InterfacePayload[] | Omit<InterfacePayload, 'ipv4' | 'ipv6'>[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
@@ -370,7 +372,8 @@ export const defaultValues = async (
     }
   }
 
-  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
+  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
+    undefined;
 
   if (isLinodeInterfacesEnabled) {
     try {

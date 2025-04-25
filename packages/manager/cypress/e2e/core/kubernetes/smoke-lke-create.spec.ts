@@ -1,9 +1,5 @@
-import { profileFactory } from '@linode/utilities';
-import {
-  accountUserFactory,
-  grantsFactory,
-  kubernetesClusterFactory,
-} from '@src/factories';
+import { grantsFactory, profileFactory } from '@linode/utilities';
+import { accountUserFactory, kubernetesClusterFactory } from '@src/factories';
 import { mockGetUser } from 'support/intercepts/account';
 import { mockCreateCluster } from 'support/intercepts/lke';
 import {
@@ -76,8 +72,8 @@ describe('LKE Create Cluster', () => {
 
     ui.regionSelect.find().click().type(`${chooseRegion().label}{enter}`);
 
-    cy.findByText('Kubernetes Version').should('be.visible').click();
-    cy.focused().type('{enter}');
+    cy.findByLabelText('Kubernetes Version').should('be.visible').click();
+    cy.findByText('1.32').should('be.visible').click();
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 

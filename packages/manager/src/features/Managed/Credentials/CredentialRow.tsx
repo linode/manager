@@ -1,4 +1,3 @@
-import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,16 +5,16 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import ActionMenu from './CredentialActionMenu';
+import { CredentialActionMenu } from './CredentialActionMenu';
+
+import type { ManagedCredential } from '@linode/api-v4/lib/managed';
 
 interface CredentialRowProps {
   credential: ManagedCredential;
-  openDialog: (id: number, label: string) => void;
-  openForEdit: (id: number) => void;
 }
 
 export const CredentialRow = (props: CredentialRowProps) => {
-  const { credential, openDialog, openForEdit } = props;
+  const { credential } = props;
 
   return (
     <StyledTableRow
@@ -33,11 +32,9 @@ export const CredentialRow = (props: CredentialRowProps) => {
         )}
       </TableCell>
       <StyledTableCell>
-        <ActionMenu
-          credentialID={credential.id}
+        <CredentialActionMenu
+          credentialId={credential.id}
           label={credential.label}
-          openDialog={openDialog}
-          openForEdit={openForEdit}
         />
       </StyledTableCell>
     </StyledTableRow>

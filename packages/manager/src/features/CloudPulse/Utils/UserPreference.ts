@@ -1,16 +1,22 @@
-import { useRef } from 'react';
-
 import { useMutatePreferences, usePreferences } from '@linode/queries';
+import { useRef } from 'react';
 
 import { DASHBOARD_ID, WIDGETS } from './constants';
 
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';
+import type { ManagerPreferences } from '@linode/utilities';
 
 interface AclpPreferenceObject {
   isLoading: boolean;
   preferences: AclpConfig;
   updateGlobalFilterPreference: (data: AclpConfig) => void;
   updateWidgetPreference: (label: string, data: Partial<AclpWidget>) => void;
+}
+
+interface PreferenceToggleObject<K extends keyof ManagerPreferences> {
+  defaultValue: ManagerPreferences[K];
+  options: [ManagerPreferences[K], ManagerPreferences[K]];
+  preferenceKey: K;
 }
 
 export const useAclpPreference = (): AclpPreferenceObject => {
@@ -73,5 +79,51 @@ export const useAclpPreference = (): AclpPreferenceObject => {
     preferences: preferences?.aclpPreference ?? {},
     updateGlobalFilterPreference,
     updateWidgetPreference,
+  };
+};
+
+/**
+ *
+ * @param key key of the preference to be toggled
+ * @param options options for the preference
+ * @param defaultValue default value of the preference
+ */
+export const usePreferencesToggle = <K extends keyof ManagerPreferences>({
+  preferenceKey,
+  options,
+  defaultValue,
+}: PreferenceToggleObject<K>) => {
+  const { data: preference } = usePreferences(
+    (preferences: ManagerPreferences) => preferences?.[preferenceKey]
+  );
+
+  const { mutateAsync: updateFunction } = useMutatePreferences();
+
+  /**
+   *
+   * @returns the toggled preference value
+   */
+  const toggle = () => {
+    let newPreferenceToSet: ManagerPreferences[K];
+
+    // if the preference is undefined, set it to false
+    if (preference === undefined) {
+      newPreferenceToSet = options[defaultValue === options[0] ? 1 : 0];
+    } else if (preference === options[0]) {
+      newPreferenceToSet = options[1];
+    } else {
+      newPreferenceToSet = options[0];
+    }
+
+    updateFunction({
+      [preferenceKey]: newPreferenceToSet,
+    }).catch(() => null);
+
+    return newPreferenceToSet;
+  };
+
+  return {
+    preference,
+    toggle,
   };
 };
