@@ -74,10 +74,11 @@ describe('Account network settings', () => {
       mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
       cy.visitWithLogin('/account/settings');
 
-      ui.accordion
-        .findByTitle('Network Interface Type')
+      cy.findByTestId('network-interface-type')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Network Interface Type').should('be.visible');
+
           // Confirm that selected interface type matches API response, and that
           // "Save" button is disabled by default.
           cy.findByLabelText('Interfaces for new Linodes').should(
@@ -156,10 +157,10 @@ describe('Account network settings', () => {
       mockGetAccountSettings(mockInitialAccountSettings);
       cy.visitWithLogin('/account/settings');
 
-      ui.accordion
-        .findByTitle('Network Interface Type')
+      cy.findByTestId('network-interface-type')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Network Interface Type').should('be.visible');
           cy.findByLabelText('Interfaces for new Linodes')
             .should('be.visible')
             .click();
@@ -226,10 +227,10 @@ describe('Account network settings', () => {
 
       cy.visitWithLogin('/account/settings');
 
-      ui.accordion
-        .findByTitle('Default Firewalls')
+      cy.findByTestId('default-firewalls')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Default Firewalls').should('be.visible');
           // Confirm that "Save" button is disabled until changes are made.
           ui.button
             .findByTitle('Save')
@@ -346,8 +347,7 @@ describe('Account network settings', () => {
 
       cy.visitWithLogin('/account/settings');
 
-      ui.accordion
-        .findByTitle('Default Firewalls')
+      cy.findByTestId('default-firewalls')
         .should('be.visible')
         .within(() => {
           // Confirm that "Save" button is disabled before making changes.
@@ -421,10 +421,11 @@ describe('Account network settings', () => {
 
       cy.visitWithLogin('/account/settings');
 
-      ui.accordion
-        .findByTitle('Default Firewalls')
+      cy.findByTestId('default-firewalls')
         .should('be.visible')
         .within(() => {
+          cy.findByText('Default Firewalls').should('be.visible');
+
           cy.findByLabelText(
             'Configuration Profile Interfaces Firewall'
           ).click();
@@ -490,12 +491,10 @@ describe('Account network settings', () => {
     cy.visitWithLogin('/account/settings');
 
     // Wait for content to load before asserting existence of networking settings.
-    ui.accordionHeading.findByTitle('Close Account').should('be.visible');
+    cy.findByTestId('close-account').should('be.visible');
 
     // Assert that "Network Interface Type" and "Default Firewalls" sections are absent.
-    ui.accordionHeading
-      .findByTitle('Network Interface Type')
-      .should('not.exist');
-    ui.accordionHeading.findByTitle('Default Firewalls').should('not.exist');
+    cy.findByTestId('network-interface-type').should('not.exist');
+    cy.findByTestId('default-firewalls').should('not.exist');
   });
 });

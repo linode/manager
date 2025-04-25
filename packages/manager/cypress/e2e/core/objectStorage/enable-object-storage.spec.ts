@@ -350,8 +350,7 @@ describe('Object Storage enrollment', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getProfile', '@getAccountSettings']);
 
-    ui.accordion
-      .findByTitle('Object Storage')
+    cy.findByTestId('object-storage')
       .should('be.visible')
       .within(() => {
         // Confirm that the user is informed that cancelling OBJ will delete their buckets and keys.
