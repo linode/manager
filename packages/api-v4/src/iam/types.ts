@@ -15,16 +15,21 @@ export type AccountAccessRole =
   | 'account_admin'
   | 'account_linode_admin'
   | 'account_viewer'
+  | 'account_volume_admin'
   | 'firewall_creator'
   | 'linode_contributor'
-  | 'linode_creator';
+  | 'linode_creator'
+  | 'stackscript_creator';
 
 export type EntityAccessRole =
+  | 'database_admin'
   | 'firewall_admin'
   | 'firewall_creator'
   | 'linode_contributor'
   | 'linode_creator'
   | 'linode_viewer'
+  | 'stackscript_admin'
+  | 'stackscript_viewer'
   | 'update_firewall';
 
 export interface IamUserPermissions {

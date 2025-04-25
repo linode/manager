@@ -7,8 +7,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
-
-import type { EntitiesOption } from '../utilities';
+import { EntitiesOption } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -73,7 +72,7 @@ describe('Entities', () => {
     const autocomplete = screen.queryAllByRole('combobox');
 
     expect(screen.getByText('Entities')).toBeVisible();
-    expect(screen.getByText('All firewalls')).toBeVisible();
+    expect(screen.getByText('All Firewalls')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
@@ -101,7 +100,7 @@ describe('Entities', () => {
     const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeVisible();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
+    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
   });
 
   it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {

@@ -39,6 +39,7 @@ export const determineIPType = (ip: string) => {
  * @param { shouldHaveIPMask } - a boolean indicating whether the value should have a mask (e.g., /32) or not
  * @param { mustBeIPMask } - a boolean indicating whether the value MUST be an IP mask/prefix length or not
  * @param { isIPv6Subnet } - a boolean indicating whether the IPv6 value is for a subnet
+ * @param { checkIPv6PrefixLengthIs64 } – a boolean indicating whether the IPv6 value prefix length is 64 (for nested `range` fields in config/Linode interface objects)
  */
 
 export const vpcsValidateIP = ({
@@ -46,11 +47,13 @@ export const vpcsValidateIP = ({
   shouldHaveIPMask,
   mustBeIPMask,
   isIPv6Subnet,
+  checkIPv6PrefixLengthIs64,
 }: {
-  value: string | undefined | null;
-  shouldHaveIPMask: boolean;
-  mustBeIPMask: boolean;
+  checkIPv6PrefixLengthIs64?: boolean;
   isIPv6Subnet?: boolean;
+  mustBeIPMask: boolean;
+  shouldHaveIPMask: boolean;
+  value: null | string | undefined;
 }): boolean => {
   if (!value) {
     return false;
@@ -98,8 +101,14 @@ export const vpcsValidateIP = ({
 
     if (isIPv6) {
       // @TODO NB-VPC: update the IPv6 prefix if required for NB-VPC integration
+      // Range values specified for legacy config interfaces (ipv6.slaac[].range, ipv6.ranges[].range) and Linode interfaces
+      // (vpc.ipv6.slaac[].range, vpc.ipv6.ranges[].range) must be a /64 IPv6 network CIDR
+      if (checkIPv6PrefixLengthIs64) {
+        return mask === '64';
+      }
+
       // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
-      const invalidVPCIPv6Prefix = !['52', '48', '44'].includes(mask);
+      const invalidVPCIPv6Prefix = !['44', '48', '52'].includes(mask);
       if (!isIPv6Subnet && invalidVPCIPv6Prefix) {
         return false;
       }
@@ -128,7 +137,7 @@ const labelValidation = string()
   .test(
     labelTestDetails.testName,
     labelTestDetails.testMessage,
-    (value) => !value?.includes('--')
+    (value) => !value?.includes('--'),
   )
   .min(1, LABEL_MESSAGE)
   .max(64, LABEL_MESSAGE)
@@ -196,9 +205,6 @@ export const createSubnetSchemaIPv4 = object({
     otherwise: (schema) =>
       lazy((value: string | undefined) => {
         switch (typeof value) {
-          case 'undefined':
-            return schema.notRequired().nullable();
-
           case 'string':
             return schema.notRequired().test({
               name: 'IPv4 CIDR format',
@@ -210,6 +216,9 @@ export const createSubnetSchemaIPv4 = object({
                   mustBeIPMask: false,
                 }),
             });
+
+          case 'undefined':
+            return schema.notRequired().nullable();
 
           default:
             return schema.notRequired().nullable();
@@ -238,9 +247,6 @@ export const createSubnetSchemaWithIPv6 = object().shape(
       otherwise: (schema) =>
         lazy((value: string | undefined) => {
           switch (typeof value) {
-            case 'undefined':
-              return schema.notRequired().nullable();
-
             case 'string':
               return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
@@ -252,6 +258,9 @@ export const createSubnetSchemaWithIPv6 = object().shape(
                     mustBeIPMask: false,
                   }),
               });
+
+            case 'undefined':
+              return schema.notRequired().nullable();
 
             default:
               return schema.notRequired().nullable();
@@ -269,13 +278,13 @@ export const createSubnetSchemaWithIPv6 = object().shape(
   [
     ['ipv6', 'ipv4'],
     ['ipv4', 'ipv6'],
-  ]
+  ],
 );
 
 const createVPCIPv6Schema = VPCIPv6Schema.concat(
   object({
     allocation_class: string().optional(),
-  })
+  }),
 );
 
 export const createVPCSchema = object({

@@ -33,9 +33,9 @@ import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
+  // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
-  // abuseTicketNotificationFactory,
   accountTransferFactory,
   alertDimensionsFactory,
   alertFactory,
@@ -120,6 +120,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { MTC_TT } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -475,9 +476,26 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
-const premiumTypes = linodeTypeFactory.buildList(7, {
-  class: 'premium',
-});
+const premiumTypes = [
+  ...linodeTypeFactory.buildList(6, {
+    class: 'premium',
+  }),
+  linodeTypeFactory.build({
+    class: 'premium',
+    disk: 10240000,
+    id: 'g8-premium-128-ht',
+    label: 'Premium HT 512 GB',
+    memory: 524288,
+    network_out: 40000,
+    price: {
+      hourly: 7.0,
+      monthly: 5040.0,
+    },
+    transfer: 24000,
+    vcpus: 128,
+  }),
+];
+
 const acceleratedType = linodeTypeFactory.buildList(7, {
   accelerated_devices: 1,
   class: 'accelerated',
@@ -701,7 +719,22 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
+    const mtcTTLinodes = [
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-1',
+        region: 'us-iad',
+        type: 'g8-premium-128-ht',
+        id: 1234,
+      }),
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-2',
+        region: 'no-east',
+        type: 'g8-premium-128-ht',
+        id: 1235,
+      }),
+    ];
     const linodes = [
+      ...mtcTTLinodes,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -806,14 +839,23 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    return HttpResponse.json(
-      linodeFactory.build({
-        backups: { enabled: false },
-        id,
-        label: 'Gecko Distributed Region Test',
-        region: 'us-den-10',
-      })
-    );
+    const linodeMTCTTPlanDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'mtc-tt-custom-plan-linode',
+      region: 'us-iad',
+      type: 'g8-premium-128-ht',
+    });
+    const linodeDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
+    });
+    const response = [1234, 1235].includes(id)
+      ? linodeMTCTTPlanDetail
+      : linodeDetail;
+    return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
@@ -1888,7 +1930,7 @@ export const handlers = [
     return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
-    const monitors = monitorFactory.buildList(5);
+    const monitors = monitorFactory.buildList(25);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
       status: 'problem',
@@ -2246,16 +2288,36 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*regions/:regionId/availability', () => {
+  http.get('*regions/:regionId/availability', ({ params }) => {
+    const selectedRegion = params.regionId as string;
+
     return HttpResponse.json([
       regionAvailabilityFactory.build({
         plan: 'g6-standard-6',
-        region: 'us-east',
+        region: selectedRegion,
       }),
       regionAvailabilityFactory.build({
         plan: 'g6-standard-7',
-        region: 'us-east',
+        region: selectedRegion,
       }),
+      // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
+      ...(MTC_TT['availability_regions'].includes(
+        selectedRegion as (typeof MTC_TT)['availability_regions'][number]
+      )
+        ? [
+            regionAvailabilityFactory.build({
+              available: true,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]
+        : [
+            regionAvailabilityFactory.build({
+              available: false,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]),
     ]);
   }),
 
@@ -2836,7 +2898,9 @@ export const handlers = [
         result: [
           {
             metric: {
-              test: 'Test1',
+              entity_id: '123',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-1',
             },
             values: [
               [1721854379, '0.2744841110560275'],
@@ -2877,7 +2941,9 @@ export const handlers = [
           // })),
           {
             metric: {
-              test2: 'Test2',
+              entity_id: '456',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-2',
             },
             values: [
               [1721854379, '0.3744841110560275'],
@@ -2897,7 +2963,9 @@ export const handlers = [
           },
           {
             metric: {
-              test3: 'Test3',
+              entity_id: '789',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

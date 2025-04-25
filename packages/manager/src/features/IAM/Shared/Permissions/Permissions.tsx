@@ -3,7 +3,7 @@ import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 import {
   StyledBox,
   StyledClampedContent,
@@ -16,6 +16,7 @@ import {
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
 type Props = {
+  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 

@@ -107,8 +107,14 @@ export const getRegionProperties = (
     savePref?: boolean
   ) => void
 ): CloudPulseRegionSelectProps => {
-  const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const { name: label, placeholder, filterKey } = props.config.configuration;
+  const {
+    dashboard,
+    isServiceAnalyticsIntegration,
+    preferences,
+    dependentFilters,
+    config,
+  } = props;
   return {
     defaultValue: preferences?.[REGION],
     handleRegionChange,
@@ -116,6 +122,12 @@ export const getRegionProperties = (
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
+    disabled: shouldDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
 
@@ -446,19 +458,16 @@ export const getMetricsCallCustomFilters = (
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[]
 ): Filters[] => {
-  const filters: Filters[] = [];
-  for (const filter of additionalFilters) {
-    if (filter) {
-      // push to the filters
-      filters.push({
-        key: filter.filterKey,
-        operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
-        value: Array.isArray(filter.filterValue)
-          ? Array.of(filter.filterValue).join(',')
-          : String(filter.filterValue),
-      });
-    }
-  }
+  const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
+    return {
+      dimension_label: filter.filterKey,
+      operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
+      value: Array.isArray(filter.filterValue)
+        ? Array.of(filter.filterValue).join(',')
+        : String(filter.filterValue),
+    };
+  });
+
   return filters;
 };
 

@@ -1,11 +1,19 @@
-import { profileFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetAccessKeys } from 'support/intercepts/object-storage';
+import {
+  mockGetAccessKeys,
+  mockGetObjectStorageEndpoints,
+} from 'support/intercepts/object-storage';
 import { mockGetProfile } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import { accountFactory, objectStorageKeyFactory } from 'src/factories';
+import {
+  accountFactory,
+  objectStorageEndpointsFactory,
+  objectStorageKeyFactory,
+} from 'src/factories';
 
 describe('Object Storage gen2 access keys tests', () => {
   /**
@@ -13,6 +21,68 @@ describe('Object Storage gen2 access keys tests', () => {
    * - Confirms endpoint types are present in the list of hostnames of the "Regions / S3 Hostnames" drawer
    */
   it('Confirms the changes to the Access Keys page for Object Storage gen2', () => {
+    const mockRegions = [
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'us',
+        id: 'us-east',
+        label: 'Newark, NJ',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'us',
+        id: 'us-southeast',
+        label: 'Atlanta, GA',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'in',
+        id: 'in-maa',
+        label: 'Chennai',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'us',
+        id: 'us-mia',
+        label: 'Miami, FL',
+      }),
+      regionFactory.build({
+        capabilities: ['Object Storage'],
+        country: 'it',
+        id: 'it-mil',
+        label: 'Milan',
+      }),
+    ];
+    const mockEndpoints = [
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E0',
+        region: mockRegions[4].id,
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: mockRegions[3].id,
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegions[2].id,
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: mockRegions[0].id,
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: mockRegions[1].id,
+        s3_endpoint: null,
+      }),
+    ];
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
     mockAppendFeatureFlags({
       objMultiCluster: true,
       objectStorageGen2: { enabled: true },
@@ -26,10 +96,14 @@ describe('Object Storage gen2 access keys tests', () => {
         ],
       })
     ).as('getAccount');
-
+    mockGetRegions(mockRegions).as('getRegions');
     const mockAccessKey1 = objectStorageKeyFactory.build({
       regions: [
-        { endpoint_type: 'E3', id: 'us-east', s3_endpoint: 'us-east.com' },
+        {
+          endpoint_type: 'E3',
+          id: mockRegions[0].id,
+          s3_endpoint: `${mockRegions[0].id}.com`,
+        },
       ],
     });
 
@@ -37,12 +111,24 @@ describe('Object Storage gen2 access keys tests', () => {
       regions: [
         {
           endpoint_type: 'E3',
-          id: 'us-southeast',
-          s3_endpoint: 'us-southeast.com',
+          id: mockRegions[1].id,
+          s3_endpoint: `${mockRegions[1].id}.com`,
         },
-        { endpoint_type: 'E2', id: 'in-maa', s3_endpoint: 'in-maa.com' },
-        { endpoint_type: 'E1', id: 'us-mia', s3_endpoint: 'us-mia.com' },
-        { endpoint_type: 'E0', id: 'it-mil', s3_endpoint: 'it-mil.com' },
+        {
+          endpoint_type: 'E2',
+          id: mockRegions[2].id,
+          s3_endpoint: `${mockRegions[2].id}.com`,
+        },
+        {
+          endpoint_type: 'E1',
+          id: mockRegions[3].id,
+          s3_endpoint: `${mockRegions[3].id}.com`,
+        },
+        {
+          endpoint_type: 'E0',
+          id: mockRegions[4].id,
+          s3_endpoint: `${mockRegions[4].id}.com`,
+        },
       ],
     });
 
@@ -51,7 +137,13 @@ describe('Object Storage gen2 access keys tests', () => {
     );
     cy.visitWithLogin('/object-storage/access-keys');
 
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getObjectStorageAccessKeys']);
+    cy.wait([
+      '@getRegions',
+      '@getObjectStorageEndpoints',
+      '@getFeatureFlags',
+      '@getAccount',
+      '@getObjectStorageAccessKeys',
+    ]);
 
     // confirm table headers exist
     cy.findByText('Label').should('be.visible');
