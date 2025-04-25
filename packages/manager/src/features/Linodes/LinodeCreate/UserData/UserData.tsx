@@ -83,10 +83,6 @@ export const UserData = () => {
             errorText={fieldState.error?.message}
             expand
             label="User Data"
-            labelTooltipIconPosition="right"
-            labelTooltipIconSize="small"
-            // labelTooltipIconPosition="left"
-            // labelTooltipIconSize="large"
             labelTooltipText="Compatible formats include cloud-config data and executable scripts."
             multiline
             onBlur={(e) => {

@@ -103,7 +103,15 @@ interface BaseProps {
 type Value = null | number | string | undefined;
 
 interface LabelToolTipProps {
+  /**
+   * Position of the tooltip icon
+   * @default right
+   */
   labelTooltipIconPosition?: 'left' | 'right';
+  /**
+   * Size of the tooltip icon
+   * @default small
+   */
   labelTooltipIconSize?: 'large' | 'small';
   labelTooltipText?: JSX.Element | string;
 }
@@ -148,8 +156,8 @@ export const TextField = (props: TextFieldProps) => {
     inputId,
     inputProps,
     label,
-    labelTooltipIconPosition,
-    labelTooltipIconSize,
+    labelTooltipIconPosition = 'right',
+    labelTooltipIconSize = 'small',
     labelTooltipText,
     loading,
     max,
@@ -173,6 +181,16 @@ export const TextField = (props: TextFieldProps) => {
 
   const [_value, setValue] = React.useState<Value>(value ?? '');
   const theme = useTheme();
+
+  const sxTooltipIconLeft = {
+    marginRight: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(2)}`,
+  };
+
+  const sxTooltipIconRight = {
+    marginLeft: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)}`,
+  };
 
   const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
     useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
@@ -282,10 +300,7 @@ export const TextField = (props: TextFieldProps) => {
           <TooltipIcon
             labelTooltipIconSize={labelTooltipIconSize}
             status="help"
-            sxTooltipIcon={{
-              marginRight: `${theme.spacingFunction(4)}`,
-              padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(2)}`,
-            }}
+            sxTooltipIcon={sxTooltipIconLeft}
             text={labelTooltipText}
             width={tooltipWidth}
           />
@@ -293,6 +308,7 @@ export const TextField = (props: TextFieldProps) => {
         <InputLabel
           data-qa-textfield-label={label}
           htmlFor={validInputId}
+          {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
           sx={{
             marginBottom: 0,
             transform: 'none',
@@ -301,7 +317,6 @@ export const TextField = (props: TextFieldProps) => {
                 ? theme.tokens.font.FontSize.S
                 : theme.tokens.font.FontSize.Xs,
           }}
-          {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
         >
           {label}
           {labelSuffixText && (
@@ -315,10 +330,7 @@ export const TextField = (props: TextFieldProps) => {
           <TooltipIcon
             labelTooltipIconSize={labelTooltipIconSize}
             status="help"
-            sxTooltipIcon={{
-              marginLeft: `${theme.spacingFunction(4)}`,
-              padding: `${theme.spacingFunction(4)}`,
-            }}
+            sxTooltipIcon={sxTooltipIconRight}
             text={labelTooltipText}
             width={tooltipWidth}
           />

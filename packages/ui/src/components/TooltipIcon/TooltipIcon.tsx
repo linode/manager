@@ -42,6 +42,7 @@ export interface TooltipIconProps
   icon?: JSX.Element;
   /**
    * Size of the tooltip icon
+   * * @default small
    */
   labelTooltipIconSize?: 'large' | 'small';
   /**

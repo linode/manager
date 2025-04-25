@@ -884,7 +884,7 @@ export const lightTheme: ThemeOptions = {
           '&.Mui-focused': {
             color: Color.Neutrals[70],
           },
-          color: Color.Neutrals[70],
+          color: Color.Neutrals[100],
           font: Typography.Body.Bold,
           marginBottom: 8,
         },

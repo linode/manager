@@ -38,7 +38,7 @@ export const FirewallAuthorization = () => {
             'I am authorized to create a Linode without a firewall'
           }
           onChange={field.onChange}
-          sx={(theme) => ({ fontSize: theme.tokens.font.FontSize.Xs })}
+          sx={{ fontSize: 14 }}
         />
       }
       text={
