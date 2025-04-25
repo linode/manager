@@ -210,7 +210,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices([serviceType]).as('fetchServices');
-    mockGetCloudPulseDashboard(id, dashboard).as('fetchDashboardById');
+    mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
@@ -223,8 +223,8 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices', '@fetchDashboard']);
-    cy.wait('@fetchDashboardById').then((interception: Interception) => {
+    cy.wait(['@fetchServices']);
+    cy.wait('@fetchDashboard').then((interception: Interception) => {
       const dashboards = interception.response?.body?.data as Dashboard[];
       const dashboard = dashboards[0];
       expect(dashboard.widgets).to.have.length(4);
