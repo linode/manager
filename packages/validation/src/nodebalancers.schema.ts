@@ -47,7 +47,7 @@ export const nodeBalancerConfigNodeSchema = object({
     .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING),
 
   subnet_id: number().when('vpcs', {
-    is: (vpcs: typeof createNodeBalancerVPCsSchema) => vpcs !== undefined,
+    is: (vpcs: (typeof createNodeBalancerVPCsSchema)[]) => vpcs !== undefined,
     then: (schema) =>
       schema
         .required('Subnet ID is required')
