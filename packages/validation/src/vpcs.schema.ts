@@ -11,7 +11,7 @@ const labelTestDetails = {
   testMessage: 'Label must not contain two dashes in a row.',
 };
 
-const IP_EITHER_BOTH_NOT_NEITHER =
+export const IP_EITHER_BOTH_NOT_NEITHER =
   'A subnet must have either IPv4 or IPv6, or both, but not neither.';
 // @TODO VPC IPv6 - remove below constant when IPv6 is in GA
 const TEMPORARY_IPV4_REQUIRED_MESSAGE = 'A subnet must have an IPv4 range.';
@@ -49,11 +49,11 @@ export const vpcsValidateIP = ({
   isIPv6Subnet,
   checkIPv6PrefixLengthIs64,
 }: {
-  value: string | undefined | null;
-  shouldHaveIPMask: boolean;
-  mustBeIPMask: boolean;
-  isIPv6Subnet?: boolean;
   checkIPv6PrefixLengthIs64?: boolean;
+  isIPv6Subnet?: boolean;
+  mustBeIPMask: boolean;
+  shouldHaveIPMask: boolean;
+  value: null | string | undefined;
 }): boolean => {
   if (!value) {
     return false;
@@ -100,6 +100,7 @@ export const vpcsValidateIP = ({
     }
 
     if (isIPv6) {
+      // @TODO NB-VPC: update the IPv6 prefix if required for NB-VPC integration
       // Range values specified for legacy config interfaces (ipv6.slaac[].range, ipv6.ranges[].range) and Linode interfaces
       // (vpc.ipv6.slaac[].range, vpc.ipv6.ranges[].range) must be a /64 IPv6 network CIDR
       if (checkIPv6PrefixLengthIs64) {
@@ -107,7 +108,7 @@ export const vpcsValidateIP = ({
       }
 
       // VPCs must be assigned an IPv6 prefix of /52, /48, or /44
-      const invalidVPCIPv6Prefix = !['52', '48', '44'].includes(mask);
+      const invalidVPCIPv6Prefix = !['44', '48', '52'].includes(mask);
       if (!isIPv6Subnet && invalidVPCIPv6Prefix) {
         return false;
       }
@@ -204,9 +205,6 @@ export const createSubnetSchemaIPv4 = object({
     otherwise: (schema) =>
       lazy((value: string | undefined) => {
         switch (typeof value) {
-          case 'undefined':
-            return schema.notRequired().nullable();
-
           case 'string':
             return schema.notRequired().test({
               name: 'IPv4 CIDR format',
@@ -218,6 +216,9 @@ export const createSubnetSchemaIPv4 = object({
                   mustBeIPMask: false,
                 }),
             });
+
+          case 'undefined':
+            return schema.notRequired().nullable();
 
           default:
             return schema.notRequired().nullable();
@@ -246,9 +247,6 @@ export const createSubnetSchemaWithIPv6 = object().shape(
       otherwise: (schema) =>
         lazy((value: string | undefined) => {
           switch (typeof value) {
-            case 'undefined':
-              return schema.notRequired().nullable();
-
             case 'string':
               return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
@@ -260,6 +258,9 @@ export const createSubnetSchemaWithIPv6 = object().shape(
                     mustBeIPMask: false,
                   }),
               });
+
+            case 'undefined':
+              return schema.notRequired().nullable();
 
             default:
               return schema.notRequired().nullable();

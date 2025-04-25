@@ -1,10 +1,18 @@
-import { Autocomplete, Box, Button, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { SupportLink } from 'src/components/SupportLink';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -170,8 +178,11 @@ export const AlertListing = () => {
     );
   }
 
+  const failedAlertsCount =
+    alerts?.filter((alert: Alert) => alert.status === 'failed').length ?? 0;
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
@@ -259,6 +270,7 @@ export const AlertListing = () => {
           onClick={() => {
             history.push(`${url}/create`);
           }}
+          ref={topRef}
           sx={{
             height: '34px',
             paddingBottom: 0,
@@ -272,6 +284,21 @@ export const AlertListing = () => {
           Create Alert
         </Button>
       </Box>
+      {failedAlertsCount > 0 && (
+        <Notice variant="error">
+          <Typography
+            sx={(theme) => ({
+              font: theme.font.bold,
+              fontSize: theme.spacingFunction(16),
+            })}
+          >
+            Creation of {failedAlertsCount} alerts has failed as indicated in
+            the status column. Please{' '}
+            <SupportLink text="open a support ticket" /> for assistance.
+          </Typography>
+        </Notice>
+      )}
+
       <AlertsListTable
         alerts={getAlertsList}
         error={error ?? undefined}
