@@ -852,13 +852,22 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const mockLinodeDetailById = (id: number) => {
-      const linodeMTCTTPlanDetail = linodeFactory.build({
-        id,
-        backups: { enabled: false },
-        label: 'mtc-tt-custom-plan-linode',
-        region: 'us-iad',
-        type: 'g8-premium-128-ht',
-      });
+      const linodeMTCTTPlanDetails = [
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'mtc-tt-custom-plan-linode-1',
+          region: 'us-iad',
+          type: 'g8-premium-128-ht',
+        }),
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'mtc-tt-custom-plan-linode-2',
+          region: 'no-east',
+          type: 'g8-premium-128-ht',
+        }),
+      ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
         id,
         backups: { enabled: false },
@@ -882,8 +891,9 @@ export const handlers = [
         case 1000:
           return linodeInDistributedRegionDetail;
         case 1001:
+          return linodeMTCTTPlanDetails[0];
         case 1002:
-          return linodeMTCTTPlanDetail;
+          return linodeMTCTTPlanDetails[1];
         case 1003:
           return linodeNonMTCPlanInMTCSupportedRegionsDetail;
         default:
