@@ -1,5 +1,3 @@
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import { useTheme } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
