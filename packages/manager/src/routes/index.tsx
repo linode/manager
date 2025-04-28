@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { NotFound } from '@linode/ui';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';

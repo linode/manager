@@ -12,7 +12,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';

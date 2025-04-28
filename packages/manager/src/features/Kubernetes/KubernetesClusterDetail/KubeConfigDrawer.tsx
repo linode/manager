@@ -4,7 +4,6 @@ import React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
-import { NotFound } from 'src/components/NotFound';
 import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
 
 interface Props {

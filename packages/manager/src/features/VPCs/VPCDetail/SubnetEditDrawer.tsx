@@ -9,8 +9,6 @@ import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {

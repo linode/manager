@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { SSHKey } from '@linode/api-v4';
@@ -56,7 +55,6 @@ export const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Edit SSH Key ${sshKey?.label}`}

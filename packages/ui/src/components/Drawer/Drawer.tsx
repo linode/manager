@@ -9,6 +9,7 @@ import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
+import { NotFound } from '../NotFound/NotFound';
 import { Typography } from '../Typography';
 
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
@@ -19,7 +20,7 @@ interface APIError {
   reason: string;
 }
 
-interface BaseProps extends _DrawerProps {
+interface DrawerProps extends _DrawerProps {
   error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
@@ -38,14 +39,6 @@ interface BaseProps extends _DrawerProps {
   wide?: boolean;
 }
 
-interface PropsWithNotFound extends BaseProps {
-  NotFoundComponent?: React.ComponentType<
-    React.PropsWithChildren<{ className?: string }>
-  >;
-}
-
-export type DrawerProps = PropsWithNotFound;
-
 /**
  * ## Overview
  * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
@@ -60,7 +53,6 @@ export type DrawerProps = PropsWithNotFound;
 export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
     const {
-      NotFoundComponent,
       children,
       error,
       isFetching,
@@ -182,8 +174,8 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Grid>
         </Grid>
         {error ? (
-          error === 'Not Found' && NotFoundComponent ? (
-            <NotFoundComponent />
+          error === 'Not Found' ? (
+            <NotFound />
           ) : (
             <ErrorState
               errorText={Array.isArray(error) ? error[0].reason : error}

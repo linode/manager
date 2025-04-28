@@ -22,7 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
+import { NotFound } from '@linode/ui';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';

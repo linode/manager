@@ -1,7 +1,7 @@
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
+import { NotFound } from '@linode/ui';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';

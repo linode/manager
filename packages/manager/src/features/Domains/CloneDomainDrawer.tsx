@@ -12,7 +12,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useCloneDomainMutation } from 'src/queries/domains';
 
 import type { Domain } from '@linode/api-v4';

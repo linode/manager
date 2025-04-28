@@ -13,7 +13,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,

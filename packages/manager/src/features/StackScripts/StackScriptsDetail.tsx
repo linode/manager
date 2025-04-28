@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
+import { NotFound } from '@linode/ui';
 import { StackScript } from 'src/components/StackScript/StackScript';
 
 import { getRestrictedResourceText } from '../Account/utils';
