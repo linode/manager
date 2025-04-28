@@ -11,6 +11,7 @@ const sxTooltipIcon = {
 export const PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not assigned to the network interfaces in this configuration profile.';
 
+// todo figure this out
 export const PublicIPAddressesTooltip = (
   <TooltipIcon
     text={
