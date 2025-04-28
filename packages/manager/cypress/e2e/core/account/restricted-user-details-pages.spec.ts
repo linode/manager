@@ -1,4 +1,10 @@
 import {
+  grantsFactory,
+  linodeConfigInterfaceFactory,
+  linodeFactory,
+  profileFactory,
+} from '@linode/utilities';
+import {
   databaseConfigurations,
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
@@ -45,7 +51,6 @@ import {
 import { chooseRegion } from 'support/util/regions';
 
 import {
-  VLANFactory,
   accountUserFactory,
   databaseFactory,
   imageFactory,
@@ -55,17 +60,12 @@ import {
   longviewClientFactory,
   longviewResponseFactory,
   nodePoolFactory,
+  VLANFactory,
   volumeFactory,
 } from 'src/factories';
 import { ADMINISTRATOR } from 'src/features/Account/constants';
 
 import type { LongviewClient } from '@linode/api-v4';
-import {
-  grantsFactory,
-  linodeConfigInterfaceFactory,
-  linodeFactory,
-  profileFactory,
-} from '@linode/utilities';
 import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 describe('restricted user details pages', () => {
