@@ -124,7 +124,11 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           .click();
         mockAddFirewallDevice(mockFirewall.id, mockLinodeDevice);
 
-        ui.button.findByTitle('Add').should('be.visible').click();
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     // confirm toast appears after adding Linode to firewall
@@ -165,18 +169,22 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           .click();
 
         // confirm Interface select doesn't appear for mockNewInterfaceLinode
-        cy.findByText(`${mockNewInterfaceLinode.label} Interfaces`).should(
+        cy.findByText(`${mockNewInterfaceLinode.label} Interface`).should(
           'not.exist'
         );
 
         mockAddFirewallDevice(mockFirewall.id, mockInterfaceDevice);
 
-        ui.button.findByTitle('Add').should('be.visible').click();
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     // Confirm toast for assigning an interface device appears
     ui.toast.assertMessage(
-      `Interface (ID ${mockInterfaceDevice.entity.id}) from Linode ${mockNewInterfaceLinode.label} successfully added.`
+      `Interface (ID ${mockLinodeInterface.id}) from Linode ${mockNewInterfaceLinode.label} successfully added.`
     );
 
     // confirm Interface device shows up in the table row
@@ -193,7 +201,121 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
    * - Confirms if selected Linode has multiple interfaces but only one eligible interface to assign, an additional interface select does not appear
    * - Confirms toasts appear if firewall successfully assigned
    */
-  it('must select interfaces for Linodes with more than one eligible Linode Interface', () => {});
+  it('must select interfaces for Linodes with more than one eligible Linode Interface', () => {
+    const mockFirewall = firewallFactory.build({ entities: [] });
+    const mockMultipleEligibleInterfacesLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      interface_generation: 'linode',
+    });
+
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      interface_generation: 'linode',
+    });
+
+    const mockPublicInterface1 = linodeInterfaceFactoryPublic.build({ id: 1 });
+    const mockPublicInterface2 = linodeInterfaceFactoryPublic.build({ id: 2 });
+    const mockVPCInterface = linodeInterfaceFactoryVPC.build({ id: 3 });
+    const mockVlanInterface = linodeInterfaceFactoryVlan.build({ id: 4 });
+
+    const mockInterfaceDevice = firewallDeviceFactory.build({
+      entity: {
+        type: 'interface',
+        id: mockVPCInterface.id,
+        url: `/v4/linode/instances/${mockMultipleEligibleInterfacesLinode.id}/interfaces/${mockVPCInterface.id}`,
+      },
+    });
+
+    mockGetFirewall(mockFirewall.id, mockFirewall);
+    mockGetFirewalls([mockFirewall]);
+    mockGetFirewallDevices(mockFirewall.id, []);
+    mockGetLinodes([mockMultipleEligibleInterfacesLinode, mockLinode]);
+    mockGetLinodeInterfaces(mockMultipleEligibleInterfacesLinode.id, {
+      interfaces: [mockPublicInterface1, mockVPCInterface],
+    });
+    mockGetLinodeInterfaces(mockLinode.id, {
+      interfaces: [mockPublicInterface2, mockVlanInterface],
+    });
+    cy.visitWithLogin(`/firewalls/${mockFirewall.id}/linodes`);
+
+    ui.button
+      .findByTitle('Add Linodes to Firewall')
+      .should('be.visible')
+      .click();
+
+    // Confirm Linode using legacy interfaces can be selected
+    ui.drawer
+      .findByTitle(`Add Linode to Firewall: ${mockFirewall.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Linodes').should('be.visible').click();
+
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
+
+        ui.button
+          .findByAttribute('aria-label', 'Close')
+          .should('be.visible')
+          .click();
+
+        // confirm Interface select doesn't appear for mockLinode - only one eligible interface
+        cy.findByText(`${mockLinode.label} Interface`).should('not.exist');
+
+        cy.findByLabelText('Linodes').should('be.visible').click();
+
+        // deselect mockLinode
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
+
+        // select mockMultipleEligibleInterfacesLinode
+        ui.autocompletePopper
+          .findByTitle(mockMultipleEligibleInterfacesLinode.label)
+          .should('be.visible')
+          .click();
+        ui.button
+          .findByAttribute('aria-label', 'Close')
+          .should('be.visible')
+          .click();
+
+        // confirm Interface select appears for mockMultipleEligibleInterfacesLinode and select interface
+        ui.autocomplete
+          .findByLabel(
+            `${mockMultipleEligibleInterfacesLinode.label} Interface`
+          )
+          .should('be.visible')
+          .click();
+        ui.autocompletePopper
+          .findByTitle(`VPC Interface (ID: ${mockVPCInterface.id})`)
+          .should('be.visible')
+          .click();
+        mockAddFirewallDevice(mockFirewall.id, mockInterfaceDevice);
+
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm toast for assigning an interface device appears
+    ui.toast.assertMessage(
+      `Interface (ID ${mockVPCInterface.id}) from Linode ${mockMultipleEligibleInterfacesLinode.label} successfully added.`
+    );
+
+    // confirm Interface device shows up in the table row
+    cy.findByLabelText(mockMultipleEligibleInterfacesLinode.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(`Linode Interface (ID: ${mockVPCInterface.id})`);
+      });
+  });
 
   /**
    * - Confirms filtering in Linode Select done correctly:
