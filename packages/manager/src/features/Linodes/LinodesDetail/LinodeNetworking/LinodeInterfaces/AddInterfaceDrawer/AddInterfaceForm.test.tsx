@@ -1,12 +1,12 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { firewallFactory, firewallSettingsFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddInterfaceForm } from './AddInterfaceForm';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { firewallFactory, firewallSettingsFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 
 const props = { linodeId: 0, onClose: vi.fn(), regionId: '' };
 
