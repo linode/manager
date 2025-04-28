@@ -1,5 +1,4 @@
-import { Box, Button, Chip, Tooltip } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 

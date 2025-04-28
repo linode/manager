@@ -22,8 +22,8 @@ import {
   mockCreateLinodeInterface,
   mockGetLinodeDetails,
   mockGetLinodeFirewalls,
-  mockGetLinodeIPAddresses,
   mockGetLinodeInterfaces,
+  mockGetLinodeIPAddresses,
 } from 'support/intercepts/linodes';
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { mockGetVPCs } from 'support/intercepts/vpc';
