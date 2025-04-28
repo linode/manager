@@ -30,7 +30,7 @@ export const interceptGetFirewalls = (): Cypress.Chainable<null> => {
  */
 export const mockGetFirewall = (
   firewallId: number,
-  firewall: Firewall,
+  firewall: Firewall
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
@@ -177,6 +177,26 @@ export const mockAddFirewallDevice = (
     'POST',
     apiMatcher(`networking/firewalls/${firewallId}/devices`),
     firewallDevice
+  );
+};
+
+/**
+ * Intercepts POST request to add a firewall device and mocks an API error response.
+ *
+ * @param errorContents - API error with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAddFirewallDeviceError = (
+  firewallId: number,
+  errorContents: APIErrorContents = 'Unable to add firewall device.',
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`networking/firewalls/${firewallId}/devices`),
+    makeErrorResponse(errorContents, statusCode)
   );
 };
 

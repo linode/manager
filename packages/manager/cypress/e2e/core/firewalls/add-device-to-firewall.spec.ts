@@ -12,6 +12,7 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockAddFirewallDevice,
+  mockAddFirewallDeviceError,
   mockGetFirewall,
   mockGetFirewallDevices,
   mockGetFirewalls,
@@ -325,7 +326,7 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
    * - Confirms a Linode using new interfaces but with an already assigned interface will not appear in the firewall select *
    * (* this may change if multi firewall support is added - see M3-9829)
    */
-  it('only shows eligible Linodes to be assigned', () => {
+  it('only shows eligible Linodes to be assigned in the AddLinodeDrawer select', () => {
     // Set up all mocks
     const mockPublicInterface = linodeInterfaceFactoryPublic.build({ id: 1 });
     const mockVlanInterface = linodeInterfaceFactoryVlan.build({ id: 4 });
@@ -413,6 +414,59 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
    * - Confirms error handling if a firewall is unable to be assigned
    */
   it('shows an error if a firewall device cannot be assigned', () => {
-    
+    const mockFirewall = firewallFactory.build({ entities: [] });
+    const mockNewInterfaceLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      interface_generation: 'linode',
+    });
+
+    const mockLinodeInterface = linodeInterfaceFactoryPublic.build();
+    mockGetFirewall(mockFirewall.id, mockFirewall);
+    mockGetFirewalls([mockFirewall]);
+    mockGetFirewallDevices(mockFirewall.id, []);
+    mockGetLinodes([mockNewInterfaceLinode]);
+    mockGetLinodeInterfaces(mockNewInterfaceLinode.id, {
+      interfaces: [mockLinodeInterface],
+    });
+    cy.visitWithLogin(`/firewalls/${mockFirewall.id}/linodes`);
+
+    ui.button
+      .findByTitle('Add Linodes to Firewall')
+      .should('be.visible')
+      .click();
+
+    ui.drawer
+      .findByTitle(`Add Linode to Firewall: ${mockFirewall.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Linodes').should('be.visible').click();
+
+        // Confirm Linode using Linode interfaces can be selected
+        ui.autocompletePopper
+          .findByTitle(mockNewInterfaceLinode.label)
+          .should('be.visible')
+          .click();
+
+        ui.button
+          .findByAttribute('aria-label', 'Close')
+          .should('be.visible')
+          .click();
+
+        // confirm Interface select doesn't appear for mockNewInterfaceLinode
+        cy.findByText(`${mockNewInterfaceLinode.label} Interface`).should(
+          'not.exist'
+        );
+
+        mockAddFirewallDeviceError(mockFirewall.id);
+
+        ui.button
+          .findByTitle('Add')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.findByText('Unable to add firewall device.').should('be.visible');
+      });
   });
 });
