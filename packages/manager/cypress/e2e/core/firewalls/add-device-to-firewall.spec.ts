@@ -198,7 +198,7 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
   });
 
   /**
-   * - Confirms if selected Linode have more than one eligible interface to assign, an additional interface select appear
+   * - Confirms if selected Linode has more than one eligible interface to assign, an additional interface select appears
    * - Confirms if selected Linode has multiple interfaces but only one eligible interface to assign, an additional interface select does not appear
    * - Confirms toasts appear if firewall successfully assigned
    */
@@ -246,7 +246,6 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
       .should('be.visible')
       .click();
 
-    // Confirm Linode using legacy interfaces can be selected
     ui.drawer
       .findByTitle(`Add Linode to Firewall: ${mockFirewall.label}`)
       .should('be.visible')
@@ -263,7 +262,7 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           .should('be.visible')
           .click();
 
-        // confirm Interface select doesn't appear for mockLinode - only one eligible interface
+        // confirm Interface select doesn't appear for mockLinode - only one eligible interface exists
         cy.findByText(`${mockLinode.label} Interface`).should('not.exist');
 
         cy.findByLabelText('Linodes').should('be.visible').click();
@@ -291,6 +290,9 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           )
           .should('be.visible')
           .click();
+        ui.autocompletePopper
+          .findByTitle(`Public Interface (ID: ${mockPublicInterface1.id})`)
+          .should('be.visible');
         ui.autocompletePopper
           .findByTitle(`VPC Interface (ID: ${mockVPCInterface.id})`)
           .should('be.visible')
@@ -466,6 +468,7 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           .should('be.enabled')
           .click();
 
+        // confirm error is displayed upon failure
         cy.findByText('Unable to add firewall device.').should('be.visible');
       });
   });
