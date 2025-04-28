@@ -203,7 +203,6 @@ export const BillingNotice = React.memo(() => {
         expiry: DateTime.utc().plus({ days: 30 }).toISO(),
         label: NOTIFICATION_KEY,
       }}
-      important
       preferenceKey={NOTIFICATION_KEY}
       variant="warning"
     >

@@ -1,13 +1,13 @@
 import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
 import {
   CircleProgress,
+  CloseIcon,
   ErrorState,
   IconButton,
   InputAdornment,
   Notice,
   TextField,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -176,7 +176,6 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       {_isRestrictedUser && (
         <Notice
-          important
           text={getRestrictedResourceText({
             action: ['create', 'edit'],
             resourceType: 'Volumes',

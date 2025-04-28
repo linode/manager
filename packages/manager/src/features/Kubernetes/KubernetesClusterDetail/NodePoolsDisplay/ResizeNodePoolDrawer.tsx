@@ -202,12 +202,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
           </div>
 
           {updatedCount < nodePool.count && (
-            <Notice important text={resizeWarning} variant="warning" />
+            <Notice text={resizeWarning} variant="warning" />
           )}
 
-          {updatedCount < 3 && (
-            <Notice important text={nodeWarning} variant="warning" />
-          )}
+          {updatedCount < 3 && <Notice text={nodeWarning} variant="warning" />}
 
           {nodePool.count && hasInvalidPrice && (
             <Notice

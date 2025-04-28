@@ -107,6 +107,7 @@ import {
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
+  widgetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
@@ -2697,6 +2698,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     } else if (params.serviceType === 'dbaas') {
@@ -2704,6 +2714,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     }
@@ -2856,6 +2875,7 @@ export const handlers = [
           metric: 'system_cpu_utilization_percent',
           size: 12,
           unit: '%',
+          group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
         },
         {
@@ -2866,6 +2886,7 @@ export const handlers = [
           metric: 'system_memory_usage_by_resource',
           size: 12,
           unit: 'Bytes',
+          group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
         {
@@ -2877,6 +2898,7 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          group_by: ['entity_id'],
         },
         {
           aggregate_function: 'avg',
@@ -2886,6 +2908,7 @@ export const handlers = [
           metric: 'system_disk_OPS_total',
           size: 6,
           unit: 'OPS',
+          group_by: ['entity_id'],
           y_label: 'system_disk_operations_total',
         },
       ],
@@ -2898,7 +2921,9 @@ export const handlers = [
         result: [
           {
             metric: {
-              test: 'Test1',
+              entity_id: '123',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-1',
             },
             values: [
               [1721854379, '0.2744841110560275'],
@@ -2939,7 +2964,9 @@ export const handlers = [
           // })),
           {
             metric: {
-              test2: 'Test2',
+              entity_id: '456',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-2',
             },
             values: [
               [1721854379, '0.3744841110560275'],
@@ -2959,7 +2986,9 @@ export const handlers = [
           },
           {
             metric: {
-              test3: 'Test3',
+              entity_id: '789',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

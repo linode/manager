@@ -425,4 +425,36 @@ describe('Can create Firewalls using custom rules', () => {
         cy.contains(mockNodeBalancer.label).should('be.visible');
       });
   });
+
+  /*
+   * - Confirms a validation error displays when trying to create a custom Firewall without inputting a label
+   */
+  it('displays an error when trying to create a customFirewall without a label', () => {
+    mockGetFirewalls([]).as('getFirewalls');
+
+    cy.visitWithLogin('/firewalls');
+    cy.wait('@getFirewalls');
+
+    ui.button
+      .findByTitle('Create Firewall')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.drawer
+      .findByTitle('Create Firewall')
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Custom Firewall').should('be.checked');
+
+        // Make no changes to the default selections, just click "Create Firewall".
+        ui.buttonGroup
+          .findButtonByTitle('Create Firewall')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.findByText('Label is required.');
+  });
 });
