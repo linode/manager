@@ -1,4 +1,6 @@
+import { linodeQueries } from '@linode/queries';
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
@@ -15,6 +17,8 @@ export const SuccessDialogContent = (
 ) => {
   const { linodeId, onClose, setDialogState, state } = props;
   const { isDryRun, linodeInterfaces, selectedConfig } = state;
+
+  const queryClient = useQueryClient();
 
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
@@ -49,7 +53,18 @@ export const SuccessDialogContent = (
         </Box>
       )}
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-        <Button buttonType="secondary" disabled={isPending} onClick={onClose}>
+        <Button
+          buttonType="secondary"
+          disabled={isPending}
+          onClick={() => {
+            onClose();
+            if (!isDryRun) {
+              queryClient.invalidateQueries({
+                queryKey: linodeQueries.linode(linodeId).queryKey,
+              });
+            }
+          }}
+        >
           {isDryRun ? 'Cancel' : 'Close'}
         </Button>
         {isDryRun && (

@@ -7,6 +7,8 @@ import { PromptDialogContent } from './DialogContents/PromptDialogContent';
 import { SuccessDialogContent } from './DialogContents/SuccessDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
+import { useQueryClient } from '@tanstack/react-query';
+import { linodeQueries } from '@linode/queries';
 
 interface UpgradeInterfacesProps {
   linodeId: number;
@@ -21,6 +23,8 @@ const initialState: UpgradeInterfacesDialogState = {
 
 export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
   const { linodeId, onClose, open } = props;
+
+  const queryClient = useQueryClient();
 
   const [dialogState, setDialogState] =
     React.useState<UpgradeInterfacesDialogState>({ ...initialState });
@@ -44,7 +48,14 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
       fullHeight
       fullWidth
       maxWidth="sm"
-      onClose={closeAndResetDialog}
+      onClose={() => {
+        closeAndResetDialog();
+        if (dialogState.step === 'success' && !dialogState.isDryRun) {
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId).queryKey,
+          });
+        }
+      }}
       open={open}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
     >
