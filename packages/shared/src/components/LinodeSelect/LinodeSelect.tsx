@@ -70,7 +70,7 @@ export interface LinodeSingleSelectProps extends LinodeSelectProps {
  * A select input allowing selection between account Linodes.
  */
 export const LinodeSelect = (
-  props: LinodeMultiSelectProps | LinodeSingleSelectProps
+  props: LinodeMultiSelectProps | LinodeSingleSelectProps,
 ) => {
   const {
     checkIsOptionEqualToValue,
@@ -130,14 +130,14 @@ export const LinodeSelect = (
         placeholder
           ? placeholder
           : multiple
-          ? 'Select Linodes'
-          : 'Select a Linode'
+            ? 'Select Linodes'
+            : 'Select a Linode'
       }
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
-            ? linodes?.filter(value) ?? null
-            : linodes?.find(value) ?? null
+            ? (linodes?.filter(value) ?? null)
+            : (linodes?.find(value) ?? null)
           : mapIdsToDevices<Linode>(value, linodes)
       }
       PopperComponent={CustomPopper}
@@ -167,7 +167,7 @@ export const LinodeSelect = (
 
 const getDefaultNoOptionsMessage = (
   error: APIError[] | null,
-  loading: boolean
+  loading: boolean,
 ) => {
   if (error) {
     return 'An error occurred while fetching your Linodes';
