@@ -25,8 +25,11 @@ describe('LinodeInterface (Linode Interfaces)', () => {
     const { getByText, getByLabelText } =
       renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <LinodeInterface index={0} />,
-        useFormOptions: { defaultValues: { interface_generation: 'linode' } },
       });
+
+    await userEvent.click(
+      getByLabelText('Linode Interfaces', { exact: false })
+    );
 
     await userEvent.click(getByText('VPC'));
 
@@ -36,8 +39,11 @@ describe('LinodeInterface (Linode Interfaces)', () => {
   it('renders a Firewall select if "Public" is selected', async () => {
     const { getByText, getByLabelText } = renderWithThemeAndHookFormContext({
       component: <LinodeInterface index={0} />,
-      useFormOptions: { defaultValues: { interface_generation: 'linode' } },
     });
+
+    await userEvent.click(
+      getByLabelText('Linode Interfaces', { exact: false })
+    );
 
     await userEvent.click(getByText('Public Internet'));
 
@@ -45,10 +51,15 @@ describe('LinodeInterface (Linode Interfaces)', () => {
   });
 
   it('renders does not render a Firewall select if "VLAN" is selected', async () => {
-    const { getByText, queryByLabelText } = renderWithThemeAndHookFormContext({
-      component: <LinodeInterface index={0} />,
-      useFormOptions: { defaultValues: { interface_generation: 'linode' } },
-    });
+    const { getByText, queryByLabelText, getByLabelText } =
+      renderWithThemeAndHookFormContext({
+        component: <LinodeInterface index={0} />,
+        useFormOptions: { defaultValues: { interface_generation: 'linode' } },
+      });
+
+    await userEvent.click(
+      getByLabelText('Linode Interfaces', { exact: false })
+    );
 
     await userEvent.click(getByText('VLAN'));
 
@@ -73,11 +84,13 @@ describe('LinodeInterface (Linode Interfaces)', () => {
       })
     );
 
-    const { getByText, findByDisplayValue } = renderWithThemeAndHookFormContext(
-      {
+    const { getByText, findByDisplayValue, getByLabelText } =
+      renderWithThemeAndHookFormContext({
         component: <LinodeInterface index={0} />,
-        useFormOptions: { defaultValues: { interface_generation: 'linode' } },
-      }
+      });
+
+    await userEvent.click(
+      getByLabelText('Linode Interfaces', { exact: false })
     );
 
     await userEvent.click(getByText('VPC'));
