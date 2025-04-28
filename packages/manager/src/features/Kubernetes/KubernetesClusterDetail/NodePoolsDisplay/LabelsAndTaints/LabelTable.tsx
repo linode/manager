@@ -1,5 +1,4 @@
-import { IconButton, Stack, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -58,7 +57,7 @@ export const LabelTable = () => {
                       size="medium"
                       sx={{ marginLeft: 'auto' }}
                     >
-                      <Close />
+                      <CloseIcon />
                     </IconButton>
                   </Stack>
                 </TableCell>

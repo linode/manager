@@ -1,10 +1,9 @@
-import { queryClientFactory } from '@linode/queries';
-import { light } from '@linode/ui';
-import { type Theme, ThemeProvider } from '@mui/material';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClientFactory, QueryClientProvider } from '@linode/queries';
+import { light, ThemeProvider } from '@linode/ui';
 import { render } from '@testing-library/react';
 import React from 'react';
 
+import type { Theme } from '@linode/ui';
 import type { RenderResult } from '@testing-library/react';
 
 type Wrapper = (ui: React.ReactNode) => React.ReactNode;
