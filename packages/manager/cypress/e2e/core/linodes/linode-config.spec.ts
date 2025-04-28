@@ -6,11 +6,11 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import {
-  VLANFactory,
   accountFactory,
   kernelFactory,
   linodeConfigFactory,
   subnetFactory,
+  VLANFactory,
   vpcFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
@@ -71,7 +71,7 @@ import type { CreateTestLinodeOptions } from 'support/util/linodes';
  * @throws If created Linode does not have any configs.
  */
 const createLinodeAndGetConfig = async (
-  payload?: Partial<CreateLinodeRequest> | null,
+  payload?: null | Partial<CreateLinodeRequest>,
   options?: Partial<CreateTestLinodeOptions>
 ) => {
   const linode = await createTestLinode(payload, options);
@@ -499,8 +499,9 @@ describe('Linode Config management', () => {
 
     /*
      * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
+     * - Confirms absence on edit and add config dialog.
      */
-    it('Does not show interfaces section when using new Linode interfaces', () => {
+    it('Does not show interfaces section when managing configs using new Linode interfaces', () => {
       // TODO M3-9775: Remove mock when `linodeInterfaces` feature flag is removed.
       mockAppendFeatureFlags({
         linodeInterfaces: {
@@ -544,8 +545,36 @@ describe('Linode Config management', () => {
             .click();
         });
 
+      // Confirm absence of the interfaces section when editing an existing config.
       ui.dialog
         .findByTitle('Edit Configuration')
+        .should('be.visible')
+        .within(() => {
+          // Scroll "Networking" section into view, and confirm that Interfaces
+          // options are absent and informational text is shown instead.
+          cy.findByText('Networking').scrollIntoView();
+          cy.contains(
+            "Go to Network to view your Linode's Network interfaces."
+          ).should('be.visible');
+          cy.findByText('Primary Interface (Default Route)').should(
+            'not.exist'
+          );
+          cy.findByText('eth0').should('not.exist');
+          cy.findByText('eth1').should('not.exist');
+          cy.findByText('eth2').should('not.exist');
+
+          ui.button.findByTitle('Cancel').click();
+        });
+
+      // Confirm asbence of the interfaces section when adding a new config.
+      ui.button
+        .findByTitle('Add Configuration')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle('Add Configuration')
         .should('be.visible')
         .within(() => {
           // Scroll "Networking" section into view, and confirm that Interfaces
