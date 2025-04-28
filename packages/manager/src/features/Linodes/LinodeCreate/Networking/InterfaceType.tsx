@@ -1,4 +1,4 @@
-import { useFirewallSettingsQuery } from '@linode/queries';
+import { firewallQueries, useQueryClient } from '@linode/queries';
 import { InputLabel, Radio, RadioGroup } from '@linode/ui';
 import { Grid2 } from '@mui/material';
 import React from 'react';
@@ -32,40 +32,42 @@ const interfaceTypes = [
 ] as const;
 
 export const InterfaceType = ({ index }: Props) => {
+  const queryClient = useQueryClient();
+
   const { control, getFieldState, setValue } =
     useFormContext<LinodeCreateFormValues>();
-
-  const { data: firewallSettings } = useFirewallSettingsQuery();
 
   const { field } = useController({
     control,
     name: `linodeInterfaces.${index}.purpose`,
   });
 
-  const onChange = (value: InterfacePurpose) => {
+  const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
 
-    const defaultFirewall = getDefaultFirewallForInterfacePurpose(
-      value,
-      firewallSettings
-    );
-
     // VLAN interfaces do not support Firewalls, so set
-    // the Firewall ID to null and early return.
+    // the Firewall ID to `null` to be safe and early return.
     if (value === 'vlan') {
       setValue(`linodeInterfaces.${index}.firewall_id`, null);
       return;
     }
 
-    // Set the Firewall based on defaults if:
-    // - there is a default firewall for the selected interface type
-    // - the user has not touched the Firewall field
-    if (
-      defaultFirewall &&
-      !getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched
-    ) {
-      setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+    // If the user has not touched the Firewall field...
+    if (!getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched) {
+      const firewallSettings = await queryClient.ensureQueryData(
+        firewallQueries.settings
+      );
+
+      const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+        value,
+        firewallSettings
+      );
+
+      // If this Interface type has a default firewall, set it
+      if (defaultFirewall) {
+        setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+      }
     }
   };
 

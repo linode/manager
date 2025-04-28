@@ -10,34 +10,47 @@ import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { INTERFACE_PURPOSE_TO_DEFAULT_FIREWALL_KEY } from './utilities';
+import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
 import type { CreateInterfaceFormValues } from './utilities';
 import type { InterfacePurpose } from '@linode/api-v4';
 
 export const InterfaceType = () => {
   const queryClient = useQueryClient();
-  const { setValue } = useFormContext<CreateInterfaceFormValues>();
+
+  const { setValue, getFieldState } =
+    useFormContext<CreateInterfaceFormValues>();
+
   const { field, fieldState } = useController<CreateInterfaceFormValues>({
     name: 'purpose',
   });
 
   const onChange = async (value: InterfacePurpose) => {
-    // Change the selected interface type (Public, VPC, VLAN)
+    // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
 
-    // Update the form's `firewall_id` based on the defaults
-    const firewallSettings = await queryClient.ensureQueryData(
-      firewallQueries.settings
-    );
-    const firewallSettingKey = INTERFACE_PURPOSE_TO_DEFAULT_FIREWALL_KEY[value];
-    if (firewallSettingKey) {
-      setValue(
-        'firewall_id',
-        firewallSettings.default_firewall_ids[firewallSettingKey]
-      );
-    } else {
+    // VLAN interfaces do not support Firewalls, so set
+    // the Firewall ID to `null` to be safe and early return.
+    if (value === 'vlan') {
       setValue('firewall_id', null);
+      return;
+    }
+
+    // If the user has not touched the Firewall field...
+    if (!getFieldState('firewall_id').isTouched) {
+      const firewallSettings = await queryClient.ensureQueryData(
+        firewallQueries.settings
+      );
+
+      const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+        value,
+        firewallSettings
+      );
+
+      // If this Interface type has a default firewall, set it
+      if (defaultFirewall) {
+        setValue('firewall_id', defaultFirewall);
+      }
     }
   };
 
