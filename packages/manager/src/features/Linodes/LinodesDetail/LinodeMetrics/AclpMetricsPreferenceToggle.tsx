@@ -1,14 +1,13 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
-import {
-  FormControlLabel,
-  Notice,
-  Paper,
-  Toggle,
-  Typography,
-} from '@linode/ui';
+import { Button, Typography, useTheme } from '@linode/ui';
 import React from 'react';
 
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { Skeleton } from 'src/components/Skeleton';
+
 export const AclpMetricsPreferenceToggle = () => {
+  const theme = useTheme();
+
   const { data: isAclpMetricsPreferenceBeta, isLoading } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
@@ -21,28 +20,42 @@ export const AclpMetricsPreferenceToggle = () => {
   const metricsBetaNoticeText =
     'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.';
 
-  return (
-    <Paper>
-      <Typography marginBottom={1} variant="h2">
-        {isAclpMetricsPreferenceBeta ? 'Metrics (Beta)' : 'Metrics'}
-      </Typography>
-      <FormControlLabel
-        control={
-          <Toggle
-            checked={Boolean(isAclpMetricsPreferenceBeta)}
-            onChange={(_, checked) =>
-              updatePreferences({ isAclpMetricsBeta: checked })
-            }
-          />
-        }
-        disabled={isLoading}
-        label={`${isAclpMetricsPreferenceBeta ? 'Metrics (Beta)' : 'Metrics'}`}
+  if (isLoading) {
+    return (
+      <Skeleton
+        height="92px"
+        sx={{ marginTop: `-${theme.spacingFunction(20)}` }}
       />
-      <Notice variant="info">
+    );
+  }
+
+  return (
+    <DismissibleBanner
+      actionButton={
+        <Button
+          buttonType="primary"
+          onClick={() =>
+            updatePreferences({
+              isAclpMetricsBeta: !isAclpMetricsPreferenceBeta,
+            })
+          }
+          sx={{ textTransform: 'none' }}
+        >
+          {isAclpMetricsPreferenceBeta
+            ? 'Switch to legacy Metrics'
+            : 'Try the Metrics (Beta)'}
+        </Button>
+      }
+      forceImportantIconVerticalCenter
+      isNotDismissible
+      preferenceKey="metrics-preference"
+      variant="info"
+    >
+      <Typography>
         {isAclpMetricsPreferenceBeta
           ? metricsBetaNoticeText
           : metricsLegacyNoticeText}
-      </Notice>
-    </Paper>
+      </Typography>
+    </DismissibleBanner>
   );
 };

@@ -22,7 +22,6 @@ const LinodeMetrics = ({ linodeCreated }: Props) => {
       {flags.aclpIntegration ? <AclpMetricsPreferenceToggle /> : null}
       {flags.aclpIntegration && isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View
-        // 'ACLP Metrics Coming soon...'
         <Notice variant="info">ACLP Metrics Coming soon...</Notice>
       ) : (
         // Legacy Metrics View
