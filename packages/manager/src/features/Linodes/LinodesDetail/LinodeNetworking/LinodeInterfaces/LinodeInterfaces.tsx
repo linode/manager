@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
-import { EditInterfaceDrawer } from './EditInterfaceDrawer/EditInterfaceDrawer';
+import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
@@ -72,13 +72,6 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         open={isAddDrawerOpen}
         regionId={regionId}
       />
-      <EditInterfaceDrawer
-        interfaceId={selectedInterfaceId}
-        linodeId={linodeId}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
-        regionId={regionId}
-      />
       <DeleteInterfaceDialog
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
@@ -91,6 +84,20 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
         open={location.pathname.includes('networking/interfaces')}
       />
+      <Drawer
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        title="Edit Network Interface"
+      >
+        {selectedInterfaceId && (
+          <EditInterfaceDrawerContents
+            interfaceId={selectedInterfaceId}
+            linodeId={linodeId}
+            onClose={() => setIsEditDrawerOpen(false)}
+            regionId={regionId}
+          />
+        )}
+      </Drawer>
       <Drawer
         onClose={() => setIsSettingsDrawerOpen(false)}
         open={isSettingsDrawerOpen}
