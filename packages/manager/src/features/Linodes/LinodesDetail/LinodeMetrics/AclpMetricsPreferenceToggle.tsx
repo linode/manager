@@ -14,17 +14,13 @@ export const AclpMetricsPreferenceToggle = () => {
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const metricsLegacyNoticeText =
-    'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current Metrics view anytime.';
-
-  const metricsBetaNoticeText =
-    'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.';
-
   if (isLoading) {
     return (
       <Skeleton
-        height="92px"
-        sx={{ marginTop: `-${theme.spacingFunction(20)}` }}
+        height="85px"
+        sx={{
+          marginTop: `-${theme.spacingFunction(20)}`,
+        }}
       />
     );
   }
@@ -52,9 +48,18 @@ export const AclpMetricsPreferenceToggle = () => {
       variant="info"
     >
       <Typography>
-        {isAclpMetricsPreferenceBeta
-          ? metricsBetaNoticeText
-          : metricsLegacyNoticeText}
+        {isAclpMetricsPreferenceBeta ? (
+          <span>
+            Welcome to <strong>Metrics (Beta)</strong> with more options and
+            greater flexibility for better data analysis.
+          </span>
+        ) : (
+          <span>
+            Try the new <strong>Metrics (Beta)</strong> with more options and
+            greater flexibility for better data analysis. You can switch back to
+            the current Metrics view anytime.
+          </span>
+        )}
       </Typography>
     </DismissibleBanner>
   );
