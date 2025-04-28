@@ -21,7 +21,7 @@ interface APIError {
 }
 
 interface DrawerProps extends _DrawerProps {
-  error?: APIError[] | null | string;
+  error?: APIError[] | null;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -108,6 +108,8 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       lastTitleRef.current = title;
     }
 
+    const errorText = error?.[0]?.reason ?? null;
+
     return (
       <_Drawer
         anchor="right"
@@ -174,7 +176,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Grid>
         </Grid>
         {error ? (
-          error === 'Not Found' ? (
+          errorText === 'Not Found' || errorText === 'Not found' ? (
             <NotFound />
           ) : (
             <ErrorState
