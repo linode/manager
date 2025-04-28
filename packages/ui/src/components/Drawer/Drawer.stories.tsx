@@ -136,35 +136,8 @@ export const Fetching: Story = {
   },
 };
 
-const NotFound = (_props: React.PropsWithChildren<{ className?: string }>) => {
-  const theme = useTheme();
-
-  const sxIcon = {
-    color: theme.color.black,
-    height: 130,
-    marginBottom: theme.spacing(4),
-    width: 130,
-  };
-
-  return (
-    <div
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        minHeight: '400px',
-      }}
-    >
-      <ErrorOutline sx={sxIcon} />
-      <Typography variant="h1">Not Found</Typography>
-    </div>
-  );
-};
-
-export const WithNotFoundComponent: Story = {
+export const NotFound: Story = {
   args: {
-    NotFoundComponent: NotFound,
     error: 'Not Found',
     onClose: action('onClose'),
     open: false,
@@ -187,7 +160,7 @@ export const WithNotFoundComponent: Story = {
   },
 };
 
-export const WithoutNotFoundComponent: Story = {
+export const WithError: Story = {
   args: {
     error: 'Some other Error',
     onClose: action('onClose'),

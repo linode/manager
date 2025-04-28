@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
@@ -12,16 +13,11 @@ import { IconButton } from '../IconButton';
 import { NotFound } from '../NotFound/NotFound';
 import { Typography } from '../Typography';
 
+import type { APIError } from '../../utilities/error';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
-// simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
-interface APIError {
-  field?: string;
-  reason: string;
-}
-
 interface DrawerProps extends _DrawerProps {
-  error?: APIError[] | null;
+  error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -108,7 +104,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       lastTitleRef.current = title;
     }
 
-    const errorText = error?.[0]?.reason ?? null;
+    const errorText = getErrorText(error);
 
     return (
       <_Drawer
@@ -175,18 +171,16 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             </IconButton>
           </Grid>
         </Grid>
-        {error ? (
-          errorText === 'Not Found' || errorText === 'Not found' ? (
-            <NotFound />
-          ) : (
-            <ErrorState
-              errorText={Array.isArray(error) ? error[0].reason : error}
-            />
-          )
-        ) : isFetching ? (
+        {isFetching ? (
           <Box display="flex" justifyContent="center" mt={12}>
             <CircleProgress size="md" />
           </Box>
+        ) : errorText ? (
+          errorText === 'Not Found' || errorText === 'Not found' ? (
+            <NotFound />
+          ) : (
+            <ErrorState errorText={errorText} />
+          )
         ) : (
           children
         )}

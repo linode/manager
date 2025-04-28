@@ -27,7 +27,7 @@ export const InterfaceDetailsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      error={error}
+      error={error?.[0].reason}
       isFetching={isLoading}
       onClose={onClose}
       open={open}
