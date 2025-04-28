@@ -265,7 +265,11 @@ export const darkTheme: ThemeOptions = {
           color: Select.Default.Icon,
         },
         tag: {
-          '.MuiChip-deleteIcon': { color: Content.Text.Primary.Default },
+          '.MuiChip-deleteIcon': {
+            color: Content.Text.Primary.Default,
+            width: 'auto',
+            height: 'auto',
+          },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
       },
