@@ -55,7 +55,7 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
    * - Confirms toasts appear if firewall successfully assigned
    * - Confirms new column in Linode devices landing table
    */
-  it.only('can assign Linodes with legacy and new interfaces to a firewall', () => {
+  it('can assign Linodes with legacy and new interfaces to a firewall', () => {
     const mockFirewall = firewallFactory.build({ entities: [] });
     const mockConfigInterfaceLinode = linodeFactory.build({
       id: randomNumber(),
@@ -71,12 +71,14 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
     const mockLinodeDevice = firewallDeviceFactory.build({
       entity: {
         id: randomNumber(),
+        label: mockConfigInterfaceLinode.label,
       },
     });
     const mockInterfaceDevice = firewallDeviceFactory.build({
       entity: {
         type: 'interface',
-        id: randomNumber(),
+        id: mockLinodeInterface.id,
+        url: `/v4/linode/instances/${mockNewInterfaceLinode.id}/interfaces/${mockLinodeInterface.id}`,
       },
     });
 
@@ -116,6 +118,41 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           .should('be.visible')
           .click();
 
+        ui.button
+          .findByAttribute('aria-label', 'Close')
+          .should('be.visible')
+          .click();
+        mockAddFirewallDevice(mockFirewall.id, mockLinodeDevice);
+
+        ui.button.findByTitle('Add').should('be.visible').click();
+      });
+
+    // confirm toast appears after adding Linode to firewall
+    ui.toast.assertMessage(
+      `Linode ${mockConfigInterfaceLinode.label} successfully added.`
+    );
+
+    // confirm Linode device shows up in the table row
+    cy.findByLabelText(mockConfigInterfaceLinode.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText('Configuration Profile Interface');
+      });
+
+    ui.button
+      .findByTitle('Add Linodes to Firewall')
+      .should('be.visible')
+      .click();
+
+    // confirm Linode using new interfaces can be selected
+    // Adding these two devices separately due to mocking - so that the same mock data isn't returned twice due to using the POST device endpoint twice
+    ui.drawer
+      .findByTitle(`Add Linode to Firewall: ${mockFirewall.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Linodes').should('be.visible').click();
+
         // Confirm Linode using Linode interfaces can be selected
         ui.autocompletePopper
           .findByTitle(mockNewInterfaceLinode.label)
@@ -132,15 +169,27 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
           'not.exist'
         );
 
-        mockAddFirewallDevice(mockFirewall.id, mockLinodeDevice);
         mockAddFirewallDevice(mockFirewall.id, mockInterfaceDevice);
 
         ui.button.findByTitle('Add').should('be.visible').click();
       });
+
+    // Confirm toast for assigning an interface device appears
+    ui.toast.assertMessage(
+      `Interface (ID ${mockInterfaceDevice.entity.id}) from Linode ${mockNewInterfaceLinode.label} successfully added.`
+    );
+
+    // confirm Interface device shows up in the table row
+    cy.findByLabelText(mockNewInterfaceLinode.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(`Linode Interface (ID: ${mockLinodeInterface.id})`);
+      });
   });
 
   /**
-   * - Confirms if selected Linode have more than one eligible interface to assign, additional interface select appears
+   * - Confirms if selected Linode have more than one eligible interface to assign, an additional interface select appear
    * - Confirms if selected Linode has multiple interfaces but only one eligible interface to assign, an additional interface select does not appear
    * - Confirms toasts appear if firewall successfully assigned
    */
