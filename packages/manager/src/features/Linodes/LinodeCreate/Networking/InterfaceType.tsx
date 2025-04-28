@@ -1,6 +1,7 @@
 import { firewallQueries, useQueryClient } from '@linode/queries';
 import { InputLabel, Radio, RadioGroup } from '@linode/ui';
 import { Grid2 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -34,6 +35,8 @@ const interfaceTypes = [
 export const InterfaceType = ({ index }: Props) => {
   const queryClient = useQueryClient();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { control, getFieldState, setValue } =
     useFormContext<LinodeCreateFormValues>();
 
@@ -55,18 +58,26 @@ export const InterfaceType = ({ index }: Props) => {
 
     // If the user has not touched the Firewall field...
     if (!getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched) {
-      const firewallSettings = await queryClient.ensureQueryData(
-        firewallQueries.settings
-      );
+      try {
+        const firewallSettings = await queryClient.ensureQueryData(
+          firewallQueries.settings
+        );
 
-      const defaultFirewall = getDefaultFirewallForInterfacePurpose(
-        value,
-        firewallSettings
-      );
+        const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+          value,
+          firewallSettings
+        );
 
-      // If this Interface type has a default firewall, set it
-      if (defaultFirewall) {
-        setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+        // If this Interface type has a default firewall, set it
+        if (defaultFirewall) {
+          setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+        }
+        // eslint-disable-next-line sonarjs/no-ignored-exceptions
+      } catch (error) {
+        // The fetch to get Firewall Settings will fail for restricted users.
+        enqueueSnackbar('Unable to retrieve default Firewall.', {
+          variant: 'warning',
+        });
       }
     }
   };
