@@ -1,12 +1,12 @@
 import {
   Autocomplete,
+  CloseIcon,
   FormControlLabel,
   IconButton,
   TextField,
   Toggle,
   Typography,
 } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import {
@@ -150,7 +150,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           onClick={() => onRemove(configItem?.label)}
           size="large"
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
       )}
     </StyledWrapper>

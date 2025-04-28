@@ -3,7 +3,7 @@ import {
   useAllLinodesQuery,
   useMutateAccountSettings,
 } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -16,7 +16,7 @@ import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { DefaultFirewalls } from './DefaultFirewalls';
 import { EnableManaged } from './EnableManaged';
-import NetworkHelper from './NetworkHelper';
+import { NetworkHelper } from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
 
@@ -84,26 +84,28 @@ const GlobalSettings = () => {
   return (
     <div>
       <DocumentTitleSegment segment="Settings" />
-      {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
-      {isLinodeInterfacesEnabled && <DefaultFirewalls />}
-      <AutoBackups
-        backups_enabled={backups_enabled}
-        hasLinodesWithoutBackups={hasLinodesWithoutBackups}
-        isManagedCustomer={managed}
-        onChange={toggleAutomaticBackups}
-        openBackupsDrawer={() => setIsBackupsDrawerOpen(true)}
-      />
-      <NetworkHelper
-        networkHelperEnabled={network_helper}
-        onChange={toggleNetworkHelper}
-      />
-      <ObjectStorageSettings />
-      <EnableManaged isManaged={managed} />
-      <CloseAccountSetting />
-      <BackupDrawer
-        onClose={() => setIsBackupsDrawerOpen(false)}
-        open={isBackupsDrawerOpen}
-      />
+      <Stack spacing={2}>
+        {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
+        {isLinodeInterfacesEnabled && <DefaultFirewalls />}
+        <AutoBackups
+          backups_enabled={backups_enabled}
+          hasLinodesWithoutBackups={hasLinodesWithoutBackups}
+          isManagedCustomer={managed}
+          onChange={toggleAutomaticBackups}
+          openBackupsDrawer={() => setIsBackupsDrawerOpen(true)}
+        />
+        <NetworkHelper
+          networkHelperEnabled={network_helper}
+          onChange={toggleNetworkHelper}
+        />
+        <ObjectStorageSettings />
+        <EnableManaged isManaged={managed} />
+        <CloseAccountSetting />
+        <BackupDrawer
+          onClose={() => setIsBackupsDrawerOpen(false)}
+          open={isBackupsDrawerOpen}
+        />
+      </Stack>
     </div>
   );
 };

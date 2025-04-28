@@ -272,9 +272,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               preferences,
               resource_ids: resource_ids?.length
                 ? resource_ids
-                : (dependentFilterReference.current[
-                    RESOURCE_ID
-                  ] as string[])?.map((id: string) => Number(id)),
+                : (
+                    dependentFilterReference.current[RESOURCE_ID] as string[]
+                  )?.map((id: string) => Number(id)),
             },
             handleNodeTypeChange
           );
