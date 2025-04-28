@@ -325,10 +325,94 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
    * - Confirms a Linode using new interfaces but with an already assigned interface will not appear in the firewall select *
    * (* this may change if multi firewall support is added - see M3-9829)
    */
-  it('must select interfaces for Linodes with more than one eligible Linode Interface', () => {});
+  it('only shows eligible Linodes to be assigned', () => {
+    // Set up all mocks
+    const mockPublicInterface = linodeInterfaceFactoryPublic.build({ id: 1 });
+    const mockVlanInterface = linodeInterfaceFactoryVlan.build({ id: 4 });
+    const mockLegacyLinode = linodeFactory.build();
+    const mockNoLIInterfacesLinode = linodeFactory.build({
+      interface_generation: 'linode',
+    });
+    const mockOnlyVlanLILinode = linodeFactory.build({
+      interface_generation: 'linode',
+    });
+    const mockAlreadyAssignedLILinode = linodeFactory.build({
+      interface_generation: 'linode',
+    });
+
+    const mockLinodeDevice = firewallDeviceFactory.build({
+      entity: {
+        label: mockLegacyLinode.label,
+        type: 'linode',
+        id: mockLegacyLinode.id,
+        url: `/v4/linode/instances/${mockLegacyLinode.id}`,
+      },
+    });
+    const mockInterfaceDevice = firewallDeviceFactory.build({
+      entity: {
+        type: 'interface',
+        id: mockPublicInterface.id,
+        url: `/v4/linode/instances/${mockAlreadyAssignedLILinode.id}/interfaces/${mockPublicInterface.id}`,
+      },
+    });
+
+    const mockFirewall = firewallFactory.build({
+      entities: [mockLinodeDevice.entity, mockInterfaceDevice.entity],
+    });
+
+    mockGetFirewall(mockFirewall.id, mockFirewall);
+    mockGetFirewalls([mockFirewall]);
+    mockGetFirewallDevices(mockFirewall.id, [
+      mockLinodeDevice,
+      mockInterfaceDevice,
+    ]);
+    mockGetLinodes([
+      mockLegacyLinode,
+      mockNoLIInterfacesLinode,
+      mockOnlyVlanLILinode,
+      mockAlreadyAssignedLILinode,
+    ]);
+    mockGetLinodeInterfaces(mockNoLIInterfacesLinode.id, {
+      interfaces: [],
+    });
+    mockGetLinodeInterfaces(mockOnlyVlanLILinode.id, {
+      interfaces: [mockVlanInterface],
+    });
+    mockGetLinodeInterfaces(mockAlreadyAssignedLILinode.id, {
+      interfaces: [mockPublicInterface],
+    });
+    cy.visitWithLogin(`/firewalls/${mockFirewall.id}/linodes`);
+
+    // confirm firewall has two devices
+    cy.findByLabelText('List of Linodes attached to this firewall')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(mockLegacyLinode.label).should('be.visible');
+        cy.findByText(mockAlreadyAssignedLILinode.label).should('be.visible');
+      });
+
+    ui.button
+      .findByTitle('Add Linodes to Firewall')
+      .should('be.visible')
+      .click();
+
+    // Confirm no Linodes show up in the Linode select
+    ui.drawer
+      .findByTitle(`Add Linode to Firewall: ${mockFirewall.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Linodes').should('be.visible').click();
+
+        ui.autocompletePopper
+          .findByTitle('No available Linodes')
+          .should('be.visible');
+      });
+  });
 
   /**
    * - Confirms error handling if a firewall is unable to be assigned
    */
-  it('shows an error if a firewall device cannot be assigned', () => {});
+  it('shows an error if a firewall device cannot be assigned', () => {
+    
+  });
 });
