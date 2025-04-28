@@ -40,7 +40,7 @@ export const EditInterfaceForm = (props: Props) => {
 
   const {
     mutateAsync: updateInterfaceFirewall,
-    data: wasFirewallUpdated,
+    data: firewallUpdateResult,
     reset,
   } = useUpdateLinodeInterfaceFirewallMutation(linodeId, linodeInterface.id);
 
@@ -139,8 +139,8 @@ export const EditInterfaceForm = (props: Props) => {
             <EditInterfaceFirewall
               showSuccessNotice={
                 !isSubmitting &&
-                wasFirewallUpdated !== undefined &&
-                wasFirewallUpdated !== false
+                firewallUpdateResult !== undefined &&
+                firewallUpdateResult !== false
               }
             />
           </Stack>
