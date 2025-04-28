@@ -13,8 +13,8 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';
 
-import type { EntitiesOption } from '../types';
-import type { ExtendedRoleMap, UpdateEntitiesFormValues } from '../utilities';
+import type { EntitiesOption, ExtendedRoleMap } from '../types';
+import type { UpdateEntitiesFormValues } from '../utilities';
 import type { EntityAccessRole } from '@linode/api-v4';
 
 interface Props {

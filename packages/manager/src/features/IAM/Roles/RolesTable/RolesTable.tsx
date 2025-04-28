@@ -23,9 +23,9 @@ import {
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
 
+import type { RoleMap } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
-import type { RoleMap } from 'src/features/IAM/Shared/utilities';
 
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
@@ -112,7 +112,7 @@ export const RolesTable = ({ roles }: Props) => {
   };
 
   return (
-    <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+    <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
       <Grid
         container
         direction="row"

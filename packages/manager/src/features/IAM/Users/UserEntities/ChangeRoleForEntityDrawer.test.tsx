@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
-import type { EntitiesRole } from '../../Shared/utilities';
+import type { EntitiesRole } from '../../Shared/types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountPermissions: vi.fn().mockReturnValue({}),

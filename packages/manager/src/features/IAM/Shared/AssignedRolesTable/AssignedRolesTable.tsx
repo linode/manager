@@ -11,7 +11,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import {
   useAccountPermissions,
@@ -22,39 +21,52 @@ import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
-  addEntitiesNamesToRoles,
-  combineRoles,
   getFacadeRoleDescription,
   getFilteredRoles,
   getFormattedEntityType,
-  mapEntityTypes,
-  mapRolesToPermissions,
+  getResourceTypes,
   groupAccountEntitiesByType,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
+import {
+  addEntitiesNamesToRoles,
+  combineRoles,
+  getSearchableFields,
+  mapRolesToPermissions,
+} from './utils';
 
 import type {
   CombinedEntity,
   DrawerModes,
+  EntitiesRole,
   EntitiesType,
   ExtendedRoleMap,
   RoleMap,
-} from '../utilities';
-import type {
-  AccountAccessRole,
-  EntityAccessRole,
-  EntityTypePermissions,
-} from '@linode/api-v4';
+} from '../types';
+import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
+
+type OrderByKeys = 'name';
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
   const history = useHistory();
-  const { handleOrderChange, order, orderBy } = useOrder();
   const theme = useTheme();
+
+  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
+
+  const handleOrderChange = (newOrderBy: OrderByKeys) => {
+    if (orderBy === newOrderBy) {
+      setOrder(order === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderBy(newOrderBy);
+      setOrder('asc');
+    }
+  };
 
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
@@ -140,9 +152,30 @@ export const AssignedRolesTable = () => {
       getSearchableFields,
       query,
       roles,
+    }) as RoleMap[];
+
+    // Sorting logic:
+    // 1. Account Access Roles are placed at the top.
+    // 2. Entity Access Roles are placed at the bottom.
+    // 3. Within each group, roles are sorted alphabetically by Role name.
+    const sortedRoles = [...filteredRoles].sort((a, b) => {
+      if (a.access !== b.access) {
+        return a.access === 'account_access' ? -1 : 1;
+      }
+
+      const aValue = a[orderBy];
+      const bValue = b[orderBy];
+
+      if (aValue < bValue) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
     });
 
-    return filteredRoles.map((role: ExtendedRoleMap) => {
+    return sortedRoles.map((role: ExtendedRoleMap) => {
       const OuterTableCells = (
         <>
           {role.access === 'account_access' ? (
@@ -211,7 +244,7 @@ export const AssignedRolesTable = () => {
         label: role.name,
       };
     });
-  }, [roles, query, entityType]);
+  }, [roles, query, entityType, order, orderBy]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -220,27 +253,37 @@ export const AssignedRolesTable = () => {
   const RoleTableRowHead = (
     <TableRow>
       <TableSortCell
-        active={orderBy === 'role'}
+        active={orderBy === 'name'}
         direction={order}
-        handleClick={handleOrderChange}
+        handleClick={() => handleOrderChange('name')}
         label="role"
         style={{ width: '20%' }}
       >
         Role
       </TableSortCell>
-      <TableSortCell
-        active={orderBy === 'entities'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="entities"
+      <TableCell
         style={{ width: '65%' }}
         sx={{ display: { sm: 'table-cell', xs: 'none' } }}
       >
         Entities
-      </TableSortCell>
+      </TableCell>
       <TableCell />
     </TableRow>
   );
+
+  // used to pass the selected role and entity to the RemoveAssignmentConfirmationDialog
+  let selectedRoleDetails: EntitiesRole | undefined = undefined;
+
+  if (selectedRole && selectedEntity) {
+    selectedRoleDetails = {
+      entity_type: selectedRole.entity_type,
+      id: selectedRole.id,
+      entity_id: selectedEntity.id,
+      entity_name: selectedEntity.name,
+      role_name: selectedRole.name as EntityAccessRole,
+      access: 'entity_access',
+    };
+  }
 
   return (
     <Grid>
@@ -309,30 +352,8 @@ export const AssignedRolesTable = () => {
       <RemoveAssignmentConfirmationDialog
         onClose={() => setIsRemoveAssignmentDialogOpen(false)}
         open={isRemoveAssignmentDialogOpen}
-        role={{
-          entity_type: selectedRole?.entity_type as EntityTypePermissions,
-          id: selectedRole?.id as EntityAccessRole,
-          entity_id: selectedEntity?.id as number,
-          entity_name: selectedEntity?.name as string,
-          role_name: selectedRole?.name as EntityAccessRole,
-          access: 'entity_access',
-        }}
+        role={selectedRoleDetails}
       />
     </Grid>
   );
-};
-
-const getResourceTypes = (data: RoleMap[]): EntitiesType[] =>
-  mapEntityTypes(data, ' Roles');
-
-const getSearchableFields = (role: ExtendedRoleMap): string[] => {
-  const entityNames = role.entity_names || [];
-  return [
-    String(role.id),
-    role.entity_type,
-    role.name,
-    role.description,
-    ...entityNames,
-    ...role.permissions,
-  ];
 };

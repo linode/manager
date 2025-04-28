@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
-import type { EntitiesRole } from '../utilities';
+import type { EntitiesRole } from '../types';
 
 const mockRole: EntitiesRole = {
   role_name: 'firewall_admin',

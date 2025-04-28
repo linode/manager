@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),

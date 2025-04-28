@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
-import type { RoleMap } from '../../Shared/utilities';
+import type { RoleMap } from '../../Shared/types';
 
 vi.mock('src/features/IAM/Shared/utilities', async () => {
   const actual = await vi.importActual<any>(

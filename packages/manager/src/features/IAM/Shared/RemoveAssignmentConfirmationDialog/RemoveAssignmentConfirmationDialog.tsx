@@ -9,7 +9,9 @@ import {
   useAccountUserPermissionsMutation,
 } from 'src/queries/iam/iam';
 
-import { deleteUserEntity, type EntitiesRole } from '../utilities';
+import { deleteUserEntity } from '../utilities';
+
+import type { EntitiesRole } from '../types';
 
 interface Props {
   onClose: () => void;
@@ -39,28 +41,27 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   };
 
   const onDelete = async () => {
-    const roleName = role!.role_name;
-    const entityId = role!.entity_id;
-    const entityType = role!.entity_type;
+    if (!role || !assignedRoles) return;
+
+    const { role_name, entity_id, entity_type } = role;
 
     const updatedUserEntityRoles = deleteUserEntity(
-      assignedRoles!.entity_access,
-      roleName,
-      entityId,
-      entityType
+      assignedRoles.entity_access,
+      role_name,
+      entity_id,
+      entity_type
     );
 
     await updateUserPermissions({
-      ...assignedRoles!,
+      ...assignedRoles,
       entity_access: updatedUserEntityRoles,
     });
 
     enqueueSnackbar(`Entity removed`, {
       variant: 'success',
     });
-    if (onSuccess) {
-      onSuccess();
-    }
+
+    onSuccess?.();
     onClose();
   };
 

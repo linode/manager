@@ -25,6 +25,7 @@ export type EntityAccessRole =
   | 'database_admin'
   | 'firewall_admin'
   | 'firewall_creator'
+  | 'image_viewer'
   | 'linode_contributor'
   | 'linode_creator'
   | 'linode_viewer'
