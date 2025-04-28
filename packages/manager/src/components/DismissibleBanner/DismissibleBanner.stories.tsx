@@ -38,6 +38,29 @@ export const CallToActionBanner: Story = {
 };
 
 /**
+ * Example of a non-dismissible banner with an associated action
+ */
+export const CallToActionNonDismissibleBanner: Story = {
+  render: () => (
+    <DismissibleBanner
+      actionButton={
+        <Button buttonType="primary" onClick={() => null}>
+          Try Beta Now
+        </Button>
+      }
+      forceImportantIconVerticalCenter
+      isNotDismissible
+      preferenceKey="cluster-v1"
+      variant="info"
+    >
+      <Typography>
+        A new Beta version is now available with enhanced features.
+      </Typography>
+    </DismissibleBanner>
+  ),
+};
+
+/**
  * Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
  */
 export const BetaBanner: Story = {

@@ -16,6 +16,12 @@ interface Props extends NoticeProps {
    */
   forceImportantIconVerticalCenter?: boolean;
   /**
+   * An option to make the Dismissible Banner not Dismissible
+   *
+   * @default false
+   */
+  isNotDismissible?: boolean;
+  /**
    * Additional controls to pass to the Dismissible Banner
    */
   options?: DismissibleNotificationOptions;
@@ -42,7 +48,14 @@ interface Props extends NoticeProps {
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
 export const DismissibleBanner = (props: Props) => {
-  const { actionButton, children, options, preferenceKey, ...rest } = props;
+  const {
+    actionButton,
+    children,
+    isNotDismissible,
+    options,
+    preferenceKey,
+    ...rest
+  } = props;
 
   const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
@@ -85,7 +98,7 @@ export const DismissibleBanner = (props: Props) => {
         spacing={1}
       >
         {actionButton}
-        {dismissibleButton}
+        {!isNotDismissible ? dismissibleButton : null}
       </Stack>
     </Notice>
   );
