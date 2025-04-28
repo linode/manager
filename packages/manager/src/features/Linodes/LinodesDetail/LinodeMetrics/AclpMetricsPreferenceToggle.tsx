@@ -1,13 +1,11 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
-import { Button, Typography, useTheme } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Skeleton } from 'src/components/Skeleton';
 
 export const AclpMetricsPreferenceToggle = () => {
-  const theme = useTheme();
-
   const { data: isAclpMetricsPreferenceBeta, isLoading } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
@@ -17,10 +15,11 @@ export const AclpMetricsPreferenceToggle = () => {
   if (isLoading) {
     return (
       <Skeleton
+        data-testid="metrics-preference-skeleton"
         height="85px"
-        sx={{
-          marginTop: `-${theme.spacingFunction(20)}`,
-        }}
+        sx={(theme) => ({
+          marginTop: `-${theme.tokens.spacing.S20}`,
+        })}
       />
     );
   }
@@ -47,7 +46,7 @@ export const AclpMetricsPreferenceToggle = () => {
       preferenceKey="metrics-preference"
       variant="info"
     >
-      <Typography>
+      <Typography data-testid="metrics-preference-banner-text">
         {isAclpMetricsPreferenceBeta ? (
           <span>
             Welcome to <strong>Metrics (Beta)</strong> with more options and
