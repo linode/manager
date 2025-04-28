@@ -77,8 +77,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+
   const { isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface: linode?.interface_generation === 'linode',
+    isLinodeInterface,
     linodeId: linodeID,
   });
 
@@ -246,6 +248,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                   <LinodeIPAddressRow
                     {...ipDisplay}
                     {...handlers}
+                    isLinodeInterface={isLinodeInterface}
                     isVPCOnlyLinode={
                       isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
                     }

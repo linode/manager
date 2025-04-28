@@ -1,10 +1,10 @@
+import { usePreferences } from '@linode/queries';
 import { tail } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
-import { usePreferences } from '@linode/queries';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
@@ -39,6 +39,10 @@ export interface IPAddressProps {
    */
   isHovered?: boolean;
   /**
+   * If passed in, assuems IP address belongs to a Linode and determines if this Linode uses Linode interfaces or legacy interfaces
+   */
+  isLinodeInterface?: boolean;
+  /**
    * If true, all IP addresses will be displayed.
    * @default false
    */
@@ -63,6 +67,7 @@ export const IPAddress = (props: IPAddressProps) => {
     disabled = false,
     ips,
     isHovered = false,
+    isLinodeInterface,
     showAll,
     showMore,
     showTooltipOnIpHover = false,
@@ -74,9 +79,8 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const copiedTimeout: null | number = null;
 
-  const [isIpTooltipHovered, setIsIpTooltipHovered] = React.useState<boolean>(
-    false
-  );
+  const [isIpTooltipHovered, setIsIpTooltipHovered] =
+    React.useState<boolean>(false);
 
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -95,7 +99,7 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const renderCopyIcon = (ip: string) => {
     if (disabled) {
-      return PublicIPAddressesTooltip;
+      return <PublicIPAddressesTooltip isLinodeInterface={isLinodeInterface} />;
     }
 
     return (

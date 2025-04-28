@@ -302,6 +302,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 ) : undefined
               }
               gridSize={{ lg: 5, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
               isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
@@ -320,6 +321,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             />
             <AccessTable
               gridSize={{ lg: 7, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
               isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
