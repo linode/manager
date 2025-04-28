@@ -17,6 +17,11 @@ import type { APIError } from '../../utilities/error';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
 interface DrawerProps extends _DrawerProps {
+  /**
+   * Error that will be shown in the drawer, such as an API error for data passed to the drawer (NotFound for instance).
+   * Those are different from errors that are shown in the drawer's content, such as a form submission or validation error.
+   * It prevents the drawer from showing broken content.
+   */
   error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.

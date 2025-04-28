@@ -26,7 +26,8 @@ export interface DialogProps extends _DialogProps {
    */
   enableCloseOnBackdropClick?: boolean;
   /**
-   * Error that will be shown in the dialog.
+   * Error that will be shown in the dialog, such as an API error for data passed to the dialog (NotFound for instance).
+   * Those are different from errors that are shown in the dialog's content, such as a form submission or validation error.
    */
   error?: APIError[] | null | string;
   /**
