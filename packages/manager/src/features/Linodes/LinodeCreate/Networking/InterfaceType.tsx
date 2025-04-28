@@ -32,11 +32,8 @@ const interfaceTypes = [
 ] as const;
 
 export const InterfaceType = ({ index }: Props) => {
-  const {
-    control,
-    getFieldState,
-    setValue,
-  } = useFormContext<LinodeCreateFormValues>();
+  const { control, getFieldState, setValue } =
+    useFormContext<LinodeCreateFormValues>();
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
 
@@ -54,8 +51,15 @@ export const InterfaceType = ({ index }: Props) => {
       firewallSettings
     );
 
+    // VLAN interfaces do not support Firewalls, so set
+    // the Firewall ID to null and early return.
+    if (value === 'vlan') {
+      setValue(`linodeInterfaces.${index}.firewall_id`, null);
+      return;
+    }
+
     // Set the Firewall based on defaults if:
-    // - there is a default firewall for this interface type
+    // - there is a default firewall for the selected interface type
     // - the user has not touched the Firewall field
     if (
       defaultFirewall &&
@@ -75,18 +79,18 @@ export const InterfaceType = ({ index }: Props) => {
         <Grid2 container spacing={1}>
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
+              checked={field.value === interfaceType.purpose}
               gridSize={{
                 md: 3,
                 sm: 12,
                 xs: 12,
               }}
-              renderIcon={() => (
-                <Radio checked={field.value === interfaceType.purpose} />
-              )}
-              checked={field.value === interfaceType.purpose}
               heading={interfaceType.label}
               key={interfaceType.purpose}
               onClick={() => onChange(interfaceType.purpose)}
+              renderIcon={() => (
+                <Radio checked={field.value === interfaceType.purpose} />
+              )}
               subheadings={[]}
               sxCardBaseIcon={{ svg: { fontSize: '24px !important' } }}
             />
