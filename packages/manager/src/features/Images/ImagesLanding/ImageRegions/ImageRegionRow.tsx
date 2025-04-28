@@ -1,5 +1,11 @@
-import { Box, IconButton, Stack, Tooltip, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
@@ -48,7 +54,7 @@ export const ImageRegionRow = (props: Props) => {
               onClick={onRemove}
               sx={{ p: 0.5 }}
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </span>
         </Tooltip>

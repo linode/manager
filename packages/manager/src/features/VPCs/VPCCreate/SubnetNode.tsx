@@ -1,5 +1,4 @@
-import { Button, TextField } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Button, CloseIcon, TextField } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -87,7 +86,7 @@ export const SubnetNode = (props: Props) => {
               aria-label={`Remove Subnet ${label !== '' ? label : idx}`}
               onClick={() => remove(idx)}
             >
-              <Close data-testid={`delete-subnet-${idx}`} />
+              <CloseIcon data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
         )}
