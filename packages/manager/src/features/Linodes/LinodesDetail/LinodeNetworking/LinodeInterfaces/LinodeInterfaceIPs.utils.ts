@@ -37,7 +37,7 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
     }
   }
 
-  if (linodeInterface.vpc) {
+  if (linodeInterface.vpc && linodeInterface.vpc.ipv4) {
     // VPC IPv4s
     for (const address of linodeInterface.vpc.ipv4.addresses) {
       if (address.primary) {
@@ -52,6 +52,7 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
         }
       }
     }
+
     // VPC IPv4 Ranges
     for (const address of linodeInterface.vpc.ipv4.ranges) {
       ips.push(address.range);

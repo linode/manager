@@ -2,6 +2,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
   CircleProgress,
+  CloseIcon,
   Drawer,
   ErrorState,
   IconButton,
@@ -11,7 +12,6 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -429,7 +429,6 @@ export const ImagesLanding = () => {
     <React.Fragment>
       {isCreateImageRestricted && (
         <Notice
-          important
           sx={{ marginBottom: 2 }}
           text={getRestrictedResourceText({
             action: 'create',

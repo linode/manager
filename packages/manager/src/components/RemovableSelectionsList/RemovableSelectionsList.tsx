@@ -1,5 +1,4 @@
-import { Box, IconButton } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Box, CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
 
 import {
@@ -185,7 +184,7 @@ export const RemovableSelectionsList = (
                         onClick={() => handleOnClick(selection)}
                         size="medium"
                       >
-                        <Close />
+                        <CloseIcon />
                       </IconButton>
                     ))}
                 </SelectedOptionsListItem>

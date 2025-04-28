@@ -88,7 +88,6 @@ export const SubnetEditDrawer = (props: Props) => {
       )}
       {readOnly && (
         <Notice
-          important
           text={`You don't have permissions to edit ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
         />

@@ -1,6 +1,5 @@
-import { useQueryClient } from '@tanstack/react-query';
-
 import { firewallQueries, useCreateFirewall } from '@linode/queries';
+import { useQueryClient } from '@tanstack/react-query';
 
 import type { DialogState } from './GenerateFirewallDialog';
 import type {
@@ -46,11 +45,18 @@ export const useCreateFirewallFromTemplate = (options: {
 
 export const createFirewallFromTemplate = async (options: {
   createFirewall: (firewall: CreateFirewallPayload) => Promise<Firewall>;
+  firewallLabel?: string;
   queryClient: QueryClient;
   templateSlug: FirewallTemplateSlug;
   updateProgress?: (progress: number | undefined) => void;
 }): Promise<Firewall> => {
-  const { createFirewall, queryClient, templateSlug, updateProgress } = options;
+  const {
+    createFirewall,
+    queryClient,
+    templateSlug,
+    updateProgress,
+    firewallLabel,
+  } = options;
   if (updateProgress) {
     updateProgress(0);
   }
@@ -66,7 +72,7 @@ export const createFirewallFromTemplate = async (options: {
     updateProgress(80); // this gives the appearance of linear progress
   }
   // Determine new firewall name
-  const label = getUniqueFirewallLabel(slug, firewalls);
+  const label = firewallLabel ?? getUniqueFirewallLabel(slug, firewalls);
 
   // Create new firewall
   return await createFirewall({ label, rules });

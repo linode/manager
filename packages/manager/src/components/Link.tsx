@@ -8,12 +8,12 @@ import {
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link as RouterLink } from 'react-router-dom';
+import type { LinkProps as _LinkProps } from 'react-router-dom';
 
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { useStyles } from 'src/components/Link.styles';
 
 import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
-import type { LinkProps as _LinkProps } from 'react-router-dom';
 
 export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
@@ -21,6 +21,11 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    * This is useful when the text of the link is unavailable, not descriptive enough, or a single icon is used as the child.
    */
   accessibleAriaLabel?: string;
+  /**
+   * Optional prop to bypass URL sanitization. Use with caution.
+   * @default false
+   */
+  bypassSanitization?: boolean;
   /**
    * Optional prop to render the link as an external link, which features an external link icon, opens in a new tab<br />
    * and provides by default "noopener noreferrer" attributes to prevent security vulnerabilities.
@@ -47,7 +52,7 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    * @example "/profile/display"
    * @example "https://linode.com"
    */
-  to: Exclude<TanStackLinkProps['to'] | (string & {}), null | undefined>;
+  to: Exclude<(string & {}) | TanStackLinkProps['to'], null | undefined>;
 }
 
 /**
@@ -78,14 +83,15 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       children,
       className,
       external,
+      bypassSanitization,
       forceCopyColor,
       hideIcon,
       onClick,
       to,
     } = props;
     const { classes, cx } = useStyles();
-    const sanitizedUrl = () => sanitizeUrl(to);
-    const shouldOpenInNewTab = opensInNewTab(sanitizedUrl());
+    const processedUrl = () => (bypassSanitization ? to : sanitizeUrl(to));
+    const shouldOpenInNewTab = opensInNewTab(processedUrl());
     const childrenAsAriaLabel = flattenChildrenIntoAriaLabel(children);
     const externalNotice = '- link opens in a new tab';
     const ariaLabel = accessibleAriaLabel
@@ -108,6 +114,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
     return shouldOpenInNewTab ? (
       <a
+        aria-label={ariaLabel}
         className={cx(
           classes.root,
           {
@@ -115,9 +122,8 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           },
           className
         )}
-        aria-label={ariaLabel}
         data-testid={external ? 'external-site-link' : 'external-link'}
-        href={sanitizedUrl()}
+        href={processedUrl()}
         onClick={onClick}
         ref={ref}
         rel="noopener noreferrer"
