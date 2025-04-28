@@ -33,14 +33,14 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
       ? '/linode/instances'
       : `/linode/instances/${sourceLinodeID}/clone`;
 
-  const curlCommand = useMemo(() => generateCurlCommand(payLoad, path), [
-    path,
-    payLoad,
-  ]);
+  const curlCommand = useMemo(
+    () => generateCurlCommand(payLoad, path),
+    [path, payLoad]
+  );
 
   return (
     <SafeTabPanel index={index}>
-      <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
+      <Typography sx={{ marginTop: theme.spacingFunction(16) }} variant="body1">
         Most Linode API requests need to be authenticated with a valid{' '}
         <Link
           onClick={() => {
@@ -74,7 +74,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         </Link>
         .
       </Typography>
-      <CodeBlock code={curlCommand} analyticsLabel={title} language={'bash'} />
+      <CodeBlock analyticsLabel={title} code={curlCommand} language={'bash'} />
     </SafeTabPanel>
   );
 };
