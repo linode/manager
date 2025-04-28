@@ -17,7 +17,7 @@ import { VPCIPv4Addresses } from './VPCInterface/VPCIPv4Addresses';
 import { VPCIPv4Ranges } from './VPCInterface/VPCIPv4Ranges';
 
 import type { EditLinodeInterfaceFormValues } from './EditInterfaceForm.utils';
-import type { APIError, Firewall, LinodeInterface } from '@linode/api-v4';
+import type { Firewall, LinodeInterface } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;
@@ -51,7 +51,9 @@ export const EditInterfaceForm = (props: Props) => {
 
   const form = useForm<EditLinodeInterfaceFormValues>({
     defaultValues,
-    resolver: yupResolver(EditLinodeInterfaceFormSchema),
+    resolver: yupResolver(EditLinodeInterfaceFormSchema, {
+      stripUnknown: true,
+    }),
     values: defaultValues,
     resetOptions: {
       keepErrors: true,
@@ -68,36 +70,26 @@ export const EditInterfaceForm = (props: Props) => {
       updateInterfaceFirewall({ firewall_id: values.firewall_id }),
     ]);
 
-    const totalNumberOfErrors = results.reduce((errorCount, result) => {
-      if (result.status === 'rejected') {
-        return errorCount + (result.reason as APIError[]).length;
+    // Handle Interface update errors
+    if (results[0].status === 'rejected') {
+      for (const error of results[0].reason) {
+        form.setError(error.field ?? 'root', { message: error.reason });
       }
-      return errorCount;
-    }, 0);
+    }
 
-    if (totalNumberOfErrors === 0) {
-      // If everything went okay...
+    // Handle Firewall update errors
+    if (results[1].status === 'rejected' && dirtyFields.firewall_id) {
+      for (const error of results[1].reason) {
+        form.setError('firewall_id', { message: error.reason });
+      }
+    }
+
+    // Handle success
+    if (results.every((r) => r.status === 'fulfilled')) {
       enqueueSnackbar('Interface successfully updated.', {
         variant: 'success',
       });
-
       onClose();
-    } else {
-      // If something didn't go okay...
-
-      // Handle Interface update errors
-      if (results[0].status === 'rejected') {
-        for (const error of results[0].reason) {
-          form.setError(error.field ?? 'root', { message: error.reason });
-        }
-      }
-
-      // Handle Firewall update errors
-      if (results[1].status === 'rejected' && dirtyFields.firewall_id) {
-        for (const error of results[1].reason) {
-          form.setError('firewall_id', { message: error.reason });
-        }
-      }
     }
   };
 
@@ -113,10 +105,7 @@ export const EditInterfaceForm = (props: Props) => {
               variant="warning"
             />
             {errors.root?.message && (
-              <Notice
-                text={errors.root?.message}
-                variant="error"
-              />
+              <Notice text={errors.root?.message} variant="error" />
             )}
             {errors.default_route?.ipv4?.message && (
               <Notice
