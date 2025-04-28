@@ -1,5 +1,11 @@
-import { IconButton, Notice, Stack, TextField, TooltipIcon } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+  CloseIcon,
+  IconButton,
+  Notice,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 

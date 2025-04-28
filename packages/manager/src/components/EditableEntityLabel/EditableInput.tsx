@@ -1,6 +1,5 @@
-import { ClickAwayListener, IconButton } from '@linode/ui';
+import { ClickAwayListener, CloseIcon, IconButton } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import {
@@ -117,7 +116,7 @@ export const EditableInput = (props: FilteredEditableInputProps) => {
               onClick={cancelEdit}
               size="small"
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </>
         )}

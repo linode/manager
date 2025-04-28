@@ -7,13 +7,13 @@ import {
   Box,
   Button,
   CircleProgress,
+  CloseIcon,
   IconButton,
   InputAdornment,
   Stack,
   TextField,
   TooltipIcon,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
@@ -81,25 +81,18 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
-  const {
-    data: stackscript,
-    isLoading: isSelectedStackScriptLoading,
-  } = useStackScriptQuery(
-    params.stackScriptID ?? -1,
-    hasPreselectedStackScript
-  );
+  const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
+    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
 
   const filter =
     type === 'Community'
       ? communityStackScriptFilter
       : accountStackScriptFilter;
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const {
     data,

@@ -1,6 +1,11 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
-import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+  Autocomplete,
+  Chip,
+  CloseIcon,
+  Stack,
+  StyledListItem,
+} from '@linode/ui';
 import React from 'react';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
@@ -56,10 +61,8 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     ...rest
   } = props;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,

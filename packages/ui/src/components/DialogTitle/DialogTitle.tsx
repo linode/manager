@@ -1,6 +1,5 @@
-import { Typography } from '@linode/ui';
+import { CloseIcon, Typography } from '@linode/ui';
 import { Box, IconButton } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
 import _DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 
@@ -61,7 +60,7 @@ const DialogTitle = (props: DialogTitleProps) => {
             onClick={onClose}
             size="large"
           >
-            <Close />
+            <CloseIcon data-testid="CloseIcon" />
           </IconButton>
         )}
       </Box>
