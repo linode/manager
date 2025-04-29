@@ -27,6 +27,7 @@ interface AccessTableProps {
     lg: number;
     xs: number;
   };
+  isLinodeInterface?: boolean;
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
   sx?: SxProps<Theme>;
@@ -34,7 +35,15 @@ interface AccessTableProps {
 }
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
-  const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
+  const {
+    footer,
+    gridSize,
+    isVPCOnlyLinode,
+    isLinodeInterface = false,
+    rows,
+    sx,
+    title,
+  } = props;
 
   const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
 
@@ -47,7 +56,10 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
       sx={sx}
     >
       <StyledColumnLabelGrid>
-        {title} {isDisabled && PublicIPAddressesTooltip}
+        {title}{' '}
+        {isDisabled && (
+          <PublicIPAddressesTooltip isLinodeInterface={isLinodeInterface} />
+        )}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
