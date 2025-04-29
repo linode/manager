@@ -127,6 +127,12 @@ export interface DatabaseInstance {
 
 export type ClusterSize = 1 | 2 | 3;
 
+export interface PrivateNetwork {
+  public_access: boolean;
+  subnet_id: null | number;
+  vpc_id: null | number;
+}
+
 type ReadonlyCount = 0 | 2;
 
 /** @deprecated TODO (UIE-8214) remove POST GA */
@@ -139,6 +145,7 @@ export interface CreateDatabasePayload {
   encrypted?: boolean;
   engine?: Engine;
   label: string;
+  private_network?: null | PrivateNetwork;
   region: string;
   /** @Deprecated used by rdbms-legacy only */
   replication_type?: MySQLReplicationType | PostgresReplicationType;
