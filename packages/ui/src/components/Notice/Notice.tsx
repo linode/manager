@@ -162,7 +162,7 @@ export const Notice = (props: NoticeProps) => {
         {variantMap.tip && <LightBulbIcon className={classes.icon} />}
         {variantMap.warning && <WarningIcon className={classes.icon} />}
       </Box>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+      <Box sx={{ width: '100%' }}>
         {text || typeof children === 'string' ? (
           <Typography {...typeProps}>{text ?? children}</Typography>
         ) : (
