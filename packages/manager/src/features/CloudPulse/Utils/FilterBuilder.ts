@@ -466,7 +466,7 @@ export const constructAdditionalRequestFilters = (
         dimension_label: filter.filterKey,
         operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
         value: Array.isArray(filter.filterValue)
-          ? Array.of(filter.filterValue).join(',')
+          ? filter.filterValue.join(',')
           : String(filter.filterValue),
       });
     }
