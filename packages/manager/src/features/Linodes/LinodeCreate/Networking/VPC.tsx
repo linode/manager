@@ -21,10 +21,10 @@ import {
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
+import { VPCAvailabilityNotice } from './VPCAvailabilityNotice';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import { VPCAvailabilityNotice } from './VPCAvailabilityNotice';
 
 interface Props {
   index: number;
