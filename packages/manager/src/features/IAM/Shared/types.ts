@@ -12,7 +12,7 @@ export interface EntitiesOption {
   value: number;
 }
 
-export interface RoleMap {
+export interface RoleView {
   access: 'account_access' | 'entity_access';
   description: string;
   entity_ids: null | number[];
@@ -21,7 +21,7 @@ export interface RoleMap {
   name: AccountAccessRole | EntityAccessRole;
   permissions: PermissionType[];
 }
-export interface ExtendedRoleMap extends RoleMap {
+export interface ExtendedRoleView extends RoleView {
   entity_names?: string[];
 }
 

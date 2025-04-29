@@ -23,7 +23,7 @@ import {
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
 
-import type { RoleMap } from '../../Shared/types';
+import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
 
@@ -33,7 +33,7 @@ const ALL_ROLES_OPTION: SelectOption = {
 };
 
 interface Props {
-  roles: RoleMap[];
+  roles: RoleView[];
 }
 
 export const RolesTable = ({ roles }: Props) => {
@@ -54,7 +54,7 @@ export const RolesTable = ({ roles }: Props) => {
     undefined | { column: string; order: Order }
   >(undefined);
 
-  const [selectedRows, setSelectedRows] = useState<RoleMap[]>([]);
+  const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
 
   const areAllSelected = React.useMemo(() => {
     return (
@@ -70,7 +70,7 @@ export const RolesTable = ({ roles }: Props) => {
     setRows(visibleRows);
   };
 
-  const handleSelect = (event: CustomEvent, row: 'all' | RoleMap) => {
+  const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
     if (row === 'all') {
       setSelectedRows(areAllSelected ? [] : rows);
     } else if (selectedRows.includes(row)) {

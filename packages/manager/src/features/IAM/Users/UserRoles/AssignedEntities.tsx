@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
-import type { CombinedEntity, ExtendedRoleMap } from '../../Shared/types';
+import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleMap) => void;
-  role: ExtendedRoleMap;
+  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
+  role: ExtendedRoleView;
 }
 
 export const AssignedEntities = ({

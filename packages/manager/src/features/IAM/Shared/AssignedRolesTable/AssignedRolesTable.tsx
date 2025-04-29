@@ -43,8 +43,8 @@ import type {
   DrawerModes,
   EntitiesRole,
   EntitiesType,
-  ExtendedRoleMap,
-  RoleMap,
+  ExtendedRoleView,
+  RoleView,
 } from '../types';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -70,7 +70,7 @@ export const AssignedRolesTable = () => {
 
   const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
     React.useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleMap>();
+  const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleView>();
   const [selectedEntity, setSelectedEntity] = React.useState<CombinedEntity>();
   const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
     React.useState<boolean>(false);
@@ -82,25 +82,25 @@ export const AssignedRolesTable = () => {
   const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
     React.useState<boolean>(false);
 
-  const handleChangeRole = (role: ExtendedRoleMap) => {
+  const handleChangeRole = (role: ExtendedRoleView) => {
     setIsChangeRoleDrawerOpen(true);
     setSelectedRole(role);
     setDrawerMode('change-role');
   };
 
-  const handleUnassignRole = (role: ExtendedRoleMap) => {
+  const handleUnassignRole = (role: ExtendedRoleView) => {
     setIsUnassignRoleDialogOpen(true);
     setSelectedRole(role);
   };
 
-  const handleUpdateEntities = (role: ExtendedRoleMap) => {
+  const handleUpdateEntities = (role: ExtendedRoleView) => {
     setIsUpdateEntitiesDrawerOpen(true);
     setSelectedRole(role);
   };
 
   const handleRemoveAssignment = (
     entity: CombinedEntity,
-    role: ExtendedRoleMap
+    role: ExtendedRoleView
   ) => {
     setIsRemoveAssignmentDialogOpen(true);
     setSelectedEntity(entity);
@@ -152,30 +152,27 @@ export const AssignedRolesTable = () => {
       getSearchableFields,
       query,
       roles,
-    }) as RoleMap[];
+    }) as RoleView[];
 
     // Sorting logic:
     // 1. Account Access Roles are placed at the top.
     // 2. Entity Access Roles are placed at the bottom.
     // 3. Within each group, roles are sorted alphabetically by Role name.
-    const sortedRoles = [...filteredRoles].sort((a, b) => {
+    const filteredAndSortedRoles = [...filteredRoles].sort((a, b) => {
       if (a.access !== b.access) {
         return a.access === 'account_access' ? -1 : 1;
       }
 
-      const aValue = a[orderBy];
-      const bValue = b[orderBy];
-
-      if (aValue < bValue) {
+      if (a[orderBy] < b[orderBy]) {
         return order === 'asc' ? -1 : 1;
       }
-      if (aValue > bValue) {
+      if (a[orderBy] > b[orderBy]) {
         return order === 'asc' ? 1 : -1;
       }
       return 0;
     });
 
-    return sortedRoles.map((role: ExtendedRoleMap) => {
+    return filteredAndSortedRoles.map((role: ExtendedRoleView) => {
       const OuterTableCells = (
         <>
           {role.access === 'account_access' ? (

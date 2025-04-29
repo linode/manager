@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
-import type { RoleMap } from '../../Shared/types';
+import type { RoleView } from '../../Shared/types';
 
 vi.mock('src/features/IAM/Shared/utilities', async () => {
   const actual = await vi.importActual<any>(
@@ -17,7 +17,7 @@ vi.mock('src/features/IAM/Shared/utilities', async () => {
   };
 });
 
-const mockRoles: RoleMap[] = [
+const mockRoles: RoleView[] = [
   {
     access: 'account_access',
     description: 'Account volume admin',

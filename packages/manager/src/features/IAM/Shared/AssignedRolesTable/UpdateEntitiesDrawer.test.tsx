@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -46,7 +46,7 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
-const mockRole: ExtendedRoleMap = {
+const mockRole: ExtendedRoleView = {
   access: 'entity_access',
   description: 'Access to update a linode instance',
   entity_ids: [1],

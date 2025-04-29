@@ -2,15 +2,15 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  handleChangeRole: (role: ExtendedRoleMap) => void;
-  handleUnassignRole: (role: ExtendedRoleMap) => void;
-  handleUpdateEntities: (role: ExtendedRoleMap) => void;
+  handleChangeRole: (role: ExtendedRoleView) => void;
+  handleUnassignRole: (role: ExtendedRoleView) => void;
+  handleUpdateEntities: (role: ExtendedRoleView) => void;
   handleViewEntities: (role: string) => void;
-  role: ExtendedRoleMap;
+  role: ExtendedRoleView;
 }
 
 export const AssignedRolesActionMenu = ({

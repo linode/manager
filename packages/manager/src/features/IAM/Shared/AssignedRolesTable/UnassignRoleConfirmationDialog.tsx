@@ -11,13 +11,13 @@ import {
 
 import { deleteUserRole } from '../utilities';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 
 interface Props {
   onClose: () => void;
   onSuccess?: () => void;
   open: boolean;
-  role: ExtendedRoleMap | undefined;
+  role: ExtendedRoleView | undefined;
 }
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
