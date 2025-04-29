@@ -13,14 +13,14 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';
 
-import type { EntitiesOption } from '../types';
-import type { ExtendedRoleMap, UpdateEntitiesFormValues } from '../utilities';
+import type { EntitiesOption, ExtendedRoleView } from '../types';
+import type { UpdateEntitiesFormValues } from '../utilities';
 import type { EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
   open: boolean;
-  role: ExtendedRoleMap | undefined;
+  role: ExtendedRoleView | undefined;
 }
 
 export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
