@@ -12,7 +12,7 @@ export const PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not assigned to the network interfaces in this configuration profile.';
 
 export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT =
-  'The noted Public IP Addresses are provisionally reserved but not assigned to the network interfaces.';
+  'The noted Public IP Addresses are provisionally reserved but not assigned to a network interface.';
 
 export const PublicIPAddressesTooltip = ({
   isLinodeInterface,
