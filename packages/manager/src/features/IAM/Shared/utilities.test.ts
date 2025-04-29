@@ -1,30 +1,25 @@
+import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 
 import {
   changeRoleForEntity,
-  combineRoles,
   deleteUserEntity,
   deleteUserRole,
   getAllRoles,
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
-  mapRolesToPermissions,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { CombinedRoles, ExtendedRoleMap } from './utilities';
-import type {
-  EntityAccess,
-  IamAccountPermissions,
-  IamUserPermissions,
-} from '@linode/api-v4';
+import type { ExtendedRoleMap } from './types';
+import type { EntityAccess } from '@linode/api-v4';
 
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions: IamAccountPermissions = {
+const accountPermissions = accountPermissionsFactory.build({
   account_access: [
     {
       roles: [
@@ -61,9 +56,9 @@ const accountPermissions: IamAccountPermissions = {
       type: 'linode',
     },
   ],
-};
+});
 
-const userPermissions: IamUserPermissions = {
+const userPermissions = userPermissionsFactory.build({
   account_access: ['account_linode_admin', 'linode_creator'],
   entity_access: [
     {
@@ -72,7 +67,7 @@ const userPermissions: IamUserPermissions = {
       type: 'linode',
     },
   ],
-};
+});
 
 describe('getAllRoles', () => {
   it('should return a list of roles for each access type', () => {
@@ -127,64 +122,6 @@ describe('getRoleByName', () => {
     };
 
     expect(getRoleByName(accountPermissions, roleName)).toEqual(expectedRole);
-  });
-});
-
-describe('combineRoles', () => {
-  it('should return an object of users roles', () => {
-    const expectedRoles = [
-      { id: null, name: 'account_linode_admin' },
-      { id: null, name: 'linode_creator' },
-      { id: [12345678], name: 'linode_contributor' },
-    ];
-
-    expect(combineRoles(userPermissions)).toEqual(expectedRoles);
-  });
-});
-
-describe('mapRolesToPermissions', () => {
-  it('should return an object of users roles', () => {
-    const userRoles: CombinedRoles[] = [
-      { id: null, name: 'account_admin' },
-      { id: null, name: 'account_linode_admin' },
-      { id: [12345678], name: 'linode_contributor' },
-    ];
-
-    const expectedRoles = [
-      {
-        access: accountAccess,
-        description:
-          'Access to perform any supported action on all resources in the account',
-        entity_ids: null,
-        entity_type: 'account',
-        id: 'account_admin',
-        name: 'account_admin',
-        permissions: ['create_linode', 'update_linode', 'update_firewall'],
-      },
-      {
-        access: accountAccess,
-        description:
-          'Access to perform any supported action on all linode instances in the account',
-        entity_ids: null,
-        entity_type: 'linode',
-        id: 'account_linode_admin',
-        name: 'account_linode_admin',
-        permissions: ['create_linode', 'update_linode', 'delete_linode'],
-      },
-      {
-        access: entityAccess,
-        description: 'Access to update a linode instance',
-        entity_ids: [12345678],
-        entity_type: 'linode',
-        id: 'linode_contributor',
-        name: 'linode_contributor',
-        permissions: ['update_linode', 'view_linode'],
-      },
-    ];
-
-    expect(mapRolesToPermissions(accountPermissions, userRoles)).toEqual(
-      expectedRoles
-    );
   });
 });
 
@@ -336,7 +273,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
-    const userPermissions: IamUserPermissions = {
+    const userPermissions = userPermissionsFactory.build({
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [
         {
@@ -350,7 +287,7 @@ describe('changeRoleForEntity', () => {
           type: 'linode',
         },
       ],
-    };
+    });
     const initialRole = 'linode_contributor';
     const newRole = 'linode_viewer';
     const entityId = 1;
@@ -380,7 +317,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access', () => {
-    const userPermissions: IamUserPermissions = {
+    const userPermissions = userPermissionsFactory.build({
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [
         {
@@ -394,7 +331,7 @@ describe('changeRoleForEntity', () => {
           type: 'linode',
         },
       ],
-    };
+    });
     const initialRole = 'linode_contributor';
     const newRole = 'linode_viewer';
     const entityId = 2;
