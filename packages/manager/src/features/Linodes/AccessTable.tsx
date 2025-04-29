@@ -27,7 +27,7 @@ interface AccessTableProps {
     lg: number;
     xs: number;
   };
-  isLinodeInterface: boolean;
+  isLinodeInterface?: boolean;
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
   sx?: SxProps<Theme>;
@@ -39,7 +39,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
     footer,
     gridSize,
     isVPCOnlyLinode,
-    isLinodeInterface,
+    isLinodeInterface = false,
     rows,
     sx,
     title,

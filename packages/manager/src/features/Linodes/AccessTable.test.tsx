@@ -14,7 +14,6 @@ describe('AccessTable', () => {
     const { findByRole, getAllByRole } = renderWithTheme(
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
-        isLinodeInterface={false}
         isVPCOnlyLinode={true}
         rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
         title={'Public IP Addresses'}
@@ -37,7 +36,6 @@ describe('AccessTable', () => {
       <>
         <AccessTable
           gridSize={{ lg: 6, xs: 12 }}
-          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
           title={'Public IP Addresses'}
@@ -45,7 +43,6 @@ describe('AccessTable', () => {
 
         <AccessTable
           gridSize={{ lg: 6, xs: 12 }}
-          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
           title={'Access'}
@@ -64,7 +61,6 @@ describe('AccessTable', () => {
     const { container } = renderWithTheme(
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
-        isLinodeInterface={false}
         isVPCOnlyLinode={true}
         rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
         title={'Public IP Addresses'}
