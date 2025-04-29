@@ -27,15 +27,13 @@ const props = {
 
 describe('SuccessDialogContent', () => {
   it('can render the success content for a dry run', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <SuccessDialogContent {...props} />
-    );
+    const { getByText } = renderWithTheme(<SuccessDialogContent {...props} />);
 
-    getByText('Upgrade Interfaces');
+    getByText('Return to Upgrade Overview');
+    getByText('Continue to Upgrade');
+    getByText('Upgrade Summary');
     getByText(SUCCESS_DRY_RUN_COPY);
     getByText('Cancel');
-
-    expect(queryByText('Upgrade Summary')).not.toBeInTheDocument();
   });
 
   it('can render the success content for the actual upgrade', () => {

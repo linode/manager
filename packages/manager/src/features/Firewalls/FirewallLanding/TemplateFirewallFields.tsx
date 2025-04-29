@@ -54,13 +54,11 @@ export const TemplateFirewallFields = (props: TemplateFirewallProps) => {
 
   return (
     <>
-      {!selectedTemplate && (
-        <Typography sx={{ mt: 2 }}>
-          Firewall templates enable you to quickly create firewalls with
-          reasonable firewall rules for Public and VPC interfaces that can be
-          edited.
-        </Typography>
-      )}
+      <Typography sx={{ mt: 2 }}>
+        Firewall templates enable you to quickly create firewalls with
+        reasonable firewall rules for Public and VPC interfaces that can be
+        edited.
+      </Typography>
       <Controller
         control={control}
         name="templateSlug"

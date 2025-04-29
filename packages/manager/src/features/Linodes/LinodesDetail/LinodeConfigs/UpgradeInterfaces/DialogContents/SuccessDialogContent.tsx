@@ -1,7 +1,9 @@
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
+import { initialState } from '../UpgradeInterfacesDialog';
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
@@ -15,6 +17,9 @@ export const SuccessDialogContent = (
 ) => {
   const { linodeId, onClose, setDialogState, state } = props;
   const { isDryRun, linodeInterfaces, selectedConfig } = state;
+
+  const location = useLocation();
+  const history = useHistory();
 
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
@@ -31,7 +36,7 @@ export const SuccessDialogContent = (
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>
       </Notice>
-      {!isDryRun && linodeInterfaces.length > 0 && (
+      {linodeInterfaces.length > 0 && (
         <Box
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
@@ -42,6 +47,7 @@ export const SuccessDialogContent = (
           <Typography variant="h3">Upgrade Summary</Typography>
           {linodeInterfaces.map((linodeInterface) => (
             <LinodeInterfaceInfo
+              isDryRun={isDryRun}
               key={linodeInterface.id}
               {...linodeInterface}
             />
@@ -53,12 +59,38 @@ export const SuccessDialogContent = (
           {isDryRun ? 'Cancel' : 'Close'}
         </Button>
         {isDryRun && (
+          <>
+            <Button
+              buttonType="outlined"
+              disabled={isPending}
+              onClick={() => setDialogState({ ...initialState })}
+            >
+              Return to Upgrade Overview
+            </Button>
+            <Button
+              buttonType="primary"
+              loading={isPending}
+              onClick={() => upgradeToLinodeInterfaces(false)}
+            >
+              Continue to Upgrade
+            </Button>
+          </>
+        )}
+        {!isDryRun && (
           <Button
             buttonType="primary"
-            loading={isPending}
-            onClick={() => upgradeToLinodeInterfaces(false)}
+            onClick={() => {
+              const newPath = location.pathname
+                .split('/')
+                // remove 'upgrade-interfaces' from URL
+                .slice(0, -1)
+                // join everything back together
+                .join('/')
+                .concat('/networking');
+              history.replace(newPath);
+            }}
           >
-            Upgrade Interfaces
+            View Network Settings
           </Button>
         )}
       </Box>
@@ -66,10 +98,15 @@ export const SuccessDialogContent = (
   );
 };
 
-const LinodeInterfaceInfo = (props: LinodeInterface) => {
+interface UpgradeLinodeInterfaceInfo extends LinodeInterface {
+  isDryRun: boolean;
+}
+
+const LinodeInterfaceInfo = (props: UpgradeLinodeInterfaceInfo) => {
   const {
     created,
     id,
+    isDryRun,
     mac_address,
     public: publicInterface,
     updated,
@@ -95,7 +132,11 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
         <Typography>Version: {version}</Typography>
       </Stack>
       {publicInterface && (
-        <Typography>Public Interface successfully upgraded</Typography>
+        <Typography>
+          {isDryRun
+            ? 'Public Interface dry run successful.'
+            : 'Public Interface successfully upgraded.'}
+        </Typography>
       )}
       {vpc && <VPCInterfaceInfo {...vpc} default_route={props.default_route} />}
       {vlan && <VlanInterfaceInfo vlan={vlan} />}
