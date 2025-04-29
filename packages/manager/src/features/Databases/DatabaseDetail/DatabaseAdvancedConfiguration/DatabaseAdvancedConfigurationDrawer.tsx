@@ -87,7 +87,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const {
     control,
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty },
     handleSubmit,
     reset,
     watch,
@@ -252,7 +252,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled: !isDirty,
-            label: hasRestartCluster(dirtyFields, configs),
+            label: hasRestartCluster(configs, existingConfigurations),
             loading: isUpdating,
             type: 'submit',
             title: 'Save',

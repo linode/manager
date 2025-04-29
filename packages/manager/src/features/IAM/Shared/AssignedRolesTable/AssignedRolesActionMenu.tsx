@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
