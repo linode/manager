@@ -17,7 +17,7 @@ export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT =
 export const PublicIPAddressesTooltip = ({
   isLinodeInterface,
 }: {
-  isLinodeInterface: boolean | undefined;
+  isLinodeInterface: boolean;
 }) => {
   return (
     <TooltipIcon
