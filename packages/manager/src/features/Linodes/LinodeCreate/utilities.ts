@@ -192,6 +192,7 @@ export const getLinodeCreatePayload = (
       values.interfaces = formValues.linodeInterfaces.map(
         getLinodeInterfacePayload
       );
+      values.firewall_id = undefined;
     } else {
       values.interfaces = formValues.linodeInterfaces.map(
         getLegacyInterfaceFromLinodeInterface
@@ -304,12 +305,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: {
+  linode?: null | {
     id: number;
     label: string;
     region: string;
-    type: string | null;
-  } | null;
+    type: null | string;
+  };
   /**
    * Form state for the new Linode interface
    */
@@ -345,7 +346,7 @@ export const defaultValues = async (
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
-  let stackscript: StackScript | null = null;
+  let stackscript: null | StackScript = null;
 
   if (stackscriptId) {
     try {

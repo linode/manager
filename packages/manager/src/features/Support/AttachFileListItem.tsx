@@ -1,5 +1,4 @@
-import { InputAdornment, TextField } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, InputAdornment, TextField } from '@linode/ui';
 import CloudUpload from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -66,7 +65,7 @@ export const AttachFileListItem = (props: Props) => {
                 onClick={() => removeFile(fileIdx)}
                 position="end"
               >
-                <Close />
+                <CloseIcon />
               </InputAdornment>
             ),
             startAdornment: (
