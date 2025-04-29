@@ -11,7 +11,7 @@ import {
 
 import { deleteUserRole } from '../utilities';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 interface Props {
   onClose: () => void;

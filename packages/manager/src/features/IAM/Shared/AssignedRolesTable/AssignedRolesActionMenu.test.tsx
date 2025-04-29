@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 const mockOnChangeRole = vi.fn();
 const mockOnUnassignRole = vi.fn();
