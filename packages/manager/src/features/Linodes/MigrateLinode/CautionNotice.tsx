@@ -1,5 +1,5 @@
 import { useLinodeVolumesQuery } from '@linode/queries';
-import { Checkbox, Notice, Typography } from '@linode/ui';
+import { Box, Checkbox, Notice, Typography } from '@linode/ui';
 import { API_MAX_PAGE_SIZE } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
@@ -45,101 +45,85 @@ export const CautionNotice = React.memo((props: Props) => {
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
 
   return (
-    <StyledRootDiv>
-      <Typography
-        sx={{
-          marginLeft: theme.spacing(2),
-          marginTop: theme.spacing(2),
-        }}
-      >
-        <strong>Caution:</strong>
-      </Typography>
-      <ul>
-        <li>
-          You&rsquo;ll be assigned new IPv4 and IPv6 addresses, which will be
-          accessible once your migration is complete.
-        </li>
-        <li>
-          Any existing backups with the Linode Backup Service will not be
-          migrated. Once your migration is complete, your backups will start
-          over on their existing schedule.
-        </li>
-        <li>
-          Any DNS records (including Reverse DNS) will need to be updated. You
-          can use the <Link to="/domains">DNS Manager</Link> or{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-rdns-reverse-dns-on-a-compute-instance">
-            Configure Your Linode for Reverse DNS (rDNS).
-          </Link>
-        </li>
-        <li>
-          Any attached VLANs will be inaccessible if the destination region does
-          not support VLANs.{` `}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/vlan">
-            Check VLAN region compatibility.
-          </Link>
-        </li>
-        <li>Your Linode will be powered off.</li>
-        <li>
-          Block Storage can&rsquo;t be migrated to other regions.{' '}
-          {amountOfAttachedVolumes > 0 && (
-            <React.Fragment>
-              The following
-              {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
-              detached from this Linode:
-              <StyledVolumeUl>
-                {volumesData?.data.map((eachVolume) => {
-                  return <li key={eachVolume.id}>{eachVolume.label}</li>;
-                })}
-              </StyledVolumeUl>
-            </React.Fragment>
-          )}
-        </li>
-        <li>
-          When this migration begins, we estimate it will take approximately{' '}
-          {DateTime.local()
-            .plus({ minutes: migrationTimeInMins })
-            .toRelative()
-            ?.replace('in', '')}{' '}
-          to complete.
-        </li>
-        {metadataWarning && <li>{metadataWarning}</li>}
-        {distributedRegionWarning && <li>{distributedRegionWarning}</li>}
-      </ul>
+    <>
+      <Notice sx={{ marginTop: 3, marginBottom: 1 }} variant="warning">
+        <Typography paddingBottom={1}>
+          <strong>Caution:</strong>
+        </Typography>
+        <ul>
+          <li>
+            You&rsquo;ll be assigned new IPv4 and IPv6 addresses, which will be
+            accessible once your migration is complete.
+          </li>
+          <li>
+            Any existing backups with the Linode Backup Service will not be
+            migrated. Once your migration is complete, your backups will start
+            over on their existing schedule.
+          </li>
+          <li>
+            Any DNS records (including Reverse DNS) will need to be updated. You
+            can use the <Link to="/domains">DNS Manager</Link> or{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-rdns-reverse-dns-on-a-compute-instance">
+              Configure Your Linode for Reverse DNS (rDNS).
+            </Link>
+          </li>
+          <li>
+            Any attached VLANs will be inaccessible if the destination region
+            does not support VLANs.{` `}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/vlan">
+              Check VLAN region compatibility.
+            </Link>
+          </li>
+          <li>Your Linode will be powered off.</li>
+          <li>
+            Block Storage can&rsquo;t be migrated to other regions.{' '}
+            {amountOfAttachedVolumes > 0 && (
+              <React.Fragment>
+                The following
+                {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
+                detached from this Linode:
+                <StyledVolumeUl>
+                  {volumesData?.data.map((eachVolume) => {
+                    return <li key={eachVolume.id}>{eachVolume.label}</li>;
+                  })}
+                </StyledVolumeUl>
+              </React.Fragment>
+            )}
+          </li>
+          <li>
+            When this migration begins, we estimate it will take approximately{' '}
+            {DateTime.local()
+              .plus({ minutes: migrationTimeInMins })
+              .toRelative()
+              ?.replace('in', '')}{' '}
+            to complete.
+          </li>
+          {metadataWarning && <li>{metadataWarning}</li>}
+          {distributedRegionWarning && <li>{distributedRegionWarning}</li>}
+        </ul>
+        <Box marginTop={0.5}>
+          <Checkbox
+            checked={hasConfirmed}
+            onChange={() => setConfirmed(!hasConfirmed)}
+            sx={{
+              marginLeft: 1,
+              '& svg': {
+                background: theme.bg.bgPaper,
+              },
+            }}
+            text="Accept"
+          />
+        </Box>
+      </Notice>
       {error && <Notice text={error} variant="error" />}
-      <Checkbox
-        sx={{
-          marginLeft: theme.spacing(2),
-        }}
-        checked={hasConfirmed}
-        onChange={() => setConfirmed(!hasConfirmed)}
-        text="Accept"
-      />
-    </StyledRootDiv>
+    </>
   );
 });
-
-const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
-  ({ theme }) => ({
-    '& ul:first-of-type': {
-      '& li': {
-        fontSize: '0.875rem',
-        marginBottom: theme.spacing(),
-      },
-      font: theme.font.normal,
-    },
-    backgroundColor: theme.bg.bgPaper,
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-    marginBottom: theme.spacing(2),
-    marginTop: 24,
-    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
-  })
-);
 
 const StyledVolumeUl = styled('ul', { label: 'StyledVolumeUl' })(
   ({ theme }) => ({
     '& li': {
       font: theme.font.bold,
     },
-    marginTop: theme.spacing(),
   })
 );

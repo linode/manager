@@ -43,20 +43,7 @@ export const Encryption = (props: EncryptionProps) => {
       </Typography>
       {notices && notices.length > 0 && (
         <Notice marginTop="0.875rem" spacingBottom={4} variant="warning">
-          <List
-            sx={(theme) => ({
-              '& > li': {
-                display: notices.length > 1 ? 'list-item' : 'inline',
-                fontSize: '0.875rem',
-                lineHeight: theme.spacing(2),
-                padding: 0,
-                pl: 0,
-                py: 0.5,
-              },
-              listStyle: 'disc',
-              ml: notices.length > 1 ? theme.spacing(2) : 0,
-            })}
-          >
+          <List>
             {notices.map((notice, i) => (
               <ListItem key={i}>{notice}</ListItem>
             ))}
