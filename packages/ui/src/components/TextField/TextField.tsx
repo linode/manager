@@ -67,6 +67,11 @@ interface BaseProps {
    */
   inputId?: string;
   /**
+   * Position of the label. Supports 'top' (default) or 'left'.
+   * @default 'top'
+   */
+  labelPosition?: 'left' | 'top';
+  /**
    * Displays a loading spinner at the end of the Text Field
    * @default false
    */
@@ -145,6 +150,7 @@ export const TextField = (props: TextFieldProps) => {
     hideLabel,
     inputId,
     inputProps,
+    labelPosition,
     label,
     labelTooltipText,
     loading,
@@ -170,12 +176,8 @@ export const TextField = (props: TextFieldProps) => {
   const [_value, setValue] = React.useState<Value>(value ?? '');
   const theme = useTheme();
 
-  const {
-    errorScrollClassName,
-    errorTextId,
-    helperTextId,
-    validInputId,
-  } = useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
+  const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
+    useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
 
   const isControlled = value !== undefined;
 
@@ -186,7 +188,7 @@ export const TextField = (props: TextFieldProps) => {
   }, [value, isControlled]);
 
   const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (trimmed) {
       const trimmedValue = e.target.value.trim();
@@ -246,14 +248,14 @@ export const TextField = (props: TextFieldProps) => {
         }
       }
     },
-    [min, max, type, onChange]
+    [min, max, type, onChange],
   );
 
   const labelSuffixText = required
     ? '(required)'
     : optional
-    ? '(optional)'
-    : null;
+      ? '(optional)'
+      : null;
 
   return (
     <Box
@@ -267,14 +269,21 @@ export const TextField = (props: TextFieldProps) => {
           display: 'flex',
           flexWrap: 'wrap',
         }),
+        // marginBottom: labelPosition === 'left' ? theme.spacing(0) : 0,
+        ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+        ...(labelPosition === 'left' && {
+          flexDirection: 'row',
+          display: 'flex',
+          gap: theme.spacing(1),
+        }),
         ...containerProps?.sx,
       }}
     >
       <Box
-        sx={{
-          marginBottom: theme.spacing(1),
-          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
-        }}
+        // sx={{
+        //   marginBottom: theme.spacing(1),
+        //   ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+        // }}
         alignItems={'center'}
         className={hideLabel ? 'visually-hidden' : ''}
         data-testid="inputLabelWrapper"
@@ -282,8 +291,10 @@ export const TextField = (props: TextFieldProps) => {
       >
         <InputLabel
           sx={{
-            marginBottom: 0,
+            // marginBottom: labelPosition === 'top' ? 0 : undefined,
+            marginBottom: '0px !important',
             transform: 'none',
+            minWidth: labelPosition === 'left' ? '100%' : undefined,
           }}
           data-qa-textfield-label={label}
           htmlFor={validInputId}
@@ -410,7 +421,7 @@ export const TextField = (props: TextFieldProps) => {
             }}
             classes={{ popper: tooltipClasses }}
             onMouseEnter={tooltipOnMouseEnter}
-            status="help"
+            status="info"
             text={tooltipText}
             tooltipPosition={tooltipPosition}
             width={tooltipWidth}

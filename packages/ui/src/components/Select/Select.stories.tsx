@@ -138,4 +138,18 @@ export const NoOptionsText: Story = {
   render: (args) => <Select {...args} />,
 };
 
+export const WithTooltipIcon: Story = {
+  args: {
+    ...defaultArgs,
+  },
+  render: (args) => (
+    <Select
+      {...args}
+      textFieldProps={{
+        tooltipText: 'this is a tooltip text',
+      }}
+    />
+  ),
+};
+
 export default meta;

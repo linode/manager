@@ -250,6 +250,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         aria-label="Select rule protocol."
         errorText={errors.protocol}
         label="Protocol"
+        labelPosition="left"
         onBlur={handleBlur}
         onChange={(_, selected) => handleProtocolChange(selected.value)}
         options={protocolOptions}

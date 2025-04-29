@@ -245,9 +245,16 @@ export const darkTheme: ThemeOptions = {
         clearIndicator: {
           color: Select.Default.Icon,
         },
+        paper: {
+          boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+          marginTop: 4,
+        },
         listbox: {
           backgroundColor: customDarkModeOptions.bg.white,
-          border: `1px solid ${primaryColors.main}`,
+          padding: '4px',
+          border: 'none',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
         },
         loading: {
           color: Color.Neutrals.White,
@@ -795,7 +802,11 @@ export const darkTheme: ThemeOptions = {
       },
     },
     MuiSelect: {
-      styleOverrides: {},
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
     },
     MuiSnackbarContent: {
       styleOverrides: {

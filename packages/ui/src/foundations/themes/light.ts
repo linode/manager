@@ -378,10 +378,16 @@ export const lightTheme: ThemeOptions = {
           height: 'inherit',
           paddingBottom: 0,
         },
+        paper: {
+          boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+          marginTop: 4,
+        },
         listbox: {
           backgroundColor: bg.white,
-          border: `1px solid ${primaryColors.main}`,
           padding: '4px',
+          border: 'none',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
         },
         loading: {
           border: `1px solid ${primaryColors.main}`,

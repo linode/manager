@@ -96,6 +96,11 @@ export interface SelectProps<T extends { label: string }>
   /**
    * The props for the ListItem component.
    */
+  /**
+   * Position of the label. Supports 'top' (default) or 'left'.
+   * @default 'top'
+   */
+  labelPosition?: 'left' | 'top';
   listItemProps?: (value: T) => {
     dataAttributes?: Record<string, T | boolean | string>;
   };
@@ -139,6 +144,7 @@ export const Select = <T extends SelectOption = SelectOption>(
     hideLabel = false,
     keepSearchEnabledOnMobile = false,
     label,
+    labelPosition,
     listItemProps,
     loading = false,
     noOptionsText = 'No options available',
@@ -190,6 +196,7 @@ export const Select = <T extends SelectOption = SelectOption>(
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           {...params}
+          labelPosition={labelPosition}
           {...textFieldProps}
           InputProps={{
             ...params.InputProps,
