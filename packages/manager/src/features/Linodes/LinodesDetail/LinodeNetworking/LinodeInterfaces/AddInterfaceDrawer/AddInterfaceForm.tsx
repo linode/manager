@@ -99,7 +99,7 @@ export const AddInterfaceForm = (props: Props) => {
           {selectedInterfacePurpose === 'vpc' && (
             <VPCInterface regionId={regionId} />
           )}
-          <InterfaceFirewall />
+          {selectedInterfacePurpose !== 'vlan' && <InterfaceFirewall />}
           <Actions onClose={onClose} />
         </Stack>
       </form>
