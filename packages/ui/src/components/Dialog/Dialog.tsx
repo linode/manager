@@ -160,14 +160,14 @@ export const Dialog = React.forwardRef(
               <Box display="flex" justifyContent="center" my={4}>
                 <CircleProgress size="md" />
               </Box>
-            ) : errorText ? (
-              errorText === 'Not Found' || errorText === 'Not found' ? (
-                <NotFound />
-              ) : (
-                <ErrorState errorText={errorText} />
-              )
+            ) : errorText &&
+              (errorText === 'Not Found' || errorText === 'Not found') ? (
+              <NotFound />
             ) : (
-              lastChildrenRef.current
+              <>
+                {errorText && <ErrorState errorText={errorText} />}
+                {children}
+              </>
             )}
           </DialogContent>
         </Box>

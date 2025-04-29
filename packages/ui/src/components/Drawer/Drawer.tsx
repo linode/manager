@@ -180,14 +180,14 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           <Box display="flex" justifyContent="center" mt={12}>
             <CircleProgress size="md" />
           </Box>
-        ) : errorText ? (
-          errorText === 'Not Found' || errorText === 'Not found' ? (
-            <NotFound />
-          ) : (
-            <ErrorState errorText={errorText} />
-          )
+        ) : errorText &&
+          (errorText === 'Not Found' || errorText === 'Not found') ? (
+          <NotFound />
         ) : (
-          children
+          <>
+            {errorText && <ErrorState errorText={errorText} />}
+            {children}
+          </>
         )}
       </_Drawer>
     );
