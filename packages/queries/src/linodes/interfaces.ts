@@ -236,11 +236,17 @@ export const useDeleteLinodeInterfaceMutation = (
 };
 
 export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
+  const queryClient = useQueryClient();
   return useMutation<UpgradeInterfaceData, APIError[], UpgradeInterfacePayload>(
     {
       mutationFn: (data) => upgradeToLinodeInterface(linodeId, data),
       onSuccess() {
-        // query invalidations will be performed in the UpgradeInterfaceDialog to avoid closing the dialog too early
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+        });
       },
     },
   );
