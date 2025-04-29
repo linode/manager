@@ -1,11 +1,11 @@
 import { firewallQueries, useQueryClient } from '@linode/queries';
-import { InputLabel, Radio, RadioGroup } from '@linode/ui';
+import { FormControl, Radio, RadioGroup, Typography } from '@linode/ui';
 import { Grid2 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { FormGroup } from 'src/components/FormGroup';
+import { FormLabel } from 'src/components/FormLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
@@ -83,9 +83,14 @@ export const InterfaceType = ({ index }: Props) => {
   };
 
   return (
-    <FormGroup sx={{ display: 'block' }}>
-      <InputLabel id="network-connection-label">Network Connection</InputLabel>
+    <FormControl>
+      <FormLabel id="network-connection-label">Network Connection</FormLabel>
+      <Typography id="network-connection-helper-text">
+        The default interface used by this Linode to route network traffic.
+        Additional interfaces can be added after the Linode is created.
+      </Typography>
       <RadioGroup
+        aria-describedby="network-connection-helper-text"
         aria-labelledby="network-connection-label"
         sx={{ display: 'block', marginBottom: '0px !important' }}
       >
@@ -110,6 +115,6 @@ export const InterfaceType = ({ index }: Props) => {
           ))}
         </Grid2>
       </RadioGroup>
-    </FormGroup>
+    </FormControl>
   );
 };

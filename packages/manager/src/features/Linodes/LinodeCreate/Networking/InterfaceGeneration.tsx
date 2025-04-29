@@ -1,10 +1,13 @@
 import { useAccountSettings } from '@linode/queries';
 import {
+  BetaChip,
   Box,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
+  Stack,
+  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { useController } from 'react-hook-form';
@@ -61,12 +64,38 @@ export const InterfaceGeneration = () => {
           >
             <FormControlLabel
               control={<Radio />}
-              label="Configuration Profile Interfaces (Legacy)"
+              label={
+                <Stack mt={1.25} spacing={0.5}>
+                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                    Configuration Profile Interfaces (Legacy)
+                  </Typography>
+                  <Typography>
+                    These interfaces are managed using the Linode’s
+                    Configurations tab. You can update them without powering off
+                    the Linode, but changes to network interfaces only take
+                    effect after a reboot.
+                  </Typography>
+                </Stack>
+              }
+              sx={{ alignItems: 'flex-start' }}
               value="legacy_config"
             />
             <FormControlLabel
               control={<Radio />}
-              label="Linode Interfaces (New)"
+              label={
+                <Stack mt={1.25} spacing={0.5}>
+                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                    Linode Interfaces <BetaChip />
+                  </Typography>
+                  <Typography>
+                    These interfaces are managed using Linode’s Network tab.
+                    They can be created, updated, or deleted only while the
+                    Linode is powered off, ensuring changes are applied at
+                    startup and reboot.
+                  </Typography>
+                </Stack>
+              }
+              sx={{ alignItems: 'flex-start' }}
               value="linode"
             />
           </RadioGroup>
