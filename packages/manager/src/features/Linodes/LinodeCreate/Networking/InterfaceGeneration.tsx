@@ -73,10 +73,14 @@ export const InterfaceGeneration = () => {
                     <BetaChip />
                   </Stack>
                   <Typography>
-                    These interfaces are managed using Linode’s Network tab.
-                    They can be created, updated, or deleted only while the
-                    Linode is powered off, ensuring changes are applied at
-                    startup and reboot.
+                    Linode Interfaces are the preferred option for VPCs and are
+                    managed directly through a Linode’s Network settings. They
+                    can only be updated, or deleted while the Linode is powered
+                    off to ensure changes are applied after a reboot.
+                  </Typography>
+                  <Typography>
+                    Cloud Firewalls are assigned to individual VPC and public
+                    interfaces.
                   </Typography>
                 </Stack>
               }
@@ -91,10 +95,15 @@ export const InterfaceGeneration = () => {
                     Configuration Profile Interfaces (Legacy)
                   </Typography>
                   <Typography>
-                    These interfaces are managed using the Linode’s
-                    Configurations tab. You can update them without powering off
-                    the Linode, but changes to network interfaces only take
-                    effect after a reboot.
+                    Interfaces in the Configuration Profile are part of a
+                    Linode’s configuration. You can modify them without powering
+                    off the Linode; however, changes to network interfaces only
+                    take effect after a reboot.
+                  </Typography>
+                  <Typography>
+                    Cloud Firewalls are applied at the Linode level and
+                    automatically cover all non-VLAN interfaces in the
+                    Configuration Profile.
                   </Typography>
                 </Stack>
               }

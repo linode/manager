@@ -34,13 +34,13 @@ const interfaceTypes = [
     label: 'VPC',
     purpose: 'vpc',
     description:
-      'Connects your Linode to a private and isolated network. It allows secure communication between Linodes within the same VPC without exposing traffic to the public internet.',
+      'Connects your Linode to a private, Layer 3–isolated network, enabling secure communication with other Linodes in the same VPC.',
   },
   {
     label: 'VLAN',
     purpose: 'vlan',
     description:
-      'Connects your Linode to a Layer 2 private network. VLANs allow you to manage your own IP addressing and routing.',
+      'Connects your Linode to a private Layer 2 network for local communication with other Linodes.',
   },
 ] as const;
 

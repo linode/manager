@@ -29,7 +29,6 @@ export const Firewall = () => {
         <FirewallSelect
           disabled={isLinodeCreateRestricted}
           errorText={fieldState.error?.message}
-          helperText="Cloud Firewalls are assigned at the Linode level and apply automatically to all interfaces in the Configuration Profile."
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
           placeholder="None"
