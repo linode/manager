@@ -19,6 +19,10 @@ export interface HiddenProps {
   xsUp?: boolean;
 }
 
+/**
+ * This component is a replacement for the `@mui/material`'s `Hidden` component, which is deprecated.
+ * It is used to conditionally render a component based on the viewport.
+ */
 export const Hidden = React.forwardRef<HTMLDivElement, HiddenProps>(
   (props, ref) => {
     const {
