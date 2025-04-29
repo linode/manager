@@ -32,7 +32,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   color: Factory.each((i) => color[i % color.length]),
   entity_ids: Factory.each((i) => [`resource-${i}`]),
   filters: [],
-  group_by: 'region',
+  group_by: Factory.each((i) => [`group_by_${i}`]),
   label: Factory.each((i) => `widget_label_${i}`),
   metric: Factory.each((i) => `widget_metric_${i}`),
   namespace_id: Factory.each((i) => i % 10),
