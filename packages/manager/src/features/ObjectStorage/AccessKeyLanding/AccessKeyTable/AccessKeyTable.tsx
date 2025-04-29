@@ -1,7 +1,7 @@
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -39,9 +39,8 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     openRevokeDialog,
   } = props;
 
-  const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
-    false
-  );
+  const [showHostNamesDrawer, setShowHostNamesDrawers] =
+    useState<boolean>(false);
   const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();

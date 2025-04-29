@@ -14,7 +14,7 @@ import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -64,12 +64,10 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -85,15 +83,13 @@ export const StackScriptLandingTable = (props: Props) => {
         : 'stackscripts-landing-community',
   });
 
-  const {
-    data: selectedStackScript,
-    isFetching: isFetchingStackScript,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useStackScriptQuery,
-    redirectToOnNotFound: '/stackscripts/account',
-  });
+  const { data: selectedStackScript, isFetching: isFetchingStackScript } =
+    useDialogData({
+      enabled: !!id,
+      paramKey: 'id',
+      queryHook: useStackScriptQuery,
+      redirectToOnNotFound: '/stackscripts/account',
+    });
 
   const {
     data,

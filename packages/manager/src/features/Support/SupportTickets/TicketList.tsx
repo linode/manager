@@ -1,7 +1,7 @@
 import { useSupportTicketsQuery } from '@linode/queries';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

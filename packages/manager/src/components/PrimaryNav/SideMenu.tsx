@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
@@ -54,7 +54,7 @@ export const SideMenu = (props: SideMenuProps) => {
           />
         </StyledDrawer>
       </Hidden>
-      <Hidden implementation="css" mdDown>
+      <Hidden mdDown>
         <StyledDrawer
           collapse={collapse}
           data-testid="side-menu"

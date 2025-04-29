@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

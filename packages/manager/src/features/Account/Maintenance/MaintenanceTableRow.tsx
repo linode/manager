@@ -2,7 +2,7 @@ import { Tooltip } from '@linode/ui';
 import { capitalize, truncate } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { Markdown } from 'src/components/Markdown/Markdown';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

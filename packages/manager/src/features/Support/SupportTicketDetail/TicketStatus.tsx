@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useProfile } from '@linode/queries';

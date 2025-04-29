@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
@@ -38,11 +38,8 @@ export const EventRow = (props: EventRowProps) => {
     return null;
   }
 
-  const {
-    progressEventDate,
-    progressEventDuration,
-    showProgress,
-  } = formatProgressEvent(event);
+  const { progressEventDate, progressEventDuration, showProgress } =
+    formatProgressEvent(event);
 
   return (
     <TableRow data-qa-event-row data-testid={action}>

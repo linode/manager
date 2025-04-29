@@ -2,7 +2,7 @@ import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
 import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
 import { TableCell } from 'src/components/TableCell';

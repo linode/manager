@@ -2,7 +2,7 @@ import { Chip } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

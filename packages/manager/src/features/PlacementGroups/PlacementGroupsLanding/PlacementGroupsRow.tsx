@@ -5,7 +5,7 @@ import {
 import { List, ListItem, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';

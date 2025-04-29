@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -74,13 +74,11 @@ export const LinodeVolumes = () => {
     filter
   );
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
-  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] = React.useState(
-    false
-  );
+  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] =
+    React.useState(false);
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);

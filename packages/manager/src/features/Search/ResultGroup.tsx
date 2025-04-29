@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

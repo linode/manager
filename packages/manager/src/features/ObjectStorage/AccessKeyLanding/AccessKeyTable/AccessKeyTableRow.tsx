@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

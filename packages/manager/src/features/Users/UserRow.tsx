@@ -6,7 +6,7 @@ import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

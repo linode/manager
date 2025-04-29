@@ -3,7 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
 
 import { SideMenu } from './SideMenu';

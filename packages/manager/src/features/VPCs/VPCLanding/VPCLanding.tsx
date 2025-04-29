@@ -3,7 +3,7 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -54,7 +54,11 @@ const VPCLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: vpcs, error, isLoading } = useVPCsQuery(
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useVPCsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

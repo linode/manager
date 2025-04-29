@@ -23,7 +23,7 @@ import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 
 import Undo from 'src/assets/icons/undo.svg';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -200,10 +200,10 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                     width: smDown
                       ? '65%'
                       : mdDown
-                      ? '50%'
-                      : lgDown
-                      ? '32%'
-                      : '26%',
+                        ? '50%'
+                        : lgDown
+                          ? '32%'
+                          : '26%',
                   }}
                 >
                   Label

@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

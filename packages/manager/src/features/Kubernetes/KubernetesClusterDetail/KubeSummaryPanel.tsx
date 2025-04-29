@@ -13,7 +13,7 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
+import { Hidden } from '@linode/ui';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import {
   getKubeControlPlaneACL,
@@ -50,16 +50,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  const [
-    isControlPlaneACLDrawerOpen,
-    setControlPlaneACLDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isControlPlaneACLDrawerOpen, setControlPlaneACLDrawerOpen] =
+    React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const {
-    data: dashboard,
-    error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id);
+  const { data: dashboard, error: dashboardError } =
+    useKubernetesDashboardQuery(cluster.id);
 
   const {
     error: resetKubeConfigError,
@@ -81,10 +77,8 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const [
-    resetKubeConfigDialogOpen,
-    setResetKubeConfigDialogOpen,
-  ] = React.useState(false);
+  const [resetKubeConfigDialogOpen, setResetKubeConfigDialogOpen] =
+    React.useState(false);
 
   const handleResetKubeConfig = () => {
     return resetKubeConfig({ id: cluster.id }).then(() => {
