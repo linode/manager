@@ -66,24 +66,6 @@ export const InterfaceGeneration = () => {
               control={<Radio />}
               label={
                 <Stack mt={1.25} spacing={0.5}>
-                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                    Configuration Profile Interfaces (Legacy)
-                  </Typography>
-                  <Typography>
-                    These interfaces are managed using the Linode’s
-                    Configurations tab. You can update them without powering off
-                    the Linode, but changes to network interfaces only take
-                    effect after a reboot.
-                  </Typography>
-                </Stack>
-              }
-              sx={{ alignItems: 'flex-start' }}
-              value="legacy_config"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              label={
-                <Stack mt={1.25} spacing={0.5}>
                   <Stack direction="row">
                     <Typography sx={(theme) => ({ font: theme.font.bold })}>
                       Linode Interfaces
@@ -100,6 +82,24 @@ export const InterfaceGeneration = () => {
               }
               sx={{ alignItems: 'flex-start' }}
               value="linode"
+            />
+            <FormControlLabel
+              control={<Radio />}
+              label={
+                <Stack mt={1.25} spacing={0.5}>
+                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                    Configuration Profile Interfaces (Legacy)
+                  </Typography>
+                  <Typography>
+                    These interfaces are managed using the Linode’s
+                    Configurations tab. You can update them without powering off
+                    the Linode, but changes to network interfaces only take
+                    effect after a reboot.
+                  </Typography>
+                </Stack>
+              }
+              sx={{ alignItems: 'flex-start' }}
+              value="legacy_config"
             />
           </RadioGroup>
         </FormControl>

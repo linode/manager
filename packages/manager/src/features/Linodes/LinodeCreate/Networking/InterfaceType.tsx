@@ -1,5 +1,11 @@
 import { firewallQueries, useQueryClient } from '@linode/queries';
-import { FormControl, Radio, RadioGroup, Typography } from '@linode/ui';
+import {
+  FormControl,
+  Radio,
+  RadioGroup,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { Grid2 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -21,14 +27,20 @@ const interfaceTypes = [
   {
     label: 'Public Internet',
     purpose: 'public',
+    description:
+      'Connects your Linode to the internet enabling traffic over the public IP address.',
   },
   {
     label: 'VPC',
     purpose: 'vpc',
+    description:
+      'Connects your Linode to a private and isolated network. It allows secure communication between Linodes within the same VPC without exposing traffic to the public internet.',
   },
   {
     label: 'VLAN',
     purpose: 'vlan',
+    description:
+      'Connects your Linode to a Layer 2 private network. VLANs allow you to manage your own IP addressing and routing.',
   },
 ] as const;
 
@@ -108,6 +120,13 @@ export const InterfaceType = ({ index }: Props) => {
               onClick={() => onChange(interfaceType.purpose)}
               renderIcon={() => (
                 <Radio checked={field.value === interfaceType.purpose} />
+              )}
+              renderVariant={() => (
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{ p: 0.5 }}
+                  text={interfaceType.description}
+                />
               )}
               subheadings={[]}
               sxCardBaseIcon={{ svg: { fontSize: '24px !important' } }}
