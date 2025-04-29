@@ -1,5 +1,4 @@
-import { Box, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Box, CloseIcon, Typography } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import * as React from 'react';
 
@@ -83,7 +82,7 @@ export const MainContentBanner = React.memo(() => {
         color="inherit"
         onClick={() => handleDismiss(key)}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
     </Box>
   );
