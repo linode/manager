@@ -40,7 +40,6 @@ export const LinodeRow = (props: Props) => {
   const {
     backups,
     handlers,
-    interface_generation,
     id,
     ipv4,
     label,
@@ -143,11 +142,7 @@ export const LinodeRow = (props: Props) => {
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
         <StyledIpTableCell data-qa-ips>
-          <IPAddress
-            ips={ipv4}
-            isHovered={isHovered}
-            isLinodeInterface={interface_generation === 'linode'}
-          />
+          <IPAddress ips={ipv4} isHovered={isHovered} />
         </StyledIpTableCell>
         <Hidden lgDown>
           <TableCell data-qa-region>

@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
@@ -34,18 +33,15 @@ export interface IPAddressProps {
    */
   ips: string[];
   /**
+   * If true, all IP addresses will be displayed.
+   * @default false
+   */
+
+  /**
    * If true, the IP address copy icon will be displayed when the row is hovered.
    * @default false
    */
   isHovered?: boolean;
-  /**
-   * If passed in, assuems IP address belongs to a Linode and determines if this Linode uses Linode interfaces or legacy interfaces
-   */
-  isLinodeInterface?: boolean;
-  /**
-   * If true, all IP addresses will be displayed.
-   * @default false
-   */
   showAll?: boolean;
   /**
    * If true, additional IP addresses will be displayed via a ShowMore component within a tooltip.
@@ -67,7 +63,6 @@ export const IPAddress = (props: IPAddressProps) => {
     disabled = false,
     ips,
     isHovered = false,
-    isLinodeInterface,
     showAll,
     showMore,
     showTooltipOnIpHover = false,
@@ -98,10 +93,6 @@ export const IPAddress = (props: IPAddressProps) => {
   const handleMouseLeave = () => setIsIpTooltipHovered(false);
 
   const renderCopyIcon = (ip: string) => {
-    if (disabled) {
-      return <PublicIPAddressesTooltip isLinodeInterface={isLinodeInterface} />;
-    }
-
     return (
       <StyledIpLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip

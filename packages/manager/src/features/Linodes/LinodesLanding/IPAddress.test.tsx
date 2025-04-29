@@ -15,12 +15,7 @@ const privateIP2 = '192.168.220.102';
 describe('IPAddress', () => {
   it('should display one IP address if showAll is false', () => {
     const { container, getByText } = renderWithTheme(
-      <IPAddress
-        ips={['8.8.8.8', '8.8.4.4']}
-        isLinodeInterface={false}
-        showAll={false}
-        showMore={true}
-      />
+      <IPAddress ips={['8.8.8.8', '8.8.4.4']} showAll={false} showMore={true} />
     );
 
     // first IP address should be visible
@@ -34,7 +29,6 @@ describe('IPAddress', () => {
     const { container, getByText } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.4.4']}
-        isLinodeInterface={false}
         showAll={false}
         showMore={false}
       />
@@ -51,7 +45,6 @@ describe('IPAddress', () => {
     const { container } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.4.4']}
-        isLinodeInterface={false}
         showAll={false}
         showMore={false}
         showTooltipOnIpHover={false}
@@ -66,7 +59,6 @@ describe('IPAddress', () => {
       <IPAddress
         disabled={true}
         ips={['8.8.8.8', '8.8.4.4']}
-        isLinodeInterface={false}
         showAll={false}
         showMore={false}
         showTooltipOnIpHover={false}
@@ -133,7 +125,6 @@ describe('IPAddress masked', () => {
     const { getAllByTestId, getAllByText, getByText } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.40.4']}
-        isLinodeInterface={false}
         showAll={true}
         showMore={false}
       />
@@ -165,7 +156,6 @@ describe('IPAddress masked', () => {
       renderWithTheme(
         <IPAddress
           ips={['8.8.8.8', '8.8.40.4']}
-          isLinodeInterface={false}
           showAll={false}
           showMore={true}
         />
