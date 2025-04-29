@@ -119,11 +119,11 @@ body.searchOverlay #main-content {
   margin-right: 0 !important;
 }
 
-.content-wrapper > .second-element:first-child {
+.content-wrapper > .landing-header:first-child {
   margin-top: 0;
 }
 
-.content-wrapper > .second-element {
+.content-wrapper > .landing-header {
   margin-top: 24px;
 }
 

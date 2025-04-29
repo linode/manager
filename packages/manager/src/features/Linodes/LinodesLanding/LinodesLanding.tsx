@@ -342,7 +342,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                         {this.props.LandingHeader ? (
                           this.props.LandingHeader
                         ) : (
-                          <div>
+                          <div className={'landing-header'}>
                             <LandingHeader
                               buttonDataAttrs={{
                                 tooltipText: getRestrictedResourceText({
