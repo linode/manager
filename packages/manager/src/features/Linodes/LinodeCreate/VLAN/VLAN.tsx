@@ -77,23 +77,36 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Stack columnGap={2} direction="row" flexWrap="wrap" mt={2}>
+      <Stack
+        alignItems="flex-start"
+        direction="row"
+        flexWrap="wrap"
+        gap={2}
+        mt={2}
+      >
         <Controller
+          control={control}
+          name="interfaces.1.label"
           render={({ field, fieldState }) => (
             <VLANSelect
               disabled={disabled}
               errorText={fieldState.error?.message}
               filter={{ region: regionId }}
+              helperText={
+                !regionId
+                  ? 'Select a region to see available VLANs.'
+                  : undefined
+              }
               onBlur={field.onBlur}
               onChange={field.onChange}
               sx={{ width: 300 }}
               value={field.value ?? null}
             />
           )}
-          control={control}
-          name="interfaces.1.label"
         />
         <Controller
+          control={control}
+          name="interfaces.1.ipam_address"
           render={({ field, fieldState }) => (
             <TextField
               tooltipText={
@@ -111,8 +124,6 @@ export const VLAN = () => {
               value={field.value ?? ''}
             />
           )}
-          control={control}
-          name="interfaces.1.ipam_address"
         />
       </Stack>
     </Accordion>
