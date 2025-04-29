@@ -136,7 +136,7 @@ export const AddLinodeDrawer = (props: Props) => {
       const ifaceInfo = interfacesToAdd[index];
       if (result.status === 'fulfilled') {
         enqueueSnackbar(
-          `Interface (ID ${id}) from Linode ${ifaceInfo.linodeLabel} successfully added.`,
+          `Interface (ID ${ifaceInfo.interfaceId}) from Linode ${ifaceInfo.linodeLabel} successfully added.`,
           {
             variant: 'success',
           }
