@@ -1,11 +1,8 @@
-export const CONFIG_SELECT_DRY_RUN_COPY =
-  'This Linode has multiple configuration profiles. Please select a configuration profile to proceed. The upgrade dry run will identify any issues that may occur before upgrading.';
-
-export const CONFIG_SELECT_ACTUAL_UPGRADE_COPY =
-  'This Linode has multiple configuration profiles. Please select a configuration profile to upgrade. The upgrade will reassign the network interfaces from the configuration profile to the Linode.';
+export const CONFIG_SELECT_SHARED_COPY =
+  'This Linode has multiple configuration profiles. Choose one to continue.';
 
 export const UPGRADE_INTERFACES_WARNING =
-  'Once the network interfaces have been reassigned to the Linode, it will no longer be possible to use legacy configuration profiles.';
+  'Upgrading to Linode Interfaces is a one-way action. After the upgrade, legacy Configuration Profile Interfaces are no longer supported. As a result, this Linode will no longer be compatible with products that could be using private IPs, such as NodeBalancers.';
 
 export const SUCCESS_DRY_RUN_COPY = 'Dry Run Successful';
 export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';

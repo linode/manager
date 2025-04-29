@@ -1,11 +1,11 @@
-import { Box, Button, Notice, Select, Stack } from '@linode/ui';
+import { Box, Button, Notice, Select, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import {
-  CONFIG_SELECT_ACTUAL_UPGRADE_COPY,
-  CONFIG_SELECT_DRY_RUN_COPY,
+  CONFIG_SELECT_SHARED_COPY,
   UPGRADE_INTERFACES_WARNING,
 } from '../constants';
+import { initialState } from '../UpgradeInterfacesDialog';
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
@@ -39,27 +39,33 @@ export const ConfigSelectDialogContent = (
 
   return (
     <Stack>
-      {isDryRun
-        ? CONFIG_SELECT_DRY_RUN_COPY
-        : CONFIG_SELECT_ACTUAL_UPGRADE_COPY}
+      <Typography>
+        {CONFIG_SELECT_SHARED_COPY}{' '}
+        {isDryRun && (
+          <>
+            The <strong>Upgrade Dry Run</strong> will display any issues.
+          </>
+        )}
+      </Typography>
       {!isDryRun && selectedConfigId && (
         <Notice
           data-testid="upgrade-interfaces-warning"
           sx={{ marginTop: 2 }}
           variant="warning"
         >
+          <strong>This Upgrade Is Irreversible!</strong>
           {UPGRADE_INTERFACES_WARNING}
         </Notice>
       )}
       <Select
-        value={
-          configOptions.find((options) => options.value === selectedConfigId) ??
-          null
-        }
         label="Configuration Profile"
         onChange={(_, item) => setSelectedConfigId(item.value)}
         options={configOptions}
         placeholder="Select Configuration Profile"
+        value={
+          configOptions.find((options) => options.value === selectedConfigId) ??
+          null
+        }
       />
       <Box
         gap={2}
@@ -67,6 +73,13 @@ export const ConfigSelectDialogContent = (
       >
         <Button buttonType="secondary" disabled={isPending} onClick={onClose}>
           Cancel
+        </Button>
+        <Button
+          buttonType="outlined"
+          disabled={isPending}
+          onClick={() => setDialogState({ ...initialState })}
+        >
+          Return to Overview
         </Button>
         <Button
           buttonType="primary"

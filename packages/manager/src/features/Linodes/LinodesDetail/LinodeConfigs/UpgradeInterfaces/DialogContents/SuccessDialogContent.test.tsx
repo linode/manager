@@ -29,7 +29,7 @@ describe('SuccessDialogContent', () => {
   it('can render the success content for a dry run', () => {
     const { getByText } = renderWithTheme(<SuccessDialogContent {...props} />);
 
-    getByText('Return to Upgrade Overview');
+    getByText('Return to Overview');
     getByText('Continue to Upgrade');
     getByText('Upgrade Summary');
     getByText(SUCCESS_DRY_RUN_COPY);

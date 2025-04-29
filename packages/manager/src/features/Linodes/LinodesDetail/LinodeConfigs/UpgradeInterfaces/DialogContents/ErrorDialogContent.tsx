@@ -51,7 +51,7 @@ export const ErrorDialogContent = (
           buttonType="primary"
           onClick={() => setDialogState({ ...initialState })}
         >
-          Return to Upgrade Overview
+          Return to Overview
         </Button>
       </Box>
     </Stack>

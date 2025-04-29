@@ -33,7 +33,7 @@ describe('ErrorDialogContent', () => {
     getByText(ERROR_DRY_RUN_COPY);
     getByText(errorMessage1);
     getByText('example error 2');
-    getByText('Return to Upgrade Overview');
+    getByText('Return to Overview');
     getByText('Close');
   });
 

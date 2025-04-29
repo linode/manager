@@ -5,8 +5,7 @@ import { linodeConfigFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  CONFIG_SELECT_ACTUAL_UPGRADE_COPY,
-  CONFIG_SELECT_DRY_RUN_COPY,
+  CONFIG_SELECT_SHARED_COPY
 } from '../constants';
 import { ConfigSelectDialogContent } from './ConfigSelectDialogContent';
 
@@ -35,7 +34,7 @@ describe('ConfigSelectDialogContent', () => {
     );
 
     getByText('Upgrade Dry Run');
-    getByText(CONFIG_SELECT_DRY_RUN_COPY);
+    getByText(CONFIG_SELECT_SHARED_COPY);
     getByText('Cancel');
     getByText('Configuration Profile');
   });
@@ -53,7 +52,7 @@ describe('ConfigSelectDialogContent', () => {
     );
 
     getByText('Upgrade Interfaces');
-    getByText(CONFIG_SELECT_ACTUAL_UPGRADE_COPY);
+    getByText(CONFIG_SELECT_SHARED_COPY);
     getByText('Cancel');
     getByText('Configuration Profile');
   });

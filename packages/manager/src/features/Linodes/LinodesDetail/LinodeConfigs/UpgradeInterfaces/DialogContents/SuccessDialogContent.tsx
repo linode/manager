@@ -77,7 +77,7 @@ export const SuccessDialogContent = (
               disabled={isPending}
               onClick={() => setDialogState({ ...initialState })}
             >
-              Return to Upgrade Overview
+              Return to Overview
             </Button>
             <Button
               buttonType="primary"
