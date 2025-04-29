@@ -1,6 +1,6 @@
 import { Button } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -76,14 +76,13 @@ export const LandingHeader = ({
 
   return (
     <Grid
-      sx={(theme) => ({
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: theme.spacingFunction(24),
-        width: '100%',
-      })}
       container
       data-qa-entity-header
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+      }}
     >
       <Grid>
         <Breadcrumb
@@ -103,10 +102,10 @@ export const LandingHeader = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              flex: '1 1 auto',
               flexWrap: xsDown ? 'wrap' : 'nowrap',
               gap: 3,
               justifyContent: 'flex-end',
+              flex: '1 1 auto',
 
               marginLeft: customSmMdBetweenBreakpoint
                 ? theme.spacingFunction(16)

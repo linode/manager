@@ -1,5 +1,6 @@
 import { useNotificationsQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -36,30 +37,31 @@ export const AbuseTicketBanner = () => {
   const isViewingTicket = location.pathname.match(href);
 
   return (
-    <DismissibleBanner
-      options={{
-        expiry: DateTime.utc().plus({ days: 7 }).toISO(),
-        label: preferenceKey,
-      }}
-      forceImportantIconVerticalCenter
-      preferenceKey={preferenceKey}
-      variant="warning"
-    >
-      <Typography>
-        {message}
-        {/** Don't link to /support/tickets if we're already on the landing page. */}
-        {!isViewingTicket ? (
-          <>
-            {' '}
-            Please{' '}
-            <Link data-testid="abuse-ticket-link" to={href}>
-              click here
-            </Link>{' '}
-            to view {`${multiple ? 'these tickets' : 'this ticket'}.`}
-          </>
-        ) : null}
-      </Typography>
-    </DismissibleBanner>
+    <Grid size={12}>
+      <DismissibleBanner
+        options={{
+          expiry: DateTime.utc().plus({ days: 7 }).toISO(),
+          label: preferenceKey,
+        }}
+        preferenceKey={preferenceKey}
+        variant="warning"
+      >
+        <Typography>
+          {message}
+          {/** Don't link to /support/tickets if we're already on the landing page. */}
+          {!isViewingTicket ? (
+            <>
+              {' '}
+              Please{' '}
+              <Link data-testid="abuse-ticket-link" to={href}>
+                click here
+              </Link>{' '}
+              to view {`${multiple ? 'these tickets' : 'this ticket'}.`}
+            </>
+          ) : null}
+        </Typography>
+      </DismissibleBanner>
+    </Grid>
   );
 };
 

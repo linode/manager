@@ -5,11 +5,7 @@ import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleB
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { NoticeProps } from '@linode/ui';
-
-type DesignUpdateBannerProps = Partial<NoticeProps>;
-
-export const DesignUpdateBanner = ({ ...rest }: DesignUpdateBannerProps) => {
+export const DesignUpdateBanner = () => {
   const flags = useFlags();
   const designUpdateFlag = flags.cloudManagerDesignUpdatesBanner;
 
@@ -33,7 +29,7 @@ export const DesignUpdateBanner = ({ ...rest }: DesignUpdateBannerProps) => {
    *
    */
   return (
-    <DismissibleBanner preferenceKey={key} variant="info" {...rest}>
+    <DismissibleBanner preferenceKey={key} variant="info">
       <Typography fontSize="inherit">
         We are improving the Cloud Manager experience for our users.{' '}
         <Link to={link}>Read more</Link> about recent updates.

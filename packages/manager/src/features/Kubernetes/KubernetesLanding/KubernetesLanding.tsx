@@ -73,14 +73,11 @@ export const KubernetesLanding = () => {
   const { push } = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ClusterDialogState>(defaultDialogState);
 
-  const [
-    upgradeDialog,
-    setUpgradeDialogState,
-  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
+  const [upgradeDialog, setUpgradeDialogState] =
+    React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -110,9 +107,8 @@ export const KubernetesLanding = () => {
     isUsingBetaEndpoint,
   });
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const openUpgradeDialog = (
     clusterID: number,
@@ -176,7 +172,7 @@ export const KubernetesLanding = () => {
       {isDiskEncryptionFeatureEnabled && ( // @TODO LDE: once LDE is GA in all DCs, remove this condition
         <DismissibleBanner
           preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
-          spacingBottom={24}
+          spacingBottom={8}
           variant="info"
         >
           <Typography fontSize="inherit">
