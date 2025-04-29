@@ -40,35 +40,38 @@ export const Hidden = React.forwardRef<HTMLDivElement, HiddenProps>(
       ...other
     } = props;
 
-    const matchesXlUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xl', 'up'),
-    );
-    const matchesLgUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'lg', 'up'),
-    );
-    const matchesMdUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'md', 'up'),
+    // Up queries
+    const matchesXsUp = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'xs', 'up'),
     );
     const matchesSmUp = useMediaQuery((theme: Theme) =>
       getBreakpointQuery(theme, 'sm', 'up'),
     );
-    const matchesXlDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xl', 'down'),
+    const matchesMdUp = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'md', 'up'),
     );
-    const matchesLgDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'lg', 'down'),
+    const matchesLgUp = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'lg', 'up'),
     );
-    const matchesMdDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'md', 'down'),
+    const matchesXlUp = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'xl', 'up'),
+    );
+
+    // Down queries
+    const matchesXsDown = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'xs', 'down'),
     );
     const matchesSmDown = useMediaQuery((theme: Theme) =>
       getBreakpointQuery(theme, 'sm', 'down'),
     );
-    const matchesXsDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xs', 'down'),
+    const matchesMdDown = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'md', 'down'),
     );
-    const matchesXsUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xs', 'up'),
+    const matchesLgDown = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'lg', 'down'),
+    );
+    const matchesXlDown = useMediaQuery((theme: Theme) =>
+      getBreakpointQuery(theme, 'xl', 'down'),
     );
 
     const shouldHide =
