@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionQuery } from '@linode/queries';
 import {
   Accordion,
   Stack,
@@ -6,7 +6,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { doesRegionSupportFeature } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,15 +13,13 @@ import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { VLANAvailabilityNotice } from '../Networking/VLANAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
-import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const VLAN = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
-
-  const { data: regions } = useRegionsQuery();
 
   const { params } = useLinodeCreateQueryParams();
 
@@ -32,11 +29,10 @@ export const VLAN = () => {
 
   const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
 
-  const regionSupportsVLANs = doesRegionSupportFeature(
-    regionId,
-    regions ?? [],
-    'Vlans'
-  );
+  const { data: selectedRegion } = useRegionQuery(regionId);
+
+  const regionSupportsVLANs =
+    selectedRegion?.capabilities.includes('Vlans') ?? false;
 
   const isCreatingFromBackup = params.type === 'Backups';
 
@@ -69,7 +65,7 @@ export const VLAN = () => {
       }
       sx={{ margin: '0 !important', padding: 1 }}
     >
-      <VLANAvailabilityNotice />
+      {selectedRegion && !regionSupportsVLANs && <VLANAvailabilityNotice />}
       <Typography variant="body1">
         VLANs are used to create a private L2 Virtual Local Area Network between
         Linodes. A VLAN created or attached in this section will be assigned to

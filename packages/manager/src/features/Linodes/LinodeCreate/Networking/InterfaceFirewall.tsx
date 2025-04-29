@@ -38,6 +38,7 @@ export const InterfaceFirewall = ({ index }: Props) => {
         <FirewallSelect
           disabled={isLinodeCreateRestricted}
           errorText={fieldState.error?.message}
+          helperText="Cloud Firewalls are assigned to individual interfaces. Templates are available for both Public and VPC interfaces, with pre-configured rules to help protect your network traffic."
           label={`${labelMap[interfaceType ?? 'public']} Interface Firewall`}
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}

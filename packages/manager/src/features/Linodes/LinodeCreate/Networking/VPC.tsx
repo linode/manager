@@ -21,10 +21,10 @@ import {
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
-import { VPCAvailability } from './VPCAvailability';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
+import { VPCAvailabilityNotice } from './VPCAvailabilityNotice';
 
 interface Props {
   index: number;
@@ -63,13 +63,7 @@ export const VPC = ({ index }: Props) => {
   return (
     <Box>
       <Stack spacing={1.5}>
-        {!regionId && (
-          <Notice
-            text="Select a region to see available VPCs."
-            variant="warning"
-          />
-        )}
-        {selectedRegion && !regionSupportsVPCs && <VPCAvailability />}
+        {selectedRegion && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Controller
           control={control}
           name={`linodeInterfaces.${index}.vpc.vpc_id`}
@@ -77,6 +71,9 @@ export const VPC = ({ index }: Props) => {
             <Autocomplete
               disabled={!regionSupportsVPCs}
               errorText={error?.[0].reason ?? fieldState.error?.message}
+              helperText={
+                !regionId ? 'Select a region to see available VPCs.' : undefined
+              }
               label="VPC"
               loading={isLoading}
               noMarginTop
