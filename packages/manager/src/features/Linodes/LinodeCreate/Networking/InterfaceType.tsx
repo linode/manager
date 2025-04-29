@@ -28,7 +28,7 @@ const interfaceTypes = [
     label: 'Public Internet',
     purpose: 'public',
     description:
-      'Connects your Linode to the internet enabling traffic over the public IP address.',
+      'Connects your Linode to the internet, enabling traffic over the public IP address.',
   },
   {
     label: 'VPC',
