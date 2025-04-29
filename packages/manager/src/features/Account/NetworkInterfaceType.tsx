@@ -1,13 +1,5 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
-import {
-  BetaChip,
-  Box,
-  Button,
-  Paper,
-  Select,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Box, Button, Paper, Select, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -80,10 +72,7 @@ export const NetworkInterfaceType = () => {
 
   return (
     <Paper data-testid="network-interface-type">
-      <Box alignItems={'center'} display={'flex'}>
-        <Typography variant="h2">Network Interface Type</Typography>
-        <BetaChip />
-      </Box>
+      <Typography variant="h2">Network Interface Type</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1}>
           <Typography variant="body1">

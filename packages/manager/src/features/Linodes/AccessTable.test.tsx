@@ -2,7 +2,7 @@ import { linodeFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessTable } from './AccessTable';
@@ -27,7 +27,7 @@ describe('AccessTable', () => {
 
     const publicIPAddressesTooltip = await findByRole('tooltip');
     expect(publicIPAddressesTooltip).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
   });
 
