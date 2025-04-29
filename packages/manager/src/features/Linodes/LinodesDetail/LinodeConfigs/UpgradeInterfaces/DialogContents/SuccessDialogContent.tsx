@@ -36,6 +36,11 @@ export const SuccessDialogContent = (
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>
       </Notice>
+      {isDryRun && (
+        <Typography>
+          <strong>No issues were found.</strong>
+        </Typography>
+      )}
       {linodeInterfaces.length > 0 && (
         <Box
           sx={(theme) => ({
@@ -44,7 +49,9 @@ export const SuccessDialogContent = (
             padding: theme.spacingFunction(16),
           })}
         >
-          <Typography variant="h3">Upgrade Summary</Typography>
+          <Typography variant="h3">
+            {isDryRun ? 'Dry Run Summary' : 'Upgrade Summary'}
+          </Typography>
           {linodeInterfaces.map((linodeInterface) => (
             <LinodeInterfaceInfo
               isDryRun={isDryRun}
@@ -53,6 +60,11 @@ export const SuccessDialogContent = (
             />
           ))}
         </Box>
+      )}
+      {isDryRun && (
+        <Typography>
+          You can proceed with upgrading to Linode Interfaces.
+        </Typography>
       )}
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
         <Button buttonType="secondary" disabled={isPending} onClick={onClose}>
@@ -123,9 +135,11 @@ const LinodeInterfaceInfo = (props: UpgradeLinodeInterfaceInfo) => {
             marginBottom: theme.spacingFunction(16),
           })}
         >
-          <strong>Interface Meta Info: Interface #{id}</strong>
+          <strong>
+            Interface Meta Info{!isDryRun ? `: Interface #${id}` : ''}
+          </strong>
         </Typography>
-        <Typography>ID: {id}</Typography>
+        {!isDryRun && <Typography>ID: {id}</Typography>}
         <Typography>MAC Address: {mac_address}</Typography>
         <Typography>Created: {created}</Typography>
         <Typography>Updated: {updated}</Typography>
