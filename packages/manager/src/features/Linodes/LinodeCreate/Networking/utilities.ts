@@ -116,6 +116,7 @@ const legacyFieldToNewFieldMap = {
   '].ipv4.vpc': '].vpc.ipv4.addresses.0.address',
   '].label': '].vlan.vlan_lanel',
   '].subnet_id': '].vpc.subnet_id',
+  '].ipam_address': '].vlan.ipam_address',
 };
 
 /**
