@@ -131,7 +131,16 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       validator = validator.required('timezone cannot be empty');
     }
   }
-
+  if (key === 'net_buffer_length') {
+    validator = validator.test(
+      'is-multiple-of-1024',
+      `${key} must be a multiple of 1024`,
+      (value: boolean | number | string) => {
+        if (typeof value !== 'number') return false;
+        return value % 1024 === 0;
+      },
+    );
+  }
   return validator;
 };
 
