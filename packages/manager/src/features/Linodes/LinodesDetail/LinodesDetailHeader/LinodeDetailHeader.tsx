@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -25,16 +25,15 @@ import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
 import { LinodeRebuildDialog } from '../LinodeRebuild/LinodeRebuildDialog';
 import { RescueDialog } from '../LinodeRescue/RescueDialog';
 import { LinodeResize } from '../LinodeResize/LinodeResize';
-import { VolumesUpgradeBanner } from '../VolumesUpgradeBanner';
-import { HostMaintenance } from './HostMaintenance';
-import { MutationNotification } from './MutationNotification';
-import Notifications from './Notifications';
+
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { BaseQueryParams } from '@linode/utilities';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { BooleanString } from 'src/features/Linodes/types';
+
+import { LinodeDetailBannerNotifications } from './LinodeDetailBannerNotifications';
 
 interface QueryParams extends BaseQueryParams {
   delete: BooleanString;
@@ -64,9 +63,8 @@ export const LinodeDetailHeader = () => {
 
   const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    matchedLinodeId
-  );
+  const { mutateAsync: updateLinode } =
+    useLinodeUpdateMutation(matchedLinodeId);
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -85,9 +83,8 @@ export const LinodeDetailHeader = () => {
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
     queryParams.migrate === 'true'
   );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] =
+    React.useState(false);
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
   const history = useHistory();
@@ -114,11 +111,8 @@ export const LinodeDetailHeader = () => {
     setEnableBackupsDialogOpen(false);
   };
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
     try {
@@ -196,11 +190,11 @@ export const LinodeDetailHeader = () => {
 
   return (
     <>
-      <HostMaintenance linodeStatus={linode.status} />
-      <MutationNotification linodeId={matchedLinodeId} />
-      <Notifications />
-      <VolumesUpgradeBanner linodeId={linode.id} />
-      <ProductInformationBanner bannerLocation="Linodes" />
+      <LinodeDetailBannerNotifications
+        linodeId={linode.id}
+        linodeStatus={linode.status}
+        matchedLinodeId={matchedLinodeId}
+      />
       <LandingHeader
         breadcrumbProps={{
           onEditHandlers: {

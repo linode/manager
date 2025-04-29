@@ -1,44 +1,54 @@
 import * as React from 'react';
-import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { BannerContext } from 'src/MainContent';
+import { useLocation } from 'react-router-dom';
+import {
+  useAddBanner,
+  useRemoveBanner,
+  useClearBanners,
+} from '../../../queries/banners';
 
 interface BannerRegistrationProps {
   showMaintenance?: boolean;
 }
 
-export const BannerRegistration: React.FC<BannerRegistrationProps> = ({
+export const BannerRegistration = ({
   showMaintenance = false,
-}) => {
-  const { registerBanner, clearBanners } =
-    React.useContext(BannerContext) ?? {};
-
-  const didRegisterRef = React.useRef(false);
+}: BannerRegistrationProps) => {
+  const addBanner = useAddBanner();
+  const removeBanner = useRemoveBanner();
+  const clearBanners = useClearBanners();
+  const location = useLocation();
 
   React.useEffect(() => {
-    if (!registerBanner) return;
-    if (didRegisterRef.current) return; // ✅ only once
+    const isOnLinodes = location.pathname.startsWith('/linodes');
 
-    didRegisterRef.current = true;
+    if (isOnLinodes) {
+      // Clear all previous banners before adding new ones
+      clearBanners();
 
-    const registered: React.ReactNode[] = [];
+      if (showMaintenance) {
+        addBanner({
+          id: 'maintenance',
+          component: 'MaintenanceBanner',
+        });
+      }
 
-    if (showMaintenance) {
-      const maintenanceBanner = <MaintenanceBanner />;
-      registerBanner(maintenanceBanner);
-      registered.push(maintenanceBanner);
+      addBanner({
+        id: 'linodesProductInfo',
+        component: 'ProductInformationBanner',
+        props: { bannerLocation: 'Linodes' },
+      });
+    } else {
+      // Remove specific banners when leaving the route
+      removeBanner('maintenance');
+      removeBanner('linodesProductInfo');
     }
-
-    const productInfoBanner = (
-      <ProductInformationBanner bannerLocation="Linodes" />
-    );
-    registerBanner(productInfoBanner);
-    registered.push(productInfoBanner);
-
-    return () => {
-      clearBanners?.(registered);
-    };
-  }, [registerBanner, clearBanners, showMaintenance]); // ✅ only these are dependencies
+  }, [
+    location.pathname,
+    showMaintenance,
+    addBanner,
+    removeBanner,
+    clearBanners,
+  ]);
 
   return null;
 };

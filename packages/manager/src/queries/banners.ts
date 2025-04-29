@@ -1,42 +1,48 @@
-// src/queries/banners.ts
-import { useQueryClient } from '@tanstack/react-query';
-import * as React from 'react';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useQueryClient } from '@tanstack/react-query';
 
-export type BannerEntry = { key: string; banner: React.ReactNode };
+export type BannerMeta = {
+  id: string;
+  component: string;
+  props?: Record<string, any>;
+};
 
-// 👇 Structured query key
-export const bannersQueryKey = createQueryKeys('banners', {
-  all: (filters?: string) => [filters],
+export const bannersQueries = createQueryKeys('banners', {
+  all: () => ({
+    queryKey: [],
+  }),
 });
 
 export const useBanners = () => {
   const queryClient = useQueryClient();
+  return (
+    queryClient.getQueryData<BannerMeta[]>(bannersQueries.all.queryKey) ?? []
+  );
+};
 
-  const getBanners = (): BannerEntry[] => {
-    return queryClient.getQueryData<BannerEntry[]>(bannersQueryKey.all()) ?? [];
-  };
-
-  const registerBanner = (entry: BannerEntry) => {
-    queryClient.setQueryData<BannerEntry[]>(
-      bannersQueryKey.all(),
-      (old = []) => {
-        const exists = old.some((e) => e.key === entry.key);
-        if (exists) return old;
-        return [...old, entry];
-      }
+export const useAddBanner = () => {
+  const queryClient = useQueryClient();
+  return (banner: BannerMeta) => {
+    queryClient.setQueryData<BannerMeta[]>(
+      bannersQueries.all.queryKey,
+      (prev = []) => [...prev, banner]
     );
   };
+};
 
-  const clearBanner = (key: string) => {
-    queryClient.setQueryData<BannerEntry[]>(bannersQueryKey.all(), (old = []) =>
-      old.filter((entry) => entry.key !== key)
+export const useRemoveBanner = () => {
+  const queryClient = useQueryClient();
+  return (bannerId: string) => {
+    queryClient.setQueryData<BannerMeta[]>(
+      bannersQueries.all.queryKey,
+      (prev = []) => prev.filter((b) => b.id !== bannerId)
     );
   };
+};
 
-  const clearAllBanners = () => {
-    queryClient.setQueryData<BannerEntry[]>(bannersQueryKey.all(), []);
+export const useClearBanners = () => {
+  const queryClient = useQueryClient();
+  return () => {
+    queryClient.setQueryData<BannerMeta[]>(bannersQueries.all.queryKey, []);
   };
-
-  return { getBanners, registerBanner, clearBanner, clearAllBanners };
 };

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
@@ -48,6 +48,8 @@ import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
+
+import { BannerRegistration } from './BannerRegistration';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -306,11 +308,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner />
-        )}
         <DocumentTitleSegment segment="Linodes" />
-        <ProductInformationBanner bannerLocation="Linodes" />
         <PreferenceToggle
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -337,6 +335,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                 }) => {
                   return (
                     <React.Fragment>
+                      <BannerRegistration
+                        showMaintenance={
+                          this.props.someLinodesHaveScheduledMaintenance
+                        }
+                      />
                       <React.Fragment>
                         <BackupsCTA />
                         {this.props.LandingHeader ? (

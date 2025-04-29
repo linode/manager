@@ -11,18 +11,18 @@ export const CreditCardExpiredBanner = () => {
 
   const { data: account } = useAccount();
 
-  if (!account) {
-    return null;
-  }
+  // if (!account) {
+  //   return null;
+  // }
 
   const isExpired = Boolean(
     account?.credit_card?.expiry &&
       isCreditCardExpired(account?.credit_card.expiry)
   );
 
-  if (!isExpired) {
-    return;
-  }
+  // if (!isExpired) {
+  //   return;
+  // }
 
   return (
     <DismissibleBanner

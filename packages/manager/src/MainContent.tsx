@@ -47,6 +47,26 @@ import { migrationRouter } from './routes';
 import type { Theme } from '@mui/material/styles';
 import type { AnyRouter } from '@tanstack/react-router';
 
+import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { VolumesUpgradeBanner } from 'src/features/Linodes/LinodesDetail/VolumesUpgradeBanner';
+import { HostMaintenance } from 'src/features/Linodes/LinodesDetail/LinodesDetailHeader/HostMaintenance';
+import { MutationNotification } from 'src/features/Linodes/LinodesDetail/LinodesDetailHeader/MutationNotification';
+import Notifications from 'src/features/Linodes/LinodesDetail/LinodesDetailHeader/Notifications';
+
+import { useBanners } from './queries/banners';
+
+export const bannerComponentMap = {
+  ProductInformationBanner,
+  HostMaintenance,
+  VolumesUpgradeBanner,
+  MaintenanceBanner,
+  MutationNotification,
+  Notifications,
+} as const;
+
+export type BannerComponentName = keyof typeof bannerComponentMap;
+
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
     padding: theme.spacing(4),
@@ -181,12 +201,18 @@ const IAM = React.lazy(() =>
 
 export const MainContent = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
+
+  const queryClient = useQueryClient();
+
+  const banners = useBanners();
+
+  console.log('banners ', banners);
+
   const { classes, cx } = useStyles();
   const { data: isDesktopSidebarOpenPreference } = usePreferences(
     (preferences) => preferences?.desktop_sidebar_open
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -225,6 +251,11 @@ export const MainContent = () => {
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
+
+  // React.useEffect(() => {
+  //   setBanners(banners);
+  //   console.log('updating ', banners);
+  // }, [banners]);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -359,62 +390,87 @@ export const MainContent = () => {
                       spacing={0}
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <ErrorBoundaryFallback>
-                            <Switch>
-                              <Route
-                                component={LinodesRoutes}
-                                path="/linodes"
-                              />
-                              <Route
-                                component={Kubernetes}
-                                path="/kubernetes"
-                              />
-                              {isIAMEnabled && (
-                                <Route component={IAM} path="/iam" />
-                              )}
-                              <Route component={Account} path="/account" />
-                              <Route component={Profile} path="/profile" />
-                              <Route component={Help} path="/support" />
-                              <Route component={SearchLanding} path="/search" />
-                              <Route component={EventsLanding} path="/events" />
-                              {isDatabasesEnabled && (
+                        <Box display="flex" flexDirection="column" gap={2}>
+                          <GlobalNotifications />
+                          {banners.map((banner) => {
+                            const Component =
+                              bannerComponentMap[
+                                banner.component as BannerComponentName
+                              ];
+                            // debugger;
+                            // if (!Component) return null;
+                            return (
+                              <React.Fragment key={banner.id}>
+                                <Component {...banner.props} />
+                              </React.Fragment>
+                            );
+                          })}
+                        </Box>
+                        <Box mt={3}>
+                          <React.Suspense fallback={<SuspenseLoader />}>
+                            <ErrorBoundaryFallback>
+                              <Switch>
                                 <Route
-                                  component={Databases}
-                                  path="/databases"
+                                  component={LinodesRoutes}
+                                  path="/linodes"
                                 />
-                              )}
-                              {isACLPEnabled && (
                                 <Route
-                                  component={CloudPulseMetrics}
-                                  path="/metrics"
+                                  component={Kubernetes}
+                                  path="/kubernetes"
                                 />
-                              )}
-                              {isACLPEnabled && (
+                                {isIAMEnabled && (
+                                  <Route component={IAM} path="/iam" />
+                                )}
+                                <Route component={Account} path="/account" />
+                                <Route component={Profile} path="/profile" />
+                                <Route component={Help} path="/support" />
                                 <Route
-                                  component={CloudPulseAlerts}
-                                  path="/alerts"
+                                  component={SearchLanding}
+                                  path="/search"
                                 />
-                              )}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              {/**
-                               * This is the catch all routes that allows TanStack Router to take over.
-                               * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                               * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                               * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                               */}
-                              <Route path="*">
-                                <RouterProvider
-                                  context={{ queryClient }}
-                                  router={migrationRouter as AnyRouter}
+                                <Route
+                                  component={EventsLanding}
+                                  path="/events"
                                 />
-                              </Route>
-                            </Switch>
-                          </ErrorBoundaryFallback>
-                        </React.Suspense>
+                                {isDatabasesEnabled && (
+                                  <Route
+                                    component={Databases}
+                                    path="/databases"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseMetrics}
+                                    path="/metrics"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseAlerts}
+                                    path="/alerts"
+                                  />
+                                )}
+                                <Redirect exact from="/" to={defaultRoot} />
+                                {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                                <Redirect from="/dashboard" to={defaultRoot} />
+                                {/**
+                                 * This is the catch all routes that allows TanStack Router to take over.
+                                 * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                                 * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                                 * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                                 */}
+                                <Route path="*">
+                                  <RouterProvider
+                                    context={{
+                                      queryClient,
+                                    }}
+                                    router={migrationRouter as AnyRouter}
+                                  />
+                                </Route>
+                              </Switch>
+                            </ErrorBoundaryFallback>
+                          </React.Suspense>
+                        </Box>
                       </Grid>
                     </Grid>
                   </Box>
