@@ -374,7 +374,7 @@ export const deleteKubernetesCluster = (mockState: MockState) => [
       const nodePools = await mswDB.getAll('kubernetesNodePools');
       const deleteNodePoolPromises = nodePools
         ? nodePools
-            .filter((pool) => pool.id === id)
+            .filter((pool: MockKubeNodePoolResponse) => pool.clusterId === id)
             .map((pool) =>
               mswDB.delete('kubernetesNodePools', pool.id, mockState)
             )
