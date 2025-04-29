@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 
-import { QueryClientWrapper, renderWithWrappers } from '../../utilities/wrap';
+import {
+  QueryClientWrapper,
+  renderWithWrappers,
+  ThemeWrapper,
+} from '../../utilities/wrap';
 import { LinodeSelect } from './LinodeSelect';
 
 import type { Linode } from '@linode/api-v4';
@@ -25,7 +29,7 @@ describe('LinodeSelect', () => {
         options={options}
         value={null}
       />,
-      [QueryClientWrapper()],
+      [QueryClientWrapper(), ThemeWrapper()],
     );
 
     const input = getByTestId(TEXTFIELD_ID);
@@ -51,7 +55,7 @@ describe('LinodeSelect', () => {
         options={option}
         value={null}
       />,
-      [QueryClientWrapper()],
+      [QueryClientWrapper(), ThemeWrapper()],
     );
 
     // Open the dropdown
@@ -78,7 +82,7 @@ describe('LinodeSelect', () => {
         options={option}
         value={null}
       />,
-      [QueryClientWrapper()],
+      [QueryClientWrapper(), ThemeWrapper()],
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);
@@ -104,7 +108,7 @@ describe('LinodeSelect', () => {
         options={[option]}
         value={null}
       />,
-      [QueryClientWrapper()],
+      [QueryClientWrapper(), ThemeWrapper()],
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);
@@ -129,7 +133,7 @@ describe('LinodeSelect', () => {
         options={[option]}
         value={null}
       />,
-      [QueryClientWrapper()],
+      [QueryClientWrapper(), ThemeWrapper()],
     );
 
     const input = screen.getByTestId(TEXTFIELD_ID);

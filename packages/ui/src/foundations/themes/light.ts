@@ -439,6 +439,8 @@ export const lightTheme: ThemeOptions = {
               backgroundColor: primaryColors.main,
               color: primaryColors.white,
             },
+            width: 'auto',
+            height: 'auto',
             borderRadius: '50%',
             color: Content.Text.Primary.Default,
             fontSize: '16px',

@@ -32,7 +32,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   color: Factory.each((i) => color[i % color.length]),
   entity_ids: Factory.each((i) => [`resource-${i}`]),
   filters: [],
-  group_by: 'region',
+  group_by: Factory.each((i) => [`group_by_${i}`]),
   label: Factory.each((i) => `widget_label_${i}`),
   metric: Factory.each((i) => `widget_metric_${i}`),
   namespace_id: Factory.each((i) => i % 10),
@@ -52,8 +52,8 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   y_label: Factory.each((i) => `y_label_${i}`),
 });
 
-export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>(
-  {
+export const dashboardMetricFactory =
+  Factory.Sync.makeFactory<MetricDefinition>({
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [
       {
@@ -79,11 +79,10 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>
       (i) => scrape_interval[i % scrape_interval.length]
     ),
     unit: 'defaultUnit',
-  }
-);
+  });
 
-export const cloudPulseMetricsResponseDataFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponseData>(
-  {
+export const cloudPulseMetricsResponseDataFactory =
+  Factory.Sync.makeFactory<CloudPulseMetricsResponseData>({
     result: [
       {
         metric: {},
@@ -91,16 +90,14 @@ export const cloudPulseMetricsResponseDataFactory = Factory.Sync.makeFactory<Clo
       },
     ],
     result_type: 'matrix',
-  }
-);
+  });
 
-export const cloudPulseMetricsResponseFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponse>(
-  {
+export const cloudPulseMetricsResponseFactory =
+  Factory.Sync.makeFactory<CloudPulseMetricsResponse>({
     data: cloudPulseMetricsResponseDataFactory.build(),
     isPartial: false,
     stats: {
       series_fetched: 2,
     },
     status: 'success',
-  }
-);
+  });

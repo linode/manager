@@ -1,4 +1,5 @@
 import { useAllLinodesQuery } from '@linode/queries';
+import { Box } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 
@@ -57,16 +58,24 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
   return (
     <TableRow data-testid={`firewall-row-${id}`}>
       <TableCell>
-        <Link tabIndex={0} to={`/firewalls/${id}`}>
-          {label}
-        </Link>
-        {isLinodeInterfacesEnabled && isDefault && (
-          <DefaultFirewallChip
-            chipProps={{ sx: { marginLeft: 1 } }}
-            defaultNumEntities={defaultNumEntities}
-            tooltipText={tooltipText}
-          />
-        )}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+          }}
+        >
+          <Link tabIndex={0} to={`/firewalls/${id}`}>
+            {label}
+          </Link>
+          {isLinodeInterfacesEnabled && isDefault && (
+            <DefaultFirewallChip
+              chipProps={{ sx: { marginLeft: 1 } }}
+              defaultNumEntities={defaultNumEntities}
+              tooltipText={tooltipText}
+            />
+          )}
+        </Box>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />

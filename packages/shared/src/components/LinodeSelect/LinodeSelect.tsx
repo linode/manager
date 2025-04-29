@@ -4,7 +4,7 @@ import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
 
 import type { APIError, Filter, Linode } from '@linode/api-v4';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@linode/ui';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
@@ -113,6 +113,34 @@ export const LinodeSelect = (
 
   return (
     <Autocomplete
+      isOptionEqualToValue={
+        checkIsOptionEqualToValue
+          ? (option, value) => option.id === value.id
+          : undefined
+      }
+      noOptionsText={
+        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isFetching)
+      }
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onSelectionChange(value)
+          : !multiple && !Array.isArray(value) && onSelectionChange(value)
+      }
+      placeholder={
+        placeholder
+          ? placeholder
+          : multiple
+            ? 'Select Linodes'
+            : 'Select a Linode'
+      }
+      value={
+        typeof value === 'function'
+          ? multiple && Array.isArray(value)
+            ? (linodes?.filter(value) ?? null)
+            : (linodes?.find(value) ?? null)
+          : mapIdsToDevices<Linode>(value, linodes)
+      }
+      PopperComponent={CustomPopper}
       clearOnBlur={false}
       data-testid="add-linode-autocomplete"
       disableClearable={!clearable}
@@ -124,43 +152,15 @@ export const LinodeSelect = (
       helperText={helperText}
       id={id}
       inputValue={inputValue}
-      isOptionEqualToValue={
-        checkIsOptionEqualToValue
-          ? (option, value) => option.id === value.id
-          : undefined
-      }
       label={label ? label : multiple ? 'Linodes' : 'Linode'}
       loading={isFetching || loading}
       multiple={multiple}
       noMarginTop={noMarginTop}
-      noOptionsText={
-        noOptionsMessage ?? getDefaultNoOptionsMessage(error, isFetching)
-      }
       onBlur={onBlur}
-      onChange={(_, value) =>
-        multiple && Array.isArray(value)
-          ? onSelectionChange(value)
-          : !multiple && !Array.isArray(value) && onSelectionChange(value)
-      }
       onInputChange={(_, value) => setInputValue(value)}
       options={options || (linodes ?? [])}
-      placeholder={
-        placeholder
-          ? placeholder
-          : multiple
-            ? 'Select Linodes'
-            : 'Select a Linode'
-      }
-      PopperComponent={CustomPopper}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
-      value={
-        typeof value === 'function'
-          ? multiple && Array.isArray(value)
-            ? (linodes?.filter(value) ?? null)
-            : (linodes?.find(value) ?? null)
-          : mapIdsToDevices<Linode>(value, linodes)
-      }
     />
   );
 };

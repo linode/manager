@@ -1,4 +1,4 @@
-import Close from '@mui/icons-material/Close';
+import { CloseIcon } from '@linode/ui';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
@@ -177,7 +177,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
               onClick={() => onClose?.({}, 'escapeKeyDown')}
               size="large"
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </Grid>
         </Grid>
@@ -198,5 +198,5 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         )}
       </_Drawer>
     );
-  }
+  },
 );
