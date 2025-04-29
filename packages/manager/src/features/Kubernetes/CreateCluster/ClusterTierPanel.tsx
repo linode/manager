@@ -1,6 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import { useMediaQuery } from '@mui/material';
+import { Grid2, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -50,14 +50,11 @@ export const ClusterTierPanel = (props: Props) => {
         </StyledDocsLinkContainer>
       </StyledStackWithTabletBreakpoint>
 
-      <Stack
-        flexDirection={smDownBreakpoint ? 'column' : 'row'}
-        gap={2}
-        marginTop={2}
-      >
+      <Grid2 container marginTop={2} spacing={2}>
         <SelectionCard
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
+          gridSize={{ xs: 12, sm: 6, md: 4 }}
           heading="LKE"
           onClick={() => handleClusterTierSelection('standard')}
           subheadings={[StandardSubheadings]}
@@ -71,13 +68,14 @@ export const ClusterTierPanel = (props: Props) => {
           }
           checked={selectedTier === 'enterprise' && !isUserRestricted}
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
+          gridSize={{ xs: 12, sm: 6, md: 4 }}
           heading="LKE Enterprise"
           onClick={() => handleClusterTierSelection('enterprise')}
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
-      </Stack>
+      </Grid2>
     </Stack>
   );
 };

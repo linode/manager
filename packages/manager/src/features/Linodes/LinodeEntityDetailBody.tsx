@@ -9,10 +9,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import {
-  DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
-  UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
-} from 'src/components/Encryption/constants';
+import { UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
@@ -48,6 +45,7 @@ import type {
   InterfaceGenerationType,
   Linode,
   LinodeCapabilities,
+  LinodeInterface,
   Subnet,
   VPC,
 } from '@linode/api-v4';
@@ -66,12 +64,12 @@ export interface Props extends LinodeEntityDetailProps {
 }
 
 export interface BodyProps {
-  configInterfaceWithVPC?: Interface;
   encryptionStatus: EncryptionStatus | undefined;
   firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
   interfaceGeneration: InterfaceGenerationType | undefined;
+  interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
@@ -90,12 +88,12 @@ export interface BodyProps {
 
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
-    configInterfaceWithVPC,
     encryptionStatus,
     firewalls,
     gbRAM,
     gbStorage,
     interfaceGeneration,
+    interfaceWithVPC,
     ipv4,
     ipv6,
     isLKELinode,
@@ -128,16 +126,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const theme = useTheme();
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
-  const {
-    canUpgradeInterfaces,
-    unableToUpgradeReasons,
-  } = useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
+  const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
+
+  const { canUpgradeInterfaces, unableToUpgradeReasons } =
+    useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
 
   const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
     unableToUpgradeReasons
@@ -166,10 +163,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
-  } = useKubernetesBetaEndpoint();
+  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
+    useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
@@ -269,16 +264,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   flexDirection="row"
                 >
                   <EncryptedStatus
-                    /**
-                     * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                     * explaining how LDE can be enabled on LKE-E node pools.
-                     * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                     */
                     tooltipText={
-                      isLKELinode && cluster?.tier === 'enterprise'
+                      isLKELinode
                         ? undefined
-                        : isLKELinode
-                        ? UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY
                         : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
                     encryptionStatus={encryptionStatus}
@@ -359,7 +347,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         <Grid
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
           }}
           container
           direction="column"
@@ -402,18 +390,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            {configInterfaceWithVPC?.ipv4?.vpc && (
+            {vpcIPv4 && (
               <StyledIPv4Box>
                 <StyledIPv4Label data-testid="vpc-ipv4">
                   VPC IPv4
                 </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <CopyTooltip
-                    copyableText
-                    text={configInterfaceWithVPC.ipv4.vpc}
-                  />
+                  <CopyTooltip copyableText text={vpcIPv4} />
                   <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
-                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                    <StyledCopyTooltip text={vpcIPv4} />
                   </Box>
                 </StyledIPv4Item>
               </StyledIPv4Box>
@@ -532,4 +517,19 @@ export const getSubnetsString = (data: Subnet[]) => {
   return data.length > 3
     ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
     : firstThreeSubnetsString;
+};
+
+export const getVPCIPv4 = (
+  interfaceWithVPC: Interface | LinodeInterface | undefined
+) => {
+  if (interfaceWithVPC) {
+    if ('purpose' in interfaceWithVPC) {
+      return interfaceWithVPC.ipv4?.vpc;
+    }
+    return interfaceWithVPC.vpc?.ipv4?.addresses.find(
+      (address) => address.primary
+    )?.address;
+  }
+
+  return undefined;
 };

@@ -11,6 +11,8 @@ import {
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  grantFactory,
+  grantsFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -27,11 +29,10 @@ import {
   securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
-  VLANFactory,
   // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -103,14 +104,15 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  VLANFactory,
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
+  widgetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { getStorage } from 'src/utilities/storage';
 
@@ -120,6 +122,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { MTC_TT } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -475,9 +478,26 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
-const premiumTypes = linodeTypeFactory.buildList(7, {
-  class: 'premium',
-});
+const premiumTypes = [
+  ...linodeTypeFactory.buildList(6, {
+    class: 'premium',
+  }),
+  linodeTypeFactory.build({
+    class: 'premium',
+    disk: 10240000,
+    id: 'g8-premium-128-ht',
+    label: 'Premium HT 512 GB',
+    memory: 524288,
+    network_out: 40000,
+    price: {
+      hourly: 7.0,
+      monthly: 5040.0,
+    },
+    transfer: 24000,
+    vcpus: 128,
+  }),
+];
+
 const acceleratedType = linodeTypeFactory.buildList(7, {
   accelerated_devices: 1,
   class: 'accelerated',
@@ -701,7 +721,22 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
+    const mtcTTLinodes = [
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-1',
+        region: 'us-iad',
+        type: 'g8-premium-128-ht',
+        id: 1234,
+      }),
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-2',
+        region: 'no-east',
+        type: 'g8-premium-128-ht',
+        id: 1235,
+      }),
+    ];
     const linodes = [
+      ...mtcTTLinodes,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -806,14 +841,23 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    return HttpResponse.json(
-      linodeFactory.build({
-        backups: { enabled: false },
-        id,
-        label: 'Gecko Distributed Region Test',
-        region: 'us-den-10',
-      })
-    );
+    const linodeMTCTTPlanDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'mtc-tt-custom-plan-linode',
+      region: 'us-iad',
+      type: 'g8-premium-128-ht',
+    });
+    const linodeDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
+    });
+    const response = [1234, 1235].includes(id)
+      ? linodeMTCTTPlanDetail
+      : linodeDetail;
+    return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
@@ -1888,7 +1932,7 @@ export const handlers = [
     return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
-    const monitors = monitorFactory.buildList(5);
+    const monitors = monitorFactory.buildList(25);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
       status: 'problem',
@@ -2010,7 +2054,7 @@ export const handlers = [
       body: null,
       entity: null,
       label: "We've updated our policies.",
-      // eslint-disable-next-line xss/no-mixed-html
+
       message:
         "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
       severity: 'minor',
@@ -2246,16 +2290,36 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*regions/:regionId/availability', () => {
+  http.get('*regions/:regionId/availability', ({ params }) => {
+    const selectedRegion = params.regionId as string;
+
     return HttpResponse.json([
       regionAvailabilityFactory.build({
         plan: 'g6-standard-6',
-        region: 'us-east',
+        region: selectedRegion,
       }),
       regionAvailabilityFactory.build({
         plan: 'g6-standard-7',
-        region: 'us-east',
+        region: selectedRegion,
       }),
+      // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
+      ...(MTC_TT['availability_regions'].includes(
+        selectedRegion as (typeof MTC_TT)['availability_regions'][number]
+      )
+        ? [
+            regionAvailabilityFactory.build({
+              available: true,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]
+        : [
+            regionAvailabilityFactory.build({
+              available: false,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]),
     ]);
   }),
 
@@ -2466,27 +2530,27 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-    http.post(
-      '*/monitor/services/:service_type/alert-definitions',
-      async ({ request }) => {
-  
-        const types: AlertDefinitionType[] = ['system', 'user'];
-        const status: AlertStatusType[] = ['enabled', 'disabled'];
-        const severity: AlertSeverityType[] = [0, 1, 2, 3];
-        const users = ['user1', 'user2', 'user3'];
-        const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
-        const reqBody = await request.json();
-        const response = alertFactory.build({
-          ...(reqBody as CreateAlertDefinitionPayload),
-          created_by: pickRandom(users),
-          service_type: pickRandom(serviceTypes),
-          severity: pickRandom(severity),
-          status: pickRandom(status),
-          type: pickRandom(types),
-          updated_by: pickRandom(users),
-        });
-        return HttpResponse.json(response);
-  }),
+  http.post(
+    '*/monitor/services/:service_type/alert-definitions',
+    async ({ request }) => {
+      const types: AlertDefinitionType[] = ['system', 'user'];
+      const status: AlertStatusType[] = ['enabled', 'disabled'];
+      const severity: AlertSeverityType[] = [0, 1, 2, 3];
+      const users = ['user1', 'user2', 'user3'];
+      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+      const reqBody = await request.json();
+      const response = alertFactory.build({
+        ...(reqBody as CreateAlertDefinitionPayload),
+        created_by: pickRandom(users),
+        service_type: pickRandom(serviceTypes),
+        severity: pickRandom(severity),
+        status: pickRandom(status),
+        type: pickRandom(types),
+        updated_by: pickRandom(users),
+      });
+      return HttpResponse.json(response);
+    }
+  ),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
@@ -2539,6 +2603,7 @@ export const handlers = [
       }),
       ...customAlerts,
       ...defaultAlertsWithServiceType,
+      ...alertFactory.buildList(3),
       ...alertFactory.buildList(36, {
         status: 'disabled',
         tags: ['tag-3'],
@@ -2608,6 +2673,9 @@ export const handlers = [
       makeResourcePage(notificationChannelFactory.buildList(7))
     );
   }),
+  http.delete('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json({});
+  }),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [
@@ -2633,6 +2701,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     } else if (params.serviceType === 'dbaas') {
@@ -2640,6 +2717,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     }
@@ -2792,6 +2878,7 @@ export const handlers = [
           metric: 'system_cpu_utilization_percent',
           size: 12,
           unit: '%',
+          group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
           filters: dimensionFilterFactory.buildList(5, {
             operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
@@ -2805,6 +2892,7 @@ export const handlers = [
           metric: 'system_memory_usage_by_resource',
           size: 12,
           unit: 'Bytes',
+          group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
         {
@@ -2816,6 +2904,7 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          group_by: ['entity_id'],
           filters: dimensionFilterFactory.buildList(3, {
             operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
           }),
@@ -2828,6 +2917,7 @@ export const handlers = [
           metric: 'system_disk_OPS_total',
           size: 6,
           unit: 'OPS',
+          group_by: ['entity_id'],
           y_label: 'system_disk_operations_total',
         },
       ],

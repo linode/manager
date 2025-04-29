@@ -20,18 +20,14 @@ export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   open: boolean;
 }
 
+/**
+ * @deprecated
+ * Use the ConfirmationDialog component instead.
+ */
 export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
-  const {
-    entity,
-    error,
-    label,
-    loading,
-    onClose,
-    onDelete,
-    open,
-    ...rest
-  } = props;
+  const { entity, error, label, loading, onClose, onDelete, open, ...rest } =
+    props;
 
   const { data: typeToConfirmPreference } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true
@@ -69,6 +65,7 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
     <ConfirmationDialog
       actions={renderActions}
       error={error}
+      isFetching={loading}
       onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}

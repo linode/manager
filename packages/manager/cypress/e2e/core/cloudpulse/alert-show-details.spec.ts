@@ -136,6 +136,33 @@ describe('Integration Tests for Alert Show Detail Page', () => {
     cy.url().should('endWith', `/detail/${service_type}/${id}`);
   });
 
+  it('displays failure message and alert details for a failed alert', () => {
+    const alertDetails = alertFactory.build({
+      service_type: 'dbaas',
+      status: 'failed',
+      type: 'user',
+      id: 1001,
+      label: 'Alert-1',
+    });
+    mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+    mockGetAlertDefinitions('dbaas', 1001, alertDetails).as(
+      'getDBaaSAlertDefinitions'
+    );
+    // Navigate to the alert definitions list page with login
+    cy.visitWithLogin('/alerts/definitions/detail/dbaas/1001');
+    cy.wait('@getDBaaSAlertDefinitions');
+
+    cy.get('[data-qa-error="true"]')
+      .should('be.visible')
+      .should(
+        'have.text',
+        'Alert-1 alert creation has failed. Please open a support ticket for assistance.'
+      );
+    // Validate Status field
+    cy.findByText('Status:').should('be.visible');
+    cy.findByText('Failed').should('be.visible');
+  });
+
   it('should correctly display the details of the DBaaS alert in the alert details view', () => {
     const searchPlaceholder = 'Search for a Region or Entity';
     cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
@@ -219,7 +246,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         cy.get('[data-qa-item="Dimension Filter"]')
           .eq(index)
           .within(() => {
-            (rule.dimension_filters ?? []).forEach((filter, filterIndex) => {
+            (rule.dimension_filters ?? []).forEach((filter) => {
               // Validate the filter label
               cy.get(`[data-qa-chip="${filter.label}"]`)
                 .should('be.visible')

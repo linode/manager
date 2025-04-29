@@ -6,13 +6,13 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { Link } from '@mui/material';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { SupportLink } from 'src/components/SupportLink';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -36,13 +36,14 @@ const searchAndSelectSx = {
   sm: '400px',
   xs: '300px',
 };
-// hardcoding the value is temporary solution until something from the API side is confirmed.
+// hardcoding the value is temporary solution until a solution from API side is confirmed.
 const maxAllowedAlerts = 100;
 const maxAllowedMetrics = 100;
 interface AlertsLimitErrorMessageProps {
   isAlertLimitReached: boolean;
   isMetricLimitReached: boolean;
 }
+
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
@@ -57,20 +58,17 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
+
+  const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
+  const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
+
+  const isMetricLimitReached =
+    userAlerts.reduce(
+      (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
+      0
+    ) >= maxAllowedMetrics;
+
   const topRef = React.useRef<HTMLButtonElement>(null);
-
-  const isAlertLimitReached = alerts
-    ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
-    : false;
-
-  const isMetricLimitReached = alerts
-    ? alerts
-        .filter(({ type }) => type === 'user')
-        .reduce(
-          (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
-          0
-        ) >= maxAllowedMetrics
-    : false;
 
   const getServicesList = React.useMemo((): Item<
     string,
@@ -159,10 +157,12 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const { preference, toggle: toggleAlertsGroupedByTag } = usePreferencesToggle(
-    'aclpAlertsGroupByTag',
-    [false, true]
-  );
+  const { preference: togglePreference, toggle: toggleGroupByTag } =
+    usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
   if (alerts && alerts.length === 0) {
     return (
@@ -221,7 +221,6 @@ export const AlertListing = () => {
             onSearch={setSearchText}
             placeholder="Search for Alerts"
             sx={{
-              maxHeight: '34px',
               width: searchAndSelectSx,
             }}
             value={searchText}
@@ -306,25 +305,19 @@ export const AlertListing = () => {
           >
             Creation of {failedAlertsCount} alerts has failed as indicated in
             the status column. Please{' '}
-            <Link
-              href="https://cloud.linode.com/support/tickets"
-              underline="hover"
-            >
-              open a support ticket
-            </Link>{' '}
-            for assistance.
+            <SupportLink text="open a support ticket" /> for assistance.
           </Typography>
         </Notice>
       )}
 
       <AlertsListTable
         alerts={getAlertsList}
-        alertsGroupedByTag={preference}
         error={error ?? undefined}
+        isGroupedByTag={togglePreference}
         isLoading={isLoading}
         scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
-        toggleAlertsGroupedByTag={() => toggleAlertsGroupedByTag?.() ?? false}
+        toggleGroupByTag={() => toggleGroupByTag?.() ?? false}
       />
     </Stack>
   );

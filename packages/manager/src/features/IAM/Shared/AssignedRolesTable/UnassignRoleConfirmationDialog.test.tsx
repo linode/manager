@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 const mockRole: ExtendedRoleMap = {
   access: 'account_access',

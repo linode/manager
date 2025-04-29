@@ -115,3 +115,9 @@ export const WithLabelAndTooltip: Story = {
     toolTipText: 'This is the tooltip!',
   },
 };
+
+export const SmallSize: Story = {
+  args: {
+    size: 'small',
+  },
+};

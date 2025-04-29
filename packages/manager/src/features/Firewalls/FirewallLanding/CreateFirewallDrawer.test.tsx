@@ -5,6 +5,8 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { accountFactory } from 'src/factories';
 
 const props = {
   createFlow: undefined,
@@ -26,6 +28,12 @@ describe('Create Firewall Drawer', () => {
       'Create Firewall'
     );
     expect(title).toBeVisible();
+  });
+
+  it('should always show the label field', () => {
+    renderWithTheme(<CreateFirewallDrawer {...props} />);
+    const label = screen.getByText('Label');
+    expect(label).toBeVisible();
   });
 
   it('should render radio buttons for default inbound/outbound policies', () => {
@@ -55,15 +63,25 @@ describe('Create Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  it('shows custom firewall radio group if Linode Interfaces flag is enabled and can toggle radio group', async () => {
-    const { getByLabelText, getByTestId } = renderWithTheme(
+  it('shows custom firewall radio group if Linode Interfaces is enabled and can toggle radio group', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Linode Interfaces'],
+    });
+
+    server.use(http.get('*/v4/account', () => HttpResponse.json(account)));
+
+    const { getByLabelText, findByTestId } = renderWithTheme(
       <CreateFirewallDrawer {...props} />,
       {
         flags: { linodeInterfaces: { enabled: true } },
       }
     );
 
-    expect(getByTestId('create-firewall-from')).toBeVisible();
+    const createFirewallForm = await findByTestId(
+      'create-firewall-from-radio-group'
+    );
+
+    expect(createFirewallForm).toBeVisible();
 
     const templateRadio = getByLabelText('From a Template');
     await userEvent.click(templateRadio);
@@ -78,7 +96,9 @@ describe('Create Firewall Drawer', () => {
       }
     );
 
-    expect(queryByTestId('create-firewall-from')).not.toBeInTheDocument();
+    expect(
+      queryByTestId('create-firewall-from-radio-group')
+    ).not.toBeInTheDocument();
     expect(queryByLabelText('Firewall Template')).not.toBeInTheDocument();
   });
 });

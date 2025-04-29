@@ -8,11 +8,18 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
  * @param onClickHandlers The list of handlers required to be called on click of an action
  * @returns The actions based on the type of the alert
  */
+
 export const getAlertTypeToActionsList = (
-  { handleDetails, handleEdit, handleStatusChange }: ActionHandlers,
+  {
+    handleDetails,
+    handleEdit,
+    handleStatusChange,
+    handleDelete,
+  }: ActionHandlers,
   alertStatus: AlertStatusType
 ): Record<AlertDefinitionType, Action[]> => ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
+
   system: [
     {
       onClick: handleDetails,
@@ -37,6 +44,13 @@ export const getAlertTypeToActionsList = (
       disabled: alertStatus === 'in progress' || alertStatus === 'failed',
       onClick: handleStatusChange,
       title: getTitleForStatusChange(alertStatus),
+    },
+    {
+      disabled:
+        /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will add proper condition check for the delete action */
+        true,
+      onClick: handleDelete,
+      title: 'Delete',
     },
   ],
 });

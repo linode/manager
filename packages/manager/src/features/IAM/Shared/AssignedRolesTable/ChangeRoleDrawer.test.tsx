@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -63,7 +63,9 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleDrawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);
+    const { getByText } = renderWithTheme(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     // Verify title renders
     getByText('Change Role');
@@ -91,7 +93,9 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(<ChangeRoleDrawer {...props} />);
+    const { getByText } = renderWithTheme(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     const autocomplete = screen.getByRole('combobox');
 

@@ -347,6 +347,9 @@ export const baseConfig = [
               ],
             ];
           }
+          if (rule === 'prefer-explicit-assert') {
+            return [`testing-library/${rule}`, 'off'];
+          }
           // All other rules just get set to warn
           return [`testing-library/${rule}`, 'warn'];
         })
@@ -372,9 +375,11 @@ export const baseConfig = [
     files: ['**/cypress/**/*.{js,ts,tsx}'],
     rules: {
       'no-console': 'off',
+      'no-unused-expressions': 'off',
       'sonarjs/pseudo-random': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
 
@@ -387,6 +392,7 @@ export const baseConfig = [
       'src/features/Firewalls/**/*',
       'src/features/Images/**/*',
       'src/features/Longview/**/*',
+      'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',

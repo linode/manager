@@ -1,18 +1,19 @@
-import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
-import { InferType } from 'yup';
-import {
+import type { Region, RegionSite } from '../regions';
+import type {
   CreateLinodeInterfaceSchema,
   ModifyLinodeInterfaceSchema,
   RebuildLinodeSchema,
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
+import type { VPCIP } from 'src/vpcs';
+import type { InferType } from 'yup';
 
 export type Hypervisor = 'kvm' | 'zen';
 
-export type EncryptionStatus = 'enabled' | 'disabled';
+export type EncryptionStatus = 'disabled' | 'enabled';
 
 export type InterfaceGenerationType = 'legacy_config' | 'linode';
 
@@ -150,6 +151,7 @@ export interface LinodeIPsResponseIPV4 {
   private: IPAddress[];
   shared: IPAddress[];
   reserved: IPAddress[];
+  vpc: VPCIP[];
 }
 
 export interface LinodeIPsResponseIPV6 {
@@ -177,13 +179,23 @@ export type LinodeStatus =
 // ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
+// IPv4
 export interface ConfigInterfaceIPv4 {
   vpc?: string | null;
   nat_1_1?: string | null;
 }
 
+export interface IPv6SLAAC {
+  range: string;
+  address: string;
+}
+
 export interface ConfigInterfaceIPv6 {
-  vpc?: string | null;
+  slaac: IPv6SLAAC[];
+  ranges: {
+    range?: string;
+  }[];
+  is_public: boolean;
 }
 
 // The legacy interface type - for Configuration Profile Interfaces
@@ -284,10 +296,18 @@ export interface LinodeInterfaces {
   interfaces: LinodeInterface[];
 }
 
+export interface LinodeInterfaceIPv6 {
+  slaac: IPv6SLAAC[];
+  ranges: {
+    range: string;
+  }[];
+  is_public: boolean;
+}
+
 export interface VPCInterfaceData {
   vpc_id: number;
   subnet_id: number;
-  ipv4: {
+  ipv4?: {
     addresses: {
       address: string;
       primary: boolean;
@@ -295,6 +315,7 @@ export interface VPCInterfaceData {
     }[];
     ranges: { range: string }[];
   };
+  ipv6?: LinodeInterfaceIPv6;
 }
 
 export interface PublicInterfaceData {
@@ -693,10 +714,10 @@ export interface ResizeLinodePayload {
   migration_type?: MigrationTypes;
 }
 
-export interface DeleteLinodeConfigInterfacePayload {
-  linodeId: number;
-  configId: number;
+export interface DeleteInterfaceIds {
+  configId: null | number;
   interfaceId: number;
+  linodeId: number;
 }
 
 export interface LinodeLishData {

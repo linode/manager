@@ -31,26 +31,23 @@ const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
 const tagSequence = ['LinodeTags', 'DBaaSTags', 'bothTags', 'No Tags'];
 
 // Generate mock alerts with a mix of tags, statuses, and service types
-const mockAlerts = Array.from(
-  { length: 5 },
-  (_, index): Alert => {
-    const tag = tagSequence[index % tagSequence.length];
-    const tags = tag === 'No Tags' ? [] : [tag, 'bothTags'];
-    const status = statusList[index % statusList.length];
-    const serviceType = serviceTypes[index % serviceTypes.length];
-    const primaryTag = tags.length === 0 ? 'No Tags' : tags[0];
-    const label = `${primaryTag}-${index}`;
+const mockAlerts = Array.from({ length: 5 }, (_, index): Alert => {
+  const tag = tagSequence[index % tagSequence.length];
+  const tags = tag === 'No Tags' ? [] : [tag, 'bothTags'];
+  const status = statusList[index % statusList.length];
+  const serviceType = serviceTypes[index % serviceTypes.length];
+  const primaryTag = tags.length === 0 ? 'No Tags' : tags[0];
+  const label = `${primaryTag}-${index}`;
 
-    return alertFactory.build({
-      created_by: primaryTag,
-      label,
-      service_type: serviceType,
-      status,
-      tags,
-      type: 'user',
-    });
-  }
-);
+  return alertFactory.build({
+    created_by: primaryTag,
+    label,
+    service_type: serviceType,
+    status,
+    tags,
+    type: 'user',
+  });
+});
 
 // Categorize alerts based on tag combinations in a single pass
 const categorizedAlerts = new Map();
@@ -64,10 +61,10 @@ mockAlerts.forEach((alert) => {
     hasLinode && hasDBaaS
       ? 'bothTags'
       : hasLinode
-      ? 'LinodeTags'
-      : hasDBaaS
-      ? 'DBaaSTags'
-      : 'noTags';
+        ? 'LinodeTags'
+        : hasDBaaS
+          ? 'DBaaSTags'
+          : 'noTags';
 
   if (!categorizedAlerts.has(key)) {
     categorizedAlerts.set(key, []);

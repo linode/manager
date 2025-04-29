@@ -9,7 +9,11 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertListing } from './AlertListing';
-import { alertLimitMessage, metricLimitMessage } from './constants';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 const queryMocks = vi.hoisted(() => ({
   useAllAlertDefinitionsQuery: vi.fn().mockReturnValue({}),
@@ -52,19 +56,18 @@ describe('Alert Listing', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getAllByLabelText, getByLabelText, getByTestId, getByText } =
-      renderWithTheme(<AlertListing />);
-    expect(getByText('Alert Name')).toBeInTheDocument();
-    expect(getByText('Service')).toBeInTheDocument();
-    expect(getByText('Status')).toBeInTheDocument();
-    expect(getByText('Last Modified')).toBeInTheDocument();
-    expect(getByText('Created By')).toBeInTheDocument();
-    expect(getByLabelText('Toggle group by tag')).toBeInTheDocument();
-    const firstActionMenu = getAllByLabelText(
+    renderWithTheme(<AlertListing />);
+    expect(screen.getByText('Alert Name')).toBeVisible();
+    expect(screen.getByText('Service')).toBeVisible();
+    expect(screen.getByText('Status')).toBeVisible();
+    expect(screen.getByText('Last Modified')).toBeVisible();
+    expect(screen.getByText('Created By')).toBeVisible();
+    expect(screen.getByLabelText('Toggle group by tag')).toBeVisible();
+    const firstActionMenu = screen.getAllByLabelText(
       `Action menu for Alert ${mockResponse[0].label}`
     )[0];
     await userEvent.click(firstActionMenu);
-    expect(getByTestId('Show Details')).toBeInTheDocument();
+    expect(screen.getByTestId('Show Details')).toBeVisible();
   });
 
   it('should render the alert row', async () => {
@@ -198,13 +201,10 @@ describe('Alert Listing', () => {
     expect(createButton).toBeDisabled();
     await userEvent.hover(createButton);
     await waitFor(() => {
-      expect(
-        screen.getByText(
-          'You have reached your limit of definitions for this account.'
-        )
-      ).toBeVisible();
+      expect(screen.getByText(alertToolTipText)).toBeVisible();
     });
   });
+
   it('should show the banner and disable the create button when the user has reached the maximum allowed user metrics', async () => {
     const userAlerts = alertFactory.buildList(25, {
       rule_criteria: {
@@ -229,11 +229,7 @@ describe('Alert Listing', () => {
     expect(createButton).toBeDisabled();
     await userEvent.hover(createButton);
     await waitFor(() => {
-      expect(
-        screen.getByText(
-          'You have reached your limit of definitions for this account.'
-        )
-      ).toBeVisible();
+      expect(screen.getByText(alertToolTipText)).toBeVisible();
     });
   });
 

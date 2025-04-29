@@ -1,18 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateLinodeInterfaceMutation } from '@linode/queries';
-import { Notice, Stack, omitProps } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
+import {
+  getCleanedLinodeInterfaceValues,
+  getLinodeInterfacePayload,
+} from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
 import { InterfaceType } from './InterfaceType';
+import { PublicInterface } from './Public/PublicInterface';
 import { CreateLinodeInterfaceFormSchema } from './utilities';
-import { VLANInterface } from './VLANInterface';
-import { VPCInterface } from './VPCInterface';
+import { VLANInterface } from './VLAN/VLANInterface';
+import { VPCInterface } from './VPC/VPCInterface';
 
 import type { CreateInterfaceFormValues } from './utilities';
 
@@ -29,9 +33,18 @@ export const AddInterfaceForm = (props: Props) => {
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
   const form = useForm<CreateInterfaceFormValues>({
-    defaultValues: { firewall_id: null, public: {}, vlan: {}, vpc: {} },
+    defaultValues: {
+      firewall_id: null,
+      public: {},
+      vlan: {},
+      vpc: {
+        ipv4: {
+          addresses: [{ primary: true, address: 'auto' }],
+        },
+      },
+    },
     async resolver(rawValues, context, options) {
-      const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
+      const valuesWithOnlySelectedInterface = getCleanedLinodeInterfaceValues(
         structuredClone(rawValues)
       );
 
@@ -49,7 +62,7 @@ export const AddInterfaceForm = (props: Props) => {
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
     try {
-      await mutateAsync(omitProps(values, ['purpose']));
+      await mutateAsync(getLinodeInterfacePayload(values));
 
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',
@@ -68,6 +81,10 @@ export const AddInterfaceForm = (props: Props) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
+          <Notice
+            text="Adding a network interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
+            variant="warning"
+          />
           {form.formState.errors.root && (
             <Notice
               spacingBottom={0}
@@ -77,6 +94,7 @@ export const AddInterfaceForm = (props: Props) => {
             />
           )}
           <InterfaceType />
+          {selectedInterfacePurpose === 'public' && <PublicInterface />}
           {selectedInterfacePurpose === 'vlan' && <VLANInterface />}
           {selectedInterfacePurpose === 'vpc' && (
             <VPCInterface regionId={regionId} />

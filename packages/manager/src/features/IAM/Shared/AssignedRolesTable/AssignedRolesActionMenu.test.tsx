@@ -5,11 +5,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleMap } from '../types';
 
 const mockOnChangeRole = vi.fn();
 const mockOnUnassignRole = vi.fn();
 const mockOnViewEntities = vi.fn();
+const mockOnUpdateEntities = vi.fn();
 
 const mockAccountRole: ExtendedRoleMap = {
   access: 'account_access',
@@ -38,6 +39,7 @@ describe('AssignedRolesActionMenu', () => {
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
+        handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
         role={mockAccountRole}
       />
@@ -58,6 +60,7 @@ describe('AssignedRolesActionMenu', () => {
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
+        handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
         role={mockEntityRole}
       />
