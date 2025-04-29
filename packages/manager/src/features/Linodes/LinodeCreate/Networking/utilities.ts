@@ -61,6 +61,13 @@ export const getLinodeInterfacePayload = (
     return { ...omitProps(cleanedValues, ['purpose']), vpc: vpcValues };
   }
 
+  // The API errors saying address is invalid if we pass an empty string.
+  // Therefore, we will transform an empty string to `null`.
+  // Ideally we should try putting this at the validation level if we can in the future.
+  if (cleanedValues.vlan?.ipam_address === '') {
+    cleanedValues.vlan.ipam_address = null;
+  }
+
   return omitProps(cleanedValues, ['purpose']);
 };
 
