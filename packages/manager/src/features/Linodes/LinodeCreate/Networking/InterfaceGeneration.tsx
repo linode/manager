@@ -84,9 +84,12 @@ export const InterfaceGeneration = () => {
               control={<Radio />}
               label={
                 <Stack mt={1.25} spacing={0.5}>
-                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
-                    Linode Interfaces <BetaChip />
-                  </Typography>
+                  <Stack direction="row">
+                    <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                      Linode Interfaces
+                    </Typography>
+                    <BetaChip />
+                  </Stack>
                   <Typography>
                     These interfaces are managed using Linode’s Network tab.
                     They can be created, updated, or deleted only while the
