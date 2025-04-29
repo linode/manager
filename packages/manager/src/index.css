@@ -119,6 +119,14 @@ body.searchOverlay #main-content {
   margin-right: 0 !important;
 }
 
+.content-wrapper > .second-element:first-child {
+  margin-top: 0;
+}
+
+.content-wrapper > .second-element {
+  margin-top: 24px;
+}
+
 .visually-hidden,
 .label-visually-hidden span:last-child {
   /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
