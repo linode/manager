@@ -25,6 +25,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   DateTimeWithPreset,
+  Filters,
   MetricDefinition,
   TimeGranularity,
   Widgets,
@@ -154,6 +155,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
+  const filters: Filters[] | undefined =
+    additionalFilters?.length || widget?.filters?.length
+      ? [
+          ...constructAdditionalRequestFilters(additionalFilters ?? []),
+          ...(widget.filters ?? []),
+        ]
+      : undefined;
 
   /**
    *
@@ -234,10 +242,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         resources,
         widget,
       }),
-      filters: [
-        ...constructAdditionalRequestFilters(additionalFilters ?? []),
-        ...(widget.filters ?? []),
-      ], // any additional dimension filters will be constructed and passed here
+      filters, // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
