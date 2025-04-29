@@ -1,6 +1,5 @@
-import { Box, Divider, Typography } from '@linode/ui';
+import { Box, CloseIcon, Divider, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
@@ -57,7 +56,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
             size="large"
             title={`Remove ${poolType.label} Node Pool`}
           >
-            <Close />
+            <CloseIcon />
           </StyledIconButton>
         </Box>
         <Box mb={1.5} mt={2}>

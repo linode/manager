@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntities } from './AssignedEntities';
 
-import type { ExtendedRoleMap } from '../../Shared/utilities';
+import type { ExtendedRoleMap } from '../../Shared/types';
 
 const handleClick = vi.fn();
 const handleRemove = vi.fn();
