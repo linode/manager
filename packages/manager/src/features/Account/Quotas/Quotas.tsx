@@ -1,4 +1,12 @@
-import { Divider, Notice, Paper, Select, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  Notice,
+  Paper,
+  Select,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -38,16 +46,18 @@ export const Quotas = () => {
       >
         <Stack>
           <Typography variant="h2">Object Storage</Typography>
-          <Notice spacingTop={16} variant="info">
-            <Typography>
-              View your Object Storage quotas by applying the endpoint filter
-              below.{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/quotas">
-                Learn more about quotas
-              </Link>
-              .
-            </Typography>
-          </Notice>
+          <Box sx={{ display: 'flex' }}>
+            <Notice spacingTop={16} variant="info">
+              <Typography>
+                View your Object Storage quotas by applying the endpoint filter
+                below.{' '}
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/quotas">
+                  Learn more about quotas
+                </Link>
+                .
+              </Typography>
+            </Notice>
+          </Box>
           <Stack spacing={1}>
             <Select
               disabled={isFetchingLocations}
@@ -86,7 +96,7 @@ export const Quotas = () => {
           <Typography>
             If you need to increase a quota, select Request Increase from the
             Actions menu. Usage can also be found using third-party tools like{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage-copy#check-disk-usage-by-bucket">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage">
               s3cmd
             </Link>
             .

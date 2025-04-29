@@ -47,10 +47,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const defaultValues = React.useMemo(
     () =>
       getQuotaIncreaseMessage({
-        convertedMetrics: {
-          limit: convertedResourceMetrics.limit,
-          metric: convertedResourceMetrics.metric,
-        },
+        convertedMetrics: convertedResourceMetrics,
         profile,
         quantity: convertedResourceMetrics?.limit ?? 0,
         quota,
@@ -69,10 +66,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
   const { notes, quantity, summary } = form.watch();
 
   const quotaIncreaseDescription = getQuotaIncreaseMessage({
-    convertedMetrics: {
-      limit: convertedResourceMetrics.limit,
-      metric: convertedResourceMetrics.metric,
-    },
+    convertedMetrics: convertedResourceMetrics,
     profile,
     quantity: Number(quantity),
     quota,
