@@ -1,5 +1,5 @@
+import { CloseIcon } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -74,7 +74,7 @@ export const Tag = (props: TagProps) => {
             data-qa-delete-tag
             title="Delete tag"
           >
-            <Close />
+            <CloseIcon />
           </StyledDeleteButton>
         ) : undefined
       }
