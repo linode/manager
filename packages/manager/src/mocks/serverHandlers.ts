@@ -108,6 +108,7 @@ import {
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
+  widgetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
@@ -2698,6 +2699,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     } else if (params.serviceType === 'dbaas') {
@@ -2705,6 +2715,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     }
@@ -2857,6 +2876,7 @@ export const handlers = [
           metric: 'system_cpu_utilization_percent',
           size: 12,
           unit: '%',
+          group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
           filters: dimensionFilterFactory.buildList(5, {
             operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
@@ -2870,6 +2890,7 @@ export const handlers = [
           metric: 'system_memory_usage_by_resource',
           size: 12,
           unit: 'Bytes',
+          group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
         {
@@ -2884,6 +2905,7 @@ export const handlers = [
           filters: dimensionFilterFactory.buildList(3, {
             operator: pickRandom(['endswith', 'eq', 'neq', 'startswith', 'in']),
           }),
+          group_by: ['entity_id'],
         },
         {
           aggregate_function: 'avg',
@@ -2893,6 +2915,7 @@ export const handlers = [
           metric: 'system_disk_OPS_total',
           size: 6,
           unit: 'OPS',
+          group_by: ['entity_id'],
           y_label: 'system_disk_operations_total',
         },
       ],
