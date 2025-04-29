@@ -33,15 +33,14 @@ export interface IPAddressProps {
    */
   ips: string[];
   /**
-   * If true, all IP addresses will be displayed.
-   * @default false
-   */
-
-  /**
    * If true, the IP address copy icon will be displayed when the row is hovered.
    * @default false
    */
   isHovered?: boolean;
+  /**
+   * If true, all IP addresses will be displayed.
+   * @default false
+   */
   showAll?: boolean;
   /**
    * If true, additional IP addresses will be displayed via a ShowMore component within a tooltip.
