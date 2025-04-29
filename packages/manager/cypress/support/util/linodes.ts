@@ -121,6 +121,7 @@ export const createTestLinode = async (
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
+      interface_generation: 'legacy_config',
       booted: false,
       image: 'linode/ubuntu24.04',
       label: randomLabel(),

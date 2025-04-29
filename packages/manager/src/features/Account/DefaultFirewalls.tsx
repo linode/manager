@@ -4,13 +4,13 @@ import {
   useMutateFirewallSettings,
 } from '@linode/queries';
 import {
-  Accordion,
   Box,
   Button,
   CircleProgress,
   Divider,
   ErrorState,
   Notice,
+  Paper,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -68,22 +68,27 @@ export const DefaultFirewalls = () => {
 
   if (isLoadingFirewallSettings) {
     return (
-      <Accordion defaultExpanded heading="Default Firewalls">
+      <Paper data-testid="default-firewalls">
+        <Typography variant="h2">Default Firewalls</Typography>
         <CircleProgress />
-      </Accordion>
+      </Paper>
     );
   }
 
   if (firewallSettingsError) {
     return (
-      <Accordion defaultExpanded heading="Default Firewalls">
+      <Paper data-testid="default-firewalls">
+        <Typography variant="h2">Default Firewalls</Typography>
         <ErrorState errorText="Unable to load your firewall settings and firewalls." />
-      </Accordion>
+      </Paper>
     );
   }
 
   return (
-    <Accordion defaultExpanded heading="Default Firewalls">
+    <Paper data-testid="default-firewalls">
+      <Typography mb={1} variant="h2">
+        Default Firewalls
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         {errors.root?.message && (
           <Notice variant="error">{errors.root.message}</Notice>
@@ -97,6 +102,8 @@ export const DefaultFirewalls = () => {
           <Stack spacing={2}>
             <Typography variant="h3">Linodes</Typography>
             <Controller
+              control={control}
+              name="default_firewall_ids.linode"
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
@@ -108,10 +115,10 @@ export const DefaultFirewalls = () => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name="default_firewall_ids.linode"
             />
             <Controller
+              control={control}
+              name="default_firewall_ids.public_interface"
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
@@ -123,10 +130,10 @@ export const DefaultFirewalls = () => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name="default_firewall_ids.public_interface"
             />
             <Controller
+              control={control}
+              name="default_firewall_ids.vpc_interface"
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
@@ -138,13 +145,13 @@ export const DefaultFirewalls = () => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name="default_firewall_ids.vpc_interface"
             />
           </Stack>
           <Stack spacing={2}>
             <Typography variant="h3">NodeBalancers</Typography>
             <Controller
+              control={control}
+              name="default_firewall_ids.nodebalancer"
               render={({ field, fieldState }) => (
                 <FirewallSelect
                   disableClearable
@@ -156,12 +163,10 @@ export const DefaultFirewalls = () => {
                   value={field.value}
                 />
               )}
-              control={control}
-              name="default_firewall_ids.nodebalancer"
             />
           </Stack>
         </Stack>
-        <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+        <Box sx={(theme) => ({ marginTop: theme.spacingFunction(16) })}>
           <Button
             buttonType="outlined"
             disabled={!isDirty}
@@ -172,6 +177,6 @@ export const DefaultFirewalls = () => {
           </Button>
         </Box>
       </form>
-    </Accordion>
+    </Paper>
   );
 };
