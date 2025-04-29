@@ -1,4 +1,4 @@
-import type { ExtendedRoleMap, RoleMap } from '../types';
+import type { ExtendedRoleView, RoleView } from '../types';
 import type {
   AccountAccessRole,
   AccountEntity,
@@ -20,7 +20,8 @@ export interface CombinedRoles {
   name: AccountAccessRole | EntityAccessRole;
 }
 
-export const getSearchableFields = (role: ExtendedRoleMap): string[] => {
+// TODO - aaleksee - can this method's return value be typed as RoleView instead of simply string[]?
+export const getSearchableFields = (role: ExtendedRoleView): string[] => {
   const entityNames = role.entity_names || [];
   return [
     String(role.id),
@@ -36,9 +37,9 @@ export const getSearchableFields = (role: ExtendedRoleMap): string[] => {
  * Add assigned entities to role
  */
 export const addEntitiesNamesToRoles = (
-  roles: ExtendedRoleMap[],
+  roles: ExtendedRoleView[],
   entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
-): ExtendedRoleMap[] => {
+): ExtendedRoleView[] => {
   return roles.map((role) => {
     // Find the resource group by entity_type
     const resourceGroup = entities.get(role.entity_type as EntityType);
@@ -104,8 +105,8 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
 export const mapRolesToPermissions = (
   accountPermissions: IamAccountPermissions,
   userRoles: CombinedRoles[]
-): RoleMap[] => {
-  const roleMap = new Map<string, RoleMap>();
+): RoleView[] => {
+  const roleMap = new Map<string, RoleView>();
 
   // Flatten resources and map roles for quick lookup
   const allResources: AllResources[] = [
