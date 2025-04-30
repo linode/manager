@@ -29,6 +29,7 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -46,6 +47,7 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -73,6 +75,7 @@ describe('Alert Row', () => {
       <Router history={history}>
         <AlertTableRow
           handlers={{
+            handleDelete: vi.fn(),
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
             handleStatusChange: vi.fn(),
@@ -93,6 +96,7 @@ describe('Alert Row', () => {
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -113,6 +117,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -131,6 +136,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -149,6 +155,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -171,6 +178,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
