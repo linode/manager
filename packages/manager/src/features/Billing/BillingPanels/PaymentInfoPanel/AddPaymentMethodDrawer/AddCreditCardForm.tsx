@@ -231,7 +231,6 @@ export const AddCreditCardForm = (props: Props) => {
           label: 'Cancel',
           onClick: onClose,
         }}
-        style={{ marginTop: 0 }}
       />
     </form>
   );
