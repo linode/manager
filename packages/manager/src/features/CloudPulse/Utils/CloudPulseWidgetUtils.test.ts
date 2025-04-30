@@ -173,7 +173,7 @@ describe('getDimensionName method', () => {
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
     };
     const result = getDimensionName(props);
-    expect(result).toBe('linode-1 | test | primary-1');
+    expect(result).toBe('linode-1 | primary-1');
   });
 
   it('handles empty metric values by filtering them out', () => {
