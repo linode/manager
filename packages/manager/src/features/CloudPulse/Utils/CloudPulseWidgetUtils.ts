@@ -155,7 +155,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   // check whether to hide metric name or not based on the number of unique metric names
   const hideMetricName =
     new Set(metricsList?.data?.result?.map((obj) => obj.metric.metric_name))
-      .size === 1;
+      .size <= 1;
 
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
