@@ -152,7 +152,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
 
-  // check whether to hide metric name or not based on the number unique metric names
+  // check whether to hide metric name or not based on the number of unique metric names
   const hideMetricName =
     new Set(metricsList?.data?.result?.map((obj) => obj.metric.metric_name))
       .size === 1;
