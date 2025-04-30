@@ -1,4 +1,5 @@
 import type {
+  AlertDefinitionType,
   AlertServiceType,
   AlertSeverityType,
   ChannelType,
@@ -23,6 +24,7 @@ export interface CreateAlertDefinitionForm
   serviceType: AlertServiceType | null;
   severity: AlertSeverityType | null;
   trigger_conditions: TriggerConditionForm;
+  type: AlertDefinitionType | null;
 }
 
 export interface MetricCriteriaForm

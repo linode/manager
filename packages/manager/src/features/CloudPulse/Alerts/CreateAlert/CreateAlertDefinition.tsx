@@ -24,6 +24,7 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
+import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroupingSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
@@ -62,6 +63,7 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
+  type: 'user',
 };
 
 const overrides = [
@@ -111,7 +113,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-
+  const entityGroupingWatcher = useWatch({ control, name: 'type' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -138,7 +140,6 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-
   const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
     if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
@@ -174,6 +175,8 @@ export const CreateAlertDefinition = () => {
               1. General Information
             </Typography>
             <Controller
+              control={control}
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
                   data-testid="alert-name"
@@ -186,10 +189,10 @@ export const CreateAlertDefinition = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="label"
             />
             <Controller
+              control={control}
+              name="description"
               render={({ field, fieldState }) => (
                 <TextField
                   errorText={fieldState.error?.message}
@@ -202,21 +205,22 @@ export const CreateAlertDefinition = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="description"
             />
             <CloudPulseServiceSelect
               handleServiceTypeChange={handleServiceTypeChange}
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <CloudPulseModifyAlertResources name="entity_ids" />
+            <AlertEntityGroupingSelect name="type" />
+            {entityGroupingWatcher === 'user' && (
+              <CloudPulseModifyAlertResources name="entity_ids" />
+            )}
             <MetricCriteriaField
+              name="rule_criteria.rules"
+              serviceType={serviceTypeWatcher!}
               setMaxInterval={(interval: number) =>
                 setMaxScrapeInterval(interval)
               }
-              name="rule_criteria.rules"
-              serviceType={serviceTypeWatcher!}
             />
             <TriggerConditions
               maxScrapingInterval={maxScrapeInterval}
