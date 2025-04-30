@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { List, ListItem, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -45,6 +45,40 @@ export const Error: StoryObj<NoticeProps> = {
 export const Warning: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a warning notice" variant="warning" />
+  ),
+};
+
+export const WarningInsidePaper: StoryObj<NoticeProps> = {
+  render: (args) => (
+    <Paper>
+      <Notice
+        {...args}
+        text="This is a warning notice inside a paper"
+        variant="warning"
+      />
+    </Paper>
+  ),
+};
+
+export const WarningWithListTag: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="warning">
+      <ul>
+        <li>This is a warning with unordered list bullets</li>
+        <li>This is a warning with unordered list bullets</li>
+      </ul>
+    </Notice>
+  ),
+};
+
+export const WarningWithListItem: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="warning">
+      <List>
+        <ListItem>This is a warning with list items</ListItem>
+        <ListItem>This is a warning with list items</ListItem>
+      </List>
+    </Notice>
   ),
 };
 

@@ -41,14 +41,12 @@ const LinodeConfigs = () => {
 
   const { data: linode } = useLinodeQuery(id);
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const {
-    canUpgradeInterfaces,
-    unableToUpgradeReasons,
-  } = useCanUpgradeInterfaces(
-    linode?.lke_cluster_id,
-    linode?.region,
-    linode?.interface_generation
-  );
+  const { canUpgradeInterfaces, unableToUpgradeReasons } =
+    useCanUpgradeInterfaces(
+      linode?.lke_cluster_id,
+      linode?.region,
+      linode?.interface_generation
+    );
 
   const unableToUpgradeTooltip = getUnableToUpgradeTooltipText(
     unableToUpgradeReasons
@@ -69,17 +67,12 @@ const LinodeConfigs = () => {
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
-  const [
-    isLinodeConfigDialogOpen,
-    setIsLinodeConfigDialogOpen,
-  ] = React.useState(false);
-  const [
-    isDeleteConfigDialogOpen,
-    setIsDeleteConfigDialogOpen,
-  ] = React.useState(false);
-  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
-    false
-  );
+  const [isLinodeConfigDialogOpen, setIsLinodeConfigDialogOpen] =
+    React.useState(false);
+  const [isDeleteConfigDialogOpen, setIsDeleteConfigDialogOpen] =
+    React.useState(false);
+  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] =
+    React.useState(false);
 
   const openUpgradeInterfacesDialog = () => {
     history.replace(`${location.pathname}/upgrade-interfaces`);
@@ -123,10 +116,10 @@ const LinodeConfigs = () => {
           href={
             'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance'
           }
+          label={'Configuration Profiles'}
           onClick={() => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
           }}
-          label={'Configuration Profiles'}
         />
         {isLinodeInterfacesEnabled &&
           linode?.interface_generation !== 'linode' && (
@@ -161,14 +154,14 @@ const LinodeConfigs = () => {
                     <TableHead>
                       <TableRow>
                         <TableSortCell
-                          sx={{
-                            ...theme.applyTableHeaderStyles,
-                            width: '35%',
-                          }}
                           active={orderBy === 'label'}
                           direction={order}
                           handleClick={handleOrderChange}
                           label={'label'}
+                          sx={{
+                            ...theme.applyTableHeaderStyles,
+                            width: '35%',
+                          }}
                         >
                           <strong>Configuration</strong>
                         </TableSortCell>
@@ -195,12 +188,12 @@ const LinodeConfigs = () => {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        loadingProps={{
-                          columns: 4,
-                        }}
                         error={error ?? undefined}
                         length={paginatedData.length}
                         loading={isLoading}
+                        loadingProps={{
+                          columns: 4,
+                        }}
                       >
                         {paginatedData.map((thisConfig) => {
                           return (

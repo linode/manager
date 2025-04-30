@@ -7,7 +7,7 @@ import {
   createVPCIPv4Display,
   ipResponseToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeIPAddressRow } from './LinodeIPAddressRow';
@@ -31,6 +31,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
@@ -53,6 +54,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
@@ -73,6 +75,7 @@ describe('LinodeIPAddressRow', () => {
     const { findByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={true}
           linodeId={1}
           readOnly={false}
@@ -87,7 +90,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(deleteBtn);
     const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
 
     const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
@@ -96,7 +99,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(editRDNSBtn);
     const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip2).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
   });
 
@@ -104,6 +107,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
