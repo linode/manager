@@ -269,21 +269,24 @@ export const TextField = (props: TextFieldProps) => {
           display: 'flex',
           flexWrap: 'wrap',
         }),
-        // marginBottom: labelPosition === 'left' ? theme.spacing(0) : 0,
-        ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+        ...(!noMarginTop &&
+          labelPosition === 'left' && { marginTop: theme.spacing(3) }),
         ...(labelPosition === 'left' && {
           flexDirection: 'row',
           display: 'flex',
           gap: theme.spacing(1),
+          alignItems: 'center',
         }),
         ...containerProps?.sx,
       }}
     >
       <Box
-        // sx={{
-        //   marginBottom: theme.spacing(1),
-        //   ...(!noMarginTop && { marginTop: theme.spacing(2) }),
-        // }}
+        sx={{
+          ...(labelPosition !== 'left' && {
+            marginBottom: theme.spacing(1),
+            ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+          }),
+        }}
         alignItems={'center'}
         className={hideLabel ? 'visually-hidden' : ''}
         data-testid="inputLabelWrapper"
@@ -291,10 +294,8 @@ export const TextField = (props: TextFieldProps) => {
       >
         <InputLabel
           sx={{
-            // marginBottom: labelPosition === 'top' ? 0 : undefined,
-            marginBottom: '0px !important',
+            margin: 0,
             transform: 'none',
-            minWidth: labelPosition === 'left' ? '100%' : undefined,
           }}
           data-qa-textfield-label={label}
           htmlFor={validInputId}
@@ -338,6 +339,7 @@ export const TextField = (props: TextFieldProps) => {
             display: 'flex',
             width: '100%',
           }),
+          width: '100%',
         }}
       >
         <_TextField
