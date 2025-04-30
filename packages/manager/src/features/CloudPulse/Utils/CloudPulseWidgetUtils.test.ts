@@ -66,6 +66,7 @@ describe('getLabelName method', () => {
     resources: [{ id: '123', label: 'linode-1' }],
     serviceType: 'linode',
     unit: '%',
+    isSingleUniqueMetricName: true,
   };
 
   it('returns resource label when all data is valid', () => {
@@ -140,6 +141,7 @@ it('test generateGraphData with metrics data', () => {
 
 describe('getDimensionName method', () => {
   const baseProps = {
+    isSingleUniqueMetricName: true,
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
   };
@@ -167,13 +169,23 @@ describe('getDimensionName method', () => {
     expect(result).toBe('123');
   });
 
-  it('joins multiple metric values with separator', () => {
+  it('joins multiple metric values with separator excluding metric_name when there is only one unique metric name', () => {
     const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
     };
     const result = getDimensionName(props);
     expect(result).toBe('linode-1 | primary-1');
+  });
+
+  it('joins multiple metric values with separator including metric_name when there are mumtiple unique metric names across metrics', () => {
+    const props = {
+      ...baseProps,
+      metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
+      isSingleUniqueMetricName: false,
+    };
+    const result = getDimensionName(props);
+    expect(result).toBe('linode-1 | test | primary-1');
   });
 
   it('handles empty metric values by filtering them out', () => {

@@ -28,6 +28,11 @@ import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay'
 
 interface LabelNameOptionsProps {
   /**
+   * Boolean to check if there is only one unique metric name
+   */
+  isSingleUniqueMetricName: boolean;
+
+  /**
    * label for the graph title
    */
   label: string;
@@ -99,6 +104,11 @@ interface MetricRequestProps {
 
 interface DimensionNameProperties {
   /**
+   * Boolean to check if there is only one unique metric name
+   */
+  isSingleUniqueMetricName: boolean;
+
+  /**
    * metric key-value to generate dimension name
    */
   metric: { [label: string]: string };
@@ -141,6 +151,12 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
+
+  // check if there is only one unique metric name
+  const isSingleUniqueMetricName =
+    new Set(metricsList?.data?.result?.map((obj) => obj.metric.metric_name))
+      .size === 1;
+
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
@@ -165,6 +181,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           metric: transformedData.metric,
           resources,
           unit,
+          isSingleUniqueMetricName,
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
@@ -285,14 +302,14 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { label, metric, resources, unit } = props;
+  const { label, metric, resources, unit, isSingleUniqueMetricName } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
     return `${label} (${unit})`;
   }
 
-  return getDimensionName({ metric, resources });
+  return getDimensionName({ metric, resources, isSingleUniqueMetricName });
 };
 
 /**
@@ -301,14 +318,14 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources } = props;
+  const { metric, resources, isSingleUniqueMetricName } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
       if (key === 'entity_id') {
         return mapResourceIdToName(value, resources);
       }
 
-      if (key === 'metric_name') {
+      if (key === 'metric_name' && isSingleUniqueMetricName) {
         return '';
       }
 
