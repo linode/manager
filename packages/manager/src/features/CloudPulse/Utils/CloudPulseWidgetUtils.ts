@@ -308,6 +308,10 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
         return mapResourceIdToName(value, resources);
       }
 
+      if (key === 'metric_name') {
+        return '';
+      }
+
       return value ?? '';
     })
     .filter(Boolean)
