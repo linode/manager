@@ -37,6 +37,8 @@ const useStyles = makeStyles()(() => ({
   },
   root: {
     position: 'relative',
+    // We pass colorScheme: none to fix a dark mode issue
+    // https://github.com/paypal/paypal-js/issues/584#issuecomment-2652308317
     colorScheme: 'none',
   },
 }));
