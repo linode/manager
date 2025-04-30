@@ -221,7 +221,7 @@ export const useDeleteAlertDefinitionMutation = () => {
       queryClient.setQueryData<Alert[]>(
         queryFactory.alerts._ctx.all().queryKey,
         (oldData) => {
-          return oldData?.filter((alert) => alert.id !== alertId) ?? [];
+          return oldData?.filter(({ id }) => id !== alertId) ?? [];
         }
       );
       queryClient.invalidateQueries({
