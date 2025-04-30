@@ -342,24 +342,22 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                         {this.props.LandingHeader ? (
                           this.props.LandingHeader
                         ) : (
-                          <div className={'landing-header'}>
-                            <LandingHeader
-                              buttonDataAttrs={{
-                                tooltipText: getRestrictedResourceText({
-                                  action: 'create',
-                                  isSingular: false,
-                                  resourceType: 'Linodes',
-                                }),
-                              }}
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
-                              disabledCreateButton={isLinodesGrantReadOnly}
-                              docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
-                              entity="Linode"
-                              title="Linodes"
-                            />
-                          </div>
+                          <LandingHeader
+                            buttonDataAttrs={{
+                              tooltipText: getRestrictedResourceText({
+                                action: 'create',
+                                isSingular: false,
+                                resourceType: 'Linodes',
+                              }),
+                            }}
+                            onButtonClick={() =>
+                              this.props.history.push('/linodes/create')
+                            }
+                            disabledCreateButton={isLinodesGrantReadOnly}
+                            docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
+                            entity="Linode"
+                            title="Linodes"
+                          />
                         )}
                       </React.Fragment>
 

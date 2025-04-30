@@ -77,6 +77,7 @@ export const LandingHeader = ({
   return (
     <Grid
       container
+      className="landing-header"
       data-qa-entity-header
       sx={{
         alignItems: 'center',

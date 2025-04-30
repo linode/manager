@@ -64,9 +64,8 @@ export const LinodeDetailHeader = () => {
 
   const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
 
-  const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
-    matchedLinodeId
-  );
+  const { mutateAsync: updateLinode } =
+    useLinodeUpdateMutation(matchedLinodeId);
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -85,9 +84,8 @@ export const LinodeDetailHeader = () => {
   const [migrateDialogOpen, setMigrateDialogOpen] = React.useState(
     queryParams.migrate === 'true'
   );
-  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] = React.useState(
-    false
-  );
+  const [enableBackupsDialogOpen, setEnableBackupsDialogOpen] =
+    React.useState(false);
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
   const history = useHistory();
@@ -114,11 +112,8 @@ export const LinodeDetailHeader = () => {
     setEnableBackupsDialogOpen(false);
   };
 
-  const {
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
-  } = useEditableLabelState();
+  const { editableLabelError, resetEditableLabel, setEditableLabelError } =
+    useEditableLabelState();
 
   const updateLinodeLabel = async (label: string) => {
     try {
