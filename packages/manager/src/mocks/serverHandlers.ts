@@ -2908,9 +2908,6 @@ export const handlers = [
             operator: pickRandom(['endswith', 'eq', 'neq', 'startswith', 'in']),
           }),
           group_by: ['entity_id'],
-          filters: dimensionFilterFactory.buildList(3, {
-            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
-          }),
         },
         {
           aggregate_function: 'avg',
