@@ -17,6 +17,7 @@ export interface LandingHeaderProps {
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: Partial<BreadcrumbProps>;
   buttonDataAttrs?: { [key: string]: boolean | string };
+  className?: string;
   createButtonText?: string;
   disabledBreadcrumbEditButton?: boolean;
   disabledCreateButton?: boolean;
@@ -43,6 +44,7 @@ export const LandingHeader = ({
   breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
+  className = 'landing-header',
   createButtonText,
   disabledBreadcrumbEditButton,
   disabledCreateButton,
@@ -77,7 +79,7 @@ export const LandingHeader = ({
   return (
     <Grid
       container
-      className="landing-header"
+      className={className}
       data-qa-entity-header
       sx={{
         alignItems: 'center',

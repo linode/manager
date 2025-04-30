@@ -128,6 +128,11 @@ body.searchOverlay #main-content {
   margin-bottom: 24px;
 }
 
+.content-wrapper > .landing-header-tabs {
+  margin-top: 24px;
+  margin-bottom: 4px;
+}
+
 .visually-hidden,
 .label-visually-hidden span:last-child {
   /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
