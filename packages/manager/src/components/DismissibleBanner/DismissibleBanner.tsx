@@ -12,15 +12,15 @@ interface Props extends NoticeProps {
    */
   actionButton?: JSX.Element;
   /**
+   * If false, the banner will not be dismissible
+   *
+   * @default true
+   */
+  dismissible?: boolean;
+  /**
    * If true, the important icon will be vertically centered with the text no matter the height of the text.
    */
   forceImportantIconVerticalCenter?: boolean;
-  /**
-   * An option to make the Dismissible Banner not Dismissible
-   *
-   * @default false
-   */
-  isNotDismissible?: boolean;
   /**
    * Additional controls to pass to the Dismissible Banner
    */
@@ -51,7 +51,7 @@ export const DismissibleBanner = (props: Props) => {
   const {
     actionButton,
     children,
-    isNotDismissible,
+    dismissible = true, // Default to true if not provided
     options,
     preferenceKey,
     ...rest
@@ -98,7 +98,7 @@ export const DismissibleBanner = (props: Props) => {
         spacing={1}
       >
         {actionButton}
-        {!isNotDismissible ? dismissibleButton : null}
+        {dismissible ? dismissibleButton : null}
       </Stack>
     </Notice>
   );

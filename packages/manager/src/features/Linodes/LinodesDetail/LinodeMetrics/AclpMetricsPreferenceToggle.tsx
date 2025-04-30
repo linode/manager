@@ -41,8 +41,8 @@ export const AclpMetricsPreferenceToggle = () => {
             : 'Try the Metrics (Beta)'}
         </Button>
       }
+      dismissible={false}
       forceImportantIconVerticalCenter
-      isNotDismissible
       preferenceKey="metrics-preference"
       variant="info"
     >

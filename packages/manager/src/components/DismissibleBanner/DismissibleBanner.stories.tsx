@@ -48,8 +48,8 @@ export const CallToActionNonDismissibleBanner: Story = {
           Try Beta Now
         </Button>
       }
+      dismissible={false}
       forceImportantIconVerticalCenter
-      isNotDismissible
       preferenceKey="cluster-v1"
       variant="info"
     >
