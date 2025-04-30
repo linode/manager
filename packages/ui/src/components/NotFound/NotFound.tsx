@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import ZeroState from 'src/assets/icons/zero-state.svg';
-
+import ZeroState from '../../assets/icons/zero-state.svg';
 import { Box } from '../Box';
 import { Typography } from '../Typography';
 
