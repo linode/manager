@@ -48,7 +48,7 @@ export const getAlertTypeToActionsList = (
     {
       disabled:
         /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will add proper condition check for the delete action */
-        true,
+        false,
       onClick: handleDelete,
       title: 'Delete',
     },
