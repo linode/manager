@@ -176,7 +176,7 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
         {primaryAddress && (
           <Typography>Primary Address: {primaryAddress.address}</Typography>
         )}
-        {ranges?.length && ranges?.length > 0 && (
+        {ranges && ranges?.length > 0 && (
           <Typography>Routed Ranges: {ranges?.join(', ')}</Typography>
         )}
       </Stack>
