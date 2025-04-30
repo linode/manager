@@ -172,15 +172,8 @@ interface GraphProps {
 }
 
 const Graph = (props: GraphProps) => {
-  const {
-    ariaLabel,
-    data,
-    metrics,
-    theme,
-    timezone,
-    unit,
-    xAxisTickFormat,
-  } = props;
+  const { ariaLabel, data, metrics, theme, timezone, unit, xAxisTickFormat } =
+    props;
 
   const format = formatBitsPerSecond;
 
