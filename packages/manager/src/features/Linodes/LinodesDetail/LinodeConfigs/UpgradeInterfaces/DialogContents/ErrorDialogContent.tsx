@@ -43,7 +43,14 @@ export const ErrorDialogContent = (
           ))}
         </List>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: 2,
+          gap: 2,
+        }}
+      >
         <Button buttonType="secondary" onClick={onClose}>
           Close
         </Button>
