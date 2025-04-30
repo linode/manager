@@ -193,6 +193,7 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
   version: '1',
 });
+
 const validateWidgetFilters = (widget: Widgets) => {
   expect(widget.filters).to.have.length(1);
   widget.filters.forEach((filter: DimensionFilter) => {
@@ -223,7 +224,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait('@fetchServices');
+    cy.wait(['@fetchServices']);
     cy.wait('@fetchDashboard').then((interception: Interception) => {
       const dashboards = interception.response?.body?.data as Dashboard[];
       const dashboard = dashboards[0];

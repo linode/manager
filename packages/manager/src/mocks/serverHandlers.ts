@@ -2904,10 +2904,10 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
-          group_by: ['entity_id'],
           filters: dimensionFilterFactory.buildList(3, {
-            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith', 'in']),
           }),
+          group_by: ['entity_id'],
         },
         {
           aggregate_function: 'avg',

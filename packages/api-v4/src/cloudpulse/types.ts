@@ -60,7 +60,7 @@ export interface Widgets {
   chart_type: 'area' | 'line';
   color: string;
   entity_ids: string[];
-  filters: DimensionFilter[];
+  filters: Filters[];
   group_by: string[];
   label: string;
   metric: string;
