@@ -30,7 +30,7 @@ interface LabelNameOptionsProps {
   /**
    * Boolean to check if metric name should be hidden
    */
-  hideMetricName: boolean;
+  hideMetricName?: boolean;
 
   /**
    * label for the graph title
@@ -106,7 +106,7 @@ interface DimensionNameProperties {
   /**
    * Boolean to check if metric name should be hidden
    */
-  hideMetricName: boolean;
+  hideMetricName?: boolean;
 
   /**
    * metric key-value to generate dimension name
@@ -154,7 +154,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
 
   // check whether to hide metric name or not based on the number of unique metric names
   const hideMetricName =
-    new Set(metricsList?.data?.result?.map((obj) => obj.metric.metric_name))
+    new Set(metricsList?.data?.result?.map(({ metric }) => metric.metric_name))
       .size <= 1;
 
   if (status === 'success') {
@@ -302,7 +302,7 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { label, metric, resources, unit, hideMetricName } = props;
+  const { label, metric, resources, unit, hideMetricName = false } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
@@ -318,7 +318,7 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources, hideMetricName } = props;
+  const { metric, resources, hideMetricName = false } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
       if (key === 'entity_id') {
