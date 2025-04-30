@@ -1,4 +1,4 @@
-import { Dialog } from '@linode/ui';
+import { BetaChip, Dialog } from '@linode/ui';
 import React from 'react';
 
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
@@ -47,6 +47,7 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
       onClose={closeAndResetDialog}
       open={open}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
+      titleChip={<BetaChip />}
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />

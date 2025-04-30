@@ -75,7 +75,8 @@ export const NetworkInterfaceType = () => {
         <Stack mt={1}>
           <Typography variant="body1">
             Choose whether to use Configuration Profile Interfaces or Linode
-            Interfaces when creating new Linodes or upgrading existing ones.
+            Interfaces (BETA) when creating new Linodes or upgrading existing
+            ones.
           </Typography>
           <Controller
             control={control}

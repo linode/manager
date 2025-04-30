@@ -13,11 +13,13 @@ export interface DialogTitleProps {
   subtitle?: string;
   sx?: SxProps<Theme>;
   title: string;
+  titleChip?: JSX.Element;
 }
 
 const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, id, isFetching, onClose, subtitle, sx, title } = props;
+  const { className, id, isFetching, onClose, subtitle, sx, title, titleChip } =
+    props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -37,6 +39,8 @@ const DialogTitle = (props: DialogTitleProps) => {
       title={title}
     >
       <Box
+        data-qa-dialog-title={title}
+        data-qa-drawer-title={title}
         sx={{
           alignItems: 'center',
           display: 'flex',
@@ -45,20 +49,21 @@ const DialogTitle = (props: DialogTitleProps) => {
           position: 'relative',
           width: '100%',
         }}
-        data-qa-dialog-title={title}
-        data-qa-drawer-title={title}
       >
-        <Box component="span">{!isFetching && title}</Box>
+        <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
+          {!isFetching && title}
+          {titleChip}
+        </Box>
         {onClose !== null && (
           <IconButton
-            sx={{
-              right: '-12px',
-            }}
             aria-label="Close"
             color="primary"
             data-qa-close-drawer
             onClick={onClose}
             size="large"
+            sx={{
+              right: '-12px',
+            }}
           >
             <CloseIcon data-testid="CloseIcon" />
           </IconButton>

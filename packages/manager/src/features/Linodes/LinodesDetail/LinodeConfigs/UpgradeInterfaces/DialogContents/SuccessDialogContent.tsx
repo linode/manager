@@ -31,7 +31,7 @@ export const SuccessDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice spacingBottom={0} variant="success">
+      <Notice variant="success">
         <Typography>
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>
@@ -40,7 +40,6 @@ export const SuccessDialogContent = (
         <Box
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
-            marginTop: theme.spacingFunction(8),
             padding: theme.spacingFunction(16),
           })}
         >
