@@ -18,7 +18,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { GooglePayChip } from '../GooglePayChip';
 import { PayPalChip } from '../PayPalChip';
 import { PayPalErrorBoundary } from '../PayPalErrorBoundary';
-import AddCreditCardForm from './AddCreditCardForm';
+import { AddCreditCardForm } from './AddCreditCardForm';
 
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
 import type { NoticeVariant } from '@linode/ui';

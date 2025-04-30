@@ -1,13 +1,12 @@
-import { addPaymentMethod } from '@linode/api-v4/lib';
-import { accountQueries } from '@linode/queries';
+import { useAddPaymentMethodMutation } from '@linode/queries';
 import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid2';
-import { useQueryClient } from '@tanstack/react-query';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
+import type { NumberFormatProps } from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
 import { parseExpiryYear } from 'src/utilities/creditCard';
@@ -15,7 +14,6 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
 import type { Theme } from '@mui/material/styles';
-import type { NumberFormatProps } from 'react-number-format';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {
@@ -47,13 +45,13 @@ interface Values {
   zip: string;
 }
 
-const AddCreditCardForm = (props: Props) => {
+export const AddCreditCardForm = (props: Props) => {
   const { disabled, onClose } = props;
   const [error, setError] = React.useState<string>();
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
   const expiryRef = React.useRef<HTMLInputElement>(null);
+  const { mutateAsync: addPaymentMethod } = useAddPaymentMethodMutation();
 
   const addCreditCard = async (
     { card_number, cvv, expiry_month, expiry_year }: Values,
@@ -81,9 +79,6 @@ const AddCreditCardForm = (props: Props) => {
       });
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
-      });
-      queryClient.invalidateQueries({
-        queryKey: accountQueries.paymentMethods.queryKey,
       });
       onClose();
     } catch (errors) {
@@ -270,5 +265,3 @@ const creditCardField = ({
     />
   );
 };
-
-export default AddCreditCardForm;
