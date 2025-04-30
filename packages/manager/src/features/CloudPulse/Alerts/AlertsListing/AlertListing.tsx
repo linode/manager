@@ -183,7 +183,7 @@ export const AlertListing = () => {
 
   return (
     <Stack spacing={3}>
-      {(isLoading || isAlertLimitReached || isMetricLimitReached) && (
+      {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
           isMetricLimitReached={isMetricLimitReached}
