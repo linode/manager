@@ -4,7 +4,8 @@ export const CONFIG_SELECT_SHARED_COPY =
 export const UPGRADE_INTERFACES_WARNING =
   'Upgrading to Linode Interfaces is a one-way action. After the upgrade, legacy Configuration Profile Interfaces are no longer supported. As a result, this Linode will no longer be compatible with products that could be using private IPs, such as NodeBalancers.';
 
-export const SUCCESS_DRY_RUN_COPY = 'Dry Run Successful';
+export const SUCCESS_DRY_RUN_COPY =
+  'The configuration dry run was successful and no issues were found. You can continue with upgrading interface.';
 export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';
 
 export const ERROR_DRY_RUN_COPY =

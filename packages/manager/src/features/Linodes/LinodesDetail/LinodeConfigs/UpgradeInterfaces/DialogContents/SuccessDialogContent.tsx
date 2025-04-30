@@ -31,16 +31,11 @@ export const SuccessDialogContent = (
 
   return (
     <Stack gap={2}>
-      <Notice variant="success">
+      <Notice spacingBottom={0} variant="success">
         <Typography>
           {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
         </Typography>
       </Notice>
-      {isDryRun && (
-        <Typography>
-          <strong>No issues were found.</strong>
-        </Typography>
-      )}
       {linodeInterfaces.length > 0 && (
         <Box
           sx={(theme) => ({
@@ -60,11 +55,6 @@ export const SuccessDialogContent = (
             />
           ))}
         </Box>
-      )}
-      {isDryRun && (
-        <Typography>
-          You can proceed with upgrading to Linode Interfaces.
-        </Typography>
       )}
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
         <Button buttonType="secondary" disabled={isPending} onClick={onClose}>
