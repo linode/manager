@@ -152,4 +152,18 @@ export const WithTooltipIcon: Story = {
   ),
 };
 
+export const LabelPositionLeft: Story = {
+  args: {
+    ...defaultArgs,
+  },
+  render: (args) => <Select {...args} label="Label" labelPosition="left" />,
+};
+
+export const LabelPositionTop: Story = {
+  args: {
+    ...defaultArgs,
+  },
+  render: (args) => <Select {...args} label="Label" labelPosition="top" />,
+};
+
 export default meta;
