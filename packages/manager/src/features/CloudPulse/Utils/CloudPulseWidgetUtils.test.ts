@@ -66,7 +66,7 @@ describe('getLabelName method', () => {
     resources: [{ id: '123', label: 'linode-1' }],
     serviceType: 'linode',
     unit: '%',
-    isSingleUniqueMetricName: true,
+    hideMetricName: true,
   };
 
   it('returns resource label when all data is valid', () => {
@@ -141,7 +141,7 @@ it('test generateGraphData with metrics data', () => {
 
 describe('getDimensionName method', () => {
   const baseProps = {
-    isSingleUniqueMetricName: true,
+    hideMetricName: true,
     metric: { entity_id: '123' },
     resources: [{ id: '123', label: 'linode-1' }],
   };
@@ -182,7 +182,7 @@ describe('getDimensionName method', () => {
     const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
-      isSingleUniqueMetricName: false,
+      hideMetricName: false,
     };
     const result = getDimensionName(props);
     expect(result).toBe('linode-1 | test | primary-1');
