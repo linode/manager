@@ -146,10 +146,10 @@ export const getQuotaIncreaseMessage = ({
       profile.email
     }<br>\n**Quota Name**: ${
       quota.quota_name
-    }<br>\n**Current Quota**: ${convertedMetrics.limit} ${
+    }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
       convertedMetrics.metric
-    }<br>\n**New Quota Requested**: ${quantity} ${convertedMetrics.metric}${
-      quantity > 1 ? 's' : ''
+    }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
+      convertedMetrics.metric
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
     notes: '',
     quantity: String(quantity),
@@ -171,7 +171,7 @@ export const convertResourceMetric = ({
   initialUsage,
   initialLimit,
 }: ConvertResourceMetricProps): {
-  convertedLimit: string;
+  convertedLimit: number;
   convertedResourceMetric: string;
   convertedUsage: number;
 } => {
@@ -183,13 +183,13 @@ export const convertResourceMetric = ({
         unit: limitReadable.unit,
       }).value,
       convertedResourceMetric: capitalize(limitReadable.unit),
-      convertedLimit: String(limitReadable.value),
+      convertedLimit: limitReadable.value,
     };
   }
 
   return {
     convertedUsage: initialUsage,
-    convertedLimit: initialLimit.toLocaleString(),
+    convertedLimit: initialLimit,
     convertedResourceMetric: capitalize(initialResourceMetric),
   };
 };

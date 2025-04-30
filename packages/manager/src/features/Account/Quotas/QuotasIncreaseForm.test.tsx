@@ -80,7 +80,7 @@ describe('QuotasIncreaseForm', () => {
 
     await waitFor(() => {
       expect(previewContent).toHaveTextContent(
-        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GBs Region: us-east test!'
+        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GB Region: us-east test!'
       );
     });
   });

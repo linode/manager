@@ -76,7 +76,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
         metric: convertedResourceMetric,
       });
     },
-    title: 'Request an Increase',
+    title: 'Request Increase',
   };
 
   return (
@@ -102,7 +102,8 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
         </Box>
       </TableCell>
       <TableCell>
-        {convertedLimit} {convertedResourceMetric}
+        {convertedLimit?.toLocaleString() ?? 'unknown'}{' '}
+        {convertedResourceMetric}
       </TableCell>
       <TableCell>
         <Box sx={{ maxWidth: '80%' }}>
@@ -146,9 +147,9 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 value={quota.usage?.usage ?? 0}
               />
               <Typography sx={{ mb: 1, mt: -0.5 }}>
-                {`${convertedUsage} of ${convertedLimit} ${
-                  convertedResourceMetric
-                } used`}
+                {`${convertedUsage?.toLocaleString() ?? 'unknown'} of ${
+                  convertedLimit?.toLocaleString() ?? 'unknown'
+                } ${convertedResourceMetric} used`}
               </Typography>
             </>
           ) : (

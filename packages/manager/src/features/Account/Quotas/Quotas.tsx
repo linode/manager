@@ -94,8 +94,9 @@ export const Quotas = () => {
             <Typography variant="h3">Quotas</Typography>
           </Stack>
           <Typography>
-            If you need to increase a quota, select Request Increase from the
-            Actions menu. Usage can also be found using third-party tools like{' '}
+            If you need to increase a quota, select{' '}
+            <strong>Request Increase</strong> from the Actions menu. Usage can
+            also be found using third-party tools like{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/use-s3cmd-with-object-storage">
               s3cmd
             </Link>

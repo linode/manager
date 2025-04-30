@@ -126,7 +126,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
               <Stack direction="row" gap={2} sx={{ maxWidth: 250 }}>
                 <TextField
                   errorText={fieldState.error?.message}
-                  helperText={`In ${quota.region_applied || quota.s3_endpoint} - current quota: ${convertedResourceMetrics?.limit} ${convertedResourceMetrics?.metric}`}
+                  helperText={`In ${quota.region_applied || quota.s3_endpoint} - current quota: ${convertedResourceMetrics?.limit?.toLocaleString() ?? 'unknown'} ${convertedResourceMetrics?.metric}`}
                   label="New Quota"
                   min={convertedResourceMetrics?.limit}
                   name="quantity"

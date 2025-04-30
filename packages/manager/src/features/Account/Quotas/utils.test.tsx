@@ -143,7 +143,7 @@ describe('convertResourceMetric', () => {
     });
 
     expect(result).toEqual({
-      convertedLimit: '95.4',
+      convertedLimit: 95.4,
       convertedResourceMetric: 'MB',
       convertedUsage: 0.95,
     });
