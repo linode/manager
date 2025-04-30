@@ -204,37 +204,66 @@ export const NewDetailTemplate = () => {
           </Grid>
         </Grid>
 
-        {/* SECTION 13/14/15/16: 33%/33%/33% width - 3 columns */}
+        {/* SECTION 13/14/15: 33%/33%/33% width - 3 columns */}
         <Grid container sx={{ mb: 4 }}>
           <Grid size={4} sx={{ pr: 2 }}>
-            <SectionHeader>SECTION NAME</SectionHeader>
+            <SectionHeader>33%/33%/33% width</SectionHeader>
             <LabelValue label="Label 13.1" value="Value 13.1" />
             <LabelValue label="Label 13.2" value="Value 13.2" />
             <LabelValue label="Label 13.3" value="Value 13.3" />
           </Grid>
           <Grid size={4} sx={{ pr: 2 }}>
-            <SectionHeader>SECTION NAME</SectionHeader>
+            <SectionHeader>33%/33%/33% width</SectionHeader>
             <LabelValue label="Label 14.1" value="Value 14.1" />
             <LabelValue label="Label 14.2" value="Value 14.2" />
             <LabelValue label="Label 14.3" value="Value 14.3" />
           </Grid>
           <Grid size={4}>
-            <SectionHeader>SECTION NAME</SectionHeader>
+            <SectionHeader>33%/33%/33% width</SectionHeader>
             <LabelValue label="Label 15.1" value="Value 15.1" />
             <LabelValue label="Label 15.2" value="Value 15.2" />
             <LabelValue label="Label 15.3" value="Value 15.3" />
           </Grid>
         </Grid>
 
+        {/* SECTION 16/17/18/19/20: 33%/33%/33% width - 3 columns + several sections in 2nd col*/}
+        <Grid container sx={{ mb: 4 }}>
+          <Grid size={4} sx={{ pr: 2 }}>
+            <SectionHeader>3 cols + several sections in 2nd col</SectionHeader>
+            <LabelValue label="Label 16.1" value="Value 16.1" />
+            <LabelValue label="Label 16.2" value="Value 16.2" />
+            <LabelValue label="Label 16.3" value="Value 16.3" />
+          </Grid>
+          <Grid size={4} sx={{ pr: 2 }}>
+            <SectionHeader>3 cols + several sections in 2nd col</SectionHeader>
+            <LabelValue label="Label 17.1" value="Value 17.1" />
+
+            <SectionHeader>3 cols + several sections in 2nd col</SectionHeader>
+            <LabelValue label="Label 18.1" value="Value 18.1" />
+
+            <SectionHeader>3 cols + several sections in 2nd col</SectionHeader>
+            <LabelValue label="Label 19.1" value="Value 19.1" />
+            <LabelValue label="Label 19.2" value="Value 19.2" />
+          </Grid>
+          <Grid size={4}>
+            <SectionHeader>3 cols + several sections in 2nd col</SectionHeader>
+            <LabelValue label="Label 20.1" value="Value 20.1" />
+            <LabelValue label="Label 20.2" value="Value 20.2" />
+            <LabelValue label="Label 20.3" value="Value 20.3" />
+          </Grid>
+        </Grid>
+
         {/* TAGS */}
-        <Box sx={{ mb: 3 }}>
+        <Grid container sx={{ mb: 4 }}>
           <SectionHeader>tags full width</SectionHeader>
-          <TagCell
-            tags={exampleTags}
-            updateTags={handleUpdateTags}
-            view="panel"
-          />
-        </Box>
+          <Grid size={12}>
+            <TagCell
+              tags={exampleTags}
+              updateTags={handleUpdateTags}
+              view="inline"
+            />
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );
