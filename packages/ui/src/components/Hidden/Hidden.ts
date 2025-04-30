@@ -1,7 +1,9 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import * as React from 'react';
+import type * as React from 'react';
 
-type Breakpoint = 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+import type { breakpoints } from '../../foundations/breakpoints';
+
+type Breakpoint = keyof typeof breakpoints.values;
 
 export interface HiddenProps {
   children?: React.ReactNode;
@@ -18,9 +20,8 @@ export interface HiddenProps {
   xsUp?: boolean;
 }
 
-const breakpointOrder: Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+export const breakpointOrder: Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 
-// Returns true if screen width is the same or greater than the given breakpoint.
 const isWidthUp = (
   breakpoint: Breakpoint,
   width: Breakpoint,
@@ -34,7 +35,6 @@ const isWidthUp = (
   return breakpointOrder.indexOf(breakpoint) < breakpointOrder.indexOf(width);
 };
 
-// Returns true if screen width is less than the given breakpoint.
 const isWidthDown = (
   breakpoint: Breakpoint,
   width: Breakpoint,
@@ -62,33 +62,58 @@ const useCurrentWidth = (): Breakpoint => {
   return 'xs';
 };
 
+type UpDownKeys = `${Breakpoint}Down` | `${Breakpoint}Up`;
+type UpDownProps = Pick<HiddenProps, UpDownKeys>;
+
 export const Hidden: React.FC<HiddenProps> = (props) => {
-  const { children, only, ...rest } = props;
   const width = useCurrentWidth();
+  const {
+    children,
+    only,
+    lgDown,
+    lgUp,
+    mdDown,
+    mdUp,
+    smDown,
+    smUp,
+    xlDown,
+    xlUp,
+    xsDown,
+    xsUp,
+  } = props;
+
+  const upDownProps: UpDownProps = {
+    lgDown,
+    lgUp,
+    mdDown,
+    mdUp,
+    smDown,
+    smUp,
+    xlDown,
+    xlUp,
+    xsDown,
+    xsUp,
+  };
 
   let visible = true;
 
-  // `only` check is faster to get out sooner if used.
   if (only) {
     if (Array.isArray(only)) {
-      for (let i = 0; i < only.length; i += 1) {
-        const breakpoint = only[i];
+      for (const breakpoint of only) {
         if (width === breakpoint) {
           visible = false;
           break;
         }
       }
-    } else if (only && width === only) {
+    } else if (width === only) {
       visible = false;
     }
   }
 
-  // Allow `only` to be combined with other props. If already hidden, no need to check others.
   if (visible) {
-    for (let i = 0; i < breakpointOrder.length; i += 1) {
-      const breakpoint = breakpointOrder[i];
-      const breakpointUp = rest[`${breakpoint}Up` as keyof HiddenProps];
-      const breakpointDown = rest[`${breakpoint}Down` as keyof HiddenProps];
+    for (const breakpoint of breakpointOrder) {
+      const breakpointUp = upDownProps[`${breakpoint}Up`];
+      const breakpointDown = upDownProps[`${breakpoint}Down`];
       if (
         (breakpointUp && isWidthUp(breakpoint, width)) ||
         (breakpointDown && isWidthDown(breakpoint, width))
@@ -103,5 +128,5 @@ export const Hidden: React.FC<HiddenProps> = (props) => {
     return null;
   }
 
-  return <>{children}</>;
+  return children;
 };
