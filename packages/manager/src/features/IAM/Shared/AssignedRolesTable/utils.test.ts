@@ -7,7 +7,7 @@ import {
   mapRolesToPermissions,
 } from './utils';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 import type { CombinedRoles } from './utils';
 import type { AccountEntity, EntityType } from '@linode/api-v4';
 
@@ -86,7 +86,7 @@ describe('addResourceNamesToRoles', () => {
         ],
       ],
     ]);
-    const userRoles: ExtendedRoleMap[] = [
+    const userRoles: ExtendedRoleView[] = [
       {
         access: accountAccess,
         description:

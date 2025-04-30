@@ -22,10 +22,8 @@ const initialState: UpgradeInterfacesDialogState = {
 export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
   const { linodeId, onClose, open } = props;
 
-  const [
-    dialogState,
-    setDialogState,
-  ] = React.useState<UpgradeInterfacesDialogState>({ ...initialState });
+  const [dialogState, setDialogState] =
+    React.useState<UpgradeInterfacesDialogState>({ ...initialState });
 
   const closeAndResetDialog = () => {
     onClose();
