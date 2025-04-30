@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 /**
  * @file Integration Tests for the CloudPulse Alerts Listing Page.
  * This file verifies the UI, functionality, and sorting/filtering of the CloudPulse Alerts Listing Page.
@@ -10,6 +11,7 @@ import {
   mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 
 import { accountFactory, alertFactory, alertRulesFactory } from 'src/factories';
@@ -26,6 +28,11 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
+const alertDefinitionsUrl = '/alerts/definitions';
+
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
 const mockAccount = accountFactory.build();
 const now = new Date();
@@ -39,11 +46,11 @@ const mockAlerts = [
     status: 'enabled',
     type: 'user',
     updated: new Date(now.getTime() - 86400).toISOString(),
-    updated_by: 'uuser1',
+    updated_by: 'updated1',
   }),
   alertFactory.build({
     created_by: 'user4',
-    updated_by: 'uuser4',
+    updated_by: 'updated4',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-2',
     service_type: 'dbaas',
@@ -54,7 +61,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user2',
-    updated_by: 'uuser2',
+    updated_by: 'updated2',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-3',
     service_type: 'linode',
@@ -65,7 +72,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user3',
-    updated_by: 'uuser3',
+    updated_by: 'updated3',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-4',
     service_type: 'linode',
@@ -167,11 +174,16 @@ const validateAlertDetails = (alert: Alert) => {
         'href',
         `/alerts/definitions/detail/${service_type}/${id}`
       );
-    cy.findByText(formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' }))
+    cy.findByText(
+      formatDate(updated, {
+        format: 'MMM dd, yyyy, h:mm a',
+        timezone: 'GMT',
+      })
+    )
       .should('be.visible')
       .and(
         'have.text',
-        formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+        formatDate(updated, { format: 'MMM dd, yyyy, h:mm a', timezone: 'GMT' })
       );
     cy.findByText(created_by).should('be.visible').and('have.text', created_by);
   });
@@ -189,6 +201,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseServices(['linode', 'dbaas']);
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     mockUpdateAlertDefinitions('dbaas', 1, mockAlerts[0]).as(
@@ -197,7 +210,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     mockUpdateAlertDefinitions('dbaas', 2, mockAlerts[1]).as(
       'getSecondAlertDefinitions'
     );
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
   });
 
@@ -238,7 +251,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
 
     cy.findByText('Definitions')
       .should('be.visible')
-      .and('have.attr', 'href', '/alerts/definitions');
+      .and('have.attr', 'href', alertDefinitionsUrl);
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.visible');
 
     // Validate table headers
@@ -405,7 +418,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       type: 'system',
     });
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('not.be.disabled');
   });
@@ -428,7 +441,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     );
 
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
     cy.get('[data-alert-notice="true"]')
@@ -456,7 +469,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     );
 
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
     cy.get('[data-alert-notice="true"]')
@@ -479,7 +492,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     );
 
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
-    cy.visitWithLogin('/alerts/definitions');
+    cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
     ui.buttonGroup.findButtonByTitle('Create Alert').should('be.disabled');
 

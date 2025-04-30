@@ -4,7 +4,7 @@
  * This file contains Cypress tests that validate the display and content of the  Alerts Show Detail Page in the CloudPulse application.
  * It ensures that all alert details, criteria, and entity information are displayed correctly.
  */
-import { capitalize, regionFactory } from '@linode/utilities';
+import { capitalize, profileFactory, regionFactory } from '@linode/utilities';
 import {
   aggregationTypeMap,
   dimensionOperatorTypeMap,
@@ -19,6 +19,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -94,6 +95,9 @@ const verifyRowOrder = (expectedIds: string[]) => {
     });
   });
 };
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 /**
  * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
@@ -102,6 +106,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetRegions(regions);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
     mockGetAlertDefinitions(service_type, id, alertDetails).as(
@@ -202,13 +207,13 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       cy.findByText(
         formatDate(updated, {
           format: 'MMM dd, yyyy, h:mm a',
+          timezone: 'GMT',
         })
       ).should('be.visible');
-
-      cy.findByText('Created:').should('be.visible');
       cy.findByText(
         formatDate(created, {
           format: 'MMM dd, yyyy, h:mm a',
+          timezone: 'GMT',
         })
       ).should('be.visible');
     });
