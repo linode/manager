@@ -279,7 +279,7 @@ export const AlertListing = () => {
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
           sxEndIcon={isLoading ? { display: 'none' } : undefined}
-          tooltipText={isLoading ? '' : alertToolTipText}
+          tooltipText={isLoading ? undefined : alertToolTipText}
           variant="contained"
         >
           Create Alert
