@@ -4,8 +4,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
-
 import type {
   AccountSettings,
   LinodeInterfaceAccountSetting,
@@ -20,20 +18,20 @@ type InterfaceSettingValues = Pick<
 const accountSettingInterfaceOptions: SelectOption<LinodeInterfaceAccountSetting>[] =
   [
     {
-      label: 'Configuration Profile Interfaces but allow Linode Interfaces',
-      value: 'legacy_config_default_but_linode_allowed',
-    },
-    {
       label: 'Linode Interfaces but allow Configuration Profile Interfaces',
       value: 'linode_default_but_legacy_config_allowed',
     },
     {
-      label: 'Configuration Profile Interfaces Only',
-      value: 'legacy_config_only',
-    },
-    {
       label: 'Linode Interfaces Only',
       value: 'linode_only',
+    },
+    {
+      label: 'Configuration Profile Interfaces but allow Linode Interfaces',
+      value: 'legacy_config_default_but_linode_allowed',
+    },
+    {
+      label: 'Configuration Profile Interfaces Only',
+      value: 'legacy_config_only',
     },
   ];
 
@@ -76,8 +74,8 @@ export const NetworkInterfaceType = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1}>
           <Typography variant="body1">
-            Set the network interface for your Linode instances to use during
-            creation. <Link to="/#">Learn more</Link>.
+            Choose whether to use Configuration Profile Interfaces or Linode
+            Interfaces when creating new Linodes or upgrading existing ones.
           </Typography>
           <Controller
             control={control}
@@ -103,8 +101,8 @@ export const NetworkInterfaceType = () => {
                   sx: {
                     width: '468px',
                   },
-                  tooltipText:
-                    '@TODO Linode Interfaces - get copy for this tooltip',
+                  tooltipText: optionsTooltipText,
+                  tooltipWidth: 410,
                 }}
                 value={accountSettingInterfaceOptions.find(
                   (option) => option.value === field.value
@@ -127,3 +125,51 @@ export const NetworkInterfaceType = () => {
     </Paper>
   );
 };
+
+const optionsTooltipText = (
+  <Stack spacing={2}>
+    <Stack>
+      <Typography>
+        <strong>
+          Linode Interfaces but allow Configuration Profile Interfaces
+        </strong>
+      </Typography>
+      <Typography>
+        Use Linode Interfaces by default, unless Configuration Profile
+        Interfaces are explicitly selected. Linodes using Configuration Profile
+        Interfaces can be upgraded to use Linode Interfaces.
+      </Typography>
+    </Stack>
+    <Stack>
+      <Typography>
+        <strong>Linode Interfaces only</strong>
+      </Typography>
+      <Typography>
+        Previously created Linodes using Configuration Profile Interfaces will
+        continue to function. Linodes using Configuration Profile Interfaces can
+        be upgraded to use Linode Interfaces.
+      </Typography>
+    </Stack>
+    <Stack>
+      <Typography>
+        <strong>
+          Configuration Profile Interfaces but allow Linode Interfaces
+        </strong>
+      </Typography>
+      <Typography>
+        Use Configuration Profile Interfaces by default, unless Linode
+        Interfaces are explicitly selected, and can be upgraded to use Linode
+        Interfaces.
+      </Typography>
+    </Stack>
+    <Stack>
+      <Typography>
+        <strong>Configuration Profile Interfaces only</strong>
+      </Typography>
+      <Typography>
+        Previously created Linodes using Linode Interfaces will continue to
+        function. Linodes cannot be upgraded to use Linode Interfaces.
+      </Typography>
+    </Stack>
+  </Stack>
+);

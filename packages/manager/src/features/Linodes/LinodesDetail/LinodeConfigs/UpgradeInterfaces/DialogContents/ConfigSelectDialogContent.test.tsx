@@ -4,9 +4,6 @@ import React from 'react';
 import { linodeConfigFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  CONFIG_SELECT_SHARED_COPY
-} from '../constants';
 import { ConfigSelectDialogContent } from './ConfigSelectDialogContent';
 
 import type {
@@ -33,8 +30,10 @@ describe('ConfigSelectDialogContent', () => {
       <ConfigSelectDialogContent {...props} />
     );
 
-    getByText('Upgrade Dry Run');
-    getByText(CONFIG_SELECT_SHARED_COPY);
+    getByText('Perform Dry Run');
+    getByText(
+      /This Linode has multiple configuration profiles. Choose one to continue./
+    );
     getByText('Cancel');
     getByText('Configuration Profile');
   });
@@ -52,7 +51,9 @@ describe('ConfigSelectDialogContent', () => {
     );
 
     getByText('Upgrade Interfaces');
-    getByText(CONFIG_SELECT_SHARED_COPY);
+    getByText(
+      /This Linode has multiple configuration profiles. Choose one to continue./
+    );
     getByText('Cancel');
     getByText('Configuration Profile');
   });

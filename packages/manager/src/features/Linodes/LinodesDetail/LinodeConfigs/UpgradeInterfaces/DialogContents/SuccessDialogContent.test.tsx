@@ -31,7 +31,7 @@ describe('SuccessDialogContent', () => {
 
     getByText('Return to Overview');
     getByText('Continue to Upgrade');
-    getByText('Upgrade Summary');
+    getByText('Dry Run Summary');
     getByText(SUCCESS_DRY_RUN_COPY);
     getByText('Cancel');
   });

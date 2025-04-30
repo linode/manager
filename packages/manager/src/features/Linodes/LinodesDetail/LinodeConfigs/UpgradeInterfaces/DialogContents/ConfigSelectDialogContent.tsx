@@ -87,7 +87,7 @@ export const ConfigSelectDialogContent = (
           loading={isPending}
           onClick={() => upgradeToLinodeInterfaces(isDryRun)}
         >
-          {isDryRun ? 'Upgrade Dry Run' : 'Upgrade Interfaces'}
+          {isDryRun ? 'Perform Dry Run' : 'Upgrade Interfaces'}
         </Button>
       </Box>
     </Stack>
