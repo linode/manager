@@ -47,12 +47,7 @@ interface AlertsLimitErrorMessageProps {
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
-  const {
-    data: alerts,
-    error,
-    isLoading,
-    isFetching,
-  } = useAllAlertDefinitionsQuery();
+  const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
   const {
     data: serviceOptions,
     error: serviceTypesError,
@@ -272,11 +267,7 @@ export const AlertListing = () => {
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
-          disabled={
-            (isLoading && isFetching) ||
-            isAlertLimitReached ||
-            isMetricLimitReached
-          }
+          disabled={isLoading || isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
             history.push(`${url}/create`);
           }}
@@ -288,8 +279,8 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          sxEndIcon={{ display: isLoading && isFetching ? 'none' : 'block' }}
-          tooltipText={isLoading && isFetching ? '' : alertToolTipText}
+          sxEndIcon={{ display: isLoading ? 'none' : 'block' }}
+          tooltipText={isLoading ? '' : alertToolTipText}
           variant="contained"
         >
           Create Alert
