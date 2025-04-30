@@ -215,9 +215,15 @@ export const useDeleteAlertDefinitionMutation = () => {
       return deleteAlertDefinition(serviceType, alertId);
     },
     onSuccess(_data, { serviceType, alertId }) {
-      queryClient.invalidateQueries({
+      queryClient.cancelQueries({
         queryKey: queryFactory.alerts._ctx.all().queryKey,
       });
+      queryClient.setQueryData<Alert[]>(
+        queryFactory.alerts._ctx.all().queryKey,
+        (oldData) => {
+          return oldData?.filter((alert) => alert.id !== alertId) ?? [];
+        }
+      );
       queryClient.invalidateQueries({
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
