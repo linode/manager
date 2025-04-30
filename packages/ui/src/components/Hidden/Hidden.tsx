@@ -1,9 +1,7 @@
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { getBreakpointQuery } from '../../utilities/getBreakpointQuery';
-
-import type { Theme } from '@mui/material';
+type Breakpoint = 'lg' | 'md' | 'sm' | 'xl' | 'xs';
 
 export interface HiddenProps {
   children?: React.ReactNode;
@@ -11,6 +9,7 @@ export interface HiddenProps {
   lgUp?: boolean;
   mdDown?: boolean;
   mdUp?: boolean;
+  only?: Breakpoint | Breakpoint[];
   smDown?: boolean;
   smUp?: boolean;
   xlDown?: boolean;
@@ -19,85 +18,90 @@ export interface HiddenProps {
   xsUp?: boolean;
 }
 
-/**
- * This component is a replacement for the `@mui/material`'s `Hidden` component, which is deprecated.
- * It is used to conditionally render a component based on the viewport.
- */
-export const Hidden = React.forwardRef<HTMLDivElement, HiddenProps>(
-  (props, ref) => {
-    const {
-      children,
-      lgDown,
-      lgUp,
-      mdDown,
-      mdUp,
-      smDown,
-      smUp,
-      xlDown,
-      xlUp,
-      xsDown,
-      xsUp,
-      ...other
-    } = props;
+const breakpointOrder: Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 
-    // Up queries
-    const matchesXsUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xs', 'up'),
-    );
-    const matchesSmUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'sm', 'up'),
-    );
-    const matchesMdUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'md', 'up'),
-    );
-    const matchesLgUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'lg', 'up'),
-    );
-    const matchesXlUp = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xl', 'up'),
-    );
-
-    // Down queries
-    const matchesXsDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xs', 'down'),
-    );
-    const matchesSmDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'sm', 'down'),
-    );
-    const matchesMdDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'md', 'down'),
-    );
-    const matchesLgDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'lg', 'down'),
-    );
-    const matchesXlDown = useMediaQuery((theme: Theme) =>
-      getBreakpointQuery(theme, 'xl', 'down'),
-    );
-
-    const shouldHide =
-      (xlUp && matchesXlUp) ||
-      (lgUp && matchesLgUp) ||
-      (mdUp && matchesMdUp) ||
-      (smUp && matchesSmUp) ||
-      (xlDown && matchesXlDown) ||
-      (lgDown && matchesLgDown) ||
-      (mdDown && matchesMdDown) ||
-      (smDown && matchesSmDown) ||
-      (xsDown && matchesXsDown) ||
-      (xsUp && matchesXsUp);
-
-    if (!children) {
-      return shouldHide;
-    }
-
-    if (shouldHide) {
-      return null;
-    }
-
+// Returns true if screen width is the same or greater than the given breakpoint.
+const isWidthUp = (
+  breakpoint: Breakpoint,
+  width: Breakpoint,
+  inclusive = true,
+) => {
+  if (inclusive) {
     return (
-      <div ref={ref} {...other}>
-        {children}
-      </div>
+      breakpointOrder.indexOf(breakpoint) <= breakpointOrder.indexOf(width)
     );
-  },
-);
+  }
+  return breakpointOrder.indexOf(breakpoint) < breakpointOrder.indexOf(width);
+};
+
+// Returns true if screen width is less than the given breakpoint.
+const isWidthDown = (
+  breakpoint: Breakpoint,
+  width: Breakpoint,
+  inclusive = false,
+) => {
+  if (inclusive) {
+    return (
+      breakpointOrder.indexOf(width) <= breakpointOrder.indexOf(breakpoint)
+    );
+  }
+  return breakpointOrder.indexOf(width) < breakpointOrder.indexOf(breakpoint);
+};
+
+const useCurrentWidth = (): Breakpoint => {
+  const theme = useTheme();
+  const matchesSm = useMediaQuery(theme.breakpoints.up('sm'));
+  const matchesMd = useMediaQuery(theme.breakpoints.up('md'));
+  const matchesLg = useMediaQuery(theme.breakpoints.up('lg'));
+  const matchesXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+  if (matchesXl) return 'xl';
+  if (matchesLg) return 'lg';
+  if (matchesMd) return 'md';
+  if (matchesSm) return 'sm';
+  return 'xs';
+};
+
+export const Hidden: React.FC<HiddenProps> = (props) => {
+  const { children, only, ...rest } = props;
+  const width = useCurrentWidth();
+
+  let visible = true;
+
+  // `only` check is faster to get out sooner if used.
+  if (only) {
+    if (Array.isArray(only)) {
+      for (let i = 0; i < only.length; i += 1) {
+        const breakpoint = only[i];
+        if (width === breakpoint) {
+          visible = false;
+          break;
+        }
+      }
+    } else if (only && width === only) {
+      visible = false;
+    }
+  }
+
+  // Allow `only` to be combined with other props. If already hidden, no need to check others.
+  if (visible) {
+    for (let i = 0; i < breakpointOrder.length; i += 1) {
+      const breakpoint = breakpointOrder[i];
+      const breakpointUp = rest[`${breakpoint}Up` as keyof HiddenProps];
+      const breakpointDown = rest[`${breakpoint}Down` as keyof HiddenProps];
+      if (
+        (breakpointUp && isWidthUp(breakpoint, width)) ||
+        (breakpointDown && isWidthDown(breakpoint, width))
+      ) {
+        visible = false;
+        break;
+      }
+    }
+  }
+
+  if (!visible) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
