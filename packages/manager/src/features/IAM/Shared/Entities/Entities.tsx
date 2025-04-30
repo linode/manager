@@ -6,7 +6,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
-import { type DrawerModes, getFormattedEntityType } from '../utilities';
+import { getFormattedEntityType } from '../utilities';
 import {
   getCreateLinkForEntityType,
   getEntitiesByType,
@@ -14,7 +14,7 @@ import {
   mapEntitiesToOptions,
 } from './utils';
 
-import type { EntitiesOption } from '../types';
+import type { DrawerModes, EntitiesOption } from '../types';
 import type {
   EntityType,
   EntityTypePermissions,

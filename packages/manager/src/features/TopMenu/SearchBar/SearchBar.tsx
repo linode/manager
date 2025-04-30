@@ -1,12 +1,12 @@
 import {
   Autocomplete,
   Box,
+  CloseIcon,
   IconButton,
   InputAdornment,
   TextField,
 } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -240,7 +240,7 @@ export const SearchBar = () => {
                           onClick={toggleSearch}
                           size="large"
                         >
-                          <Close />
+                          <CloseIcon />
                         </IconButton>
                       </InputAdornment>
                     ),
