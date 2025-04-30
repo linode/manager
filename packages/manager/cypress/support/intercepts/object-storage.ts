@@ -17,6 +17,7 @@ import type {
   ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
+  PriceType,
 } from '@linode/api-v4';
 
 /**
@@ -52,6 +53,25 @@ export const mockGetBuckets = (
     'GET',
     apiMatcher('object-storage/buckets/*'),
     sequentialStub([paginateResponse(buckets), paginateResponse([])])
+  );
+};
+
+/**
+ * Intercepts GET requests to fetch object-storage types and mocks response.
+ *
+ * Only returns data for the first request intercepted.
+ *
+ * @param priceTypes - Object storage buckets with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetObjectStorageTypes = (
+  priceTypes: PriceType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/types?page_size=500'),
+    sequentialStub([paginateResponse(priceTypes), paginateResponse([])])
   );
 };
 
