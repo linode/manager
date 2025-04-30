@@ -4,6 +4,7 @@ import type {
   CloudPulseMetricsResponse,
   CloudPulseMetricsResponseData,
   Dashboard,
+  Filters,
   MetricDefinition,
   Widgets,
 } from '@linode/api-v4';
@@ -26,12 +27,18 @@ export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({
   widgets: [],
 });
 
+export const dimensionFilterFactory = Factory.Sync.makeFactory<Filters>({
+  dimension_label: Factory.each((i) => `dimension_${i}`),
+  operator: 'startswith',
+  value: Factory.each((i) => `value_${i}`),
+});
+
 export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   aggregate_function: 'avg',
   chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
   color: Factory.each((i) => color[i % color.length]),
   entity_ids: Factory.each((i) => [`resource-${i}`]),
-  filters: [],
+  filters: dimensionFilterFactory.buildList(3),
   group_by: Factory.each((i) => [`group_by_${i}`]),
   label: Factory.each((i) => `widget_label_${i}`),
   metric: Factory.each((i) => `widget_metric_${i}`),
