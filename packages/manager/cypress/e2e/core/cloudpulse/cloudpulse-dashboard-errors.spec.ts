@@ -104,7 +104,7 @@ const mockRegions = [
   }),
   regionFactory.build({
     id: 'us-east',
-    label: 'Newyark, NJ',
+    label: 'Newark, NJ',
     capabilities: ['Managed Databases'],
   }),
 ];
@@ -432,6 +432,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
+    // simulate an error on instances call before changing the region again
     mockGetDatabasesError('Internal Server Error').as(
       'getDatabaseInstancesError'
     );

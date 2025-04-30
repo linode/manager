@@ -1,6 +1,6 @@
 {
   "name": "@linode/shared",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Linode shared feature component library",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -35,8 +35,6 @@
     "@linode/queries": "workspace:*",
     "@linode/ui": "workspace:*",
     "@linode/utilities": "workspace:*",
-    "@mui/material": "^6.4.5",
-    "@tanstack/react-query": "5.51.24",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

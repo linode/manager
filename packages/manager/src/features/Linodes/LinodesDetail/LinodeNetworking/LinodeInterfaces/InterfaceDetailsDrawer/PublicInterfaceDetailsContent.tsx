@@ -14,7 +14,7 @@ export const PublicInterfaceDetailsContent = (props: PublicInterfaceData) => {
         <MaskableText
           isToggleable
           key={address.address}
-          text={`${address.address} ${address.primary && '(Primary)'}`}
+          text={`${address.address} ${address.primary ? '(Primary)' : ''}`}
         />
       ))}
       {ipv4.shared.map((shared) => (

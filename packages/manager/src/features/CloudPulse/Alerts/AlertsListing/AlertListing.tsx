@@ -1,10 +1,18 @@
-import { Autocomplete, Box, Button, Stack } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
+import { SupportLink } from 'src/components/SupportLink';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -13,7 +21,11 @@ import { alertStatusOptions } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertsListTable } from './AlertListTable';
-import { alertLimitMessage, metricLimitMessage } from './constants';
+import {
+  alertLimitMessage,
+  alertToolTipText,
+  metricLimitMessage,
+} from './constants';
 
 import type { Item } from '../constants';
 import type { Alert, AlertServiceType, AlertStatusType } from '@linode/api-v4';
@@ -24,13 +36,14 @@ const searchAndSelectSx = {
   sm: '400px',
   xs: '300px',
 };
-// hardcoding the value is temporary solution until something from the API side is confirmed.
+// hardcoding the value is temporary solution until a solution from API side is confirmed.
 const maxAllowedAlerts = 100;
 const maxAllowedMetrics = 100;
 interface AlertsLimitErrorMessageProps {
   isAlertLimitReached: boolean;
   isMetricLimitReached: boolean;
 }
+
 export const AlertListing = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
@@ -40,20 +53,17 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
+
+  const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
+  const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
+
+  const isMetricLimitReached =
+    userAlerts.reduce(
+      (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
+      0
+    ) >= maxAllowedMetrics;
+
   const topRef = React.useRef<HTMLButtonElement>(null);
-
-  const isAlertLimitReached = alerts
-    ? alerts.filter(({ type }) => type === 'user').length >= maxAllowedAlerts
-    : false;
-
-  const isMetricLimitReached = alerts
-    ? alerts
-        .filter(({ type }) => type === 'user')
-        .reduce(
-          (total, alert) => total + (alert.rule_criteria?.rules?.length ?? 0),
-          0
-        ) >= maxAllowedMetrics
-    : false;
 
   const getServicesList = React.useMemo((): Item<
     string,
@@ -142,10 +152,12 @@ export const AlertListing = () => {
     statusFilters,
   ]);
 
-  const {
-    preference,
-    toggle: toggleAlertsGroupedByTag,
-  } = usePreferencesToggle('aclpAlertsGroupByTag', [false, true]);
+  const { preference: togglePreference, toggle: toggleGroupByTag } =
+    usePreferencesToggle({
+      preferenceKey: 'aclpAlertsGroupByTag',
+      options: [false, true],
+      defaultValue: false,
+    });
 
   if (alerts && alerts.length === 0) {
     return (
@@ -166,8 +178,12 @@ export const AlertListing = () => {
       />
     );
   }
+
+  const failedAlertsCount =
+    alerts?.filter((alert: Alert) => alert.status === 'failed').length ?? 0;
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       {(isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
@@ -184,58 +200,51 @@ export const AlertListing = () => {
         ref={topRef}
       >
         <Box
+          display="flex"
           flexDirection={{
             lg: 'row',
             md: 'column',
             sm: 'column',
             xs: 'column',
           }}
-          display="flex"
           gap={2}
         >
           <DebouncedSearchTextField
-            sx={{
-              maxHeight: '34px',
-              width: searchAndSelectSx,
-            }}
             data-qa-filter="alert-search"
             label=""
             noMarginTop
             onSearch={setSearchText}
             placeholder="Search for Alerts"
+            sx={{
+              width: searchAndSelectSx,
+            }}
             value={searchText}
           />
           <Autocomplete
+            autoHighlight
+            data-qa-filter="alert-service-filter"
+            data-testid="alert-service-filter"
             errorText={
               serviceTypesError
                 ? 'There was an error in fetching the services.'
                 : ''
             }
-            onChange={(_, selected) => {
-              setServiceFilters(selected);
-            }}
-            sx={{
-              width: searchAndSelectSx,
-            }}
-            autoHighlight
-            data-qa-filter="alert-service-filter"
-            data-testid="alert-service-filter"
             label=""
             limitTags={1}
             loading={serviceTypesLoading}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setServiceFilters(selected);
+            }}
             options={getServicesList}
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
-            value={serviceFilters}
-          />
-          <Autocomplete
-            onChange={(_, selected) => {
-              setStatusFilters(selected);
-            }}
             sx={{
               width: searchAndSelectSx,
             }}
+            value={serviceFilters}
+          />
+          <Autocomplete
             autoHighlight
             data-qa-filter="alert-status-filter"
             data-testid="alert-status-filter"
@@ -243,15 +252,26 @@ export const AlertListing = () => {
             limitTags={1}
             multiple
             noMarginTop
+            onChange={(_, selected) => {
+              setStatusFilters(selected);
+            }}
             options={alertStatusOptions}
             placeholder={statusFilters.length > 0 ? '' : 'Select a Status'}
+            sx={{
+              width: searchAndSelectSx,
+            }}
             value={statusFilters}
           />
         </Box>
         <Button
+          buttonType="primary"
+          data-qa-button="create-alert"
+          data-qa-buttons="true"
+          disabled={isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
             history.push(`${url}/create`);
           }}
+          ref={topRef}
           sx={{
             height: '34px',
             paddingBottom: 0,
@@ -259,25 +279,35 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          buttonType="primary"
-          data-qa-button="create-alert"
-          data-qa-buttons="true"
-          disabled={isAlertLimitReached || isMetricLimitReached}
-          ref={topRef}
-          tooltipText="You have reached your limit of definitions for this account."
+          tooltipText={alertToolTipText}
           variant="contained"
         >
           Create Alert
         </Button>
       </Box>
+      {failedAlertsCount > 0 && (
+        <Notice variant="error">
+          <Typography
+            sx={(theme) => ({
+              font: theme.font.bold,
+              fontSize: theme.spacingFunction(16),
+            })}
+          >
+            Creation of {failedAlertsCount} alerts has failed as indicated in
+            the status column. Please{' '}
+            <SupportLink text="open a support ticket" /> for assistance.
+          </Typography>
+        </Notice>
+      )}
+
       <AlertsListTable
         alerts={getAlertsList}
-        alertsGroupedByTag={preference}
         error={error ?? undefined}
+        isGroupedByTag={togglePreference}
         isLoading={isLoading}
         scrollToElement={() => scrollToElement(topRef.current ?? null)}
         services={getServicesList}
-        toggleAlertsGroupedByTag={() => toggleAlertsGroupedByTag?.() ?? false}
+        toggleGroupByTag={() => toggleGroupByTag?.() ?? false}
       />
     </Stack>
   );

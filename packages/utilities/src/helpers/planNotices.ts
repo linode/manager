@@ -18,7 +18,7 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
    * @returns {Region | undefined}
    */
   const selectedRegion = regionsData?.find(
-    (region: Region) => region.id === selectedRegionID
+    (region: Region) => region.id === selectedRegionID,
   );
 
   /**
@@ -33,7 +33,9 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
    */
   const isSelectedRegionEligibleForPlan = (planType: LinodeTypeClass) =>
     Boolean(
-      selectedRegion?.capabilities.includes(getCapabilityFromPlanType(planType))
+      selectedRegion?.capabilities.includes(
+        getCapabilityFromPlanType(planType),
+      ),
     );
 
   /**
@@ -59,7 +61,7 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
  * @returns {Capabilities} the capability name
  */
 export const getCapabilityFromPlanType = (
-  planType: LinodeTypeClass
+  planType: LinodeTypeClass,
 ): Capabilities => {
   switch (planType) {
     case 'gpu': {

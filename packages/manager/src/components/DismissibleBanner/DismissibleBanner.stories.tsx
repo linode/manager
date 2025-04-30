@@ -1,4 +1,4 @@
-import { Button, Typography } from '@linode/ui';
+import { Button, List, ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -11,7 +11,7 @@ type Story = StoryObj<typeof DismissibleBanner>;
 
 export const Default: Story = {
   render: (args) => (
-    <DismissibleBanner {...args}>
+    <DismissibleBanner {...args} variant="info">
       <Typography>This is an example of a dismissible banner.</Typography>
     </DismissibleBanner>
   ),
@@ -28,6 +28,7 @@ export const CallToActionBanner: Story = {
           Upgrade Version
         </Button>
       }
+      forceImportantIconVerticalCenter
       preferenceKey="cluster-v1"
       variant="info"
     >
@@ -51,6 +52,48 @@ export const BetaBanner: Story = {
         </Link>
         .
       </Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="lenghty-dismissible-banner"
+      variant="info"
+    >
+      <Typography variant="h2">
+        This is a dismissible informational notice with a title.
+      </Typography>
+      <Typography>This notice contains long text that should wrap.</Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListTag: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-dismissible-banner"
+      variant="warning"
+    >
+      <ul>
+        <li>This is a dismissible warning with unordered list bullets</li>
+        <li>This is a dismissible warning with unordered list bullets</li>
+      </ul>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListItem: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-item-dismissible-banner"
+      variant="warning"
+    >
+      <List>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+      </List>
     </DismissibleBanner>
   ),
 };

@@ -1,3 +1,4 @@
+import { List, ListItem, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -5,10 +6,6 @@ import { Notice } from './Notice';
 
 import type { NoticeProps } from './Notice';
 import type { Meta, StoryObj } from '@storybook/react';
-
-export const Default: StoryObj<NoticeProps> = {
-  render: (args) => <Notice {...args} />,
-};
 
 export const Success: StoryObj<NoticeProps> = {
   render: (args) => (
@@ -19,6 +16,23 @@ export const Success: StoryObj<NoticeProps> = {
 export const Info: StoryObj<NoticeProps> = {
   render: (args) => (
     <Notice {...args} text="This is a informational notice" variant="info" />
+  ),
+};
+
+export const Tip: StoryObj<NoticeProps> = {
+  render: (args) => (
+    <Notice {...args} text="This is a tip notice" variant="tip" />
+  ),
+};
+
+export const InfoWithLongTextAndMarkup: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="info">
+      <Typography variant="h2">
+        This is a informational notice with a title.
+      </Typography>
+      <Typography>This paragraph under the title should wrap.</Typography>
+    </Notice>
   ),
 };
 
@@ -34,47 +48,37 @@ export const Warning: StoryObj<NoticeProps> = {
   ),
 };
 
-export const ImportantSuccess: StoryObj<NoticeProps> = {
+export const WarningInsidePaper: StoryObj<NoticeProps> = {
   render: (args) => (
-    <Notice
-      {...args}
-      important
-      text="This is an important success notice"
-      variant="success"
-    />
+    <Paper>
+      <Notice
+        {...args}
+        text="This is a warning notice inside a paper"
+        variant="warning"
+      />
+    </Paper>
   ),
 };
 
-export const ImportantInfo: StoryObj<NoticeProps> = {
-  render: (args) => (
-    <Notice
-      {...args}
-      important
-      text="This is an important informational notice"
-      variant="info"
-    />
+export const WarningWithListTag: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="warning">
+      <ul>
+        <li>This is a warning with unordered list bullets</li>
+        <li>This is a warning with unordered list bullets</li>
+      </ul>
+    </Notice>
   ),
 };
 
-export const ImportantError: StoryObj<NoticeProps> = {
-  render: (args) => (
-    <Notice
-      {...args}
-      important
-      text="This is an important error notice"
-      variant="error"
-    />
-  ),
-};
-
-export const ImportantWarning: StoryObj<NoticeProps> = {
-  render: (args) => (
-    <Notice
-      {...args}
-      important
-      text="This is an important warning notice"
-      variant="warning"
-    />
+export const WarningWithListItem: StoryObj<NoticeProps> = {
+  render: () => (
+    <Notice variant="warning">
+      <List>
+        <ListItem>This is a warning with list items</ListItem>
+        <ListItem>This is a warning with list items</ListItem>
+      </List>
+    </Notice>
   ),
 };
 

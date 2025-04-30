@@ -1,38 +1,36 @@
-import { Paper, StyledLinkButton, Typography } from '@linode/ui';
-import { truncate } from '@linode/utilities';
+import { Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
+
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
+import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
 
-import type { EntitiesOption } from '../utilities';
-import type {
-  EntityTypePermissions,
-  IamAccessType,
-  Roles,
-} from '@linode/api-v4/lib/iam/types';
-
-interface ExtendedRole extends Roles {
-  access: IamAccessType;
-  entity_type: EntityTypePermissions;
-}
+import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
+import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
-  assignedEntities?: EntitiesOption[];
-  role: ExtendedRole;
+  errorText?: string;
+  mode?: DrawerModes;
+  onChange?: (value: EntitiesOption[]) => void;
+  role: ExtendedRole | ExtendedRoleView;
+  sx?: SxProps<Theme>;
+  value?: EntitiesOption[];
 }
 
-export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
-  const [showFullDescription, setShowFullDescription] = React.useState(false);
-
+export const AssignedPermissionsPanel = ({
+  errorText,
+  mode,
+  onChange,
+  role,
+  sx,
+  value,
+}: Props) => {
   const theme = useTheme();
 
-  const description =
-    role.description.length < 110 || showFullDescription
-      ? role.description
-      : truncate(role.description, 110);
-
+  // TODO: update the link for the description when it's ready - UIE-8534
   return (
     <Paper
       sx={{
@@ -40,39 +38,45 @@ export const AssignedPermissionsPanel = ({ assignedEntities, role }: Props) => {
           theme.name === 'light'
             ? theme.tokens.color.Neutrals[5]
             : theme.tokens.color.Neutrals[100],
-        marginTop: theme.spacing(1.25),
+        marginTop: theme.tokens.spacing.S8,
         padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
+        ...sx,
       }}
     >
       <Typography
+        sx={(theme) => ({
+          font: theme.tokens.alias.Typography.Label.Bold.S,
+        })}
+      >
+        Description
+      </Typography>
+      <Typography
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          marginBottom: theme.tokens.spacing.S12,
+          marginBottom: theme.tokens.spacing.S8,
+          marginTop: theme.tokens.spacing.S2,
           overflowWrap: 'anywhere',
           wordBreak: 'normal',
         }}
       >
-        {description}{' '}
-        {description.length > 110 && (
-          <StyledLinkButton
-            sx={{
-              font: theme.tokens.alias.Typography.Label.Semibold.Xs,
-              width: 'max-content',
-            }}
-            onClick={() => setShowFullDescription((show) => !show)}
-            type="button"
-          >
-            {showFullDescription ? 'Hide' : 'Expand'}
-          </StyledLinkButton>
+        {role.permissions.length ? (
+          role.description
+        ) : (
+          <>
+            {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
+          </>
         )}
       </Typography>
       <Permissions permissions={role.permissions} />
-      <Entities
-        access={role.access}
-        assignedEntities={assignedEntities ?? []}
-        type={role.entity_type}
-      />
+      {mode !== 'change-role-for-entity' && (
+        <Entities
+          access={role.access}
+          errorText={errorText}
+          mode={mode}
+          onChange={(value) => onChange?.(value)}
+          type={role.entity_type}
+          value={value || []}
+        />
+      )}
     </Paper>
   );
 };

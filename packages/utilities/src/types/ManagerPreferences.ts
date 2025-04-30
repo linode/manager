@@ -21,8 +21,8 @@ export interface DismissedNotification {
 export type ThemeChoice = 'dark' | 'light' | 'system';
 
 export type ManagerPreferences = Partial<{
-  aclpPreference: AclpConfig; // Why is this type in @linode/api-v4?
   aclpAlertsGroupByTag: boolean;
+  aclpPreference: AclpConfig; // Why is this type in @linode/api-v4?
   avatarColor: string;
   backups_cta_dismissed: boolean;
   collapsedSideNavProductFamilies: number[];

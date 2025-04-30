@@ -60,8 +60,8 @@ export interface Widgets {
   chart_type: 'area' | 'line';
   color: string;
   entity_ids: string[];
-  filters: DimensionFilter[];
-  group_by: string;
+  filters: Filters[];
+  group_by: string[];
   label: string;
   metric: string;
   namespace_id: number;
@@ -138,7 +138,7 @@ export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
   entity_ids: number[];
   filters?: Filters[];
-  group_by: string;
+  group_by: string[];
   metrics: Metric[];
   relative_time_duration: TimeDuration | undefined;
   time_granularity: TimeGranularity | undefined;

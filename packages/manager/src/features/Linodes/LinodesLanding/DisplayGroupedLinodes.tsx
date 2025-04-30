@@ -48,8 +48,8 @@ interface DisplayGroupedLinodesProps
   display: 'grid' | 'list';
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  linodeViewPreference: 'grid' | 'list';
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -57,6 +57,7 @@ interface DisplayGroupedLinodesProps
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -74,6 +75,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     linodesAreGrouped,
     order,
     orderBy,
+    regionFilter,
     toggleGroupLinodes,
     toggleLinodeView,
     ...rest
@@ -83,8 +85,17 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   const groupByDescriptionId = React.useId();
 
   const dataLength = data.length;
-
   const orderedGroupedLinodes = sortGroups(groupByTags(data));
+
+  const tabGroupRefs = React.useRef([]);
+
+  // avoids recreating the refs array unless the no. of linodes have changed
+  if (tabGroupRefs.current.length !== orderedGroupedLinodes.length) {
+    tabGroupRefs.current = orderedGroupedLinodes.map(
+      (_, i) => tabGroupRefs.current[i] || React.createRef()
+    );
+  }
+
   const tableWrapperProps = {
     dataLength,
     handleOrderChange,
@@ -114,7 +125,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
         <Grid className={'px0'} size={12}>
           {isGeckoLAEnabled && (
             <Paper sx={{ padding: 1 }}>
-              <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+              <RegionTypeFilter
+                handleRegionFilter={handleRegionFilter}
+                regionFilter={regionFilter}
+              />
             </Paper>
           )}
           <StyledControlHeader>
@@ -141,17 +155,17 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
               </div>
               <Tooltip placement="top-end" title="Ungroup by tag">
                 <IconButton
+                  aria-describedby={groupByDescriptionId}
+                  aria-label="Toggle group by tag"
+                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
+                  disableRipple
+                  onClick={toggleGroupLinodes}
                   sx={(theme) => ({
                     ':hover': {
                       color: theme.tokens.color.Brand[60],
                     },
                     color: theme.tokens.component.Table.HeaderNested.Icon,
                   })}
-                  aria-describedby={groupByDescriptionId}
-                  aria-label="Toggle group by tag"
-                  className={linodesAreGrouped ? 'MuiIconButton-isActive' : ''}
-                  disableRipple
-                  onClick={toggleGroupLinodes}
                 >
                   <GroupByTag />
                 </IconButton>
@@ -166,15 +180,22 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
             No items to display.
           </Typography>
         ) : null}
-        {orderedGroupedLinodes.map(([tag, linodes]) => {
+        {orderedGroupedLinodes.map(([tag, linodes], index) => {
           return (
-            <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
+            <Box
+              data-qa-tag-header={tag}
+              key={tag}
+              ref={tabGroupRefs.current[index]}
+              sx={{ marginBottom: 2 }}
+            >
               <Grid container>
                 <Grid size={12}>
                   <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
                 </Grid>
               </Grid>
               <Paginate
+                // If there are more Linodes with maintenance than the current page size, show the minimum
+                data={linodes}
                 // page size needed to show ALL Linodes with maintenance.
                 pageSize={
                   numberOfLinodesWithMaintenance > infinitePageSize
@@ -183,9 +204,8 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       )
                     : infinitePageSize
                 }
-                // If there are more Linodes with maintenance than the current page size, show the minimum
-                data={linodes}
                 pageSizeSetter={setInfinitePageSize}
+                scrollToRef={tabGroupRefs.current[index]}
               >
                 {({
                   count,
@@ -212,9 +232,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       <Component {...finalProps} />
                       <Grid size={12}>
                         <PaginationFooter
-                          sx={{
-                            border: 0,
-                          }}
                           count={count}
                           eventCategory={'linodes landing'}
                           handlePageChange={handlePageChange}
@@ -222,6 +239,9 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                           page={page}
                           pageSize={pageSize}
                           showAll
+                          sx={{
+                            border: 0,
+                          }}
                         />
                       </Grid>
                     </React.Fragment>
@@ -240,13 +260,16 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
       <>
         {isGeckoLAEnabled && (
           <Paper sx={{ padding: 1 }}>
-            <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+            <RegionTypeFilter
+              handleRegionFilter={handleRegionFilter}
+              regionFilter={regionFilter}
+            />
           </Paper>
         )}
         <TableWrapper
           {...tableWrapperProps}
-          linodeViewPreference="list"
           linodesAreGrouped={true}
+          linodeViewPreference="list"
           toggleGroupLinodes={toggleGroupLinodes}
           toggleLinodeView={toggleLinodeView}
         >
@@ -257,13 +280,14 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
               <TableRowEmpty colSpan={12} />
             </TableBody>
           ) : null}
-          {orderedGroupedLinodes.map(([tag, linodes]) => {
+          {orderedGroupedLinodes.map(([tag, linodes], index) => {
             return (
               <React.Fragment key={tag}>
                 <Paginate
                   data={linodes}
                   pageSize={infinitePageSize}
                   pageSizeSetter={setInfinitePageSize}
+                  scrollToRef={tabGroupRefs.current[index]}
                 >
                   {({
                     count,
@@ -286,7 +310,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       pageSize,
                     };
                     return (
-                      <TableBody data-qa-tag-header={tag}>
+                      <TableBody
+                        data-qa-tag-header={tag}
+                        ref={tabGroupRefs.current[index]}
+                      >
                         <StyledTagHeaderRow>
                           <TableCell colSpan={7}>
                             <StyledTagHeader variant="h2">
@@ -299,10 +326,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                           <TableRow>
                             <TableCell colSpan={7} sx={{ padding: 0 }}>
                               <PaginationFooter
-                                sx={{
-                                  borderLeft: 0,
-                                  borderRight: 0,
-                                }}
                                 count={count}
                                 eventCategory={'linodes landing'}
                                 handlePageChange={handlePageChange}
@@ -311,6 +334,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                                 pageSize={pageSize}
                                 // Disabling showAll as it is impacting page performance.
                                 showAll={false}
+                                sx={{
+                                  borderLeft: 0,
+                                  borderRight: 0,
+                                }}
                               />
                             </TableCell>
                           </TableRow>
