@@ -3,7 +3,7 @@ import {
   useGrants,
   useLinodeQuery,
 } from '@linode/queries';
-import { Box, Button } from '@linode/ui';
+import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -27,8 +27,21 @@ import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
-import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './UpgradeInterfaces/constants';
 import { getUnableToUpgradeTooltipText } from './UpgradeInterfaces/utils';
+
+export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
+  <>
+    <Typography>
+      Configuration Profile interfaces from a single profile can be upgraded to
+      Linode Interfaces.
+    </Typography>
+    <Typography mt={2}>
+      After the upgrade, the Linode can only use Linode Interfaces and cannot
+      revert to Configuration Profile interfaces. Use the dry-run feature to
+      review the changes before committing.
+    </Typography>
+  </>
+);
 
 const LinodeConfigs = () => {
   const theme = useTheme();
@@ -128,6 +141,15 @@ const LinodeConfigs = () => {
               buttonType="outlined"
               disabled={isReadOnly || !canUpgradeInterfaces}
               onClick={openUpgradeInterfacesDialog}
+              TooltipProps={{
+                slotProps: {
+                  tooltip: {
+                    sx: {
+                      maxWidth: !canUpgradeInterfaces ? '210px' : '260px',
+                    },
+                  },
+                },
+              }}
               tooltipText={upgradeInterfacesTooltipText}
             >
               Upgrade Interfaces

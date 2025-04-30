@@ -33,7 +33,7 @@ describe('CustomFirewallFields', () => {
 
     expect(
       getByText(
-        'Firewall templates enable you to quickly create firewalls with reasonable firewall rules for Public and VPC interfaces that can be edited.'
+        'Customizable templates are available for both VPC and Public Linode Interfaces. Each comes with pre-configured firewall rules to help you get started.'
       )
     ).toBeVisible();
     expect(getByText('Firewall Template')).toBeVisible();

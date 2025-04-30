@@ -45,6 +45,11 @@ export interface DialogProps extends _DialogProps {
    * Title that will be shown in the dialog.
    */
   title: string;
+  /**
+   * The element to show after the title, if provided
+   * ex: a BetaChip
+   */
+  titleSuffix?: JSX.Element;
 }
 
 /**
@@ -83,6 +88,7 @@ export const Dialog = React.forwardRef(
       open,
       subtitle,
       title,
+      titleSuffix,
       ...rest
     } = props;
 
@@ -101,14 +107,6 @@ export const Dialog = React.forwardRef(
 
     return (
       <StyledDialog
-        onClose={(_, reason) => {
-          if (
-            onClose &&
-            (reason !== 'backdropClick' || enableCloseOnBackdropClick)
-          ) {
-            onClose({}, 'escapeKeyDown');
-          }
-        }}
         aria-labelledby={titleID}
         closeAfterTransition={false}
         data-qa-dialog
@@ -117,6 +115,14 @@ export const Dialog = React.forwardRef(
         fullHeight={fullHeight}
         fullWidth={fullWidth}
         maxWidth={(fullWidth && maxWidth) ?? undefined}
+        onClose={(_, reason) => {
+          if (
+            onClose &&
+            (reason !== 'backdropClick' || enableCloseOnBackdropClick)
+          ) {
+            onClose({}, 'escapeKeyDown');
+          }
+        }}
         open={open}
         ref={ref}
         role="dialog"
@@ -134,15 +140,16 @@ export const Dialog = React.forwardRef(
             onClose={() => onClose?.({}, 'escapeKeyDown')}
             subtitle={subtitle}
             title={lastTitleRef.current}
+            titleSuffix={titleSuffix}
           />
           <DialogContent
+            className={className}
             sx={{
               display: 'flex',
               flexDirection: 'column',
               overflowX: 'hidden',
               paddingBottom: theme.spacing(3),
             }}
-            className={className}
           >
             {isFetching ? (
               <Box display="flex" justifyContent="center" my={4}>
@@ -160,7 +167,7 @@ export const Dialog = React.forwardRef(
         </Box>
       </StyledDialog>
     );
-  }
+  },
 );
 
 const StyledDialog = styled(_Dialog, {

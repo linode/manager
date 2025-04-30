@@ -146,6 +146,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
+  const showAddIPButton =
+    !isLinodeInterfacesEnabled || linode?.interface_generation !== 'linode';
+
   const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
@@ -165,7 +168,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         {isSmallScreen ? (
           <ActionMenu
             actionsList={[
-              ...(!isLinodeInterfacesEnabled
+              ...(showAddIPButton
                 ? [
                     {
                       disabled: isLinodesGrantReadOnly,
@@ -203,7 +206,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               IP Sharing
             </Button>
-            {!isLinodeInterfacesEnabled && (
+            {showAddIPButton && (
               <Button
                 buttonType="primary"
                 disabled={isLinodesGrantReadOnly}

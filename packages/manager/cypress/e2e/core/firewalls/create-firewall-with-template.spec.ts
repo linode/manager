@@ -99,6 +99,7 @@ describe('Can create Firewalls using templates', () => {
         mockGetFirewalls([mockFirewall]);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
+          .scrollIntoView()
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -172,7 +173,7 @@ describe('Can create Firewalls using templates', () => {
         // Confirm that selecting "Public Firewall Template" shows descriptive
         // information and rule details specific to the public Firewall template.
         cy.contains(
-          'Allows for login with SSH, and regular networking control data.'
+          'This rule set is a starting point for Public Linode Interfaces. It allows SSH access and essential networking control traffic.'
         ).should('be.visible');
 
         // Create the Firewall

@@ -101,8 +101,8 @@ export const EditInterfaceForm = (props: Props) => {
         <Stack spacing={2}>
           <Stack spacing={1}>
             <Notice
-              text="Updating the interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
-              variant="warning"
+              text="Except for Firewall changes, updating the interface requires shutting down the Linode. Changes take effect when the Linode is powered on."
+              variant="info"
             />
             {errors.root?.message && (
               <Notice text={errors.root?.message} variant="error" />
