@@ -183,7 +183,7 @@ export const AlertListing = () => {
 
   return (
     <Stack spacing={3}>
-      {(isAlertLimitReached || isMetricLimitReached) && (
+      {(isLoading || isAlertLimitReached || isMetricLimitReached) && (
         <AlertsLimitErrorMessage
           isAlertLimitReached={isAlertLimitReached}
           isMetricLimitReached={isMetricLimitReached}
@@ -266,7 +266,7 @@ export const AlertListing = () => {
           buttonType="primary"
           data-qa-button="create-alert"
           data-qa-buttons="true"
-          disabled={isAlertLimitReached || isMetricLimitReached}
+          disabled={isLoading || isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
             history.push(`${url}/create`);
           }}
@@ -278,7 +278,8 @@ export const AlertListing = () => {
             whiteSpace: 'noWrap',
             width: { lg: '120px', md: '120px', sm: '150px', xs: '150px' },
           }}
-          tooltipText={alertToolTipText}
+          sxEndIcon={isLoading ? { display: 'none' } : undefined}
+          tooltipText={isLoading ? '' : alertToolTipText}
           variant="contained"
         >
           Create Alert
