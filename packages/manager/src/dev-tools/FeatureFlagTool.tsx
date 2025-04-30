@@ -22,6 +22,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
   { flag: 'aclpIntegration', label: 'ACLP Integration' },
+  { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
