@@ -37,6 +37,7 @@ const useStyles = makeStyles()(() => ({
   },
   root: {
     position: 'relative',
+    colorScheme: 'none',
   },
 }));
 
@@ -257,5 +258,3 @@ export const PayPalButton = (props: Props) => {
     </div>
   );
 };
-
-export default PayPalButton;
