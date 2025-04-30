@@ -142,7 +142,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               <Chip
                 {...getTagProps({ index })}
                 data-testid={option.id}
-                deleteIcon={<CloseIcon />}
+                deleteIcon={<CloseIcon data-testid="CloseIcon" />}
                 key={index}
                 label={<RegionChipLabel region={option} />}
                 onDelete={() => handleRemoveOption(option.id)}
