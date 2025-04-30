@@ -178,7 +178,7 @@ describe('getDimensionName method', () => {
     expect(result).toBe('linode-1 | primary-1');
   });
 
-  it('joins multiple metric values with separator including metric_name when there are mumtiple unique metric names across metrics', () => {
+  it('joins multiple metric values with separator including metric_name when there are multiple unique metric names', () => {
     const props = {
       ...baseProps,
       metric: { entity_id: '123', metric_name: 'test', node_id: 'primary-1' },
