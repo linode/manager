@@ -1,11 +1,8 @@
 import { useRegionsQuery } from '@linode/queries';
+import { capitalize, readableBytes } from '@linode/utilities';
 import { object, string } from 'yup';
 
-import {
-  GLOBAL_QUOTA_LABEL,
-  GLOBAL_QUOTA_VALUE,
-  regionSelectGlobalOption,
-} from 'src/components/RegionSelect/constants';
+import { regionSelectGlobalOption } from 'src/components/RegionSelect/constants';
 import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
 
 import type { QuotaIncreaseFormFields } from './QuotasIncreaseForm';
@@ -53,7 +50,6 @@ export const useGetLocationsForQuotaService = (
       isFetchingS3Endpoints,
       regions: null,
       s3Endpoints: [
-        ...[{ label: GLOBAL_QUOTA_LABEL, value: GLOBAL_QUOTA_VALUE }],
         ...(s3Endpoints ?? [])
           .map((s3Endpoint) => {
             if (!s3Endpoint.s3_endpoint) {
@@ -113,18 +109,25 @@ export const getQuotaError = (
 };
 
 interface GetQuotaIncreaseFormDefaultValuesProps {
+  convertedMetrics: {
+    limit: number;
+    metric: string;
+  };
   profile: Profile | undefined;
   quantity: number;
   quota: Quota;
+  selectedService: SelectOption<QuotaType>;
 }
 
 /**
  * Function to get the default values for the quota increase form
  */
 export const getQuotaIncreaseMessage = ({
+  convertedMetrics,
   profile,
   quantity,
   quota,
+  selectedService,
 }: GetQuotaIncreaseFormDefaultValuesProps): QuotaIncreaseFormFields => {
   const regionAppliedLabel = quota.s3_endpoint ? 'Endpoint' : 'Region';
   const regionAppliedValue = quota.s3_endpoint ?? quota.region_applied;
@@ -134,7 +137,7 @@ export const getQuotaIncreaseMessage = ({
       description: '',
       notes: '',
       quantity: '0',
-      summary: 'Increase Quota',
+      summary: `Increase ${selectedService.label} Quota`,
     };
   }
 
@@ -143,22 +146,85 @@ export const getQuotaIncreaseMessage = ({
       profile.email
     }<br>\n**Quota Name**: ${
       quota.quota_name
-    }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
-      quantity > 1 ? 's' : ''
+    }<br>\n**Current Quota**: ${convertedMetrics.limit?.toLocaleString()} ${
+      convertedMetrics.metric
+    }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
+      convertedMetrics.metric
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
     notes: '',
-    quantity: '0',
-    summary: 'Increase Quota',
+    quantity: String(quantity),
+    summary: `Increase ${selectedService.label} Quota`,
   };
 };
 
-export const getQuotaIncreaseFormSchema = object({
-  description: string().required('Description is required.'),
-  notes: string()
-    .optional()
-    .max(255, 'Notes must be less than 255 characters.'),
-  quantity: string()
-    .required('Quantity is required')
-    .matches(/^[1-9]\d*$/, 'Quantity must be a number greater than 0.'),
-  summary: string().required('Summary is required.'),
-});
+interface ConvertResourceMetricProps {
+  initialLimit: number;
+  initialResourceMetric: string;
+  initialUsage: number;
+}
+
+/**
+ * Function to convert the resource metric to a human readable format
+ */
+export const convertResourceMetric = ({
+  initialResourceMetric,
+  initialUsage,
+  initialLimit,
+}: ConvertResourceMetricProps): {
+  convertedLimit: number;
+  convertedResourceMetric: string;
+  convertedUsage: number;
+} => {
+  if (initialResourceMetric === 'byte') {
+    const limitReadable = readableBytes(initialLimit);
+
+    return {
+      convertedUsage: readableBytes(initialUsage, {
+        unit: limitReadable.unit,
+      }).value,
+      convertedResourceMetric: capitalize(limitReadable.unit),
+      convertedLimit: limitReadable.value,
+    };
+  }
+
+  return {
+    convertedUsage: initialUsage,
+    convertedLimit: initialLimit,
+    convertedResourceMetric: capitalize(initialResourceMetric),
+  };
+};
+
+/**
+ * Function to pluralize the resource metric
+ * If the unit is 'byte', we need to return the unit without an 's' (ex: 'GB', 'MB', 'TB')
+ * Otherwise, we need to return the unit with an 's' (ex: 'Buckets', 'Objects')
+ *
+ * Note: the value should be the raw values in bytes, not an existing conversion
+ */
+export const pluralizeMetric = (value: number, unit: string) => {
+  if (unit !== 'byte') {
+    return value > 1 ? `${unit}s` : unit;
+  }
+
+  return unit;
+};
+
+export const getQuotaIncreaseFormSchema = (currentLimit: number) =>
+  object({
+    description: string().required('Description is required.'),
+    notes: string()
+      .optional()
+      .max(255, 'Notes must be less than 255 characters.'),
+    quantity: string()
+      .required('Quantity is required')
+      .test(
+        'is-greater-than-limit',
+        `Quantity must be greater than the current quota of ${currentLimit.toLocaleString()}.`,
+        (value) => {
+          const num = parseFloat(value);
+          return !isNaN(num) && num > currentLimit;
+        }
+      ),
+    // .matches(/^\d*\.?\d*$/, 'Must be a valid number'), // allows decimals
+    summary: string().required('Summary is required.'),
+  });
