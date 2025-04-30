@@ -128,9 +128,14 @@ body.searchOverlay #main-content {
   margin-bottom: 24px;
 }
 
-.content-wrapper > .landing-header-tabs {
+.content-wrapper > .landing-header-mb-4 {
   margin-top: 24px;
   margin-bottom: 4px;
+}
+
+.content-wrapper > .landing-header-mb-16 {
+  margin-top: 24px;
+  margin-bottom: 16px;
 }
 
 .visually-hidden,

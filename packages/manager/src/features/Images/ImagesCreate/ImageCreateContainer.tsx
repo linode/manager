@@ -7,9 +7,10 @@ import { ImageCreate } from './ImageCreate';
 
 export const ImagesCreateContainer = () => {
   return (
-    <Grid container>
+    <>
       <LandingHeader
         breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}
+        className="landing-header-mb-4"
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         removeCrumbX={2}
@@ -18,6 +19,6 @@ export const ImagesCreateContainer = () => {
       <Grid className="p0" size={12}>
         <ImageCreate />
       </Grid>
-    </Grid>
+    </>
   );
 };

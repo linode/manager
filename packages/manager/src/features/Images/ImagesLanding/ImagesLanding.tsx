@@ -450,6 +450,7 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
+        className="landing-header-mb-16"
         disabledCreateButton={isCreateImageRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
@@ -459,7 +460,7 @@ export const ImagesLanding = () => {
         title="Images"
       />
       <TextField
-        containerProps={{ mb: 2 }}
+        containerProps={{ mb: 3 }}
         errorText={searchParseError?.message}
         hideLabel
         InputProps={{
