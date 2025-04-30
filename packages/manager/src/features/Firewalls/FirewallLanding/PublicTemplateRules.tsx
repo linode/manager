@@ -1,24 +1,30 @@
 import { Box, List, ListItem, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { STRENGTHEN_TEMPLATE_RULES } from './constants';
-
 import type { Theme } from '@mui/material';
+
+export const STRENGTHEN_TEMPLATE_RULES = (
+  <Typography>
+    For improved security, narrow the allowed IPv4 and IPv6 ranges in the{' '}
+    <strong>Allow Inbound SSH Sources</strong> rule.
+  </Typography>
+);
 
 export const PublicTemplateRules = () => {
   return (
     <>
-      <Stack marginTop={3} spacing={2}>
+      <Stack marginTop={2} spacing={2}>
         <Typography>
-          Allows for login with SSH, and regular networking control data.
+          This rule set is a starting point for Public Linode Interfaces. It
+          allows SSH access and essential networking control traffic.
         </Typography>
-        <Typography>{STRENGTHEN_TEMPLATE_RULES}</Typography>
+        {STRENGTHEN_TEMPLATE_RULES}
         <Box
+          data-testid="public-template-info"
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
             padding: theme.spacingFunction(16),
           })}
-          data-testid="public-template-info"
         >
           {sharedTemplateRules}
         </Box>

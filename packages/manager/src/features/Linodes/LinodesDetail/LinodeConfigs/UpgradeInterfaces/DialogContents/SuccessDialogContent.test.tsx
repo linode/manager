@@ -4,7 +4,6 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
 import { SuccessDialogContent } from './SuccessDialogContent';
 
 import type {
@@ -27,15 +26,13 @@ const props = {
 
 describe('SuccessDialogContent', () => {
   it('can render the success content for a dry run', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <SuccessDialogContent {...props} />
-    );
+    const { getByText } = renderWithTheme(<SuccessDialogContent {...props} />);
 
-    getByText('Upgrade Interfaces');
-    getByText(SUCCESS_DRY_RUN_COPY);
+    getByText('Return to Overview');
+    getByText('Continue to Upgrade');
+    getByText('Dry Run Summary');
+    getByText(/Dry run successful/);
     getByText('Cancel');
-
-    expect(queryByText('Upgrade Summary')).not.toBeInTheDocument();
   });
 
   it('can render the success content for the actual upgrade', () => {
@@ -49,7 +46,7 @@ describe('SuccessDialogContent', () => {
       />
     );
 
-    getByText(SUCCESS_UPGRADE_COPY);
+    getByText(/Upgrade successful/);
     getByText('Close');
     getByText('Upgrade Summary');
     getByText('Interface Meta Info: Interface #1');

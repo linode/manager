@@ -21,22 +21,22 @@ export const InterfaceDetailsDrawer = (props: Props) => {
   const { interfaceId: id, linodeId, onClose, open } = props;
   const interfaceId = id ?? interfaceIdFromLocation;
 
-  const { data: linodeInterface, error, isLoading } = useLinodeInterfaceQuery(
-    linodeId,
-    interfaceId,
-    open
-  );
+  const {
+    data: linodeInterface,
+    error,
+    isLoading,
+  } = useLinodeInterfaceQuery(linodeId, interfaceId, open);
 
   return (
     <Drawer
-      title={`Network Interface Details${
-        interfaceId ? `: #${interfaceId}` : ''
-      }`}
-      NotFoundComponent={NotFound}
       error={error?.[0].reason}
       isFetching={isLoading}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
+      title={`Network Interface Details${
+        interfaceId ? ` (ID: ${interfaceId})` : ''
+      }`}
     >
       {linodeInterface && <InterfaceDetailsContent {...linodeInterface} />}
       <Box marginTop={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
