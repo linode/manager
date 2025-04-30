@@ -20,6 +20,10 @@ export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   open: boolean;
 }
 
+/**
+ * @deprecated
+ * Use the ConfirmationDialog component instead.
+ */
 export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
   const { entity, error, label, loading, onClose, onDelete, open, ...rest } =

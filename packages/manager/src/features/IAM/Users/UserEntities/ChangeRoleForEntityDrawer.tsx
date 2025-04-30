@@ -25,11 +25,8 @@ import {
   getRoleByName,
 } from '../../Shared/utilities';
 
-import type {
-  DrawerModes,
-  EntitiesRole,
-  ExtendedEntityRole,
-} from '../../Shared/utilities';
+import type { DrawerModes, EntitiesRole } from '../../Shared/types';
+import type { ExtendedEntityRole } from '../../Shared/utilities';
 
 interface Props {
   mode: DrawerModes;

@@ -1,4 +1,4 @@
-import { Button, Typography } from '@linode/ui';
+import { Button, List, ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -89,6 +89,34 @@ export const InfoWithLongTextAndMarkup: StoryObj = {
         This is a dismissible informational notice with a title.
       </Typography>
       <Typography>This notice contains long text that should wrap.</Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListTag: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-dismissible-banner"
+      variant="warning"
+    >
+      <ul>
+        <li>This is a dismissible warning with unordered list bullets</li>
+        <li>This is a dismissible warning with unordered list bullets</li>
+      </ul>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListItem: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-item-dismissible-banner"
+      variant="warning"
+    >
+      <List>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+      </List>
     </DismissibleBanner>
   ),
 };
