@@ -16,7 +16,7 @@ export const AclpMetricsPreferenceToggle = () => {
     return (
       <Skeleton
         data-testid="metrics-preference-skeleton"
-        height="85px"
+        height="90px"
         sx={(theme) => ({
           marginTop: `-${theme.tokens.spacing.S20}`,
         })}
