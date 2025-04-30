@@ -2,7 +2,6 @@
  * @file Cypress intercepts and mocks for Cloud Manager Object Storage operations.
  */
 
-import { sequentialStub } from 'support/stubs/sequential-stub';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
@@ -31,6 +30,6 @@ export const mockGetPrices = (
   return cy.intercept(
     'GET',
     apiMatcher('network-transfer/prices*'),
-    sequentialStub([paginateResponse(priceTypes), paginateResponse([])])
+    paginateResponse(priceTypes)
   );
 };

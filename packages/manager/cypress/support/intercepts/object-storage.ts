@@ -71,7 +71,7 @@ export const mockGetObjectStorageTypes = (
   return cy.intercept(
     'GET',
     apiMatcher('object-storage/types*'),
-    sequentialStub([paginateResponse(priceTypes), paginateResponse([])])
+    paginateResponse(priceTypes)
   );
 };
 
