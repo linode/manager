@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import ZeroState from 'src/assets/icons/zero-state.svg';
+
 import { Box } from '../Box';
 import { Typography } from '../Typography';
 
@@ -22,9 +24,12 @@ export const NotFound = (props: Props) => {
         alignItems: 'center',
         justifyContent: alignTop ? 'flex-start' : 'center',
         height: '100%',
+        p: 8,
       }}
     >
-      <Typography>Not Found</Typography>
+      <ZeroState />
+      <Typography variant="h2">Not Found</Typography>
+      <Typography sx={{ mt: 1 }}>Something went wrong!</Typography>
     </Box>
   );
 };
