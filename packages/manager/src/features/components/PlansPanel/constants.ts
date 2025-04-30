@@ -8,8 +8,6 @@ export const PLAN_IS_SMALLER_THAN_USAGE_COPY =
   'The usage storage in this plan is smaller than your current usage.';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
-export const PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY =
-  'Currently unavailable for the selected region.';
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
 export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =

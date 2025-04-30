@@ -80,9 +80,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     'Cloning is currently not supported for distributed region instances.';
 
   const linodeMTCTTResizingTooltipText =
-    'Resizing is not supported for custom plan instances.';
+    'Resizing is not supported for this plan type.';
 
-  const isCustomMTCLinode = Boolean(linodeType && isMTCTTPlan(linodeType));
+  const isMTCTTLinode = Boolean(linodeType && isMTCTTPlan(linodeType));
 
   const actionConfigs: ActionConfig[] = [
     {
@@ -146,12 +146,12 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance || isCustomMTCLinode,
+      disabled: isLinodeReadOnly || hasHostMaintenance || isMTCTTLinode,
       isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenResizeDialog,
       title: 'Resize',
       tooltipAction: 'resize',
-      tooltipText: isCustomMTCLinode
+      tooltipText: isMTCTTLinode
         ? linodeMTCTTResizingTooltipText
         : maintenanceTooltipText,
     },

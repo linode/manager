@@ -60,7 +60,7 @@ export const KubernetesPlanSelection = (
     planHasLimitedAvailability,
     planIsDisabled512Gb,
     planIsTooSmallForAPL,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCTTDisabledGroup,
   } = plan;
 
   const rowIsDisabled =
@@ -68,7 +68,7 @@ export const KubernetesPlanSelection = (
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
     planIsTooSmallForAPL ||
-    planIsMTCTTAndUnavailableInSelectedRegion;
+    planBelongsToMTCTTDisabledGroup;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
@@ -82,7 +82,7 @@ export const KubernetesPlanSelection = (
     // So far, planIsTooSmall only applies to DbaaS plans (resize)
     planIsTooSmall: false,
     planIsTooSmallForAPL,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCTTDisabledGroup,
     wholePanelIsDisabled,
   });
 
@@ -97,7 +97,7 @@ export const KubernetesPlanSelection = (
       planIsDisabled512Gb ||
       planIsTooSmallForAPL ||
       planHasLimitedAvailability ||
-      planIsMTCTTAndUnavailableInSelectedRegion);
+      planBelongsToMTCTTDisabledGroup);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [

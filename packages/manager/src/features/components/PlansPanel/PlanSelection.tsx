@@ -59,7 +59,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCTTDisabledGroup,
     planIsSmallerThanUsage,
     planIsTooSmall,
   } = plan;
@@ -89,14 +89,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
     planHasLimitedAvailability ||
-    planIsMTCTTAndUnavailableInSelectedRegion ||
+    planBelongsToMTCTTDisabledGroup ||
     wholePanelIsDisabled;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCTTDisabledGroup,
     planIsSmallerThanUsage,
     planIsTooSmall,
     wholePanelIsDisabled,
@@ -114,7 +114,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planHasLimitedAvailability ||
       planIsTooSmall ||
       planIsSmallerThanUsage ||
-      planIsMTCTTAndUnavailableInSelectedRegion);
+      planBelongsToMTCTTDisabledGroup);
 
   const isDistributedPlan =
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');

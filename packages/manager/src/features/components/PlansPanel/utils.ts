@@ -7,7 +7,6 @@ import {
   DEDICATED_512_GB_PLAN,
   LIMITED_AVAILABILITY_COPY,
   MTC_TT,
-  PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY,
   PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
   PLAN_IS_SMALLER_THAN_USAGE_COPY,
   PLAN_IS_TOO_SMALL_FOR_APL_COPY,
@@ -324,6 +323,7 @@ interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   isAPLEnabled?: boolean;
   isLegacyDatabase?: boolean;
+  isResize?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -347,6 +347,7 @@ export const extractPlansInformation = ({
   disabledSmallerPlans,
   isAPLEnabled,
   isLegacyDatabase,
+  isResize,
   plans,
   regionAvailabilities,
   selectedRegionId,
@@ -374,6 +375,16 @@ export const extractPlansInformation = ({
           )
         );
 
+      // Resizing of MTC_TT plan instances are not supported from any regions.
+      // Some Resizing scenarios:
+      // - Resizing existing MTC linodes is not supported at all (Disabled at the `Resize` Action Menu as well).
+      // - Resizing existing linodes (from non-MTC regions) to this MTC_TT plan is not supported.
+      // - Resizing existing linodes (from MTC regions) to this MTC_TT plan is not supported.
+      const planIsMTCTTWithResizing = isCustomMTCPlan && isResize;
+
+      const planBelongsToMTCTTDisabledGroup =
+        planIsMTCTTAndUnavailableInSelectedRegion || planIsMTCTTWithResizing;
+
       const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
         regionAvailabilities,
@@ -400,7 +411,7 @@ export const extractPlansInformation = ({
         planBelongsToDisabledClass,
         planHasLimitedAvailability,
         planIsDisabled512Gb,
-        planIsMTCTTAndUnavailableInSelectedRegion,
+        planBelongsToMTCTTDisabledGroup,
         planIsSmallerThanUsage,
         planIsTooSmall,
         planIsTooSmallForAPL,
@@ -413,7 +424,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass,
       planHasLimitedAvailability,
       planIsDisabled512Gb,
-      planIsMTCTTAndUnavailableInSelectedRegion,
+      planBelongsToMTCTTDisabledGroup,
       planIsSmallerThanUsage,
       planIsTooSmall,
       planIsTooSmallForAPL,
@@ -427,7 +438,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass ||
       planHasLimitedAvailability ||
       planIsDisabled512Gb ||
-      planIsMTCTTAndUnavailableInSelectedRegion ||
+      planBelongsToMTCTTDisabledGroup ||
       planIsSmallerThanUsage ||
       planIsTooSmall ||
       planIsTooSmallForAPL
@@ -457,16 +468,16 @@ export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
   planHasLimitedAvailability,
   planIsDisabled512Gb,
-  planIsMTCTTAndUnavailableInSelectedRegion,
+  planBelongsToMTCTTDisabledGroup,
   planIsSmallerThanUsage,
   planIsTooSmall,
   planIsTooSmallForAPL,
   wholePanelIsDisabled,
 }: {
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
+  planBelongsToMTCTTDisabledGroup?: DisabledTooltipReasons['planBelongsToMTCTTDisabledGroup'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
-  planIsMTCTTAndUnavailableInSelectedRegion?: DisabledTooltipReasons['planIsMTCTTAndUnavailableInSelectedRegion'];
   planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
@@ -474,10 +485,6 @@ export const getDisabledPlanReasonCopy = ({
 }): string => {
   if (wholePanelIsDisabled) {
     return PLAN_NOT_AVAILABLE_IN_REGION_COPY;
-  }
-
-  if (planIsMTCTTAndUnavailableInSelectedRegion) {
-    return PLAN_CURRENTLY_NOT_AVAILABLE_IN_REGION_COPY;
   }
 
   if (planBelongsToDisabledClass) {
@@ -494,7 +501,11 @@ export const getDisabledPlanReasonCopy = ({
     return PLAN_IS_TOO_SMALL_FOR_APL_COPY;
   }
 
-  if (planHasLimitedAvailability || planIsDisabled512Gb) {
+  if (
+    planHasLimitedAvailability ||
+    planIsDisabled512Gb ||
+    planBelongsToMTCTTDisabledGroup
+  ) {
     return LIMITED_AVAILABILITY_COPY;
   }
 
