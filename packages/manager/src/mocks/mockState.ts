@@ -28,6 +28,8 @@ export const emptyStore: MockState = {
   firewallDevices: [],
   firewalls: [],
   ipAddresses: [],
+  kubernetesClusters: [],
+  kubernetesNodePools: [],
   linodeConfigs: [],
   linodeInterfaces: [],
   linodes: [],
