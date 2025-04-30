@@ -1,5 +1,5 @@
+import { CloseIcon } from '@linode/ui';
 import { getRoot } from '@linode/utilities';
-import CloseIcon from '@mui/icons-material/Close';
 import Handyman from '@mui/icons-material/Handyman';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled } from '@mui/material';

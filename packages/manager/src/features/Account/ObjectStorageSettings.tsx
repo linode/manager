@@ -1,10 +1,10 @@
 import { useAccountSettings, useProfile } from '@linode/queries';
 import {
-  Accordion,
   Box,
   Button,
   CircleProgress,
   Notice,
+  Paper,
   Stack,
   Typography,
 } from '@linode/ui';
@@ -28,9 +28,8 @@ export const ObjectStorageSettings = () => {
 
   const username = profile?.username;
 
-  const [isCancelDialogOpen, setIsCancelDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCancelDialogOpen, setIsCancelDialogOpen] =
+    React.useState<boolean>(false);
 
   const handleCloseCancelDialog = () => {
     setIsCancelDialogOpen(false);
@@ -52,9 +51,10 @@ export const ObjectStorageSettings = () => {
 
   return (
     <>
-      <Accordion defaultExpanded heading="Object Storage">
+      <Paper data-testid="object-storage">
+        <Typography variant="h2">Object Storage</Typography>
         {accountSettings?.object_storage === 'active' ? (
-          <Stack spacing={2}>
+          <Stack mt={1} spacing={2}>
             <Typography variant="body1">
               Object Storage is enabled on your account. Upon cancellation, all
               Object Storage Access Keys will be revoked, all buckets will be
@@ -83,7 +83,7 @@ export const ObjectStorageSettings = () => {
             .
           </Typography>
         )}
-      </Accordion>
+      </Paper>
       <TypeToConfirmDialog
         entity={{
           action: 'cancellation',

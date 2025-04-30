@@ -439,6 +439,8 @@ export const lightTheme: ThemeOptions = {
               backgroundColor: primaryColors.main,
               color: primaryColors.white,
             },
+            width: 'auto',
+            height: 'auto',
             borderRadius: '50%',
             color: Content.Text.Primary.Default,
             fontSize: '16px',
@@ -1147,7 +1149,11 @@ export const lightTheme: ThemeOptions = {
         outlined: {
           border: `1px solid ${Color.Neutrals[30]}`,
         },
-        root: {},
+        root: {
+          '& .notice': {
+            width: 'fit-content',
+          },
+        },
         rounded: {
           borderRadius: 0,
         },
