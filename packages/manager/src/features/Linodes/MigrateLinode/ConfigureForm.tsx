@@ -149,36 +149,25 @@ export const ConfigureForm = React.memo((props: Props) => {
   const linodeIsInDistributedRegion =
     currentActualRegion?.site_type === 'distributed';
 
-  const _regions =
+  const filteredRegions =
     regions?.filter((eachRegion) => {
+      // Ignore current region.
       if (eachRegion.id === currentRegion) {
         return false;
       }
 
-      // For non-MTC_TT Linodes, the migration region dropdown should display all regions except for MTC availability regions.
-      // - Exclude only MTC availability regions.
-      if (
-        flags.mtctt2025 &&
-        !isMTCTTLinode &&
-        MTC_TT['availability_regions'].includes(
+      // If mtctt2025 flag is enabled, apply MTC region filtering.
+      if (flags.mtctt2025) {
+        const isMtcRegion = MTC_TT['availability_regions'].includes(
           eachRegion.id as (typeof MTC_TT)['availability_regions'][number]
-        )
-      ) {
-        return false;
+        );
+
+        // For MTC_TT Linodes, only show MTC regions.
+        // For non-MTC_TT Linodes, exclude MTC regions.
+        return isMTCTTLinode ? isMtcRegion : !isMtcRegion;
       }
 
-      // For MTC_TT Linodes, the migration region dropdown should only display MTC availability regions.
-      // - All other regions should be excluded from selection.
-      if (
-        flags.mtctt2025 &&
-        isMTCTTLinode &&
-        !MTC_TT['availability_regions'].includes(
-          eachRegion.id as (typeof MTC_TT)['availability_regions'][number]
-        )
-      ) {
-        return false;
-      }
-
+      // If flag is disabled, show all regions.
       return true;
     }) ?? [];
 
@@ -213,7 +202,7 @@ export const ConfigureForm = React.memo((props: Props) => {
                 ? 'distributed'
                 : 'core'
             }
-            regions={_regions}
+            regions={filteredRegions}
             textFieldProps={{
               helperText,
             }}
