@@ -70,7 +70,7 @@ export const mockGetObjectStorageTypes = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher('object-storage/types?page_size=500'),
+    apiMatcher('object-storage/types*'),
     sequentialStub([paginateResponse(priceTypes), paginateResponse([])])
   );
 };

@@ -30,7 +30,7 @@ export const mockGetPrices = (
    */
   return cy.intercept(
     'GET',
-    apiMatcher('network-transfer/prices?page_size=500'),
+    apiMatcher('network-transfer/prices*'),
     sequentialStub([paginateResponse(priceTypes), paginateResponse([])])
   );
 };
