@@ -1,10 +1,10 @@
+import { Notice, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -13,6 +13,7 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import {
   useDeleteAlertDefinitionMutation,
   useEditAlertDefinition,
@@ -162,7 +163,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         .catch((deleteError: APIError[]) => {
           const errorResponse = getAPIErrorOrDefault(
             deleteError,
-            'Alert deletion failed.'
+            'Failed to delete alert. Please try again.'
           );
           enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
         })
@@ -340,16 +341,30 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
           isEnabled ? 'disable' : 'enable'
         } this alert definition?`}
       />
-      <DeletionDialog
-        entity="Alert"
-        label={selectedAlert.label}
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: selectedAlert.label,
+          primaryBtnText: 'Delete',
+          type: 'Alert',
+        }}
+        expand
+        label="Alert Label"
         loading={deleteState.isDeleting}
+        onClick={() => handleDeleteConfirm(selectedAlert)}
         onClose={() =>
           setDeleteState((prev) => ({ ...prev, isDialogOpen: false }))
         }
-        onDelete={() => handleDeleteConfirm(selectedAlert)}
         open={deleteState.isDialogOpen}
-      />
+        title={`Delete ${selectedAlert.label ?? ''}? `}
+      >
+        <Notice variant="warning">
+          <Typography>
+            <strong>Warning:</strong> Deleting this Alert is permanent and
+            can&lsquo;t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
     </>
   );
 });
