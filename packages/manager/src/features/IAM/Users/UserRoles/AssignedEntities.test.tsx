@@ -6,12 +6,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedEntities } from './AssignedEntities';
 
-import type { ExtendedRoleMap } from '../../Shared/types';
+import type { ExtendedRoleView } from '../../Shared/types';
 
 const handleClick = vi.fn();
 const handleRemove = vi.fn();
 
-const mockRole: ExtendedRoleMap = {
+const mockRole: ExtendedRoleView = {
   access: 'entity_access',
   description: 'linode viewer',
   entity_type: 'linode',

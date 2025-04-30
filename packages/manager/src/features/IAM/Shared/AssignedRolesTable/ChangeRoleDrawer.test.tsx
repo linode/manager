@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -33,7 +33,7 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
-const mockRole: ExtendedRoleMap = {
+const mockRole: ExtendedRoleView = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
