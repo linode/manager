@@ -117,7 +117,6 @@ export const deleteEntityFromAlert = (
     setMethod('DELETE')
   );
 
-
 export const deleteAlertDefinition = (serviceType: string, alertId: number) =>
   Request<Alert>(
     setURL(

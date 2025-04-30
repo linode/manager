@@ -214,5 +214,5 @@ describe('Alert List Table test', () => {
     expect(screen.getByText('tag1')).toBeVisible();
     expect(screen.getByText('tag2')).toBeVisible();
   });
-  //TODO: Add tests for the delete alert functionality once API's are available
+  // TODO: Add tests for the delete alert functionality once API's are available
 });

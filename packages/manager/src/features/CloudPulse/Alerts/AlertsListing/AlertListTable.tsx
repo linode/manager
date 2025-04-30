@@ -1,7 +1,7 @@
 import {
-  type APIError,
   type Alert,
   type AlertServiceType,
+  type APIError,
   type DeleteAlertPayload,
 } from '@linode/api-v4';
 import { Notice, Typography } from '@linode/ui';
