@@ -4,7 +4,6 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
 import { SuccessDialogContent } from './SuccessDialogContent';
 
 import type {
@@ -32,7 +31,7 @@ describe('SuccessDialogContent', () => {
     getByText('Return to Overview');
     getByText('Continue to Upgrade');
     getByText('Dry Run Summary');
-    getByText(SUCCESS_DRY_RUN_COPY);
+    getByText(/Dry run successful/);
     getByText('Cancel');
   });
 
@@ -47,7 +46,7 @@ describe('SuccessDialogContent', () => {
       />
     );
 
-    getByText(SUCCESS_UPGRADE_COPY);
+    getByText(/Upgrade successful/);
     getByText('Close');
     getByText('Upgrade Summary');
     getByText('Interface Meta Info: Interface #1');

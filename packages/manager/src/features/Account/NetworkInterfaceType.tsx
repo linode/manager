@@ -143,7 +143,7 @@ const optionsTooltipText = (
     </Stack>
     <Stack>
       <Typography>
-        <strong>Linode Interfaces only</strong>
+        <strong>Linode Interfaces Only</strong>
       </Typography>
       <Typography>
         Previously created Linodes using Configuration Profile Interfaces will
@@ -165,7 +165,7 @@ const optionsTooltipText = (
     </Stack>
     <Stack>
       <Typography>
-        <strong>Configuration Profile Interfaces only</strong>
+        <strong>Configuration Profile Interfaces Only</strong>
       </Typography>
       <Typography>
         Previously created Linodes using Linode Interfaces will continue to

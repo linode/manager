@@ -2,7 +2,6 @@ import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
 import { initialState } from '../UpgradeInterfacesDialog';
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
@@ -33,7 +32,22 @@ export const SuccessDialogContent = (
     <Stack gap={2}>
       <Notice variant="success">
         <Typography>
-          {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
+          {isDryRun ? (
+            <>
+              <strong>Dry run successful</strong>
+              <br />
+              No issues were found. You can proceed with upgrading to Linode
+              Interfaces.
+            </>
+          ) : (
+            <>
+              <strong>Upgrade successful</strong>
+              <br />
+              Your Linode now uses Linode Interfaces. Existing interfaces were
+              migrated, firewalls reassigned, and changes are visible in the{' '}
+              <strong>Network</strong> tab.
+            </>
+          )}
         </Typography>
       </Notice>
       {linodeInterfaces.length > 0 && (

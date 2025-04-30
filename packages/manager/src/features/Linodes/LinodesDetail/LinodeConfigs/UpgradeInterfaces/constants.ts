@@ -2,11 +2,7 @@ export const CONFIG_SELECT_SHARED_COPY =
   'This Linode has multiple configuration profiles. Choose one to continue.';
 
 export const UPGRADE_INTERFACES_WARNING =
-  'Upgrading to Linode Interfaces is a one-way action. After the upgrade, legacy Configuration Profile Interfaces are no longer supported. As a result, this Linode will no longer be compatible with products that could be using private IPs, such as NodeBalancers.';
-
-export const SUCCESS_DRY_RUN_COPY =
-  'The configuration dry run was successful and no issues were found. You can continue with upgrading interface.';
-export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';
+  'After upgrading, the Linode will use only Linode Interfaces and cannot revert back to Configuration Profile Interfaces. Private IPv4 addresses are not supported on public Linode Interfaces. Services depending on a private IPv4 will no longer function.';
 
 export const ERROR_DRY_RUN_COPY =
   'The dry run found the following issues. After correcting them, perform another dry run.';

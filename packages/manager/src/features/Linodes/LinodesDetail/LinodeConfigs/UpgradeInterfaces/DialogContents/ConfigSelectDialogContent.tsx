@@ -43,7 +43,7 @@ export const ConfigSelectDialogContent = (
         {CONFIG_SELECT_SHARED_COPY}{' '}
         {isDryRun && (
           <>
-            The <strong>Upgrade Dry Run</strong> will display any issues.
+            <strong>Perform Dry Run</strong> will display any issues.
           </>
         )}
       </Typography>
@@ -53,7 +53,7 @@ export const ConfigSelectDialogContent = (
           sx={{ marginTop: 2 }}
           variant="warning"
         >
-          <strong>This Upgrade Is Irreversible!</strong>
+          <strong>Important upgrade notice</strong><br />
           {UPGRADE_INTERFACES_WARNING}
         </Notice>
       )}

@@ -46,9 +46,10 @@ export interface DialogProps extends _DialogProps {
    */
   title: string;
   /**
-   * The chip to show in the title, if provided
+   * The element to show after the title, if provided
+   * ex: a BetaChip
    */
-  titleChip?: JSX.Element;
+  titleSuffix?: JSX.Element;
 }
 
 /**
@@ -87,7 +88,7 @@ export const Dialog = React.forwardRef(
       open,
       subtitle,
       title,
-      titleChip,
+      titleSuffix,
       ...rest
     } = props;
 
@@ -139,7 +140,7 @@ export const Dialog = React.forwardRef(
             onClose={() => onClose?.({}, 'escapeKeyDown')}
             subtitle={subtitle}
             title={lastTitleRef.current}
-            titleChip={titleChip}
+            titleSuffix={titleSuffix}
           />
           <DialogContent
             className={className}

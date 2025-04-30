@@ -182,8 +182,9 @@ export const InterfaceSettingsForm = (props: Props) => {
             Linode&rsquo;s internal network configuration files during each
             system boot.{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
-              Learn more.
+              Learn more
             </Link>
+            .
           </Typography>
           <Controller
             control={form.control}
@@ -192,7 +193,7 @@ export const InterfaceSettingsForm = (props: Props) => {
               <FormControlLabel
                 checked={field.value ?? false}
                 control={<Toggle />}
-                label="Automatically deposit a networking configuration"
+                label="Enable Network Helper"
                 onChange={field.onChange}
                 sx={{ ml: '-10px !important' }}
               />

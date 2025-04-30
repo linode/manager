@@ -13,13 +13,21 @@ export interface DialogTitleProps {
   subtitle?: string;
   sx?: SxProps<Theme>;
   title: string;
-  titleChip?: JSX.Element;
+  titleSuffix?: JSX.Element;
 }
 
 const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, id, isFetching, onClose, subtitle, sx, title, titleChip } =
-    props;
+  const {
+    className,
+    id,
+    isFetching,
+    onClose,
+    subtitle,
+    sx,
+    title,
+    titleSuffix,
+  } = props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -52,7 +60,7 @@ const DialogTitle = (props: DialogTitleProps) => {
       >
         <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
           {!isFetching && title}
-          {titleChip}
+          {titleSuffix}
         </Box>
         {onClose !== null && (
           <IconButton

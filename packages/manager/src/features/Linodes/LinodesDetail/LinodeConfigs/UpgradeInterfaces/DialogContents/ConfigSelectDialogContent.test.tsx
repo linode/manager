@@ -26,11 +26,11 @@ const props = {
 
 describe('ConfigSelectDialogContent', () => {
   it('can render the config select content for a dry run', () => {
-    const { getByText } = renderWithTheme(
+    const { getAllByText, getByText } = renderWithTheme(
       <ConfigSelectDialogContent {...props} />
     );
 
-    getByText('Perform Dry Run');
+    getAllByText('Perform Dry Run');
     getByText(
       /This Linode has multiple configuration profiles. Choose one to continue./
     );

@@ -47,7 +47,7 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
       onClose={closeAndResetDialog}
       open={open}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
-      titleChip={<BetaChip />}
+      titleSuffix={<BetaChip />}
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />
