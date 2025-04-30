@@ -800,11 +800,7 @@ export const darkTheme: ThemeOptions = {
       },
     },
     MuiSelect: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-        },
-      },
+      styleOverrides: {},
     },
     MuiSnackbarContent: {
       styleOverrides: {

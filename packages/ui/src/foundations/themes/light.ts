@@ -1246,7 +1246,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         icon: {
-          color: `${Color.Neutrals[50]} !important`,
+          color: `${Select.Disabled.Icon} !important`,
           height: 28,
           marginRight: 4,
           marginTop: -2,
