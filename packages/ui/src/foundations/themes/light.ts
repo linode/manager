@@ -383,11 +383,9 @@ export const lightTheme: ThemeOptions = {
           marginTop: 4,
         },
         listbox: {
-          backgroundColor: bg.white,
+          backgroundColor: Select.Default.Background,
           padding: '4px',
           border: 'none',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
         },
         loading: {
           border: `1px solid ${primaryColors.main}`,

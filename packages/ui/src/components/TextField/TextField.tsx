@@ -294,7 +294,7 @@ export const TextField = (props: TextFieldProps) => {
       >
         <InputLabel
           sx={{
-            margin: 0,
+            marginBottom: 0,
             transform: 'none',
           }}
           data-qa-textfield-label={label}

@@ -250,17 +250,15 @@ export const darkTheme: ThemeOptions = {
           marginTop: 4,
         },
         listbox: {
-          backgroundColor: customDarkModeOptions.bg.white,
+          backgroundColor: Select.Default.Background,
           padding: '4px',
           border: 'none',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
         },
         loading: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
         },
         noOptions: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
         },
         option: {
           '&:hover': {
@@ -273,7 +271,7 @@ export const darkTheme: ThemeOptions = {
         },
         tag: {
           '.MuiChip-deleteIcon': {
-            color: Content.Text.Primary.Default,
+            color: Select.Default.Icon,
             width: 'auto',
             height: 'auto',
           },
