@@ -25,7 +25,7 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { ErrorBoundaryFallback } from 'src/features/ErrorBoundary/ErrorBoundaryFallback';
 import { Footer } from 'src/features/Footer';
-
+import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
   notificationCenterContext,
   useNotificationContext,
@@ -360,6 +360,7 @@ export const MainContent = () => {
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <div className="content-wrapper">
+                          <GlobalNotifications />
                           <React.Suspense fallback={<SuspenseLoader />}>
                             <ErrorBoundaryFallback>
                               <Switch>

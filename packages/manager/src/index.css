@@ -125,6 +125,7 @@ body.searchOverlay #main-content {
 
 .content-wrapper > .landing-header {
   margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 .visually-hidden,
