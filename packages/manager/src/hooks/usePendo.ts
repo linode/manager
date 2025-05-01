@@ -4,9 +4,9 @@ import React from 'react';
 
 import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
 import {
-  ONE_TRUST_COOKIE_CATEGORIES,
   checkOptanonConsent,
   getCookie,
+  ONE_TRUST_COOKIE_CATEGORIES,
 } from 'src/utilities/analytics/utils';
 
 declare global {

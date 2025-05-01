@@ -1,14 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import Lock from 'src/assets/icons/lock.svg';
 import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
-import Lock from 'src/assets/icons/lock.svg';
-import { Stack, Typography } from '@linode/ui';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
@@ -31,18 +31,13 @@ export const EditImageDrawer = (props: Props) => {
     tags: image?.tags,
   };
 
-  const {
-    control,
-    formState,
-    handleSubmit,
-    reset,
-    setError,
-  } = useForm<UpdateImagePayload>({
-    defaultValues,
-    mode: 'onBlur',
-    resolver: yupResolver(updateImageSchema),
-    values: defaultValues,
-  });
+  const { control, formState, handleSubmit, reset, setError } =
+    useForm<UpdateImagePayload>({
+      defaultValues,
+      mode: 'onBlur',
+      resolver: yupResolver(updateImageSchema),
+      values: defaultValues,
+    });
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
 
@@ -83,8 +78,8 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Edit Image"
@@ -105,7 +100,7 @@ export const EditImageDrawer = (props: Props) => {
       )}
 
       {image?.capabilities?.includes('distributed-sites') && (
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack alignItems="center" direction="row" spacing={1}>
           <Lock />
           <Typography
             sx={(theme) => ({ color: theme.textColors.textAccessTable })}
@@ -116,6 +111,8 @@ export const EditImageDrawer = (props: Props) => {
       )}
 
       <Controller
+        control={control}
+        name="label"
         render={({ field, fieldState }) => (
           <TextField
             disabled={!canCreateImage}
@@ -127,11 +124,11 @@ export const EditImageDrawer = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="label"
       />
 
       <Controller
+        control={control}
+        name="description"
         render={({ field, fieldState }) => (
           <TextField
             disabled={!canCreateImage}
@@ -145,24 +142,22 @@ export const EditImageDrawer = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="description"
       />
 
       <Controller
+        control={control}
+        name="tags"
         render={({ field, fieldState }) => (
           <TagsInput
-            value={
-              field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
-            }
             disabled={!canCreateImage}
             label="Tags"
             onChange={(tags) => field.onChange(tags.map((tag) => tag.value))}
             tagError={fieldState.error?.message}
+            value={
+              field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
+            }
           />
         )}
-        control={control}
-        name="tags"
       />
 
       <ActionsPanel

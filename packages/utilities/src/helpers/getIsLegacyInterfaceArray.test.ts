@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
 } from '../factories';
 import { getIsLegacyInterfaceArray } from './getIsLegacyInterfaceArray';
 

@@ -84,6 +84,9 @@ export const PlacementGroupsRow = React.memo(
             '0'
           ) : (
             <TextTooltip
+              displayText={`${assignedLinodes?.length ?? 0}`}
+              minWidth={250}
+              placement="bottom-start"
               PopperProps={{
                 sx: {
                   '& .MuiTooltip-tooltip': {
@@ -100,9 +103,6 @@ export const PlacementGroupsRow = React.memo(
                   ))}
                 </List>
               }
-              displayText={`${assignedLinodes?.length ?? 0}`}
-              minWidth={250}
-              placement="bottom-start"
             />
           )}
           &nbsp; of{' '}

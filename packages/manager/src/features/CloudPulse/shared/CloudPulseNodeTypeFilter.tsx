@@ -82,10 +82,8 @@ export const CloudPulseNodeTypeFilter = React.memo(
       savePreferences,
     } = props;
 
-    const [
-      selectedNodeType,
-      setSelectedNodeType,
-    ] = React.useState<CloudPulseNodeType | null>();
+    const [selectedNodeType, setSelectedNodeType] =
+      React.useState<CloudPulseNodeType | null>();
 
     const {
       data: databaseClusters,
@@ -151,26 +149,26 @@ export const CloudPulseNodeTypeFilter = React.memo(
 
     return (
       <Autocomplete
-        isOptionEqualToValue={(option, value) =>
-          option.id === value.id && option.label === value.label
-        }
-        slotProps={{
-          popper: {
-            placement: 'bottom',
-          },
-        }}
         autoHighlight
         clearOnBlur
         data-testid="node-type-select"
         disabled={disabled}
         errorText={isError ? 'Error loading node types.' : ''}
         fullWidth
+        isOptionEqualToValue={(option, value) =>
+          option.id === value.id && option.label === value.label
+        }
         label={label || 'Node Type'}
         loading={isLoading}
         noMarginTop
         onChange={(_e, selectedNode) => handleNodeTypeSelection(selectedNode)}
         options={availableOptions}
         placeholder={placeholder ?? 'Select a Node Type'}
+        slotProps={{
+          popper: {
+            placement: 'bottom',
+          },
+        }}
         value={selectedNodeType ?? null}
       />
     );
@@ -191,8 +189,8 @@ const getNodeTypeOptions = (
   return isClusterSizeGreaterThanOne === undefined
     ? []
     : isClusterSizeGreaterThanOne
-    ? nodeTypeOptionsList
-    : primaryNode
-    ? [primaryNode]
-    : [];
+      ? nodeTypeOptionsList
+      : primaryNode
+        ? [primaryNode]
+        : [];
 };

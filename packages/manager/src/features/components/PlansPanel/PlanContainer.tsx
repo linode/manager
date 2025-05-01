@@ -206,6 +206,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       filterOptions={{
                         header: table.header,
                       }}
+                      key={`plan-filter-${idx}`}
+                      plans={plans}
                       renderPlanSelection={() =>
                         renderPlanSelection({
                           header: table.header,
@@ -215,8 +217,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       shouldDisplayNoRegionSelectedMessage={
                         shouldDisplayNoRegionSelectedMessage
                       }
-                      key={`plan-filter-${idx}`}
-                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />
@@ -225,13 +225,13 @@ export const PlanContainer = (props: PlanContainerProps) => {
               })
             ) : (
               <PlanSelectionTable
+                key={planType}
+                plans={plans}
+                planType={planType}
+                renderPlanSelection={renderPlanSelection}
                 shouldDisplayNoRegionSelectedMessage={
                   shouldDisplayNoRegionSelectedMessage
                 }
-                key={planType}
-                planType={planType}
-                plans={plans}
-                renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
                 showTransfer={showTransfer}
                 showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}

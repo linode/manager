@@ -1,8 +1,9 @@
+import type { MemoExoticComponent } from 'react';
+
 import type { AlertsEngineOptionProps } from './AlertsEngineTypeFilter';
 import type { AlertsRegionProps } from './AlertsRegionFilter';
 import type { AlertsTagFilterProps } from './AlertsTagsFilter';
 import type { AlertServiceType } from '@linode/api-v4';
-import type { MemoExoticComponent } from 'react';
 
 export interface ColumnConfig<T> {
   /**
