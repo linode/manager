@@ -4,6 +4,7 @@ import {
 } from '@linode/queries';
 import { useGrants, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Paper } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 // eslint-disable-next-line no-restricted-imports
@@ -11,7 +12,6 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from '@linode/ui';
 import { StackScript } from 'src/components/StackScript/StackScript';
 
 import { getRestrictedResourceText } from '../Account/utils';

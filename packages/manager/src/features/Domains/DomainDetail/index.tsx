@@ -1,8 +1,8 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { NotFound } from '@linode/ui';
 import { useDomainQuery } from 'src/queries/domains';
 
 const DomainsLanding = React.lazy(() =>

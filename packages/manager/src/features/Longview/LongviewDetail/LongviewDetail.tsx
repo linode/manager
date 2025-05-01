@@ -1,10 +1,10 @@
 import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from '@linode/ui';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';

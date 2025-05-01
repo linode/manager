@@ -12,6 +12,7 @@ import {
   Paper,
   Stack,
 } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import { arrayToList } from '@linode/utilities';
 import { stackScriptSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
@@ -22,7 +23,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from '@linode/ui';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
