@@ -13,7 +13,6 @@ import type { KubernetesTier } from '@linode/api-v4';
 
 interface Props {
   clusterID: number;
-  clusterLabel: string;
   clusterTier: KubernetesTier;
   currentVersion: string;
 }
