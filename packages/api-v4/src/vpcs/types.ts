@@ -66,7 +66,6 @@ export interface SubnetAssignedLinodeData {
 export interface SubnetAssignedNodeBalancerData {
   id: number;
   ipv4_range: string;
-  ipv6_range: string;
 }
 
 export interface VPCIP {
